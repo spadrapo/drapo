@@ -54,10 +54,10 @@ stages:
     - task: NuGetCommand@2
       displayName: 'NuGet pack'
       inputs:
-        command: pack
+        command: 'pack'
         packagesToPack: '**\*.nuspec'
         versioningScheme: 'byEnvVar'
-        versionEnvVar: '$(NugetVersion)'
+        versionEnvVar: 'NugetVersion'
     - task: NuGetCommand@2
       displayName: 'NuGet push VSTS'
       inputs:
