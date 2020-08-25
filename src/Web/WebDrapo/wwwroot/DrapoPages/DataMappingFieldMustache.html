@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Mapping</title>
+    <style>
+        .selected {
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <span>Data Mapping</span>
+    <div d-dataKey="tabs" d-dataUrlGet="/Data/GetTabs"></div>
+    <div>
+        <div d-for="tab in tabs.Tabs">
+            <span d-model="{{tab.Name}}" d-class="{selected:{{tab._Index}}={{tabs.TabIndex}}}" d-on-click="UpdateDataField(tabs,TabIndex,{{tab._Index}})"></span>
+        </div>
+    </div>
+    <br />
+    <div d-sector="1">
+        <div d-dataKey="objectCode" d-dataType="value" d-dataValue="Tab1I7L2K1"></div>
+        <div d-dataKey="mappingObject" d-dataType="mapping" d-dataValue="tabs" d-dataMappingField="Tabs.[{{tabs.TabIndex}}].Items" d-dataMappingSearchField="Key" d-dataMappingSearchValue="{{objectCode}}" d-dataMappingSearchHierarchyField="Children"></div>
+        <span>Sector 1</span>
+        <br />
+        <span></span>
+        <input type="button" value="Load" d-on-click="ReloadData(mappingObject)" />
+        <input type="button" value="Save" d-on-click="PostData(mappingObject)" />
+        <br />
+        <br />
+        <span>Search Key: </span><input type="text" d-model="{{objectCode}}" />
+        <br />
+        <br />
+        <span>Key: </span><span d-model="{{mappingObject.Key}}"></span><span> Value: </span><input type="text" d-model="{{mappingObject.Value}}" />
+        <br />
+        <span>Value: </span><span d-model="{{mappingObject.Value}}"></span>
+        <div d-datakey="wslLoader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateDataField(mappingObject,Value,opsss);PostData(mappingObject);ReloadData(mappingObject)" />
+    </div>
+</body>
+</html>

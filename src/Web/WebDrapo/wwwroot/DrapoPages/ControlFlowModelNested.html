@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Model - Nested</title>
+</head>
+<body>
+    <span>Control Flow - Model - Nested</span>
+    <div d-dataKey="items" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div d-dataKey="nesteds" d-dataType="array" d-dataValue='[{"key":"User","value":"v1"},{"key":"Name","value":"v2"}]'></div>
+    <div d-for="item in items">
+        <div d-for="nested in nesteds">
+            <input type="text" d-model="{{item.Key}}">
+            <span>{{item.Key}}</span>
+        </div>
+    </div>
+</body>
+</html>

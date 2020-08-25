@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Class Mustache Array</title>
+    <style>
+        .red {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <span>Class Mustache Array</span>
+        <div d-dataKey="selection" d-dataType="object" d-dataProperty-class="red:true"></div>
+        <ul>
+            <li d-class="{{{selection.class}}}">
+                First
+            </li>
+            <li>
+                Second
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

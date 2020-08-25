@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data - Incremental Load Limited</title>
+</head>
+<body>
+    <div>
+        <span>Data - Incremental Load Limited</span>
+        <div d-datakey="users" d-datalazy="true" d-datalazystart="0" d-datalazyincrement="5" d-dataurlget="/Data/GetData?start={{start}}&amp;length={{increment}}&amp;max=14"></div>
+        <ul>
+            <li d-for="user in users" style="display: none;">{{user.Key}}</li>
+        <li>K0</li><li>K1</li><li>K2</li><li>K3</li><li>K4</li><li>K5</li><li>K6</li><li>K7</li><li>K8</li><li>K9</li><li>K10</li><li>K11</li><li>K12</li><li>K13</li></ul>
+    </div>
+
+</body></html>

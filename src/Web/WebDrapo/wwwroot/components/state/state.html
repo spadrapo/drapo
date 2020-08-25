@@ -1,0 +1,13 @@
+﻿<div d-sector="@" class="state" dc-name="Unknown" dc-count="0">
+    <div d-dataKey="internal" d-dataType="parent" d-dataValue="dc-"></div>
+    <div d-dataKey="data" d-dataUrlGet="/Data/GetLevels?levels=0&children={{internal.count}}"></div>
+    <span d-model="{{internal.name}}"></span><br>
+    <span>Count:</span><input d-model="{{internal.count}}" type="text" /><br>
+    <div>
+        <div d-for="item in data">
+            <br>
+            <span>Key: {{item.Key}}</span><br>
+            <span>Value: {{item.Value}}</span><br>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Chat</title>
+</head>
+<body>
+    <br>
+    <span>Chat</span>
+    <div d-dataKey="user" d-dataType="object"></div>
+    <div d-dataKey="chats" d-dataUnitOfWork="true" d-dataUrlGet="/Chat/Get" d-dataUrlSet="/Chat/Set" d-dataPipes="chat"></div>
+    <br>
+    <span>User:</span><input type="text" d-model="{{user.User}}">
+    <br>
+    <span>Message:</span><input type="text" d-model="{{user.Message}}"><input type="button" value="Talk" d-on-click="AddDataItem(chats,user,false);PostData(chats)"/><input type="button" value="Clear" d-on-click="ClearData(chats,false);PostData(chats)" />
+    <ul>
+        <li d-for="chat in chats">{{chat.Date}} - {{chat.User}} - {{chat.Message}}</li>
+    </ul>
+</body>
+</html>

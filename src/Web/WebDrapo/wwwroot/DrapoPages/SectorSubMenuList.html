@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div>
+        <style>
+            .d-MenuApplicationSubMenuItemList {
+                width: 100%;
+                height: 50px;
+            }
+
+            .d-MenuApplicationSubMenuItemList:hover {
+                width: 100%;
+                height: 50px;
+                background-color: lightgray;
+                cursor: pointer;
+            }
+
+            .d-MenuApplicationSubMenuItemListImage {
+                color: black;
+                top: 10px;
+                left: 10px;
+                font-size: 2em;
+            }
+
+            .d-MenuApplicationSubMenuItemListText {
+                top: 0px;
+                left: 20px;
+                position: relative;
+                color: black;
+            }
+        </style>
+        <div d-for="subMenuItem in d-menuSubItems">
+            <div class="d-MenuApplicationSubMenuItemList" d-on-click="{{subMenuItem.Action}}">
+                <span class="d-MenuApplicationSubMenuItemListImage {{subMenuItem.TypeImageClass}}"></span>
+                <span class="d-MenuApplicationSubMenuItemListText">{{subMenuItem.Name}}</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

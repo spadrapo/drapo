@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Class Conditional Function</title>
+    <style>
+        .ppUserListRow > :first-child {
+            border-right: 1px solid #FFFFFF;
+        }
+
+        .ppUserSelected {
+            color: #4A4A4A;
+            background-color: #E1E1E1;
+        }
+
+        .ppUserListRowCell {
+            display: table-cell;
+            border-bottom: 1px solid #E1E1E1;
+            border-right: 1px solid #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+    <div style="width:50%">
+        <span>Class Conditional Function</span>
+        <div d-dataKey="usersSelected" d-dataType="array"></div>
+        <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSelectOptions"></div>
+        <div d-for="user in users" d-class="{ppUserListRow,ppUserSelected:ContainsDataItem({{usersSelected}},{{user.Key}})}" d-on-click="IF(ContainsDataItem({{usersSelected}},{{user.Key}}),RemoveDataItem(usersSelected,{{user.Key}}),AddDataItem(usersSelected,{{user.Key}}));Notify(users)" style="width:100%">
+            <div class="ppUserListRowCell" style="width:949px">
+                <span>{{user.Key}}</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

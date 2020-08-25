@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data - Incremental Load Limited</title>
+</head>
+<body>
+    <div>
+        <span>Data - Incremental Load Limited</span>
+        <div d-datakey="items" d-datalazy="true" d-datalazystart="0" d-datalazyincrement="5" d-dataurlget="/Data/GetData?start={{start}}&amp;length={{increment}}&amp;max=14"></div>
+        <div d-datakey="itemsInternal" d-dataurlget="/Data/GetLevels?levels=1&amp;children=2&amp;prefix=I"></div>
+        <div>
+            <div d-for="item in items" style="display: none;">
+                <span d-model="{{item.Key}}"></span>
+                <div>
+                    <div d-for="itemInternal in itemsInternal">
+                        <span d-model="{{itemInternal.Key}}"></span>
+                    </div>
+                </div>
+            </div>
+        <div>
+                <span>K0</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K1</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K2</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K3</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K4</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K5</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K6</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K7</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K8</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K9</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K10</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K11</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K12</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div><div>
+                <span>K13</span>
+                <div>
+                    <div>
+                        <span>IL1K0</span>
+                    </div><div>
+                        <span>IL1K1</span>
+                    </div>
+                </div>
+            </div></div>
+    </div>
+
+</body></html>

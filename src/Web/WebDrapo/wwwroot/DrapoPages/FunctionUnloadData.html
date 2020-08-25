@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - UnloadData</title>
+</head>
+<body>
+    <span>Function - UnloadData</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data"></div>
+    <div>
+        <ul>
+            <li d-for="item in data">{{item.Key}} - {{item.Value}}</li>
+        </ul>
+    </div>
+    <br />
+    <div d-dataKey="loader" d-dataType="value" d-dataValue="UnloadData(data)"></div>
+    <input type="button" value="Unload" d-on-click="Execute({{loader}})" />
+</body>
+</html>

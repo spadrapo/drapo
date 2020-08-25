@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Attribute Min</title>
+</head>
+<body>
+    <br>
+    <span>Attribute Min</span>
+    <div d-dataKey="object" d-dataType="object" d-dataProperty-readonly="true" d-dataProperty-disabled="false"></div>
+    <div>
+        <input type="checkbox" d-model="{{object.readonly}}" /><span>readonly</span>
+        <br />
+        <input type="checkbox" d-model="{{object.disabled}}" /><span>disabled</span>
+        <br />
+        <input type="text" d-attr-readonly-min="{{object.readonly}}">
+        <br />
+        <input type="text" d-attr-disabled-min="{{object.disabled}}">
+    </div>
+</body>
+</html>

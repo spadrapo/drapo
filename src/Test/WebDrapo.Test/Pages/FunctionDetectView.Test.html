@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function - DetectView</title>
+</head>
+<body>
+    <span>Function - DetectView</span>
+    <div d-datakey="view" d-datatype="object"></div>
+    <div d-datakey="drapo" d-datacookieget="drapo"></div>
+    <span>Detected: </span><span d-model="{{view}}">default</span>
+    <br />
+    <span>Configurated: </span><span d-model="{{drapo.view}}">default</span>
+    <br />
+    <input type="button" value="Use Current View" d-on-click="UpdateDataField(drapo,view,DetectView());PostData(drapo)" d-id="__drapoUnitTest" />
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateData(view,DetectView())"></div>
+
+</body></html>

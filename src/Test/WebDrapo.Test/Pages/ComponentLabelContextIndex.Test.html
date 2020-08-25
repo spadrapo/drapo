@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - LabelContext Index</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <span>Component - LabelContext Index</span>
+    <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children=2&amp;levels=2&amp;includeIndex=true"></div>
+    <div>
+        <div d-for="object in objects" style="display: none;">
+            <d-labelcontext dc-model="{{object._Index}}"></d-labelcontext>
+            <br />
+        </div>
+    <div>
+            <div dc-model="0">
+    <span>0</span>
+    <span></span>
+</div>
+            <br />
+        </div><div>
+            <div dc-model="1">
+    <span>1</span>
+    <span></span>
+</div>
+            <br />
+        </div></div>
+
+</body></html>

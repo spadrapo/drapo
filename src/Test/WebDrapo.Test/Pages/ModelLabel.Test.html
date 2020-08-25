@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Model Label</title>
+</head>
+<body>
+    <span>Model Label</span>
+    <div d-datakey="object" d-datatype="object" d-dataproperty-name="Name"></div>
+    <label>Text:</label>
+    <input type="text" d-model="{{object.name}}" />
+    <br />
+    <label>Reply:</label>
+    <label d-model="{{object.name}}">Name</label>
+
+</body></html>

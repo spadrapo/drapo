@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow - For</span>
+        <div d-dataKey="options" d-dataUrlGet="/Data/GetModelSample"></div>
+        <ul>
+            <li d-for="option in options">
+                <div>
+                    <span>{{option.Key}}</span>
+                </div>
+                <ul>
+                    <li d-for="value in (0..1)" d-if="{{option.Visible}}">
+                        <span>{{value}}</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

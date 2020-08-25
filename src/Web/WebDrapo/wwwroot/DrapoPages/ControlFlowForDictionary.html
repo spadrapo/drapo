@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Dictionary</title>
+</head>
+<body>
+    <span>Control Flow - Dictionary</span>
+    <div d-dataKey="dictionary" d-dataUrlGet="/Data/GetDictionary"></div>
+    <div d-for="entry in dictionary">
+        <br>
+        <span>Key: {{entry.Key}}</span><br>
+        <div d-for="value in entry.Value">
+            <span>Value.Key: {{value.Key}}</span><br>
+            <span>Value.Value: {{value.Value}}</span><br>
+        </div>
+    </div>
+</body>
+</html>

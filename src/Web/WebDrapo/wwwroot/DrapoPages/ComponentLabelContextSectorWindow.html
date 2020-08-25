@@ -1,0 +1,14 @@
+﻿<div d-sector="@">
+    <div d-dataKey="count" d-dataType="value" d-dataValue="2"></div>
+    <div d-dataKey="objects" d-dataUrlGet="~/Data/GetLevels?children={{count}}"></div>
+    <div d-dataKey="loaderInternal" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateDataField(count,,3)"></div>
+    <span>Count: </span><input type="text" d-model="{{count}}" /><br /><br />
+    <div>
+        <div d-for="object in objects">
+            <span>Name: </span><input type="text" d-model="{{object.Key}}" />
+            <br />
+            <d-labelcontextsector dc-model="{{object.Key}}"></d-labelcontextsector>
+            <br />
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="../drapo.js"></script>
+    <title>Windows Friend</title>
+</head>
+<body>
+    <span>Windows Friend</span>
+    <div>
+        <div d-dataKey="open" d-dataType="value" d-dataLoadType="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowsFriendWindow.html,Windows)"></div>
+    </div>
+    <br>
+    <div d-sector="content">
+        <div d-dataKey="data" d-dataUrlGet="/Data/GetLevels?levels=1&children=3&prefix=WF"></div>
+        <div>
+            <div d-for="item in data">
+                <input type="checkbox" d-model="{{item.Visible}}">
+                <span>{{item.Key}}</span>
+            </div>
+        </div>
+    </div>
+    <div d-sector="rainbow">
+        <input type="button" value="Open" d-on-click="{{open}}" />
+    </div>
+    <div d-id="Windows" d-sector="windows" d-sector-friend="content"></div>
+    <br>
+    <div d-dataKey="startup" d-dataType="function" d-dataLoadType="startup" d-dataValue="{{open}}"></div>
+</body>
+</html>

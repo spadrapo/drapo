@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Conditional Tokenizer GUID</title>
+</head>
+<body>
+    <span>Conditional Tokenizer GUID</span>
+    <div>
+        <div>
+            <!--Data-->
+            <div d-datakey="items" d-dataurlget="~/Data/GetWithEmpty"></div>
+            <div d-datakey="d" d-datatype="object" d-dataproperty-show="1A2A3"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <div d-if="{{d.show}}!=1A2A3" style="display: none;">
+                <span>Wally</span>
+                <br />
+                <div>
+                    <div d-for="item in items" style="display: none;">
+                        <span d-model="{{item.Key}}"></span>
+                        <br />
+                    </div>
+                <div>
+                        <span></span>
+                        <br />
+                    </div><div>
+                        <span>K0</span>
+                        <br />
+                    </div><div>
+                        <span>K1</span>
+                        <br />
+                    </div><div>
+                        <span>K2</span>
+                        <br />
+                    </div><div>
+                        <span>K3</span>
+                        <br />
+                    </div><div>
+                        <span>K4</span>
+                        <br />
+                    </div></div>
+            </div>
+            <br />
+        </div>
+    </div>
+
+</body></html>

@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Attribute Min Context</title>
+</head>
+<body>
+    <br>
+    <span>Attribute Min Context</span>
+    <div d-dataKey="items" d-dataUrlGet="/Data/GetIFSample"></div>
+    <div>
+        <div d-for="item in items">
+            <input type="checkbox" d-model="{{item.Visible}}" /><span>Disabled</span>
+            <br />
+            <input type="text" d-attr-disabled-min="{{item.Visible}}">
+        </div>
+    </div>
+</body>
+</html>

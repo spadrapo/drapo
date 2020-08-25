@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function - RemoveDataItemLookup</title>
+</head>
+<body>
+    <span>Function - RemoveDataItemLookup</span>
+    <div d-datakey="data" d-dataurlget="/Data"></div>
+    <div d-datakey="search" d-datatype="object" d-dataproperty-key="Key" d-dataproperty-value="K2"></div>
+    <div d-datakey="functionStartup" d-datatype="value" d-dataloadtype="startup" d-datavalue="RemoveDataItemLookup(data,{{search.key}},{{search.value}})"></div>
+    <div>
+        <ul>
+            <li d-for="item in data" style="display: none;">{{item.Key}} - {{item.Value}}</li>
+        <li>K0 - V0</li><li>K1 - V1</li><li>K3 - V3</li><li>K4 - V4</li></ul>
+    </div>
+    <br />
+    <span>Key:</span>
+    <input type="text" d-model="{{search.key}}" />
+    <input type="text" d-model="{{search.value}}" />
+    <input type="button" value="Remove" d-on-click="{{functionStartup}}" d-id="__drapoUnitTest" />
+
+</body></html>

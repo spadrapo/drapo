@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Drag and Drop</title>
+</head>
+<body>
+    <span>Drag and Drop</span>
+    <br />
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div d-dataKey="array" d-dataType="array" d-dataValue="(1..3)"></div>
+    <div>
+        <div d-for="user in users" d-dragStart="true" d-dragEnd="true" style="width:300px" d-dragOnAfterEnd="Notify(array)">
+            <span>Key:</span>
+            <input type="text" d-model="{{user.Key}}">
+            <span>{{user.Key}}</span>
+            <br />
+        </div>
+    </div>
+    <br />
+    <div>
+        <div d-for="value in array">
+            <span>{{value}}</span>
+            <div d-for="user in users" d-dragStart="true" d-dragEnd="true" style="width:300px">
+                <span>Key:</span><span>{{user.Key}}</span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

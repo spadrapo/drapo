@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function Switch Sector Iframe</title>
+</head>
+<body>
+    <div>
+        <span>Function Switch Sector Iframe</span>
+        <div d-dataKey="tabs" d-dataType="array"></div>
+        <div d-dataKey="tabNew" d-dataType="object" d-dataProperty-type="" d-dataProperty-container=""></div>
+        <div d-dataKey="functionAddType1" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateDataField(tabNew,type,Type1);ClearDataField(tabNew,container);UpdateSector(content,~/DrapoPages/SectorType1.html,Type1,true,true,{{tabNew.container}});AddDataItem(tabs,tabNew);"></div>
+        <div d-dataKey="functionAddType1Iframe" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateDataField(tabNew,type,Type1Iframe);ClearDataField(tabNew,container);UpdateSector(content,~/DrapoPages/SectorType1iframe.html,,false,false,{{tabNew.container}});AddDataItem(tabs,tabNew);"></div>
+        <div>
+            <input type="button" d-on-click="{{functionAddType1}}" value="Type1" />
+            <input type="button" d-on-click="{{functionAddType1Iframe}}" value="Type1Iframe" />
+            <br />
+            <br />
+            <div style="position:relative;float:left;">
+                <input d-for="tab in tabs" type="button" d-on-click="SwitchSector(content,{{tab.container}})" d-on-dblclick="DestroyContainer({{tab.container}});RemoveDataItem(tabs,tab);ClearSector(content)" value="{{tab.type}}" />
+            </div>
+        </div>
+        <br />
+        <br />
+        <div d-sector="startup" d-sector-friend="content">
+            <div d-dataKey="startup" d-dataType="function" d-dataLoadType="startup" d-dataValue="Execute({{functionAddType1Iframe}});Wait(1000);Execute({{functionAddType1}});ExecuteDataItem(SwitchSector(content,{{tab.container}}),tab in tabs,true,false)"></div>
+        </div>
+        <div d-sector="content"></div>
+    </div>
+</body>
+</html>

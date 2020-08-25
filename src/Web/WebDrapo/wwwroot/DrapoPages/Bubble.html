@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Bubble</title>
+</head>
+<body>
+    <span>Bubble</span>
+    <div>
+        <div d-dataKey="data" d-dataType="value" d-dataValue="Nothing"></div>
+        <span d-model="{{data}}"></span>
+        <br />
+        <div d-on-click="UpdateDataField(data,,D3)">
+            <div d-on-click="UpdateDataField(data,,D2)" d-propagation-click="false">
+                <div d-on-click="UpdateDataField(data,,D1)" style="width:100px;height:100px;border:1px solid red">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

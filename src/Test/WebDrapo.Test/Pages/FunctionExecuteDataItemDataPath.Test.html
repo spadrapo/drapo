@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function ExecuteDataItem DataPath</title>
+    <style>
+        .selected {
+            color: white;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <span d-on-click="{{functionToggleAll}}">Function ExecuteDataItem Hierarchy</span>
+    <div d-datakey="data" d-dataurlget="/Data/GetLevels?levels=2&amp;children=2&amp;includeIndex=true"></div>
+    <div d-datakey="functionToggle" d-datatype="value" d-dataloadtype="startup" d-datavalue="ToggleItemField({{item.Visible}});Notify(data)"></div>
+    <div d-datakey="functionToggleAll" d-datatype="value" d-dataloadtype="startup" d-datavalue="ExecuteDataItem({{functionToggle}},item in data.[1].Children,true,true)"></div>
+    <div>
+        <div d-for="item in data.[1].Children" style="display: none;">
+            <span d-model="{{item.Key}}" d-class="{selected:{{item.Visible}}}" d-on-click="{{functionToggle}}"></span>
+        </div>
+    <div>
+            <span d-class="{selected:{{item.Visible}}}" d-on-click="{{functionToggle}}">I8L1K0</span>
+        </div><div>
+            <span d-class="{selected:{{item.Visible}}}" d-on-click="{{functionToggle}}">I11L1K1</span>
+        </div></div>
+    <div d-datakey="functionStartup" d-datatype="function" d-dataloadtype="startup" d-datavalue="{{functionToggleAll}}"></div>
+
+</body></html>

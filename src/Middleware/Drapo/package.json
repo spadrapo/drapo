@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "name": "asp.net",
+  "private": true,
+  "devDependencies": {
+    "jquery": "3.2.1",
+    "typescript": "2.7.2",
+    "@aspnet/signalr": "1.0.0"
+  },
+  "dependencies": {
+    "es6-promise": "^4.2.4"
+  }
+}

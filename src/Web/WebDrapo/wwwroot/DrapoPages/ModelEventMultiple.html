@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Model Event Multiple</title>
+</head>
+<body>
+    <br>
+    <span>Model Event Multiple</span>
+    <div d-dataKey="item" d-dataType="object" d-dataProperty-name="Name" d-dataProperty-last="Last" d-dataProperty-changed=""></div>
+    <input type="text" d-id="name" d-model="{{item.name}}" d-model-event="blur,keyup-enter" d-on-model-change="UpdateDataField(item,changed,{{item.name}})" d-on-model-complete="Focus(last)"><span d-model="{{item.name}}"></span>
+    <input type="text" d-id="last" d-model="{{item.last}}" d-model-event="blur,keyup-enter" d-on-model-change="UpdateDataField(item,changed,{{item.last}})" d-on-model-complete="Focus(name)"><span d-model="{{item.last}}"></span>
+    <span d-model="{{item.changed}}"></span>
+</body>
+</html>

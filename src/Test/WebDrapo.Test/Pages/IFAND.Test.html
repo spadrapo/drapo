@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>IF - AND</title>
+</head>
+<body>
+    <br />
+    <span>IF - AND</span>
+    <div d-datakey="values" d-datatype="array" d-datavalue="[-3,-2,-1,0,1,2,3]"></div>
+    <div>
+        <span>Interval Numbers using AND</span>
+        <ul>
+            <li d-for="value in values" d-if="(({{value}}&gt;-1)&amp;&amp;({{value}}&lt;3))" style="display: none;">{{value}}</li><li>0</li><li>1</li><li>2</li>
+        </ul>
+    </div>
+
+</body></html>

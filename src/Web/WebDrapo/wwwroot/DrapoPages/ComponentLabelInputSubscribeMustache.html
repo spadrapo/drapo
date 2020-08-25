@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Component - Labelinput</title>
+</head>
+<body>
+    <div d-dataKey="cultures" d-dataUrlGet="/Culture/GetCultures"></div>
+    <div d-dataKey="userConfig" d-dataUrlGet="/Culture/GetUserConfig"></div>
+    <select d-model="{{userConfig.Culture}}">
+        <option d-for="culture in cultures" value="{{culture.Key}}">{{culture.Value}}</option>
+    </select>
+    <br />
+    <br />
+    <span>Selected: </span>
+    <span d-model="{{userConfig.Culture}}"></span>
+    <br />
+    <br />
+    <d-labelinputsubscribemustache d-caption="Name:" d-dataKeySource="{{userConfig.Culture}}"></d-labelinputsubscribemustache>
+    <br />
+    <d-labelinputsubscribemustache d-caption="Name:" d-dataKeySource="{{userConfig.Culture}}"></d-labelinputsubscribemustache>
+    <br />
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateDataField(userConfig,Culture,en)"></div>
+</body>
+</html>

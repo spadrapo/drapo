@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - IF</title>
+</head>
+<body>
+    <span>Control Flow - For</span>
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetLevels?Levels=3&Children=1"></div>
+    <div d-for="user in users">
+        <br>
+        <span>Key: {{user.Key}}</span><br>
+        <span>Value: {{user.Value}}</span><br>
+        <span>Children</span>
+        <br>
+        <div d-for="user in user.Children" d-if="{{user.Value}}!=L2V0"></div>
+    </div>
+</body>
+</html>

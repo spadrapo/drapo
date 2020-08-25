@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Parent Sector Parent</title>
+</head>
+<body>
+    <div>
+        <span>Data Parent Sector Parent</span>
+        <div d-sector="@" class="state" dc-levels="0" dc-children="3">
+            <span>1</span>
+            <div>
+                <div d-datakey="internal" d-datatype="parent" d-datavalue="dc-"></div>
+                <div d-datakey="data" d-dataurlget="/Data/GetLevels?levels={{internal.levels}}&amp;children={{internal.children}}"></div>
+                <div d-for="item in data" style="display: none;">
+                    <br />
+                    <span>Key: {{item.Key}}</span><br />
+                    <span>Value: {{item.Value}}</span><br />
+                </div><div>
+                    <br />
+                    <span>Key: L0K0</span><br />
+                    <span>Value: L0V0</span><br />
+                </div><div>
+                    <br />
+                    <span>Key: L0K1</span><br />
+                    <span>Value: L0V1</span><br />
+                </div><div>
+                    <br />
+                    <span>Key: L0K2</span><br />
+                    <span>Value: L0V2</span><br />
+                </div>
+            </div>
+            <div d-sector="@" class="state" dc-levels="0" dc-children="1">
+                <span>2</span>
+                <div d-datakey="internal" d-datatype="parent" d-datavalue="dc-"></div>
+                <div d-datakey="data2" d-dataurlget="/Data/GetLevels?levels={{internal.levels}}&amp;children={{internal.children}}"></div>
+                <div d-for="item in data2" style="display: none;">
+                    <br />
+                    <span>Key: {{item.Key}}</span><br />
+                    <span>Value: {{item.Value}}</span><br />
+                </div><div>
+                    <br />
+                    <span>Key: L0K0</span><br />
+                    <span>Value: L0V0</span><br />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body></html>

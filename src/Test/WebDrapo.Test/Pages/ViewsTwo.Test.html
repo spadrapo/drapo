@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title>Views</title>
+</head><body>
+    <div>
+        <div d-datakey="views" d-dataconfigget="Views"></div>
+        <div d-datakey="drapo" d-datacookieget="drapo"></div>
+        <br />
+        <label>Choose View:</label>
+        <br />
+        <select d-model="{{drapo.view}}" d-on-change="PostData(drapo);ReloadSector(sector)">
+            <span style="display: none;"><option d-for="view in views" value="{{view.Tag}}">{{view.Name}}</option></span>
+        <option value="mobile">Mobile</option><option value="default">Web</option></select>
+        <br />
+        <br />
+        <span>Selected:</span>
+        <span d-model="{{drapo.view}}">default</span>
+        <br />
+        <br />
+        <div>
+            <ul class="list-inline">
+                <li class="list-inline-item"><h3><a href="#" d-on-click="UpdateSector(sector,/DrapoPages/ViewsOne.html,One)">One</a></h3></li>
+                <li class="list-inline-item"><h3><a href="#" d-on-click="UpdateSector(sector,/DrapoPages/ViewsTwo.html,Two)">Two</a></h3></li>
+            </ul>
+        </div>
+        <div d-sector="@" d-sector-url="/DrapoPages/ViewsOne.html"><div d-sector-parent-url="/DrapoPages/Views.html" d-sector-parent="sector">
+    <span>2</span>
+</div></div>
+    </div>
+    <script src="/js/bootstrap.min.js"></script>
+</body></html>

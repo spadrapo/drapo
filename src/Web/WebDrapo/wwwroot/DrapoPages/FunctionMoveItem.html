@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function Move Item</title>
+</head>
+<body>
+    <span>Function Move Item</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div d-dataKey="functionCurrent" d-dataType="value" d-dataLoadType="startup" d-dataValue="MoveItem({{item}},^0)"></div>
+    <div>
+        <div d-for="item in data">
+            <br />
+            <span d-model="{{item.Key}}" d-on-click="{{functionCurrent}}"></span>
+        </div>
+    </div>
+    <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="ExecuteDataItem({{functionCurrent}},item in data[^3])"></div>
+</body>
+</html>

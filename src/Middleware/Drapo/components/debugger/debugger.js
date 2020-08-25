@@ -1,0 +1,2 @@
+﻿function debuggerConstructor(el, app) {
+}

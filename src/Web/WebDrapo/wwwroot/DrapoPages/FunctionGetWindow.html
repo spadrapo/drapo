@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Function GetWindow</title>
+</head>
+<body>
+    <span>Function GetWindow</span>
+    <div class="cloak" d-cloak="cloak">
+        <!--Data-->
+        <div d-dataKey="openClose" d-datatype="value" d-dataloadtype="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowsClose.html,Windows)"></div>
+        <div d-dataKey="openAutoClose" d-datatype="value" d-dataloadtype="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowsAutoClose.html,Windows)"></div>
+        <div>
+            <input type="button" value="OpenClose" d-on-click="{{openClose}}" />
+            <input type="button" value="OpenAutoClose" d-on-click="{{openAutoClose}}" />
+        </div>
+        <div d-id="Windows" d-sector="Windows">
+        </div>
+    </div>
+    <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="Execute({{openClose}});Execute({{openAutoClose}});Execute({{openClose}})"></div>
+</body>
+</html>

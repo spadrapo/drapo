@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Type</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <div>
+        <span>Notify Component Detached</span>
+        <div d-datakey="tabs" d-datatype="array"></div>
+        <div d-datakey="tabNew" d-datatype="object" d-dataproperty-type="" d-dataproperty-container=""></div>
+        <div d-datakey="functionAdd" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(tabNew,type,Type);ClearDataField(tabNew,container);UpdateSector(content,~/DrapoPages/SectorTypeComponentIframe.html,Type,true,true,{{tabNew.container}});AddDataItem(tabs,tabNew);"></div>
+        <div>
+            <input type="button" d-on-click="{{functionAdd}}" value="Add" />
+            <br />
+            <br />
+            <div style="position:relative;float:left;">
+                <input d-for="tab in tabs" type="button" d-on-click="SwitchSector(content,{{tab.container}})" d-on-dblclick="DestroyContainer({{tab.container}});RemoveDataItem(tabs,tab);ClearSector(content)" value="{{tab.type}}" style="display: none;" />
+            <input type="button" d-on-click="SwitchSector(content,{{tab.container}})" d-on-dblclick="DestroyContainer({{tab.container}});RemoveDataItem(tabs,tab);ClearSector(content)" value="Type" /><input type="button" d-on-click="SwitchSector(content,{{tab.container}})" d-on-dblclick="DestroyContainer({{tab.container}});RemoveDataItem(tabs,tab);ClearSector(content)" value="Type" /></div>
+        </div>
+        <br />
+        <br />
+        <div d-sector="@" d-sector-friend="content">
+            <div d-datakey="startup" d-datatype="function" d-dataloadtype="startup" d-datavalue="Execute({{functionAdd}});Wait(1000);Execute({{functionAdd}});Execute({{functionEN}});ExecuteDataItem(SwitchSector(content,{{tab.container}}),tab in tabs,true,false)"></div>
+        </div>
+        <div d-sector="@"><div d-detach="active" style="">
+    <span>Type Component iframe</span>
+    <div d-datakey="userConfig" d-dataurlget="/Culture/GetUserConfig"></div>
+    <div d-datakey="functionES" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(userConfig,Culture,es)"></div>
+    <div d-datakey="functionEN" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(userConfig,Culture,en)"></div>
+    <br />
+    <input type="button" value="ES" d-on-click="{{functionES}}" />
+    <input type="button" value="EN" d-on-click="{{functionEN}}" />
+    <br />
+    <div class="labelinputsubscribe" d-caption="Name:" d-datakeysource="userConfig" d-datakeyfield="Culture">
+    <span>Name:</span>
+    <span>pt</span>
+</div>
+    <br />
+    <div>
+        <iframe src="/DrapoPages/SectorType1iframeContent.html"></iframe>
+    </div>
+</div><div d-detach="empty" style="display: none;">
+    <span>Type Component iframe</span>
+    <div d-datakey="userConfig" d-dataurlget="/Culture/GetUserConfig"></div>
+    <div d-datakey="functionES" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(userConfig,Culture,es)"></div>
+    <div d-datakey="functionEN" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(userConfig,Culture,en)"></div>
+    <br />
+    <input type="button" value="ES" d-on-click="{{functionES}}" />
+    <input type="button" value="EN" d-on-click="{{functionEN}}" />
+    <br />
+    <div class="labelinputsubscribe" d-caption="Name:" d-datakeysource="userConfig" d-datakeyfield="Culture">
+    <span>Name:</span>
+    <span>en</span>
+</div>
+    <br />
+    <div>
+        <iframe src="/DrapoPages/SectorType1iframeContent.html"></iframe>
+    </div>
+</div></div>
+    </div>
+
+</body></html>

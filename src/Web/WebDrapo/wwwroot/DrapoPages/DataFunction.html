@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Function</title>
+</head>
+<body>
+    <span>Data Function</span>
+    <div>
+        <div>
+            <div d-dataKey="value" d-dataType="value" d-dataValue="NewValue"></div>
+            <div d-dataKey="dataFunction" d-dataType="function" d-dataValue="UpdateDataField(dataFunction,,{{value}})"></div>
+        </div>
+        <div>
+            <span d-model="{{dataFunction}}"></span>
+        </div>
+    </div>
+</body>
+</html>

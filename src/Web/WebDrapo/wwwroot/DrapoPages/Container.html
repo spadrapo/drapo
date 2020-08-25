@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Container</title>
+</head>
+<body>
+    <span>Container</span>
+    <div d-sector="11111">
+        <span>First</span>
+        <div d-dataKey="items" d-dataUrlGet="/Data/GetModelSelectOptions"></div>
+        <div d-for="item in items">
+            <span>{{item.Key}}</span>
+        </div>
+    </div>
+    <div d-sector="22222">
+        <span>Second</span>
+        <div d-dataKey="items" d-dataUrlGet="/Data/GetNullable"></div>
+        <div d-for="item in items">
+            <span>{{item.Key}}</span>
+        </div>
+    </div>
+</body>
+</html>

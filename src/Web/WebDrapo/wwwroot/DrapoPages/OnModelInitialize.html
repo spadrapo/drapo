@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>On Model Initialize</title>
+</head>
+<body>
+    <span>On Model Initialize</span>
+    <div d-dataKey="objectSingle" d-dataType="object" d-dataProperty-v1="2000"></div>
+    <div d-dataKey="objects" d-dataType="array" d-dataValue='[{"year":"1980"},{"year":"2011"},{"year":"2014"}]'></div>
+    <span d-model="{{objectSingle.year}}" d-on-model-initialize="UpdateDataField(objectSingle,year,Cast({{objectSingle.v1}} + 19,number))"></span>
+    <div d-for="object in objects">
+        <span>Year:</span><span d-model="{{object.year}}"></span><span> Age:</span><span d-model="{{object.age}}" d-on-model-initialize="UpdateItemField({{object.age}},Cast(2019 - {{object.year}},number),false)"></span>
+        <br />
+    </div>
+</body>
+</html>

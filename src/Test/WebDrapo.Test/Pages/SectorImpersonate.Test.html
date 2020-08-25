@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Sector Impersonate</title>
+</head>
+<body>
+    <span>Sector Impersonate</span>
+    <div d-sector-impersonate="{{global.sector}}">
+        <div d-datakey="global" d-datatype="object" d-dataproperty-sector="2" d-dataproperty-value="value"></div>
+        <div d-datakey="functionAdd" d-datatype="value" d-dataloadtype="startup" d-datavalue="AddDataItem(values,{{global.value}})"></div>
+        <input type="button" value="Add" d-id="__drapoUnitTest" d-on-click="{{functionAdd}}" />
+        <div d-sector="@">
+            <div d-datakey="values" d-datatype="array"></div>
+            <input type="button" value="Switch 1" d-on-click="UpdateDataField(global,sector,1)" />
+            <input type="button" value="Add 1" d-on-click="{{functionAdd}}" />
+            <div d-for="value in values" style="display: none;">
+                <span d-model="{{value}}"></span>
+                <br />
+            </div>
+        </div>
+        <div d-sector="@">
+            <div d-datakey="values" d-datatype="array"></div>
+            <input type="button" value="Switch 2" d-on-click="UpdateDataField(global,sector,2)" />
+            <input type="button" value="Add 2" d-on-click="{{functionAdd}}" />
+            <div d-for="value in values" style="display: none;">
+                <span d-model="{{value}}"></span>
+                <br />
+            </div><div>
+                <span>value</span>
+                <br />
+            </div>
+        </div>
+        <span>sector:</span><span d-model="{{global.sector}}">2</span><br />
+        <span>value:</span><input type="text" d-model="{{global.value}}" /><br />
+    </div>
+
+</body></html>

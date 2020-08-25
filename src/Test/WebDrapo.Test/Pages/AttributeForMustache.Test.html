@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Attribute For Mustache</title>
+</head>
+<body>
+    <br />
+    <span>Attribute For Mustache</span>
+    <div d-datakey="items" d-datatype="array" d-datavalue="[{&quot;key&quot;:&quot;k1&quot;,&quot;value&quot;:&quot;20&quot;},{&quot;key&quot;:&quot;k2&quot;,&quot;value&quot;:&quot;40&quot;}]"></div>
+    <div d-for="item in items" style="display: none;">
+        <input type="text" d-attr-style="width:{{item.value}}%" />
+    </div><div>
+        <input type="text" d-attr-style="width:{{item.value}}%" style="width:20%" />
+    </div><div>
+        <input type="text" d-attr-style="width:{{item.value}}%" style="width:40%" />
+    </div>
+
+</body></html>

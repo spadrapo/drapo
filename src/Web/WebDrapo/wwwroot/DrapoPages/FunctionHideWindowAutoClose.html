@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="../drapo.js"></script>
+    <title>Function Close Window - Context Hidden</title>
+</head>
+<body>
+    <div d-dataKey="result" d-dataType="object"></div>
+    <div d-dataKey="functionLoader" d-dataType="value" d-dataLoadType="startup" d-dataValue="ShowWindow(/DrapoPages/WindowsTemplateWindow.html,Windows);ShowWindow(~/DrapoPages/FunctionCloseWindowContextHiddenWindow.html,Windows);HideWindow();PostData(create);UpdateDataField(result,,{{create}})"></div>
+    <div d-id="Windows" d-sector="sector"></div>
+    <br>
+    <span>Function Close Window - Context Hidden</span>
+    <br>
+    <span d-model="{{result}}"></span>
+    <br>
+    <input type="button" value="Open" d-on-click="{{functionLoader}}" />
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="{{functionLoader}}"></div>
+</body>
+</html>

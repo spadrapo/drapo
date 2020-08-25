@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Window Allow Multiple Instance Url</title>
+</head>
+<body>
+    <span>Window Allow Multiple Instance Url</span>
+    <br />
+    <div d-id="Windows" d-sector="sector" d-window-allowMultipleInstanceUrl="false"></div>
+    <br />
+    <div>
+        <div d-dataKey="click" d-datatype="value" d-dataloadtype="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowLoading.html,Windows,false)"></div>
+        <input type="button" value="Add" d-on-click="{{click}}" />
+        <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="Execute({{click}});Execute({{click}})"></div>
+    </div>
+</body>
+</html>

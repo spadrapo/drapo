@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Data Field</title>
+</head>
+<body>
+    <span>Control Flow - Data Field</span>
+    <div d-datakey="user" d-dataurlget="/Object/GetChildProperties"></div>
+    <div d-for="property in user.Child.Properties" style="display: none;">
+        <br />
+        <span>Key: {{property.Key}}</span><br />
+        <span>Value: {{property.Value}}</span><br />
+    </div><div>
+        <br />
+        <span>Key: k1</span><br />
+        <span>Value: v1</span><br />
+    </div><div>
+        <br />
+        <span>Key: k2</span><br />
+        <span>Value: v2</span><br />
+    </div><div>
+        <br />
+        <span>Key: k3</span><br />
+        <span>Value: v3</span><br />
+    </div>
+
+</body></html>

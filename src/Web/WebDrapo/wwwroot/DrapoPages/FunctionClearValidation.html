@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Function ClearValidation</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="sector" d-on-body-keyup-escape="CloseWindow()"></div>
+    <br />
+    <span>Function ClearValidation</span>
+    <div class="cloak" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-dataKey="data" d-dataType="object" d-dataProperty-agree="false" d-dataProperty-value="false"></div>
+            <div d-dataKey="click" d-datatype="value" d-dataloadtype="startup" d-dataValue="IF(ExecuteValidation(agree),UpdateDataField(data,value,true),UpdateDataField(data,value,false));ClearValidation(agree)"></div>
+        </div>
+        <div>
+            <!--Validation-->
+            <div d-validation-id="agree" d-validation-type="conditional" d-validation-value="{{data.agree}}"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <input type="checkbox" d-model="{{data.agree}}" /><span>Agree</span>
+            <div d-validation="agree">
+                <span>You must check the agree checkbox</span>
+            </div>
+            <br />
+            <span d-model="{{data.value}}"></span>
+            <br />
+            <input type="button" value="Validate" d-on-click="{{click}}" d-id="__drapoUnitTest" />
+        </div>
+    </div>
+</body>
+</html>

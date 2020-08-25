@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Parent Reference</title>
+</head>
+<body>
+    <div>
+        <span>Data Parent Reference</span>
+        <div d-datakey="source" d-datatype="object" d-dataproperty-levels="2" d-dataproperty-children="5"></div>
+        <div class="state" dc-levels="{{source.levels}}" dc-children="{{source.children}}">
+            <div d-datakey="internal" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+            <div d-datakey="data" d-dataurlget="/Data/GetLevels?levels={{internal.levels}}&amp;children={{internal.children}}"></div>
+            <div d-for="item in data" style="display: none;">
+                <br />
+                <span>Key: {{item.Key}}</span><br />
+                <span>Value: {{item.Value}}</span><br />
+            </div><div>
+                <br />
+                <span>Key: L2K0</span><br />
+                <span>Value: L2V0</span><br />
+            </div><div>
+                <br />
+                <span>Key: L2K1</span><br />
+                <span>Value: L2V1</span><br />
+            </div><div>
+                <br />
+                <span>Key: L2K2</span><br />
+                <span>Value: L2V2</span><br />
+            </div><div>
+                <br />
+                <span>Key: L2K3</span><br />
+                <span>Value: L2V3</span><br />
+            </div><div>
+                <br />
+                <span>Key: L2K4</span><br />
+                <span>Value: L2V4</span><br />
+            </div>
+        </div>
+    </div>
+
+</body></html>

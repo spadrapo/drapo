@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Message Execute Sector</title>
+</head>
+<body>
+    <script>
+        function ExecuteMessage(event) {
+            var message = {};
+            message.Action = 'execute';
+            message.DataKey = 'itemAdd';
+            window.parent.postMessage(message, '*');
+        }
+    </script>
+    <br>
+    <span>Function External Frame Sector</span>
+    <input id="buttonAdd" type="button" value="Add" onclick="ExecuteMessage(event)">
+    <script>
+        function start() {
+            $(document.getElementById('buttonAdd')).trigger('click');
+        }
+        start();
+    </script>
+</body>
+</html>

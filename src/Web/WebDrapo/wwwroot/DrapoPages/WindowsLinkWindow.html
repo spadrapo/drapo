@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<div style="border: 1px black solid">
+    <span>Window Link Window</span>
+    <br />
+    <div>
+        <div d-dataKey="dataLink" d-dataType="mapping" d-dataValue="clipboard"></div>
+        <div d-dataKey="linkOpen" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateData(clipboard,{{dataLink}});ShowWindow(~/DrapoPages/WindowsLinkWindowLink.html,Windows)"></div>
+        <div d-dataKey="linkClose" d-dataType="value" d-dataLoadType="startup" d-dataValue="PostData(dataLink);CloseWindow();UpdateData(data,{{clipboard}})"></div>
+        <div d-dataKey="linkUncheckItem" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateItemField({{item.Visible}},false)"></div>
+        <div d-dataKey="linkUncheck" d-dataType="value" d-dataLoadType="startup" d-dataValue="ExecuteDataItem({{linkUncheckItem}},item in dataLink)"></div>
+        <div d-for="item in dataLink">
+            <input type="checkbox" d-model="{{item.Visible}}">
+            <span>{{item.Visible}}</span>
+        </div>
+    </div>
+    <br />
+    <input type="button" d-on-click="{{linkOpen}}" value="Open" />
+    <input type="button" d-on-click="{{linkClose}}" value="Close" />
+    <input type="button" d-on-click="{{linkUncheck}}" value="Uncheck" />
+</div>

@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Header Set Charset</title>
+</head>
+<body>
+    <span>Data Header Set Charset</span>
+    <div d-dataKey="itemObject" d-dataType="object" d-dataProperty-key-name="Key" d-dataProperty-key-value="Execução de Fórmulas Key" d-dataProperty-value-name="Value" d-dataProperty-value-value="Execução de Fórmulas Value"></div>
+    <div d-dataKey="items1" d-dataUrlGet="/Data/GetLevels?levels=1&children=5&prefix=PRE1"></div>
+    <div d-dataKey="items2" d-dataUrlGet="/Data/GetLevels?levels=1&children=5&prefix=PRE2"></div>
+    <div d-dataKey="items" d-dataUrlGet="/Data/GetHeadersJoin" d-dataUrlSet="/Data/SetHeadersJoin" d-dataHeaderGet-item="itemObject" d-dataHeaderGet-list1="items1" d-dataHeaderSet-list2="items2"></div>
+    <div d-dataKey="startup" d-dataType="function" d-dataLoadType="startup" d-dataValue="PostDataItem(items)"></div>
+    <ul>
+        <li d-for="item in items" d-model="{{item.Key}}"></li>
+    </ul>
+</body>
+</html>

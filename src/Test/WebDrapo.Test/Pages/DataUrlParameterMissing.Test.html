@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Parameter Missing</title>
+</head>
+<body>
+    <span>Data Parameter Missing</span>
+    <div d-datakey="object" d-datatype="object" d-dataproperty-count="3"></div>
+    <div d-datakey="items" d-dataurlget="/Data/GetLevels?Children={{object.count}}"></div>
+    <div d-datakey="itemsMissing" d-dataurlparameters="required" d-dataurlget="/Data/GetLevels?Children={{object.countMiss}}"></div>
+    <div d-datakey="itemsOptional" d-dataurlparameters="optional" d-dataurlget="/Data/GetLevels?Children={{object.countMiss}}"></div>
+    <div>
+        <span>Items</span><br />
+        <div d-for="item in items" style="display: none;">
+            <span>Key: {{item.Key}}</span>
+            <span>Value: {{item.Value}}</span><br />
+        </div><div>
+            <span>Key: L0K0</span>
+            <span>Value: L0V0</span><br />
+        </div><div>
+            <span>Key: L0K1</span>
+            <span>Value: L0V1</span><br />
+        </div><div>
+            <span>Key: L0K2</span>
+            <span>Value: L0V2</span><br />
+        </div>
+    </div>
+    <div>
+        <span>Items Missing</span><br />
+        <div d-for="itemMiss in itemsMissing" style="display: none;">
+            <span>Key: {{itemMiss.Key}}</span>
+            <span>Value: {{itemMiss.Value}}</span><br />
+        </div>
+    </div>
+    <div>
+        <span>Items Optional</span><br />
+        <div d-for="itemOptional in itemsOptional" style="display: none;">
+            <span>Key: {{itemOptional.Key}}</span>
+            <span>Value: {{itemOptional.Value}}</span><br />
+        </div><div>
+            <span>Key: L0K0</span>
+            <span>Value: L0V0</span><br />
+        </div><div>
+            <span>Key: L0K1</span>
+            <span>Value: L0V1</span><br />
+        </div><div>
+            <span>Key: L0K2</span>
+            <span>Value: L0V2</span><br />
+        </div><div>
+            <span>Key: L0K3</span>
+            <span>Value: L0V3</span><br />
+        </div><div>
+            <span>Key: L0K4</span>
+            <span>Value: L0V4</span><br />
+        </div>
+    </div>
+
+</body></html>

@@ -1,0 +1,36 @@
+declare class DrapoGlobalization {
+    private _application;
+    private _culture;
+    private _resourceDayOfWeekNameShort;
+    private _resourceDayOfWeekName;
+    private _resourceMonthNameShort;
+    private _resourceMonthName;
+    private _resourceDateFormat;
+    private _resourceNumberSizeType;
+    get Application(): DrapoApplication;
+    constructor(application: DrapoApplication);
+    private Initialize;
+    private InitializeResource;
+    private InitializeResourceDictionary;
+    private GetLanguage;
+    private GetCultureNeutral;
+    private GetCultureCookie;
+    private GetCultureLanguage;
+    ReloadCulture(): Promise<boolean>;
+    GetCulture(): string;
+    GetDelimiterDecimal(culture: string): string;
+    GetDelimiterThousands(culture: string): string;
+    GetDayOfWeekNameShort(day: number, culture: string): string;
+    GetDayOfWeekName(day: number, culture: string): string;
+    GetMonthNameShort(day: number, culture: string): string;
+    GetMonthName(day: number, culture: string): string;
+    private GetResourceValue;
+    private GetResourceCulture;
+    GetDateFormat(dateFormatType: string, culture: string): string;
+    GetDateFormatsRegex(culture?: string): string;
+    private GetDateFormatRegex;
+    private ReplaceDataFormatRegex;
+    private GetResourceValueDictionary;
+    private GetResourceCultureDictionary;
+    GetNumberSizeTypeName(type: number, culture?: string): string;
+}

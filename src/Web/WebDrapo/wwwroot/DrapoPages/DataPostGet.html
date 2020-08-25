@@ -1,0 +1,13 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Post Get</title>
+</head>
+<body>
+    <span>Data Post Get</span>
+    <div d-dataKey="dataVM" d-dataType="object" d-dataProperty-name-name="Name" d-dataProperty-name-value="Hit" ></div>
+    <div d-dataKey="data" d-dataUrlGet="/Data/SetFunctionPostDataItem" d-dataPostGet="dataVM"></div>
+    <span>Data:</span><span d-model="{{data.Name}}"></span>
+</body>
+</html>

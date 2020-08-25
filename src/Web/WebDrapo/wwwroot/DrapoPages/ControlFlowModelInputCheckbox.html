@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Model - Checkbox</title>
+</head>
+<body>
+    <span>Control Flow - Model - Checkbox</span>
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div>
+        <div d-for="user in users">
+            <input type="checkbox" d-model="{{user.Visible}}" >
+            <span>{{user.Visible}}</span>
+        </div>
+    </div>
+</body>
+</html>

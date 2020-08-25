@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Type2</title>
+</head>
+<body>
+    <div>
+        <span>Function Update Sector</span>
+        <div d-datakey="tabs" d-datatype="array"></div>
+        <div d-datakey="tabNew" d-datatype="object" d-dataproperty-type="" d-dataproperty-container=""></div>
+        <div d-datakey="functionAddType1" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(tabNew,type,Type1);ClearDataField(tabNew,container);UpdateSector(content,~/DrapoPages/SectorType1.html,Type1,true,true,{{tabNew.container}});AddDataItem(tabs,tabNew);"></div>
+        <div d-datakey="functionAddType2" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(tabNew,type,Type2);ClearDataField(tabNew,container);UpdateSector(content,~/DrapoPages/SectorType2.html,Type2,true,true,{{tabNew.container}});AddDataItem(tabs,tabNew);"></div>
+        <div d-datakey="functionAddType3" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(tabNew,type,Type3);ClearDataField(tabNew,container);UpdateSector(content,~/DrapoPages/SectorType3.html,Type3,true,true,{{tabNew.container}});AddDataItem(tabs,tabNew);"></div>
+        <div>
+            <input type="button" d-on-click="{{functionAddType1}}" value="Type1" />
+            <input type="button" d-on-click="{{functionAddType2}}" value="Type2" />
+            <input type="button" d-on-click="{{functionAddType3}}" value="Type3" />
+            <br />
+            <br />
+            <div style="position:relative;float:left;">
+                <input d-for="tab in tabs" type="button" d-on-click="SwitchSector(content,{{tab.container}})" d-on-dblclick="DestroyContainer({{tab.container}});RemoveDataItem(tabs,tab);ClearSector(content)" value="{{tab.type}}" style="display: none;" />
+            <input type="button" d-on-click="SwitchSector(content,{{tab.container}})" d-on-dblclick="DestroyContainer({{tab.container}});RemoveDataItem(tabs,tab);ClearSector(content)" value="Type1" /><input type="button" d-on-click="SwitchSector(content,{{tab.container}})" d-on-dblclick="DestroyContainer({{tab.container}});RemoveDataItem(tabs,tab);ClearSector(content)" value="Type2" /></div>
+        </div>
+        <br />
+        <br />
+        <div d-sector="@" d-sector-friend="content">
+            <div d-datakey="startup" d-datatype="function" d-dataloadtype="startup" d-datavalue="Execute({{functionAddType1}});ExecuteDataItem(ToggleItemField({{item.Visible}}),item in items,true,true);Execute({{functionAddType2}});ExecuteDataItem(ToggleItemField({{item.Visible}}),item in items,true,false);ExecuteDataItem(SwitchSector(content,{{tab.container}}),tab in tabs,true,false)"></div>
+        </div>
+        <div d-sector="@"><div>
+    <span>Type 1</span>
+    <div>
+        <div d-datakey="items" d-dataurlget="~/Data/GetLevels?levels=0&amp;children=5&amp;prefix=Type1"></div>
+        <div d-for="item in items" style="display: none;">
+            <input type="checkbox" d-model="{{item.Visible}}" />
+            <span>{{item.Visible}}</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div>
+    </div>
+</div></div>
+    </div>
+
+</body></html>

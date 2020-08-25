@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Mustache Inside For</title>
+</head>
+<body>
+    <span>Control Flow - For - Mustache Inside For</span>
+    <div d-dataKey="entries" d-dataUrlGet="/Data/GetLevels?Levels=3&Children=2"></div>
+    <div d-for="entry in entries">
+        <br>
+        <div style="float:left">
+            <span d-for="level in (1..{{entry._Level}})">-</span>
+        </div>
+        <span>{{entry.Key}}</span>
+        <div d-for="entry in entry.Children"></div>
+    </div>
+</body>
+</html>

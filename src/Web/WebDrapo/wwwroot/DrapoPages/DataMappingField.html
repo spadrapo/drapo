@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Mapping</title>
+</head>
+<body>
+    <span>Data Mapping</span>
+    <div d-dataKey="objects" d-dataUrlGet="/Data/GetLevels?levels=2&children=2&includeIndex=true"></div>
+    <div>
+        <div d-for="object in objects">
+            <span>Key: </span><span d-model="{{object.Key}}"></span><span> Value: </span><span d-model="{{object.Value}}"></span>
+            <div d-for="object in object.Children"></div>
+        </div>
+    </div>
+    <br />
+    <div d-sector="1">
+        <div d-dataKey="objectCode" d-dataType="value" d-dataValue="I10L0K1"></div>
+        <div d-dataKey="mappingObject" d-dataType="mapping" d-dataValue="objects" d-dataMappingField="" d-dataMappingSearchField="Key" d-dataMappingSearchValue="{{objectCode}}" d-dataMappingSearchHierarchyField="Children"></div>
+        <span>Sector 1</span>
+        <br />
+        <span></span>
+        <input type="button" value="Load" d-on-click="ReloadData(mappingObject)" />
+        <input type="button" value="Save" d-on-click="PostData(mappingObject)" />
+        <br />
+        <br />
+        <span>Search Key: </span><input type="text" d-model="{{objectCode}}" />
+        <br />
+        <br />
+        <span>Key: </span><span d-model="{{mappingObject.Key}}"></span><span> Value: </span><input type="text" d-model="{{mappingObject.Value}}" />
+        <div d-datakey="wslLoader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateDataField(mappingObject,Value,opsss);PostData(mappingObject)" />
+    </div>
+</body>
+</html>

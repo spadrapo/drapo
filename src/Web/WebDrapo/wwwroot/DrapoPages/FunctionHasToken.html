@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Auhentication</title>
+</head>
+<body>
+    <div>
+        <div>
+            <div d-dataKey="keyValue" d-dataType="object" d-dataProperty-key-name="Key" d-dataProperty-key-value="admin" d-dataProperty-value-name="Value" d-dataProperty-value-value="password" d-dataUrlSet="/Authentication/Login"></div>
+            <div d-dataKey="response" d-dataType="value"></div>
+            <div d-dataKey="userName" d-dataUrlGet="/Authorization/GetUserName"></div>
+            <div d-dataKey="list" d-dataType="array"></div>
+            <div d-dataKey="tokenHasvalue" d-dataType="value"></div>
+            <div d-dataKey="functionToken" d-dataType="value" d-dataLoadType="startup" d-dataValue="IF(HasToken(),UpdateDataField(tokenHasvalue,,Yes),UpdateDataField(tokenHasvalue,,No))"></div>
+            <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="{{functionToken}}"></div>
+        </div>
+        <div>
+            <span d-model="{{tokenHasvalue}}"></span>
+            <br />
+            <label>User:</label>
+            <input type="text" d-model="{{keyValue.Key}}" />
+            <br />
+            <label>Password:</label>
+            <input type="password" d-model="{{keyValue.Value}}" />
+            <br />
+            <input type="button" value="Login" d-on-click="PostDataItem(keyValue,response);UpdateToken({{response}});Execute({{functionToken}})">
+            <br />
+            <span d-model="{{response}}"></span>
+            <span d-model="{{userName.userLogin}}"></span>
+        </div>
+    </div>
+</body>
+</html>

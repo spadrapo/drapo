@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Event Double Click Delay Click</title>
+    <style>
+        .noSelect {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .classClick {
+            color: green;
+        }
+
+        .classDoubleClick {
+            background-color: red;
+        }
+    </style>
+</head>
+<body class="noSelect">
+    <span>Event Double Click Delay Click</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div d-dataKey="functionClick" d-dataType="value" d-dataLoadType="startup" d-dataValue="ToggleItemField({{item.Click}})"></div>
+    <div d-dataKey="functionDoubleClick" d-dataType="value" d-dataLoadType="startup" d-dataValue="ToggleItemField({{item.DoubleClick}})"></div>
+    <div>
+        <div d-for="item in data" d-on-dblclick="{{functionDoubleClick}}">
+            <br />
+            <span d-model="{{item.Key}}" d-class="{classClick:{{item.Click}},classDoubleClick:{{item.DoubleClick}}}" d-on-click="{{functionClick}}"></span>
+            <span d-model="{{item.Click}}"></span>
+        </div>
+    </div>
+</body>
+</html>

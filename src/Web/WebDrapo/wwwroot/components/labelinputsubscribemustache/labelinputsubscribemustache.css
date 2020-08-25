@@ -1,0 +1,14 @@
+﻿.labelinputsubscribe {
+}
+
+    .labelinputsubscribe > span {
+        color: green;
+    }
+
+    .labelinputsubscribe > input {
+        color: red;
+    }
+
+    .labelinputsubscribe > input:focus {
+        background-color : black;
+    }

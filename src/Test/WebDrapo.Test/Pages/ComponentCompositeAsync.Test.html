@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - Composite</title>
+<link href="" rel="stylesheet" /><script src=""></script><script src=""></script></head>
+<body>
+    <span>Component - Composite</span>
+    <div d-datakey="data" d-datatype="object" d-dataproperty-count="2"></div>
+    <div d-datakey="culture" d-datadelay="true" d-dataurlget="/Data/GetCulture"></div>
+    <input type="text" d-model="{{data.count}}" />
+    <br />
+    <div dc-datakeysource="{{data.count}}">
+    <!--Container-->
+    <div><div><span d-datavalue="{{data.count}}">Data: 8</span></div><div><span d-datavalue="{{data.count}}">Data: 8</span></div><div><span d-datavalue="{{data.count}}">Data: 8</span></div><div><span d-datavalue="{{data.count}}">Data: 8</span></div><div><span d-datavalue="{{data.count}}">Data: 8</span></div><div><span d-datavalue="{{data.count}}">Data: 8</span></div><div><span d-datavalue="{{data.count}}">Data: 8</span></div><div><span d-datavalue="{{data.count}}">Data: 8</span></div></div>
+</div>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateDataField(data,count,8)"></div>
+
+</body></html>

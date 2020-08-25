@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Model - Range</title>
+</head>
+<body>
+    <span>Control Flow - Model - Range</span>
+    <div d-dataKey="items" d-dataType="array" d-dataValue='[{"value":"5"},{"value":"50"},{"value":"90"}]'></div>
+    <div>
+        <div d-for="item in items">
+            <input type="range" min="0" max="100" d-model="{{item.value}}">
+            <span d-model="{{item.value}}"></span>
+        </div>
+    </div>
+</body>
+</html>

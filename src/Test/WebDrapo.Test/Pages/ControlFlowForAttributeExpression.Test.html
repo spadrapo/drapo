@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For Attr Expression</title>
+</head>
+<body>
+    <br />
+    <span>Control Flow For Attr Expression</span>
+    <div d-datakey="objects" d-datatype="array" d-datavalue="[{&quot;width&quot;:&quot;90&quot;},{&quot;width&quot;:&quot;70&quot;},{&quot;width&quot;:&quot;50&quot;}]"></div>
+    <div d-datakey="dataFunction" d-datatype="function" d-dataloadtype="startup" d-datavalue="ExecuteDataItem(UpdateItemField({{object.width}},15),object in objects[1])"></div>
+    <div d-for="object in objects" style="display: none;">
+        <input type="text" d-model="{{object.width}}" />
+        <div style="position:relative;float:left;width:100%">
+            <div d-attr-style="position:relative;float:left;height:200px;background-color:red;width:{{object.width}}%"></div>
+            <div d-attr-style="position:relative;float:left;height:200px;background-color:green;width:Cast(100 - {{object.width}},number)%"></div>
+        </div>
+        <br />
+    </div><div>
+        <input type="text" />
+        <div style="position:relative;float:left;width:100%">
+            <div d-attr-style="position:relative;float:left;height:200px;background-color:red;width:{{object.width}}%" style="position:relative;float:left;height:200px;background-color:red;width:90%"></div>
+            <div d-attr-style="position:relative;float:left;height:200px;background-color:green;width:Cast(100 - {{object.width}},number)%" style="position:relative;float:left;height:200px;background-color:green;width:10%"></div>
+        </div>
+        <br />
+    </div><div>
+        <input type="text" />
+        <div style="position:relative;float:left;width:100%">
+            <div d-attr-style="position:relative;float:left;height:200px;background-color:red;width:{{object.width}}%" style="position:relative;float:left;height:200px;background-color:red;width:15%"></div>
+            <div d-attr-style="position:relative;float:left;height:200px;background-color:green;width:Cast(100 - {{object.width}},number)%" style="position:relative;float:left;height:200px;background-color:green;width:85%"></div>
+        </div>
+        <br />
+    </div><div>
+        <input type="text" />
+        <div style="position:relative;float:left;width:100%">
+            <div d-attr-style="position:relative;float:left;height:200px;background-color:red;width:{{object.width}}%" style="position:relative;float:left;height:200px;background-color:red;width:50%"></div>
+            <div d-attr-style="position:relative;float:left;height:200px;background-color:green;width:Cast(100 - {{object.width}},number)%" style="position:relative;float:left;height:200px;background-color:green;width:50%"></div>
+        </div>
+        <br />
+    </div>
+
+</body></html>

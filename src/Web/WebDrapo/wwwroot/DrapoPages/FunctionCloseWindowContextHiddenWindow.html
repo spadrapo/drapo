@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<div>
+    <div style="background-color:lightgray;position:fixed;width:100%;height:100%;opacity:0.5;"></div>
+    <div style="position:absolute;left:40vw;top:10vh;height:40vh;width:20vw;border:2px solid black">
+        <div style="position:absolute;left:10%;top:10%">
+            <span>Window State</span>
+            <br />
+            <div d-dataKey="data" d-dataType="object" d-dataProperty-text1="T1" d-dataProperty-text2="T2"></div>
+            <div d-dataKey="create" d-dataType="object" d-dataUrlSet="~/Object/Join?text1={{data.text1}}&text2={{data.text2}}"></div>
+            <span>Text1:</span><input type="text" d-model="{{data.text1}}" /><br />
+            <span>Text2:</span><input type="text" d-model="{{data.text2}}" /><br />
+            <input type="button" d-on-click="CloseWindow()" value="Close" />
+        </div>
+    </div>
+</div>

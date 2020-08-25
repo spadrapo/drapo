@@ -1,0 +1,10 @@
+﻿.linkedCube {
+}
+
+    .linkedCube > div {
+        position: relative;
+    }
+
+    .linkedCube > div > span {
+        position:relative;
+    }

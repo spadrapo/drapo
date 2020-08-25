@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function DownloadData Binary</title>
+</head>
+<body>
+    <span>Function DownloadData Binary</span>
+    <div>
+        <div>
+            <div d-dataKey="file" d-dataType="object" d-dataProperty-url="/fonts/glyphicons-halflings-regular.woff" d-dataProperty-name="glyphicons-halflings-regular.woff"></div>
+            <div d-dataKey="dataFile" d-dataType="file" d-dataUrlGet="~/Data/GetFile?path={{file.url}}&fileName={{file.name}}"></div>
+        </div>
+        <div>
+            <span d-model="{{dataFile.filename}}"></span>
+            <br />
+            <span d-model="{{dataFile.length}}"></span>
+            <br />
+            <input type="button" value="Download" d-on-click="DownloadData(dataFile)" />
+        </div>
+    </div>
+</body>
+</html>

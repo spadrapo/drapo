@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function Move Item</title>
+</head>
+<body>
+    <span>Function Move Item</span>
+    <div d-datakey="data" d-dataurlget="/Data/GetModelSample"></div>
+    <div d-datakey="functionCurrent" d-datatype="value" d-dataloadtype="startup" d-datavalue="MoveItem({{item}},^0)"></div>
+    <div>
+        <div d-for="item in data" style="display: none;">
+            <br />
+            <span d-model="{{item.Key}}" d-on-click="{{functionCurrent}}"></span>
+        </div>
+    <div>
+            <br />
+            <span d-on-click="{{functionCurrent}}">K0</span>
+        </div><div>
+            <br />
+            <span d-on-click="{{functionCurrent}}">K1</span>
+        </div><div>
+            <br />
+            <span d-on-click="{{functionCurrent}}">K2</span>
+        </div><div>
+            <br />
+            <span d-on-click="{{functionCurrent}}">K3</span>
+        </div><div>
+            <br />
+            <span d-on-click="{{functionCurrent}}">K4</span>
+        </div><div>
+            <br />
+            <span d-on-click="{{functionCurrent}}">K6</span>
+        </div><div>
+            <br />
+            <span d-on-click="{{functionCurrent}}">K7</span>
+        </div><div>
+            <br />
+            <span d-on-click="{{functionCurrent}}">K5</span>
+        </div></div>
+    <div d-datakey="functionStartup" d-datatype="function" d-dataloadtype="startup" d-datavalue="ExecuteDataItem({{functionCurrent}},item in data[^3])"></div>
+
+</body></html>

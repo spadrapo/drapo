@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Conditional Short Circuit</title>
+</head>
+<body>
+    <span>Conditional Short Circuit</span>
+    <div>
+        <div>
+            <!--Data-->
+            <div d-dataKey="items" d-dataUrlGet="~/Data/GetWithEmpty"></div>
+            <div d-dataKey="data" d-dataType="object" d-dataProperty-show="false"></div>
+            <div d-dataKey="click" d-datatype="value" d-dataloadtype="startup" d-dataValue="ToggleItemField({{data.show}})"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <div d-if="{{data.show}}&&({{items.length}}>0)">
+                <span>Wally</span>
+                <br />
+                <div>
+                    <div d-for="item in items" d-for-if="{{data.show}}">
+                        <span d-model="{{item.Key}}"></span>
+                        <br />
+                    </div>
+                </div>
+            </div>
+            <br />
+            <input type="button" value="Toogle" d-on-click="{{click}}" d-did="__drapoUnitTest" />
+        </div>
+    </div>
+</body>
+</html>

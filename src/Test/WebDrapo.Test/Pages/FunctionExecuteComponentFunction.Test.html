@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function Execute Component Function</title>
+<script src=""></script><link href="" rel="stylesheet" /></head>
+<body>
+    <span>Function Execute Component Function</span>
+    <div d-datakey="cultures" d-dataurlget="/Culture/GetCultures"></div>
+    <div d-datakey="userConfig" d-dataurlget="/Culture/GetUserConfig"></div>
+    <select d-model="{{userConfig.Culture}}">
+        <span style="display: none;"><option d-for="culture in cultures" value="{{culture.Key}}">{{culture.Value}}</option></span>
+    <option value="en">Ingles</option><option value="pt">Portugues</option></select>
+    <br />
+    <br />
+    <span>Selected: </span>
+    <span d-model="{{userConfig.Culture}}">en</span>
+    <br />
+    <input type="button" value="I1" d-on-click="ExecuteComponentFunction(I1,Update,pt)" />
+    <input type="button" value="I2" d-on-click="ExecuteComponentFunction(I2,Update,en)" d-id="__drapoUnitTest" />
+    <input type="button" value="I3" d-on-click="ExecuteComponentFunction(I3,Update,pt)" />
+    <br />
+    <div class="labelinputsubscribe" d-id="I1" d-caption="Name:" d-datakeysource="userConfig" d-datakeyfield="Culture">
+    <span>Name:</span>
+    <span>en</span>
+</div>
+    <br />
+    <div class="labelinputsubscribe" d-id="I2" d-caption="Name:" d-datakeysource="userConfig" d-datakeyfield="Culture">
+    <span>Name:</span>
+    <span>en</span>
+</div>
+    <br />
+    <div class="labelinputsubscribe" d-id="I3" d-caption="Name:" d-datakeysource="userConfig" d-datakeyfield="Culture">
+    <span>Name:</span>
+    <span>en</span>
+</div>
+
+</body></html>

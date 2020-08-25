@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+	<script src="/drapo.js"></script>
+	<title>Arithmetic</title>
+    <style>
+        .selected {
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div d-datakey="page" d-datatype="object" d-dataproperty-count-name="Count" d-dataproperty-count-value="10" d-dataproperty-current-name="Current" d-dataproperty-current-value="6" d-dataproperty-offset-name="Offset" d-dataproperty-offset-value="2"></div>
+        <button type="button" d-on-click="IF({{page.Current}}&gt;0,UpdateDataField(page,Current,Cast({{page.Current}}-1,number)))">-1</button>
+        <button type="button" d-on-click="IF({{page.Current}}&lt;{{page.Count}}-1,UpdateDataField(page,Current,Cast({{page.Current}}+1,number)))">+1</button>
+        <br />
+        <span>Index Without Offset</span>
+        <ul>
+            <li d-for="index in ({{page.Current}}..{{page.Count}})" style="display: none;">{{index}}</li><li>6</li><li>7</li><li>8</li><li>9</li>
+        </ul><br />
+        <span>Index With Offset</span>
+        <ul>
+            <li d-class="{selected:{{index}}={{page.Current}}}" d-for="index in ({{page.Current}}-3..{{page.Current}}+4)" d-if="((-1&lt;{{index}})&amp;&amp;({{index}}&lt;{{page.Count}}))" style="display: none;">{{index}}</li><li d-class="{selected:{{index}}={{page.Current}}}">3</li><li d-class="{selected:{{index}}={{page.Current}}}">4</li><li d-class="{selected:{{index}}={{page.Current}}}">5</li><li d-class="{selected:{{index}}={{page.Current}}}" class="selected">6</li><li d-class="{selected:{{index}}={{page.Current}}}">7</li><li d-class="{selected:{{index}}={{page.Current}}}">8</li><li d-class="{selected:{{index}}={{page.Current}}}">9</li>
+        </ul><br />
+        <span>Index With Offset on Data Field</span>
+        <ul>
+            <li d-for="index in ({{page.Current}}-{{page.Offset}}..{{page.Current}}+{{page.Offset}})" style="display: none;">{{index}}</li><li>4</li><li>5</li><li>6</li><li>7</li>
+        </ul><br />
+    </div>
+
+</body></html>

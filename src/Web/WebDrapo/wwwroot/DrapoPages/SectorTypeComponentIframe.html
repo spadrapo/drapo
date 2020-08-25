@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<div>
+    <span>Type Component iframe</span>
+    <div d-dataKey="userConfig" d-dataUrlGet="/Culture/GetUserConfig"></div>
+    <div d-dataKey="functionES" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateDataField(userConfig,Culture,es)"></div>
+    <div d-dataKey="functionEN" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateDataField(userConfig,Culture,en)"></div>
+    <br />
+    <input type="button" value="ES" d-on-click="{{functionES}}" />
+    <input type="button" value="EN" d-on-click="{{functionEN}}" />
+    <br />
+    <d-labelinputsubscribe d-caption="Name:" d-dataKeySource="userConfig" d-dataKeyField="Culture"></d-labelinputsubscribe>
+    <br />
+    <div>
+        <iframe src="/DrapoPages/SectorType1iframeContent.html"></iframe>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Windows Template On Load</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="@"><div>
+    <span>This is the template d-on-load</span>
+    <div d-template="template" d-on-load="ExecuteDataItem(UpdateItemField({{user.Visible}},true),user in users)"><div d-templateurl="/DrapoPages/WindowsTemplateOnLoadTemplate.html">
+    <div>
+        <div d-datakey="users" d-dataurlget="/Data/GetModelSample"></div>
+        <div d-for="user in users" style="display: none;">
+            <input type="checkbox" d-model="{{user.Visible}}" />
+            <span>{{user.Visible}}</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div>
+    </div>
+</div></div>
+</div></div>
+    <br />
+    <span>Windows Template</span>
+    <br />
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="ShowWindow(/DrapoPages/WindowsTemplateOnLoadChild.html,Windows)"></div>
+    <input type="button" value="Open" d-on-click="ShowWindow(/DrapoPages/WindowsTemplateOnLoadChild.html,Windows)" />
+
+</body></html>

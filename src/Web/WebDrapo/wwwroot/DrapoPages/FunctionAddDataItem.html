@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - AddDataItem</title>
+</head>
+<body>
+    <br>
+    <span>AddDataItem</span>
+    <div d-dataKey="datas" d-dataType="array"></div>
+    <div>
+        <input type="button" value="Add" d-on-click="AddDataItem(datas,1)">
+        <ul>
+            <li d-for="inserted in datas">{{inserted}}</li>
+        </ul>
+    </div>
+</body>
+</html>

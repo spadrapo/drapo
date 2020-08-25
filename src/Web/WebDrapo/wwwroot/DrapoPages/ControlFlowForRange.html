@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Range</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow - For - Range</span>
+        <div d-dataKey="items" d-dataUrlGet="/Data"></div>
+        <ul>
+            <li d-for="item in items[0..^0]">{{item.Key}}</li>
+        </ul>
+    </div>
+</body>
+</html>

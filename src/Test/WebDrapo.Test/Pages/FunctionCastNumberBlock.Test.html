@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function Cast Number</title>
+</head>
+<body>
+    <br />
+    <span>Function Cast Number</span>
+    <div d-datakey="object" d-datatype="object" d-dataproperty-v1="2" d-dataproperty-v2="3" d-dataproperty-v3="4" d-dataproperty-v4="4" d-dataproperty-v5="-4"></div>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateItemField({{object.v1}},15)"></div>
+    <div>
+        <span>v1</span><input type="text" d-model="{{object.v1}}" /><br />
+        <span>v2</span><input type="text" d-model="{{object.v2}}" /><br />
+        <span>v3</span><input type="text" d-model="{{object.v3}}" /><br />
+        <span>v4</span><input type="text" d-model="{{object.v4}}" /><br />
+        <span>v5</span><input type="text" d-model="{{object.v5}}" /><br />
+        <br /><span>Calc: (v1 + (v3 - v2))* v4</span><br /><span d-model="Cast(({{object.v1}} + ({{object.v3}} - {{object.v2}})) * {{object.v4}},number)">64</span>
+        <br /><span>Calc: v1 + v5 * v2</span><br /><span d-model="Cast({{object.v1}} + {{object.v5}} * {{object.v2}},number)">3</span>
+    </div>
+
+</body></html>

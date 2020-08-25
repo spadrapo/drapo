@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Validation Event Conditional Fields</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="sector" d-on-body-keyup-escape="CloseWindow()"></div>
+    <br />
+    <span>Validation Event Conditional Fields</span>
+    <div class="cloak" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-dataKey="item" d-dataUrlGet="/Data/GetLevels?levels=2&children=5&prefix=PRE1"></div>
+            <div d-dataKey="data" d-dataType="object" d-dataProperty-enable="false" d-dataProperty-enable2="true"></div>
+            <div d-dataKey="click" d-datatype="value" d-dataloadtype="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowLoading.html,Windows,false)"></div>
+        </div>
+        <div>
+            <!--Validation-->
+            <div d-validation-id="agree" d-validation-type="conditional" d-validation-value="{{item.[1].KeyX}}"></div>
+            <div d-validation-id="agree2" d-validation-type="conditional" d-validation-value="{{item.[1].ValueX}}"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <input type="checkbox" d-model="{{data.enable}}" /><span>Enable</span>
+            <br />
+            <input type="checkbox" d-model="{{data.enable2}}" /><span>Enable2</span>
+            <br />
+            <input type="text" d-model="{{item.[1].KeyX}}" /><span>Agree</span>
+            <div d-validation="agree">
+                <span>You must check the agree checkbox</span>
+            </div>
+            <br />
+            <input type="text" d-model="{{item.[1].ValueX}}" /><span>Agree2</span>
+            <div d-validation="agree2">
+                <span>You must check the agree2 checkbox</span>
+            </div>
+            <br />
+            <br />
+            <input type="button" value="Validate" d-on-click="{{click}}" d-validation-on-click="{agree:{{data.enable}},agree2:{{data.enable2}}}" d-id="__drapoUnitTest" />
+        </div>
+    </div>
+</body>
+</html>

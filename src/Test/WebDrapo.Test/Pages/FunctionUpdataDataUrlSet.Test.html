@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function - UpdataDataUrlSet</title>
+</head>
+<body>
+    <span>Function - UpdataDataUrlSet</span>
+    <div d-datakey="data" d-datatype="object" d-dataproperty-url="~/Data/GetCookieValues"></div>
+    <div d-datakey="dataRequest" d-datatype="object" d-dataurlset="~/Data/GetCookieValues"></div>
+    <div d-datakey="dataResponse" d-datatype="object"></div>
+    <div d-datakey="dataFunction" d-datatype="function" d-datavalue="UpdateDataUrlSet(dataRequest,{{data.url}});UpdateData(dataRequest,{{data}});PostDataItem(dataRequest,dataResponse)"></div>
+    <div>
+        <ul>
+            <li d-for="item in dataResponse" style="display: none;">{{item.Key}} - {{item.Value}}</li><li>url - ~/Data/GetCookieValues</li>
+        </ul>
+    </div>
+    <br />
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="{{dataFunction}}"></div>
+
+</body></html>

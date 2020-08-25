@@ -1,0 +1,13 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Field Update</title>
+</head>
+<body>
+    <div d-datakey="users" d-dataurlget="/Data/GetModelSample"></div>
+    <div d-datakey="selected" d-datatype="value" d-datavalue="None"></div>
+    <ul>
+        <li d-for="user in users" d-on-click="UpdateDataField(selected,,{{user.Key}});" style="display: none;">{{user.Value}}</li><li d-on-click="UpdateDataField(selected,,{{user.Key}});">V0</li><li d-on-click="UpdateDataField(selected,,{{user.Key}});">V1</li><li d-on-click="UpdateDataField(selected,,{{user.Key}});">V2</li><li d-on-click="UpdateDataField(selected,,{{user.Key}});">V3</li><li d-on-click="UpdateDataField(selected,,{{user.Key}});">V4</li><li d-on-click="UpdateDataField(selected,,{{user.Key}});">V5</li><li d-on-click="UpdateDataField(selected,,{{user.Key}});">V6</li><li d-on-click="UpdateDataField(selected,,{{user.Key}});">V7</li>        
+    </ul>
+    <span>Selected item list:</span><span d-model="{{selected}}">None</span>
+
+</body></html>

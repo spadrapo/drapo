@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For If - Iterator</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow - For If - Iterator</span>
+        <div d-datakey="control" d-datatype="object" d-dataproperty-show="false"></div>
+        <div d-datakey="data" d-datatype="array" d-datavalue="[{&quot;Name&quot;:&quot;True&quot;,&quot;Visible&quot;:&quot;{{control.show}}&quot;},{&quot;Name&quot;:&quot;False&quot;,&quot;Visible&quot;:&quot;!{{control.show}}&quot;}]"></div>
+        <input type="button" value="Toggle" d-on-click="ToggleItemField({{control.show}})" d-id="__drapoUnitTest" />
+        <span d-model="{{control.show}}">true</span>
+        <ul><li d-for="item in data" d-if="{{item.Visible}}" style="display: none;">{{item.Name}}</li><li>True</li></ul>
+    </div>
+
+</body></html>

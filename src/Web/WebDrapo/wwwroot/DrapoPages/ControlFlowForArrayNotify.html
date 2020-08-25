@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<script src="/drapo.js"></script>
+	<title>Drapo For</title>
+</head>
+<body>
+    <h1><span>For Array Notify</span></h1>
+    <div d-dataKey="items" d-dataType="object" d-dataProperty-count-name="Count" d-dataProperty-count-value="10"></div>
+
+    <button type="button" d-on-click="UpdateDataField(items,Count,4)">Update 4</button>
+    <button type="button" d-on-click="UpdateDataField(items,Count,6)">Update 6</button>
+    <ul>
+        <li d-for="item in (0..{{items.Count}})">{{item}}</li>
+    </ul>
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateDataField(items,Count,5)"></div>
+</body>
+</html>

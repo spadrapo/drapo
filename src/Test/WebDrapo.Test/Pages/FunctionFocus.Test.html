@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function Focus</title>
+</head>
+<body>
+    <span>Function Focus</span>
+    <div d-datakey="users" d-dataurlget="/Data/GetModelSample"></div>
+    <div>
+        <div d-for="user in users" style="display: none;">
+            <span>Key:</span>
+            <input type="text" d-model="{{user.Key}}" d-id="it{{user._Index}}" />
+            <span d-on-click="Focus(it{{user._Index}})">{{user.Key}}</span>
+            <br />
+            <br />
+        </div>
+    <div>
+            <span>Key:</span>
+            <input type="text" d-id="it0" />
+            <span d-on-click="Focus(it{{user._Index}})">K0</span>
+            <br />
+            <br />
+        </div><div>
+            <span>Key:</span>
+            <input type="text" d-id="it1" />
+            <span d-on-click="Focus(it{{user._Index}})">K1</span>
+            <br />
+            <br />
+        </div><div>
+            <span>Key:</span>
+            <input type="text" d-id="it2" />
+            <span d-on-click="Focus(it{{user._Index}})">K2</span>
+            <br />
+            <br />
+        </div><div>
+            <span>Key:</span>
+            <input type="text" d-id="it3" />
+            <span d-on-click="Focus(it{{user._Index}})">K3</span>
+            <br />
+            <br />
+        </div><div>
+            <span>Key:</span>
+            <input type="text" d-id="it4" />
+            <span d-on-click="Focus(it{{user._Index}})">K4</span>
+            <br />
+            <br />
+        </div><div>
+            <span>Key:</span>
+            <input type="text" d-id="it5" />
+            <span d-on-click="Focus(it{{user._Index}})">K5</span>
+            <br />
+            <br />
+        </div><div>
+            <span>Key:</span>
+            <input type="text" d-id="it6" />
+            <span d-on-click="Focus(it{{user._Index}})">K6</span>
+            <br />
+            <br />
+        </div><div>
+            <span>Key:</span>
+            <input type="text" d-id="it7" />
+            <span d-on-click="Focus(it{{user._Index}})">K7</span>
+            <br />
+            <br />
+        </div></div>
+
+</body></html>

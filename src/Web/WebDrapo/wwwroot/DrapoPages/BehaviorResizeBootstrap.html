@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title>Resize - Bootstrap</title>
+    <style>
+        .columnStyle {
+            border: 1px black solid;
+            padding: 0px;
+            height: 100px
+        }
+
+        .columnResizer {
+            position: relative;
+            float: right;
+            width: 10px;
+            height: 100%;
+            border: solid 1px green;
+        }
+
+            .columnResizer:hover {
+                cursor: col-resize;
+            }
+
+        .columnSpan {
+            display: table;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <span>Resize - Bootstrap</span>
+    <br />
+    <div>
+        <div class="row">
+            <div class="col-md-1 columnStyle">
+                <div class="columnResizer" d-resize-location="bootstrap" d-resize-preview="true">
+                </div>
+                <span class="columnSpan">1</span>
+            </div>
+            <div class="col-md-1 columnStyle">
+                <div class="columnResizer" d-resize-location="bootstrap" d-resize-preview="true">
+                </div>
+                <span class="columnSpan">2</span>
+            </div>
+            <div class="col-md-1 columnStyle">
+                <div class="columnResizer" d-resize-location="bootstrap" d-resize-preview="true">
+                </div>
+                <span class="columnSpan">3</span>
+            </div>
+            <div class="col-md-1 columnStyle">
+                <div class="columnResizer" d-resize-location="bootstrap" d-resize-preview="true">
+                </div>
+                <span class="columnSpan">4</span>
+            </div>
+        </div>
+    </div>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

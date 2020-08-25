@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>IF - Greater Than/Less Than</title>
+</head>
+<body>
+    <br>
+    <span>IF - Greater Than/Less Than</span>
+    <div d-dataKey="values" d-dataType="array" d-dataValue="[-3,-2,-1,0,1,2,3]"></div>
+    <div>
+        <br />
+        <span>Positive Numbers</span>
+        <ul>            
+            <li d-for="value in values" d-if="{{value}}>0">{{value}}</li>
+        </ul>
+        <span>Negative Numbers</span>
+        <ul>
+            <li d-for="value in values" d-if="{{value}}<0">{{value}}</li>
+        </ul>
+    </div>
+</body>
+</html>

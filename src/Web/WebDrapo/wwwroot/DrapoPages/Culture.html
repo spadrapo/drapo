@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Culture</title>
+</head>
+<body>
+    <div>
+        <div d-dataKey="cultures" d-dataUrlGet="/Culture/GetCultures"></div>
+        <div d-dataKey="userConfig" d-dataUrlGet="/Culture/GetUserConfig"></div>
+        <div d-dataKey="res" d-dataDelay="true" d-dataUrlGet="/Culture/GetResources?culture={{userConfig.Culture}}"></div>
+        <span>Culture</span>
+        <br>
+        <select d-model="{{userConfig.Culture}}">
+            <option d-for="culture in cultures" value="{{culture.Key}}">{{culture.Value}}</option>
+        </select>
+        <br>
+        <br>
+        <span>Resources</span>
+        <ul>
+            <li d-model="{{res.User}}"></li>
+            <li d-model="{{res.Name}}"></li>
+            <li d-model="{{res.Date}}"></li>
+        </ul>
+    </div>
+</body>
+</html>

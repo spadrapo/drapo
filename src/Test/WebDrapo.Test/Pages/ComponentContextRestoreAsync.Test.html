@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - ContextRestore</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <span>Component - ContextRestore</span>
+    <div d-sector="@">
+        <div>
+            <div d-datakey="count" d-datatype="value" d-datavalue="1"></div>
+        </div>
+        <div d-for="item in (0..{{count}})" style="display: none;">
+            <d-autoclick dc-model="{{count}}" dc-click="UpdateDataField(count,,Cast({{count}} + 1,number));UpdateDataField(count,,Cast({{count}} + 1,number))"></d-autoclick>
+        </div><div>
+            <div d-sector="@" dc-model="{{count}}" dc-click="UpdateDataField(count,,Cast({{count}} + 1,number));UpdateDataField(count,,Cast({{count}} + 1,number))">
+    <input type="button" d-id="__drapoUnitTest" d-attr-value="{{count}}" d-on-click="UpdateDataField(count,,Cast({{count}} + 1,number));UpdateDataField(count,,Cast({{count}} + 1,number))" value="3" />
+</div>
+        </div><div>
+            <div d-sector="@" dc-model="{{count}}" dc-click="UpdateDataField(count,,Cast({{count}} + 1,number));UpdateDataField(count,,Cast({{count}} + 1,number))">
+    <input type="button" d-id="__drapoUnitTest" d-attr-value="{{count}}" d-on-click="UpdateDataField(count,,Cast({{count}} + 1,number));UpdateDataField(count,,Cast({{count}} + 1,number))" value="3" />
+</div>
+        </div><div>
+            <div d-sector="@" dc-model="{{count}}" dc-click="UpdateDataField(count,,Cast({{count}} + 1,number));UpdateDataField(count,,Cast({{count}} + 1,number))">
+    <input type="button" d-id="__drapoUnitTest" d-attr-value="{{count}}" d-on-click="UpdateDataField(count,,Cast({{count}} + 1,number));UpdateDataField(count,,Cast({{count}} + 1,number))" value="3" />
+</div>
+        </div>
+    </div>
+
+</body></html>

@@ -1,0 +1,12 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Post Get Mustache</title>
+</head>
+<body>
+    <span>Data Post Get</span>
+    <div d-datakey="item" d-datatype="object" d-dataproperty-value="dataVM"></div>
+    <div d-datakey="dataVM" d-datatype="object" d-dataproperty-name-name="Name" d-dataproperty-name-value="Hit"></div>
+    <div d-datakey="data" d-dataurlget="/Data/SetFunctionPostDataItem" d-datapostget="{{item.value}}"></div>
+    <span>Data:</span><span d-model="{{data.Name}}">Hit +1</span>
+
+</body></html>

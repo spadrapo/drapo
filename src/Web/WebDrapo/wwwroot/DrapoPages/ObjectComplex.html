@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Object Complex</title>
+    <style>
+        .cloak {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <span>Object Complex</span>
+    <div d-dataKey="object" d-dataUrlGet="/Object/GetComplex" d-dataUrlSet="/Object/SetComplex"></div>
+    <div class="cloak" d-cloak="cloak">
+        <span>Name:</span>
+        <br />
+        <input type="text" d-model="{{object.Name}}">
+        <br />
+        <span>Child:</span>
+        <br />
+        <input type="text" d-model="{{object.Child.Name}}">
+        <br />
+        <input type="button" value="Save" d-on-click="PostDataItem(object,)" />
+    </div>
+</body>
+</html>

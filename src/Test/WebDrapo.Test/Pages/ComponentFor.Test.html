@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component for</title>
+<link href="" rel="stylesheet" /><script src=""></script><link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <div>
+        <span>Component for</span>
+        <div d-datakey="internal" d-datatype="object" d-dataproperty-levels="1" d-dataproperty-children="5"></div>
+        <div d-datakey="source" d-dataurlget="/Data/GetLevels?levels={{internal.levels}}&amp;children={{internal.children}}"></div>
+        <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateDataField(internal,children,8)"></div>
+        <span>Count:</span><input type="text" d-model="{{internal.children}}" />
+        <div d-sector="@" dc-for="source" dc-property="Key">
+   <div d-for="item in source" style="display: none;">
+       <d-labelcontext dc-model="{{item.Key}}"></d-labelcontext>
+   </div>
+<div>
+       <div dc-model="{{source.[0].Key}}">
+    <span>source.[0].Key</span>
+    <span>L1K0</span>
+</div>
+   </div><div>
+       <div dc-model="{{source.[1].Key}}">
+    <span>source.[1].Key</span>
+    <span>L1K1</span>
+</div>
+   </div><div>
+       <div dc-model="{{source.[2].Key}}">
+    <span>source.[2].Key</span>
+    <span>L1K2</span>
+</div>
+   </div><div>
+       <div dc-model="{{source.[3].Key}}">
+    <span>source.[3].Key</span>
+    <span>L1K3</span>
+</div>
+   </div><div>
+       <div dc-model="{{source.[4].Key}}">
+    <span>source.[4].Key</span>
+    <span>L1K4</span>
+</div>
+   </div><div>
+       <div dc-model="{{source.[5].Key}}">
+    <span>source.[5].Key</span>
+    <span>L1K5</span>
+</div>
+   </div><div>
+       <div dc-model="{{source.[6].Key}}">
+    <span>source.[6].Key</span>
+    <span>L1K6</span>
+</div>
+   </div><div>
+       <div dc-model="{{source.[7].Key}}">
+    <span>source.[7].Key</span>
+    <span>L1K7</span>
+</div>
+   </div></div>
+    </div>
+
+</body></html>

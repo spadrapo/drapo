@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Component - ContextRestore</title>
+</head>
+<body>
+    <span>Component - ContextRestore</span>
+    <div d-sector="counter">
+        <div>
+            <div d-dataKey="count" d-dataType="value" d-dataValue="1"></div>
+        </div>
+        <div d-for="item in (0..{{count}})">
+            <d-autoclick dc-model="{{count}}" dc-click="UpdateDataField(count,,Cast({{count}} + 1,number));UpdateDataField(count,,Cast({{count}} + 1,number))"></d-autoclick>
+        </div>
+    </div>
+</body>
+</html>

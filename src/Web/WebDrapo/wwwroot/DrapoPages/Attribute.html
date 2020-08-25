@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Attribute</title>
+</head>
+<body>
+    <br>
+    <span>Attribute</span>
+    <!--There is two ways to define a property. One is like placeholder and the another is like Tooltip-->
+    <div d-dataKey="res" d-dataType="object" d-dataProperty-placeholder="Name here" d-dataProperty-tooltip-name="Tooltip" d-dataProperty-tooltip-value="I am a tip !" ></div>
+    <div>
+        <input d-attr-placeholder="{{res.placeholder}}" type="text" d-attr-title="{{res.Tooltip}}">
+    </div>
+</body>
+</html>

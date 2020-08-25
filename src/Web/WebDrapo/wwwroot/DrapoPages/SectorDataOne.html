@@ -1,0 +1,12 @@
+﻿<!DOCTYPE html>
+<script src="../drapo.js"></script>
+<div d-sector-parent-url="~/DrapoPages/SectorData.html" d-sector-parent="sector">
+    <span>1</span>
+    <div>
+        <div d-dataKey="users" d-dataUrlGet="~/Data/GetModelSample"></div>
+        <div d-for="user in users">
+            <input type="checkbox" d-model="{{user.Visible}}">
+            <span>{{user.Visible}}</span>
+        </div>
+    </div>
+</div>

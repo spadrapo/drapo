@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - UpdateDataFieldLookup</title>
+</head>
+<body>
+    <span>Function - UpdateDataFieldLookup</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data"></div>
+    <div d-dataKey="dataCopy" d-dataType="object"></div>
+    <div>
+        <ul>
+            <li d-for="item in data">{{item.Key}} - {{item.Value}}</li>
+        </ul>
+    </div>
+    <div>
+        <ul>
+            <li d-for="item in dataCopy">{{item.Key}} - {{item.Value}}</li>
+        </ul>
+    </div>
+    <br />
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateData(dataCopy,{{data}})"></div>
+</body>
+</html>

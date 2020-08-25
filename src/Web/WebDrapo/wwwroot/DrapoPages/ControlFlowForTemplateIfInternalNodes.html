@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Template - If - Internal Complex</title>
+</head>
+<body>
+    <span>Control Flow - For - Template - If - Internal Complex</span>
+    <div d-dataKey="children" d-dataType="value" d-dataValue="50"></div>
+    <div d-dataKey="prefix" d-dataType="value" d-dataValue="PRE"></div>
+    <div d-dataKey="columns" d-dataUrlGet="/Data/GetColumns"></div>
+    <div d-dataKey="items" d-dataUrlGet="/Data/GetLevels?levels=1&children={{children}}&prefix={{prefix}}"></div>
+    <input type="text" d-model="{{children}}" />
+    <input type="button" value="200" d-on-click="UpdateDataField(prefix,,PREFIX,false);UpdateDataField(children,,200)" />
+    <div>
+        <div d-for="item in items">
+            <div d-for="column in columns">
+                <span d-if="{{item.Visible}}" d-model="{{item.{{column}}}}"></span>
+                <input type="text" d-attr-placeholder="{{column}}" />
+                <br />
+                <div d-if="{{column}}=Key">
+                    <span>Column : {{column}}</span>
+                    <br />
+                </div>
+                <div d-if="{{column}}=Value">
+                    <span>Key : {{item.Key}}</span>
+                    <br />
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

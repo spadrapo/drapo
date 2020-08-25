@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Validation Event Context Group</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="@" d-on-body-keyup-escape="CloseWindow()"></div>
+    <br />
+    <span>Validation Event Context Group</span>
+    <div class="" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-datakey="items" d-dataurlget="/Data/GetIFSample"></div>
+            <div d-datakey="click" d-datatype="value" d-dataloadtype="startup" d-datavalue="ShowWindow(~/DrapoPages/WindowLoading.html,Windows,false)"></div>
+        </div>
+        <div>
+            <div d-for="item in items" style="display: none;">
+                <div d-validation-id="item_{{item.Key}}" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{item.Visible}}"></div>
+                <input type="checkbox" d-model="{{item.Visible}}" /><span d-model="{{item.Key}}"></span>
+                <br />
+                <div d-validation="item_{{item.Key}}">
+                    <span>You must check checkbox</span>
+                </div>
+                <br />
+            </div>
+        <div>
+                <div d-validation-id="item_{{item.Key}}" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{item.Visible}}"></div>
+                <input type="checkbox" /><span>K0</span>
+                <br />
+                <div d-validation="item_{{item.Key}}" class="validatorValid">
+                    <span>You must check checkbox</span>
+                </div>
+                <br />
+            </div><div>
+                <div d-validation-id="item_{{item.Key}}" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{item.Visible}}"></div>
+                <input type="checkbox" /><span>K1</span>
+                <br />
+                <div d-validation="item_{{item.Key}}" class="validatorInvalid">
+                    <span>You must check checkbox</span>
+                </div>
+                <br />
+            </div><div>
+                <div d-validation-id="item_{{item.Key}}" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{item.Visible}}"></div>
+                <input type="checkbox" /><span>K2</span>
+                <br />
+                <div d-validation="item_{{item.Key}}" class="validatorValid">
+                    <span>You must check checkbox</span>
+                </div>
+                <br />
+            </div><div>
+                <div d-validation-id="item_{{item.Key}}" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{item.Visible}}"></div>
+                <input type="checkbox" /><span>K3</span>
+                <br />
+                <div d-validation="item_{{item.Key}}" class="validatorInvalid">
+                    <span>You must check checkbox</span>
+                </div>
+                <br />
+            </div><div>
+                <div d-validation-id="item_{{item.Key}}" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{item.Visible}}"></div>
+                <input type="checkbox" /><span>K4</span>
+                <br />
+                <div d-validation="item_{{item.Key}}" class="validatorValid">
+                    <span>You must check checkbox</span>
+                </div>
+                <br />
+            </div><div>
+                <div d-validation-id="item_{{item.Key}}" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{item.Visible}}"></div>
+                <input type="checkbox" /><span>K5</span>
+                <br />
+                <div d-validation="item_{{item.Key}}" class="validatorInvalid">
+                    <span>You must check checkbox</span>
+                </div>
+                <br />
+            </div><div>
+                <div d-validation-id="item_{{item.Key}}" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{item.Visible}}"></div>
+                <input type="checkbox" /><span>K6</span>
+                <br />
+                <div d-validation="item_{{item.Key}}" class="validatorValid">
+                    <span>You must check checkbox</span>
+                </div>
+                <br />
+            </div><div>
+                <div d-validation-id="item_{{item.Key}}" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{item.Visible}}"></div>
+                <input type="checkbox" /><span>K7</span>
+                <br />
+                <div d-validation="item_{{item.Key}}" class="validatorInvalid">
+                    <span>You must check checkbox</span>
+                </div>
+                <br />
+            </div><div>
+                <div d-validation-id="item_{{item.Key}}" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{item.Visible}}"></div>
+                <input type="checkbox" /><span>K8</span>
+                <br />
+                <div d-validation="item_{{item.Key}}" class="validatorValid">
+                    <span>You must check checkbox</span>
+                </div>
+                <br />
+            </div><div>
+                <div d-validation-id="item_{{item.Key}}" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{item.Visible}}"></div>
+                <input type="checkbox" /><span>K9</span>
+                <br />
+                <div d-validation="item_{{item.Key}}" class="validatorInvalid">
+                    <span>You must check checkbox</span>
+                </div>
+                <br />
+            </div></div>
+        <input type="button" value="Validate" d-on-click="{{click}}" d-validation-on-click="agreeGroup" d-id="__drapoUnitTest" />
+    </div>
+
+</body></html>

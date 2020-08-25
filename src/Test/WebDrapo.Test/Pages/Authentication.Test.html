@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Auhentication</title>
+</head>
+<body>
+    <div>
+        <div>
+            <div d-datakey="keyValue" d-datatype="object" d-dataproperty-key-name="Key" d-dataproperty-key-value="admin" d-dataproperty-value-name="Value" d-dataproperty-value-value="password" d-dataurlset="/Authentication/Login"></div>
+            <div d-datakey="response" d-datatype="value"></div>
+            <div d-datakey="userName" d-dataurlget="/Authorization/GetUserName"></div>
+            <div d-datakey="list" d-datatype="array"></div>
+        </div>
+        <div>
+            <br />
+            <label>User:</label>
+            <input type="text" d-model="{{keyValue.Key}}" />
+            <br />
+            <label>Password:</label>
+            <input type="password" d-model="{{keyValue.Value}}" />
+            <br />
+            <input type="button" value="Login" d-on-click="PostDataItem(keyValue,response);UpdateToken({{response}})" />
+            <br />
+            <span d-model="{{response}}"></span>
+            <span d-model="{{userName.userLogin}}"></span>
+            <br />
+            <ul>
+                <li d-for="item in list" style="display: none;">{{item.Key}}</li><li>admin</li>
+            </ul>
+        </div>
+    </div>
+
+</body></html>

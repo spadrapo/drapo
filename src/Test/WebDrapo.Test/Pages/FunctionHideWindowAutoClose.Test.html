@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="../drapo.js"></script>
+    <title>Function Close Window - Context Hidden</title>
+</head>
+<body>
+    <div d-datakey="result" d-datatype="object"></div>
+    <div d-datakey="functionLoader" d-datatype="value" d-dataloadtype="startup" d-datavalue="ShowWindow(/DrapoPages/WindowsTemplateWindow.html,Windows);ShowWindow(~/DrapoPages/FunctionCloseWindowContextHiddenWindow.html,Windows);HideWindow();PostData(create);UpdateDataField(result,,{{create}})"></div>
+    <div d-id="Windows" d-sector="@"><div>
+    <div style="background-color:lightgray;position:fixed;width:100%;height:100%;opacity:0.5;"></div>
+    <div style="position:absolute;left:40vw;top:10vh;height:40vh;width:20vw;border:2px solid black">
+        <div style="position:absolute;left:10%;top:10%" d-template="template"><div d-templateurl="/DrapoPages/WindowsTemplateBase.html">
+    <span>Window State</span>
+    <br />
+    <div>
+        <div d-datakey="items" d-dataurlget="/Data/GetModelSample"></div>
+        <div d-for="item in items" style="display: none;">
+            <input type="checkbox" d-model="{{item.Visible}}" />
+            <span>{{item.Visible}}</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div>
+    </div>
+    <br />
+    <input type="button" d-on-click="ShowWindow(/DrapoPages/WindowsTemplateWindow.html,Windows)" value="Open" />
+    <input type="button" d-on-click="CloseWindow()" value="Close" />
+</div></div>
+    </div>
+</div></div>
+    <br />
+    <span>Function Close Window - Context Hidden</span>
+    <br />
+    <span d-model="{{result}}">T1T2</span>
+    <br />
+    <input type="button" value="Open" d-on-click="{{functionLoader}}" />
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="{{functionLoader}}"></div>
+
+</body></html>

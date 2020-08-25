@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Drag and Drop Custom</title>
+</head>
+<body>
+    <span>Drag and Drop Custom</span>
+    <br />
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div d-dataKey="usersNew" d-dataType="array"></div>
+    <div d-dataKey="start" d-dataType="object"></div>
+    <div d-dataKey="end" d-dataType="object"></div>
+    <div>
+        <div d-for="user in users" d-dragStart="true" d-dragEnd="true" d-dragStartDataKey="start" d-dragEndDataKey="end" d-dragAction="custom" d-dragActionCustom="AddDataItem(usersNew,start);AddDataItem(usersNew,end)" style="width:300px">
+            <span>Key:</span>
+            <input type="text" d-model="{{user.Key}}">
+            <span>{{user.Key}}</span>
+            <br />
+        </div>
+    </div>
+    <br />
+    <div>
+        <div d-for="userNew in usersNew" style="width:300px">
+            <span>Key:</span>
+            <input type="text" d-model="{{userNew.Key}}">
+            <span>{{userNew.Key}}</span>
+            <br />
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow Model Mustache Nested Delay</title>
+</head>
+<body>
+    <span>Control Flow Model Mustache Nested Delay</span>
+    <div d-datakey="culture" d-datadelay="true" d-dataurlget="/Data/GetCulture"></div>
+    <div d-datakey="nesteds" d-datatype="array" d-datavalue="[{&quot;key&quot;:&quot;User&quot;,&quot;value&quot;:&quot;v1&quot;},{&quot;key&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;v2&quot;}]"></div>
+    <div d-for="nested in nesteds" style="display: none;">
+        <span d-model="{{culture.{{nested.key}}}}"></span>
+    </div><div>
+        <span d-model="{{culture.User}}">Usuário</span>
+    </div><div>
+        <span d-model="{{culture.Name}}">Nome</span>
+    </div>
+
+</body></html>

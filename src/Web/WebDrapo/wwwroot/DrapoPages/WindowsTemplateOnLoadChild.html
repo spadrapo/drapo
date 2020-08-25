@@ -1,0 +1,10 @@
+﻿<!DOCTYPE html>
+<div d-templateUrl="/DrapoPages/WindowsTemplateOnLoadTemplate.html">
+    <div>
+        <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSample"></div>
+        <div d-for="user in users">
+            <input type="checkbox" d-model="{{user.Visible}}">
+            <span>{{user.Visible}}</span>
+        </div>
+    </div>
+</div>

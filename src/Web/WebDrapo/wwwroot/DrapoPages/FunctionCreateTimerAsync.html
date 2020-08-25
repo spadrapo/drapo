@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Function CreateTimer</title>
+</head>
+<body>
+    <span>Function CreateTimer</span>
+    <div class="cloak" d-cloak="cloak">
+        <!--Data-->
+        <div d-dataKey="object" d-dataType="object" d-dataProperty-title-name="Title" d-dataProperty-title-value="Drapo" d-dataProperty-subtitle-name="Subtitle" d-dataProperty-subtitle-value="spa drapo"></div>
+        <div d-dataKey="timer" d-datatype="value" d-dataloadtype="startup" d-dataValue="UpdateDataField(object,Title,DrapoTimer)"></div>
+        <ul>
+            <li d-for="property in object">{{property.Key}} - {{property.Value}}</li>
+        </ul>
+       </div>
+    <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="CreateTimer({{timer}},100)"></div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - If</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow - If</span>
+        <div d-dataKey="options" d-dataUrlGet="/Data/GetModelSelectOptions"></div>
+        <div d-dataKey="selected" d-dataUrlGet="/Data/GetModelSelectSelected"></div>
+        <div>
+            <select d-model="{{selected.Selection}}">
+                <option d-for="option in options" value="{{option.Key}}">{{option.Value}}</option>
+            </select>
+        </div>
+        <div>
+            <span d-model="{{selected.Selection}}"></span>
+        </div>
+    </div>
+</body>
+</html>

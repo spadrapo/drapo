@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Sector Unique Loading</title>
+</head>
+<body>
+    <span>Sector Unique Loading</span>
+    <div d-datakey="items" d-datatype="array"></div>
+    <div d-datakey="itemNew" d-datatype="object" d-dataproperty-value="+1"></div>
+    <span>Items: </span>
+    <br />
+    <ul>
+        <li d-for="item in items" style="display: none;">{{item.value}}</li>
+    <li>+1</li></ul>
+    <div d-sector="@"><div>
+    <span>Sector Unique Loaded</span>
+    <div d-sector="@">
+        <div d-datakey="loaderChild" d-datatype="function" d-dataloadtype="startup" d-datavalue="AddDataItem(items,itemNew)"></div>
+    </div>
+</div></div>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateSector(sector,/DrapoPages/SectorUniqueLoadingChild.html)"></div>
+
+</body></html>

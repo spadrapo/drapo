@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Windows Template On Load</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="sector"></div>
+    <br>
+    <span>Windows Template</span>
+    <br>
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="ShowWindow(/DrapoPages/WindowsTemplateOnLoadChild.html,Windows)"></div>
+    <input type="button" value="Open" d-on-click="ShowWindow(/DrapoPages/WindowsTemplateOnLoadChild.html,Windows)" />
+</body>
+</html>

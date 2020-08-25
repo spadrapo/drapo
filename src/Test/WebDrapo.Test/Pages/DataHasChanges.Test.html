@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data HasChanges</title>
+    <style>
+        .notChanged {
+            background-color: green;
+        }
+        .changed {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <span>Data HasChanges</span>
+    <div d-datakey="data" d-dataurlget="/Data"></div>
+    <div d-datakey="search" d-datatype="object" d-dataproperty-key="K2" d-dataproperty-value="New Value"></div>
+    <div d-datakey="functionUpdate" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataFieldLookup(data,Key,{{search.key}},Value,{{search.value}})"></div>
+    <div d-datakey="functionReset" d-datatype="value" d-dataloadtype="startup" d-datavalue="ReloadData(data)"></div>
+    <div>
+        <ul>
+            <li d-for="item in data" style="display: none;">{{item.Key}} - {{item.Value}}</li>
+        <li>K0 - V0</li><li>K1 - V1</li><li>K2 - V2</li><li>K3 - V3</li><li>K4 - V4</li></ul>
+    </div>
+    <br />
+    <span>Key:</span>
+    <input type="text" d-model="{{search.key}}" />
+    <span>Value:</span>
+    <input type="text" d-model="{{search.value}}" />
+    <br />
+    <input type="button" value="Update" d-class="{notChanged:!{{data._HasChanges}}}" d-on-click="{{functionUpdate}}" class="notChanged" />
+    <input type="button" value="Reset" d-class="{changed:{{data._HasChanges}}}" d-on-click="{{functionReset}}" />
+
+</body></html>

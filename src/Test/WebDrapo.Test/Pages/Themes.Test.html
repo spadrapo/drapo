@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <meta charset="utf-8" />
+    <link href="/css/themes.css" rel="stylesheet" />
+    <title>Themes</title>
+</head>
+<body>
+    <div>
+        <div d-datakey="themes" d-dataconfigget="Themes"></div>
+        <div d-datakey="drapo" d-datacookieget="drapo"></div>
+        <br />
+        <label>Choose Theme:</label>
+        <br />
+        <select d-model="{{drapo.theme}}" d-on-change="PostData(drapo);ReloadPage()">
+            <span style="display: none;"><option d-for="theme in themes" value="{{theme.Tag}}">{{theme.Name}}</option></span><option value="">Default</option><option value="dark">Dark</option><option value="light">Light</option>
+        </select>
+        <br />
+        <br />
+        <span>Selected:</span>
+        <span d-model="{{drapo.theme}}"></span>
+    </div>
+
+</body></html>

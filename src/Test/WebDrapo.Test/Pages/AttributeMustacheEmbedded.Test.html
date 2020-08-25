@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Attribute Mustache Embedded</title>
+</head>
+<body>
+    <span>Attribute Mustache Embedded</span>
+    <div>
+        <div d-datakey="ext" d-datatype="value" d-datavalue=".html"></div>
+        <div d-datakey="template" d-datatype="value" d-datavalue="Attribute{{ext}}"></div>
+        <div d-datakey="url" d-datatype="value" d-datavalue=""></div>
+        <iframe id="frameID" d-attr-src="{{url}}" src="Attribute.html"></iframe>
+        <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateDataField(url,,{{template}})"></div>
+    </div>
+
+
+</body></html>

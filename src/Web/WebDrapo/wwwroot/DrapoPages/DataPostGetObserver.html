@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Post Get</title>
+</head>
+<body>
+    <span>Data Post Get</span>
+    <div d-dataKey="datas" d-dataUrlGet="/Data/GetFunctionPostDataItems"> </div>
+    <div d-dataKey="dataSelected" d-dataType="object" d-dataProperty-name-name="Name" d-dataProperty-name-value="Empty"></div>
+    <div d-dataKey="dataAnswer" d-dataUrlGet="/Data/SetFunctionPostDataItem" d-dataPostGet="dataSelected"></div>
+    <div>
+        <span>Choose One:</span>
+        <ul>
+            <li d-for="data in datas" d-on-click="UpdateDataField(dataSelected,,{{data}});">{{data.Name}}</li>
+        </ul>
+    </div>
+    <span>Data:</span><span d-model="{{dataAnswer.Name}}"></span>
+</body>
+</html>

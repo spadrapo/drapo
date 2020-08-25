@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Model Button</title>
+</head>
+<body>
+    <span>Model Button</span>
+    <div d-dataKey="object" d-dataType="object" d-dataProperty-name="Name"></div>
+    <label>Text:</label>
+    <input type="text" d-model="{{object.name}}" />
+    <br />
+    <label>Reply:</label>
+    <button d-model="{{object.name}}"></button>
+</body>
+</html>

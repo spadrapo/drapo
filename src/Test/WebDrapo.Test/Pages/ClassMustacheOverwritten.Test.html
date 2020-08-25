@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Class Mustache Overwritten</title>
+    <style>
+        .selected {
+            background-color: yellow;
+        }
+        .fontLarger {
+            font-size: 50px;
+        }
+        .fontBold {
+            font-weight: bold;
+            font-style:italic;
+            font-size: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <span>Class Mustache Overwritten</span>
+        <div d-datakey="selection" d-datatype="object" d-dataproperty-class=""></div>
+        <div d-datakey="setFontSize" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(selection,class,fontLarger,true);UpdateData(count,2,false)"></div>
+        <div d-datakey="setFontWeight" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(selection,class,fontBold,true);UpdateData(count,0,false)"></div>
+        <div d-datakey="functionClick" d-datatype="value" d-datavalue="IF({{count}}=1,{{setFontSize}},IF({{count}}=2,{{setFontWeight}},UpdateDataField(selection,class,selected,true);UpdateData(count,1,false)))"></div>
+        <div d-datakey="count" d-datatype="value" d-dataloadtype="startup" d-value="0"></div>
+        <ul>
+            <li d-attr-class="{{selection.class}}" d-on-click="{{functionClick}}" class="fontBold">
+                Click Me!
+            </li>
+        </ul>
+        <div d-datakey="startup" d-datatype="function" d-dataloadtype="startup" d-datavalue="Execute({{functionClick}});Execute({{functionClick}});Execute({{functionClick}})"></div>
+    </div>
+
+</body></html>

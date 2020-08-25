@@ -1,0 +1,12 @@
+﻿<!DOCTYPE html>
+<script src="/drapo.js"></script>
+<div d-sector-parent-url="/DrapoPages/ContainerClean.html" d-sector-parent="1">
+    <span>Replaced</span>
+    <br />
+    <div d-dataKey="items1" d-dataUrlGet="/Data/GetLevels?levels=1&children=4"></div>
+    <div>
+        <div d-for="item in items1">
+            <span>{{item.Key}}</span>
+        </div>
+    </div>
+</div>

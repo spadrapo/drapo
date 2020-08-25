@@ -1,0 +1,12 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Drapo For</title>
+</head>
+<body>
+    <h1><span>For Object</span></h1>
+    <div d-datakey="objects" d-dataurlget="/Culture/GetResourcesPT"></div>
+    <ul>
+        <li d-for="object in objects" style="display: none;">{{object.Key}} - {{object.Value}}</li><li>0 - 0</li><li>1 - 1</li><li>2 - 2</li><li>3 - 3</li><li>4 - 4</li><li>5 - 5</li><li>6 - 6</li><li>7 - 7</li><li>8 - 8</li><li>9 - 9</li><li>User - Usuário</li><li>Name - Nome</li><li>Date - Data</li>
+    </ul>
+
+</body></html>

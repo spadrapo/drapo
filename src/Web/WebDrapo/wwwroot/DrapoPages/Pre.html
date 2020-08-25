@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Pre</title>
+</head>
+<body>
+    <div>
+        <span>Pre</span>
+        <div d-dataKey="object" d-dataType="object" d-dataProperty-value="true"></div>
+        <div d-pre="true">
+            <span d-model="{{object.value}}"></span>
+            <div d-for="property in object">
+                <span d-model="{{property.Key}} {{property.Value}}"></span>
+            </div>
+        </div>
+        <div>
+            <span d-model="{{object.value}}"></span>
+            <div d-for="property in object">
+                <span d-model="{{property.Key}} {{property.Value}}"></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

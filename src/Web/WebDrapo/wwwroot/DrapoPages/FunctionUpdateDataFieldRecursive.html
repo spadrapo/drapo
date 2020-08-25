@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Field Update Recursive</title>
+</head>
+<body>
+    <span>Data Field Update Recursive</span>
+    <div d-dataKey="data" d-dataType="object" d-dataProperty-value="Start" d-dataProperty-i1="{{data.i2}}" d-dataProperty-i2="End"></div>
+    <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateDataField(data,value,{{data.i1}},true,true)"></div>
+    <br /><span>i1:</span><span d-model="{{data.i1}}"></span>
+    <br /><span>i2:</span><span d-model="{{data.i2}}"></span>
+    <br /><span>value:</span><span d-model="{{data.value}}"></span>
+</body>
+</html>

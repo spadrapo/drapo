@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For Embedded Conditional</title>
+</head>
+<body>
+    <span>Control Flow - For Embedded Conditional</span>
+    <div d-dataKey="items1" d-dataUrlGet="/Data/GetLevels?Levels=1&children=3&prefix=I1"></div>
+    <div d-dataKey="items2" d-dataUrlGet="/Data/GetLevels?Levels=1&children=3&prefix=I2"></div>
+    <div>
+        <div d-for="item1 in items1">
+            <div d-for="item2 in items2" d-if="{{item1._IndexRelative}}={{item2._IndexRelative}}">
+                <span d-model="{{item1.Key}}"></span><span> = </span><span d-model="{{item2.Key}}"></span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - ToggleItemField - Data</title>
+</head>
+<body>
+    <span>Function - ToggleItemField - Data</span>
+    <div d-dataKey="dataValue" d-datatype="value" d-datavalue="false"></div>
+    <div d-dataKey="dataObject" d-datatype="object" d-dataProperty-value="false"></div>
+    <div d-dataKey="functionToggleValue" d-dataType="value" d-dataLoadType="startup" d-dataValue="ToggleItemField({{dataValue}})"></div>
+    <div d-dataKey="functionToggleObject" d-dataType="value" d-dataLoadType="startup" d-dataValue="ToggleItemField({{dataObject.value}})"></div>
+    <div>
+        <span>Value: </span><span d-model="{{dataValue}}" d-on-click="{{functionToggleValue}}"></span><br />
+        <span>Object: </span><span d-model="{{dataObject.value}}" d-on-click="{{functionToggleObject}}"></span><br />
+    </div>
+    <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="Execute({{functionToggleValue}});Execute({{functionToggleObject}})"></div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Function GetWindow</title>
+</head>
+<body>
+    <span>Function GetWindow</span>
+    <div class="" d-cloak="cloak">
+        <!--Data-->
+        <div d-datakey="openClose" d-datatype="value" d-dataloadtype="startup" d-datavalue="ShowWindow(~/DrapoPages/WindowsClose.html,Windows)"></div>
+        <div d-datakey="openAutoClose" d-datatype="value" d-dataloadtype="startup" d-datavalue="ShowWindow(~/DrapoPages/WindowsAutoClose.html,Windows)"></div>
+        <div>
+            <input type="button" value="OpenClose" d-on-click="{{openClose}}" />
+            <input type="button" value="OpenAutoClose" d-on-click="{{openAutoClose}}" />
+        </div>
+        <div d-id="Windows" d-sector="@">
+        <div>
+    <div style="position:relative;left:10px;top:10px;height:100px;width:100px;border:2px solid black">
+        <div style="position:absolute;left:10%;top:10%">
+            <span>Window Close</span>
+            <br />
+            <input type="button" d-on-click="CloseWindow(GetWindow())" value="Close" />
+        </div>
+    </div>
+</div><div>
+    <div style="position:relative;left:10px;top:10px;height:100px;width:100px;border:2px solid black">
+        <div style="position:absolute;left:10%;top:10%">
+            <span>Window Close</span>
+            <br />
+            <input type="button" d-on-click="CloseWindow(GetWindow())" value="Close" />
+        </div>
+    </div>
+</div></div>
+    </div>
+    <div d-datakey="functionStartup" d-datatype="function" d-dataloadtype="startup" d-datavalue="Execute({{openClose}});Execute({{openAutoClose}});Execute({{openClose}})"></div>
+
+</body></html>

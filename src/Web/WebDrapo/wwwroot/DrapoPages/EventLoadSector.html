@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Event Load Sector</title>
+</head>
+<body>
+    <span>Event Load Sector</span>
+    <div>
+        <div d-dataKey="data" d-dataType="value" d-dataValue="Loading"></div>
+        <span d-model="{{data}}"></span>
+        <br />
+        <div d-sector="sector" d-on-load="UpdateDataField(data,,Loaded)"></div>
+        <div d-dataKey="dkStartupAction" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateSector(sector,~/DrapoPages/SectorDataOne.html)"></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For</title>
+</head>
+<body>
+    <span>Control Flow - For</span>
+    <div d-datakey="users" d-dataurlget="/Data/GetLevels?Levels=1"></div>
+    <div d-for="user in users" style="display: none;">
+        <br />
+        <span>Key: {{user.Key}}</span><br />
+        <span>Value: {{user.Value}}</span><br />
+        <span>Children</span>
+        <br />
+        <div d-for="child in user.Children">
+            <span>Child Key: {{child.Key}}</span><br />
+            <span>Child Value: {{child.Value}}</span><br />
+        </div>
+    </div><div>
+        <br />
+        <span>Key: L1K0</span><br />
+        <span>Value: L1V0</span><br />
+        <span>Children</span>
+        <br />
+        <div>
+            <span>Child Key: L0K0</span><br />
+            <span>Child Value: L0V0</span><br />
+        </div><div>
+            <span>Child Key: L0K1</span><br />
+            <span>Child Value: L0V1</span><br />
+        </div><div>
+            <span>Child Key: L0K2</span><br />
+            <span>Child Value: L0V2</span><br />
+        </div><div>
+            <span>Child Key: L0K3</span><br />
+            <span>Child Value: L0V3</span><br />
+        </div><div>
+            <span>Child Key: L0K4</span><br />
+            <span>Child Value: L0V4</span><br />
+        </div>
+    </div><div>
+        <br />
+        <span>Key: L1K1</span><br />
+        <span>Value: L1V1</span><br />
+        <span>Children</span>
+        <br />
+        <div>
+            <span>Child Key: L0K0</span><br />
+            <span>Child Value: L0V0</span><br />
+        </div><div>
+            <span>Child Key: L0K1</span><br />
+            <span>Child Value: L0V1</span><br />
+        </div><div>
+            <span>Child Key: L0K2</span><br />
+            <span>Child Value: L0V2</span><br />
+        </div><div>
+            <span>Child Key: L0K3</span><br />
+            <span>Child Value: L0V3</span><br />
+        </div><div>
+            <span>Child Key: L0K4</span><br />
+            <span>Child Value: L0V4</span><br />
+        </div>
+    </div><div>
+        <br />
+        <span>Key: L1K2</span><br />
+        <span>Value: L1V2</span><br />
+        <span>Children</span>
+        <br />
+        <div>
+            <span>Child Key: L0K0</span><br />
+            <span>Child Value: L0V0</span><br />
+        </div><div>
+            <span>Child Key: L0K1</span><br />
+            <span>Child Value: L0V1</span><br />
+        </div><div>
+            <span>Child Key: L0K2</span><br />
+            <span>Child Value: L0V2</span><br />
+        </div><div>
+            <span>Child Key: L0K3</span><br />
+            <span>Child Value: L0V3</span><br />
+        </div><div>
+            <span>Child Key: L0K4</span><br />
+            <span>Child Value: L0V4</span><br />
+        </div>
+    </div><div>
+        <br />
+        <span>Key: L1K3</span><br />
+        <span>Value: L1V3</span><br />
+        <span>Children</span>
+        <br />
+        <div>
+            <span>Child Key: L0K0</span><br />
+            <span>Child Value: L0V0</span><br />
+        </div><div>
+            <span>Child Key: L0K1</span><br />
+            <span>Child Value: L0V1</span><br />
+        </div><div>
+            <span>Child Key: L0K2</span><br />
+            <span>Child Value: L0V2</span><br />
+        </div><div>
+            <span>Child Key: L0K3</span><br />
+            <span>Child Value: L0V3</span><br />
+        </div><div>
+            <span>Child Key: L0K4</span><br />
+            <span>Child Value: L0V4</span><br />
+        </div>
+    </div><div>
+        <br />
+        <span>Key: L1K4</span><br />
+        <span>Value: L1V4</span><br />
+        <span>Children</span>
+        <br />
+        <div>
+            <span>Child Key: L0K0</span><br />
+            <span>Child Value: L0V0</span><br />
+        </div><div>
+            <span>Child Key: L0K1</span><br />
+            <span>Child Value: L0V1</span><br />
+        </div><div>
+            <span>Child Key: L0K2</span><br />
+            <span>Child Value: L0V2</span><br />
+        </div><div>
+            <span>Child Key: L0K3</span><br />
+            <span>Child Value: L0V3</span><br />
+        </div><div>
+            <span>Child Key: L0K4</span><br />
+            <span>Child Value: L0V4</span><br />
+        </div>
+    </div>
+
+</body></html>

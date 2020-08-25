@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - LabelContextSector</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <span>Component - LabelContextSector</span>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="ShowWindow(~/DrapoPages/ComponentLabelContextSectorWindow.html,windows)"></div>
+    <div d-sector="@" d-id="windows"><div d-sector="@">
+    <div d-datakey="count" d-datatype="value" d-datavalue="2"></div>
+    <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children={{count}}"></div>
+    <div d-datakey="loaderInternal" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateDataField(count,,3)"></div>
+    <span>Count: </span><input type="text" d-model="{{count}}" /><br /><br />
+    <div>
+        <div d-for="object in objects" style="display: none;">
+            <span>Name: </span><input type="text" d-model="{{object.Key}}" />
+            <br />
+            <d-labelcontextsector dc-model="{{object.Key}}"></d-labelcontextsector>
+            <br />
+        </div>
+    <div>
+            <span>Name: </span><input type="text" />
+            <br />
+            <div d-sector="@" dc-model="{{objects.[0].Key}}">
+    <span>objects.[0].Key</span>
+    <span>L0K0</span>
+</div>
+            <br />
+        </div><div>
+            <span>Name: </span><input type="text" />
+            <br />
+            <div d-sector="@" dc-model="{{objects.[1].Key}}">
+    <span>objects.[1].Key</span>
+    <span>L0K1</span>
+</div>
+            <br />
+        </div><div>
+            <span>Name: </span><input type="text" />
+            <br />
+            <div d-sector="@" dc-model="{{objects.[2].Key}}">
+    <span>objects.[2].Key</span>
+    <span>L0K2</span>
+</div>
+            <br />
+        </div></div>
+</div></div>
+
+</body></html>

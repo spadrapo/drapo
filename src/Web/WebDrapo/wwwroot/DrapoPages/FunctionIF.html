@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - IF</title>
+</head>
+<body>
+    <br>
+    <span>IF</span>
+    <div d-dataKey="datas" d-dataType="array"></div>
+    <div d-dataKey="data" d-dataType="object" d-dataProperty-value=""></div>
+    <div>
+        <input type="text" d-model="{{data.value}}">
+        <input type="button" value="Add Non Empty" d-on-click="IF({{data.value}},AddDataItem(datas,{{data}});ClearDataField(data,value))">
+        <ul>
+            <li d-for="inserted in datas">{{inserted.value}}</li>
+        </ul>
+    </div>
+</body>
+</html>

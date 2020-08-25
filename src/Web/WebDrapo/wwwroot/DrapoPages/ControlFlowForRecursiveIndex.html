@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Index</title>
+</head>
+<body>
+    <span>Control Flow - For - Index</span>
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetLevels?Levels=3&Children=2"></div>
+    <div d-for="user in users">
+        <br>
+        <span>Key: {{user.Key}}</span><br>
+        <span>Value: {{user.Value}}</span><br>
+        <span>Index: {{user._Index}}</span><br>
+        <span>Children</span>
+        <br>
+        <div d-for="user in user.Children"></div>
+    </div>
+</body>
+</html>

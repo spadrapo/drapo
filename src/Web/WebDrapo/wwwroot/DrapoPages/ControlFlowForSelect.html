@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow - For</span>
+        <div d-dataKey="users" d-dataUrlGet="/Data"></div>
+        <select>
+            <option d-for="user in users" value="{{user.Key}}">{{user.Value}}</option>
+        </select>
+    </div>
+</body>
+</html>

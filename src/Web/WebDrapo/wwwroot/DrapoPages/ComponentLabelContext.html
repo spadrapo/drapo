@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Component - LabelContext</title>
+</head>
+<body>
+    <span>Component - LabelContext</span>
+    <div d-dataKey="count" d-dataType="value" d-dataValue="5"></div>
+    <div d-dataKey="objects" d-dataUrlGet="~/Data/GetLevels?children={{count}}"></div>
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateDataField(count,,8)"></div>
+    <span>Count: </span><input type="text" d-model="{{count}}" /><br /><br />
+    <div>
+        <div d-for="object in objects">
+            <span>Name: </span><input type="text" d-model="{{object.Key}}" />
+            <br />
+            <d-labelcontext dc-model="{{object.Key}}"></d-labelcontext>
+            <br />
+        </div>
+    </div>
+</body>
+</html>

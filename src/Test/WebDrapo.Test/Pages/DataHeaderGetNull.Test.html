@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Header Get Null</title>
+</head>
+<body>
+    <span>Data Header Get Null</span>
+    <div d-datakey="itemObject" d-datatype="object" d-dataproperty-key-name="Key" d-dataproperty-key-value="OneKey" d-dataproperty-value-name="Value" d-dataproperty-value-value="OneValue"></div>
+    <div d-datakey="items1" d-dataurlget="/Data/GetLevels?levels=1&amp;children=5&amp;prefix=PRE1"></div>
+    <div d-datakey="items2" d-dataurlget="/Data/GetNull"></div>
+    <div d-datakey="items" d-dataurlget="/Data/GetHeadersJoin" d-dataheaderget-item="itemObject" d-dataheaderget-list1="items1" d-dataheaderget-list2="items2"></div>
+    <ul>
+        <li d-for="item in items" d-model="{{item.Key}}" style="display: none;"></li>
+    <li>OneKey</li><li>PRE1L1K0</li><li>PRE1L1K1</li><li>PRE1L1K2</li><li>PRE1L1K3</li><li>PRE1L1K4</li></ul>
+
+</body></html>

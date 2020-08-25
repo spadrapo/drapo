@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Drapo For</title>
+</head>
+<body>
+    <h1><span>For Object</span></h1>
+    <div d-dataKey="objects" d-dataUrlGet="/Culture/GetResourcesPT"></div>
+    <ul>
+        <li d-for="object in objects">{{object.Key}} - {{object.Value}}</li>
+    </ul>
+</body>
+</html>

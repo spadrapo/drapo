@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For Nested Conditional</title>
+</head>
+<body>
+    <span>Control Flow - For Nested Conditional</span>
+    <div d-datakey="items" d-dataurlget="/Data/GetLevels?Levels=1"></div>
+    <ul>
+        <li d-for="item in items" style="display: none;">
+            <span d-on-click="ToggleItemField({{item.Selected}})">Key: {{item.Key}}</span><br />
+            <br />
+            <ul>
+                <li d-for="child in item.Children" d-if="{{item.Selected}}">
+                    <span>Child Key: {{child.Key}}</span><br />
+                </li>
+            </ul>
+        </li><li>
+            <span d-on-click="ToggleItemField({{item.Selected}})">Key: L1K0</span><br />
+            <br />
+            <ul>
+                <li>
+                    <span>Child Key: L0K0</span><br />
+                </li><li>
+                    <span>Child Key: L0K1</span><br />
+                </li><li>
+                    <span>Child Key: L0K2</span><br />
+                </li><li>
+                    <span>Child Key: L0K3</span><br />
+                </li><li>
+                    <span>Child Key: L0K4</span><br />
+                </li>
+            </ul>
+        </li><li>
+            <span d-on-click="ToggleItemField({{item.Selected}})">Key: L1K1</span><br />
+            <br />
+            <ul>
+                <li>
+                    <span>Child Key: L0K0</span><br />
+                </li><li>
+                    <span>Child Key: L0K1</span><br />
+                </li><li>
+                    <span>Child Key: L0K2</span><br />
+                </li><li>
+                    <span>Child Key: L0K3</span><br />
+                </li><li>
+                    <span>Child Key: L0K4</span><br />
+                </li>
+            </ul>
+        </li><li>
+            <span d-on-click="ToggleItemField({{item.Selected}})">Key: L1K2</span><br />
+            <br />
+            <ul>
+                <li>
+                    <span>Child Key: L0K0</span><br />
+                </li><li>
+                    <span>Child Key: L0K1</span><br />
+                </li><li>
+                    <span>Child Key: L0K2</span><br />
+                </li><li>
+                    <span>Child Key: L0K3</span><br />
+                </li><li>
+                    <span>Child Key: L0K4</span><br />
+                </li>
+            </ul>
+        </li><li>
+            <span d-on-click="ToggleItemField({{item.Selected}})">Key: L1K3</span><br />
+            <br />
+            <ul>
+                <li>
+                    <span>Child Key: L0K0</span><br />
+                </li><li>
+                    <span>Child Key: L0K1</span><br />
+                </li><li>
+                    <span>Child Key: L0K2</span><br />
+                </li><li>
+                    <span>Child Key: L0K3</span><br />
+                </li><li>
+                    <span>Child Key: L0K4</span><br />
+                </li>
+            </ul>
+        </li><li>
+            <span d-on-click="ToggleItemField({{item.Selected}})">Key: L1K4</span><br />
+            <br />
+            <ul>
+                <li>
+                    <span>Child Key: L0K0</span><br />
+                </li><li>
+                    <span>Child Key: L0K1</span><br />
+                </li><li>
+                    <span>Child Key: L0K2</span><br />
+                </li><li>
+                    <span>Child Key: L0K3</span><br />
+                </li><li>
+                    <span>Child Key: L0K4</span><br />
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="checkdatafield(items,Selected)"></div>
+
+</body></html>

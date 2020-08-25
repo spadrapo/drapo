@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>DataStartupFunctionNoCacheInsideSector</title>
+</head>
+<body>
+    <span>DataStartupFunctionNoCacheInsideSector</span>
+    <div d-dataKey="items" d-dataType="array"></div>
+    <div d-dataKey="itemNew" d-dataType="object" d-dataProperty-value="+1"></div>
+    <span>Items: </span>
+    <br />
+    <ul>
+        <li d-for="item in items">{{item.value}}</li>
+    </ul>
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateSector(sector,/DrapoPages/DataStartupFunctionNoCacheInsideSectorChild.html)"></div>
+    <div d-sector="sector">
+
+    </div>
+</body>
+</html>

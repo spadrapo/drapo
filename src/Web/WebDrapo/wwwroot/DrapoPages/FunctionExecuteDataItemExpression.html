@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function ExecuteDataItem Expression</title>
+    <style>
+        .selected {
+            color: white;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <span>Function ExecuteDataItem Expression</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div>
+        <div d-for="item in data">
+            <br />
+            <span d-model="{{item.Key}}" d-class="{selected:{{item.Selected}}}" d-on-click="ToggleItemField({{item.Selected}})"></span>
+        </div>
+    </div>
+    <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="ExecuteDataItem(ToggleItemField({{item.Selected}}),item in data,true,true)"></div>
+</body>
+</html>

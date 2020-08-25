@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - UI - Nullable</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow - For - UI - Nullable</span>
+        <div d-dataKey="users" d-dataUrlGet="/Data/GetNullable"></div>
+        <ul>
+            <li d-for="user in users">{{user.Key}}</li>
+        </ul>
+    </div>
+</body>
+</html>

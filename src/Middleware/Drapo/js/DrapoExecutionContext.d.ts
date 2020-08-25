@@ -1,0 +1,30 @@
+declare class DrapoExecutionContext<T> {
+    private _application;
+    private _hasError;
+    private _canReset;
+    private _hasBreakpoint;
+    private _sector;
+    private _dataKey;
+    private _data;
+    private _sectorContainer;
+    private _windowsAutoClose;
+    get HasError(): boolean;
+    set HasError(value: boolean);
+    get CanReset(): boolean;
+    set CanReset(value: boolean);
+    get HasBreakpoint(): boolean;
+    set HasBreakpoint(value: boolean);
+    get Sector(): string;
+    set Sector(value: string);
+    get DataKey(): string;
+    set DataKey(value: string);
+    get Data(): T;
+    set Data(value: T);
+    constructor(application: DrapoApplication);
+    Continue(): Promise<boolean>;
+    AddSectorContainer(sector: string, containerCode: string): void;
+    HasSectorContainer(sector: string): boolean;
+    GetSectorContainer(sector: string): string;
+    AddWindowAutoClose(window: DrapoWindow): void;
+    GetWindowsAutoClose(): DrapoWindow[];
+}

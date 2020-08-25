@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - State</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <span>Component - State</span>
+    <div d-sector="@" class="state" dc-name="One" dc-count="1">
+    <div d-datakey="internal" d-datatype="parent" d-datavalue="dc-"></div>
+    <div d-datakey="data" d-dataurlget="/Data/GetLevels?levels=0&amp;children={{internal.count}}"></div>
+    <span d-model="{{internal.name}}">One</span><br />
+    <span>Count:</span><input d-model="{{internal.count}}" type="text" /><br />
+    <div>
+        <div d-for="item in data" style="display: none;">
+            <br />
+            <span>Key: {{item.Key}}</span><br />
+            <span>Value: {{item.Value}}</span><br />
+        </div>
+    <div>
+            <br />
+            <span>Key: L0K0</span><br />
+            <span>Value: L0V0</span><br />
+        </div></div>
+</div>
+    <div d-sector="@" class="state" dc-name="Two" dc-count="2">
+    <div d-datakey="internal" d-datatype="parent" d-datavalue="dc-"></div>
+    <div d-datakey="data" d-dataurlget="/Data/GetLevels?levels=0&amp;children={{internal.count}}"></div>
+    <span d-model="{{internal.name}}">Two</span><br />
+    <span>Count:</span><input d-model="{{internal.count}}" type="text" /><br />
+    <div>
+        <div d-for="item in data" style="display: none;">
+            <br />
+            <span>Key: {{item.Key}}</span><br />
+            <span>Value: {{item.Value}}</span><br />
+        </div>
+    <div>
+            <br />
+            <span>Key: L0K0</span><br />
+            <span>Value: L0V0</span><br />
+        </div><div>
+            <br />
+            <span>Key: L0K1</span><br />
+            <span>Value: L0V1</span><br />
+        </div></div>
+</div>
+    <div d-sector="@" class="state" dc-name="Three" dc-count="3">
+    <div d-datakey="internal" d-datatype="parent" d-datavalue="dc-"></div>
+    <div d-datakey="data" d-dataurlget="/Data/GetLevels?levels=0&amp;children={{internal.count}}"></div>
+    <span d-model="{{internal.name}}">Three</span><br />
+    <span>Count:</span><input d-model="{{internal.count}}" type="text" /><br />
+    <div>
+        <div d-for="item in data" style="display: none;">
+            <br />
+            <span>Key: {{item.Key}}</span><br />
+            <span>Value: {{item.Value}}</span><br />
+        </div>
+    <div>
+            <br />
+            <span>Key: L0K0</span><br />
+            <span>Value: L0V0</span><br />
+        </div><div>
+            <br />
+            <span>Key: L0K1</span><br />
+            <span>Value: L0V1</span><br />
+        </div><div>
+            <br />
+            <span>Key: L0K2</span><br />
+            <span>Value: L0V2</span><br />
+        </div></div>
+</div>
+
+</body></html>

@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<div d-templateUrl="/DrapoPages/WindowsTemplateBase.html">
+    <span>Window State</span>
+    <br />
+    <div>
+        <div d-dataKey="items" d-dataUrlGet="/Data/GetModelSample"></div>
+        <div d-for="item in items">
+            <input type="checkbox" d-model="{{item.Visible}}">
+            <span>{{item.Visible}}</span>
+        </div>
+    </div>
+    <br />
+    <input type="button" d-on-click="ShowWindow(/DrapoPages/WindowsTemplateWindow.html,Windows)" value="Open" />
+    <input type="button" d-on-click="CloseWindow()" value="Close" />
+</div>

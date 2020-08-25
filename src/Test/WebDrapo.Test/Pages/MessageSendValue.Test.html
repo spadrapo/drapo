@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+	<script src="/drapo.js"></script>
+	<title>Message Send Value</title>
+</head>
+<body>
+	<span>Message Execute</span>
+	<div>
+		<div d-datakey="itemObject" d-datatype="object" d-dataproperty-value-name="Value" d-dataproperty-value-value="OldValue"></div>
+		<div d-datakey="valueFromMessage" d-datatype="value"></div>
+		<div d-datakey="updateItemValue" d-datatype="value" d-datavalue="UpdateDataField(itemObject,Value,{{valueFromMessage}})"></div>
+		<span d-model="{{itemObject.Value}}">NewValue</span>
+		<iframe id="frameID" src="MessageSendValueSector.html"></iframe>
+	</div>
+
+</body></html>

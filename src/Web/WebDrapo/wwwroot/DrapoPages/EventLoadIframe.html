@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Event Load IFrame</title>
+</head>
+<body>
+    <span>Event Load IFrame</span>
+    <div>
+        <div d-dataKey="data" d-dataType="value" d-dataValue="Loading"></div>
+        <div d-dataKey="url" d-dataType="value" d-dataValue="EventLoadIframeChild.html"></div>
+        <span d-model="{{data}}"></span>
+        <br />
+        <iframe id="frameID" d-on-load="UpdateDataField(data,,Loaded)" d-attr-src="{{url}}"></iframe>
+    </div>
+</body>
+</html>

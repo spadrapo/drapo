@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Model - TextArea</title>
+</head>
+<body>
+    <span>Control Flow - Model - TextArea</span>
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div>
+        <div d-for="user in users">
+            <span>Key:</span>
+            <textarea d-model="{{user.Key}}"></textarea>
+            <span>{{user.Key}}</span>
+            <br />
+            <br />
+        </div>
+    </div>
+</body>
+</html>

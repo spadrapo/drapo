@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Model - Nested</title>
+</head>
+<body>
+    <span>Control Flow - Model - Nested</span>
+    <div d-datakey="items" d-dataurlget="/Data/GetModelSample"></div>
+    <div d-datakey="nesteds" d-datatype="array" d-datavalue="[{&quot;key&quot;:&quot;User&quot;,&quot;value&quot;:&quot;v1&quot;},{&quot;key&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;v2&quot;}]"></div>
+    <div d-for="item in items" style="display: none;">
+        <div d-for="nested in nesteds">
+            <input type="text" d-model="{{item.Key}}" />
+            <span>{{item.Key}}</span>
+        </div>
+    </div><div>
+        <div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K0</span>
+        </div><div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K0</span>
+        </div>
+    </div><div>
+        <div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K1</span>
+        </div><div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K1</span>
+        </div>
+    </div><div>
+        <div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K2</span>
+        </div><div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K2</span>
+        </div>
+    </div><div>
+        <div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K3</span>
+        </div><div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K3</span>
+        </div>
+    </div><div>
+        <div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K4</span>
+        </div><div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K4</span>
+        </div>
+    </div><div>
+        <div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K5</span>
+        </div><div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K5</span>
+        </div>
+    </div><div>
+        <div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K6</span>
+        </div><div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K6</span>
+        </div>
+    </div><div>
+        <div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K7</span>
+        </div><div>
+            <input type="text" d-model="{{item.Key}}" />
+            <span>K7</span>
+        </div>
+    </div>
+
+</body></html>

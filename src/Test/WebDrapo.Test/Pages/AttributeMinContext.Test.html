@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Attribute Min Context</title>
+</head>
+<body>
+    <br />
+    <span>Attribute Min Context</span>
+    <div d-datakey="items" d-dataurlget="/Data/GetIFSample"></div>
+    <div>
+        <div d-for="item in items" style="display: none;">
+            <input type="checkbox" d-model="{{item.Visible}}" /><span>Disabled</span>
+            <br />
+            <input type="text" d-attr-disabled-min="{{item.Visible}}" />
+        </div>
+    <div>
+            <input type="checkbox" /><span>Disabled</span>
+            <br />
+            <input type="text" d-attr-disabled-min="{{item.Visible}}" disabled="" />
+        </div><div>
+            <input type="checkbox" /><span>Disabled</span>
+            <br />
+            <input type="text" d-attr-disabled-min="{{item.Visible}}" />
+        </div><div>
+            <input type="checkbox" /><span>Disabled</span>
+            <br />
+            <input type="text" d-attr-disabled-min="{{item.Visible}}" disabled="" />
+        </div><div>
+            <input type="checkbox" /><span>Disabled</span>
+            <br />
+            <input type="text" d-attr-disabled-min="{{item.Visible}}" />
+        </div><div>
+            <input type="checkbox" /><span>Disabled</span>
+            <br />
+            <input type="text" d-attr-disabled-min="{{item.Visible}}" disabled="" />
+        </div><div>
+            <input type="checkbox" /><span>Disabled</span>
+            <br />
+            <input type="text" d-attr-disabled-min="{{item.Visible}}" />
+        </div><div>
+            <input type="checkbox" /><span>Disabled</span>
+            <br />
+            <input type="text" d-attr-disabled-min="{{item.Visible}}" disabled="" />
+        </div><div>
+            <input type="checkbox" /><span>Disabled</span>
+            <br />
+            <input type="text" d-attr-disabled-min="{{item.Visible}}" />
+        </div><div>
+            <input type="checkbox" /><span>Disabled</span>
+            <br />
+            <input type="text" d-attr-disabled-min="{{item.Visible}}" disabled="" />
+        </div><div>
+            <input type="checkbox" /><span>Disabled</span>
+            <br />
+            <input type="text" d-attr-disabled-min="{{item.Visible}}" />
+        </div></div>
+
+</body></html>

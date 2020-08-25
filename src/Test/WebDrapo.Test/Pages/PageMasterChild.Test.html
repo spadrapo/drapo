@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title></title>
+</head><body>
+    <div class="row">
+        <div class="col-sm-2 col-sm-push-4">
+            <span>Page Master Master</span>
+        </div>
+    </div>
+    <div class="row">
+        <div d-sector="@" d-sector-url="/DrapoPages/PageMasterChild.html" class="col-sm-4"><div d-sector-parent-url="/DrapoPages/PageMasterMaster.html" d-sector-parent="child">
+    <span>Page Master Child</span>
+</div></div>
+        <div d-sector="@" d-sector-url="/DrapoPages/PageMasterChild.html" class="col-sm-4"><div d-sector-parent-url="/DrapoPages/PageMasterMaster.html" d-sector-parent="child">
+    <span>Page Master Child</span>
+</div>
+</div>
+        <div d-sector="@" d-sector-url="/Mixed" class="col-sm-4"><div d-sector-parent-url="/DrapoPages/PageMasterMaster.html" d-sector-parent="child">
+    <span>Page Master Child Mixed</span>
+</div>
+</div>
+    </div>
+    <script src="/js/bootstrap.min.js"></script>
+</body></html>

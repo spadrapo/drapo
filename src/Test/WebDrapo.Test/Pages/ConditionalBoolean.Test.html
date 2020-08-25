@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+	<script src="/drapo.js"></script>
+	<title>Conditional Boolean</title>
+</head>
+<body>
+	<span>Conditional Boolean</span>
+
+	<div d-datakey="conditionalTrue" d-datatype="value" d-datavalue="True"></div>
+	<div d-datakey="conditionalFalse" d-datatype="value" d-datavalue="False"></div>
+
+	<div d-if="{{conditionalTrue}}">Show True</div>
+	<div d-if="!{{conditionalFalse}}">Show Not False</div>
+	<div d-if="{{conditionalFalse}}" style="display: none;">Hide False</div>
+	<div d-if="!{{conditionalTrue}}" style="display: none;">Hide Not True</div>
+
+</body></html>

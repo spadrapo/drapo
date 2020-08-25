@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Cache</title>
+</head>
+<body>
+    <span>Data Cache</span>
+    <div>
+        <div>
+            <div d-dataKey="value" d-dataType="value" d-dataValue="OldValue"></div>
+            <div d-dataKey="valueNew" d-dataType="value" d-dataValue="NewValue"></div>
+            <div d-dataKey="dataFunction" d-dataType="function" d-dataLoadType="startup" d-dataCache="false" d-dataValue="UpdateDataField(value,,{{valueNew}})"></div>
+        </div>
+        <div>
+            <span d-model="{{value}}"></span>
+        </div>
+    </div>
+</body>
+</html>

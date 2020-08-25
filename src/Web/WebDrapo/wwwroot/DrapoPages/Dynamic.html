@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title>Dynamic</title>
+</head>
+<body>
+    <div>
+        <div d-dataKey="views" d-dataConfigGet="Views"></div>
+        <div d-dataKey="drapo" d-dataCookieGet="drapo"></div>
+        <br />
+        <label>Choose View:</label>
+        <br />
+        <select d-model="{{drapo.view}}" d-on-change="PostData(drapo);ReloadSector(sector)">
+            <option d-for="view in views" value="{{view.Tag}}">{{view.Name}}</option>
+        </select>
+        <br />
+        <br />
+        <span>Selected:</span>
+        <span d-model="{{drapo.view}}"></span>
+        <br />
+        <br />
+        <div>
+            <ul class="list-inline">
+                <li class="list-inline-item"><h3><a href="#" d-on-click="UpdateSector(sector,/view/ViewsOne,One)">One</a></h3></li>
+                <li class="list-inline-item"><h3><a href="#" d-on-click="UpdateSector(sector,/view/ViewsTwo,Two)">Two</a></h3></li>
+            </ul>
+        </div>
+        <div d-sector="sector" d-sector-url="/view/ViewsOne"></div>
+    </div>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Format</title>
+</head>
+<body>
+    <br />
+    <span>Format</span>
+    <div d-datakey="dates" d-dataurlget="~/Data/GetDates"></div>
+    <div d-for="date in dates" style="display: none;">
+        <br />
+        <span d-model="{{date.Date}}" d-format="{{date.Format}}"></span>
+    </div><div>
+        <br />
+        <span>06/03/1980</span>
+    </div><div>
+        <br />
+        <span>Tuesday, 03 June 1980</span>
+    </div><div>
+        <br />
+        <span>Tue, 03 Jun 1980 00:00:00</span>
+    </div><div>
+        <br />
+        <span>Tuesday, 03 Jun 1980</span>
+    </div><div>
+        <br />
+        <span></span>
+    </div>
+
+</body></html>

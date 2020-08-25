@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function GetSector</title>
+</head>
+<body>
+    <span>Function GetSector</span>
+    <div d-dataKey="global" d-dataType="value" d-dataValue="2"></div>
+    <div d-dataKey="value" d-dataType="value" d-dataValue="x"></div>
+    <div d-dataKey="execute" d-dataType="value" d-dataValue="UpdateData(local2,{{value}})"></div>
+    <div d-dataKey="execute1" d-dataType="value" d-dataValue="UpdateData(local1,{{value}})"></div>
+    <div d-dataKey="execute2" d-dataType="value" d-dataValue="UpdateData(local2,{{value}})"></div>
+    <div d-sector="1">
+        <input type="button" value="Click1" d-on-click="UpdateData(global,GetSector());UpdateData(execute,{{execute1}})" />
+        <div d-dataKey="local1" d-dataType="value" d-dataValue=""></div>
+        <span d-model="{{local1}}"></span>
+    </div>
+    <div d-sector="2">
+        <input type="button" value="Click2" d-on-click="UpdateData(global,GetSector());UpdateData(execute,{{execute2}})" />
+        <div d-dataKey="local2" d-dataType="value" d-dataValue=""></div>
+        <span d-model="{{local2}}"></span>
+    </div>
+    <span>global:</span><span d-model="{{global}}"></span>
+    <input type="text" d-model="{{value}}" />
+    <br />
+    <span>value:</span><input type="button" value="Update" d-on-click="Execute({{execute}},{{global}})" d-id="__drapoUnitTest" />
+</body>
+</html>

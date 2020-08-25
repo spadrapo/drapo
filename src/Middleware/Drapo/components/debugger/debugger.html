@@ -1,0 +1,198 @@
+<div class="dbgDebugger dbgDebuggerCloak" d-cloak="dbgDebuggerCloak">
+    <!--Data-->
+    <div>
+        <div d-dataKey="_dbgBreakpointAdd" d-dataType="object" d-dataProperty-sector="" d-dataProperty-datakey=""></div>
+        <div d-dataKey="_dbgFunctionObjectExpander" d-dataType="value" d-dataLoadType="startup" d-dataValue="IF(ContainsDataItem({{__objectsexpanded}},{{dbgObject.Code}}),RemoveDataItem(__objectsexpanded,{{dbgObject.Code}}),AddDataItem(__objectsexpanded,{{dbgObject.Code}}))"></div>
+        <div d-dataKey="_dbgFunctionObjectDataExpander" d-dataType="value" d-dataLoadType="startup" d-dataValue="ToggleItemField({{dbgData.IsExpanded}});Notify(__objectdata)"></div>
+    </div>
+    <!--Layout-->
+    <div d-class="{dbgLayout,dbgLayoutRight:!{{__debuggerProperties.left}},dbgLayoutLeft:{{__debuggerProperties.left}},dbgLayoutNoErrors:{{__errors.length}}=0,dbgLayoutErrors:{{__errors.length}}>0}">
+        <span class="dbgDrapo" d-on-click="ToggleItemField({{__debuggerProperties.left}})">Drapo Debugger</span>
+        <br />
+        <fieldset>
+            <legend>View:</legend>
+            <label><input type="checkbox" d-model="{{__debuggerProperties.showobjects}}" />Objects</label>
+            <label><input type="checkbox" d-model="{{__debuggerProperties.showbreakpoints}}" />Breakpoints</label>
+            <label><input type="checkbox" d-model="{{__debuggerProperties.shownotifys}}" />Notifys</label>
+            <label><input type="checkbox" d-model="{{__debuggerProperties.showfunctions}}" />Functions</label>
+            <label><input type="checkbox" d-model="{{__debuggerProperties.showcomponents}}" />Components</label>
+            <label><input type="checkbox" d-model="{{__debuggerProperties.showserver}}" />Server</label>
+            <label><input type="checkbox" d-model="{{__debuggerProperties.showsectorsupdate}}" />Sectors</label>
+            <label><input type="checkbox" d-model="{{__debuggerProperties.showerrors}}" />Errors</label>
+            <label><input type="checkbox" d-model="{{__debuggerProperties.showpipes}}" />Pipes</label>
+            <br />
+            <label><input type="checkbox" d-model="{{__debuggerProperties.persist}}" d-on-model-change="debugger(persist)" />Persist</label>
+        </fieldset>
+        <fieldset d-if="{{__debuggerProperties.showobjects}}">
+            <legend>Objects:</legend>
+            <div d-for="dbgObject in __objects" d-for-if="{{__debuggerProperties.showobjects}}">
+                <div class="dbgObject">
+                    <div style="float:left" d-on-click="{{_dbgFunctionObjectExpander}}">
+                        <span d-for="level in (0..{{dbgObject._Level}})"></span>
+                    </div>
+                    <span d-class="{dbgObjectExpanded:{{dbgObject.IsExpanded}},dbgObjectCollapsed:(!{{dbgObject.IsExpanded}})&&({{dbgObject.Children.length}}>0),dbgObjectNoExpandable:{{dbgObject.Children.length}}=0}" d-propagation-click="false"></span>
+                    <span d-class="{dbgObjectSector:{{dbgObject.Type}}=sector,dbgObjectData:{{dbgObject.Type}}=data}"></span>
+                    <span d-on-click="{{dbgObject.Action}}">{{dbgObject.Name}}</span>
+                </div>
+                <div d-for="dbgObject in dbgObject.Children" d-if="{{dbgObject.IsExpanded}}"></div>
+            </div>
+        </fieldset>
+        <fieldset d-if="{{__objectproperties.datakey}}">
+            <legend>Data:</legend>
+            <div d-for="dbgData in __objectdata" d-for-if="{{__objectproperties.datakey}}">
+                <div class="dbgData" d-on-click="{{_dbgFunctionObjectDataExpander}}">
+                    <div style="float:left">
+                        <span d-for="level in (0..{{dbgData._Level}})"></span>
+                    </div>
+                    <span d-if="{{dbgData.__objectdata.length}}>0" d-class="{dbgObjectExpanded:{{dbgData.IsExpanded}},dbgObjectCollapsed:!{{dbgData.IsExpanded}}}"></span>
+                    <span class="dbgDebuggerClickable" d-model="{{dbgData.Name}}" d-on-click="{{dbgData.Action}}"></span>
+                    <div style="display:inline" d-if="{{dbgData.__objectdata.length}}=0">
+                        <span>=</span>
+                        <span d-model="{{dbgData.Value}}"></span>
+                    </div>
+                </div>
+                <div d-for="dbgData in dbgData.__objectdata" d-if="{{dbgData.IsExpanded}}"></div>
+            </div>
+        </fieldset>
+        <fieldset d-if="{{__objectswatchsvalues.length}}>0">
+            <legend>Watchs:</legend>
+            <div d-for="dbgWatch in __objectswatchsvalues" d-on-click="{{dbgWatch.Action}}">
+                <span d-model="{{dbgWatch.Sector}}"></span>
+                <span>:</span>
+                <span d-model="{{dbgWatch.Mustache}}"></span>
+                <span>:</span>
+                <span d-model="{{dbgWatch.Value}}"></span>
+                <span>:</span>
+                <span class="dbgDebuggerClickable" d-on-click="{{dbgWatch.ActionRemove}}">x</span>
+            </div>
+        </fieldset>
+        <fieldset d-if="{{__debuggerProperties.showbreakpoints}}">
+            <legend>Breakpoints:</legend>
+            <div class="dbgBlock">
+                <label>Sector:</label>
+                <select class="dbgSelector" d-model="{{__debugger.sector}}">
+                    <option d-for="sector in __sectors" value="{{sector}}">{{sector}}</option>
+                </select>
+            </div>
+            <div class="dbgBlock">
+                <label>DataKey:</label>
+                <select class="dbgSelector" d-model="{{__debugger.datakey}}">
+                    <option d-for="datakey in __datakeysfunction" value="{{datakey}}">{{datakey}}</option>
+                </select>
+            </div>
+            <div class="dbgBlock">
+                <input type="button" value="Add" d-on-click="IF({{__debugger.datakey}},UpdateDataField(_dbgBreakpointAdd,sector,{{__debugger.sector}});UpdateDataField(_dbgBreakpointAdd,datakey,{{__debugger.datakey}});AddDataItem(__breakpoints,_dbgBreakpointAdd))" />
+                <input type="button" value="Clear" d-on-click="ClearData(__breakpoints)" />
+            </div>
+            <br />
+            <div class="dbgBlock">
+                <div d-for="breakpoint in __breakpoints">
+                    <span d-model="{{breakpoint.sector}}"></span>
+                    <span> > </span>
+                    <span d-model="{{breakpoint.datakey}}"></span>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset d-if="{{__breakpoints.length}}>0">
+            <legend>Runtime:</legend>
+            <div class="dbgBlock">
+                <input type="button" value="Run" d-on-click="UpdateDataField(__runtime,running,true)" />
+            </div>
+            <div class="dbgBlock">
+                <label>Sector:</label><label d-model="{{__runtime.sector}}"></label>
+            </div>
+            <div class="dbgBlock">
+                <label>DataKey:</label><label d-model="{{__runtime.datakey}}"></label>
+            </div>
+            <div class="dbgBlock">
+                <label>Label:</label><label d-model="{{__runtime.label}}"></label>
+            </div>
+            <div class="dbgBlock">
+                <label>Expression:</label><label d-model="{{__runtime.expression}}"></label>
+            </div>
+            <div class="dbgBlock">
+                <label>Function:</label><label d-model="{{__runtime.functionValue}}"></label>
+            </div>
+        </fieldset>
+        <fieldset d-if="({{__debuggerProperties.shownotifys}})&&({{__notifys.length}}>0)">
+            <legend>Notify:</legend>
+            <div class="dbgBlock">
+                <input type="button" value="Clear" d-on-click="ClearData(__notifys)" />
+            </div>
+            <div class="dbgBlock">
+                <div d-for="notify in __notifys" d-for-if="{{__debuggerProperties.shownotifys}}">
+                    <label d-model="{{notify}}"></label>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset d-if="({{__debuggerProperties.showpipes}})&&({{__pipes.length}}>0)">
+            <legend>Pipes:</legend>
+            <div class="dbgBlock">
+                <input type="button" value="Clear" d-on-click="ClearData(__pipes)" />
+            </div>
+            <div class="dbgBlock">
+                <div d-for="pipe in __pipes" d-for-if="{{__debuggerProperties.showpipes}}">
+                    <label d-model="{{pipe}}"></label>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset d-if="({{__debuggerProperties.showerrors}})&&({{__errors.length}}>0)">
+            <legend>Errors:</legend>
+            <div class="dbgBlock">
+                <input type="button" value="Clear" d-on-click="ClearData(__errors)" />
+            </div>
+            <div class="dbgBlock">
+                <div d-for="error in __errors" d-for-if="{{__debuggerProperties.showerrors}}">
+                    <label d-model="{{error}}"></label>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset d-if="({{__debuggerProperties.showfunctions}})&&({{__functions.length}}>0)">
+            <legend>Functions:</legend>
+            <div class="dbgBlock">
+                <input type="button" value="Clear" d-on-click="ClearData(__functions)" />
+            </div>
+            <div class="dbgBlock">
+                <div d-for="functionCurrent in __functions" d-for-if="{{__debuggerProperties.showfunctions}}">
+                    <label d-model="{{functionCurrent}}"></label>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset d-if="({{__debuggerProperties.showcomponents}})&&({{__components.length}}>0)">
+            <legend>Components:</legend>
+            <div class="dbgBlock">
+                <div d-for="component in __components" d-for-if="{{__debuggerProperties.showcomponents}}">
+                    <label d-model="{{component.Tag}}" d-on-click="{{component.Action}}"></label>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset d-if="({{__debuggerProperties.showserver}})&&({{__requests.length}}>0)">
+            <legend>Requests:</legend>
+            <div class="dbgBlock">
+                <input type="button" value="Clear" d-on-click="ClearData(__requests)" />
+            </div>
+            <div class="dbgBlock">
+                <div d-for="request in __requests" d-for-if="{{__debuggerProperties.showserver}}">
+                    <span d-model="{{request.Start}}" d-format="T"></span>
+                    <span d-model="Cast({{request.End}} - {{request.Start}},number)" d-format="t" d-class="{dbgRequestLast:{{request.Last}}:dbgRequestNotLast}"></span>
+                    <span d-model="{{request.Url}}"></span>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset d-if="({{__debuggerProperties.showsectorsupdate}})&&({{__sectorsupdate.length}}>0)">
+            <legend>Sectors:</legend>
+            <div class="dbgBlock">
+                <input type="button" value="Clear" d-on-click="ClearData(__sectorsupdate)" />
+            </div>
+            <div class="dbgBlock">
+                <div d-for="sector in __sectorsupdate" d-for-if="{{__debuggerProperties.showsectorsupdate}}">
+                    <span d-model="{{sector.Name}}"></span>
+                    <span> - </span>
+                    <span d-model="{{sector.Parent}}"></span>
+                    <span> - </span>
+                    <span d-model="{{sector.Url}}"></span>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>

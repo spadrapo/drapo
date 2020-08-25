@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Model - Range</title>
+</head>
+<body>
+    <span>Control Flow - Model - Range</span>
+    <div d-datakey="profitability" d-datatype="array" d-datavalue="[{&quot;ValueDestination&quot;:&quot;2400&quot;,&quot;ValueSource&quot;:&quot;1200&quot;},{&quot;ValueSource&quot;:&quot;1200&quot;,&quot;ValueDestination&quot;:&quot;1200&quot;}]"></div>
+    <div d-for="driver in profitability" style="display: none;">
+        <input type="range" name="valueSource" min="0" d-model="{{driver.ValueDestination}}" d-attr-max="CAST({{driver.ValueSource}}*2,number)" step="1" />
+    </div><div>
+        <input type="range" name="valueSource" min="0" d-attr-max="CAST({{driver.ValueSource}}*2,number)" step="1" max="2400" />
+    </div><div>
+        <input type="range" name="valueSource" min="0" d-attr-max="CAST({{driver.ValueSource}}*2,number)" step="1" max="2400" />
+    </div>
+
+</body></html>

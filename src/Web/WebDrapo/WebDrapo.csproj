@@ -1,0 +1,84 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RetryAttemptsForDeployment>50</RetryAttemptsForDeployment>
+    <TypeScriptToolsVersion>3.7</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Middleware\Drapo\Drapo.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="node_modules\**\*;Client\**\*" />
+    <Content Include="Dockerfile" />
+    <Content Update="appsettings.json;">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Client\**\*;">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\**\*;">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="tsconfig.json;">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="web.config;">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="config\**\*;">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\**\*;">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\Test\WebDrapo.Test\bin\Release\net45\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Middleware\Drapo\lib\index.d.ts">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>node_modules\@types\drapo\index.d.ts</TargetPath>
+      <DestinationSubDirectory>node_modules\@types\drapo\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>node_modules\@types\drapo\index.d.ts</Link>
+    </Content>
+  </ItemGroup>
+  <Target Name="CopyLinkedContentFiles" BeforeTargets="Build">
+    <Copy SourceFiles="%(Content.Identity)" DestinationFiles="%(Content.Link)" SkipUnchangedFiles="false" OverwriteReadOnlyFiles="true" Condition="'%(Content.Link)' != ''" />
+  </Target>
+  <ItemGroup>
+    <Content Remove="wwwroot\components\composite\composite.ts" />
+    <Content Remove="wwwroot\components\dataValue\dataValue.ts" />
+    <Content Remove="wwwroot\components\increment\increment.ts" />
+    <Content Remove="wwwroot\components\labelcontext\labelcontext.ts" />
+    <Content Remove="wwwroot\components\labelinputsubscribe\labelInputsubscribe.ts" />
+    <Content Remove="wwwroot\components\parsedate\parsedate.ts" />
+    <Content Remove="wwwroot\components\state\state.ts" />
+    <Content Remove="wwwroot\components\stylist\stylist.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\components\labelinputinstance\" />
+    <Folder Include="wwwroot\components\code\" />
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\components\composite\composite.ts" />
+    <TypeScriptCompile Include="wwwroot\components\dataValue\dataValue.ts" />
+    <TypeScriptCompile Include="wwwroot\components\increment\increment.ts" />
+    <TypeScriptCompile Include="wwwroot\components\labelcontext\labelcontext.ts" />
+    <TypeScriptCompile Include="wwwroot\components\labelinputsubscribe\labelInputsubscribe.ts" />
+    <TypeScriptCompile Include="wwwroot\components\parsedate\parsedate.ts" />
+    <TypeScriptCompile Include="wwwroot\components\state\state.ts" />
+    <TypeScriptCompile Include="wwwroot\components\stylist\stylist.ts" />
+  </ItemGroup>
+</Project>

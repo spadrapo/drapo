@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Select Chain</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow - For - Select Chain</span>
+        <div d-dataKey="itemSelected" d-dataType="object" d-dataproperty-pre="PRE1"></div>
+        <div d-dataKey="items" d-dataUrlGet="/Data/GetLevels?levels=1&children=5&prefix={{itemSelected.pre}}"></div>
+        <div d-dataKey="action" d-dataType="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(itemSelected,pre,PRE2)"></div>
+        <span d-model="{{itemSelected.pre}}"></span>
+        <select>
+            <option d-for="item in items" value="{{item.Key}}">{{item.Key}}</option>
+        </select>
+        <input type="button" value="PRE2" d-on-click="{{action}}" />
+        <div d-dataKey="startup" d-dataType="function" d-dataloadtype="startup" d-datavalue="{{action}}"></div>
+    </div>
+</body>
+</html>

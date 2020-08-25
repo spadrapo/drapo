@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data - Group Load</title>
+</head>
+<body>
+    <div>
+        <span>Data Group</span>
+        <div d-datakey="culture" d-datadelay="true" d-dataurlget="/Data/GetCulture"></div>
+        <ul>
+            <li d-model="{{culture.User}}">Usuário</li>
+            <li d-model="{{culture.Name}}">Nome</li>
+            <li d-model="{{culture.Date}}">Data</li>
+        </ul>
+    </div>
+
+</body></html>

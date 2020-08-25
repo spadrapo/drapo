@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Validation Event Auto Focus Select</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="sector" d-on-body-keyup-escape="CloseWindow()"></div>
+    <br />
+    <span>Validation Event Auto Focus Select</span>
+    <div class="cloak" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-dataKey="items" d-dataUrlGet="~/Data/GetWithEmpty"></div>
+            <div d-dataKey="data" d-dataType="object" d-dataProperty-agree="K1" d-dataProperty-agree2=""></div>
+            <div d-dataKey="click" d-datatype="value" d-dataloadtype="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowLoading.html,Windows,false)"></div>
+        </div>
+        <div>
+            <!--Validation-->
+            <div d-validation-id="agree" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{data.agree}}"></div>
+            <div d-validation-id="agree2" d-validation-group="agreeGroup" d-validation-type="conditional" d-validation-value="{{data.agree2}}"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <input type="text" /><span>WrongFocus</span>
+            <br />
+            <br />
+            <span>Agree</span>
+            <select d-model="{{data.agree}}">
+                <option d-for="item in items" value="{{item.Key}}">{{item.Value}}</option>
+            </select>
+            <span d-model="{{data.agree}}"></span>
+            <div d-validation="agree">
+                <span>You must fill the agree</span>
+            </div>
+            <br />
+            <br />
+            <span>Agree2</span>
+            <select d-model="{{data.agree2}}">
+                <option d-for="item in items" value="{{item.Key}}">{{item.Value}}</option>
+            </select>
+            <span d-model="{{data.agree2}}"></span>
+            <div d-validation="agree2">
+                <span>You must fill the agree2</span>
+            </div>
+            <br />
+            <br />
+            <input type="button" value="Validate" d-on-click="{{click}}" d-validation-on-click="agreeGroup" d-id="__drapoUnitTest" />
+        </div>
+    </div>
+</body>
+</html>

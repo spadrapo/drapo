@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<script src="/drapo.js"></script>
+	<title>Index Array</title>
+</head>
+<body>
+	<div>
+		<span>Index Array</span>
+		<div d-dataKey="levels" d-dataLoadType="startup" d-dataUrlGet="/Data/GetLevels?levels=1&children=3"></div>
+		<span d-model="{{levels.[0].Key}}"></span>
+		<span d-model="{{levels.[0].Children.[0].Key}}"></span>
+	</div>
+</body>
+</html>

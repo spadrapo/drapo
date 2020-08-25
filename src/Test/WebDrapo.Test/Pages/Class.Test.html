@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Class</title>
+    <style>
+        .selected {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <span>Class</span>
+        <div d-datakey="selection" d-datatype="object" d-dataproperty-first="true" d-dataproperty-second="false"></div>
+        <ul>
+            <li d-class="{selected:{{selection.first}}}" class="selected">
+                First
+            </li>
+            <li d-class="{selected:{{selection.second}}}">
+                Second
+            </li>
+        </ul>
+    </div>
+
+</body></html>

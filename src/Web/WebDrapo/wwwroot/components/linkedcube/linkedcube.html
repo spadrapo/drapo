@@ -1,0 +1,22 @@
+﻿<div d-sector="@">
+    <!--Data-->
+    <div>
+        <div d-dataKey="internal" d-dataType="object" d-dataProperty-page="p1" d-dataProperty-row="r1" d-dataProperty-column="c1" d-dataProperty-value="v1"></div>
+        <div d-dataKey="functionAdd" d-dataType="value" d-dataLoadType="startup" d-dataValue="ExecuteInstanceFunction(,Add,,{{internal.page}},{{internal.row}},{{internal.column}},{{internal.value}})"></div>
+        <div d-dataKey="functionRemove" d-dataType="value" d-dataLoadType="startup" d-dataValue="ExecuteInstanceFunction(,Remove,,{{internal.page}},{{internal.row}},{{internal.column}})"></div>
+        <div d-dataKey="functionClear" d-dataType="value" d-dataLoadType="startup" d-dataValue="ExecuteInstanceFunction(,Clear)"></div>
+    </div>
+    <!--Input-->
+    <div>
+        <label>Page:</label><input type="text" d-model="{{internal.page}}" /><br />
+        <label>Row:</label><input type="text" d-model="{{internal.row}}" /><br />
+        <label>Column:</label><input type="text" d-model="{{internal.column}}" /><br />
+        <label>Value:</label><input type="text" d-model="{{internal.value}}" /><br />
+        <input type="button" value="Add" d-on-click="{{functionAdd}}" />
+        <input type="button" value="Remove" d-on-click="{{functionRemove}}" />
+        <input type="button" value="Clear" d-on-click="{{functionClear}}" />
+    </div>
+    <!--Cube-->
+    <div class="linkedCube">
+    </div>
+</div>

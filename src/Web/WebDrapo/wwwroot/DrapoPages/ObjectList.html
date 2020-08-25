@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Drapo Object List</title>
+</head>
+<body>
+    <h1><span>Drapo Object List</span></h1>
+    <div d-dataKey="objects" d-dataUrlGet="~/Object/GetReports"></div>
+    <ul>
+        <li d-for="object in objects">{{object.Code}} - {{object.Name}}</li>
+    </ul>
+</body>
+</html>

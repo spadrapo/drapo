@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - DataPostItem</title>
+</head>
+<body>
+    <br>
+    <span>DataPostItem</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data/GetFunctionPostDataItem" d-dataUrlSet="/Data/SetFunctionPostDataItem" ></div>
+    <div>
+        <input type="text" d-model="{{data.Name}}">
+        <input type="button" value="+1" d-on-click="PostDataItem(data)">
+    </div>
+</body>
+</html>

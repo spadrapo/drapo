@@ -1,0 +1,9 @@
+﻿<div>
+    <div d-dataKey="windowData" d-dataType="object" d-dataUrlGet="/Data/GetFunctionPostDataItem"></div>
+    <div d-dataKey="windowRequest" d-dataType="object" d-dataProperty-code-name="Code" d-dataProperty-code-value="" d-dataProperty-Name-name="Name" d-dataProperty-name-value="500" d-dataUrlSet="/Data/SetFunctionPostDataItem"></div>
+    <div d-dataKey="windowResponse" d-dataType="object"></div>
+    <div d-dataKey="windowFunction" d-dataType="value" d-dataLoadType="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowLoading.html,Windows,false);PostDataItem(windowRequest,windowResponse);UpdateData(windowData,{{windowResponse}});CloseWindow()"></div>
+    <span d-model="{{windowData.Name}}"></span>
+    <input type="button" d-on-click="{{windowFunction}}" value="+ 1" />
+    <div d-datakey="wslLoader" d-datatype="function" d-dataloadtype="startup" d-datavalue="Execute({{windowFunction}})" />
+</div>

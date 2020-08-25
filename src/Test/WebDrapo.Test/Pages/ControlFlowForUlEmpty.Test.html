@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow - For</span>
+        <div d-datakey="options" d-dataurlget="/Data/GetModelSample"></div>
+        <ul>
+            <li d-for="option in options" style="display: none;">
+                <div>
+                    <span>{{option.Key}}</span>
+                </div>
+                <ul>
+                    <li d-for="value in (0..1)" d-if="{{option.Visible}}">
+                        <span>{{value}}</span>
+                    </li>
+                </ul>
+            </li><li>
+                <div>
+                    <span>K0</span>
+                </div>
+                <ul>
+                    <li>
+                        <span>0</span>
+                    </li>
+                </ul>
+            </li><li>
+                <div>
+                    <span>K1</span>
+                </div>
+                <ul>
+                    
+                </ul>
+            </li><li>
+                <div>
+                    <span>K2</span>
+                </div>
+                <ul>
+                    <li>
+                        <span>0</span>
+                    </li>
+                </ul>
+            </li><li>
+                <div>
+                    <span>K3</span>
+                </div>
+                <ul>
+                    
+                </ul>
+            </li><li>
+                <div>
+                    <span>K4</span>
+                </div>
+                <ul>
+                    <li>
+                        <span>0</span>
+                    </li>
+                </ul>
+            </li><li>
+                <div>
+                    <span>K5</span>
+                </div>
+                <ul>
+                    
+                </ul>
+            </li><li>
+                <div>
+                    <span>K6</span>
+                </div>
+                <ul>
+                    <li>
+                        <span>0</span>
+                    </li>
+                </ul>
+            </li><li>
+                <div>
+                    <span>K7</span>
+                </div>
+                <ul>
+                    
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+</body></html>

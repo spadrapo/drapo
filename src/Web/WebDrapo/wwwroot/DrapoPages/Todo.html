@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="../drapo.js"></script>
+    <link href="../css/todo.css" rel="stylesheet" />
+    <title>Todo</title>
+</head>
+<body>
+    <div d-dataKey="config" d-dataType="object" d-dataProperty-showactive="true" d-dataProperty-showcompleted="true"></div>
+    <div d-dataKey="taskAdd" d-dataType="object"></div>
+    <div d-dataKey="todos" d-dataUnitOfWork="false" d-dataUrlGet="~/Todo/Get" d-dataUrlSet="~/Todo/Set" d-dataPipes="todo"></div>
+    <section class="todoapp">
+        <div class="resizer" d-resize-location="width" d-resize-class="resizing" d-resize-preview="true"></div>
+        <header class="header">
+            <h1>todos</h1>
+            <input type="text" class="new-todo" autofocus autocomplete="off" placeholder="What needs to be done?" d-model="{{taskAdd.Task}}" d-model-event="keyup" d-on-keyup-enter="AddDataItem(todos,taskAdd,false);ClearDataField(taskAdd,Task);PostData(todos)">
+        </header>
+        <section class="main">
+            <ul class="todo-list">
+                <li d-for="todo in todos" d-if="(({{config.showactive}}&&!{{todo.Completed}})||({{config.showcompleted}}&&{{todo.Completed}}))" d-class="{todo,completed:{{todo.Completed}},editing:{{todo.Edit}}}" d-dragStart="true" d-dragEnd="true" d-dragOnAfterEnd="PostData(todos)">
+                    <div class="view">
+                        <input class="toggle" type="checkbox" d-model="{{todo.Completed}}" d-on-model-change="PostData(todos)">
+                        <label d-on-dblclick="CheckItemField({{todo.Edit}})">{{todo.Task}}</label>
+                        <button class="destroy" d-on-click="RemoveDataItem(todos,todo);PostData(todos)"></button>
+                    </div>
+                    <input class="edit" type="text" d-model="{{todo.Task}}" d-model-event="keyup" d-on-blur="UncheckItemField({{todo.Edit}},false);PostData(todos)">
+                </li>
+            </ul>
+        </section>
+        <footer class="footer">
+            <ul class="filters">
+                <li><a href="#/all" d-on-click="CheckDataField(config,showactive);CheckDataField(config,showcompleted)">All</a></li>
+                <li><a href="#/active" d-on-click="CheckDataField(config,showactive);UncheckDataField(config,showcompleted)">Active</a></li>
+                <li><a href="#/completed" d-on-click="UncheckDataField(config,showactive);CheckDataField(config,showcompleted)">Completed</a></li>
+            </ul>
+            <button class="clear-completed" d-on-click="ClearData(todos);PostData(todos)">Clear</button>
+        </footer>
+    </section>
+    <footer class="info">
+        <p>Double-click to edit a todo</p>
+    </footer>
+</body>
+</html>

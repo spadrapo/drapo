@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component Content</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <div>
+        <span>Component Content</span>
+        <div class="code">
+    
+   <pre>
+            &lt;div d-datakey="source" d-datatype="object" d-dataproperty-levels="2" d-dataproperty-children="5"&gt;&lt;/div&gt;
+            &lt;div class="state" dc-levels="{{source.levels}}" dc-children="{{source.children}}"&gt;
+                &lt;div d-datakey="internal" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"&gt;&lt;/div&gt;
+                &lt;div d-datakey="data" d-dataurlget="/Data/GetLevels?levels={{internal.levels}}&amp;amp;children={{internal.children}}"&gt;&lt;/div&gt;
+                &lt;div d-for="item in data"&gt;
+                    &lt;br&gt;
+                    &lt;span&gt;Key: {{item.Key}}&lt;/span&gt;&lt;br&gt;
+                    &lt;span&gt;Value: {{item.Value}}&lt;/span&gt;&lt;br&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        </pre>
+</div>
+    </div>
+
+</body></html>

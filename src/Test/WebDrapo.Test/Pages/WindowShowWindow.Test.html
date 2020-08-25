@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+	<script src="../drapo.js"></script>
+	<title>Windows Show Window</title>
+</head>
+<body>
+	<div d-id="Windows" d-sector="@"><div>
+    <div d-datakey="windowData" d-datatype="object" d-dataurlget="/Data/GetFunctionPostDataItem"></div>
+    <div d-datakey="windowRequest" d-datatype="object" d-dataproperty-code-name="Code" d-dataproperty-code-value="" d-dataproperty-name-name="Name" d-dataproperty-name-value="500" d-dataurlset="/Data/SetFunctionPostDataItem"></div>
+    <div d-datakey="windowResponse" d-datatype="object"></div>
+    <div d-datakey="windowFunction" d-datatype="value" d-dataloadtype="startup" d-datavalue="ShowWindow(~/DrapoPages/WindowLoading.html,Windows,false);PostDataItem(windowRequest,windowResponse);UpdateData(windowData,{{windowResponse}});CloseWindow()"></div>
+    <span d-model="{{windowData.Name}}">500 +1</span>
+    <input type="button" d-on-click="{{windowFunction}}" value="+ 1" />
+    <div d-datakey="wslLoader" d-datatype="function" d-dataloadtype="startup" d-datavalue="Execute({{windowFunction}})"></div>
+</div></div>
+	<br />
+	<span>Windows Show</span>
+	<br />
+    <div d-datakey="wswLoader" d-datatype="function" d-dataloadtype="startup" d-datavalue="ShowWindow(~/DrapoPages/WindowShowLoading.html,Windows)"></div>
+
+</body></html>

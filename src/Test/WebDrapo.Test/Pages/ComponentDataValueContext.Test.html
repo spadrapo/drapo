@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - DataValue - Context</title>
+<script src=""></script></head>
+<body>
+    <span>Component - DataValue - Context</span>
+    <div d-sector="@">
+        <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children=4&amp;levels=2&amp;prefix=O"></div>
+        <div d-for="object in objects" style="display: none;">
+            <d-datavalue d-datavalue="{{object.Key}}"></d-datavalue>
+        </div><div>
+            <span d-datavalue="{{objects.[0].Key}}">Data: OL2K0</span>
+        </div><div>
+            <span d-datavalue="{{objects.[1].Key}}">Data: OL2K1</span>
+        </div><div>
+            <span d-datavalue="{{objects.[2].Key}}">Data: OL2K2</span>
+        </div><div>
+            <span d-datavalue="{{objects.[3].Key}}">Data: OL2K3</span>
+        </div>
+    </div>
+
+</body></html>

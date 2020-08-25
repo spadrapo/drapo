@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data - Incremental Load</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow - For</span>
+        <div d-dataKey="users" d-dataLazy="true" d-dataLazyStart="0" d-dataLazyIncrement="100" d-dataUrlGet="/Data/GetData?start={{start}}&length={{increment}}"></div>
+        <ul>
+            <li d-for="user in users">{{user.Key}}</li>
+        </ul>
+    </div>
+</body>
+</html>

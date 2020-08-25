@@ -1,0 +1,9 @@
+﻿<!DOCTYPE html>
+<script src="/drapo.js"></script>
+<div d-sector-parent-url="/DrapoPages/RouterSectorMasterLoadDefaultSectors.html" d-sector-parent="sector" d-sector-sectordefault="/DrapoPages/RouterSectorMasterLoadDefaultSectorsSectorDefault.html">
+    <span>Router Sector</span>
+    <div d-dataKey="users" d-dataUrlGet="/Data"></div>
+    <select>
+        <option d-for="user in users" value="{{user.Key}}">{{user.Value}}</option>
+    </select>
+</div>

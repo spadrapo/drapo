@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Validation Event Outside</title>
+</head>
+<body>
+    <div d-sector="sector">
+        <!--Validation-->
+        <div d-validation-id="outsider" d-validation-type="outside"></div>
+        <div d-id="Windows" d-on-body-keyup-escape="CloseWindow()" d-on-body-click="CloseWindow()" d-validation-on-body-click="{outsider}"></div>
+    </div>
+    <br />
+    <span>Validation Event Outside</span>
+    <div class="cloak" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-dataKey="startup" d-datatype="function" d-dataloadtype="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowsMiddle.html,Windows,false)"></div>
+            <div d-dataKey="click" d-datatype="value" d-dataloadtype="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowsMiddle.html,Windows,false)"></div>
+        </div>
+        <div>
+            <input type="button" value="Validate" d-on-click="{{click}}" />
+        </div>
+    </div>
+</body>
+</html>

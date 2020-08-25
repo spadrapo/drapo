@@ -1,0 +1,10 @@
+﻿.labelinputsubscribe {
+}
+
+    .labelinputsubscribe > span {
+        color: green;
+    }
+
+    .labelinputsubscribe > input {
+        color: red;
+    }

@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Container Clean</title>
+</head>
+<body>
+    <span>Container Clean</span>
+    <div d-sector="0">
+        <div d-dataKey="itemsParent" d-dataUrlGet="/Data/GetLevels?levels=1&children=3"></div>
+        <div d-sector="1">
+            <span>Original</span>
+            <br />
+            <div d-dataKey="items1" d-dataUrlGet="/Data/GetLevels?levels=1&children=1"></div>
+            <div>
+                <div d-for="item in items1">
+                    <span>{{item.Key}}</span>
+                </div>
+            </div>
+            <span>Parent</span>
+            <br />
+            <div>
+                <div d-for="item in itemsParent">
+                    <span>{{item.Key}}</span>
+                </div>
+            </div>
+            <div d-sector="child" d-sector-friend="2">
+                <span>Friend</span>
+                <br />
+                <div>
+                    <div d-for="item in items2">
+                        <span>{{item.Key}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div d-sector="2">
+            <div d-dataKey="items2" d-dataUrlGet="/Data/GetLevels?levels=1&children=2"></div>
+        </div>
+        <div d-dataKey="functionStartup" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateSector(1,/DrapoPages/ContainerCleanSector.html)"></div>
+        <input type="button" value="Swap" d-on-click="Execute({{functionStartup}})" />
+    </div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<script src="/drapo.js"></script>
+<div d-sector-parent-url="/DrapoPages/SectorContainerData.html" d-sector-parent="sector">
+    <span>2</span>
+    <div>
+        <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSample"></div>
+        <div d-dataKey="selected" d-dataType="object"></div>
+        <div>
+            <div d-for="user in users">
+                <input type="checkbox" d-model="{{user.Visible}}">
+                <span d-on-click="UpdateDataField(selected,Index,{{user._Index}})">{{user.Visible}}</span>
+            </div>
+        </div>
+        <span d-model="{{selected.Index}}"></span>
+    </div>
+</div>

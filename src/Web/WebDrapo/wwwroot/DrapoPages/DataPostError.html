@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Post Error</title>
+</head>
+<body>
+    <br>
+    <span>Data Post Error</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data/GetFunctionPostDataItem" d-dataUrlSet="/Data/SetFunctionPostDataItemError"></div>
+    <div d-dataKey="errors" d-dataType="array"></div>
+    <div>
+        <input type="text" d-model="{{data.Name}}">
+        <input type="button" value="+1" d-on-click="PostDataItem(data)">
+    </div>
+    <br />
+    <span>Errors:</span>
+    <ul>
+        <li d-for="error in errors" d-on-click="LoadSectorContent(sector,{{error.Content}})">{{error.Type}} - {{error.Message}}</li>
+    </ul>
+    <br />
+    <span>Details:</span>
+    <div d-sector="sector"></div>
+</body>
+</html>

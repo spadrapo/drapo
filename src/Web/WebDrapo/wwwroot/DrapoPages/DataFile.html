@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data File</title>
+</head>
+<body>
+    <span>Data File</span>
+    <div>
+        <div>
+            <div d-dataKey="file" d-dataType="object" d-dataProperty-url="/DrapoPages/DataFile.html" d-dataProperty-name="DataFile.html"></div>
+            <div d-dataKey="dataFile" d-dataType="file" d-dataUrlGet="~/Data/GetFile?path={{file.url}}&fileName={{file.name}}"></div>
+        </div>
+        <div>
+            <span d-model="{{dataFile.filename}}"></span>
+            <br />
+            <span d-model="{{dataFile.length}}"></span>
+            <br />
+            <input type="button" value="Download" d-on-click="DownloadData(dataFile)" />
+        </div>
+    </div>
+</body>
+</html>

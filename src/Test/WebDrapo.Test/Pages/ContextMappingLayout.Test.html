@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Page</title>
+</head>
+<body>
+    <div>
+        <div d-datakey="tabs" d-datatype="array"></div>
+        <div d-datakey="clipboard" d-datatype="value"></div>
+        <div d-datakey="tabPage" d-datatype="object" d-dataproperty-container="" d-dataproperty-selected="true"></div>
+        <div d-datakey="objectPageTwo" d-datatype="object" d-dataproperty-name="P2" d-dataproperty-value="10"></div>
+        <div d-datakey="functionOpenTabP1" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(tabPage,name,P1);UpdateDataField(tabPage,page,ContextMappingPageOne.html);UncheckDataField(tabs,selected,false);CreateGuid(tabPage,container);AddDataItem(tabs,{{tabPage}});UpdateData(clipboard,P1);UpdateSector(content,/DrapoPages/ContextMappingPageOne.html,Page,true,true,{{tabPage.container}});"></div>
+        <div d-datakey="functionOpenTabP2" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateDataField(tabPage,name,P2);UpdateDataField(tabPage,page,ContextMappingPageTwo.html);UncheckDataField(tabs,selected,false);CreateGuid(tabPage,container);AddDataItem(tabs,{{tabPage}});UpdateData(clipboard,{{objectPageTwo}});UpdateSector(content,/DrapoPages/ContextMappingPageTwo.html,Page,true,true,{{tabPage.container}});"></div>
+        <div d-datakey="functionActivateTab" d-datatype="value" d-dataloadtype="startup" d-datavalue="UncheckDataField(tabs,selected);MoveItem({{tab}},^0,false);CheckItemField({{tab.selected}});UpdateSector(content,/DrapoPages/{{tab.page}},Page,true,true,{{tab.container}})"></div>
+        <div d-datakey="functionStartup" d-datatype="function" d-dataloadtype="startup" d-datavalue="Execute({{functionOpenTabP1}});Execute({{functionOpenTabP2}});ExecuteDataItem({{functionActivateTab}},tab in tabs[0])"></div>
+        <div>
+            <div d-for="tab in tabs" style="border: solid; height: 25px; width: 50px; display: none;">
+                <div>
+                    <span d-if="{{tab.selected}}" style="font-weight:bold" d-model="{{tab.name}}"></span>
+                    <span d-if="!{{tab.selected}}" d-model="{{tab.name}}" d-on-click="{{functionActivateTab}}"></span>
+                </div>
+            </div>
+        <div style="border: solid; height: 25px; width: 50px;">
+                <div>
+                    
+                    <span d-on-click="{{functionActivateTab}}">P2</span>
+                </div>
+            </div><div style="border: solid; height: 25px; width: 50px;">
+                <div>
+                    <span style="font-weight:bold">P1</span>
+                    
+                </div>
+            </div></div>
+        <input type="button" value="P1" d-on-click="{{functionOpenTabP1}}" />
+        <input type="button" value="P2" d-on-click="{{functionOpenTabP2}}" />
+        <div d-sector="@"><div d-sector-parent-url="/DrapoPages/ContextMappingLayout.html" d-sector-parent="content">
+    <div d-datakey="dataPageOne" d-datatype="mapping" d-datavalue="clipboard"></div>
+    <span d-model="{{dataPageOne}}">P1</span>
+</div></div>
+    </div>
+
+
+</body></html>

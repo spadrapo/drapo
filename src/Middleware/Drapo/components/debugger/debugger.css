@@ -1,0 +1,132 @@
+﻿.dbgDebugger {
+    color: black;
+    font-size: 12px;
+    line-height:1.5;
+    padding:2px;
+    margin:2px;
+    border:2px;
+}
+
+    .dbgDebugger fieldset {
+        border: 1px solid #003B00;
+        padding: 2px;
+        margin: 2px;
+    }
+
+    .dbgDebugger legend {
+        font-size: 12px;
+        width:auto;
+        border: 0px
+    }
+
+.dbgLayout {
+    position: fixed;
+    border: 3px solid #003B00;
+    overflow-y: auto;
+}
+
+.dbgLayoutLeft {
+    top: 0px;
+    left: 0px;
+    width: 600px;
+    height: 100vh;
+}
+
+.dbgLayoutRight {
+    top: 0px;
+    right: 0px;
+    width: 600px;
+    height: 100vh;
+}
+
+.dbgLayoutNoErrors {
+    background-color: #008F11;
+}
+
+.dbgLayoutErrors {
+    background-color: red;
+}
+
+.dbgDrapo:hover {
+    cursor: pointer;
+}
+
+.dbgBlock {
+    display: block;
+}
+
+.dbgSelector {
+    position: absolute;
+    left: 100px;
+    width: 300px;
+}
+
+.dbgObject {
+    padding: 5px;
+    white-space: nowrap;
+}
+
+    .dbgObject div span {
+        padding-left: 15px;
+    }
+
+    .dbgObject:hover {
+        color: #333;
+        background-color: #EFEFEF;
+        cursor: pointer;
+    }
+
+.dbgData {
+    padding: 5px;
+    white-space: nowrap;
+}
+
+    .dbgData div span {
+        padding-left: 15px;
+    }
+
+    .dbgData:hover {
+        color: #333;
+        background-color: #EFEFEF;
+        cursor: pointer;
+    }
+
+.dbgObjectSector::before {
+    content: "s";
+}
+
+.dbgObjectData::before {
+    content: "d";
+}
+
+.dbgObjectExpanded::before {
+    content: "-";
+}
+
+.dbgObjectCollapsed::before {
+    content: "+";
+}
+
+.dbgObjectNoExpandable::before {
+    content: "*";
+}
+
+.dbgDebuggerCloak {
+    display:none;
+}
+
+.dbgDebuggerClickable:hover {
+    cursor: pointer;
+}
+
+.dbgDebuggerHighlight {
+    border: 1px solid red;
+}
+
+.dbgRequestLast {
+    color: blue;
+}
+
+.dbgRequestNotLast {
+    color: darkred;
+}

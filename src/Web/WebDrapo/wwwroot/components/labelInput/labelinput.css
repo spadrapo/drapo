@@ -1,0 +1,10 @@
+﻿.labelinput {
+}
+
+    .labelinput > span {
+        color: green;
+    }
+
+    .labelinput > input {
+        color: red;
+    }

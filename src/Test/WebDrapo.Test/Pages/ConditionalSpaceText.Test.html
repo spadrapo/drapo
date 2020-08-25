@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Conditional Spaced Text</title>
+</head>
+<body>
+    <span>Conditional Spaced Text</span>
+    <div>
+        <div>
+            <!--Data-->
+            <div d-datakey="items" d-dataurlget="~/Data/GetLevels?levels=1&amp;children=5&amp;prefix=I1"></div>
+            <div d-datakey="data" d-datatype="object" d-dataproperty-show="Projeto 20180917 (Melhorias pátio de homogeneização)"></div>
+        </div>
+        <div d-if="{{data.show}}">
+            <!--UI-->
+            <div d-if="{{data.show}} = 'Projeto 20180917 (Melhorias pátio de homogeneização)'">
+                <select>
+                    <span style="display: none;"><option d-for="item in items" value="{{item.Key}}">{{item.Value}}</option></span>
+                <option value="I1L1K0">L1V0</option><option value="I1L1K1">L1V1</option><option value="I1L1K2">L1V2</option><option value="I1L1K3">L1V3</option><option value="I1L1K4">L1V4</option></select>
+            </div>
+        </div>
+    </div>
+
+</body></html>

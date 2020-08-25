@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Format Number Size</title>
+</head>
+<body>
+    <br />
+    <span>Format Number Size</span>
+    <div d-datakey="values" d-dataurlget="~/Data/GetLargeNumbers"></div>
+    <div d-for="value in values" style="display: none;">
+        <br />
+        <span d-model="{{value}}" d-format="s"></span>
+        <span d-model="{{value}}"></span>
+    </div><div>
+        <br />
+        <span>12</span>
+        <span>12</span>
+    </div><div>
+        <br />
+        <span>1.2K</span>
+        <span>1200</span>
+    </div><div>
+        <br />
+        <span>12M</span>
+        <span>12000000</span>
+    </div><div>
+        <br />
+        <span>12.3M</span>
+        <span>12300000</span>
+    </div><div>
+        <br />
+        <span>2B</span>
+        <span>2000000000</span>
+    </div><div>
+        <br />
+        <span>8T</span>
+        <span>8000000000000</span>
+    </div>
+
+</body></html>

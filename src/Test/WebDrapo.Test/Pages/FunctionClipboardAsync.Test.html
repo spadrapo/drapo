@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function - Clipboard</title>
+</head>
+<body>
+    <span>Function - Clipboard</span>
+    <div>
+        <div d-datakey="data" d-datatype="object" d-dataproperty-from="Clipboard Data here" d-dataproperty-to=""></div>
+    </div>
+    <div>
+        <span d-model="{{data.from}}">Clipboard Data here</span>
+        <br />
+        <span d-model="{{data.to}}">Clipboard Data here</span>
+        <br />
+        <br />
+        <br />
+        <input type="button" value="Copy" d-on-click="SetClipboard({{data.from}});GetClipboard({{data.to}})" d-id="__drapoUnitTest" driverunittest="click" />
+    </div>
+
+</body></html>

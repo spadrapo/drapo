@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Class Conditional</title>
+    <style>
+        .ppUserListRow &gt; :first-child {
+            border-right: 1px solid #FFFFFF;
+        }
+
+        .ppUserSelected {
+            color: #4A4A4A;
+            background-color: #E1E1E1;
+        }
+
+        .ppUserListRowCell {
+            display: table-cell;
+            border-bottom: 1px solid #E1E1E1;
+            border-right: 1px solid #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+    <div style="width:50%">
+        <span>Class Conditional</span>
+        <div d-datakey="userSelected" d-datatype="object"></div>
+        <div d-datakey="users" d-dataurlget="/Data/GetModelSelectOptions"></div>
+        <div d-for="user in users" d-class="{ppUserListRow,ppUserSelected:{{userSelected.Key}}={{user.Key}}}" d-on-click="UpdateDataField(userSelected,Key,{{user.Key}})" style="width: 100%; display: none;">
+            <div class="ppUserListRowCell" style="width:949px">
+                <span>{{user.Key}}</span>
+            </div>
+        </div><div d-class="{ppUserListRow,ppUserSelected:{{userSelected.Key}}={{user.Key}}}" d-on-click="UpdateDataField(userSelected,Key,{{user.Key}})" style="width: 100%;" class="ppUserListRow">
+            <div class="ppUserListRowCell" style="width:949px">
+                <span>K0</span>
+            </div>
+        </div><div d-class="{ppUserListRow,ppUserSelected:{{userSelected.Key}}={{user.Key}}}" d-on-click="UpdateDataField(userSelected,Key,{{user.Key}})" style="width: 100%;" class="ppUserListRow">
+            <div class="ppUserListRowCell" style="width:949px">
+                <span>K1</span>
+            </div>
+        </div><div d-class="{ppUserListRow,ppUserSelected:{{userSelected.Key}}={{user.Key}}}" d-on-click="UpdateDataField(userSelected,Key,{{user.Key}})" style="width: 100%;" class="ppUserListRow">
+            <div class="ppUserListRowCell" style="width:949px">
+                <span>K2</span>
+            </div>
+        </div><div d-class="{ppUserListRow,ppUserSelected:{{userSelected.Key}}={{user.Key}}}" d-on-click="UpdateDataField(userSelected,Key,{{user.Key}})" style="width: 100%;" class="ppUserListRow">
+            <div class="ppUserListRowCell" style="width:949px">
+                <span>K3</span>
+            </div>
+        </div><div d-class="{ppUserListRow,ppUserSelected:{{userSelected.Key}}={{user.Key}}}" d-on-click="UpdateDataField(userSelected,Key,{{user.Key}})" style="width: 100%;" class="ppUserListRow">
+            <div class="ppUserListRowCell" style="width:949px">
+                <span>K4</span>
+            </div>
+        </div><div d-class="{ppUserListRow,ppUserSelected:{{userSelected.Key}}={{user.Key}}}" d-on-click="UpdateDataField(userSelected,Key,{{user.Key}})" style="width: 100%;" class="ppUserListRow">
+            <div class="ppUserListRowCell" style="width:949px">
+                <span>K5</span>
+            </div>
+        </div><div d-class="{ppUserListRow,ppUserSelected:{{userSelected.Key}}={{user.Key}}}" d-on-click="UpdateDataField(userSelected,Key,{{user.Key}})" style="width: 100%;" class="ppUserListRow">
+            <div class="ppUserListRowCell" style="width:949px">
+                <span>K6</span>
+            </div>
+        </div><div d-class="{ppUserListRow,ppUserSelected:{{userSelected.Key}}={{user.Key}}}" d-on-click="UpdateDataField(userSelected,Key,{{user.Key}})" style="width: 100%;" class="ppUserListRow">
+            <div class="ppUserListRowCell" style="width:949px">
+                <span>K7</span>
+            </div>
+        </div>
+    </div>
+
+</body></html>

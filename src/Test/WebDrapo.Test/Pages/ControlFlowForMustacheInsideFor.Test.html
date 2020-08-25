@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Mustache Inside For</title>
+</head>
+<body>
+    <span>Control Flow - For - Mustache Inside For</span>
+    <div d-datakey="entries" d-dataurlget="/Data/GetLevels?Levels=3&amp;Children=2"></div>
+    <div d-for="entry in entries" style="display: none;">
+        <br />
+        <div style="float:left">
+            <span d-for="level in (1..{{entry._Level}})">-</span>
+        </div>
+        <span>{{entry.Key}}</span>
+        <div d-for="entry in entry.Children"></div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span d-for="level in (1..{{entry._Level}})" style="display: none;">-</span>
+        </div>
+        <span>L3K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span>
+        </div>
+        <span>L2K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span>
+        </div>
+        <span>L1K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span>
+        </div>
+        <span>L1K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div>
+    </div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span>
+        </div>
+        <span>L2K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span>
+        </div>
+        <span>L1K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span>
+        </div>
+        <span>L1K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div>
+    </div>
+    </div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span d-for="level in (1..{{entry._Level}})" style="display: none;">-</span>
+        </div>
+        <span>L3K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span>
+        </div>
+        <span>L2K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span>
+        </div>
+        <span>L1K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span>
+        </div>
+        <span>L1K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div>
+    </div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span>
+        </div>
+        <span>L2K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span>
+        </div>
+        <span>L1K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span>
+        </div>
+        <span>L1K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K0</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div><div style="">
+        <br />
+        <div style="float:left">
+            <span style="">-</span><span style="">-</span><span style="">-</span>
+        </div>
+        <span>L0K1</span>
+        <div d-for="entry in entry.Children" style="display: none;"></div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+</body></html>

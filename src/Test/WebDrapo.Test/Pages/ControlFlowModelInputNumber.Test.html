@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Model - Number</title>
+</head>
+<body>
+    <span>Control Flow - Model - Number</span>
+    <div d-datakey="objects" d-datatype="array" d-datavalue="[{&quot;width&quot;:&quot;90&quot;},{&quot;width&quot;:&quot;70&quot;},{&quot;width&quot;:&quot;50&quot;}]"></div>
+    <div>
+        <div d-for="object in objects" style="display: none;">
+            <input type="number" d-model="{{object.width}}" />
+            <br />
+        </div>
+    <div>
+            <input type="number" />
+            <br />
+        </div><div>
+            <input type="number" />
+            <br />
+        </div><div>
+            <input type="number" />
+            <br />
+        </div></div>
+
+</body></html>

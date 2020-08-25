@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function FilterData</title>
+</head>
+<body>
+    <span>Function FilterData</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data/GetLevels?levels=0&children=30"></div>
+    <div d-dataKey="dataFiltered" d-dataType="array"></div>
+    <div d-dataKey="prop" d-dataType="object" d-dataProperty-filter="1"></div>
+    <div d-dataKey="functionFilter" d-dataType="value" d-dataLoadType="startup" d-dataValue="FilterData(item in data,{{item.Key}} LIKE %{{prop.filter}}%,dataFiltered)"></div>
+    <div>
+        <div d-for="item in dataFiltered">
+            <br />
+            <span d-model="{{item.Key}}"></span>
+        </div>
+    </div>
+    <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="Execute({{functionFilter}})"></div>
+</body>
+</html>

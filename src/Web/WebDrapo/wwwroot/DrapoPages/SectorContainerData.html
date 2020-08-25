@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title>Sector Container Data</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-sm-4 col-sm-push-2">
+            <h1><span>Sector Container Data</span></h1>
+        </div>
+    </div>
+    <div d-dataKey="containers" d-dataType="object" d-dataProperty-one="one"></div>
+    <div>
+        <ul class="list-inline">
+            <li class="list-inline-item">
+                <h3>
+                    <a href="#" d-on-click="UpdateSector(sector,/DrapoPages/SectorContainerDataOne.html,One,,,{{containers.one}})">One</a>
+                </h3>
+                <span d-on-click="DestroyContainer({{containers.one}});ClearSector(sector);ClearDataField(containers,one)">X</span>
+            </li>
+            <li class="list-inline-item">
+                <h3>
+                    <a href="#" d-on-click="UpdateSector(sector,/DrapoPages/SectorContainerDataTwo.html,Two,,,{{containers.two}})">Two</a>
+                </h3>
+                <span d-on-click="DestroyContainer({{containers.two}});ClearSector(sector);ClearDataField(containers,two)">X</span>
+            </li>
+            <li class="list-inline-item">
+                <h3>
+                    <a href="#" d-on-click="UpdateSector(sector,/DrapoPages/SectorContainerDataOne.html,One,,,{{containers.one}})">OneNew</a>
+                </h3>
+                <span d-on-click="DestroyContainer({{containers.one}});ClearSector(sector);ClearDataField(containers,one)">X</span>
+            </li>
+        </ul>
+    </div>
+    <div d-sector="sector" d-sector-url="/DrapoPages/SectorContainerDataOne.html" d-container="{{containers.one}}"></div>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data - Incremental Load Limited</title>
+</head>
+<body>
+    <div>
+        <span>Data - Incremental Load Limited</span>
+        <div d-dataKey="items" d-dataLazy="true" d-dataLazyStart="0" d-dataLazyIncrement="5" d-dataUrlGet="/Data/GetData?start={{start}}&length={{increment}}&max=14"></div>
+        <div d-dataKey="itemsInternal" d-dataUrlGet="/Data/GetLevels?levels=1&children=2&prefix=I"></div>
+        <div>
+            <div d-for="item in items">
+                <span d-model="{{item.Key}}"></span>
+                <div>
+                    <div d-for="itemInternal in itemsInternal">
+                        <span d-model="{{itemInternal.Key}}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Component - Checkbox</title>
+</head>
+<body>
+    <span>Component - Checkbox</span>
+    <div d-dataKey="items" d-dataUrlGet="/Data/GetBooleansAsString"></div>
+    <div d-dataKey="functionToggle" d-dataType="value" d-dataLoadType="startup" d-dataValue="ToggleItemField({{item.Key}})"></div>
+    <div>
+        <div d-for="item in items">
+            <d-checkbox dc-value="{{item.Key}}" dc-label="{{item.Key}}"></d-checkbox>
+        </div>
+    </div>
+</body>
+</html>

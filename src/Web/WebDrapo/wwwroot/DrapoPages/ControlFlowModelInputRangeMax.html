@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Model - Range</title>
+</head>
+<body>
+    <span>Control Flow - Model - Range</span>
+    <div d-dataKey="profitability" d-dataType="array" d-dataValue='[{"ValueDestination":"2400","ValueSource":"1200"},{"ValueSource":"1200","ValueDestination":"1200"}]'></div>
+    <div d-for="driver in profitability">
+        <input type="range" name="valueSource" min="0" d-model="{{driver.ValueDestination}}" d-attr-max="CAST({{driver.ValueSource}}*2,number)" step="1">
+    </div>
+</body>
+</html>

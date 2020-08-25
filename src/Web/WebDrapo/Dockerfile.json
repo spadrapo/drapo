@@ -1,0 +1,6 @@
+﻿FROM microsoft/aspnetcore:2.0.0
+ARG source=.
+WORKDIR /app
+EXPOSE 9901
+COPY ${source:-obj/Docker/publish} .
+ENTRYPOINT ["dotnet", "PowerPlanning.Gateway.Web.WebGateway.dll"]

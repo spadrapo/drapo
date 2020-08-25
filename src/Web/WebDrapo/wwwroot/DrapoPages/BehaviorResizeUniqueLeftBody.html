@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Resize Unique Left Body</title>
+    <style>
+        .resizer {
+            cursor: col-resize;
+        }
+
+        .parent {
+            position: relative;
+            height: 400px;
+            float:right;
+        }
+
+            .parent > div {
+                border: solid 1px black;
+                position: relative;
+                float: right;
+                height: 100%;
+            }
+
+                .parent > div > div {
+                    width: 10px;
+                    height: 100%;
+                    border: solid 1px green;
+                }
+
+                    .parent > div > div:hover {
+                        cursor: col-resize;
+                    }
+    </style>
+</head>
+<body>
+    <span>Resize Unique Left Body</span>
+    <br />
+    <span>Width: </span><span d-model="{{data.width}}"></span><span>px</span>
+    <br />
+    <div d-dataKey="data" d-dataType="object" d-dataProperty-width="100"></div>
+    <div class="parent">
+        <div d-attr-style="width:{{data.width}}px">
+            <div d-resize-model="{{data.width}}" d-resize-location="width" d-resize-type="reverse" d-resize-class="resizer" d-resize-container="3" d-resize-preview="true">
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

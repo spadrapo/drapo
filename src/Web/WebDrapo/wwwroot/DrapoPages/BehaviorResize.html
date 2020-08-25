@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Resize</title>
+    <style>
+        .parent {
+            position:relative;
+            width:600px;
+        }
+
+            .parent > div {
+                border: solid 1px red;
+                position:relative;
+                float:left;
+            }
+
+                .parent > div > input {
+                    width: 50%;
+                }
+    </style>
+</head>
+<body>
+    <span>Resize</span>
+    <br />
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div class="parent">
+        <div d-for="user in users" style="width:10%">
+            <span>Key:</span>
+            <input type="text" d-model="{{user.Key}}">
+            <span>{{user.Key}}</span>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="../drapo.js"></script>
+    <title>Windows Link</title>
+</head>
+<body>
+    <span>Windows Link</span>
+    <div>
+        <div d-dataKey="data" d-dataUrlGet="~/Data/GetModelSample"></div>
+        <div d-dataKey="open" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateData(clipboard,{{data}});ShowWindow(~/DrapoPages/WindowsLinkWindow.html,Windows)"></div>
+        <div d-dataKey="clipboard" d-dataType="object"></div>
+    </div>
+    <br>
+    <div d-id="Windows" d-sector="windows"></div>
+    <br>
+    <input type="button" value="Open" d-on-click="{{open}}" />
+    <div>
+        <div d-for="item in data">
+            <input type="checkbox" d-model="{{item.Visible}}">
+            <span>{{item.Visible}}</span>
+        </div>
+    </div>
+    <div d-dataKey="startup" d-dataType="function" d-dataLoadType="startup" d-dataValue="Execute({{open}});Execute({{linkUncheck}},windows);Execute({{linkOpen}},windows);Execute({{linklinkCheck}},windows);Execute({{linkLinkClose}},windows);Execute({{linkClose}},windows)"></div>
+</body>
+</html>

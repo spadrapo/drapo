@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Attribute</title>
+</head>
+<body>
+    <br />
+    <span>Attribute</span>
+    <div d-datakey="users" d-dataurlget="/Data"></div>
+    <div d-for="user in users" style="display: none;">
+        <input d-attr-placeholder="{{user.Key}}" type="text" />
+    </div><div>
+        <input d-attr-placeholder="{{user.Key}}" type="text" placeholder="K0" />
+    </div><div>
+        <input d-attr-placeholder="{{user.Key}}" type="text" placeholder="K1" />
+    </div><div>
+        <input d-attr-placeholder="{{user.Key}}" type="text" placeholder="K2" />
+    </div><div>
+        <input d-attr-placeholder="{{user.Key}}" type="text" placeholder="K3" />
+    </div><div>
+        <input d-attr-placeholder="{{user.Key}}" type="text" placeholder="K4" />
+    </div>
+
+</body></html>

@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function ExecuteDataItem</title>
+    <style>
+        .selected{
+            color: white;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <span>Function ExecuteDataItem</span>
+    <div d-datakey="data" d-dataurlget="/Data/GetModelSample"></div>
+    <div d-datakey="functionToggle" d-datatype="value" d-dataloadtype="startup" d-datavalue="ToggleItemField({{item.Selected}})"></div>
+    <div>
+        <div d-for="item in data" style="display: none;">
+            <br />
+            <span d-model="{{item.Key}}" d-class="{selected:{{item.Selected}}}" d-on-click="{{functionToggle}}"></span>
+        </div>
+    <div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="{{functionToggle}}">K0</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="{{functionToggle}}">K1</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="{{functionToggle}}" class="selected">K2</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="{{functionToggle}}">K3</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="{{functionToggle}}">K4</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="{{functionToggle}}">K5</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="{{functionToggle}}">K6</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="{{functionToggle}}">K7</span>
+        </div></div>
+    <div d-datakey="functionStartup" d-datatype="function" d-dataloadtype="startup" d-datavalue="ExecuteDataItem({{functionToggle}},item in data,{{item._Index}}=2)"></div>
+
+</body></html>

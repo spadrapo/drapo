@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Server Response Redirect</title>
+</head>
+<body>
+    <span>Server Response Redirect</span>
+    <div d-dataKey="objects" d-dataUrlGet="~/Server/Redirect"></div>
+    <div d-for="object in objects">
+        <span>Price:</span><input type="text" d-model="{{object.price}}" /><br />
+        <span>Quantity:</span><input type="text" d-model="{{object.quantity}}" /><br />
+    </div>
+</body>
+</html>

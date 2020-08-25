@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - If - Internal</title>
+</head>
+<body>
+    <span>Control Flow - For - If - Internal</span>
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetIFSample"></div>
+    <div d-for="user in users">
+        <span>{{user.Value}}</span>
+        <input type="text" d-if="{{user.Visible}}" d-model="{{user.Value}}" />
+    </div>
+</body>
+</html>

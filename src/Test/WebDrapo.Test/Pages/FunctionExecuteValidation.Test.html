@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Function ExecuteValidation</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="@" d-on-body-keyup-escape="CloseWindow()"></div>
+    <br />
+    <span>Function ExecuteValidation</span>
+    <div class="" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-datakey="data" d-datatype="object" d-dataproperty-agree="false" d-dataproperty-agree2="true" d-dataproperty-value="false" d-dataproperty-value2="false"></div>
+            <div d-datakey="click" d-datatype="value" d-dataloadtype="startup" d-datavalue="IF(ExecuteValidation(agree),UpdateDataField(data,value,true),UpdateDataField(data,value,false));IF(ExecuteValidation(agree2),UpdateDataField(data,value2,true),UpdateDataField(data,value2,false))"></div>
+        </div>
+        <div>
+            <!--Validation-->
+            <div d-validation-id="agree" d-validation-type="conditional" d-validation-value="{{data.agree}}"></div>
+            <div d-validation-id="agree2" d-validation-type="conditional" d-validation-value="{{data.agree2}}"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <input type="checkbox" d-model="{{data.agree}}" /><span>Agree</span>
+            <div d-validation="agree" class="validatorInvalid">
+                <span>You must check the agree checkbox</span>
+            </div>
+            <br />
+            <input type="checkbox" d-model="{{data.agree2}}" /><span>Agree2</span>
+            <div d-validation="agree2" class="validatorValid">
+                <span>You must check the agree2 checkbox</span>
+            </div>
+            <br />
+            <span d-model="{{data.value}}">false</span>
+            <br />
+            <span d-model="{{data.value2}}">true</span>
+            <br />
+            <input type="button" value="Validate" d-on-click="{{click}}" d-id="__drapoUnitTest" />
+        </div>
+    </div>
+
+</body></html>

@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - DataPostItem - With Obj sent NULL</title>
+</head>
+<body>
+    <br>
+    <span>DataPostItem</span>
+
+    <div d-dataKey="user" d-dataUrlGet="/Data/GetFunctionPostDataItem"></div>
+    <div d-dataKey="data" d-dataType="object" d-dataUrlSet="/Data/SetFunctionPostDataItem"></div>
+    <div>
+        <input type="text" d-model="{{user.Name}}">
+        <input type="button" value="+1" d-on-click="UpdateDataField(data,,{{user}});PostDataItem(data);Notify(user)">
+    </div>
+</body>
+</html>

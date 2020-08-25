@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="/drapo.js"></script>
+    <title>ModelTextAreaMultipleMustaches</title>
+</head>
+<body>
+    <br />
+    <span>ModelTextAreaMultipleMustaches</span>
+    <div d-datakey="object" d-datatype="object" d-dataproperty-v1="Thiago" d-dataproperty-v2="Henrique" d-dataproperty-v3="da Silva"></div>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateItemField({{object.v1}},Joao)"></div>
+    <div>
+        <span>v1</span><input type="text" d-model="{{object.v1}}" /><br />
+        <span>v2</span><input type="text" d-model="{{object.v2}}" /><br />
+        <span>v3</span><input type="text" d-model="{{object.v3}}" /><br />
+        <br /><span>Calc: v1 + v2 + v3</span><br /><textarea d-model="{{object.v1}} {{object.v2}} {{object.v3}}"></textarea>
+    </div>
+</body>
+</html>

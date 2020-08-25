@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - Notify</title>
+</head>
+<body>
+    <br>
+    <span>Notify</span>
+    <div d-dataKey="datas" d-dataType="array"></div>
+    <div d-dataKey="data" d-dataType="object" d-dataProperty-value=""></div>
+    <div>
+        <input type="text" d-model="{{data.value}}">
+        <input type="button" value="Add" d-on-click="AddDataItem(datas,{{data}},false);ClearDataField(data,value)">
+        <input type="button" value="Refresh" d-on-click="Notify(datas)">
+        <ul>
+            <li d-for="inserted in datas">{{inserted.value}}</li>
+        </ul>
+    </div>
+</body>
+</html>

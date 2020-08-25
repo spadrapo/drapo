@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Model Object</title>
+</head>
+<body>
+    <div d-dataKey="response" d-dataType="object"></div>
+    <label>Text:</label>
+    <input type="text" d-model="{{response.Message}}" d-model-event-cancel="keyup-esc" />
+    <br />
+    <label>Reply:</label>
+    <span d-model="{{response.Message}}"></span>
+</body>
+</html>

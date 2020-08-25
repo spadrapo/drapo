@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Format TimeSpan</title>
+</head>
+<body>
+    <br />
+    <span>Format TimeSpan</span>
+    <div d-datakey="dates" d-dataurlget="~/Data/GetDatesCompare"></div>
+    <div d-for="date in dates" style="display: none;">
+        <br />
+        <span d-model="{{date.start}}" d-format="G"></span>
+        <span d-model="{{date.end}}" d-format="G"></span>
+        <span d-model="Cast({{date.end}} - {{date.start}},number)" d-format="t"></span>
+    </div><div>
+        <br />
+        <span>06/03/1980 00:00:00</span>
+        <span>06/03/1980 00:00:00</span>
+        <span>50ms</span>
+    </div><div>
+        <br />
+        <span>06/03/1980 00:00:00</span>
+        <span>06/03/1980 00:00:25</span>
+        <span>25s</span>
+    </div><div>
+        <br />
+        <span>06/03/1980 00:00:00</span>
+        <span>06/03/1980 00:03:00</span>
+        <span>3m</span>
+    </div><div>
+        <br />
+        <span>06/03/1980 00:00:00</span>
+        <span>06/03/1980 02:00:00</span>
+        <span>2h</span>
+    </div><div>
+        <br />
+        <span>06/03/1980 00:00:00</span>
+        <span>06/04/1980 00:00:00</span>
+        <span>24h</span>
+    </div><div>
+        <br />
+        <span>06/03/1980 00:00:00</span>
+        <span></span>
+        <span></span>
+    </div><div>
+        <br />
+        <span>06/03/1980 00:00:00</span>
+        <span>06/03/1980 00:02:30</span>
+        <span>2m30s</span>
+    </div><div>
+        <br />
+        <span>06/03/1980 00:00:00</span>
+        <span>06/03/1980 04:01:22</span>
+        <span>4h1m22s</span>
+    </div>
+
+</body></html>

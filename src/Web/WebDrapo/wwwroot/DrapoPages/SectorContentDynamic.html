@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Sector - Content Dynamic</title>
+</head>
+<body>
+    <span>Sector - Content Dynamic</span>
+    <!--Data-->
+    <div>
+        <div d-dataKey="contentProperties" d-dataType="object" d-dataProperty-levels="1" d-dataProperty-children="2"></div>
+        <div d-dataKey="sectorContent" d-dataUrlGet="~/Sector/GetContentDynamic?levels={{contentProperties.levels}}&children={{contentProperties.children}}"></div>
+        <div d-dataKey="functionLoadContent" d-dataType="value" d-dataLoadType="startup" d-dataValue="LoadSectorContent(content,{{sectorContent}})"></div>
+        <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="{{functionLoadContent}}"></div>
+    </div>
+    <!--Layout-->
+    <div>
+        <span>Master</span>
+        <br />
+        <span>Levels:</span><input d-model="{{contentProperties.levels}}" type="text" />
+        <span>Children:</span><input d-model="{{contentProperties.children}}" type="text" />
+        <input type="button" d-on-click="{{functionLoadContent}}" value="Apply" />
+        <br />
+        <span>Content</span>
+        <br />
+        <div d-sector="content">
+        </div>
+    </div>
+</body>
+</html>

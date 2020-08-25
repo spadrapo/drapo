@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For Nested Conditional</title>
+</head>
+<body>
+    <span>Control Flow - For Nested Conditional</span>
+    <div d-dataKey="items" d-dataUrlGet="/Data/GetLevels?Levels=1"></div>
+    <ul>
+        <li d-for="item in items">
+            <span d-on-click="ToggleItemField({{item.Selected}})">Key: {{item.Key}}</span><br>
+            <br>
+            <ul>
+                <li d-for="child in item.Children" d-if="{{item.Selected}}">
+                    <span>Child Key: {{child.Key}}</span><br>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="checkdatafield(items,Selected)"></div>
+</body>
+</html>

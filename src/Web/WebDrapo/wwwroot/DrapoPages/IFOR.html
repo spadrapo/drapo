@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>IF - OR</title>
+</head>
+<body>
+    <br>
+    <span>IF - OR</span>
+    <div d-dataKey="values" d-dataType="array" d-dataValue="[-3,-2,-1,0,1,2,3]"></div>
+    <div>
+        <span>Interval Numbers using OR</span>
+        <ul>
+            <li d-for="value in values" d-if="(({{value}}<-1)||({{value}}>1))">{{value}}</li>
+        </ul>
+    </div>
+</body>
+</html>

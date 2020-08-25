@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Plumber Execute</title>
+</head>
+<body>
+    <span>Plumber Execute</span>
+    <div class="" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-datakey="data" d-datatype="array"></div>
+            <div d-datakey="expression" d-datatype="value" d-dataloadtype="startup" d-datavalue="AddDataItem(data,x)" d-dataurlset="~/Plumber/Execute"></div>
+            <div d-datakey="post" d-dataurlget="~/Plumber/Execute" d-datapostget="expression"></div>
+            <div d-datakey="click" d-datatype="value" d-dataloadtype="startup" d-datavalue="PostData(post)"></div>
+        </div>
+        <div>
+            <ul>
+                <li d-for="item in data" style="display: none;">{{item}}</li>
+            <li>x</li></ul>
+        </div>
+        <div>
+            <input type="button" value="Add" d-on-click="{{click}}" d-id="__drapoUnitTest" />
+        </div>
+    </div>
+
+</body></html>

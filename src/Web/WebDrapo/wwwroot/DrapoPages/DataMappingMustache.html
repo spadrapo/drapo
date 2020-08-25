@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Mapping Mustache</title>
+</head>
+<body>
+    <span>Data Mapping Mustache</span>
+    <div>
+        <div>
+            <div d-dataKey="value" d-dataType="value" d-dataValue="OldValue"></div>
+            <div d-dataKey="link" d-dataType="value" d-dataValue="value"></div>
+            <div d-dataKey="mapping" d-dataType="mapping" d-dataValue="{{link}}"></div>
+        </div>
+        <div>
+            <span d-model="{{value}}"></span>
+            <br />
+            <span d-model="{{mapping}}"></span>
+        </div>
+        <div d-dataKey="startup" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateData(mapping,Newvalue);PostData(mapping)"></div>
+    </div>
+</body>
+</html>

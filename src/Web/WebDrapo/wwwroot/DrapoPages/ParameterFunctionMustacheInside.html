@@ -1,0 +1,13 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Parameter Function Mustache Inside</title>
+</head>
+<body>
+    <span>Parameter Function Mustache Inside</span>
+    <div d-dataKey="pageName" d-dataType="value" d-dataValue="RouterOne"></div>
+    <div d-sector="sector"></div>
+    <input type="button" value="Update" d-on-click="UpdateSector(sector,~/DrapoPages/{{pageName}}.html,One)" d-id="__drapoUnitTest" />
+</body>
+</html>

@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Parameter Missing</title>
+</head>
+<body>
+    <span>Data Parameter Missing</span>
+    <div d-dataKey="object" d-dataType="object" d-dataProperty-count="3"></div>
+    <div d-dataKey="items" d-dataUrlGet="/Data/GetLevels?Children={{object.count}}"></div>
+    <div d-dataKey="itemsMissing" d-dataUrlParameters="required" d-dataUrlGet="/Data/GetLevels?Children={{object.countMiss}}"></div>
+    <div d-dataKey="itemsOptional" d-dataUrlParameters="optional" d-dataUrlGet="/Data/GetLevels?Children={{object.countMiss}}"></div>
+    <div>
+        <span>Items</span><br />
+        <div d-for="item in items">
+            <span>Key: {{item.Key}}</span>
+            <span>Value: {{item.Value}}</span><br>
+        </div>
+    </div>
+    <div>
+        <span>Items Missing</span><br />
+        <div d-for="itemMiss in itemsMissing">
+            <span>Key: {{itemMiss.Key}}</span>
+            <span>Value: {{itemMiss.Value}}</span><br>
+        </div>
+    </div>
+    <div>
+        <span>Items Optional</span><br />
+        <div d-for="itemOptional in itemsOptional">
+            <span>Key: {{itemOptional.Key}}</span>
+            <span>Value: {{itemOptional.Value}}</span><br>
+        </div>
+    </div>
+</body>
+</html>

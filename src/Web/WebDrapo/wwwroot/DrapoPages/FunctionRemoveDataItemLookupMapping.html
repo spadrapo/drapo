@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - RemoveDataItemLookup Mapping</title>
+</head>
+<body>
+    <span>Function - RemoveDataItemLookup Mapping</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data"></div>
+    <div d-dataKey="dataMapping" d-dataType="mapping" d-dataValue="data"></div>
+    <div d-datakey="toggle" d-datatype="value" d-dataloadtype="startup" d-datavalue="ToggleItemField({{item.selected}})"></div>
+    <div d-dataKey="functionRemoveSelected" d-dataType="value" d-dataLoadType="startup" d-dataValue="RemoveDataItemLookup(dataMapping,selected,true)"></div>
+    <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="ExecuteDataItem({{toggle}},item in dataMapping[0..3],true,true);Execute({{functionRemoveSelected}})"></div>
+    <div>
+        <div d-for="item in dataMapping">
+            <input type="checkbox" d-model="{{item.selected}}" />
+            <span d-model="{{item.Key}}"></span>
+        </div>
+    </div>
+    <input type="button" value="Remove" d-on-click="{{functionRemoveSelected}}" />
+</body>
+</html>

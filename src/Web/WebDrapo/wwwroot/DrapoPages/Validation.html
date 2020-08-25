@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Validation</title>
+</head>
+<body>
+    <br>
+    <span>Validation</span>
+    <div d-dataKey="res" d-dataType="object" d-dataProperty-placeholder="Name here"></div>
+    <div>
+        <input class="form-control" d-attr-placeholder="{{res.placeholder}}" placeholder="Enter your name" type="text" required>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </div>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

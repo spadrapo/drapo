@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Event Load Sector</title>
+</head>
+<body>
+    <span>Event Load Sector</span>
+    <div>
+        <div d-datakey="data" d-datatype="value" d-datavalue="Loading"></div>
+        <span d-model="{{data}}">Loaded</span>
+        <br />
+        <div d-sector="@" d-on-load="UpdateDataField(data,,Loaded)"><div d-sector-parent-url="~/DrapoPages/SectorData.html" d-sector-parent="sector">
+    <span>1</span>
+    <div>
+        <div d-datakey="users" d-dataurlget="~/Data/GetModelSample"></div>
+        <div d-for="user in users" style="display: none;">
+            <input type="checkbox" d-model="{{user.Visible}}" />
+            <span>{{user.Visible}}</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div>
+    </div>
+</div></div>
+        <div d-datakey="dkStartupAction" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateSector(sector,~/DrapoPages/SectorDataOne.html)"></div>
+    </div>
+
+</body></html>

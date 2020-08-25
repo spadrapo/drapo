@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function External</title>
+</head>
+<body>
+    <script>
+        var value;
+        function SetValue(valueNew)
+        {
+            value = valueNew;
+        }
+
+        function GetValue()
+        {
+            return (value);
+        }
+    </script>
+    <br>
+    <span>Function External</span>
+    <div>
+        <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSample"></div>
+        <div>
+            <input type="button" value="Save" d-on-click="SetExternal(SetValue,users,true)" />
+            <input type="button" value="Load" d-on-click="GetExternal(GetValue,users,true)" />
+            <div d-for="user in users">
+                <input type="checkbox" d-model="{{user.Visible}}">
+                <span d-on-click="UpdateDataField(selected,Index,{{user._Index}})">{{user.Visible}}</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

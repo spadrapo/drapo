@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Bad Request</title>
+</head>
+<body>
+    <span>Bad Request</span>
+    <div d-datakey="badrequest" d-datatype="object"></div>
+    <div d-datakey="config" d-datatype="object" d-dataproperty-isbad="true" d-dataproperty-message="" d-dataproperty-pos=""></div>
+    <div d-datakey="dataRequest" d-datatype="object" d-dataurlget="~/Data/GetRequest?isBadRequest={{config.isbad}}"></div>
+    <div d-datakey="execute" d-datatype="value" d-datavalue="UpdateDataField(config,message,);UpdateDataField(config,pos,);IF({{config.isbad}},UncheckDataField(config,isbad),CheckDataField(config,isbad));UpdateDataField(config,pos,Finished)"></div>
+    <br />
+    <input type="button" value="Toggle" d-on-click="{{execute}}" />
+    <br />
+    <span>BadRequest: </span><span d-model="{{config.isbad}}">false</span><br />
+    <span>StatusCode: </span><span d-model="{{dataRequest}}">200</span><br />
+    <span>Message: </span><span d-model="{{config.message}}"></span><br />
+    <span>Pos: </span><span d-model="{{config.pos}}">Finished</span><br />
+    <br />
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="Execute({{execute}})"></div>
+
+</body></html>

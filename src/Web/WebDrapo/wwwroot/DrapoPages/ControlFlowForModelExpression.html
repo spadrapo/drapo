@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For Model Expression</title>
+</head>
+<body>
+    <span>Control Flow For Model Expression</span>
+    <div d-dataKey="dataFunction" d-dataType="function" d-dataLoadType="startup" d-dataValue="ExecuteDataItem(UpdateItemField({{object.price}},2.1),object in objects[1])"></div>
+    <div d-dataKey="objects" d-dataType="array" d-dataValue="[{&quot;price&quot;:&quot;1.5&quot;,&quot;quantity&quot;:&quot;3&quot;},{&quot;price&quot;:&quot;2.5&quot;,&quot;quantity&quot;:&quot;4&quot;}]"></div>
+    <div d-for="object in objects">
+        <span>Price:</span><input type="text" d-model="{{object.price}}" /><br />
+        <span>Quantity:</span><input type="text" d-model="{{object.quantity}}" /><br />
+        <br />
+        <span>Price:</span><span d-model="{{object.price}}"></span><br />
+        <span>Quantity:</span><span d-model="{{object.quantity}}"></span><br />
+        <span>Expression:</span><span d-model="{{object.price}} * {{object.quantity}}"></span><br />
+        <span>Value:</span><span d-model="Cast({{object.price}} * {{object.quantity}},number)"></span><br />
+        <span>Format:</span><span d-model="Cast({{object.price}} * {{object.quantity}},number)" d-format="D2"></span><br />
+    </div>
+</body>
+</html>

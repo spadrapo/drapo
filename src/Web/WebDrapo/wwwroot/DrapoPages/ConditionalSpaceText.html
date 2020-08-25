@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Conditional Spaced Text</title>
+</head>
+<body>
+    <span>Conditional Spaced Text</span>
+    <div>
+        <div>
+            <!--Data-->
+            <div d-dataKey="items" d-dataUrlGet="~/Data/GetLevels?levels=1&children=5&prefix=I1"></div>
+            <div d-dataKey="data" d-dataType="object" d-dataProperty-show="Projeto 20180917 (Melhorias pátio de homogeneização)"></div>
+        </div>
+        <div d-if="{{data.show}}">
+            <!--UI-->
+            <div d-if="{{data.show}} = 'Projeto 20180917 (Melhorias pátio de homogeneização)'">
+                <select>
+                    <option d-for="item in items" value="{{item.Key}}">{{item.Value}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

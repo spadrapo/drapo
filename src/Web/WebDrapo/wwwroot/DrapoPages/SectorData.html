@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="../drapo.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title>Sector Data</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-sm-2 col-sm-push-4">
+            <h1><span>Sector Data</span></h1>
+        </div>
+    </div>
+    <div>
+        <ul class="list-inline">
+            <li class="list-inline-item"><h3><a d-on-click="UpdateSector(sector,~/DrapoPages/SectorDataOne.html,One)">One</a></h3></li>
+            <li class="list-inline-item"><h3><a d-on-click="UpdateSector(sector,~/DrapoPages/SectorDataTwo.html,Two)">Two</a></h3></li>
+        </ul>
+    </div>
+    <div d-sector="sector" d-sector-url="~/DrapoPages/SectorDataOne.html"></div>
+    <script src="../js/bootstrap.min.js"></script>
+</body>
+</html>

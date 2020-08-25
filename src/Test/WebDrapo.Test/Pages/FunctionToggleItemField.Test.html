@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function - ToggleItemField</title>
+</head>
+<body>
+    <span>Function - ToggleItemField</span>
+    <div d-datakey="items" d-dataurlget="/Data/GetBooleansAsString"></div>
+    <div d-datakey="functionToggle" d-datatype="value" d-dataloadtype="startup" d-datavalue="ToggleItemField({{item.Key}})"></div>
+    <div>
+        <div d-for="item in items" style="display: none;">
+            <span d-on-click="{{functionToggle}}">{{item.Key}}</span>
+        </div>
+    <div>
+            <span d-on-click="{{functionToggle}}">True</span>
+        </div><div>
+            <span d-on-click="{{functionToggle}}">False</span>
+        </div><div>
+            <span d-on-click="{{functionToggle}}">false</span>
+        </div><div>
+            <span d-on-click="{{functionToggle}}">False</span>
+        </div><div>
+            <span d-on-click="{{functionToggle}}">True</span>
+        </div><div>
+            <span d-on-click="{{functionToggle}}">False</span>
+        </div><div>
+            <span d-on-click="{{functionToggle}}">True</span>
+        </div><div>
+            <span d-on-click="{{functionToggle}}">False</span>
+        </div></div>
+    <div d-datakey="functionStartup" d-datatype="function" d-dataloadtype="startup" d-datavalue="ExecuteDataItem({{functionToggle}},item in items,{{item._Index}}=2)"></div>
+
+</body></html>

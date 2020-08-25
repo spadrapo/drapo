@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow Mustache Nested</title>
+</head>
+<body>
+    <span>Control Flow Mustache Nested</span>
+    <div d-datakey="objects" d-datatype="object" d-dataproperty-k1="kv1" d-dataproperty-k2="kv2" d-dataproperty-k3="kv3"></div>
+    <div d-datakey="nesteds" d-datatype="array" d-datavalue="[{&quot;key&quot;:&quot;k1&quot;,&quot;value&quot;:&quot;v1&quot;},{&quot;key&quot;:&quot;k2&quot;,&quot;value&quot;:&quot;v2&quot;}]"></div>
+    <ul d-for="nested in nesteds" style="display: none;">
+        <li>{{objects.{{nested.key}}}}</li>
+    </ul><ul>
+        <li>kv1</li>
+    </ul><ul>
+        <li>kv2</li>
+    </ul>
+
+</body></html>

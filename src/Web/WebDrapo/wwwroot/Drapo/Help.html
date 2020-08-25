@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="/drapo.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Drapo Help</title>
+    <style>
+        html, body, .col-sm-2 {
+            height: 100%;
+        }
+
+        .body {
+            margin: 0px;
+            font-family: sans-serif;
+            background-color: lightgray;
+            overflow-x: hidden;
+        }
+
+        .header {
+            padding: 2px;
+            background-color: black;
+            color: gray;
+            width: 100%;
+        }
+
+        .description {
+            padding: 2px;
+            background-color: darkgrey;
+            width: 100%;
+            height: 100%;
+        }
+
+        .related {
+            padding: 2px;
+            background-color: darkgrey;
+            width: 100%;
+            height: 100%;
+        }
+
+        .tags {
+            padding-top: 24px;
+            height: 70%;
+            width: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 10px;
+            line-height: 25px;
+        }
+
+        a {
+            text-decoration: none !important;
+            color: #333;
+            display: block;
+            padding-left: 5px;
+        }
+
+        a:hover {
+            color: white;
+            background-color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="body">
+    <div class="header">
+        <h1 style="padding-left: 24px;">Drapo Docs</h1>
+    </div>
+    <div class="col-sm-2">
+        <div d-dataKey="tags" d-dataUrlGet="/Help"></div>
+        <div d-dataKey="selectedTag" d-dataType="value" d-datavalue="d-dataKey"></div>
+        <div class="tags">
+            <ul>
+                <li d-for="tag in tags">
+                    <b>{{tag.Value}}</b>
+                    <ul>
+                        <li d-for="child in tag.Children" d-on-click="UpdateDataField(selectedTag,,{{child.Key}});"><a>{{child.Key}}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--Screen-->
+    <div class="col-sm-8">
+        <div d-dataKey="description" d-dataType="value" d-dataUrlGet="/Help/FindTag?key={{selectedTag}}"></div>
+        <div d-dataKey="usage" d-dataType="value" d-dataUrlGet="/Help/GetUsage?key={{selectedTag}}"></div>
+        <div d-dataKey="relatedTags" d-dataType="array" d-dataUrlGet="/Help/GetRelatedTags?key={{selectedTag}}"></div>
+        <h2><span d-model="{{selectedTag}}"></span></h2>
+        <div class="description">
+            <span d-model="{{description}}"></span>
+        </div>
+        <br>
+        <h4><span>Usage</span></h4>
+        <pre><code><span d-model="{{usage}}"></span></code></pre>
+        <br>
+        <h4><span>Related Tags</span></h4>
+        <div class="related" >
+            <ul>
+                <li d-for="relatedTag in relatedTags" d-on-click="UpdateDataField(selectedTag,,{{relatedTag.Key}});"><a>{{relatedTag.Key}}</a></li>
+            </ul>
+        </div>
+    </div> 
+</body>
+</html>

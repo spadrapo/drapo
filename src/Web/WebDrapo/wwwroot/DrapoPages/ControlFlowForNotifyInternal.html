@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>ControlFlor For Notify Internal</title>
+</head>
+<body>
+    <span>ControlFlor For Notify Internal</span>
+    <br />
+    <div d-dataKey="columns" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div d-dataKey="rows" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div>
+        <div d-for="colunm in columns" d-dragStart="column" d-dragEnd="column" style="float:left;border:1px solid black">
+            <span>Col: </span><span>{{colunm.Key}}</span><span>&nbsp;</span>
+        </div>
+    </div>
+    <br />
+    <div style="position:relative;float:left">
+        <div d-for="row in rows" style="float:left">
+            <br />
+            <span>Row: </span><span>{{row.Key}}</span>
+            <br />
+            <div d-for="colunm in columns" style="float:left;border:1px solid black">
+                <span>Col: </span><span>{{colunm.Key}}</span><span>&nbsp;</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

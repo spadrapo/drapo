@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <meta charset="utf-8" />
+    <script src="/drapo.js"></script>
+    <title>Properties - Same Tag</title>
+</head>
+<body>
+    <div d-datakey="users" d-dataurlget="/Data/GetLevels?Levels=0"></div>
+    <div d-for="user in users" style="display: none;">
+        <span><b>Key: {{user.Key}}</b> - Value: {{user.Value}}</span>
+    </div><div>
+        <span><b>Key: L0K0</b> - Value: L0V0</span>
+    </div><div>
+        <span><b>Key: L0K1</b> - Value: L0V1</span>
+    </div><div>
+        <span><b>Key: L0K2</b> - Value: L0V2</span>
+    </div><div>
+        <span><b>Key: L0K3</b> - Value: L0V3</span>
+    </div><div>
+        <span><b>Key: L0K4</b> - Value: L0V4</span>
+    </div>
+
+</body></html>

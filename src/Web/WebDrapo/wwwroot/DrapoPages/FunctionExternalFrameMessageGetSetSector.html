@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Function External Frame Sector</title>
+</head>
+<body>
+    <script>
+        var value;
+        function SetValue(valueNew) {
+            value = valueNew;
+        }
+
+        function GetValue() {
+            return (value);
+        }
+
+        function ReceiveMessage(event)
+        {
+            var message = event.data;
+            if (message._action === 'set') {
+                SetValue(message._data);
+            } else if (message._action === 'get') {
+                message._action = 'set';
+                message._data = GetValue();
+                event.source.postMessage(message,'*');
+            } 
+        }
+
+        window.addEventListener("message", ReceiveMessage, false);
+    </script>
+    <br>
+    <span>Function External Frame Sector</span>
+</body>
+</html>

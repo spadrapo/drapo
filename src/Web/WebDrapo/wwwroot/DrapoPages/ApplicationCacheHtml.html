@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Application Cache Html</title>
+</head>
+<body>
+    <br>
+    <span>Application Cache Html</span>
+    <div>
+        <div>
+            <div d-dataKey="object" d-dataType="querystring"></div>
+        </div>
+        <div d-for="property in object">
+            <span>{{property.Key}} - {{property.Value}}</span>
+        </div>
+    </div>
+</body>
+</html>

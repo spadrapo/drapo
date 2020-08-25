@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <meta charset="utf-8" />
+    <link href="/css/themes.css" rel="stylesheet" />
+    <title>Themes</title>
+</head>
+<body>
+    <div>
+        <div d-dataKey="themes" d-dataConfigGet="Themes"></div>
+        <div d-dataKey="drapo" d-dataCookieGet="drapo"></div>
+        <br />
+        <label>Choose Theme:</label>
+        <br />
+        <select d-model="{{drapo.theme}}" d-on-change="PostData(drapo);ReloadPage()">
+            <option d-for="theme in themes" value="{{theme.Tag}}">{{theme.Name}}</option>
+        </select>
+        <br />
+        <br />
+        <span>Selected:</span>
+        <span d-model="{{drapo.theme}}"></span>
+    </div>
+</body>
+</html>

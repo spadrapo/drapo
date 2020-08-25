@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - Stylist</title>
+<script src=""></script><style id="s1" type="text/css">.s1 
+{
+ position:relative;
+float:left;
+margin:5px;
+background-color:red;
+width:20px;
+height:20px;
+ }</style><style id="s2" type="text/css">.s2 
+{
+ position:relative;
+float:left;
+margin:5px;
+background-color:green;
+width:30px;
+height:30px;
+ }</style></head>
+<body>
+    <span>Component - Stylist</span>
+    <div d-sector="@" dc-count="3" dc-size="20px" dc-color="red" dc-name="s1">
+    <div d-datakey="internal" d-datatype="parent" d-datavalue="dc-"></div>
+    <div d-for="value in (0..{{internal.count}})" style="display: none;">
+        <div class="s1"></div>
+    </div><div>
+        <div class="s1"></div>
+    </div><div>
+        <div class="s1"></div>
+    </div><div>
+        <div class="s1"></div>
+    </div>
+</div>
+    <div d-sector="@" dc-count="5" dc-size="30px" dc-color="green" dc-name="s2">
+    <div d-datakey="internal" d-datatype="parent" d-datavalue="dc-"></div>
+    <div d-for="value in (0..{{internal.count}})" style="display: none;">
+        <div class="s2"></div>
+    </div><div>
+        <div class="s2"></div>
+    </div><div>
+        <div class="s2"></div>
+    </div><div>
+        <div class="s2"></div>
+    </div><div>
+        <div class="s2"></div>
+    </div><div>
+        <div class="s2"></div>
+    </div>
+</div>
+
+</body></html>

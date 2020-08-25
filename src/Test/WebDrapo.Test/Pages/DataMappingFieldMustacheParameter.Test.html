@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Mapping Field Mustache Parameter</title>
+</head>
+<body>
+    <span>Data Mapping Field Mustache Parameter</span>
+    <div>
+        <div>
+            <div d-datakey="user" d-datatype="object" d-dataproperty-name="Old Name Here"></div>
+            <div d-datakey="link" d-datatype="value" d-datavalue="name"></div>
+            <div d-datakey="mapping" d-datatype="mapping" d-datavalue="user" d-datamappingfield="{{link}}"></div>
+        </div>
+        <div>
+            <span d-model="{{user.name}}">Newvalue</span>
+            <br />
+            <span d-model="{{mapping}}">Newvalue</span>
+        </div>
+        <div d-datakey="startup" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateData(mapping,Newvalue);PostData(mapping)"></div>
+    </div>
+
+</body></html>

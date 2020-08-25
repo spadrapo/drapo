@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Component for</title>
+</head>
+<body>
+    <div>
+        <span>Component for</span>
+        <div d-dataKey="internal" d-dataType="object" d-dataProperty-levels="1" d-dataProperty-children="5"></div>
+        <div d-dataKey="source" d-dataUrlGet="/Data/GetLevels?levels={{internal.levels}}&children={{internal.children}}"></div>
+        <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateDataField(internal,children,8)"></div>
+        <span>Count:</span><input type="text" d-model="{{internal.children}}" />
+        <d-context dc-for="source" dc-property="Key"></d-context>
+    </div>
+</body>
+</html>

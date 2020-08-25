@@ -1,0 +1,12 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - Labelinput</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <div d-datakey="object" d-dataurlget="/Object/GetComplex" d-dataurlset="/Object/SetComplex"></div>
+    <div class="labelinput" d-caption="Name:" d-model="{{object.Name}}">
+    <span>Name:</span>
+    <input type="text" d-model="{{object.Name}}" />
+</div>
+
+</body></html>

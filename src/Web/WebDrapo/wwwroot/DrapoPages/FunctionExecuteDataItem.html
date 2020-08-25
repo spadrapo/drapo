@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function ExecuteDataItem</title>
+    <style>
+        .selected{
+            color: white;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <span>Function ExecuteDataItem</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div d-dataKey="functionToggle" d-dataType="value" d-dataLoadType="startup" d-dataValue="ToggleItemField({{item.Selected}})"></div>
+    <div>
+        <div d-for="item in data">
+            <br />
+            <span d-model="{{item.Key}}" d-class="{selected:{{item.Selected}}}" d-on-click="{{functionToggle}}"></span>
+        </div>
+    </div>
+    <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="ExecuteDataItem({{functionToggle}},item in data,{{item._Index}}=2)"></div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="/drapo.js"></script>
+    <title>Properties - Same Tag</title>
+</head>
+<body>
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetLevels?Levels=0"></div>
+    <div d-for="user in users">
+        <span><b>Key: {{user.Key}}</b> - Value: {{user.Value}}</span>
+    </div>
+</body>
+</html>

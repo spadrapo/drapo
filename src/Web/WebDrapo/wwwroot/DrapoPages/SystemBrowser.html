@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>System Browser</title>
+</head>
+<body>
+    <span>System Browser</span>
+    <div d-dataKey="browser" d-dataType="object"></div>
+    <div>
+        <div d-for="item in browser">
+            <span d-model="{{item.Key}}"></span><span> = </span><span d-model="{{item.Value}}"></span>
+            <br />
+        </div>
+    </div>
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateData(browser,{{__browser}})"></div>
+</body>
+</html>

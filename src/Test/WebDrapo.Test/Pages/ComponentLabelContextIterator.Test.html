@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - LabelContext Iterator</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <span>Component - LabelContext Iterator</span>
+    <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children=2&amp;levels=2&amp;includeIndex=true"></div>
+    <div>
+        <div d-for="object in objects.[1].Children" style="display: none;">
+            <d-labelcontext dc-model="{{object.Key}}"></d-labelcontext>
+            <br />
+        </div>
+    <div>
+            <div dc-model="{{objects.[1].Children.[0].Key}}">
+    <span>objects.[1].Children.[0].Key</span>
+    <span>I8L1K0</span>
+</div>
+            <br />
+        </div><div>
+            <div dc-model="{{objects.[1].Children.[1].Key}}">
+    <span>objects.[1].Children.[1].Key</span>
+    <span>I11L1K1</span>
+</div>
+            <br />
+        </div></div>
+
+</body></html>

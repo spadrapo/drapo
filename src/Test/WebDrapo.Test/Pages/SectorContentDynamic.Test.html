@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Sector - Content Dynamic</title>
+</head>
+<body>
+    <span>Sector - Content Dynamic</span>
+    <!--Data-->
+    <div>
+        <div d-datakey="contentProperties" d-datatype="object" d-dataproperty-levels="1" d-dataproperty-children="2"></div>
+        <div d-datakey="sectorContent" d-dataurlget="~/Sector/GetContentDynamic?levels={{contentProperties.levels}}&amp;children={{contentProperties.children}}"></div>
+        <div d-datakey="functionLoadContent" d-datatype="value" d-dataloadtype="startup" d-datavalue="LoadSectorContent(content,{{sectorContent}})"></div>
+        <div d-datakey="functionStartup" d-datatype="function" d-dataloadtype="startup" d-datavalue="{{functionLoadContent}}"></div>
+    </div>
+    <!--Layout-->
+    <div>
+        <span>Master</span>
+        <br />
+        <span>Levels:</span><input d-model="{{contentProperties.levels}}" type="text" />
+        <span>Children:</span><input d-model="{{contentProperties.children}}" type="text" />
+        <input type="button" d-on-click="{{functionLoadContent}}" value="Apply" />
+        <br />
+        <span>Content</span>
+        <br />
+        <div d-sector="@"><div>
+<span>Content Dynamic</span>
+<div d-sector="@">
+<div d-sector="@">
+   <div d-datakey="items" d-dataurlget="~/Data/GetModelSample"></div>
+   <div>
+      <div d-for="item in items" style="display: none;">
+         <input type="text" d-model="{{item.Key}}" />
+         <span>{{item.Key}}</span>
+         <br />
+      </div>
+   <div>
+         <input type="text" />
+         <span>K0</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K1</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K2</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K3</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K4</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K5</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K6</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K7</span>
+         <br />
+      </div></div>
+   <br />
+</div>
+<div d-sector="@">
+   <div d-datakey="items" d-dataurlget="~/Data/GetModelSample"></div>
+   <div>
+      <div d-for="item in items" style="display: none;">
+         <input type="text" d-model="{{item.Key}}" />
+         <span>{{item.Key}}</span>
+         <br />
+      </div>
+   <div>
+         <input type="text" />
+         <span>K0</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K1</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K2</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K3</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K4</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K5</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K6</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K7</span>
+         <br />
+      </div></div>
+   <br />
+</div>
+</div>
+<div d-sector="@">
+<div d-sector="@">
+   <div d-datakey="items" d-dataurlget="~/Data/GetModelSample"></div>
+   <div>
+      <div d-for="item in items" style="display: none;">
+         <input type="text" d-model="{{item.Key}}" />
+         <span>{{item.Key}}</span>
+         <br />
+      </div>
+   <div>
+         <input type="text" />
+         <span>K0</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K1</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K2</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K3</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K4</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K5</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K6</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K7</span>
+         <br />
+      </div></div>
+   <br />
+</div>
+<div d-sector="@">
+   <div d-datakey="items" d-dataurlget="~/Data/GetModelSample"></div>
+   <div>
+      <div d-for="item in items" style="display: none;">
+         <input type="text" d-model="{{item.Key}}" />
+         <span>{{item.Key}}</span>
+         <br />
+      </div>
+   <div>
+         <input type="text" />
+         <span>K0</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K1</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K2</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K3</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K4</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K5</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K6</span>
+         <br />
+      </div><div>
+         <input type="text" />
+         <span>K7</span>
+         <br />
+      </div></div>
+   <br />
+</div>
+</div>
+</div>
+</div>
+    </div>
+
+</body></html>

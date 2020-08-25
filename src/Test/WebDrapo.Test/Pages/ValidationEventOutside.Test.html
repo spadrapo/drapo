@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Validation Event Outside</title>
+</head>
+<body>
+    <div d-sector="@">
+        <!--Validation-->
+        <div d-validation-id="outsider" d-validation-type="outside"></div>
+        <div d-id="Windows" d-on-body-keyup-escape="CloseWindow()" d-on-body-click="CloseWindow()" d-validation-on-body-click="{outsider}"><div>
+    <div style="position:absolute;left:40vw;top:10vh;height:40vh;width:20vw;border:2px solid black">
+        <div style="position:absolute;left:10%;top:10%">
+            <span>Window State</span>
+            <br />
+            <div>
+                <div d-datakey="items" d-dataurlget="~/Data/GetModelSample"></div>
+                <div d-for="item in items" style="display: none;">
+                    <input type="checkbox" d-model="{{item.Visible}}" />
+                    <span>{{item.Visible}}</span>
+                </div><div>
+                    <input type="checkbox" />
+                    <span>true</span>
+                </div><div>
+                    <input type="checkbox" />
+                    <span>true</span>
+                </div><div>
+                    <input type="checkbox" />
+                    <span>true</span>
+                </div><div>
+                    <input type="checkbox" />
+                    <span>true</span>
+                </div><div>
+                    <input type="checkbox" />
+                    <span>true</span>
+                </div><div>
+                    <input type="checkbox" />
+                    <span>true</span>
+                </div><div>
+                    <input type="checkbox" />
+                    <span>true</span>
+                </div><div>
+                    <input type="checkbox" />
+                    <span>true</span>
+                </div>
+            </div>
+            <br />
+            <input type="button" d-on-click="ShowWindow(~/DrapoPages/WindowsMiddle.html,Windows)" value="Open" />
+            <input type="button" d-on-click="CloseWindow()" value="Close" />
+            <input type="button" value="Select All" d-on-click="UpdateDataField(items,Visible,true)" d-id="__drapoUnitTest" />
+        </div>
+    </div>
+</div></div>
+    </div>
+    <br />
+    <span>Validation Event Outside</span>
+    <div class="" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-datakey="startup" d-datatype="function" d-dataloadtype="startup" d-datavalue="ShowWindow(~/DrapoPages/WindowsMiddle.html,Windows,false)"></div>
+            <div d-datakey="click" d-datatype="value" d-dataloadtype="startup" d-datavalue="ShowWindow(~/DrapoPages/WindowsMiddle.html,Windows,false)"></div>
+        </div>
+        <div>
+            <input type="button" value="Validate" d-on-click="{{click}}" />
+        </div>
+    </div>
+
+</body></html>

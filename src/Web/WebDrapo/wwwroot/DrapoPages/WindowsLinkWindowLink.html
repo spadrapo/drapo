@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<div style="border: 1px black solid">
+    <span>Window Link Window Link</span>
+    <br />
+    <div>
+        <div d-dataKey="dataLinkLink" d-dataType="mapping" d-dataValue="clipboard"></div>
+        <div d-dataKey="linkLinkClose" d-dataType="value" d-dataLoadType="startup" d-dataValue="PostData(dataLinkLink);CloseWindow();UpdateData(dataLink,{{clipboard}})"></div>
+        <div d-dataKey="linklinkCheckItem" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateItemField({{item.Visible}},true)"></div>
+        <div d-dataKey="linklinkCheck" d-dataType="value" d-dataLoadType="startup" d-dataValue="ExecuteDataItem({{linklinkCheckItem}},item in dataLinkLink)"></div>
+        <div d-for="item in dataLinkLink">
+            <input type="checkbox" d-model="{{item.Visible}}">
+            <span>{{item.Visible}}</span>
+        </div>
+    </div>
+    <br />
+    <input type="button" d-on-click="{{linkLinkClose}}" value="Close" />
+    <input type="button" d-on-click="{{linklinkCheck}}" value="Check" />
+</div>

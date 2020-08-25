@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Component - DataValue - Context</title>
+</head>
+<body>
+    <span>Component - DataValue - Context</span>
+    <div d-sector="notroot">
+        <div d-dataKey="objects" d-dataUrlGet="~/Data/GetLevels?children=4&levels=2&prefix=O"></div>
+        <div d-for="object in objects">
+            <d-datavalue d-dataValue="{{object.Key}}"></d-datavalue>
+        </div>
+    </div>
+</body>
+</html>

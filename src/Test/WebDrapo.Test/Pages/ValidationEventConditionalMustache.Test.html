@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Validation Event Conditional</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="@" d-on-body-keyup-escape="CloseWindow()"></div>
+    <br />
+    <span>Validation Event Conditional</span>
+    <div class="" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-datakey="data" d-datatype="object" d-dataproperty-enable="false" d-dataproperty-enable2="true" d-dataproperty-agree="false" d-dataproperty-agree2="false"></div>
+            <div d-datakey="click" d-datatype="value" d-dataloadtype="startup" d-datavalue="ShowWindow(~/DrapoPages/WindowLoading.html,Windows,false)"></div>
+            <div d-datakey="validation" d-datatype="value" d-datavalue="{agree:{{data.enable}},agree2:{{data.enable2}}}"></div>
+        </div>
+        <div>
+            <!--Validation-->
+            <div d-validation-id="agree" d-validation-type="conditional" d-validation-value="{{data.agree}}"></div>
+            <div d-validation-id="agree2" d-validation-type="conditional" d-validation-value="{{data.agree2}}"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <input type="checkbox" d-model="{{data.enable}}" /><span>Enable</span>
+            <br />
+            <input type="checkbox" d-model="{{data.enable2}}" /><span>Enable2</span>
+            <br />
+            <input type="checkbox" d-model="{{data.agree}}" /><span>Agree</span>
+            <div d-validation="agree" class="validationUnchecked">
+                <span>You must check the agree checkbox</span>
+            </div>
+            <br />
+            <input type="checkbox" d-model="{{data.agree2}}" /><span>Agree2</span>
+            <div d-validation="agree2" class="validatorInvalid">
+                <span>You must check the agree2 checkbox</span>
+            </div>
+            <br />
+            <br />
+            <input type="button" value="Validate" d-on-click="{{click}}" d-validation-on-click="{{validation}}" d-id="__drapoUnitTest" />
+        </div>
+    </div>
+
+</body></html>

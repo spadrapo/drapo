@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Function CreateTimer Loop</title>
+</head>
+<body>
+    <span>Function CreateTimer Loop</span>
+    <div class="cloak" d-cloak="cloak">
+        <!--Data-->
+        <div d-dataKey="items" d-dataType="array"></div>
+        <div d-dataKey="timer" d-datatype="value" d-dataloadtype="startup" d-dataValue="AddDataItem(items,1)"></div>
+        <ul>
+            <li d-for="item in items">{{item}}</li>
+        </ul>
+    </div>
+    <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="CreateTimer({{timer}},100, true)"></div>
+</body>
+</html>

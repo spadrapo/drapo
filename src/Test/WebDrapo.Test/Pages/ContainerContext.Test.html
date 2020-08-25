@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Container</title>
+</head>
+<body>
+    <span>Container</span>
+    <div d-datakey="itemsNoSector" d-dataurlget="/Data/GetLevels?levels=1&amp;children=1"></div>
+    <div d-sector="@">
+        <div d-datakey="itemsParent" d-dataurlget="/Data/GetLevels?levels=1&amp;children=3"></div>
+        <div d-sector="@" d-sector-friend="2">
+            <span>First</span>
+            <br />
+            <span>Local</span>
+            <br />
+            <div d-datakey="items1" d-dataurlget="/Data/GetLevels?levels=1&amp;children=1"></div>
+            <div>
+                <div d-for="item in items1" style="display: none;">
+                    <span>{{item.Key}}</span>
+                </div><div>
+                    <span>L1K0</span>
+                </div>
+            </div>
+            <span>Friend</span>
+            <br />
+            <div>
+                <div d-for="item in items2" style="display: none;">
+                    <span>{{item.Key}}</span>
+                </div><div>
+                    <span>L1K0</span>
+                </div><div>
+                    <span>L1K1</span>
+                </div>
+            </div>
+            <span>Parent</span>
+            <br />
+            <div>
+                <div d-for="item in itemsParent" style="display: none;">
+                    <span>{{item.Key}}</span>
+                </div><div>
+                    <span>L1K0</span>
+                </div><div>
+                    <span>L1K1</span>
+                </div><div>
+                    <span>L1K2</span>
+                </div>
+            </div>
+            <span>No Sector</span>
+            <br />
+            <div>
+                <div d-for="item in itemsNoSector" style="display: none;">
+                    <span>{{item.Key}}</span>
+                </div><div>
+                    <span>L1K0</span>
+                </div>
+            </div>
+            <span>Outside</span>
+            <br />
+            <div>
+                <div d-for="item in itemsOutside" style="display: none;">
+                    <span>{{item.Key}}</span>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div d-sector="@">
+            <span>Second</span>
+            <br />
+            <span>Local</span>
+            <br />
+            <div d-datakey="items2" d-dataurlget="/Data/GetLevels?levels=1&amp;children=2"></div>
+            <div>
+                <div d-for="item in items2" style="display: none;">
+                    <span>{{item.Key}}</span>
+                </div><div>
+                    <span>L1K0</span>
+                </div><div>
+                    <span>L1K1</span>
+                </div>
+            </div>
+            <span>Friend</span>
+            <br />
+            <div>
+                <div d-for="item in items1" style="display: none;">
+                    <span>{{item.Key}}</span>
+                </div>
+            </div>
+            <span>Parent</span>
+            <br />
+            <div>
+                <div d-for="item in itemsParent" style="display: none;">
+                    <span>{{item.Key}}</span>
+                </div><div>
+                    <span>L1K0</span>
+                </div><div>
+                    <span>L1K1</span>
+                </div><div>
+                    <span>L1K2</span>
+                </div>
+            </div>
+            <span>No Sector</span>
+            <br />
+            <div>
+                <div d-for="item in itemsNoSector" style="display: none;">
+                    <span>{{item.Key}}</span>
+                </div><div>
+                    <span>L1K0</span>
+                </div>
+            </div>
+            <span>Outside</span>
+            <br />
+            <div>
+                <div d-for="item in itemsOutside" style="display: none;">
+                    <span>{{item.Key}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div d-sector="@">
+        <div d-datakey="itemsOutside" d-dataurlget="/Data/GetLevels?levels=1&amp;children=4"></div>
+    </div>
+
+</body></html>

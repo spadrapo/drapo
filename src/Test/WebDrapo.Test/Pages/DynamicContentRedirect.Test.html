@@ -1,0 +1,13 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Dynamic Content Redirect</title>
+</head>
+<body>
+    <br />
+    <span>Dynamic Content Redirect</span>
+    <div d-datakey="url" d-datatype="value" d-datavalue="~/redirect/Attribute.html"></div>
+    <div>
+        <iframe d-attr-src="{{url}}" style="position: absolute; height: 100%; width: 100%; border: none" src="http://localhost:9991/redirect/Attribute.html"></iframe>
+    </div>
+
+</body></html>

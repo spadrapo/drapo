@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Parent Sector Parent</title>
+</head>
+<body>
+    <div>
+        <span>Data Parent Sector Parent</span>
+        <div d-sector="1" class="state" dc-levels="0" dc-children="3">
+            <span>1</span>
+            <div>
+                <div d-dataKey="internal" d-dataType="parent" d-dataValue="dc-"></div>
+                <div d-dataKey="data" d-dataUrlGet="/Data/GetLevels?levels={{internal.levels}}&children={{internal.children}}"></div>
+                <div d-for="item in data">
+                    <br>
+                    <span>Key: {{item.Key}}</span><br>
+                    <span>Value: {{item.Value}}</span><br>
+                </div>
+            </div>
+            <div d-sector="2" class="state" dc-levels="0" dc-children="1">
+                <span>2</span>
+                <div d-dataKey="internal" d-dataType="parent" d-dataValue="dc-"></div>
+                <div d-dataKey="data2" d-dataUrlGet="/Data/GetLevels?levels={{internal.levels}}&children={{internal.children}}"></div>
+                <div d-for="item in data2">
+                    <br>
+                    <span>Key: {{item.Key}}</span><br>
+                    <span>Value: {{item.Value}}</span><br>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

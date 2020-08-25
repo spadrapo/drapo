@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Multiple Sources</title>
+</head>
+<body>
+    <span>Control Flow - For - Multiple Sources</span>
+    <div d-dataKey="objectSizes" d-dataType="array" d-dataUrlGet="~/Data/GetObjectSizes"></div>
+    <div d-dataKey="objectOptions" d-dataType="array" d-dataUrlGet="~/Data/GetObjectSizeOptions"></div>
+    <div d-for="size in objectSizes.Sizes">
+        <br />
+        <span d-model="{{size.Value}}"></span>
+        <select d-model="{{size.Value}}">
+            <option d-for="option in objectOptions.Options" value="{{option.Code}}">{{option.Name}}</option>
+        </select>
+        <br />
+    </div>
+</body>
+</html>

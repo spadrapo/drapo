@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="/drapo.js"></script>
+    <title>User Config</title>
+    <link href="/css/themes.css" rel="stylesheet" />
+</head>
+<body>
+    <div d-dataKey="theme" d-dataType="value" d-dataValue="light"></div>
+    <div d-dataKey="themeCurrent" d-dataUrlGet="~/UserConfiguration/ChangeTheme?theme={{theme}}"></div>
+    <div d-dataKey="functionChangeDark" d-dataType="value" d-dataValue="UpdateData(theme,dark)"></div>
+    <div d-dataKey="functionChangeLight" d-dataType="value" d-dataValue="UpdateData(theme,light)"></div>
+    <div>
+        <span>User Config</span>
+        <br />
+        <div class="background" style="height:100px;width:100px"></div>
+        <br />
+        <span d-model="{{theme}}"></span>
+        <span d-model="{{themeCurrent}}"></span>
+        <br />
+        <input type="button" value="Dark" d-on-click="{{functionChangeDark}}" />
+        <input type="button" value="Light" d-on-click="{{functionChangeLight}}" />
+    </div>
+</body>
+</html>

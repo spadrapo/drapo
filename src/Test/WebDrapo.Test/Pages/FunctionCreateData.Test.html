@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function - CreateData</title>
+</head>
+<body>
+    <br />
+    <span>CreateData</span>
+    <div d-datakey="object" d-datatype="object" d-dataproperty-title-name="Title" d-dataproperty-title-value="Drapo" d-dataproperty-subtitle-name="Subtitle" d-dataproperty-subtitle-value="spa drapo"></div>
+    <ul>
+        <li d-for="property in object" style="display: none;">{{property.Key}} - {{property.Value}}</li><li>Name - Thiago</li><li>Last - Silva</li>
+    </ul>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="CreateData(object,true,Name,Thiago,Last,Silva)"></div>
+    <input type="button" value="Create" d-on-click="CreateData(object,true,Name,Thiago,Last,Silva)" />
+
+</body></html>

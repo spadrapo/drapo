@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Dictionary</title>
+</head>
+<body>
+    <span>Control Flow - Dictionary</span>
+    <div d-datakey="dictionary" d-dataurlget="/Data/GetDictionary"></div>
+    <div d-for="entry in dictionary" style="display: none;">
+        <br />
+        <span>Key: {{entry.Key}}</span><br />
+        <div d-for="value in entry.Value">
+            <span>Value.Key: {{value.Key}}</span><br />
+            <span>Value.Value: {{value.Value}}</span><br />
+        </div>
+    </div><div>
+        <br />
+        <span>Key: Thiago</span><br />
+        <div>
+            <span>Value.Key: KT</span><br />
+            <span>Value.Value: VT</span><br />
+        </div><div>
+            <span>Value.Key: Kh</span><br />
+            <span>Value.Value: Vh</span><br />
+        </div><div>
+            <span>Value.Key: Ki</span><br />
+            <span>Value.Value: Vi</span><br />
+        </div><div>
+            <span>Value.Key: Ka</span><br />
+            <span>Value.Value: Va</span><br />
+        </div><div>
+            <span>Value.Key: Kg</span><br />
+            <span>Value.Value: Vg</span><br />
+        </div><div>
+            <span>Value.Key: Ko</span><br />
+            <span>Value.Value: Vo</span><br />
+        </div>
+    </div><div>
+        <br />
+        <span>Key: Henrique</span><br />
+        <div>
+            <span>Value.Key: KH</span><br />
+            <span>Value.Value: VH</span><br />
+        </div><div>
+            <span>Value.Key: Ke</span><br />
+            <span>Value.Value: Ve</span><br />
+        </div><div>
+            <span>Value.Key: Kn</span><br />
+            <span>Value.Value: Vn</span><br />
+        </div><div>
+            <span>Value.Key: Kr</span><br />
+            <span>Value.Value: Vr</span><br />
+        </div><div>
+            <span>Value.Key: Ki</span><br />
+            <span>Value.Value: Vi</span><br />
+        </div><div>
+            <span>Value.Key: Kq</span><br />
+            <span>Value.Value: Vq</span><br />
+        </div><div>
+            <span>Value.Key: Ku</span><br />
+            <span>Value.Value: Vu</span><br />
+        </div><div>
+            <span>Value.Key: Ke</span><br />
+            <span>Value.Value: Ve</span><br />
+        </div>
+    </div><div>
+        <br />
+        <span>Key: da</span><br />
+        <div>
+            <span>Value.Key: Kd</span><br />
+            <span>Value.Value: Vd</span><br />
+        </div><div>
+            <span>Value.Key: Ka</span><br />
+            <span>Value.Value: Va</span><br />
+        </div>
+    </div><div>
+        <br />
+        <span>Key: Silva</span><br />
+        <div>
+            <span>Value.Key: KS</span><br />
+            <span>Value.Value: VS</span><br />
+        </div><div>
+            <span>Value.Key: Ki</span><br />
+            <span>Value.Value: Vi</span><br />
+        </div><div>
+            <span>Value.Key: Kl</span><br />
+            <span>Value.Value: Vl</span><br />
+        </div><div>
+            <span>Value.Key: Kv</span><br />
+            <span>Value.Value: Vv</span><br />
+        </div><div>
+            <span>Value.Key: Ka</span><br />
+            <span>Value.Value: Va</span><br />
+        </div>
+    </div>
+
+</body></html>

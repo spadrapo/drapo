@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For Attr Expression</title>
+</head>
+<body>
+    <br>
+    <span>Control Flow For Attr Expression</span>
+    <div d-dataKey="objects" d-dataType="array" d-dataValue="[{&quot;width&quot;:&quot;90&quot;},{&quot;width&quot;:&quot;70&quot;},{&quot;width&quot;:&quot;50&quot;}]"></div>
+    <div d-dataKey="dataFunction" d-dataType="function" d-dataLoadType="startup" d-dataValue="ExecuteDataItem(UpdateItemField({{object.width}},15),object in objects[1])"></div>
+    <div d-for="object in objects">
+        <input type="text" d-model="{{object.width}}">
+        <div style="position:relative;float:left;width:100%">
+            <div d-attr-style="position:relative;float:left;height:200px;background-color:red;width:{{object.width}}%"></div>
+            <div d-attr-style="position:relative;float:left;height:200px;background-color:green;width:Cast(100 - {{object.width}},number)%"></div>
+        </div>
+        <br />
+    </div>
+</body>
+</html>

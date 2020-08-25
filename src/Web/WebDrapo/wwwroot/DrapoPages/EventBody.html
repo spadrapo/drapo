@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Event Body</title>
+</head>
+<body>
+    <div d-id="Windows" d-on-body-keyup-escape="CloseWindow()"></div>
+    <br>
+    <span>Event Body</span>
+    <br>
+    <input type="button" value="Confirm" d-on-click="ShowWindow(Confirm,[Message],Do you really want to remove this item?,[Yes],CloseWindow(),[No],CloseWindow())" />
+    <input type="button" value="Confirm Url" d-on-click="ShowWindow(/DrapoPages/WindowConfirm.html,Windows,[Message],Do you really want to remove this item?,[Yes],CloseWindow(),[No],CloseWindow())" />
+</body>
+</html>

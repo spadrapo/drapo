@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Encode Url Mustache</title>
+</head>
+<body>
+    <br>
+    <span>Encode Url Mustache</span>
+    <div d-dataKey="data" d-dataType="object" d-dataProperty-value1="P@ssw0rd!" d-dataProperty-value2="!%?^&*()"></div>
+    <div d-dataKey="url" d-dataUrlGet="~/Object/GetJoin?text1={{data.value1}}&text2={{data.value2}}"></div>
+    <div>
+        <span d-model="{{url}}"></span>
+    </div>
+</body>
+</html>

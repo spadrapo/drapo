@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Connections</title>
+</head>
+<body>
+    <br>
+    <span>Connections</span>
+    <div d-dataKey="count" d-dataUrlGet="~/Plumber/GetCount"></div>
+    <div d-dataKey="timer" d-datatype="value" d-dataloadtype="startup" d-dataValue="ReloadData(count)"></div>
+    <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="CreateTimer({{timer}},1000, true)"></div>
+    <span>Count: </span><span d-model="{{count}}"></span>
+</body>
+</html>

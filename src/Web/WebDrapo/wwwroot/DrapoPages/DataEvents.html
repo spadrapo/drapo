@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title>Data Events</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-sm-4 col-sm-push-2">
+            <h1><span>Data Events</span></h1>
+        </div>
+    </div>
+    <div>
+        <div d-dataKey="containers" d-dataType="object" d-dataProperty-one="one"></div>
+        <div d-dataKey="before" d-dataType="value" d-dataValue="before"></div>
+        <div d-dataKey="after" d-dataType="value" d-dataValue="after"></div>
+    </div>
+    <span d-model="{{before}}"></span>
+    <span d-model="{{after}}"></span>
+    <div>
+        <ul class="list-inline">
+            <li class="list-inline-item">
+                <h3>
+                    <a href="#" d-on-click="UpdateSector(sector,/DrapoPages/DataEventsOne.html,One,,,{{containers.one}})">One</a>
+                </h3>
+            </li>
+            <li class="list-inline-item">
+                <h3>
+                    <a href="#" d-on-click="UpdateSector(sector,/DrapoPages/DataEventsTwo.html,Two,,,{{containers.two}})">Two</a>
+                </h3>
+            </li>
+        </ul>
+    </div>
+    <div d-sector="sector" d-sector-url="/DrapoPages/DataEventsOne.html" d-container="{{containers.one}}"></div>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

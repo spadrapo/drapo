@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function ExecuteDataItem Expression</title>
+    <style>
+        .selected {
+            color: white;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <span>Function ExecuteDataItem Expression</span>
+    <div d-datakey="data" d-dataurlget="/Data/GetModelSample"></div>
+    <div>
+        <div d-for="item in data" style="display: none;">
+            <br />
+            <span d-model="{{item.Key}}" d-class="{selected:{{item.Selected}}}" d-on-click="ToggleItemField({{item.Selected}})"></span>
+        </div>
+    <div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="ToggleItemField({{item.Selected}})" class="selected">K0</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="ToggleItemField({{item.Selected}})" class="selected">K1</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="ToggleItemField({{item.Selected}})" class="selected">K2</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="ToggleItemField({{item.Selected}})" class="selected">K3</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="ToggleItemField({{item.Selected}})" class="selected">K4</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="ToggleItemField({{item.Selected}})" class="selected">K5</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="ToggleItemField({{item.Selected}})" class="selected">K6</span>
+        </div><div>
+            <br />
+            <span d-class="{selected:{{item.Selected}}}" d-on-click="ToggleItemField({{item.Selected}})" class="selected">K7</span>
+        </div></div>
+    <div d-datakey="functionStartup" d-datatype="function" d-dataloadtype="startup" d-datavalue="ExecuteDataItem(ToggleItemField({{item.Selected}}),item in data,true,true)"></div>
+
+</body></html>

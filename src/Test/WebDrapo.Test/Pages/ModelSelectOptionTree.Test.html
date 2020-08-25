@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Model - Select Option Tree</title>
+</head>
+<body>
+    <div>
+        <div d-datakey="options" d-dataurlget="/Data/GetModelSelectOptionTree"></div>
+        <div d-datakey="selection" d-dataurlget="/Data/GetOptionTreeSelection"></div>
+        <select d-model="{{selection.Value}}">
+            <span style="display: none;"><optgroup d-for="option in options" label="value" d-attr-label="{{option.Value}}" value="{{option.Key}}">
+                <option d-for="child in option.Children" value="{{child.Key}}">{{child.Value}}</option>
+            </optgroup></span>
+        <optgroup label="Parent 0" d-attr-label="{{option.Value}}" value="{{option.Key}}">
+                <option value="Child 0 of 0">Child 0 of 0</option><option value="Child 1 of 0">Child 1 of 0</option><option value="Child 2 of 0">Child 2 of 0</option><option value="Child 3 of 0">Child 3 of 0</option>
+            </optgroup><optgroup label="Parent 1" d-attr-label="{{option.Value}}" value="{{option.Key}}">
+                <option value="Child 0 of 1">Child 0 of 1</option><option value="Child 1 of 1">Child 1 of 1</option><option value="Child 2 of 1">Child 2 of 1</option><option value="Child 3 of 1">Child 3 of 1</option>
+            </optgroup><optgroup label="Parent 2" d-attr-label="{{option.Value}}" value="{{option.Key}}">
+                <option value="Child 0 of 2">Child 0 of 2</option><option value="Child 1 of 2">Child 1 of 2</option><option value="Child 2 of 2">Child 2 of 2</option><option value="Child 3 of 2">Child 3 of 2</option>
+            </optgroup></select>
+        <br />
+        <span>Selected:</span>
+        <span d-model="{{selection.Value}}">Child 1 of 0</span>
+    </div>
+
+</body></html>

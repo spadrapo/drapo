@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title>Router Master</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-sm-2 col-sm-push-4">
+            <h1><span>Router</span></h1>
+        </div>
+    </div>
+    <div>
+        <ul class="list-inline">
+            <li class="list-inline-item"><h3><a href="#" d-on-click="UpdateSector(sector,/DrapoPages/RouterOne.html,One)">One</a></h3></li>
+            <li class="list-inline-item"><h3><a href="#" d-on-click="UpdateSector(sector,/DrapoPages/RouterTwo.html,Two)">Two</a></h3></li>
+            <li class="list-inline-item"><h3><a href="#" d-on-click="UpdateSector(sector,/DrapoPages/RouterThree.html,Three)">Three</a></h3></li>
+        </ul>
+    </div>
+    <div d-sector="sector" d-sector-url="/DrapoPages/RouterOne.html"></div>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For If</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow - For If</span>
+        <div d-dataKey="control" d-dataType="object" d-dataProperty-show="false"></div>
+        <div d-dataKey="data" d-dataUrlGet="/Data"></div>
+        <input type="button" value="Toggle" d-on-click="ToggleItemField({{control.show}})" />
+        <ul d-if="{{control.show}}">
+            <li d-for="item in data" d-for-if="{{control.show}}">{{item.Key}}</li>
+        </ul>
+    </div>
+</body>
+</html>

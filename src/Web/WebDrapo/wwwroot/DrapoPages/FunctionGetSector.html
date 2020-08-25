@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function GetSector</title>
+</head>
+<body>
+    <span>Function GetSector</span>
+    <div d-dataKey="global" d-dataType="value" d-dataValue="0"></div>
+    <div d-sector="1">
+        <input type="button" value="Click1" d-on-click="UpdateData(global,GetSector())" />
+    </div>
+    <div d-sector="2">
+        <input type="button" value="Click2" d-on-click="UpdateData(global,GetSector())" d-id="__drapoUnitTest" />
+    </div>
+    <span>global:</span><span d-model="{{global}}"></span>
+</body>
+</html>

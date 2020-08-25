@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Component - Increment</title>
+</head>
+<body>
+    <span>Component - Increment</span>
+    <div d-sector="1">
+        <div d-dataKey="values" d-dataType="array"></div>
+        <div d-dataKey="value" d-dataType="value" d-dataValue="text"></div>
+        <ul>
+            <li d-for="v in values">{{v}}</li>
+        </ul>
+        <input type="text" d-model="{{value}}" /><input type="button" value="Add" d-on-click="AddDataItem(values,{{value}})" />
+        <d-increment dc-dataKey="values"></d-increment>
+    </div>
+    <div d-sector="2">
+        <div d-dataKey="values" d-dataType="array"></div>
+        <div d-dataKey="value" d-dataType="value" d-dataValue="text"></div>
+        <ul>
+            <li d-for="v in values">{{v}}</li>
+        </ul>
+        <input type="text" d-model="{{value}}" /><input type="button" value="Add" d-on-click="AddDataItem(values,{{value}})" />
+        <d-increment dc-dataKey="values"></d-increment>
+    </div>
+</body>
+</html>

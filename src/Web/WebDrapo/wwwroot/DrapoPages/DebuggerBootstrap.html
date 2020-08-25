@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Debugger Bootstrap</title>
+</head>
+<body>
+    <br>
+    <span>Debugger Bootstrap</span>
+    <!--Data-->
+    <div>
+        <div d-dataKey="datas" d-dataType="array"></div>
+        <div d-dataKey="data" d-dataType="object" d-dataProperty-value=""></div>
+        <div d-dataKey="dataInsert" d-dataType="value" d-dataLoadType="startup" d-dataValue="AddDataItem(datas,{{data}},false);ClearDataField(data,value)"></div>
+        <div d-dataKey="dataNotify" d-dataType="value" d-dataLoadType="startup" d-dataValue="Notify(datas)"></div>
+    </div>
+    <div>
+        <input type="text" d-model="{{data.value}}">
+        <input type="button" value="Add" d-on-click="{{dataInsert}}">
+        <input type="button" value="Refresh" d-on-click="{{dataNotify}}">
+        <ul>
+            <li d-for="inserted in datas">{{inserted.value}}</li>
+        </ul>
+    </div>
+    <div d-sector="S1">
+        <div d-dataKey="dataInsertNotify" d-dataType="value" d-dataLoadType="startup" d-dataValue="AddDataItem(datas,{{data}});ClearDataField(data,value)"></div>
+        <input type="button" value="AddNotify" d-on-click="{{dataInsertNotify}}">
+    </div>
+    <div d-sector="S2">
+        <div d-dataKey="dataClear" d-dataType="value" d-dataLoadType="startup" d-dataValue="ClearData(datas)"></div>
+        <input type="button" value="Clear" d-on-click="{{dataClear}}">
+    </div>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

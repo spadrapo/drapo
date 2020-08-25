@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Validation Event Regex</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="sector" d-on-body-keyup-escape="CloseWindow()"></div>
+    <br />
+    <span>Validation Event Regex</span>
+    <div class="cloak" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-dataKey="data" d-dataType="object" d-dataProperty-text="emailwrong" d-dataProperty-text2="thsilva@sysphera.com"></div>
+            <div d-dataKey="click" d-datatype="value" d-dataloadtype="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowLoading.html,Windows,false)"></div>
+        </div>
+        <div>
+            <!--Validation-->
+            <div d-validation-id="agree" d-validation-type="regex" d-validation-expression="^[^\s@]+@[^\s@]+\.[^\s@]+$" d-validation-value="{{data.text}}"></div>
+            <div d-validation-id="agree2" d-validation-type="regex" d-validation-expression="^[^\s@]+@[^\s@]+\.[^\s@]+$" d-validation-value="{{data.text2}}"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <span>E-mail: </span><input type="text" d-model="{{data.text}}" />
+            <div d-validation="agree">
+                <span>You must fill the email right</span>
+            </div>
+            <br />
+            <span>E-mail: </span><input type="text" d-model="{{data.text2}}" />
+            <div d-validation="agree2">
+                <span>You must fill the email right</span>
+            </div>
+            <br />
+            <br />
+            <input type="button" value="Validate" d-on-click="{{click}}" d-validation-on-click="{agree,agree2}" d-id="__drapoUnitTest" />
+        </div>
+    </div>
+</body>
+</html>

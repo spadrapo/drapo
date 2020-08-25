@@ -1,0 +1,11 @@
+﻿<!DOCTYPE html>
+<div>
+    <span>Type 3</span>
+    <div>
+        <div d-dataKey="items" d-dataUrlGet="~/Data/GetLevels?levels=0&children=20&prefix=Type3"></div>
+        <div d-for="item in items">
+            <input type="checkbox" d-model="{{item.Visible}}">
+            <span>{{item.Visible}}</span>
+        </div>
+    </div>
+</div>

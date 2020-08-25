@@ -1,0 +1,13 @@
+﻿<!DOCTYPE html>
+<script src="../drapo.js"></script>
+<div d-sector-parent-url="~/DrapoPages/DataQueryStringValue.html" d-sector-parent="sector">
+    <span>Data QueryString Value Sector</span>
+    <div>
+        <div>
+            <div d-dataKey="object" d-dataType="querystring" d-dataValue="data"></div>
+        </div>
+        <div d-for="property in object">
+            <span>{{property.Key}} - {{property.Value}}</span>
+        </div>
+    </div>
+</div>

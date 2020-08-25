@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Format Number Size</title>
+</head>
+<body>
+    <br>
+    <span>Format Number Size</span>
+    <div d-dataKey="values" d-dataUrlGet="~/Data/GetLargeNumbers"></div>
+    <div d-for="value in values">
+        <br>
+        <span d-model="{{value}}" d-format="s"></span>
+        <span d-model="{{value}}"></span>
+    </div>
+</body>
+</html>

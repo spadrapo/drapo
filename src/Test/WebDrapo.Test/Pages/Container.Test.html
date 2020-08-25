@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Container</title>
+</head>
+<body>
+    <span>Container</span>
+    <div d-sector="@">
+        <span>First</span>
+        <div d-datakey="items" d-dataurlget="/Data/GetModelSelectOptions"></div>
+        <div d-for="item in items" style="display: none;">
+            <span>{{item.Key}}</span>
+        </div><div>
+            <span>K0</span>
+        </div><div>
+            <span>K1</span>
+        </div><div>
+            <span>K2</span>
+        </div><div>
+            <span>K3</span>
+        </div><div>
+            <span>K4</span>
+        </div><div>
+            <span>K5</span>
+        </div><div>
+            <span>K6</span>
+        </div><div>
+            <span>K7</span>
+        </div>
+    </div>
+    <div d-sector="@">
+        <span>Second</span>
+        <div d-datakey="items" d-dataurlget="/Data/GetNullable"></div>
+        <div d-for="item in items" style="display: none;">
+            <span>{{item.Key}}</span>
+        </div><div>
+            <span></span>
+        </div><div>
+            <span>K1</span>
+        </div><div>
+            <span></span>
+        </div><div>
+            <span>K3</span>
+        </div><div>
+            <span></span>
+        </div><div>
+            <span>K5</span>
+        </div><div>
+            <span></span>
+        </div><div>
+            <span>K7</span>
+        </div><div>
+            <span></span>
+        </div><div>
+            <span>K9</span>
+        </div>
+    </div>
+
+</body></html>

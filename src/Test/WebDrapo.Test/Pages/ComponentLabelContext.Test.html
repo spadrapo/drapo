@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - LabelContext</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <span>Component - LabelContext</span>
+    <div d-datakey="count" d-datatype="value" d-datavalue="5"></div>
+    <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children={{count}}"></div>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateDataField(count,,8)"></div>
+    <span>Count: </span><input type="text" d-model="{{count}}" /><br /><br />
+    <div>
+        <div d-for="object in objects" style="display: none;">
+            <span>Name: </span><input type="text" d-model="{{object.Key}}" />
+            <br />
+            <d-labelcontext dc-model="{{object.Key}}"></d-labelcontext>
+            <br />
+        </div>
+    <div>
+            <span>Name: </span><input type="text" />
+            <br />
+            <div dc-model="{{objects.[0].Key}}">
+    <span>objects.[0].Key</span>
+    <span>L0K0</span>
+</div>
+            <br />
+        </div><div>
+            <span>Name: </span><input type="text" />
+            <br />
+            <div dc-model="{{objects.[1].Key}}">
+    <span>objects.[1].Key</span>
+    <span>L0K1</span>
+</div>
+            <br />
+        </div><div>
+            <span>Name: </span><input type="text" />
+            <br />
+            <div dc-model="{{objects.[2].Key}}">
+    <span>objects.[2].Key</span>
+    <span>L0K2</span>
+</div>
+            <br />
+        </div><div>
+            <span>Name: </span><input type="text" />
+            <br />
+            <div dc-model="{{objects.[3].Key}}">
+    <span>objects.[3].Key</span>
+    <span>L0K3</span>
+</div>
+            <br />
+        </div><div>
+            <span>Name: </span><input type="text" />
+            <br />
+            <div dc-model="{{objects.[4].Key}}">
+    <span>objects.[4].Key</span>
+    <span>L0K4</span>
+</div>
+            <br />
+        </div><div>
+            <span>Name: </span><input type="text" />
+            <br />
+            <div dc-model="{{objects.[5].Key}}">
+    <span>objects.[5].Key</span>
+    <span>L0K5</span>
+</div>
+            <br />
+        </div><div>
+            <span>Name: </span><input type="text" />
+            <br />
+            <div dc-model="{{objects.[6].Key}}">
+    <span>objects.[6].Key</span>
+    <span>L0K6</span>
+</div>
+            <br />
+        </div><div>
+            <span>Name: </span><input type="text" />
+            <br />
+            <div dc-model="{{objects.[7].Key}}">
+    <span>objects.[7].Key</span>
+    <span>L0K7</span>
+</div>
+            <br />
+        </div></div>
+
+</body></html>

@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Format Object Culture</title>
+</head>
+<body>
+    <br>
+    <span>Format Object Culture</span>
+    <div d-dataKey="dates" d-dataUrlGet="~/Culture/GetObjectsCulture"></div>
+    <div d-for="date in dates">
+        <br>
+        <span d-model="{{date.Culture}}"></span> <span d-model="{{date.Value}}" d-format="{{date.Format}}" d-culture="{{date.Culture}}"></span>
+    </div>
+</body>
+</html>

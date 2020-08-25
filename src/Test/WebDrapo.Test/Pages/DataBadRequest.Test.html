@@ -1,0 +1,13 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Bad Request</title>
+</head>
+<body>
+    <span>Data Header Set</span>
+    <div d-datakey="items" d-dataurlget="/Data/GetLevels?levels=1&amp;children=5&amp;prefix=PRE1" d-dataurlset="/Data/SetLevelsBadRequest"></div>
+    <div d-datakey="startup" d-datatype="function" d-dataloadtype="startup" d-datavalue="PostDataItem(items)"></div>
+    <ul>
+        <li d-for="item in items" d-model="{{item.Key}}" style="display: none;"></li>
+    <li>PRE1L1K0</li><li>PRE1L1K1</li><li>PRE1L1K2</li><li>PRE1L1K3</li><li>PRE1L1K4</li></ul>
+
+</body></html>

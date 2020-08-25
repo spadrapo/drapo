@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Attr Expression</title>
+</head>
+<body>
+    <br />
+    <span>Attr Expression</span>
+    <div d-datakey="object" d-datatype="object" d-dataproperty-width="90" d-dataproperty-color="red" d-dataproperty-color2="green"></div>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateItemField({{object.width}},15)"></div>
+    <div>
+        <input type="text" d-model="{{object.width}}" />
+        <div style="position:relative;float:left;width:100%">
+            <div d-attr-style="position:relative;float:left;height:200px;background-color:{{object.color}};width:{{object.width}}%" style="position:relative;float:left;height:200px;background-color:red;width:15%"></div>
+            <div d-attr-style="position:relative;float:left;height:200px;background-color:{{object.color2}};width:Cast(100 - {{object.width}},number)%" style="position:relative;float:left;height:200px;background-color:green;width:85%"></div>
+        </div>
+    </div>
+
+</body></html>

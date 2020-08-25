@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Class For</title>
+    <style>
+        .normal {
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .selected {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <span>Class For</span>
+        <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSelectOptions"></div>
+        <div d-dataKey="style" d-dataType="object" d-dataProperty-class="{normal,selected:{{user.Visible}}}"></div>
+        <div d-for="user in users" d-class="{{style.class}}" d-on-click="UncheckDataField(users,Visible);CheckItemField({{user.Visible}});">
+            <span>{{user.Key}}</span>
+        </div>
+    </div>
+</body>
+</html>

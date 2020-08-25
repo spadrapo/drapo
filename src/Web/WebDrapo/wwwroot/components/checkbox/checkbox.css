@@ -1,0 +1,87 @@
+﻿.ppcCheckboxLayout {
+    position: relative;
+    display: block;
+    min-height: 1.5rem;
+    padding-left: 1.5rem;
+    padding-top: 0.35rem;
+}
+
+.ppcCheckboxDisabled {
+    color: #DEE2E6;
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+.ppcCheckboxInput {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.ppcCheckboxLabel {
+    border-radius: 0.25rem;
+    color: black;
+}
+
+    .ppcCheckboxLabel:hover {
+        cursor: pointer;
+    }
+
+    .ppcCheckboxLabel::before {
+        position: absolute;
+        top: .25rem;
+        left: 0;
+        display: block;
+        width: 1rem;
+        height: 1rem;
+        pointer-events: none;
+        content: "";
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: #DEE2E6; /*grey*/
+        border-radius: 0.25rem;
+    }
+
+    .ppcCheckboxLabel::after {
+        position: absolute;
+        top: .25rem;
+        left: 0;
+        display: block;
+        width: 1rem;
+        height: 1rem;
+        content: "";
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 50% 50%;
+        border-radius: 0.25rem;
+    }
+
+.ppcCheckboxLayout .ppcCheckboxInput:checked ~ .ppcCheckboxLabel::after {
+    content: "\00AC";
+    color: #FFFFFF; /*white*/
+    font-family: 'pp';
+    font-size: 0.5rem;
+    font-weight: 100;
+    margin: 0.2rem 0 0 0.25rem;
+}
+
+.ppcCheckboxLayout .ppcCheckboxInput:checked ~ .ppcCheckboxLabel::before {
+    background-color: #FF0033; /*red*/
+}
+
+.ppcCheckboxDisabled .ppcCheckboxLabel {
+    color: #DEE2E6; /*grey*/
+}
+
+.ppcCheckboxDisabled .ppcCheckboxLabel::before {
+    background-color: #DEE2E6 !important; /*grey*/
+}
+
+.ppcCheckboxLayout .ppcCheckboxLabel::before {
+    border-radius: .25rem;
+}

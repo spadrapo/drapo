@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - UpdateDataFieldLookup</title>
+</head>
+<body>
+    <span>Function - UpdateDataFieldLookup</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data"></div>
+    <div d-dataKey="search" d-dataType="object" d-dataProperty-key="K2" d-dataProperty-value="New Value"></div>
+    <div>
+        <ul>
+            <li d-for="item in data">{{item.Key}} - {{item.Value}}</li>
+        </ul>
+    </div>
+    <br />
+    <span>Key:</span>
+    <input type="text" d-model="{{search.key}}" />
+    <span>Value:</span>
+    <input type="text" d-model="{{search.value}}" />
+    <input type="button" value="Update" d-on-click="UpdateDataFieldLookup(data,Key,{{search.key}},Value,{{search.value}})" />
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateDataFieldLookup(data,Key,{{search.key}},Value,{{search.value}})"></div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Virtual DOM</title>
+</head>
+<body>
+    <span>Virtual DOM</span>
+    <br />
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div>
+        <div d-for="user in users">
+            <span>Key:</span>
+            <input type="text" d-model="{{user.Key}}">
+            <span>{{user.Key}}</span>
+            <br />
+        </div>
+    </div>
+</body>
+</html>

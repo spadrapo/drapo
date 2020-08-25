@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - If - Object</title>
+</head>
+<body>
+    <span>Control Flow - If - Object</span>
+    <div d-dataKey="visibility" d-dataType="object" d-dataProperty-first="true" d-dataProperty-second="false"></div>
+    <span d-if="{{visibility.first}}">First</span>
+    <br />
+    <span d-if="{{visibility.second}}">Second</span>
+    <br />
+    <input type="button" value="Toogle" d-on-click="ToggleItemField({{visibility.second}})">
+</body>
+</html>

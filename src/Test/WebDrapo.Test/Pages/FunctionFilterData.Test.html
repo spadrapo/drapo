@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function FilterData</title>
+</head>
+<body>
+    <span>Function FilterData</span>
+    <div d-datakey="data" d-dataurlget="/Data/GetLevels?levels=0&amp;children=30"></div>
+    <div d-datakey="dataFiltered" d-datatype="array"></div>
+    <div d-datakey="prop" d-datatype="object" d-dataproperty-filter="1"></div>
+    <div d-datakey="functionFilter" d-datatype="value" d-dataloadtype="startup" d-datavalue="FilterData(item in data,{{item.Key}} LIKE %{{prop.filter}}%,dataFiltered)"></div>
+    <div>
+        <div d-for="item in dataFiltered" style="display: none;">
+            <br />
+            <span d-model="{{item.Key}}"></span>
+        </div>
+    <div>
+            <br />
+            <span>L0K1</span>
+        </div><div>
+            <br />
+            <span>L0K10</span>
+        </div><div>
+            <br />
+            <span>L0K11</span>
+        </div><div>
+            <br />
+            <span>L0K12</span>
+        </div><div>
+            <br />
+            <span>L0K13</span>
+        </div><div>
+            <br />
+            <span>L0K14</span>
+        </div><div>
+            <br />
+            <span>L0K15</span>
+        </div><div>
+            <br />
+            <span>L0K16</span>
+        </div><div>
+            <br />
+            <span>L0K17</span>
+        </div><div>
+            <br />
+            <span>L0K18</span>
+        </div><div>
+            <br />
+            <span>L0K19</span>
+        </div><div>
+            <br />
+            <span>L0K21</span>
+        </div></div>
+    <div d-datakey="functionStartup" d-datatype="function" d-dataloadtype="startup" d-datavalue="Execute({{functionFilter}})"></div>
+
+</body></html>

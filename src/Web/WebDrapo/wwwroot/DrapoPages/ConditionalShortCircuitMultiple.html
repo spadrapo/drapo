@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Conditional Short Circuit Multiple</title>
+</head>
+<body>
+    <span>Conditional Short Circuit Multiple</span>
+    <div>
+        <div>
+            <!--Data-->
+            <div d-dataKey="items1" d-dataUrlGet="~/Data/GetLevels?levels=1&children=5&prefix=I1"></div>
+            <div d-dataKey="data" d-dataType="object" d-dataProperty-show1="false" d-dataProperty-show2="false"></div>
+            <div d-dataKey="click1" d-datatype="value" d-dataloadtype="startup" d-dataValue="ToggleItemField({{data.show1}})"></div>
+            <div d-dataKey="click2" d-datatype="value" d-dataloadtype="startup" d-dataValue="ToggleItemField({{data.show2}})"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <div d-if="{{data.show1}}&&({{items1.length}}>0)">
+                <span>Wally1</span>
+                <br />
+                <div>
+                    <select>
+                        <option d-for="item in items1" d-for-if="{{data.show1}}" value="{{item.Key}}">{{item.Value}}</option>
+                    </select>
+                </div>
+            </div>
+            <br />
+            <input type="button" value="Toogle1" d-on-click="{{click1}}" />
+            <input type="button" value="Toogle2" d-on-click="{{click2}}" d-did="__drapoUnitTest" />
+        </div>
+    </div>
+</body>
+</html>

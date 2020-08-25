@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function - Async</title>
+</head>
+<body>
+    <br />
+    <span>Async</span>
+    <div d-datakey="data" d-dataurlget="/Data/GetFunctionPostDataItem" d-dataurlset="/Data/SetFunctionPostDataItemSleep?Sleep=1"></div>
+    <div>
+        <span d-model="{{data.Name}}">1 +1</span>
+        <input type="text" d-model="{{data.Name}}" />
+        <input type="button" value="+1" d-id="__drapoUnitTest" d-on-click="Async(PostDataItem(data));UpdateDataField(data,Name,Zero)" />
+    </div>
+
+</body></html>

@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function AcceptDataChanges</title>
+</head>
+<body>
+    <span>Function AcceptDataChanges</span>
+    <div d-dataKey="data1" d-dataUrlGet="/Data/GetLevels?levels=0&children=5"></div>
+    <div d-dataKey="data2" d-dataGroups="g23" d-dataUrlGet="/Data/GetLevels?levels=0&children=3"></div>
+    <div d-dataKey="data3" d-dataGroups="g23" d-dataUrlGet="/Data/GetLevels?levels=0&children=3"></div>
+    <div d-dataKey="result" d-dataType="object" d-dataproperty-data1="false" d-dataproperty-data2="false" d-dataproperty-g23="false" d-dataproperty-all="false"></div>
+    <br /><span>result.data1 > </span><span d-model="{{result.data1}}"></span>
+    <br /><span>result.data2 > </span><span d-model="{{result.data2}}"></span>
+    <br /><span>result.g23 > </span><span d-model="{{result.g23}}"></span>
+    <br /><span>result.all > </span><span d-model="{{result.all}}"></span>
+    <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateItemField({{data1.[3].Key}},Updated);UpdateItemField({{data3.[1].Key}},Updated);AcceptDataChanges(=,data1);AcceptDataChanges(,g23);;IF(HasDataChanges(,data1),UpdateItemField({{result.data1}},true));IF(HasDataChanges(=,data2),UpdateItemField({{result.data2}},true));IF(HasDataChanges(,g23),UpdateItemField({{result.g23}},true));IF(HasDataChanges(),UpdateItemField({{result.all}},true))"></div>
+</body>
+</html>

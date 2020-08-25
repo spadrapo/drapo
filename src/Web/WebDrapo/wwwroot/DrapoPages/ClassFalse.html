@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Class False</title>
+    <style>
+        .normal {
+            cursor: pointer;
+        }
+
+        .selected {
+            background-color: red;
+        }
+
+        .unselected {
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <span>Class False</span>
+        <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSelectOptions"></div>
+        <div d-for="user in users" d-class="{normal,selected:{{user.Visible}}:unselected}" d-on-click="UncheckDataField(users,Visible);CheckItemField({{user.Visible}});">
+            <span>{{user.Key}}</span>
+        </div>
+    </div>
+</body>
+</html>

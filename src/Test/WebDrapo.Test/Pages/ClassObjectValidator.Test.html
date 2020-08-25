@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Class Complex Object Validator</title>
+    <style>
+        .normal {
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .selected {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <span>Class For</span>
+        <div d-datakey="users" d-dataurlget="/Object/GetListComplexObjects"></div>
+        <div d-for="user in users" d-class="{normal,selected:{{user.Child}}}" style="display: none;">
+            <span d-model="{{user.Name}}"></span>
+            <span d-model="{{user.Child.Name}}"></span>
+        </div><div d-class="{normal,selected:{{user.Child}}}" class="normal selected">
+            <span>Thiago - [0]</span>
+            <span>Catarina - [0]</span>
+        </div><div d-class="{normal,selected:{{user.Child}}}" class="normal">
+            <span>Thiago - [1]</span>
+            <span></span>
+        </div><div d-class="{normal,selected:{{user.Child}}}" class="normal selected">
+            <span>Thiago - [2]</span>
+            <span>Catarina - [2]</span>
+        </div><div d-class="{normal,selected:{{user.Child}}}" class="normal">
+            <span>Thiago - [3]</span>
+            <span></span>
+        </div><div d-class="{normal,selected:{{user.Child}}}" class="normal selected">
+            <span>Thiago - [4]</span>
+            <span>Catarina - [4]</span>
+        </div><div d-class="{normal,selected:{{user.Child}}}" class="normal">
+            <span>Thiago - [5]</span>
+            <span></span>
+        </div><div d-class="{normal,selected:{{user.Child}}}" class="normal selected">
+            <span>Thiago - [6]</span>
+            <span>Catarina - [6]</span>
+        </div><div d-class="{normal,selected:{{user.Child}}}" class="normal">
+            <span>Thiago - [7]</span>
+            <span></span>
+        </div><div d-class="{normal,selected:{{user.Child}}}" class="normal selected">
+            <span>Thiago - [8]</span>
+            <span>Catarina - [8]</span>
+        </div><div d-class="{normal,selected:{{user.Child}}}" class="normal">
+            <span>Thiago - [9]</span>
+            <span></span>
+        </div>
+    </div>
+
+</body></html>

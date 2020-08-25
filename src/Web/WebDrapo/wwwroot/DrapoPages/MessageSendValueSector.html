@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<script src="/drapo.js"></script>
+	<title>Message Send Value</title>
+</head>
+<body>
+	<script>
+        function ExecuteMessage(event) {
+            var message = {};
+            message.Action = 'execute';
+			message.DataKey = 'updateItemValue';
+            window.parent.postMessage(message, '*');
+		}
+
+		function SendValueMessage(event) {
+			var message = {};
+			message.Action = 'update';
+			message.DataKey = 'valueFromMessage';
+			message.Data = "NewValue"
+			window.parent.postMessage(message, '*');
+		}
+	</script>
+	<br>
+	<span>Function External Frame Sector</span>
+	<input id="buttonSend" type="button" value="Send" onclick="SendValueMessage(event);ExecuteMessage(event)">
+	<script>
+        function start() {
+            $(document.getElementById('buttonSend')).trigger('click');
+        }
+        start();
+	</script>
+</body>
+</html>

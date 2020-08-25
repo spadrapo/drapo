@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Mapping</title>
+</head>
+<body>
+    <span>Data Mapping</span>
+    <div d-datakey="objects" d-dataurlget="/Data/GetLevels?levels=2&amp;children=2&amp;includeIndex=true"></div>
+    <div>
+        <div d-for="object in objects" style="display: none;">
+            <span>Key: </span><span d-model="{{object.Key}}"></span><span> Value: </span><span d-model="{{object.Value}}"></span>
+            <div d-for="object in object.Children"></div>
+        </div>
+    <div>
+            <span>Key: </span><span>I0L2K0</span><span> Value: </span><span>L2V0</span>
+            <div>
+            <span>Key: </span><span>I1L1K0</span><span> Value: </span><span>L1V0</span>
+            <div>
+            <span>Key: </span><span>I2L0K0</span><span> Value: </span><span>L0V0</span>
+            
+        </div><div>
+            <span>Key: </span><span>I3L0K1</span><span> Value: </span><span>L0V1</span>
+            
+        </div>
+        </div><div>
+            <span>Key: </span><span>I4L1K1</span><span> Value: </span><span>L1V1</span>
+            <div>
+            <span>Key: </span><span>I5L0K0</span><span> Value: </span><span>L0V0</span>
+            
+        </div><div>
+            <span>Key: </span><span>I6L0K1</span><span> Value: </span><span>L0V1</span>
+            
+        </div>
+        </div>
+        </div><div>
+            <span>Key: </span><span>I7L2K1</span><span> Value: </span><span>L2V1</span>
+            <div>
+            <span>Key: </span><span>I8L1K0</span><span> Value: </span><span>L1V0</span>
+            <div>
+            <span>Key: </span><span>I9L0K0</span><span> Value: </span><span>L0V0</span>
+            
+        </div><div>
+            <span>Key: </span><span>I10L0K1</span><span> Value: </span><span>opsss</span>
+            
+        </div>
+        </div><div>
+            <span>Key: </span><span>I11L1K1</span><span> Value: </span><span>L1V1</span>
+            <div>
+            <span>Key: </span><span>I12L0K0</span><span> Value: </span><span>L0V0</span>
+            
+        </div><div>
+            <span>Key: </span><span>I13L0K1</span><span> Value: </span><span>L0V1</span>
+            
+        </div>
+        </div>
+        </div></div>
+    <br />
+    <div d-sector="@">
+        <div d-datakey="objectCode" d-datatype="value" d-datavalue="I10L0K1"></div>
+        <div d-datakey="mappingObject" d-datatype="mapping" d-datavalue="objects" d-datamappingfield="" d-datamappingsearchfield="Key" d-datamappingsearchvalue="{{objectCode}}" d-datamappingsearchhierarchyfield="Children"></div>
+        <span>Sector 1</span>
+        <br />
+        <span></span>
+        <input type="button" value="Load" d-on-click="ReloadData(mappingObject)" />
+        <input type="button" value="Save" d-on-click="PostData(mappingObject)" />
+        <br />
+        <br />
+        <span>Search Key: </span><input type="text" d-model="{{objectCode}}" />
+        <br />
+        <br />
+        <span>Key: </span><span d-model="{{mappingObject.Key}}">I10L0K1</span><span> Value: </span><input type="text" d-model="{{mappingObject.Value}}" />
+        <div d-datakey="wslLoader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateDataField(mappingObject,Value,opsss);PostData(mappingObject)">
+    </div>
+
+</div></body></html>

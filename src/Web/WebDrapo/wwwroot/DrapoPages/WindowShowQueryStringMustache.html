@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="../drapo.js"></script>
+    <title>Windows Show Query Strig Mustache</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="sector"></div>
+    <br>
+    <span>Windows Show Query Strig Mustache</span>
+    <br>
+    <div d-dataKey="query" d-dataType="object" d-dataProperty-v1="x1" d-dataProperty-v2="x1" d-dataProperty-v3="x3" ></div>
+    <div d-datakey="wswLoader" d-datatype="function" d-dataloadtype="startup" d-datavalue="ShowWindow(~/Data/GetContent?v1={{query.v1}}&v2={{query.v2}}&v3={{query.v3}},Windows)"></div>
+</body>
+</html>

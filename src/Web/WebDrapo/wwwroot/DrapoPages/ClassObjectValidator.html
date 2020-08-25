@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="/drapo.js"></script>
+    <title>Class Complex Object Validator</title>
+    <style>
+        .normal {
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .selected {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <span>Class For</span>
+        <div d-datakey="users" d-dataurlget="/Object/GetListComplexObjects"></div>
+        <div d-for="user in users" d-class="{normal,selected:{{user.Child}}}">
+            <span d-model="{{user.Name}}"></span>
+            <span d-model="{{user.Child.Name}}"></span>
+        </div>
+    </div>
+</body>
+</html>

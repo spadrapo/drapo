@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script src="/drapo.js"></script>
+	<title>Input Delay</title>
+</head>
+<body>
+    <div>
+        <div d-dataKey="res" d-dataDelay="true" d-dataUrlGet="/Culture/GetResources?culture=pt"></div>
+
+        <input type="text" d-attr-placeholder="{{res.User}}" />
+        <input type="button" d-attr-value="{{res.User}}" />
+        <label d-model="{{res.User}}"></label>
+    </div>
+</body>
+</html>

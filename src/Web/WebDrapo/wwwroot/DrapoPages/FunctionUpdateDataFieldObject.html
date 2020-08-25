@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Field Update Object</title>
+</head>
+<body>
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div d-dataKey="selected" d-dataType="value" d-dataValue="None"></div>
+    <ul>
+        <li d-for="user in users" d-on-click="UpdateDataField(selected,,{{user}});">{{user.Value}}</li>
+    </ul>
+    <span>Selected item list:</span><span d-model="{{selected.Key}}"></span>
+</body>
+</html>

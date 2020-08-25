@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function Execute Component Function</title>
+</head>
+<body>
+    <span>Function Execute Component Function</span>
+    <div d-dataKey="cultures" d-dataUrlGet="/Culture/GetCultures"></div>
+    <div d-dataKey="userConfig" d-dataUrlGet="/Culture/GetUserConfig"></div>
+    <select d-model="{{userConfig.Culture}}">
+        <option d-for="culture in cultures" value="{{culture.Key}}">{{culture.Value}}</option>
+    </select>
+    <br />
+    <br />
+    <span>Selected: </span>
+    <span d-model="{{userConfig.Culture}}"></span>
+    <br />
+    <input type="button" value="I1" d-on-click="ExecuteComponentFunction(I1,Update,pt)" />
+    <input type="button" value="I2" d-on-click="ExecuteComponentFunction(I2,Update,en)" d-id="__drapoUnitTest" />
+    <input type="button" value="I3" d-on-click="ExecuteComponentFunction(I3,Update,pt)" />
+    <br />
+    <d-labelinputinstance d-id="I1" d-caption="Name:" d-dataKeySource="userConfig" d-dataKeyField="Culture"></d-labelinputinstance>
+    <br />
+    <d-labelinputinstance d-id="I2" d-caption="Name:" d-dataKeySource="userConfig" d-dataKeyField="Culture"></d-labelinputinstance>
+    <br />
+    <d-labelinputinstance d-id="I3" d-caption="Name:" d-dataKeySource="userConfig" d-dataKeyField="Culture"></d-labelinputinstance>
+</body>
+</html>

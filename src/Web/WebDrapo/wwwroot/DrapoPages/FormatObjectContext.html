@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Format Object Context</title>
+</head>
+<body>
+    <br>
+    <span>Format Object Context</span>
+    <div d-dataKey="dates" d-dataUrlGet="~/Data/GetDatesObject"></div>
+    <div d-dataKey="fields" d-dataUrlGet="~/Data/GetFields"></div>
+    <div d-for="date in dates">
+        <div d-for="field in fields">
+            <br>
+            <span d-model="{{date.{{field.Name}}}}" d-format="{{date.Format}}"></span>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Message Execute</title>
+</head>
+<body>
+    <span>Message Execute</span>
+    <div>
+        <div d-datakey="itemObject" d-datatype="object" d-dataproperty-key-name="Key" d-dataproperty-key-value="OneKey" d-dataproperty-value-name="Value" d-dataproperty-value-value="OneValue"></div>
+        <div d-datakey="items" d-datatype="array"></div>
+        <div d-datakey="itemAdd" d-datatype="value" d-datavalue="AddDataItem(items,itemObject)"></div>
+        <ul>
+            <li d-for="item in items" d-model="{{item.Key}}" style="display: none;"></li>
+        <li>OneKey</li></ul>
+        <iframe id="frameID" src="MessageExecuteSector.html"></iframe>
+    </div>
+
+</body></html>

@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Component - LabelContext Iterator</title>
+</head>
+<body>
+    <span>Component - LabelContext Iterator</span>
+    <div d-dataKey="objects" d-dataUrlGet="~/Data/GetLevels?children=2&levels=2&includeIndex=true"></div>
+    <div>
+        <div d-for="object in objects.[1].Children">
+            <d-labelcontext dc-model="{{object.Key}}"></d-labelcontext>
+            <br />
+        </div>
+    </div>
+</body>
+</html>

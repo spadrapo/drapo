@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Data Field</title>
+</head>
+<body>
+    <span>Control Flow - Data Field</span>
+    <div d-dataKey="user" d-dataUrlGet="/Object/GetChildProperties"></div>
+    <div d-for="property in user.Child.Properties">
+        <br>
+        <span>Key: {{property.Key}}</span><br>
+        <span>Value: {{property.Value}}</span><br>
+    </div>
+</body>
+</html>

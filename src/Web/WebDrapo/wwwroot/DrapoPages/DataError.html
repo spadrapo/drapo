@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Error</title>
+</head>
+<body>
+    <h1><span>Data Error</span></h1>
+    <div d-dataKey="objects" d-dataUrlGet="/Data/GetDataError"></div>
+    <div d-dataKey="errors" d-dataType="array"></div>
+    <ul>
+        <li d-for="object in objects">{{object.Key}}</li>
+    </ul>
+    <br />
+    <span>Errors:</span>
+    <ul>
+        <li d-for="error in errors" d-on-click="LoadSectorContent(sector,{{error.Content}})">{{error.Type}} - {{error.Message}}</li>
+    </ul>
+    <br />
+    <span>Details:</span>
+    <div d-sector="sector"></div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="../drapo.js"></script>
+    <title>Windows Link</title>
+</head>
+<body>
+    <span>Windows Link</span>
+    <div>
+        <div d-datakey="data" d-dataurlget="~/Data/GetModelSample"></div>
+        <div d-datakey="open" d-datatype="value" d-dataloadtype="startup" d-datavalue="UpdateData(clipboard,{{data}});ShowWindow(~/DrapoPages/WindowsLinkWindow.html,Windows)"></div>
+        <div d-datakey="clipboard" d-datatype="object"></div>
+    </div>
+    <br />
+    <div d-id="Windows" d-sector="@"></div>
+    <br />
+    <input type="button" value="Open" d-on-click="{{open}}" />
+    <div>
+        <div d-for="item in data" style="display: none;">
+            <input type="checkbox" d-model="{{item.Visible}}" />
+            <span>{{item.Visible}}</span>
+        </div>
+    <div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div></div>
+    <div d-datakey="startup" d-datatype="function" d-dataloadtype="startup" d-datavalue="Execute({{open}});Execute({{linkUncheck}},windows);Execute({{linkOpen}},windows);Execute({{linklinkCheck}},windows);Execute({{linkLinkClose}},windows);Execute({{linkClose}},windows)"></div>
+
+</body></html>

@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Bad Request</title>
+</head>
+<body>
+    <span>Data Header Set</span>
+    <div d-dataKey="items" d-dataUrlGet="/Data/GetLevels?levels=1&children=5&prefix=PRE1" d-dataUrlSet="/Data/SetLevelsBadRequest"></div>
+    <div d-dataKey="startup" d-dataType="function" d-dataLoadType="startup" d-dataValue="PostDataItem(items)"></div>
+    <ul>
+        <li d-for="item in items" d-model="{{item.Key}}"></li>
+    </ul>
+</body>
+</html>

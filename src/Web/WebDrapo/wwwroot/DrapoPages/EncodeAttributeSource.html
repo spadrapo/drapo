@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<script src="/drapo.js"></script>
+	<title>Encode Attribute Source</title>
+</head>
+<body>
+	<br>
+	<span>Encode Attribute Source</span>
+	<div d-dataKey="url" d-dataType="value" d-dataValue="~/DrapoPages/DataQueryString.html?IsWindowPopup=1&pp=true&name=Formulário de Dados"></div>
+	<div>
+		<iframe d-attr-src="{{url}}" style="position: absolute; height: 100%; width: 100%; border: none"></iframe>
+	</div>
+</body>
+</html>

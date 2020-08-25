@@ -1,0 +1,11 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Field Update Object With Delay</title>
+</head>
+<body>
+    <div d-datakey="culture" d-datadelay="true" d-dataurlget="/Data/GetCulture"></div>
+    <div d-datakey="user" d-datatype="value" d-datavalue="None"></div>
+    <span>Culture User:</span><span d-model="{{user}}">Usuário</span>
+    <div d-datakey="function" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateDataField(user,,{{culture.User}})"></div>
+
+</body></html>

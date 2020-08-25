@@ -1,0 +1,13 @@
+﻿<!DOCTYPE html>
+<script src="/drapo.js"></script>
+<div d-sector-parent-url="/DrapoPages/Layout.html" d-sector-parent="child">
+    <div>
+        <div>
+            <div d-dataKey="childOneValue" d-dataType="value" d-dataValue="Value coming from child one"></div>
+        </div>
+        <div>
+            <span>{{childOneValue}}</span>
+            <input type="button" value="Child Two" d-on-click="UpdateSector(child,/DrapoPages/LayoutChildTwo.html,ChildTwo)"/>
+        </div>
+    </div>
+</div>

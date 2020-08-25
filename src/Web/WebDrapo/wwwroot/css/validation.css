@@ -1,0 +1,14 @@
+﻿.cloak {
+    display: none;
+}
+
+.validatorValid {
+    display: none;
+}
+
+.validationUnchecked {
+    display: none;
+}
+
+.validatorInvalid {
+}

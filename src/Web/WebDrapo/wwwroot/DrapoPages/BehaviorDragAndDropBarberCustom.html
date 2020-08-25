@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title>Drag and Drop Barber Custom</title>
+    <style>
+        .columnStyle {
+            border: 1px black solid;
+            min-height:50px;
+            padding:0px;
+        }
+
+        .objectStyle {
+            background-color: red;
+            width: 100%;
+            height: 50px
+        }
+    </style>
+</head>
+<body>
+    <span>Drag and Drop Barber Custom</span>
+    <br />
+    <div d-dataKey="start" d-dataType="value"></div>
+    <div d-dataKey="end" d-dataType="value"></div>
+    <span>Start: </span><span d-model="{{start}}"></span>
+    <br />
+    <span>End: </span><span d-model="{{end}}"></span>
+    <br />
+    <div>
+        <div class="row">
+            <div class="col-md-3 columnStyle" d-dragEnd="column" d-dragAction="barber" d-dragOnAfterEnd="UpdateDataField(end,,R1C1)">
+                <div class="objectStyle" d-dragStart="column" d-dragAction="barber" d-dragOnBeforeStart="UpdateDataField(start,,O1)">
+                </div>
+            </div>
+            <div class="col-md-3 columnStyle" d-dragEnd="column" d-dragAction="barber" d-dragOnAfterEnd="UpdateDataField(end,,R1C2)">
+            </div>
+            <div class="col-md-3 columnStyle" d-dragEnd="column" d-dragAction="barber" d-dragOnAfterEnd="UpdateDataField(end,,R1C3)">
+            </div>
+            <div class="col-md-3 columnStyle" d-dragEnd="column" d-dragAction="barber" d-dragOnAfterEnd="UpdateDataField(end,,R1C4)">
+            </div>
+        </div>
+    </div>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

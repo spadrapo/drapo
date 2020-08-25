@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>ControlFlowModelArrayReference</title>
+</head>
+<body>
+    <span>ControlFlowModelArrayReference</span>
+    <div d-dataKey="objects" d-dataUrlGet="~/Data/GetLevels?children=2&levels=2&prefix=D"></div>
+    <div d-dataKey="objectsReference" d-dataUrlGet="~/Data/GetLevels?children=2&levels=2&prefix=R"></div>
+    <div>
+        <div d-for="object in objects">
+            <span d-model="{{objectsReference.[{{object._Index}}].Key}}"></span>
+            <br />
+        </div>
+    </div>
+</body>
+</html>

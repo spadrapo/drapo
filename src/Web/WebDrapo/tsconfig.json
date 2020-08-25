@@ -1,0 +1,23 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "removeComments": true,
+    "sourceMap": false,
+    "target": "es5",
+    "declaration": true,
+    "lib": [
+      "dom",
+      "es5",
+      "es2015.promise",
+      "es6"
+    ]
+  },
+  "include": [
+    "wwwroot/components/**/*"
+  ],
+  "exclude": [
+    "wwwroot/js/**/*"
+  ]
+}

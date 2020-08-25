@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - If - Internal</title>
+</head>
+<body>
+    <span>Control Flow - For - If - Internal</span>
+    <div d-datakey="users" d-dataurlget="/Data/GetIFSample"></div>
+    <div d-for="user in users" style="display: none;">
+        <span>{{user.Value}}</span>
+        <input type="text" d-if="{{user.Visible}}" d-model="{{user.Value}}" />
+    </div><div>
+        <span>V0</span>
+        <input type="text" />
+    </div><div>
+        <span>V1</span>
+        
+    </div><div>
+        <span>V2</span>
+        <input type="text" />
+    </div><div>
+        <span>V3</span>
+        
+    </div><div>
+        <span>V4</span>
+        <input type="text" />
+    </div><div>
+        <span>V5</span>
+        
+    </div><div>
+        <span>V6</span>
+        <input type="text" />
+    </div><div>
+        <span>V7</span>
+        
+    </div><div>
+        <span>V8</span>
+        <input type="text" />
+    </div><div>
+        <span>V9</span>
+        
+    </div>
+
+</body></html>

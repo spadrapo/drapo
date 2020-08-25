@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Object</title>
+    <style>
+        .cloak {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <span>Object</span>
+    <div d-dataKey="code" d-dataType="value" d-dataValue="1"></div>
+    <div d-dataKey="object" d-dataUrlGet="/Object/Get?Code={{code}}" d-dataUrlSet="/Object/Set"></div>
+    <div class="cloak" d-cloak="cloak">
+        <span>Name:</span>
+        <br />
+        <input type="text" d-model="{{object.Name}}">
+        <br />
+        <br />
+        <input type="button" value="Save" d-on-click="PostDataItem(object,)" />
+        <input type="button" value="Previous" d-if="{{object.Previous}}" d-on-click="UpdateDataField(code,,{{object.Previous}})" />
+        <input type="button" value="Next" d-if="{{object.Next}}" d-on-click="UpdateDataField(code,,{{object.Next}})" />
+    </div>
+</body>
+</html>

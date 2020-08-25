@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Model - Select Option Tree</title>
+</head>
+<body>
+    <div>
+        <div d-dataKey="options" d-dataUrlGet="/Data/GetModelSelectOptionTree"></div>
+        <div d-dataKey="selection" d-dataUrlGet="/Data/GetOptionTreeSelection"></div>
+        <select d-model="{{selection.Value}}">
+            <optgroup d-for="option in options" label="value" d-attr-label="{{option.Value}}" value="{{option.Key}}">
+                <option d-for="child in option.Children" value="{{child.Key}}">{{child.Value}}</option>
+            </optgroup>
+        </select>
+        <br />
+        <span>Selected:</span>
+        <span d-model="{{selection.Value}}"></span>
+    </div>
+</body>
+</html>

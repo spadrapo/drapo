@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title>Sector Template</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-sm-2 col-sm-push-4">
+            <h1><span>Sector Template</span></h1>
+        </div>
+    </div>
+    <div>
+        <ul class="list-inline">
+            <li class="list-inline-item"><h3><a href="#" d-on-click="UpdateSector(sector,/DrapoPages/SectorTemplateOne.html,One)">One</a></h3></li>
+            <li class="list-inline-item"><h3><a href="#" d-on-click="UpdateSector(sector,/DrapoPages/SectorTemplateTwo.html,Two)">Two</a></h3></li>
+        </ul>
+    </div>
+    <div d-sector="@" d-sector-url="/DrapoPages/SectorTemplateOne.html"><div>
+    <span>This is the template</span>
+    <div d-template="template"><div d-sector-parent-url="/DrapoPages/SectorData.html" d-sector-parent="sector" d-templateurl="/DrapoPages/SectorTemplateBase.html">
+    <span>1</span>
+    <div>
+        <div d-datakey="users" d-dataurlget="/Data/GetModelSample"></div>
+        <div d-for="user in users" style="display: none;">
+            <input type="checkbox" d-model="{{user.Visible}}" />
+            <span>{{user.Visible}}</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>true</span>
+        </div><div>
+            <input type="checkbox" />
+            <span>false</span>
+        </div>
+    </div>
+</div></div>  
+</div></div>
+    <script src="/js/bootstrap.min.js"></script>
+
+</body></html>

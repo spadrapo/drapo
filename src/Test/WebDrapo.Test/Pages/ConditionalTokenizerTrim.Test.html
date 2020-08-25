@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Conditional Tokenizer Operation</title>
+</head>
+<body>
+    <span>Conditional Tokenizer Operation</span>
+    <div>
+        <div>
+            <!--Data-->
+            <div d-datakey="d" d-datatype="object" d-dataproperty-v1="6"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <div d-if="{{d.v1}} &gt; ( {{d.v1}} - 4 )">
+                <span>Show</span>
+            </div>
+            <br />
+            <div d-if="( {{d.v1}} + 4 ) &lt; {{d.v1}} " style="display: none;">
+                <span>Hide</span>
+            </div>
+            <br />
+        </div>
+    </div>
+
+</body></html>

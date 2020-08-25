@@ -1,0 +1,267 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Component - MenuApplication - html</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <style>
+        .body {
+            background-color:lightgray;
+        }
+
+        .d-MenuApplication 
+        {
+            width:100%;
+            height: 50px;
+        }
+
+        .d-MenuApplicationBar 
+        {
+            background-color: black;
+            color: gray;
+            width: 100%;
+            height: 100%;
+        }
+
+        .d-MenuApplicationBarImageConteiner 
+        {
+            background-color: dimgray;
+            width:50px;
+            height:100%;
+        }
+
+        .d-MenuApplicationBarImage 
+        {   
+            color:white;
+            top:10px;
+            left:10px;
+            font-size: 2em;
+            cursor: pointer;
+        }
+
+        .d-MenuApplicationBarTabsConteiner {
+            position:absolute;
+            top: 0px;
+            left:50px;
+            height:50px;
+            width: calc(100% - 50px);
+        }
+
+        .d-MenuApplicationBarTabSelectedConteiner {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            height: 50px;
+            width: 300px;
+        }
+
+        .d-MenuApplicationBarTabSelected {
+            width: 100%;
+            height: 50px;
+            cursor: pointer;
+            border-right-style: dotted;
+            border-right-width: 2px;
+        }
+        .d-MenuApplicationBarTabSelectedImage {
+            position:absolute;
+            top: 5px;
+            left: 20px;
+            font-size: 3em;
+        }
+        .d-MenuApplicationBarTabSelectedText {
+            position:absolute;
+            top: 0px;
+            left: 70px;
+            height:100%;
+            width: calc(100% - 90px);
+            display:table;
+        }
+
+        .d-MenuApplicationBarTabSelectedText p {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .d-MenuApplicationBarTabSelectedRemove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+
+        .d-MenuApplicationBarTabNonSelectedConteiner {
+            position: absolute;
+            top: 0px;
+            left: 300px;
+            height: 50px;
+            width: calc(100% - 300px);
+        }
+
+        .d-MenuApplicationBarTabNonSelected {
+            position:relative;
+            float:left;
+            width: 200px;
+            height: 50px;
+            border-right-style: dotted;
+            border-right-width:2px;
+        }
+
+            .d-MenuApplicationBarTabNonSelected:hover 
+            {
+                cursor: pointer;
+                background-color: darkgray;
+            }
+
+        .d-MenuApplicationBarTabNonSelectedImage {
+            position: absolute;
+            top: 12px;
+            left: 0px;
+            font-size: 1.5em;
+        }
+
+        .d-MenuApplicationBarTabNonSelectedText {
+            position: absolute;
+            top: 0px;
+            left: 25px;
+            height:100%;
+            width: calc(100% - 35px);
+            display:table;
+        }
+
+            .d-MenuApplicationBarTabNonSelectedText p {
+                display: table-cell;
+                vertical-align: middle;
+                text-align: center;
+                font-size: 1em;
+            }
+
+        .d-MenuApplicationBarTabNonSelectedRemove 
+        {
+            position:absolute;
+            top:5px;
+            right:5px;
+        }
+
+        .d-MenuApplicationMenuContainer {
+            display: inline;
+        }
+
+        .d-MenuApplicationMenu {
+            position: relative;
+            background-color: dimgray;
+            width: 300px;
+            height: calc(100vh - 50px);
+        }
+
+        .d-MenuApplicationMenuItem 
+        {
+            width: 100%;
+            height: 50px;
+        }
+
+        .d-MenuApplicationMenuItem:hover 
+        {
+            background-color: lightgray;
+            cursor: pointer;
+        }
+
+        .d-MenuApplicationMenuItemText 
+        {
+            top: 0px;
+            left:20px;
+            position:relative;
+            color: white;
+        }
+
+        .d-MenuApplicationMenuItemImage {
+            color: black;
+            top: 10px;
+            left: 10px;
+            font-size: 2em;
+        }
+
+        .d-MenuApplicationSubMenuContainer {
+            display: inline;
+        }
+
+        .d-MenuApplicationSubMenu 
+        {
+            position: absolute;
+            top: 50px;
+            left: 300px;
+            width: 500px;
+            height: calc(100vh - 50px);
+            background-color: white;
+        }
+    </style>
+</head>
+<body class="body">
+    <!--Data-->
+    <div d-dataKey="d-menuState" d-dataType="object" d-dataProperty-visibleMenu="false" d-dataProperty-visibleSubMenu="false"></div>
+    <div d-dataKey="d-menuItems" d-dataUrlGet="/Menu/GetItems"></div>
+    <div d-dataKey="d-menuSubItems" d-dataUrlGet="/Menu/GetSubItemsNew"></div>
+    <div d-dataKey="d-menuTabs" d-dataType="array"></div>
+    <!--Menu-->
+    <div class="d-MenuApplication">
+        <!--Bar-->
+        <div class="d-MenuApplicationBar">
+            <!--Menu Button-->    
+            <div class="d-MenuApplicationBarImageConteiner">
+                <div d-for="menuState in d-menuState">
+                    <span class="glyphicon glyphicon-menu-hamburger d-MenuApplicationBarImage" d-on-click="UncheckItemField({{menuState.visibleSubMenu}});ToggleItemField({{menuState.visibleMenu}})"></span>
+                </div>
+            </div>
+            <!--Tabs-->
+            <div class="d-MenuApplicationBarTabsConteiner">
+                <!--Tab Selected-->
+                <div class="d-MenuApplicationBarTabSelectedConteiner">
+                    <div d-for="tab in d-menuTabs" d-if="{{tab.Selected}}" class="d-MenuApplicationBarTabSelected">
+                        <span class="d-MenuApplicationBarTabSelectedImage {{tab.TypeImageClass}}" d-on-click="{{tab.Activated}}"></span>
+                        <div class="d-MenuApplicationBarTabSelectedText" d-on-click="{{tab.Activated}}">
+                            <p>{{tab.Name}}</p>
+                        </div>
+                        <span class="d-MenuApplicationBarTabSelectedRemove glyphicon glyphicon-remove" d-on-click="ClearSector(sector);RemoveDataItem(d-menuTabs,tab)"></span>
+                    </div>
+                </div>
+                <!--Tabs Non Selected-->
+                <div class="d-MenuApplicationBarTabNonSelectedConteiner">
+                    <div d-for="tab in d-menuTabs" d-if="!{{tab.Selected}}" class="d-MenuApplicationBarTabNonSelected">
+                        <span class="d-MenuApplicationBarTabNonSelectedImage {{tab.TypeImageClass}}" d-on-click="{{tab.Activated}}"></span>
+                        <div class="d-MenuApplicationBarTabNonSelectedText" d-on-click="{{tab.Activated}}">
+                            <p>{{tab.Name}}</p>
+                        </div>
+                        <span class="d-MenuApplicationBarTabNonSelectedRemove glyphicon glyphicon-remove" d-on-click="RemoveDataItem(d-menuTabs,tab)"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Left Menu-->
+        <div class="d-MenuApplicationMenuContainer">
+            <div class="d-MenuApplicationMenu" d-for="menuState in d-menuState" d-if="{{menuState.visibleMenu}}">
+                <div d-for="menuItem in d-menuItems" class="d-MenuApplicationMenuItem" d-on-click="{{menuItem.Action}}">
+                    <span class="d-MenuApplicationMenuItemImage {{menuItem.TypeImageClass}}"></span>
+                    <span class="d-MenuApplicationMenuItemText">{{menuItem.Name}}</span>
+                </div>
+            </div>
+        </div>
+        <!--Left SubMenu-->
+        <div class="d-MenuApplicationSubMenuContainer">
+            <div class="d-MenuApplicationSubMenu" d-for="menuState in d-menuState" d-if="{{menuState.visibleSubMenu}}">
+                <div d-sector="sectorSubMenu" d-route="false"></div>
+            </div>
+        </div>
+    </div>
+    <!--Rainbow-->
+    <div>
+
+    </div>
+    <!--Screen-->
+    <div d-sector="sector">
+
+    </div>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

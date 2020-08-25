@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - DataPostItem - Mustache</title>
+</head>
+<body>
+    <br>
+    <span>DataPostItem Mustache</span>
+    <div d-dataKey="incremental" d-dataType="value" d-dataValue="3"></div>
+    <div d-dataKey="data" d-dataUrlGet="/Data/GetFunctionPostDataItem" d-dataUrlSet="/Data/SetFunctionPostDataItemIncremental?incremental={{incremental}}"></div>
+    <div>
+        <input type="text" d-model="{{data.Name}}">
+        <input type="button" value="Add" d-on-click="PostDataItem(data)">
+        <span d-model="{{incremental}}"></span>
+    </div>
+</body>
+</html>

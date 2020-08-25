@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow Mustache Nested Delay</title>
+</head>
+<body>
+    <span>Control Flow Mustache Nested Delay</span>
+    <div d-dataKey="culture" d-dataDelay="true" d-dataUrlGet="/Data/GetCulture"></div>
+    <div d-dataKey="nesteds" d-dataType="array" d-dataValue='[{"key":"User","value":"v1"},{"key":"Name","value":"v2"}]'></div>
+    <ul d-for="nested in nesteds">
+        <li>{{culture.{{nested.key}}}}</li>
+    </ul>
+</body>
+</html>

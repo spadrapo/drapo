@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - If</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow - If</span>
+        <div d-datakey="options" d-dataurlget="/Data/GetModelSelectOptions"></div>
+        <div d-datakey="selected" d-dataurlget="/Data/GetModelSelectSelected"></div>
+        <div>
+            <select d-model="{{selected.Selection}}">
+                <span style="display: none;"><option d-for="option in options" value="{{option.Key}}">{{option.Value}}</option></span><option value="K0">V0</option><option value="K1">V1</option><option value="K2">V2</option><option value="K3">V3</option><option value="K4">V4</option><option value="K5">V5</option><option value="K6">V6</option><option value="K7">V7</option>
+            </select>
+        </div>
+        <div>
+            <span d-model="{{selected.Selection}}">K1</span>
+        </div>
+    </div>
+
+</body></html>

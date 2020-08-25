@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - If</title>
+</head>
+<body>
+    <span>Control Flow - If</span>
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetIFSample"></div>
+    <ul>
+        <li d-for="user in users" d-if="{{user.Visible}}">{{user.Key}}</li>
+    </ul>
+</body>
+</html>

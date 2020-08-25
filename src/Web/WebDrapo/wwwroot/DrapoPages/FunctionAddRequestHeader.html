@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - AddRequestHeader</title>
+</head>
+<body>
+    <span>Function - AddRequestHeader</span>
+    <div d-dataKey="data" d-dataType="object" d-dataProperty-url="~/Data/GetCookieValues?useHeaders=true"></div>
+    <div d-dataKey="dataHeader" d-dataType="object" d-dataProperty-value="HeaderData" ></div>
+    <div d-dataKey="dataRequest" d-dataType="object"></div>
+    <div d-dataKey="dataResponse" d-dataType="object"></div>
+    <div d-dataKey="dataFunction" d-dataType="function" d-dataValue="UpdateDataUrlSet(dataRequest,{{data.url}});UpdateData(dataRequest,{{data}});AddRequestHeader(Custom,{{dataHeader.value}});PostDataItem(dataRequest,dataResponse)"></div>
+    <div>
+        <ul>
+            <li d-for="item in dataResponse">{{item.Key}} - {{item.Value}}</li>
+        </ul>
+    </div>
+    <br />
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="{{dataFunction}}"></div>
+</body>
+</html>

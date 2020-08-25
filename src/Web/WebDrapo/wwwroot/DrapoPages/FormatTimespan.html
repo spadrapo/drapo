@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Format TimeSpan</title>
+</head>
+<body>
+    <br>
+    <span>Format TimeSpan</span>
+    <div d-dataKey="dates" d-dataUrlGet="~/Data/GetDatesCompare"></div>
+    <div d-for="date in dates">
+        <br>
+        <span d-model="{{date.start}}" d-format="G"></span>
+        <span d-model="{{date.end}}" d-format="G"></span>
+        <span d-model="Cast({{date.end}} - {{date.start}},number)" d-format="t"></span>
+    </div>
+</body>
+</html>

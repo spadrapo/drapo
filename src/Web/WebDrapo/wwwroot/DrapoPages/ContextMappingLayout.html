@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title></title>
+</head>
+<body>
+    <div>
+        <div d-dataKey="tabs" d-dataType="array"></div>
+        <div d-dataKey="clipboard" d-dataType="value"></div>
+        <div d-dataKey="tabPage" d-dataType="object" d-dataProperty-container="" d-dataProperty-selected="true"></div>
+        <div d-dataKey="objectPageTwo" d-dataType="object" d-dataProperty-name="P2" d-dataProperty-value="10"></div>
+        <div d-dataKey="functionOpenTabP1" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateDataField(tabPage,name,P1);UpdateDataField(tabPage,page,ContextMappingPageOne.html);UncheckDataField(tabs,selected,false);CreateGuid(tabPage,container);AddDataItem(tabs,{{tabPage}});UpdateData(clipboard,P1);UpdateSector(content,/DrapoPages/ContextMappingPageOne.html,Page,true,true,{{tabPage.container}});"></div>
+        <div d-dataKey="functionOpenTabP2" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateDataField(tabPage,name,P2);UpdateDataField(tabPage,page,ContextMappingPageTwo.html);UncheckDataField(tabs,selected,false);CreateGuid(tabPage,container);AddDataItem(tabs,{{tabPage}});UpdateData(clipboard,{{objectPageTwo}});UpdateSector(content,/DrapoPages/ContextMappingPageTwo.html,Page,true,true,{{tabPage.container}});"></div>
+        <div d-dataKey="functionActivateTab" d-dataType="value" d-dataLoadType="startup" d-dataValue="UncheckDataField(tabs,selected);MoveItem({{tab}},^0,false);CheckItemField({{tab.selected}});UpdateSector(content,/DrapoPages/{{tab.page}},Page,true,true,{{tab.container}})"></div>
+        <div d-dataKey="functionStartup" d-dataType="function" d-dataLoadType="startup" d-dataValue="Execute({{functionOpenTabP1}});Execute({{functionOpenTabP2}});ExecuteDataItem({{functionActivateTab}},tab in tabs[0])"></div>
+        <div>
+            <div d-for="tab in tabs" style="border:solid; height:25px; width:50px">
+                <div>
+                    <span d-if="{{tab.selected}}" style="font-weight:bold" d-model="{{tab.name}}"></span>
+                    <span d-if="!{{tab.selected}}" d-model="{{tab.name}}" d-on-click="{{functionActivateTab}}"></span>
+                </div>
+            </div>
+        </div>
+        <input type="button" value="P1" d-on-click="{{functionOpenTabP1}}" />
+        <input type="button" value="P2" d-on-click="{{functionOpenTabP2}}" />
+        <div d-sector="content"></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function Focus</title>
+</head>
+<body>
+    <span>Function Focus</span>
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div>
+        <div d-for="user in users">
+            <span>Key:</span>
+            <input type="text" d-model="{{user.Key}}" d-id="it{{user._Index}}">
+            <span d-on-click="Focus(it{{user._Index}})">{{user.Key}}</span>
+            <br />
+            <br />
+        </div>
+    </div>
+</body>
+</html>

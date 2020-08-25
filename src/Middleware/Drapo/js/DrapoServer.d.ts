@@ -1,0 +1,38 @@
+declare class DrapoServer {
+    private _application;
+    private _url;
+    private _token;
+    private _requestHeaders;
+    private _requestHeadersNext;
+    private _hasBadRequest;
+    get Application(): DrapoApplication;
+    get HasBadRequest(): boolean;
+    set HasBadRequest(value: boolean);
+    constructor(application: DrapoApplication);
+    private InitializeServer;
+    ResolveUrl(url: string): string;
+    AppendUrlQueryStringCacheStatic(url: string): Promise<string>;
+    private AppendUrlQueryStringTimestamp;
+    GetHTML(url: string): Promise<string>;
+    GetJSON(url: string, verb?: string, data?: string, contentType?: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
+    GetFile(url: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
+    private CreateFileObject;
+    private ConvertFileBody;
+    private Request;
+    private RequestInternal;
+    CreateResponse(request: DrapoServerRequest, xhr: XMLHttpRequest): DrapoServerResponse;
+    private ExtractHeaders;
+    private InsertHeaders;
+    private InsertHeader;
+    private GetHeaderValue;
+    SetToken(token: string): Promise<boolean>;
+    HasToken(): boolean;
+    private GetRequestHeaders;
+    private AddHeader;
+    AddRequestHeader(key: string, value: string): void;
+    GetRequestHeader(key: string): string;
+    AddNextRequestHeader(key: string, value: string): void;
+    EnsureUrlEncoded(url: string): string;
+    EnsureUrlComponentEncoded(url: string): string;
+    private IsUrlEncoded;
+}
