@@ -1,6 +1,8 @@
 trigger:
 - master
 
+name: $(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
+
 resources:
 - repo: self
 
@@ -16,11 +18,6 @@ stages:
   - job: Build
     displayName: Build
     steps:
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-host "##vso[build.updatebuildnumber]$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)";
     - task: DotNetCoreCLI@1
       displayName: Restore
       inputs:
