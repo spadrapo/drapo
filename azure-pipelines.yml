@@ -56,7 +56,7 @@ stages:
         command: pack
         packagesToPack: '**\*.nuspec'
         versioningScheme: 'byEnvVar'
-        versionEnvVar: '$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)'
+        versionEnvVar: '$(Version)'
     - task: NuGetCommand@2
       displayName: 'NuGet push VSTS'
       inputs:
