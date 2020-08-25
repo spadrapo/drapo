@@ -79,26 +79,22 @@ stages:
         command: publish
         arguments: '--configuration $(BuildConfiguration) --output published'
         zipAfterPublish: false
-    - task: Docker@0
-      displayName: 'Remove an Image'
+    - task: PowerShell@2
+      displayName: 'remove drapo/demo image'
       inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryConnection: drapo
-        action: 'Run a Docker command'
-        customCommand: 'rmi drapo/demo --force'
+        targetType: 'inline'
+        script: 'docker rmi drapo/demo --force'
       continueOnError: true
-    - task: Docker@0
-      displayName: 'Build an image'
+    - task: Docker@2
+      displayName: 'docker build drapo/demo image'
       inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryConnection: drapo
+        containerRegistry: 'docker'
+        repository: 'drapo/demo'
+        command: 'build'
         dockerFile: '**/published/**/*Dockerfile'
-        imageName: drapo/demo
-    - task: Docker@0
-      displayName: 'Push an image'
+        tags: latest
+    - task: PowerShell@2
+      displayName: 'docker push drapo/demo'
       inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryConnection: drapo
-        action: 'Push an image'
-        imageName: drapo/demo
-        includeLatestTag: true
+        targetType: 'inline'
+        script: 'docker push drapo/demo'
