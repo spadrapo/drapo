@@ -20,7 +20,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Write-host "##vso[build.updatebuildnumber]$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)";
+          Write-host "##vso[build.updatebuildnumber]$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)";
     - task: DotNetCoreCLI@1
       displayName: Restore
       inputs:
