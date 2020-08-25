@@ -6,6 +6,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
+  BuildConfiguration: 'Release'
 
 stages:
 - stage: Build
