@@ -1010,6 +1010,8 @@ var DrapoDocument = (function () {
     DrapoDocument.prototype.CanDetachElement = function (el) {
         if (this.HasElementIframe(el))
             return (false);
+        if (this.HasElementCantDetach(el))
+            return (false);
         return (true);
     };
     DrapoDocument.prototype.IsElementDetached = function (el) {
@@ -1050,6 +1052,21 @@ var DrapoDocument = (function () {
             var child = children[i];
             var hasChildIframe = this.HasElementIframe(child);
             if (hasChildIframe)
+                return (true);
+        }
+        return (false);
+    };
+    DrapoDocument.prototype.HasElementCantDetach = function (el) {
+        if (el == null)
+            return (false);
+        var detachable = el.getAttribute('d-detachable');
+        if (detachable === 'false')
+            return (true);
+        var children = [].slice.call(el.children);
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            var hasElementCantDetach = this.HasElementCantDetach(child);
+            if (hasElementCantDetach)
                 return (true);
         }
         return (false);
