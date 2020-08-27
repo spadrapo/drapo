@@ -125,18 +125,24 @@ var DrapoSectorContainerHandler = (function () {
     };
     DrapoSectorContainerHandler.prototype.CreateContainer = function (sector, containerCode) {
         var el = this.Application.Document.GetSectorElementInner(sector);
+        var canDetachElement = this.Application.Document.CanDetachElement(el);
         var sectorChildren = this.Application.Document.GetSectorAndChildren(sector);
         var storageItems = [];
         var sectorHierarchys = [];
         var sectorFriends = [];
+        var componentSectors = [];
+        var componentTags = [];
+        var componentElements = [];
+        var componentInstances = [];
         for (var i = 0; i < sectorChildren.length; i++) {
             var sectorCurrent = sectorChildren[i];
             this.Application.Storage.AppendCacheDataItemBySector(storageItems, sectorCurrent);
             this.Application.Document.AppendSectorHierarchyBySector(sectorHierarchys, sectorCurrent);
             this.Application.Document.AppendSectorFriendsBySector(sectorFriends, sectorCurrent);
+            if (!canDetachElement)
+                this.Application.ComponentHandler.AppendInstances(sectorCurrent, componentSectors, componentTags, componentElements, componentInstances);
         }
-        var canDetachElement = this.Application.Document.CanDetachElement(el);
-        return (new DrapoSectorContainerItem(sector, containerCode, storageItems, sectorHierarchys, sectorFriends, el, canDetachElement));
+        return (new DrapoSectorContainerItem(sector, containerCode, storageItems, sectorHierarchys, sectorFriends, componentSectors, componentTags, componentElements, componentInstances, el, canDetachElement));
     };
     DrapoSectorContainerHandler.prototype.LoadContainer = function (container) {
         return __awaiter(this, void 0, void 0, function () {
@@ -148,20 +154,23 @@ var DrapoSectorContainerHandler = (function () {
                         this.Application.Storage.AddCacheDataItems(container.StorageItems);
                         this.Application.Document.AddSectorHierarchys(container.SectorHierarchys);
                         this.Application.Document.AddSectorFriendsRange(container.SectorFriends);
+                        return [4, this.Application.ComponentHandler.AddInstances(container)];
+                    case 1:
+                        _a.sent();
                         sectorChildren = this.Application.Document.GetSectorAndChildren(container.Sector);
                         i = 0;
-                        _a.label = 1;
-                    case 1:
-                        if (!(i < sectorChildren.length)) return [3, 4];
+                        _a.label = 2;
+                    case 2:
+                        if (!(i < sectorChildren.length)) return [3, 5];
                         sectorCurrent = sectorChildren[i];
                         return [4, this.Application.Storage.FireEventOnAfterContainerLoad(sectorCurrent)];
-                    case 2:
-                        _a.sent();
-                        _a.label = 3;
                     case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4:
                         i++;
-                        return [3, 1];
-                    case 4: return [2];
+                        return [3, 2];
+                    case 5: return [2];
                 }
             });
         });

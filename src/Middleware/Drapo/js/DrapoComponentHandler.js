@@ -530,5 +530,31 @@ var DrapoComponentHandler = (function () {
         }
         return (list);
     };
+    DrapoComponentHandler.prototype.AppendInstances = function (sector, componentSectors, componentTags, componentElements, componentInstances) {
+        var index = this.GetComponentInstanceIndex(sector);
+        if (index === null)
+            return;
+        componentSectors.push(sector);
+        componentTags.push(Array.from(this._dataTags[index]));
+        componentElements.push(Array.from(this._dataElements[index]));
+        componentInstances.push(Array.from(this._dataInstances[index]));
+    };
+    DrapoComponentHandler.prototype.AddInstances = function (container) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this._dataSectors.push.apply(this._dataSectors, container.ComponentSectors);
+                        this._dataTags.push.apply(this._dataTags, container.ComponentTags);
+                        this._dataElements.push.apply(this._dataElements, container.ComponentElements);
+                        this._dataInstances.push.apply(this._dataInstances, container.ComponentInstances);
+                        return [4, this.Application.Debugger.NotifyComponents()];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
     return DrapoComponentHandler;
 }());
