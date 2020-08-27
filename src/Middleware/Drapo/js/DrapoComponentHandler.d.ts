@@ -32,4 +32,6 @@ declare class DrapoComponentHandler {
     HasContentComponent(content: string): boolean;
     ResolveComponentContext(sector: string, context: DrapoContext, el: HTMLElement, renderContext: DrapoRenderContext, canResolveComponents: boolean): Promise<void>;
     Retrieve(): [string, string, HTMLElement, any][];
+    AppendInstances(sector: string, componentSectors: string[], componentTags: string[][], componentElements: HTMLElement[][], componentInstances: any[][]): void;
+    AddInstances(container: DrapoSectorContainerItem): Promise<void>;
 }

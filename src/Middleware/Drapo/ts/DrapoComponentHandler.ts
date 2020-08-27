@@ -412,4 +412,22 @@ class DrapoComponentHandler {
         }
         return (list);
     }
+
+    public AppendInstances(sector :string, componentSectors: string[], componentTags: string[][], componentElements: HTMLElement[][], componentInstances: any[][]): void {
+        const index: number = this.GetComponentInstanceIndex(sector);
+        if (index === null)
+            return;
+        componentSectors.push(sector);
+        componentTags.push(Array.from(this._dataTags[index]));
+        componentElements.push(Array.from(this._dataElements[index]));
+        componentInstances.push(Array.from(this._dataInstances[index]));
+    }
+
+    public async AddInstances(container: DrapoSectorContainerItem): Promise<void> {
+        this._dataSectors.push.apply(this._dataSectors, container.ComponentSectors);
+        this._dataTags.push.apply(this._dataTags, container.ComponentTags);
+        this._dataElements.push.apply(this._dataElements, container.ComponentElements);
+        this._dataInstances.push.apply(this._dataInstances, container.ComponentInstances);
+        await this.Application.Debugger.NotifyComponents();
+    }
 }

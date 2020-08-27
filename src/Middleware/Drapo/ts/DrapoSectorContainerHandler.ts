@@ -82,6 +82,8 @@ class DrapoSectorContainerHandler {
     private CreateContainer(sector: string, containerCode: string): DrapoSectorContainerItem {
         //Element
         const el: HTMLElement = this.Application.Document.GetSectorElementInner(sector);
+        //Can Detach Element
+        const canDetachElement: boolean = this.Application.Document.CanDetachElement(el);
         //Sector and Children
         const sectorChildren: string[] = this.Application.Document.GetSectorAndChildren(sector);
         //Storage Items
@@ -90,6 +92,14 @@ class DrapoSectorContainerHandler {
         const sectorHierarchys: [string, string][] = [];
         //Sector Friends
         const sectorFriends: [string, string[]][] = [];
+        //Component Sectors
+        const componentSectors: string[] = [];
+        //Component Tags
+        const componentTags: string[][] = [];
+        //Component Elements
+        const componentElements: HTMLElement[][] = [];
+        //Component Instances
+        const componentInstances: any[][] = [];
         //Sectors
         for (let i: number = 0; i < sectorChildren.length; i++) {
             const sectorCurrent: string = sectorChildren[i];
@@ -99,10 +109,11 @@ class DrapoSectorContainerHandler {
             this.Application.Document.AppendSectorHierarchyBySector(sectorHierarchys, sectorCurrent);
             //Sector Friends
             this.Application.Document.AppendSectorFriendsBySector(sectorFriends, sectorCurrent);
+            //Components
+            if (!canDetachElement)
+                this.Application.ComponentHandler.AppendInstances(sectorCurrent, componentSectors, componentTags, componentElements, componentInstances);
         }
-        //Can Detach Element
-        const canDetachElement: boolean = this.Application.Document.CanDetachElement(el);
-        return (new DrapoSectorContainerItem(sector, containerCode, storageItems, sectorHierarchys, sectorFriends, el, canDetachElement));
+        return (new DrapoSectorContainerItem(sector, containerCode, storageItems, sectorHierarchys, sectorFriends, componentSectors, componentTags, componentElements, componentInstances, el, canDetachElement));
     }
 
     private async LoadContainer(container: DrapoSectorContainerItem): Promise<void> {
@@ -114,6 +125,8 @@ class DrapoSectorContainerHandler {
         this.Application.Document.AddSectorHierarchys(container.SectorHierarchys);
         //Sector Friends
         this.Application.Document.AddSectorFriendsRange(container.SectorFriends);
+        //Component
+        await this.Application.ComponentHandler.AddInstances(container);
         //Sector Event
         const sectorChildren: string[] = this.Application.Document.GetSectorAndChildren(container.Sector);
         for (let i: number = 0; i < sectorChildren.length; i++) {

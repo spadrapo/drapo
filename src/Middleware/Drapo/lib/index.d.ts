@@ -217,6 +217,8 @@ declare class DrapoComponentHandler {
     HasContentComponent(content: string): boolean;
     ResolveComponentContext(sector: string, context: DrapoContext, el: HTMLElement, renderContext: DrapoRenderContext, canResolveComponents: boolean): Promise<void>;
     Retrieve(): [string, string, HTMLElement, any][];
+    AppendInstances(sector: string, componentSectors: string[], componentTags: string[][], componentElements: HTMLElement[][], componentInstances: any[][]): void;
+    AddInstances(container: DrapoSectorContainerItem): Promise<void>;
 }
 
 declare class DrapoConfig {
@@ -1392,6 +1394,10 @@ declare class DrapoSectorContainerItem {
     private _storageItems;
     private _sectorHierarchys;
     private _sectorFriends;
+    private _componentSectors;
+    private _componentTags;
+    private _componentElements;
+    private _componentInstances;
     private _element;
     private _canDetachElement;
     get Sector(): string;
@@ -1399,9 +1405,13 @@ declare class DrapoSectorContainerItem {
     get StorageItems(): [string, DrapoStorageItem][];
     get SectorHierarchys(): [string, string][];
     get SectorFriends(): [string, string[]][];
+    get ComponentSectors(): string[];
+    get ComponentTags(): string[][];
+    get ComponentElements(): HTMLElement[][];
+    get ComponentInstances(): any[][];
     get Element(): HTMLElement;
     get CanDetachElement(): boolean;
-    constructor(sector: string, containerCode: string, storageItems: [string, DrapoStorageItem][], sectorHierarchys: [string, string][], sectorFriends: [string, string[]][], element: HTMLElement, canDetachElement: boolean);
+    constructor(sector: string, containerCode: string, storageItems: [string, DrapoStorageItem][], sectorHierarchys: [string, string][], sectorFriends: [string, string[]][], componentSectors: string[], componentTags: string[][], componentElements: HTMLElement[][], componentInstances: any[][], element: HTMLElement, canDetachElement: boolean);
 }
 
 declare class DrapoSerializer {
