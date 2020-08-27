@@ -549,6 +549,7 @@ declare class DrapoDocument {
     IsElementAlive(el: HTMLElement): boolean;
     IsElementInsideComponent(el: HTMLElement): boolean;
     private HasElementIframe;
+    private HasElementCantDetach;
     GetSectorImpersonate(el: HTMLElement): string;
     IsSectorDynamic(el: HTMLElement): Promise<boolean>;
     GetSectorResolved(el: HTMLElement): Promise<string>;
