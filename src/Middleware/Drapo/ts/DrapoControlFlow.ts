@@ -215,8 +215,6 @@ class DrapoControlFlow {
                 this.RemoveListIndex(items, i);
             }
         }
-        const canFragmentElements: boolean = true;
-        const fragment: DocumentFragment = document.createDocumentFragment();
         if ((datas.length !== null) && (datas.length === 0)) {
             if (isIncremental)
                 return (false);
@@ -240,6 +238,11 @@ class DrapoControlFlow {
         const viewport: DrapoViewport = this.Application.ViewportHandler.CreateViewportControlFlow(elementForTemplate, isContextRootFullExclusive, hasIfText, range !== null);
         if (viewport !== null)
             jQueryForReferenceTemplate.removeAttr('d-for-render');
+        //Viewport Ballon Before
+        lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
+        //Document Fragment
+        let canFragmentElements: boolean = viewport == null;
+        const fragment: DocumentFragment = document.createDocumentFragment();
         //Inline d-for inside
         const canUseTemplate: boolean = isContextRootFullExclusive && (type == DrapoStorageLinkType.Render) && (datas.length > 3);
         const templateVariables: string[][] = canUseTemplate ? (await this.GetTemplateVariables(sector, context, dataKey, key, jQueryForReferenceTemplate)) : null;
@@ -277,14 +280,17 @@ class DrapoControlFlow {
                 } else {
                     lastInserted.after(templateJ);
                     lastInserted = templateJ;
+                    this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
+                    canFragmentElements = true;
                 }
-                //this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
             } else if (type == DrapoStorageLinkType.RenderClass) {
                 await this.ResolveControlFlowForIterationRenderClass(context, renderContext, template, sector);
                 this.Application.Document.ApplyNodeDifferencesRenderClass(oldNode, template);
             }
         }
-        if ((isContextRootFullExclusive) && (!isIncremental)) {
+        //Viewport Ballon After
+        this.Application.ViewportHandler.AppendViewportControlFlowBallonAfter(viewport, fragment);
+        if ((viewport == null) && (isContextRootFullExclusive) && (!isIncremental)) {
             this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
             if (forJQueryParent.children().length !== 1)
                 forJQueryParent.html(content);

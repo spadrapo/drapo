@@ -161,7 +161,7 @@ var DrapoControlFlow = (function () {
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, canFragmentElements, fragment, template, jQueryForReferenceTemplate, viewport, canUseTemplate, templateVariables, _a, nodesRemovedCount, length, j, data, templateKey, _b, templateData, _c, templateJ, template, nodeIndex, oldNode, item, _d, template;
+            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, viewport, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, length, j, data, templateKey, _b, templateData, _c, templateJ, template, nodeIndex, oldNode, item, _d, template;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -282,8 +282,6 @@ var DrapoControlFlow = (function () {
                                 this.RemoveListIndex(items, i);
                             }
                         }
-                        canFragmentElements = true;
-                        fragment = document.createDocumentFragment();
                         if ((datas.length !== null) && (datas.length === 0)) {
                             if (isIncremental)
                                 return [2, (false)];
@@ -306,6 +304,9 @@ var DrapoControlFlow = (function () {
                         viewport = this.Application.ViewportHandler.CreateViewportControlFlow(elementForTemplate, isContextRootFullExclusive, hasIfText, range !== null);
                         if (viewport !== null)
                             jQueryForReferenceTemplate.removeAttr('d-for-render');
+                        lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
+                        canFragmentElements = viewport == null;
+                        fragment = document.createDocumentFragment();
                         canUseTemplate = isContextRootFullExclusive && (type == DrapoStorageLinkType.Render) && (datas.length > 3);
                         if (!canUseTemplate) return [3, 9];
                         return [4, this.GetTemplateVariables(sector, context, dataKey, key, jQueryForReferenceTemplate)];
@@ -384,6 +385,8 @@ var DrapoControlFlow = (function () {
                         else {
                             lastInserted.after(templateJ);
                             lastInserted = templateJ;
+                            this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
+                            canFragmentElements = true;
                         }
                         return [3, 25];
                     case 23:
@@ -397,7 +400,8 @@ var DrapoControlFlow = (function () {
                         j++;
                         return [3, 11];
                     case 26:
-                        if ((isContextRootFullExclusive) && (!isIncremental)) {
+                        this.Application.ViewportHandler.AppendViewportControlFlowBallonAfter(viewport, fragment);
+                        if ((viewport == null) && (isContextRootFullExclusive) && (!isIncremental)) {
                             this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
                             if (forJQueryParent.children().length !== 1)
                                 forJQueryParent.html(content);

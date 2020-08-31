@@ -30,7 +30,30 @@
         viewPort.Element = el;
         viewPort.ElementScroll = elScroll;
         viewPort.Height = height;
+        viewPort.HeightBefore = 0;
+        viewPort.HeightAfter = 0;
+        viewPort.HeightBallonBefore = 0;
+        viewPort.HeightBallonAfter = 0;
         return (viewPort);
+    }
+
+    public CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: JQuery) {
+        if (viewport == null)
+            return (lastInserted);
+        const elBallonBefore: HTMLElement = document.createElement('div');
+        elBallonBefore.style.width = '100%';
+        elBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
+        lastInserted.after(elBallonBefore);
+        return ($(elBallonBefore));
+    }
+
+    public AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, fragment: DocumentFragment) : void {
+        if (viewport == null)
+            return;
+        const elBallonBefore: HTMLElement = document.createElement('div');
+        elBallonBefore.style.width = '100%';
+        elBallonBefore.style.height = viewport.HeightBallonAfter + 'px';
+        fragment.appendChild(elBallonBefore);
     }
 
     public GetViewportControlFlowLength(viewport: DrapoViewport, length: number): number {

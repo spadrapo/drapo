@@ -7,7 +7,7 @@ var DrapoViewportHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoViewportHandler.prototype.CreateViewportControlFlow = function (el, isContextRootFullExclusive, hasIf, hasRange) {
@@ -29,7 +29,28 @@ var DrapoViewportHandler = (function () {
         viewPort.Element = el;
         viewPort.ElementScroll = elScroll;
         viewPort.Height = height;
+        viewPort.HeightBefore = 0;
+        viewPort.HeightAfter = 0;
+        viewPort.HeightBallonBefore = 0;
+        viewPort.HeightBallonAfter = 0;
         return (viewPort);
+    };
+    DrapoViewportHandler.prototype.CreateViewportControlFlowBallonBefore = function (viewport, lastInserted) {
+        if (viewport == null)
+            return (lastInserted);
+        var elBallonBefore = document.createElement('div');
+        elBallonBefore.style.width = '100%';
+        elBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
+        lastInserted.after(elBallonBefore);
+        return ($(elBallonBefore));
+    };
+    DrapoViewportHandler.prototype.AppendViewportControlFlowBallonAfter = function (viewport, fragment) {
+        if (viewport == null)
+            return;
+        var elBallonBefore = document.createElement('div');
+        elBallonBefore.style.width = '100%';
+        elBallonBefore.style.height = viewport.HeightBallonAfter + 'px';
+        fragment.appendChild(elBallonBefore);
     };
     DrapoViewportHandler.prototype.GetViewportControlFlowLength = function (viewport, length) {
         return (length);
