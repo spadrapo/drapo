@@ -654,6 +654,24 @@ class DrapoSolver {
         return (clone);
     }
 
+    public CloneArrayElement(list: HTMLElement[]): HTMLElement[] {
+        if (list == null)
+            return (null);
+        const clone: HTMLElement[] = [];
+        for (let i: number = 0; i < list.length; i++)
+            clone.push(list[i]);
+        return (clone);
+    }
+
+    public CloneArrayAny(list: any[]): any[] {
+        if (list == null)
+            return (null);
+        const clone: any[] = [];
+        for (let i: number = 0; i < list.length; i++)
+            clone.push(list[i]);
+        return (clone);
+    }
+
     private GetSystemContextPathValue(sector: string, context: DrapoContext, dataPath: string[]): string {
         if (dataPath.length != 2)
             return (null);

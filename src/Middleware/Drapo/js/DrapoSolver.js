@@ -855,6 +855,22 @@ var DrapoSolver = (function () {
             clone.push(list[i]);
         return (clone);
     };
+    DrapoSolver.prototype.CloneArrayElement = function (list) {
+        if (list == null)
+            return (null);
+        var clone = [];
+        for (var i = 0; i < list.length; i++)
+            clone.push(list[i]);
+        return (clone);
+    };
+    DrapoSolver.prototype.CloneArrayAny = function (list) {
+        if (list == null)
+            return (null);
+        var clone = [];
+        for (var i = 0; i < list.length; i++)
+            clone.push(list[i]);
+        return (clone);
+    };
     DrapoSolver.prototype.GetSystemContextPathValue = function (sector, context, dataPath) {
         if (dataPath.length != 2)
             return (null);
