@@ -1556,6 +1556,8 @@ declare class DrapoSolver {
     Clone(object: any, deepCopy?: boolean): any;
     private CloneArray;
     CloneArrayString(list: string[]): string[];
+    CloneArrayElement(list: HTMLElement[]): HTMLElement[];
+    CloneArrayAny(list: any[]): any[];
     private GetSystemContextPathValue;
     private GetSystemPathValue;
     private GetSystemContextPathValueIndex;
