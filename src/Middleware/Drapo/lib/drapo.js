@@ -2984,9 +2984,9 @@ var DrapoComponentHandler = (function () {
         if (index === null)
             return;
         componentSectors.push(sector);
-        componentTags.push(Array.from(this._dataTags[index]));
-        componentElements.push(Array.from(this._dataElements[index]));
-        componentInstances.push(Array.from(this._dataInstances[index]));
+        componentTags.push(this.Application.Solver.CloneArrayString(this._dataTags[index]));
+        componentElements.push(this.Application.Solver.CloneArrayElement(this._dataElements[index]));
+        componentInstances.push(this.Application.Solver.CloneArrayAny(this._dataInstances[index]));
     };
     DrapoComponentHandler.prototype.AddInstances = function (container) {
         return __awaiter(this, void 0, void 0, function () {
@@ -17980,6 +17980,22 @@ var DrapoSolver = (function () {
             return (jQuery.extend([], object));
     };
     DrapoSolver.prototype.CloneArrayString = function (list) {
+        if (list == null)
+            return (null);
+        var clone = [];
+        for (var i = 0; i < list.length; i++)
+            clone.push(list[i]);
+        return (clone);
+    };
+    DrapoSolver.prototype.CloneArrayElement = function (list) {
+        if (list == null)
+            return (null);
+        var clone = [];
+        for (var i = 0; i < list.length; i++)
+            clone.push(list[i]);
+        return (clone);
+    };
+    DrapoSolver.prototype.CloneArrayAny = function (list) {
         if (list == null)
             return (null);
         var clone = [];
