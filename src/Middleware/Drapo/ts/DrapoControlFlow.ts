@@ -236,12 +236,17 @@ class DrapoControlFlow {
         jQueryForReferenceTemplate.removeAttr('d-for');
         if (ifText != null)
             jQueryForReferenceTemplate.removeAttr('d-if');
+        //Viewport
+        const viewport: DrapoViewport = this.Application.ViewportHandler.CreateViewportControlFlow(elementForTemplate, isContextRootFullExclusive, hasIfText, range !== null);
+        if (viewport !== null)
+            jQueryForReferenceTemplate.removeAttr('d-for-render');
         //Inline d-for inside
         const canUseTemplate: boolean = isContextRootFullExclusive && (type == DrapoStorageLinkType.Render) && (datas.length > 3);
         const templateVariables: string[][] = canUseTemplate ? (await this.GetTemplateVariables(sector, context, dataKey, key, jQueryForReferenceTemplate)) : null;
         //Render
         let nodesRemovedCount: number = 0;
-        for (let j = start; j < datas.length; j++) {
+        const length: number = datas.length;
+        for (let j = start; j < this.Application.ViewportHandler.GetViewportControlFlowLength(viewport, length); j++) {
             const data: any = datas[j];
             //Template
             const templateKey: string = templateVariables !== null ? await this.CreateTemplateKey(sector, context, dataKey, templateVariables, data, key, j) : null;
@@ -273,6 +278,7 @@ class DrapoControlFlow {
                     lastInserted.after(templateJ);
                     lastInserted = templateJ;
                 }
+                //this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
             } else if (type == DrapoStorageLinkType.RenderClass) {
                 await this.ResolveControlFlowForIterationRenderClass(context, renderContext, template, sector);
                 this.Application.Document.ApplyNodeDifferencesRenderClass(oldNode, template);

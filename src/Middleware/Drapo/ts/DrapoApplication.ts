@@ -31,6 +31,7 @@
     private _exceptionHandler: DrapoExceptionHandler;
     private _globalization: DrapoGlobalization;
     private _stylist: DrapoStylist;
+    private _viewportHandler: DrapoViewportHandler;
     private _debugger: DrapoDebugger;
 
     // Properties
@@ -159,6 +160,10 @@
         return (this._stylist);
     }
 
+    get ViewportHandler(): DrapoViewportHandler {
+        return (this._viewportHandler);
+    }
+
     get Debugger(): DrapoDebugger {
         return (this._debugger);
     }
@@ -195,6 +200,7 @@
         this._exceptionHandler = new DrapoExceptionHandler(this);
         this._globalization = new DrapoGlobalization(this);
         this._stylist = new DrapoStylist(this);
+        this._viewportHandler = new DrapoViewportHandler(this);
         this._debugger = new DrapoDebugger(this);
     }
 

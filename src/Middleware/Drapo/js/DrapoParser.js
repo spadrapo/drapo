@@ -1031,5 +1031,11 @@ var DrapoParser = (function () {
             return (true);
         return (false);
     };
+    DrapoParser.prototype.ParsePixels = function (value) {
+        if ((value == null) || (value == '') || (value.length < 3))
+            return (null);
+        var valueNumber = this.ParseNumber(value.substr(0, value.length - 2));
+        return (valueNumber);
+    };
     return DrapoParser;
 }());

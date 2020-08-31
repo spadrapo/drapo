@@ -30,6 +30,7 @@ declare class DrapoApplication {
     private _exceptionHandler;
     private _globalization;
     private _stylist;
+    private _viewportHandler;
     private _debugger;
     get IsLoaded(): boolean;
     get Log(): DrapoLogger;
@@ -62,6 +63,7 @@ declare class DrapoApplication {
     get ExceptionHandler(): DrapoExceptionHandler;
     get Globalization(): DrapoGlobalization;
     get Stylist(): DrapoStylist;
+    get ViewportHandler(): DrapoViewportHandler;
     get Debugger(): DrapoDebugger;
     constructor();
     OnLoad(): Promise<void>;
@@ -1209,6 +1211,7 @@ declare class DrapoParser {
     ParseHeader(data: string): [string, string];
     ParseFormat(format: string): string[];
     private IsFormatCharacterCompatible;
+    ParsePixels(value: string): number;
 }
 
 declare class DrapoPipeMessage {
@@ -1903,6 +1906,47 @@ declare class DrapoView {
     set Tag(value: string);
     get Condition(): string;
     set Condition(value: string);
+}
+
+declare class DrapoViewport {
+    private _el;
+    private _elScroll;
+    private _heightScroll;
+    private _heightBefore;
+    private _heightAfter;
+    private _heightItem;
+    private _heightBallonBefore;
+    private _heightBallonAfter;
+    get Element(): HTMLElement;
+    set Element(value: HTMLElement);
+    get ElementScroll(): HTMLElement;
+    set ElementScroll(value: HTMLElement);
+    get HeightScroll(): number;
+    set Height(value: number);
+    get HeightBefore(): number;
+    set HeightBefore(value: number);
+    get HeightAfter(): number;
+    set HeightAfter(value: number);
+    get HeightItem(): number;
+    set HeightItem(value: number);
+    get HeightBallonBefore(): number;
+    set HeightBallonBefore(value: number);
+    get HeightBallonAfter(): number;
+    set HeightBallonAfter(value: number);
+}
+
+declare class DrapoViewportHandler {
+    private _application;
+    get Application(): DrapoApplication;
+    constructor(application: DrapoApplication);
+    CreateViewportControlFlow(el: HTMLElement, isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport;
+    GetViewportControlFlowLength(viewport: DrapoViewport, length: number): number;
+    UpdateHeightItem(viewport: DrapoViewport, elItem: HTMLElement): boolean;
+    private GetElementStyleHeight;
+    private GetElementClientHeight;
+    private GetElementScrollViewport;
+    private HasOverflowY;
+    private IsOverflowEnabled;
 }
 
 declare class DrapoWindow {

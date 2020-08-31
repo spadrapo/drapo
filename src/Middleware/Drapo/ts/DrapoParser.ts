@@ -1107,4 +1107,11 @@ class DrapoParser {
             return (true);
         return (false);
     }
+
+    public ParsePixels(value: string): number {
+        if ((value == null) || (value == '') || (value.length < 3))
+            return (null);
+        const valueNumber: number = this.ParseNumber(value.substr(0, value.length - 2));
+        return (valueNumber);
+    }
 }

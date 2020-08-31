@@ -68,6 +68,7 @@ var DrapoApplication = (function () {
         this._exceptionHandler = new DrapoExceptionHandler(this);
         this._globalization = new DrapoGlobalization(this);
         this._stylist = new DrapoStylist(this);
+        this._viewportHandler = new DrapoViewportHandler(this);
         this._debugger = new DrapoDebugger(this);
     }
     Object.defineProperty(DrapoApplication.prototype, "IsLoaded", {
@@ -283,6 +284,13 @@ var DrapoApplication = (function () {
     Object.defineProperty(DrapoApplication.prototype, "Stylist", {
         get: function () {
             return (this._stylist);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoApplication.prototype, "ViewportHandler", {
+        get: function () {
+            return (this._viewportHandler);
         },
         enumerable: true,
         configurable: true
