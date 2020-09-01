@@ -173,6 +173,8 @@ declare class DrapoBinder {
     private IsElementScrollVisible;
     private HasElementVerticalScroll;
     IsElementScrollVerticalAlmostEnd(el: JQuery): boolean;
+    BindControlFlowViewport(viewport: DrapoViewport): void;
+    BindControlFlowViewportScroll(viewport: DrapoViewport): Promise<void>;
 }
 
 declare class DrapoClassHandler {
@@ -410,6 +412,7 @@ declare class DrapoControlFlow {
     ApplyRange(data: any[], range: DrapoRange): any[];
     GetRangeIndex(data: any[], rangeIndex: string): number;
     ExecuteDataItem(sector: string, context: DrapoContext, expression: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string): Promise<boolean>;
+    ResolveControlFlowForViewportScroll(viewport: DrapoViewport): Promise<void>;
 }
 
 declare class DrapoCookieHandler {
@@ -1913,18 +1916,29 @@ declare class DrapoView {
 declare class DrapoViewport {
     private _el;
     private _elScroll;
+    private _elBallonBefore;
+    private _elBallonAfter;
     private _heightScroll;
     private _heightBefore;
     private _heightAfter;
     private _heightItem;
     private _heightBallonBefore;
     private _heightBallonAfter;
+    private _dataStart;
+    private _dataEnd;
+    private _dataLength;
+    private _factor;
+    private _eventScrollTimeout;
     get Element(): HTMLElement;
     set Element(value: HTMLElement);
+    get ElementBallonBefore(): HTMLElement;
+    set ElementBallonBefore(value: HTMLElement);
+    get ElementBallonAfter(): HTMLElement;
+    set ElementBallonAfter(value: HTMLElement);
     get ElementScroll(): HTMLElement;
     set ElementScroll(value: HTMLElement);
     get HeightScroll(): number;
-    set Height(value: number);
+    set HeightScroll(value: number);
     get HeightBefore(): number;
     set HeightBefore(value: number);
     get HeightAfter(): number;
@@ -1935,17 +1949,30 @@ declare class DrapoViewport {
     set HeightBallonBefore(value: number);
     get HeightBallonAfter(): number;
     set HeightBallonAfter(value: number);
+    get DataStart(): number;
+    set DataStart(value: number);
+    get DataEnd(): number;
+    set DataEnd(value: number);
+    get DataLength(): number;
+    set DataLength(value: number);
+    get Factor(): number;
+    set Factor(value: number);
+    get EventScrollTimeout(): number;
+    set EventScrollTimeout(value: number);
 }
 
 declare class DrapoViewportHandler {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    CreateViewportControlFlow(el: HTMLElement, isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport;
+    CreateViewportControlFlow(el: HTMLElement, dataLength: number, isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport;
     CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: JQuery): JQuery;
     AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, fragment: DocumentFragment): void;
-    GetViewportControlFlowLength(viewport: DrapoViewport, length: number): number;
+    GetViewportControlFlowStart(viewport: DrapoViewport, start: number): number;
+    GetViewportControlFlowEnd(viewport: DrapoViewport, length: number): number;
     UpdateHeightItem(viewport: DrapoViewport, elItem: HTMLElement): boolean;
+    private UpdateValues;
+    private UpdateValuesBallon;
     private GetElementStyleHeight;
     private GetElementClientHeight;
     private GetElementScrollViewport;

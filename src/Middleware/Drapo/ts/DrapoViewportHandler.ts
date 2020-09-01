@@ -11,7 +11,7 @@
         this._application = application;
     }
 
-    public CreateViewportControlFlow(el: HTMLElement, isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport {
+    public CreateViewportControlFlow(el: HTMLElement, dataLength : number, isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport {
         if (!isContextRootFullExclusive)
             return (null);
         if (hasIf)
@@ -29,36 +29,50 @@
         const viewPort: DrapoViewport = new DrapoViewport();
         viewPort.Element = el;
         viewPort.ElementScroll = elScroll;
-        viewPort.Height = height;
+        viewPort.HeightScroll = height;
         viewPort.HeightBefore = 0;
         viewPort.HeightAfter = 0;
         viewPort.HeightBallonBefore = 0;
         viewPort.HeightBallonAfter = 0;
+        viewPort.DataStart = 0;
+        viewPort.DataEnd = dataLength;
+        viewPort.DataLength = dataLength;
         return (viewPort);
     }
 
     public CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: JQuery) {
-        if (viewport == null)
+        if (viewport === null)
             return (lastInserted);
         const elBallonBefore: HTMLElement = document.createElement('div');
+        elBallonBefore.setAttribute('d-ballon', 'before');
         elBallonBefore.style.width = '100%';
         elBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
+        viewport.ElementBallonBefore = elBallonBefore;
         lastInserted.after(elBallonBefore);
         return ($(elBallonBefore));
     }
 
     public AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, fragment: DocumentFragment) : void {
-        if (viewport == null)
+        if (viewport === null)
             return;
-        const elBallonBefore: HTMLElement = document.createElement('div');
-        elBallonBefore.style.width = '100%';
-        elBallonBefore.style.height = viewport.HeightBallonAfter + 'px';
-        fragment.appendChild(elBallonBefore);
+        const elBallonAfter: HTMLElement = document.createElement('div');
+        elBallonAfter.style.width = '100%';
+        elBallonAfter.style.height = viewport.HeightBallonAfter + 'px';
+        viewport.ElementBallonAfter = elBallonAfter;
+        fragment.appendChild(elBallonAfter);
+        this.Application.Binder.BindControlFlowViewport(viewport);
     }
 
-    public GetViewportControlFlowLength(viewport: DrapoViewport, length: number): number {
-        //TODO: We need to try to calculate the length of the viewport data
-        return (length);
+    public GetViewportControlFlowStart(viewport: DrapoViewport, start: number): number {
+        if (viewport === null)
+            return (start);
+        return (viewport.DataStart);
+    }
+
+    public GetViewportControlFlowEnd(viewport: DrapoViewport, length: number): number {
+        if (viewport === null)
+            return (length);
+        return (viewport.DataEnd);
     }
 
     public UpdateHeightItem(viewport: DrapoViewport, elItem: HTMLElement): boolean {
@@ -72,7 +86,24 @@
         if (height === null)
             return (false);
         viewport.HeightItem = height;
+        this.UpdateValues(viewport);
         return (true);
+    }
+
+    private UpdateValues(viewport: DrapoViewport): void {
+        const heightData: number = viewport.HeightScroll - (viewport.HeightBefore + viewport.HeightAfter);
+        if (heightData < 0)
+            return;
+        const heightDataFactor: number = heightData * viewport.Factor;
+        const dataItems: number = Math.floor(heightDataFactor / viewport.HeightItem);
+        viewport.DataEnd = dataItems < viewport.DataEnd ? dataItems : viewport.DataEnd;
+        this.UpdateValuesBallon(viewport);
+    }
+
+    private UpdateValuesBallon(viewport: DrapoViewport)
+    {
+        viewport.HeightBallonBefore = viewport.DataStart * viewport.HeightItem;
+        viewport.HeightBallonAfter = (viewport.DataLength - viewport.DataEnd) * viewport.HeightItem;
     }
 
     private GetElementStyleHeight(el: HTMLElement): number {

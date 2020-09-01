@@ -1,12 +1,19 @@
 ﻿class DrapoViewport {
     private _el: HTMLElement = null;
     private _elScroll: HTMLElement = null;
+    private _elBallonBefore: HTMLElement = null;
+    private _elBallonAfter: HTMLElement = null;
     private _heightScroll: number = null;
     private _heightBefore: number = null;
     private _heightAfter: number = null;
     private _heightItem: number = null;
     private _heightBallonBefore: number = null;
     private _heightBallonAfter: number = null;
+    private _dataStart: number = null;
+    private _dataEnd: number = null;
+    private _dataLength: number = null;
+    private _factor: number = 3;
+    private _eventScrollTimeout : number = null;
 
     get Element(): HTMLElement {
         return (this._el);
@@ -14,6 +21,22 @@
 
     set Element(value: HTMLElement) {
         this._el = value;
+    }
+
+    get ElementBallonBefore(): HTMLElement {
+        return (this._elBallonBefore);
+    }
+
+    set ElementBallonBefore(value: HTMLElement) {
+        this._elBallonBefore = value;
+    }
+
+    get ElementBallonAfter(): HTMLElement {
+        return (this._elBallonAfter);
+    }
+
+    set ElementBallonAfter(value: HTMLElement) {
+        this._elBallonAfter = value;
     }
 
     get ElementScroll(): HTMLElement {
@@ -28,7 +51,7 @@
         return (this._heightScroll);
     }
 
-    set Height(value: number) {
+    set HeightScroll(value: number) {
         this._heightScroll = value;
     }
 
@@ -70,5 +93,45 @@
 
     set HeightBallonAfter(value: number) {
         this._heightBallonAfter = value;
+    }
+
+    get DataStart(): number {
+        return (this._dataStart);
+    }
+
+    set DataStart(value: number) {
+        this._dataStart = value;
+    }
+
+    get DataEnd(): number {
+        return (this._dataEnd);
+    }
+
+    set DataEnd(value: number) {
+        this._dataEnd = value;
+    }
+
+    get DataLength(): number {
+        return (this._dataLength);
+    }
+
+    set DataLength(value: number) {
+        this._dataLength = value;
+    }
+
+    get Factor(): number {
+        return (this._factor);
+    }
+
+    set Factor(value: number) {
+        this._factor = value;
+    }
+
+    get EventScrollTimeout(): number {
+        return (this._eventScrollTimeout);
+    }
+
+    set EventScrollTimeout(value: number) {
+        this._eventScrollTimeout = value;
     }
 }

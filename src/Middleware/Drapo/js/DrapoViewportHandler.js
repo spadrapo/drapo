@@ -7,10 +7,10 @@ var DrapoViewportHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
-    DrapoViewportHandler.prototype.CreateViewportControlFlow = function (el, isContextRootFullExclusive, hasIf, hasRange) {
+    DrapoViewportHandler.prototype.CreateViewportControlFlow = function (el, dataLength, isContextRootFullExclusive, hasIf, hasRange) {
         if (!isContextRootFullExclusive)
             return (null);
         if (hasIf)
@@ -28,32 +28,46 @@ var DrapoViewportHandler = (function () {
         var viewPort = new DrapoViewport();
         viewPort.Element = el;
         viewPort.ElementScroll = elScroll;
-        viewPort.Height = height;
+        viewPort.HeightScroll = height;
         viewPort.HeightBefore = 0;
         viewPort.HeightAfter = 0;
         viewPort.HeightBallonBefore = 0;
         viewPort.HeightBallonAfter = 0;
+        viewPort.DataStart = 0;
+        viewPort.DataEnd = dataLength;
+        viewPort.DataLength = dataLength;
         return (viewPort);
     };
     DrapoViewportHandler.prototype.CreateViewportControlFlowBallonBefore = function (viewport, lastInserted) {
-        if (viewport == null)
+        if (viewport === null)
             return (lastInserted);
         var elBallonBefore = document.createElement('div');
+        elBallonBefore.setAttribute('d-ballon', 'before');
         elBallonBefore.style.width = '100%';
         elBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
+        viewport.ElementBallonBefore = elBallonBefore;
         lastInserted.after(elBallonBefore);
         return ($(elBallonBefore));
     };
     DrapoViewportHandler.prototype.AppendViewportControlFlowBallonAfter = function (viewport, fragment) {
-        if (viewport == null)
+        if (viewport === null)
             return;
-        var elBallonBefore = document.createElement('div');
-        elBallonBefore.style.width = '100%';
-        elBallonBefore.style.height = viewport.HeightBallonAfter + 'px';
-        fragment.appendChild(elBallonBefore);
+        var elBallonAfter = document.createElement('div');
+        elBallonAfter.style.width = '100%';
+        elBallonAfter.style.height = viewport.HeightBallonAfter + 'px';
+        viewport.ElementBallonAfter = elBallonAfter;
+        fragment.appendChild(elBallonAfter);
+        this.Application.Binder.BindControlFlowViewport(viewport);
     };
-    DrapoViewportHandler.prototype.GetViewportControlFlowLength = function (viewport, length) {
-        return (length);
+    DrapoViewportHandler.prototype.GetViewportControlFlowStart = function (viewport, start) {
+        if (viewport === null)
+            return (start);
+        return (viewport.DataStart);
+    };
+    DrapoViewportHandler.prototype.GetViewportControlFlowEnd = function (viewport, length) {
+        if (viewport === null)
+            return (length);
+        return (viewport.DataEnd);
     };
     DrapoViewportHandler.prototype.UpdateHeightItem = function (viewport, elItem) {
         if (viewport === null)
@@ -66,7 +80,21 @@ var DrapoViewportHandler = (function () {
         if (height === null)
             return (false);
         viewport.HeightItem = height;
+        this.UpdateValues(viewport);
         return (true);
+    };
+    DrapoViewportHandler.prototype.UpdateValues = function (viewport) {
+        var heightData = viewport.HeightScroll - (viewport.HeightBefore + viewport.HeightAfter);
+        if (heightData < 0)
+            return;
+        var heightDataFactor = heightData * viewport.Factor;
+        var dataItems = Math.floor(heightDataFactor / viewport.HeightItem);
+        viewport.DataEnd = dataItems < viewport.DataEnd ? dataItems : viewport.DataEnd;
+        this.UpdateValuesBallon(viewport);
+    };
+    DrapoViewportHandler.prototype.UpdateValuesBallon = function (viewport) {
+        viewport.HeightBallonBefore = viewport.DataStart * viewport.HeightItem;
+        viewport.HeightBallonAfter = (viewport.DataLength - viewport.DataEnd) * viewport.HeightItem;
     };
     DrapoViewportHandler.prototype.GetElementStyleHeight = function (el) {
         var elStyle = window.getComputedStyle(el);

@@ -268,5 +268,36 @@ var DrapoBinder = (function () {
         var remaining = scrollHeight - (scrollTop + clientHeight);
         return (remaining < 50);
     };
+    DrapoBinder.prototype.BindControlFlowViewport = function (viewport) {
+        var application = this.Application;
+        var viewportCurrent = viewport;
+        var binder = $(viewport.ElementScroll);
+        var eventNamespace = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
+        binder.unbind(eventNamespace);
+        binder.bind(eventNamespace, function (e) {
+            application.Binder.BindControlFlowViewportScroll(viewportCurrent);
+        });
+    };
+    DrapoBinder.prototype.BindControlFlowViewportScroll = function (viewport) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                clearTimeout(viewport.EventScrollTimeout);
+                viewport.EventScrollTimeout = setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                clearTimeout(viewport.EventScrollTimeout);
+                                return [4, this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport)];
+                            case 1:
+                                _a.sent();
+                                return [2];
+                        }
+                    });
+                }); }, 50);
+                return [2];
+            });
+        });
+    };
     return DrapoBinder;
 }());

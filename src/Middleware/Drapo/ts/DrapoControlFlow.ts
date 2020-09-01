@@ -234,8 +234,10 @@ class DrapoControlFlow {
         jQueryForReferenceTemplate.removeAttr('d-for');
         if (ifText != null)
             jQueryForReferenceTemplate.removeAttr('d-if');
+        //Data Length
+        const length: number = datas.length;
         //Viewport
-        const viewport: DrapoViewport = this.Application.ViewportHandler.CreateViewportControlFlow(elementForTemplate, isContextRootFullExclusive, hasIfText, range !== null);
+        const viewport: DrapoViewport = this.Application.ViewportHandler.CreateViewportControlFlow(elementForTemplate, length, isContextRootFullExclusive, hasIfText, range !== null);
         if (viewport !== null)
             jQueryForReferenceTemplate.removeAttr('d-for-render');
         //Viewport Ballon Before
@@ -248,8 +250,7 @@ class DrapoControlFlow {
         const templateVariables: string[][] = canUseTemplate ? (await this.GetTemplateVariables(sector, context, dataKey, key, jQueryForReferenceTemplate)) : null;
         //Render
         let nodesRemovedCount: number = 0;
-        const length: number = datas.length;
-        for (let j = start; j < this.Application.ViewportHandler.GetViewportControlFlowLength(viewport, length); j++) {
+        for (let j = this.Application.ViewportHandler.GetViewportControlFlowStart(viewport, start); j < this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length); j++) {
             const data: any = datas[j];
             //Template
             const templateKey: string = templateVariables !== null ? await this.CreateTemplateKey(sector, context, dataKey, templateVariables, data, key, j) : null;
@@ -694,5 +695,9 @@ class DrapoControlFlow {
                 return (true);
         }
         return (false);
+    }
+
+    public async ResolveControlFlowForViewportScroll(viewport: DrapoViewport): Promise<void> {
+        viewport.ElementBallonBefore.setAttribute('scroll', Date.now().toFixed());
     }
 }

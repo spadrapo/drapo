@@ -15,4 +15,6 @@ declare class DrapoBinder {
     private IsElementScrollVisible;
     private HasElementVerticalScroll;
     IsElementScrollVerticalAlmostEnd(el: JQuery): boolean;
+    BindControlFlowViewport(viewport: DrapoViewport): void;
+    BindControlFlowViewportScroll(viewport: DrapoViewport): Promise<void>;
 }

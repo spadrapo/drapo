@@ -202,4 +202,25 @@ class DrapoBinder {
         const remaining: number = scrollHeight - (scrollTop + clientHeight);
         return (remaining < 50);
     }
+
+    public BindControlFlowViewport(viewport: DrapoViewport) : void
+    {
+        const application: DrapoApplication = this.Application;
+        const viewportCurrent: DrapoViewport = viewport;
+        const binder: JQuery = $(viewport.ElementScroll);
+        const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
+        binder.unbind(eventNamespace);
+        binder.bind(eventNamespace, (e) => {
+            // tslint:disable-next-line:no-floating-promises
+            application.Binder.BindControlFlowViewportScroll(viewportCurrent);
+        });
+    }
+
+    public async BindControlFlowViewportScroll(viewport: DrapoViewport): Promise<void> {
+        clearTimeout(viewport.EventScrollTimeout);
+        viewport.EventScrollTimeout = setTimeout(async () => {
+            clearTimeout(viewport.EventScrollTimeout);
+            await this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport);
+        }, 50);
+    }
 }
