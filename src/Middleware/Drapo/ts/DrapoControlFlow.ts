@@ -237,7 +237,7 @@ class DrapoControlFlow {
         //Data Length
         const length: number = datas.length;
         //Viewport
-        const viewport: DrapoViewport = this.Application.ViewportHandler.CreateViewportControlFlow(elementForTemplate, length, isContextRootFullExclusive, hasIfText, range !== null);
+        const viewport: DrapoViewport = this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas, isContextRootFullExclusive, hasIfText, range !== null);
         if (viewport !== null)
             jQueryForReferenceTemplate.removeAttr('d-for-render');
         //Viewport Ballon Before
@@ -698,6 +698,59 @@ class DrapoControlFlow {
     }
 
     public async ResolveControlFlowForViewportScroll(viewport: DrapoViewport): Promise<void> {
-        viewport.ElementBallonBefore.setAttribute('scroll', Date.now().toFixed());
+        const view: [number, number, number, number, number, number] = this.Application.ViewportHandler.GetView(viewport);
+        const rowsBeforeRemove: number = view[0];
+        const rowsBeforeInsertStart: number = view[1];
+        const rowsBeforeInsertLength: number = view[2];
+        const rowsAfterRemove: number = view[3];
+        const rowsAfterInsertStart: number = view[4];
+        const rowsAfterInsertLength: number = view[5];
+        //Before Remove
+        if (rowsBeforeRemove !== null) {
+            let rowRemove: Element = viewport.ElementBallonBefore.nextElementSibling;
+            for (let i: number = 0; i < rowsBeforeRemove; i++) {
+                const rowNext: Element = rowRemove.nextElementSibling;
+                rowRemove.remove();
+                rowRemove = rowNext;
+            }
+        }
+        //Before Insert
+        const fragmentBefore: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsBeforeInsertStart, rowsBeforeInsertLength);
+        if (fragmentBefore !== null) {
+            viewport.ElementBallonBefore.append(fragmentBefore);
+        }
+        //After Remove
+        if (rowsAfterRemove !== null) {
+            let rowRemove: Element = viewport.ElementBallonAfter.previousElementSibling;
+            for (let i: number = 0; i < rowsBeforeRemove; i++) {
+                const rowPrevious: Element = rowRemove.previousElementSibling;
+                rowRemove.remove();
+                rowRemove = rowPrevious;
+            }
+        }
+        //After Insert
+        const fragmentAfter: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsAfterInsertStart, rowsAfterInsertLength);
+        if (fragmentAfter !== null) {
+            const elementAfterPrevious: Element = viewport.ElementBallonAfter.previousElementSibling;
+            elementAfterPrevious.append(fragmentAfter);
+        }
+    }
+
+    private async CreateControlFlowForViewportFragment(viewport: DrapoViewport, start: number, length: number): Promise<DocumentFragment> {
+        if ((start === null) || (length == 0))
+            return (null);
+        const fragment: DocumentFragment = document.createDocumentFragment();
+        const context: DrapoContext = new DrapoContext();
+        const renderContext: DrapoRenderContext = new DrapoRenderContext();
+        context.Sector = viewport.Sector;
+        for (let i = start; i < length; i++) {
+            const data: any = viewport.Data[i];
+            //Template
+            const template: HTMLElement = this.Application.Solver.Clone(viewport.ElementTemplate, true);
+            const item: DrapoContextItem = context.Create(data, template, template, viewport.DataKey, viewport.Key, viewport.DataKeyIteratorRange, i, null);
+            await this.ResolveControlFlowForIterationRender(viewport.Sector, context, template, renderContext, true, true);
+            fragment.appendChild(template);
+        }
+        return (fragment);
     }
 }

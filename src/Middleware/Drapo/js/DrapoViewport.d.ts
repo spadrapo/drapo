@@ -1,6 +1,12 @@
 declare class DrapoViewport {
+    private _sector;
+    private _dataKey;
+    private _key;
+    private _dataKeyIteratorRange;
+    private _data;
     private _el;
     private _elScroll;
+    private _elTemplate;
     private _elBallonBefore;
     private _elBallonAfter;
     private _heightScroll;
@@ -14,8 +20,20 @@ declare class DrapoViewport {
     private _dataLength;
     private _factor;
     private _eventScrollTimeout;
+    get Sector(): string;
+    set Sector(value: string);
+    get DataKey(): string;
+    set DataKey(value: string);
+    get Key(): string;
+    set Key(value: string);
+    get DataKeyIteratorRange(): string;
+    set DataKeyIteratorRange(value: string);
+    get Data(): any[];
+    set Data(value: any[]);
     get Element(): HTMLElement;
     set Element(value: HTMLElement);
+    get ElementTemplate(): HTMLElement;
+    set ElementTemplate(value: HTMLElement);
     get ElementBallonBefore(): HTMLElement;
     set ElementBallonBefore(value: HTMLElement);
     get ElementBallonAfter(): HTMLElement;

@@ -11,7 +11,7 @@
         this._application = application;
     }
 
-    public CreateViewportControlFlow(el: HTMLElement, dataLength : number, isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport {
+    public CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key : string, dataKeyIteratorRange : string, data: any[], isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport {
         if (!isContextRootFullExclusive)
             return (null);
         if (hasIf)
@@ -27,16 +27,22 @@
         if (height == null)
             return (null);
         const viewPort: DrapoViewport = new DrapoViewport();
+        viewPort.Sector = sector;
         viewPort.Element = el;
+        viewPort.ElementTemplate = elTemplate;
         viewPort.ElementScroll = elScroll;
+        viewPort.DataKey = dataKey;
+        viewPort.Key = key;
+        viewPort.DataKeyIteratorRange = dataKeyIteratorRange;
+        viewPort.Data= data;
         viewPort.HeightScroll = height;
         viewPort.HeightBefore = 0;
         viewPort.HeightAfter = 0;
         viewPort.HeightBallonBefore = 0;
         viewPort.HeightBallonAfter = 0;
         viewPort.DataStart = 0;
-        viewPort.DataEnd = dataLength;
-        viewPort.DataLength = dataLength;
+        viewPort.DataEnd = data.length;
+        viewPort.DataLength = data.length;
         return (viewPort);
     }
 
@@ -147,5 +153,17 @@
         if (value === 'hidden')
             return (true);
         return (false);
+    }
+
+    public GetView(viewport: DrapoViewport): [number, number, number, number, number, number] {
+        let rowsBeforeRemove: number = null;
+        let rowsBeforeInsertStart: number = null;
+        let rowsBeforeInsertLength: number = null;
+        let rowsAfterRemove: number = null;
+        let rowsAfterInsertStart: number = null;
+        let rowsAfterInsertLength: number = null;
+        //TODO: Fill there values of the view
+        this.UpdateValuesBallon(viewport);
+        return ([rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertLength, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertLength]);
     }
 }

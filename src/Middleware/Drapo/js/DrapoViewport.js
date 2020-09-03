@@ -1,8 +1,14 @@
 "use strict";
 var DrapoViewport = (function () {
     function DrapoViewport() {
+        this._sector = null;
+        this._dataKey = null;
+        this._key = null;
+        this._dataKeyIteratorRange = null;
+        this._data = null;
         this._el = null;
         this._elScroll = null;
+        this._elTemplate = null;
         this._elBallonBefore = null;
         this._elBallonAfter = null;
         this._heightScroll = null;
@@ -17,12 +23,72 @@ var DrapoViewport = (function () {
         this._factor = 3;
         this._eventScrollTimeout = null;
     }
+    Object.defineProperty(DrapoViewport.prototype, "Sector", {
+        get: function () {
+            return (this._sector);
+        },
+        set: function (value) {
+            this._sector = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoViewport.prototype, "DataKey", {
+        get: function () {
+            return (this._dataKey);
+        },
+        set: function (value) {
+            this._dataKey = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoViewport.prototype, "Key", {
+        get: function () {
+            return (this._key);
+        },
+        set: function (value) {
+            this._key = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoViewport.prototype, "DataKeyIteratorRange", {
+        get: function () {
+            return (this._dataKeyIteratorRange);
+        },
+        set: function (value) {
+            this._dataKeyIteratorRange = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoViewport.prototype, "Data", {
+        get: function () {
+            return (this._data);
+        },
+        set: function (value) {
+            this._data = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(DrapoViewport.prototype, "Element", {
         get: function () {
             return (this._el);
         },
         set: function (value) {
             this._el = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoViewport.prototype, "ElementTemplate", {
+        get: function () {
+            return (this._elTemplate);
+        },
+        set: function (value) {
+            this._elTemplate = value;
         },
         enumerable: true,
         configurable: true

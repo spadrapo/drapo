@@ -10,7 +10,7 @@ var DrapoViewportHandler = (function () {
         enumerable: true,
         configurable: true
     });
-    DrapoViewportHandler.prototype.CreateViewportControlFlow = function (el, dataLength, isContextRootFullExclusive, hasIf, hasRange) {
+    DrapoViewportHandler.prototype.CreateViewportControlFlow = function (sector, el, elTemplate, dataKey, key, dataKeyIteratorRange, data, isContextRootFullExclusive, hasIf, hasRange) {
         if (!isContextRootFullExclusive)
             return (null);
         if (hasIf)
@@ -26,16 +26,22 @@ var DrapoViewportHandler = (function () {
         if (height == null)
             return (null);
         var viewPort = new DrapoViewport();
+        viewPort.Sector = sector;
         viewPort.Element = el;
+        viewPort.ElementTemplate = elTemplate;
         viewPort.ElementScroll = elScroll;
+        viewPort.DataKey = dataKey;
+        viewPort.Key = key;
+        viewPort.DataKeyIteratorRange = dataKeyIteratorRange;
+        viewPort.Data = data;
         viewPort.HeightScroll = height;
         viewPort.HeightBefore = 0;
         viewPort.HeightAfter = 0;
         viewPort.HeightBallonBefore = 0;
         viewPort.HeightBallonAfter = 0;
         viewPort.DataStart = 0;
-        viewPort.DataEnd = dataLength;
-        viewPort.DataLength = dataLength;
+        viewPort.DataEnd = data.length;
+        viewPort.DataLength = data.length;
         return (viewPort);
     };
     DrapoViewportHandler.prototype.CreateViewportControlFlowBallonBefore = function (viewport, lastInserted) {
@@ -133,6 +139,16 @@ var DrapoViewportHandler = (function () {
         if (value === 'hidden')
             return (true);
         return (false);
+    };
+    DrapoViewportHandler.prototype.GetView = function (viewport) {
+        var rowsBeforeRemove = null;
+        var rowsBeforeInsertStart = null;
+        var rowsBeforeInsertLength = null;
+        var rowsAfterRemove = null;
+        var rowsAfterInsertStart = null;
+        var rowsAfterInsertLength = null;
+        this.UpdateValuesBallon(viewport);
+        return ([rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertLength, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertLength]);
     };
     return DrapoViewportHandler;
 }());

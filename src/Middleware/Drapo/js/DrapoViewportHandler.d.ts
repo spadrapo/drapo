@@ -2,7 +2,7 @@ declare class DrapoViewportHandler {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    CreateViewportControlFlow(el: HTMLElement, dataLength: number, isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport;
+    CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[], isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport;
     CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: JQuery): JQuery;
     AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, fragment: DocumentFragment): void;
     GetViewportControlFlowStart(viewport: DrapoViewport, start: number): number;
@@ -15,4 +15,5 @@ declare class DrapoViewportHandler {
     private GetElementScrollViewport;
     private HasOverflowY;
     private IsOverflowEnabled;
+    GetView(viewport: DrapoViewport): [number, number, number, number, number, number];
 }

@@ -1,6 +1,12 @@
 ﻿class DrapoViewport {
+    private _sector: string = null;
+    private _dataKey: string = null;
+    private _key: string = null;
+    private _dataKeyIteratorRange: string = null;
+    private _data: any[] = null;
     private _el: HTMLElement = null;
     private _elScroll: HTMLElement = null;
+    private _elTemplate: HTMLElement = null;
     private _elBallonBefore: HTMLElement = null;
     private _elBallonAfter: HTMLElement = null;
     private _heightScroll: number = null;
@@ -13,7 +19,47 @@
     private _dataEnd: number = null;
     private _dataLength: number = null;
     private _factor: number = 3;
-    private _eventScrollTimeout : number = null;
+    private _eventScrollTimeout: number = null;
+
+    get Sector(): string {
+        return (this._sector);
+    }
+
+    set Sector(value: string) {
+        this._sector = value;
+    }
+
+    get DataKey(): string {
+        return (this._dataKey);
+    }
+
+    set DataKey(value: string) {
+        this._dataKey = value;
+    }
+
+    get Key(): string {
+        return (this._key);
+    }
+
+    set Key(value: string) {
+        this._key = value;
+    }
+
+    get DataKeyIteratorRange(): string {
+        return (this._dataKeyIteratorRange);
+    }
+
+    set DataKeyIteratorRange(value: string) {
+        this._dataKeyIteratorRange = value;
+    }
+
+    get Data(): any[] {
+        return (this._data);
+    }
+
+    set Data(value: any[]) {
+        this._data = value;
+    }
 
     get Element(): HTMLElement {
         return (this._el);
@@ -21,6 +67,14 @@
 
     set Element(value: HTMLElement) {
         this._el = value;
+    }
+
+    get ElementTemplate(): HTMLElement {
+        return (this._elTemplate);
+    }
+
+    set ElementTemplate(value: HTMLElement) {
+        this._elTemplate = value;
     }
 
     get ElementBallonBefore(): HTMLElement {
