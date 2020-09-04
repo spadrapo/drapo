@@ -20,7 +20,7 @@ var DrapoViewport = (function () {
         this._dataStart = null;
         this._dataEnd = null;
         this._dataLength = null;
-        this._factor = 3;
+        this._factor = 2;
         this._eventScrollTimeout = null;
     }
     Object.defineProperty(DrapoViewport.prototype, "Sector", {

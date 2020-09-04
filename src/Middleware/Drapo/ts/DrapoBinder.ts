@@ -220,7 +220,11 @@ class DrapoBinder {
         clearTimeout(viewport.EventScrollTimeout);
         viewport.EventScrollTimeout = setTimeout(async () => {
             clearTimeout(viewport.EventScrollTimeout);
-            await this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport);
+            try {
+                await this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport);
+            } catch (e) {
+                await this.Application.ExceptionHandler.Handle(e, 'DrapoBinder - BindControlFlowViewportScroll');
+            }
         }, 50);
     }
 }

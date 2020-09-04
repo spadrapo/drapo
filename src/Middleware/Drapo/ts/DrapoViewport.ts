@@ -18,7 +18,7 @@
     private _dataStart: number = null;
     private _dataEnd: number = null;
     private _dataLength: number = null;
-    private _factor: number = 3;
+    private _factor: number = 2;
     private _eventScrollTimeout: number = null;
 
     get Sector(): string {
@@ -178,7 +178,7 @@
     }
 
     set Factor(value: number) {
-        this._factor = value;
+        this._factor  = value;
     }
 
     get EventScrollTimeout(): number {

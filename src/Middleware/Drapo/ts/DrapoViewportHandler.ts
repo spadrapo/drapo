@@ -11,7 +11,7 @@
         this._application = application;
     }
 
-    public CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key : string, dataKeyIteratorRange : string, data: any[], isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport {
+    public CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[], isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport {
         if (!isContextRootFullExclusive)
             return (null);
         if (hasIf)
@@ -34,7 +34,7 @@
         viewPort.DataKey = dataKey;
         viewPort.Key = key;
         viewPort.DataKeyIteratorRange = dataKeyIteratorRange;
-        viewPort.Data= data;
+        viewPort.Data = data;
         viewPort.HeightScroll = height;
         viewPort.HeightBefore = 0;
         viewPort.HeightAfter = 0;
@@ -58,7 +58,7 @@
         return ($(elBallonBefore));
     }
 
-    public AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, fragment: DocumentFragment) : void {
+    public AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, fragment: DocumentFragment): void {
         if (viewport === null)
             return;
         const elBallonAfter: HTMLElement = document.createElement('div');
@@ -106,10 +106,14 @@
         this.UpdateValuesBallon(viewport);
     }
 
-    private UpdateValuesBallon(viewport: DrapoViewport)
-    {
+    private UpdateValuesBallon(viewport: DrapoViewport): void {
         viewport.HeightBallonBefore = viewport.DataStart * viewport.HeightItem;
         viewport.HeightBallonAfter = (viewport.DataLength - viewport.DataEnd) * viewport.HeightItem;
+    }
+
+    public UpdateElementsBallon(viewport: DrapoViewport): void {
+        viewport.ElementBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
+        viewport.ElementBallonAfter.style.height = viewport.HeightBallonAfter + 'px';
     }
 
     private GetElementStyleHeight(el: HTMLElement): number {
@@ -158,12 +162,63 @@
     public GetView(viewport: DrapoViewport): [number, number, number, number, number, number] {
         let rowsBeforeRemove: number = null;
         let rowsBeforeInsertStart: number = null;
-        let rowsBeforeInsertLength: number = null;
+        let rowsBeforeInsertEnd: number = null;
         let rowsAfterRemove: number = null;
         let rowsAfterInsertStart: number = null;
-        let rowsAfterInsertLength: number = null;
-        //TODO: Fill there values of the view
+        let rowsAfterInsertEnd: number = null;
+        //Current
+        const view: [number, number] = this.GetViewFactorCurrent(viewport);
+        const viewStart: number = view[0];
+        const viewEnd: number = view[1];
+        //Inside
+        if ((viewStart >= viewport.DataStart) && (viewEnd <= viewport.DataEnd))
+            return (null);
+        //Equal
+        if ((viewport.DataStart === viewStart) && (viewport.DataEnd === viewEnd))
+            return (null);
+        //Full
+        if ((viewStart > viewport.DataEnd) || (viewEnd < viewport.DataStart)) {
+            rowsBeforeRemove = viewport.DataEnd - viewport.DataStart;
+            rowsAfterInsertStart = viewStart;
+            rowsAfterInsertEnd = viewEnd;
+        } else {
+            //Before
+            if (viewport.DataStart < viewStart) {
+                rowsBeforeRemove = viewStart - viewport.DataStart;
+            } else if (viewStart < viewport.DataStart) {
+                rowsBeforeInsertStart = viewStart;
+                rowsBeforeInsertEnd = viewport.DataStart;
+            }
+            //After
+            if (viewport.DataEnd > viewEnd) {
+                rowsAfterRemove = viewport.DataEnd - viewEnd;
+            } else if (viewEnd > viewport.DataEnd) {
+                rowsAfterInsertStart = viewport.DataEnd;
+                rowsAfterInsertEnd = viewEnd;
+            }
+        }
+        viewport.DataStart = viewStart;
+        viewport.DataEnd = viewEnd;
+        //Update Ballons
         this.UpdateValuesBallon(viewport);
-        return ([rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertLength, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertLength]);
+        return ([rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertEnd, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertEnd]);
+    }
+
+    private GetViewFactorCurrent(viewport: DrapoViewport): [number, number] {
+        const viewHeight: number = viewport.HeightScroll - (viewport.HeightBefore + viewport.HeightAfter);
+        const viewItems: number = Math.floor(viewHeight / viewport.HeightItem);
+        const scrollTop: number = viewport.ElementScroll.scrollTop;
+        const scrollTopLessBefore: number = scrollTop - viewport.HeightBefore;
+        const scrollTopLessBeforeValid: number = scrollTopLessBefore > 0 ? scrollTopLessBefore : 0;
+        const views: number = Math.round(scrollTopLessBeforeValid / viewHeight);
+        let viewsStart: number = views - viewport.Factor;
+        if (viewsStart < 0)
+            viewsStart = 0;
+        const viewsEnd: number = views + viewport.Factor;
+        const rowStart: number = viewsStart * viewItems;
+        let rowEnd: number = viewsEnd * viewItems;
+        if (rowEnd > viewport.DataLength)
+            rowEnd = viewport.DataLength;
+        return ([rowStart, rowEnd]);
     }
 }

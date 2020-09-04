@@ -699,12 +699,14 @@ class DrapoControlFlow {
 
     public async ResolveControlFlowForViewportScroll(viewport: DrapoViewport): Promise<void> {
         const view: [number, number, number, number, number, number] = this.Application.ViewportHandler.GetView(viewport);
+        if (view === null)
+            return;
         const rowsBeforeRemove: number = view[0];
         const rowsBeforeInsertStart: number = view[1];
-        const rowsBeforeInsertLength: number = view[2];
+        const rowsBeforeInsertEnd: number = view[2];
         const rowsAfterRemove: number = view[3];
         const rowsAfterInsertStart: number = view[4];
-        const rowsAfterInsertLength: number = view[5];
+        const rowsAfterInsertEnd: number = view[5];
         //Before Remove
         if (rowsBeforeRemove !== null) {
             let rowRemove: Element = viewport.ElementBallonBefore.nextElementSibling;
@@ -715,9 +717,9 @@ class DrapoControlFlow {
             }
         }
         //Before Insert
-        const fragmentBefore: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsBeforeInsertStart, rowsBeforeInsertLength);
+        const fragmentBefore: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsBeforeInsertStart, rowsBeforeInsertEnd);
         if (fragmentBefore !== null) {
-            viewport.ElementBallonBefore.append(fragmentBefore);
+            $(viewport.ElementBallonBefore).after(fragmentBefore);
         }
         //After Remove
         if (rowsAfterRemove !== null) {
@@ -729,24 +731,30 @@ class DrapoControlFlow {
             }
         }
         //After Insert
-        const fragmentAfter: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsAfterInsertStart, rowsAfterInsertLength);
+        const fragmentAfter: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsAfterInsertStart, rowsAfterInsertEnd);
         if (fragmentAfter !== null) {
             const elementAfterPrevious: Element = viewport.ElementBallonAfter.previousElementSibling;
-            elementAfterPrevious.append(fragmentAfter);
+            $(elementAfterPrevious).after(fragmentAfter);
         }
+        //Ballon
+        this.Application.ViewportHandler.UpdateElementsBallon(viewport);
     }
 
-    private async CreateControlFlowForViewportFragment(viewport: DrapoViewport, start: number, length: number): Promise<DocumentFragment> {
-        if ((start === null) || (length == 0))
+    private async CreateControlFlowForViewportFragment(viewport: DrapoViewport, start: number, end: number): Promise<DocumentFragment> {
+        if ((start === null) || (end == start))
             return (null);
         const fragment: DocumentFragment = document.createDocumentFragment();
         const context: DrapoContext = new DrapoContext();
-        const renderContext: DrapoRenderContext = new DrapoRenderContext();
         context.Sector = viewport.Sector;
-        for (let i = start; i < length; i++) {
+        context.Index = start;
+        context.IndexRelative = start;
+        const content: string = viewport.ElementTemplate.outerHTML;
+        this.InitializeContext(context, content);
+        const renderContext: DrapoRenderContext = new DrapoRenderContext();
+        for (let i = start; i < end; i++) {
             const data: any = viewport.Data[i];
             //Template
-            const template: HTMLElement = this.Application.Solver.Clone(viewport.ElementTemplate, true);
+            const template: HTMLElement = this.Application.Solver.CloneElement(viewport.ElementTemplate);
             const item: DrapoContextItem = context.Create(data, template, template, viewport.DataKey, viewport.Key, viewport.DataKeyIteratorRange, i, null);
             await this.ResolveControlFlowForIterationRender(viewport.Sector, context, template, renderContext, true, true);
             fragment.appendChild(template);

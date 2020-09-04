@@ -102,6 +102,10 @@ var DrapoViewportHandler = (function () {
         viewport.HeightBallonBefore = viewport.DataStart * viewport.HeightItem;
         viewport.HeightBallonAfter = (viewport.DataLength - viewport.DataEnd) * viewport.HeightItem;
     };
+    DrapoViewportHandler.prototype.UpdateElementsBallon = function (viewport) {
+        viewport.ElementBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
+        viewport.ElementBallonAfter.style.height = viewport.HeightBallonAfter + 'px';
+    };
     DrapoViewportHandler.prototype.GetElementStyleHeight = function (el) {
         var elStyle = window.getComputedStyle(el);
         var heightString = elStyle.getPropertyValue('height');
@@ -143,12 +147,59 @@ var DrapoViewportHandler = (function () {
     DrapoViewportHandler.prototype.GetView = function (viewport) {
         var rowsBeforeRemove = null;
         var rowsBeforeInsertStart = null;
-        var rowsBeforeInsertLength = null;
+        var rowsBeforeInsertEnd = null;
         var rowsAfterRemove = null;
         var rowsAfterInsertStart = null;
-        var rowsAfterInsertLength = null;
+        var rowsAfterInsertEnd = null;
+        var view = this.GetViewFactorCurrent(viewport);
+        var viewStart = view[0];
+        var viewEnd = view[1];
+        if ((viewStart >= viewport.DataStart) && (viewEnd <= viewport.DataEnd))
+            return (null);
+        if ((viewport.DataStart === viewStart) && (viewport.DataEnd === viewEnd))
+            return (null);
+        if ((viewStart > viewport.DataEnd) || (viewEnd < viewport.DataStart)) {
+            rowsBeforeRemove = viewport.DataEnd - viewport.DataStart;
+            rowsAfterInsertStart = viewStart;
+            rowsAfterInsertEnd = viewEnd;
+        }
+        else {
+            if (viewport.DataStart < viewStart) {
+                rowsBeforeRemove = viewStart - viewport.DataStart;
+            }
+            else if (viewStart < viewport.DataStart) {
+                rowsBeforeInsertStart = viewStart;
+                rowsBeforeInsertEnd = viewport.DataStart;
+            }
+            if (viewport.DataEnd > viewEnd) {
+                rowsAfterRemove = viewport.DataEnd - viewEnd;
+            }
+            else if (viewEnd > viewport.DataEnd) {
+                rowsAfterInsertStart = viewport.DataEnd;
+                rowsAfterInsertEnd = viewEnd;
+            }
+        }
+        viewport.DataStart = viewStart;
+        viewport.DataEnd = viewEnd;
         this.UpdateValuesBallon(viewport);
-        return ([rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertLength, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertLength]);
+        return ([rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertEnd, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertEnd]);
+    };
+    DrapoViewportHandler.prototype.GetViewFactorCurrent = function (viewport) {
+        var viewHeight = viewport.HeightScroll - (viewport.HeightBefore + viewport.HeightAfter);
+        var viewItems = Math.floor(viewHeight / viewport.HeightItem);
+        var scrollTop = viewport.ElementScroll.scrollTop;
+        var scrollTopLessBefore = scrollTop - viewport.HeightBefore;
+        var scrollTopLessBeforeValid = scrollTopLessBefore > 0 ? scrollTopLessBefore : 0;
+        var views = Math.round(scrollTopLessBeforeValid / viewHeight);
+        var viewsStart = views - viewport.Factor;
+        if (viewsStart < 0)
+            viewsStart = 0;
+        var viewsEnd = views + viewport.Factor;
+        var rowStart = viewsStart * viewItems;
+        var rowEnd = viewsEnd * viewItems;
+        if (rowEnd > viewport.DataLength)
+            rowEnd = viewport.DataLength;
+        return ([rowStart, rowEnd]);
     };
     return DrapoViewportHandler;
 }());

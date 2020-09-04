@@ -284,14 +284,25 @@ var DrapoBinder = (function () {
             return __generator(this, function (_a) {
                 clearTimeout(viewport.EventScrollTimeout);
                 viewport.EventScrollTimeout = setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                    var e_1;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 clearTimeout(viewport.EventScrollTimeout);
-                                return [4, this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport)];
+                                _a.label = 1;
                             case 1:
+                                _a.trys.push([1, 3, , 5]);
+                                return [4, this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport)];
+                            case 2:
                                 _a.sent();
-                                return [2];
+                                return [3, 5];
+                            case 3:
+                                e_1 = _a.sent();
+                                return [4, this.Application.ExceptionHandler.Handle(e_1, 'DrapoBinder - BindControlFlowViewportScroll')];
+                            case 4:
+                                _a.sent();
+                                return [3, 5];
+                            case 5: return [2];
                         }
                     });
                 }); }, 50);

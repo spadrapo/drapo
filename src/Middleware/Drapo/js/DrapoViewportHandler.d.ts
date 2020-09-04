@@ -10,10 +10,12 @@ declare class DrapoViewportHandler {
     UpdateHeightItem(viewport: DrapoViewport, elItem: HTMLElement): boolean;
     private UpdateValues;
     private UpdateValuesBallon;
+    UpdateElementsBallon(viewport: DrapoViewport): void;
     private GetElementStyleHeight;
     private GetElementClientHeight;
     private GetElementScrollViewport;
     private HasOverflowY;
     private IsOverflowEnabled;
     GetView(viewport: DrapoViewport): [number, number, number, number, number, number];
+    private GetViewFactorCurrent;
 }

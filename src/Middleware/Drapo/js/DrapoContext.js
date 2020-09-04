@@ -52,6 +52,9 @@ var DrapoContext = (function () {
         get: function () {
             return (this._index);
         },
+        set: function (value) {
+            this._index = value;
+        },
         enumerable: true,
         configurable: true
     });
@@ -65,6 +68,9 @@ var DrapoContext = (function () {
     Object.defineProperty(DrapoContext.prototype, "IndexRelative", {
         get: function () {
             return (this._indexRelative);
+        },
+        set: function (value) {
+            this._indexRelative = value;
         },
         enumerable: true,
         configurable: true

@@ -672,6 +672,13 @@ class DrapoSolver {
         return (clone);
     }
 
+    public CloneElement(el: HTMLElement): HTMLElement {
+        if (el == null)
+            return (null);
+        const elj: JQuery = $(el).clone();
+        return (elj[0]);
+    }
+
     private GetSystemContextPathValue(sector: string, context: DrapoContext, dataPath: string[]): string {
         if (dataPath.length != 2)
             return (null);
