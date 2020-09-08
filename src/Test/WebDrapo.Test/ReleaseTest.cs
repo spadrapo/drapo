@@ -565,6 +565,16 @@ namespace WebDrapo.Test
             ValidatePage("ControlFlowForUlNullable");
         }
         [TestCase]
+        public void ControlFlowForViewportTest()
+        {
+            ValidatePage("ControlFlowForViewport");
+        }
+        [TestCase]
+        public void ControlFlowForViewportHeightBeforeTest()
+        {
+            ValidatePage("ControlFlowForViewportHeightBefore");
+        }
+        [TestCase]
         public void ControlFlowIfSelectTest()
         {
             ValidatePage("ControlFlowIfSelect");

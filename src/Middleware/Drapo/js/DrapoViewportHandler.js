@@ -19,9 +19,10 @@ var DrapoViewportHandler = (function () {
             return (null);
         if (el.getAttribute('d-for-render') !== 'viewport')
             return (null);
-        var elScroll = this.GetElementScrollViewport(el);
-        if (elScroll == null)
+        var scroll = this.GetScrollViewport(el);
+        if (scroll == null)
             return (null);
+        var elScroll = scroll[0];
         var height = this.GetElementStyleHeight(elScroll);
         if (height == null)
             return (null);
@@ -35,8 +36,8 @@ var DrapoViewportHandler = (function () {
         viewPort.DataKeyIteratorRange = dataKeyIteratorRange;
         viewPort.Data = data;
         viewPort.HeightScroll = height;
-        viewPort.HeightBefore = 0;
-        viewPort.HeightAfter = 0;
+        viewPort.HeightBefore = scroll[1];
+        viewPort.HeightAfter = scroll[2];
         viewPort.HeightBallonBefore = 0;
         viewPort.HeightBallonAfter = 0;
         viewPort.DataStart = 0;
@@ -90,7 +91,7 @@ var DrapoViewportHandler = (function () {
         return (true);
     };
     DrapoViewportHandler.prototype.UpdateValues = function (viewport) {
-        var heightData = viewport.HeightScroll - (viewport.HeightBefore + viewport.HeightAfter);
+        var heightData = viewport.HeightScroll;
         if (heightData < 0)
             return;
         var heightDataFactor = heightData * viewport.Factor;
@@ -116,12 +117,37 @@ var DrapoViewportHandler = (function () {
         var rect = el.getBoundingClientRect();
         return (rect.height);
     };
-    DrapoViewportHandler.prototype.GetElementScrollViewport = function (el) {
+    DrapoViewportHandler.prototype.GetScrollViewport = function (el) {
         var elCurrent = el;
+        var isFirst = true;
+        var heightBefore = 0;
+        var heightAfter = 0;
         while (elCurrent != null) {
             if (this.HasOverflowY(elCurrent))
-                return (elCurrent);
-            elCurrent = elCurrent.parentElement;
+                return ([elCurrent, heightBefore, heightAfter]);
+            var elParent = elCurrent.parentElement;
+            if (elParent != null) {
+                if (isFirst) {
+                    isFirst = false;
+                }
+                else {
+                    var isBefore = true;
+                    for (var i = 0; i < elParent.children.length; i++) {
+                        var elChild = elParent.children[i];
+                        if (elChild === elCurrent) {
+                            isBefore = false;
+                        }
+                        else {
+                            var height = this.GetElementClientHeight(elChild);
+                            if (isBefore)
+                                heightBefore = heightBefore + height;
+                            else
+                                heightAfter = heightAfter + height;
+                        }
+                    }
+                }
+            }
+            elCurrent = elParent;
         }
         return (null);
     };
@@ -159,7 +185,7 @@ var DrapoViewportHandler = (function () {
         if ((viewport.DataStart === viewStart) && (viewport.DataEnd === viewEnd))
             return (null);
         if ((viewStart > viewport.DataEnd) || (viewEnd < viewport.DataStart)) {
-            rowsBeforeRemove = viewport.DataEnd - viewport.DataStart;
+            rowsBeforeRemove = -1;
             rowsAfterInsertStart = viewStart;
             rowsAfterInsertEnd = viewEnd;
         }
@@ -185,7 +211,7 @@ var DrapoViewportHandler = (function () {
         return ([rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertEnd, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertEnd]);
     };
     DrapoViewportHandler.prototype.GetViewFactorCurrent = function (viewport) {
-        var viewHeight = viewport.HeightScroll - (viewport.HeightBefore + viewport.HeightAfter);
+        var viewHeight = viewport.HeightScroll;
         var viewItems = Math.floor(viewHeight / viewport.HeightItem);
         var scrollTop = viewport.ElementScroll.scrollTop;
         var scrollTopLessBefore = scrollTop - viewport.HeightBefore;

@@ -2254,18 +2254,28 @@ var DrapoBinder = (function () {
                                 clearTimeout(viewport.EventScrollTimeout);
                                 _a.label = 1;
                             case 1:
-                                _a.trys.push([1, 3, , 5]);
-                                return [4, this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport)];
+                                _a.trys.push([1, 6, , 8]);
+                                _a.label = 2;
                             case 2:
-                                _a.sent();
-                                return [3, 5];
+                                if (!viewport.Busy) return [3, 4];
+                                return [4, this.Application.Document.Sleep(50)];
                             case 3:
+                                _a.sent();
+                                return [3, 2];
+                            case 4:
+                                viewport.Busy = true;
+                                return [4, this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport)];
+                            case 5:
+                                _a.sent();
+                                viewport.Busy = false;
+                                return [3, 8];
+                            case 6:
                                 e_1 = _a.sent();
                                 return [4, this.Application.ExceptionHandler.Handle(e_1, 'DrapoBinder - BindControlFlowViewportScroll')];
-                            case 4:
+                            case 7:
                                 _a.sent();
-                                return [3, 5];
-                            case 5: return [2];
+                                return [3, 8];
+                            case 8: return [2];
                         }
                     });
                 }); }, 50);
@@ -4843,7 +4853,7 @@ var DrapoControlFlow = (function () {
     };
     DrapoControlFlow.prototype.ResolveControlFlowForViewportScroll = function (viewport) {
         return __awaiter(this, void 0, void 0, function () {
-            var view, rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertEnd, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertEnd, rowRemove, i, rowNext, fragmentBefore, rowRemove, i, rowPrevious, fragmentAfter, elementAfterPrevious;
+            var view, rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertEnd, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertEnd, rowRemove, elBallonAfter, rowNext, rowRemove, i, rowNext, fragmentBefore, rowRemove, i, rowPrevious, fragmentAfter, elementAfterPrevious;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -4857,11 +4867,22 @@ var DrapoControlFlow = (function () {
                         rowsAfterInsertStart = view[4];
                         rowsAfterInsertEnd = view[5];
                         if (rowsBeforeRemove !== null) {
-                            rowRemove = viewport.ElementBallonBefore.nextElementSibling;
-                            for (i = 0; i < rowsBeforeRemove; i++) {
-                                rowNext = rowRemove.nextElementSibling;
-                                rowRemove.remove();
-                                rowRemove = rowNext;
+                            if (rowsBeforeRemove === -1) {
+                                rowRemove = viewport.ElementBallonBefore.nextElementSibling;
+                                elBallonAfter = viewport.ElementBallonAfter;
+                                while (rowRemove !== elBallonAfter) {
+                                    rowNext = rowRemove.nextElementSibling;
+                                    rowRemove.remove();
+                                    rowRemove = rowNext;
+                                }
+                            }
+                            else {
+                                rowRemove = viewport.ElementBallonBefore.nextElementSibling;
+                                for (i = 0; i < rowsBeforeRemove; i++) {
+                                    rowNext = rowRemove.nextElementSibling;
+                                    rowRemove.remove();
+                                    rowRemove = rowNext;
+                                }
                             }
                         }
                         return [4, this.CreateControlFlowForViewportFragment(viewport, rowsBeforeInsertStart, rowsBeforeInsertEnd)];
@@ -22222,6 +22243,7 @@ var DrapoView = (function () {
 "use strict";
 var DrapoViewport = (function () {
     function DrapoViewport() {
+        this._busy = false;
         this._sector = null;
         this._dataKey = null;
         this._key = null;
@@ -22244,6 +22266,16 @@ var DrapoViewport = (function () {
         this._factor = 2;
         this._eventScrollTimeout = null;
     }
+    Object.defineProperty(DrapoViewport.prototype, "Busy", {
+        get: function () {
+            return (this._busy);
+        },
+        set: function (value) {
+            this._busy = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(DrapoViewport.prototype, "Sector", {
         get: function () {
             return (this._sector);
@@ -22478,9 +22510,10 @@ var DrapoViewportHandler = (function () {
             return (null);
         if (el.getAttribute('d-for-render') !== 'viewport')
             return (null);
-        var elScroll = this.GetElementScrollViewport(el);
-        if (elScroll == null)
+        var scroll = this.GetScrollViewport(el);
+        if (scroll == null)
             return (null);
+        var elScroll = scroll[0];
         var height = this.GetElementStyleHeight(elScroll);
         if (height == null)
             return (null);
@@ -22494,8 +22527,8 @@ var DrapoViewportHandler = (function () {
         viewPort.DataKeyIteratorRange = dataKeyIteratorRange;
         viewPort.Data = data;
         viewPort.HeightScroll = height;
-        viewPort.HeightBefore = 0;
-        viewPort.HeightAfter = 0;
+        viewPort.HeightBefore = scroll[1];
+        viewPort.HeightAfter = scroll[2];
         viewPort.HeightBallonBefore = 0;
         viewPort.HeightBallonAfter = 0;
         viewPort.DataStart = 0;
@@ -22549,7 +22582,7 @@ var DrapoViewportHandler = (function () {
         return (true);
     };
     DrapoViewportHandler.prototype.UpdateValues = function (viewport) {
-        var heightData = viewport.HeightScroll - (viewport.HeightBefore + viewport.HeightAfter);
+        var heightData = viewport.HeightScroll;
         if (heightData < 0)
             return;
         var heightDataFactor = heightData * viewport.Factor;
@@ -22575,12 +22608,37 @@ var DrapoViewportHandler = (function () {
         var rect = el.getBoundingClientRect();
         return (rect.height);
     };
-    DrapoViewportHandler.prototype.GetElementScrollViewport = function (el) {
+    DrapoViewportHandler.prototype.GetScrollViewport = function (el) {
         var elCurrent = el;
+        var isFirst = true;
+        var heightBefore = 0;
+        var heightAfter = 0;
         while (elCurrent != null) {
             if (this.HasOverflowY(elCurrent))
-                return (elCurrent);
-            elCurrent = elCurrent.parentElement;
+                return ([elCurrent, heightBefore, heightAfter]);
+            var elParent = elCurrent.parentElement;
+            if (elParent != null) {
+                if (isFirst) {
+                    isFirst = false;
+                }
+                else {
+                    var isBefore = true;
+                    for (var i = 0; i < elParent.children.length; i++) {
+                        var elChild = elParent.children[i];
+                        if (elChild === elCurrent) {
+                            isBefore = false;
+                        }
+                        else {
+                            var height = this.GetElementClientHeight(elChild);
+                            if (isBefore)
+                                heightBefore = heightBefore + height;
+                            else
+                                heightAfter = heightAfter + height;
+                        }
+                    }
+                }
+            }
+            elCurrent = elParent;
         }
         return (null);
     };
@@ -22618,7 +22676,7 @@ var DrapoViewportHandler = (function () {
         if ((viewport.DataStart === viewStart) && (viewport.DataEnd === viewEnd))
             return (null);
         if ((viewStart > viewport.DataEnd) || (viewEnd < viewport.DataStart)) {
-            rowsBeforeRemove = viewport.DataEnd - viewport.DataStart;
+            rowsBeforeRemove = -1;
             rowsAfterInsertStart = viewStart;
             rowsAfterInsertEnd = viewEnd;
         }
@@ -22644,7 +22702,7 @@ var DrapoViewportHandler = (function () {
         return ([rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertEnd, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertEnd]);
     };
     DrapoViewportHandler.prototype.GetViewFactorCurrent = function (viewport) {
-        var viewHeight = viewport.HeightScroll - (viewport.HeightBefore + viewport.HeightAfter);
+        var viewHeight = viewport.HeightScroll;
         var viewItems = Math.floor(viewHeight / viewport.HeightItem);
         var scrollTop = viewport.ElementScroll.scrollTop;
         var scrollTopLessBefore = scrollTop - viewport.HeightBefore;

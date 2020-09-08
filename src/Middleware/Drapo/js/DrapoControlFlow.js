@@ -959,7 +959,7 @@ var DrapoControlFlow = (function () {
     };
     DrapoControlFlow.prototype.ResolveControlFlowForViewportScroll = function (viewport) {
         return __awaiter(this, void 0, void 0, function () {
-            var view, rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertEnd, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertEnd, rowRemove, i, rowNext, fragmentBefore, rowRemove, i, rowPrevious, fragmentAfter, elementAfterPrevious;
+            var view, rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertEnd, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertEnd, rowRemove, elBallonAfter, rowNext, rowRemove, i, rowNext, fragmentBefore, rowRemove, i, rowPrevious, fragmentAfter, elementAfterPrevious;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -973,11 +973,22 @@ var DrapoControlFlow = (function () {
                         rowsAfterInsertStart = view[4];
                         rowsAfterInsertEnd = view[5];
                         if (rowsBeforeRemove !== null) {
-                            rowRemove = viewport.ElementBallonBefore.nextElementSibling;
-                            for (i = 0; i < rowsBeforeRemove; i++) {
-                                rowNext = rowRemove.nextElementSibling;
-                                rowRemove.remove();
-                                rowRemove = rowNext;
+                            if (rowsBeforeRemove === -1) {
+                                rowRemove = viewport.ElementBallonBefore.nextElementSibling;
+                                elBallonAfter = viewport.ElementBallonAfter;
+                                while (rowRemove !== elBallonAfter) {
+                                    rowNext = rowRemove.nextElementSibling;
+                                    rowRemove.remove();
+                                    rowRemove = rowNext;
+                                }
+                            }
+                            else {
+                                rowRemove = viewport.ElementBallonBefore.nextElementSibling;
+                                for (i = 0; i < rowsBeforeRemove; i++) {
+                                    rowNext = rowRemove.nextElementSibling;
+                                    rowRemove.remove();
+                                    rowRemove = rowNext;
+                                }
                             }
                         }
                         return [4, this.CreateControlFlowForViewportFragment(viewport, rowsBeforeInsertStart, rowsBeforeInsertEnd)];

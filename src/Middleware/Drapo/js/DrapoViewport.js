@@ -1,6 +1,7 @@
 "use strict";
 var DrapoViewport = (function () {
     function DrapoViewport() {
+        this._busy = false;
         this._sector = null;
         this._dataKey = null;
         this._key = null;
@@ -23,6 +24,16 @@ var DrapoViewport = (function () {
         this._factor = 2;
         this._eventScrollTimeout = null;
     }
+    Object.defineProperty(DrapoViewport.prototype, "Busy", {
+        get: function () {
+            return (this._busy);
+        },
+        set: function (value) {
+            this._busy = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(DrapoViewport.prototype, "Sector", {
         get: function () {
             return (this._sector);

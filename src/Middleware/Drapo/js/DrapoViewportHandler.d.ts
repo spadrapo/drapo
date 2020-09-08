@@ -13,7 +13,7 @@ declare class DrapoViewportHandler {
     UpdateElementsBallon(viewport: DrapoViewport): void;
     private GetElementStyleHeight;
     private GetElementClientHeight;
-    private GetElementScrollViewport;
+    private GetScrollViewport;
     private HasOverflowY;
     private IsOverflowEnabled;
     GetView(viewport: DrapoViewport): [number, number, number, number, number, number];

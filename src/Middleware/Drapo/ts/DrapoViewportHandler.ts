@@ -20,9 +20,10 @@
             return (null);
         if (el.getAttribute('d-for-render') !== 'viewport')
             return (null);
-        const elScroll: HTMLElement = this.GetElementScrollViewport(el);
-        if (elScroll == null)
+        const scroll: [HTMLElement, number, number] = this.GetScrollViewport(el);
+        if (scroll == null)
             return (null);
+        const elScroll: HTMLElement = scroll[0];
         const height: number = this.GetElementStyleHeight(elScroll);
         if (height == null)
             return (null);
@@ -36,8 +37,8 @@
         viewPort.DataKeyIteratorRange = dataKeyIteratorRange;
         viewPort.Data = data;
         viewPort.HeightScroll = height;
-        viewPort.HeightBefore = 0;
-        viewPort.HeightAfter = 0;
+        viewPort.HeightBefore = scroll[1];
+        viewPort.HeightAfter = scroll[2];
         viewPort.HeightBallonBefore = 0;
         viewPort.HeightBallonAfter = 0;
         viewPort.DataStart = 0;
@@ -97,7 +98,7 @@
     }
 
     private UpdateValues(viewport: DrapoViewport): void {
-        const heightData: number = viewport.HeightScroll - (viewport.HeightBefore + viewport.HeightAfter);
+        const heightData: number = viewport.HeightScroll;
         if (heightData < 0)
             return;
         const heightDataFactor: number = heightData * viewport.Factor;
@@ -128,12 +129,36 @@
         return (rect.height);
     }
 
-    private GetElementScrollViewport(el: HTMLElement): HTMLElement {
+    private GetScrollViewport(el: HTMLElement): [HTMLElement,number, number] {
         let elCurrent: HTMLElement = el;
+        let isFirst: boolean = true;
+        let heightBefore: number = 0;
+        let heightAfter: number = 0;
         while (elCurrent != null) {
             if (this.HasOverflowY(elCurrent))
-                return (elCurrent);
-            elCurrent = elCurrent.parentElement;
+                return ([elCurrent, heightBefore, heightAfter]);
+            const elParent: HTMLElement = elCurrent.parentElement;
+            if (elParent != null) {
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    let isBefore: boolean = true;
+                    for (let i: number = 0; i < elParent.children.length; i++)
+                    {
+                        const elChild: HTMLElement = elParent.children[i] as HTMLElement;
+                        if (elChild === elCurrent) {
+                            isBefore = false;
+                        } else {
+                            const height: number = this.GetElementClientHeight(elChild);
+                            if (isBefore)
+                                heightBefore = heightBefore + height;
+                            else
+                                heightAfter = heightAfter + height;
+                        }
+                    }
+                }
+            }
+            elCurrent = elParent;
         }
         return (null);
     }
@@ -178,7 +203,7 @@
             return (null);
         //Full
         if ((viewStart > viewport.DataEnd) || (viewEnd < viewport.DataStart)) {
-            rowsBeforeRemove = viewport.DataEnd - viewport.DataStart;
+            rowsBeforeRemove = -1;
             rowsAfterInsertStart = viewStart;
             rowsAfterInsertEnd = viewEnd;
         } else {
@@ -205,7 +230,7 @@
     }
 
     private GetViewFactorCurrent(viewport: DrapoViewport): [number, number] {
-        const viewHeight: number = viewport.HeightScroll - (viewport.HeightBefore + viewport.HeightAfter);
+        const viewHeight: number = viewport.HeightScroll;
         const viewItems: number = Math.floor(viewHeight / viewport.HeightItem);
         const scrollTop: number = viewport.ElementScroll.scrollTop;
         const scrollTopLessBefore: number = scrollTop - viewport.HeightBefore;

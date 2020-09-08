@@ -221,7 +221,12 @@ class DrapoBinder {
         viewport.EventScrollTimeout = setTimeout(async () => {
             clearTimeout(viewport.EventScrollTimeout);
             try {
+                while (viewport.Busy) {
+                    await this.Application.Document.Sleep(50);
+                }
+                viewport.Busy = true;
                 await this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport);
+                viewport.Busy = false;
             } catch (e) {
                 await this.Application.ExceptionHandler.Handle(e, 'DrapoBinder - BindControlFlowViewportScroll');
             }

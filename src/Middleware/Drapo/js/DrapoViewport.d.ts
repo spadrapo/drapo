@@ -1,4 +1,5 @@
 declare class DrapoViewport {
+    private _busy;
     private _sector;
     private _dataKey;
     private _key;
@@ -20,6 +21,8 @@ declare class DrapoViewport {
     private _dataLength;
     private _factor;
     private _eventScrollTimeout;
+    get Busy(): boolean;
+    set Busy(value: boolean);
     get Sector(): string;
     set Sector(value: string);
     get DataKey(): string;

@@ -291,18 +291,28 @@ var DrapoBinder = (function () {
                                 clearTimeout(viewport.EventScrollTimeout);
                                 _a.label = 1;
                             case 1:
-                                _a.trys.push([1, 3, , 5]);
-                                return [4, this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport)];
+                                _a.trys.push([1, 6, , 8]);
+                                _a.label = 2;
                             case 2:
-                                _a.sent();
-                                return [3, 5];
+                                if (!viewport.Busy) return [3, 4];
+                                return [4, this.Application.Document.Sleep(50)];
                             case 3:
+                                _a.sent();
+                                return [3, 2];
+                            case 4:
+                                viewport.Busy = true;
+                                return [4, this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport)];
+                            case 5:
+                                _a.sent();
+                                viewport.Busy = false;
+                                return [3, 8];
+                            case 6:
                                 e_1 = _a.sent();
                                 return [4, this.Application.ExceptionHandler.Handle(e_1, 'DrapoBinder - BindControlFlowViewportScroll')];
-                            case 4:
+                            case 7:
                                 _a.sent();
-                                return [3, 5];
-                            case 5: return [2];
+                                return [3, 8];
+                            case 8: return [2];
                         }
                     });
                 }); }, 50);

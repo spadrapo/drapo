@@ -1,4 +1,5 @@
 ﻿class DrapoViewport {
+    private _busy: boolean = false;
     private _sector: string = null;
     private _dataKey: string = null;
     private _key: string = null;
@@ -20,6 +21,14 @@
     private _dataLength: number = null;
     private _factor: number = 2;
     private _eventScrollTimeout: number = null;
+
+    get Busy(): boolean {
+        return (this._busy);
+    }
+
+    set Busy(value: boolean) {
+        this._busy = value;
+    }
 
     get Sector(): string {
         return (this._sector);
