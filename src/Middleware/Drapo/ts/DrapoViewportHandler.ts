@@ -11,14 +11,14 @@
         this._application = application;
     }
 
-    public CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[], isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport {
-        if (!isContextRootFullExclusive)
+    public IsElementControlFlowRenderViewport(el: HTMLElement): boolean {
+        return ((el.getAttribute('d-for-render') === 'viewport'));
+    }
+
+    public CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[], canCreateViewport: boolean): DrapoViewport {
+        if (!canCreateViewport)
             return (null);
-        if (hasIf)
-            return (null);
-        if (hasRange)
-            return (null);
-        if (el.getAttribute('d-for-render') !== 'viewport')
+        if (!this.IsElementControlFlowRenderViewport(el))
             return (null);
         const scroll: [HTMLElement, number, number] = this.GetScrollViewport(el);
         if (scroll == null)
@@ -27,36 +27,80 @@
         const height: number = this.GetElementStyleHeight(elScroll);
         if (height == null)
             return (null);
-        const viewPort: DrapoViewport = new DrapoViewport();
-        viewPort.Sector = sector;
-        viewPort.Element = el;
-        viewPort.ElementTemplate = elTemplate;
-        viewPort.ElementScroll = elScroll;
-        viewPort.DataKey = dataKey;
-        viewPort.Key = key;
-        viewPort.DataKeyIteratorRange = dataKeyIteratorRange;
-        viewPort.Data = data;
-        viewPort.HeightScroll = height;
-        viewPort.HeightBefore = scroll[1];
-        viewPort.HeightAfter = scroll[2];
-        viewPort.HeightBallonBefore = 0;
-        viewPort.HeightBallonAfter = 0;
-        viewPort.DataStart = 0;
-        viewPort.DataEnd = data.length;
-        viewPort.DataLength = data.length;
-        return (viewPort);
+        const viewport: DrapoViewport = new DrapoViewport();
+        viewport.Sector = sector;
+        viewport.Element = el;
+        viewport.ElementTemplate = elTemplate;
+        viewport.ElementScroll = elScroll;
+        viewport.DataKey = dataKey;
+        viewport.Key = key;
+        viewport.DataKeyIteratorRange = dataKeyIteratorRange;
+        viewport.Data = data;
+        viewport.HeightScroll = height;
+        viewport.HeightBefore = scroll[1];
+        viewport.HeightAfter = scroll[2];
+        viewport.HeightBallonBefore = 0;
+        viewport.HeightBallonAfter = 0;
+        viewport.DataStart = 0;
+        viewport.DataEnd = data.length;
+        viewport.DataLength = data.length;
+        if ((elScroll.scrollTop) && elScroll.scrollTop > 0) {
+            //Restore
+            this.Application.Binder.UnbindControlFlowViewport(viewport);
+            viewport.ScrollTop = viewport.ElementScroll.scrollTop;
+            viewport.HeightItem = this.GetElementItemHeight(el);
+            if (viewport.HeightItem != null) {
+                const view: [number, number] = this.GetViewFactorCurrent(viewport);
+                viewport.DataStart = view[0];
+                viewport.DataEnd = view[1];
+            }
+        }
+        return (viewport);
     }
 
     public CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: JQuery) {
         if (viewport === null)
             return (lastInserted);
-        const elBallonBefore: HTMLElement = document.createElement('div');
-        elBallonBefore.setAttribute('d-ballon', 'before');
-        elBallonBefore.style.width = '100%';
-        elBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
-        viewport.ElementBallonBefore = elBallonBefore;
-        lastInserted.after(elBallonBefore);
-        return ($(elBallonBefore));
+        const elBallonBeforeInDOM: HTMLElement = this.GetBallonBefore(lastInserted);
+        if (elBallonBeforeInDOM == null) {
+            const elBallonBefore: HTMLElement = document.createElement('div');
+            elBallonBefore.setAttribute('d-ballon', 'before');
+            elBallonBefore.style.width = '100%';
+            elBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
+            viewport.ElementBallonBefore = elBallonBefore;
+            lastInserted.after(elBallonBefore);
+            return ($(elBallonBefore));
+        } else {
+            elBallonBeforeInDOM.style.height = viewport.HeightBallonBefore + 'px';
+            viewport.ElementBallonBefore = elBallonBeforeInDOM;
+            const elParent: HTMLElement = elBallonBeforeInDOM.parentElement;
+            while (elParent.children.length > 2)
+                elParent.lastElementChild.remove();
+            return ($(elBallonBeforeInDOM));
+        }
+    }
+
+    private GetBallonBefore(eljTemplate: JQuery): HTMLElement {
+        const elTemplate: HTMLElement = eljTemplate[0];
+        const elTemplateNext: HTMLElement = elTemplate.nextElementSibling as HTMLElement;
+        if (elTemplateNext == null)
+            return (null);
+        const isBallonBefore: boolean = elTemplateNext.getAttribute('d-ballon') === 'before';
+        if (!isBallonBefore)
+            return (null);
+        return (elTemplateNext);
+    }
+
+    private GetElementItemHeight(elTemplate: HTMLElement): number {
+        const elParent: HTMLElement = elTemplate.parentElement;
+        if (elParent == null)
+            return (null);
+        if (elParent.children.length < 4)
+            return (null);
+        const elBallonBefore: HTMLElement = elTemplate.nextElementSibling as HTMLElement;
+        const elItem: HTMLElement = elBallonBefore.nextElementSibling as HTMLElement;
+        const height: number = this.GetElementClientHeight(elItem);
+        return (height);
     }
 
     public AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, fragment: DocumentFragment): void {
@@ -67,6 +111,16 @@
         elBallonAfter.style.height = viewport.HeightBallonAfter + 'px';
         viewport.ElementBallonAfter = elBallonAfter;
         fragment.appendChild(elBallonAfter);
+    }
+
+    public ActivateViewportControlFlow(viewport: DrapoViewport): void {
+        if (viewport == null)
+            return;
+        if (viewport.ScrollTop != null) {
+            this.UpdateValuesBallon(viewport);
+            this.UpdateElementsBallon(viewport);
+            viewport.ElementScroll.scrollTop = viewport.ScrollTop;
+        }
         this.Application.Binder.BindControlFlowViewport(viewport);
     }
 
@@ -129,7 +183,7 @@
         return (rect.height);
     }
 
-    private GetScrollViewport(el: HTMLElement): [HTMLElement,number, number] {
+    private GetScrollViewport(el: HTMLElement): [HTMLElement, number, number] {
         let elCurrent: HTMLElement = el;
         let isFirst: boolean = true;
         let heightBefore: number = 0;
@@ -143,8 +197,7 @@
                     isFirst = false;
                 } else {
                     let isBefore: boolean = true;
-                    for (let i: number = 0; i < elParent.children.length; i++)
-                    {
+                    for (let i: number = 0; i < elParent.children.length; i++) {
                         const elChild: HTMLElement = elParent.children[i] as HTMLElement;
                         if (elChild === elCurrent) {
                             isBefore = false;

@@ -23,6 +23,7 @@ var DrapoViewport = (function () {
         this._dataLength = null;
         this._factor = 2;
         this._eventScrollTimeout = null;
+        this._scrollTop = null;
     }
     Object.defineProperty(DrapoViewport.prototype, "Busy", {
         get: function () {
@@ -240,6 +241,16 @@ var DrapoViewport = (function () {
         },
         set: function (value) {
             this._eventScrollTimeout = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoViewport.prototype, "ScrollTop", {
+        get: function () {
+            return (this._scrollTop);
+        },
+        set: function (value) {
+            this._scrollTop = value;
         },
         enumerable: true,
         configurable: true

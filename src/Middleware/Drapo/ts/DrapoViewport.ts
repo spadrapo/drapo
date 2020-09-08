@@ -21,6 +21,7 @@
     private _dataLength: number = null;
     private _factor: number = 2;
     private _eventScrollTimeout: number = null;
+    private _scrollTop: number = null;
 
     get Busy(): boolean {
         return (this._busy);
@@ -196,5 +197,13 @@
 
     set EventScrollTimeout(value: number) {
         this._eventScrollTimeout = value;
+    }
+
+    get ScrollTop(): number {
+        return (this._scrollTop);
+    }
+
+    set ScrollTop(value: number) {
+        this._scrollTop = value;
     }
 }

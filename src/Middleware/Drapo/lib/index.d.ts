@@ -173,6 +173,7 @@ declare class DrapoBinder {
     private IsElementScrollVisible;
     private HasElementVerticalScroll;
     IsElementScrollVerticalAlmostEnd(el: JQuery): boolean;
+    UnbindControlFlowViewport(viewport: DrapoViewport): void;
     BindControlFlowViewport(viewport: DrapoViewport): void;
     BindControlFlowViewportScroll(viewport: DrapoViewport): Promise<void>;
 }
@@ -1940,6 +1941,7 @@ declare class DrapoViewport {
     private _dataLength;
     private _factor;
     private _eventScrollTimeout;
+    private _scrollTop;
     get Busy(): boolean;
     set Busy(value: boolean);
     get Sector(): string;
@@ -1984,15 +1986,21 @@ declare class DrapoViewport {
     set Factor(value: number);
     get EventScrollTimeout(): number;
     set EventScrollTimeout(value: number);
+    get ScrollTop(): number;
+    set ScrollTop(value: number);
 }
 
 declare class DrapoViewportHandler {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[], isContextRootFullExclusive: boolean, hasIf: boolean, hasRange: boolean): DrapoViewport;
+    IsElementControlFlowRenderViewport(el: HTMLElement): boolean;
+    CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[], canCreateViewport: boolean): DrapoViewport;
     CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: JQuery): JQuery;
+    private GetBallonBefore;
+    private GetElementItemHeight;
     AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, fragment: DocumentFragment): void;
+    ActivateViewportControlFlow(viewport: DrapoViewport): void;
     GetViewportControlFlowStart(viewport: DrapoViewport, start: number): number;
     GetViewportControlFlowEnd(viewport: DrapoViewport, length: number): number;
     UpdateHeightItem(viewport: DrapoViewport, elItem: HTMLElement): boolean;

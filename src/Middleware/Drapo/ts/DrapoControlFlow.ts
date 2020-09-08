@@ -140,7 +140,10 @@ class DrapoControlFlow {
         const content: string = isContextRoot ? forJQuery[0].outerHTML : null;
         if (isContextRoot)
             this.InitializeContext(context, content);
-        let isDifference: boolean = ((canUseDifference) && (!isIncremental) && (!hasIfText));
+        //Viewport
+        const isRenderViewport: boolean = this.Application.ViewportHandler.IsElementControlFlowRenderViewport(elementForTemplate);
+        //Difference
+        let isDifference: boolean = ((canUseDifference) && (!isRenderViewport) && (!isIncremental) && (!hasIfText));
         const isLastChild: boolean = this.Application.Document.IsLastChild(anchor);
         if ((isDifference) && (isContextRoot) && (isLastChild))
             isDifference = false;
@@ -207,7 +210,7 @@ class DrapoControlFlow {
         if ((!isDifference) && (type == DrapoStorageLinkType.RenderClass))
             type = DrapoStorageLinkType.Render;
         //Removing Data
-        if ((!isIncremental) && (!isDifference) && (!isContextRootFullExclusive))
+        if ((!isIncremental) && (!isDifference) && (!isContextRootFullExclusive) && (!isRenderViewport))
             this.RemoveList(items);
         if (isDifference) {
             const dataLength: number = datas.length;
@@ -237,7 +240,8 @@ class DrapoControlFlow {
         //Data Length
         const length: number = datas.length;
         //Viewport
-        const viewport: DrapoViewport = this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas, isContextRootFullExclusive, hasIfText, range !== null);
+        const canCreateViewport: boolean = ((isContextRoot) && (isFirstChild) && (!wasWrapped) && (!hasIfText) && (range === null));
+        const viewport: DrapoViewport = this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas, canCreateViewport);
         if (viewport !== null)
             jQueryForReferenceTemplate.removeAttr('d-for-render');
         //Viewport Ballon Before
@@ -303,6 +307,9 @@ class DrapoControlFlow {
             if (fragment.childNodes.length > 0)
                 lastInserted.after(fragment);
         }
+        //Viewport Activate
+        this.Application.ViewportHandler.ActivateViewportControlFlow(viewport);
+        //Enable Incremental Notify
         this.Application.Observer.IsEnabledNotifyIncremental = true;
         //Inside recursion we can remove template.
         if ((context.IsInsideRecursion) && (!context.IsElementTemplateRoot(key)))

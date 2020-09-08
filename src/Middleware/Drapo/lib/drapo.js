@@ -2231,6 +2231,11 @@ var DrapoBinder = (function () {
         var remaining = scrollHeight - (scrollTop + clientHeight);
         return (remaining < 50);
     };
+    DrapoBinder.prototype.UnbindControlFlowViewport = function (viewport) {
+        var binder = $(viewport.ElementScroll);
+        var eventNamespace = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
+        binder.unbind(eventNamespace);
+    };
     DrapoBinder.prototype.BindControlFlowViewport = function (viewport) {
         var application = this.Application;
         var viewportCurrent = viewport;
@@ -4055,7 +4060,7 @@ var DrapoControlFlow = (function () {
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, length, viewport, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, j, data, templateKey, _b, templateData, _c, templateJ, template, nodeIndex, oldNode, item, _d, template;
+            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, isRenderViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, length, canCreateViewport, viewport, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, j, data, templateKey, _b, templateData, _c, templateJ, template, nodeIndex, oldNode, item, _d, template;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -4094,7 +4099,8 @@ var DrapoControlFlow = (function () {
                         content = isContextRoot ? forJQuery[0].outerHTML : null;
                         if (isContextRoot)
                             this.InitializeContext(context, content);
-                        isDifference = ((canUseDifference) && (!isIncremental) && (!hasIfText));
+                        isRenderViewport = this.Application.ViewportHandler.IsElementControlFlowRenderViewport(elementForTemplate);
+                        isDifference = ((canUseDifference) && (!isRenderViewport) && (!isIncremental) && (!hasIfText));
                         isLastChild = this.Application.Document.IsLastChild(anchor);
                         if ((isDifference) && (isContextRoot) && (isLastChild))
                             isDifference = false;
@@ -4168,7 +4174,7 @@ var DrapoControlFlow = (function () {
                         }
                         if ((!isDifference) && (type == DrapoStorageLinkType.RenderClass))
                             type = DrapoStorageLinkType.Render;
-                        if ((!isIncremental) && (!isDifference) && (!isContextRootFullExclusive))
+                        if ((!isIncremental) && (!isDifference) && (!isContextRootFullExclusive) && (!isRenderViewport))
                             this.RemoveList(items);
                         if (isDifference) {
                             dataLength = datas.length;
@@ -4196,7 +4202,8 @@ var DrapoControlFlow = (function () {
                         if (ifText != null)
                             jQueryForReferenceTemplate.removeAttr('d-if');
                         length = datas.length;
-                        viewport = this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas, isContextRootFullExclusive, hasIfText, range !== null);
+                        canCreateViewport = ((isContextRoot) && (isFirstChild) && (!wasWrapped) && (!hasIfText) && (range === null));
+                        viewport = this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas, canCreateViewport);
                         if (viewport !== null)
                             jQueryForReferenceTemplate.removeAttr('d-for-render');
                         lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
@@ -4308,6 +4315,7 @@ var DrapoControlFlow = (function () {
                             if (fragment.childNodes.length > 0)
                                 lastInserted.after(fragment);
                         }
+                        this.Application.ViewportHandler.ActivateViewportControlFlow(viewport);
                         this.Application.Observer.IsEnabledNotifyIncremental = true;
                         if ((context.IsInsideRecursion) && (!context.IsElementTemplateRoot(key)))
                             jQueryForReference.remove();
@@ -22265,6 +22273,7 @@ var DrapoViewport = (function () {
         this._dataLength = null;
         this._factor = 2;
         this._eventScrollTimeout = null;
+        this._scrollTop = null;
     }
     Object.defineProperty(DrapoViewport.prototype, "Busy", {
         get: function () {
@@ -22486,6 +22495,16 @@ var DrapoViewport = (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(DrapoViewport.prototype, "ScrollTop", {
+        get: function () {
+            return (this._scrollTop);
+        },
+        set: function (value) {
+            this._scrollTop = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
     return DrapoViewport;
 }());
 
@@ -22501,14 +22520,13 @@ var DrapoViewportHandler = (function () {
         enumerable: false,
         configurable: true
     });
-    DrapoViewportHandler.prototype.CreateViewportControlFlow = function (sector, el, elTemplate, dataKey, key, dataKeyIteratorRange, data, isContextRootFullExclusive, hasIf, hasRange) {
-        if (!isContextRootFullExclusive)
+    DrapoViewportHandler.prototype.IsElementControlFlowRenderViewport = function (el) {
+        return ((el.getAttribute('d-for-render') === 'viewport'));
+    };
+    DrapoViewportHandler.prototype.CreateViewportControlFlow = function (sector, el, elTemplate, dataKey, key, dataKeyIteratorRange, data, canCreateViewport) {
+        if (!canCreateViewport)
             return (null);
-        if (hasIf)
-            return (null);
-        if (hasRange)
-            return (null);
-        if (el.getAttribute('d-for-render') !== 'viewport')
+        if (!this.IsElementControlFlowRenderViewport(el))
             return (null);
         var scroll = this.GetScrollViewport(el);
         if (scroll == null)
@@ -22517,35 +22535,77 @@ var DrapoViewportHandler = (function () {
         var height = this.GetElementStyleHeight(elScroll);
         if (height == null)
             return (null);
-        var viewPort = new DrapoViewport();
-        viewPort.Sector = sector;
-        viewPort.Element = el;
-        viewPort.ElementTemplate = elTemplate;
-        viewPort.ElementScroll = elScroll;
-        viewPort.DataKey = dataKey;
-        viewPort.Key = key;
-        viewPort.DataKeyIteratorRange = dataKeyIteratorRange;
-        viewPort.Data = data;
-        viewPort.HeightScroll = height;
-        viewPort.HeightBefore = scroll[1];
-        viewPort.HeightAfter = scroll[2];
-        viewPort.HeightBallonBefore = 0;
-        viewPort.HeightBallonAfter = 0;
-        viewPort.DataStart = 0;
-        viewPort.DataEnd = data.length;
-        viewPort.DataLength = data.length;
-        return (viewPort);
+        var viewport = new DrapoViewport();
+        viewport.Sector = sector;
+        viewport.Element = el;
+        viewport.ElementTemplate = elTemplate;
+        viewport.ElementScroll = elScroll;
+        viewport.DataKey = dataKey;
+        viewport.Key = key;
+        viewport.DataKeyIteratorRange = dataKeyIteratorRange;
+        viewport.Data = data;
+        viewport.HeightScroll = height;
+        viewport.HeightBefore = scroll[1];
+        viewport.HeightAfter = scroll[2];
+        viewport.HeightBallonBefore = 0;
+        viewport.HeightBallonAfter = 0;
+        viewport.DataStart = 0;
+        viewport.DataEnd = data.length;
+        viewport.DataLength = data.length;
+        if ((elScroll.scrollTop) && elScroll.scrollTop > 0) {
+            this.Application.Binder.UnbindControlFlowViewport(viewport);
+            viewport.ScrollTop = viewport.ElementScroll.scrollTop;
+            viewport.HeightItem = this.GetElementItemHeight(el);
+            if (viewport.HeightItem != null) {
+                var view = this.GetViewFactorCurrent(viewport);
+                viewport.DataStart = view[0];
+                viewport.DataEnd = view[1];
+            }
+        }
+        return (viewport);
     };
     DrapoViewportHandler.prototype.CreateViewportControlFlowBallonBefore = function (viewport, lastInserted) {
         if (viewport === null)
             return (lastInserted);
-        var elBallonBefore = document.createElement('div');
-        elBallonBefore.setAttribute('d-ballon', 'before');
-        elBallonBefore.style.width = '100%';
-        elBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
-        viewport.ElementBallonBefore = elBallonBefore;
-        lastInserted.after(elBallonBefore);
-        return ($(elBallonBefore));
+        var elBallonBeforeInDOM = this.GetBallonBefore(lastInserted);
+        if (elBallonBeforeInDOM == null) {
+            var elBallonBefore = document.createElement('div');
+            elBallonBefore.setAttribute('d-ballon', 'before');
+            elBallonBefore.style.width = '100%';
+            elBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
+            viewport.ElementBallonBefore = elBallonBefore;
+            lastInserted.after(elBallonBefore);
+            return ($(elBallonBefore));
+        }
+        else {
+            elBallonBeforeInDOM.style.height = viewport.HeightBallonBefore + 'px';
+            viewport.ElementBallonBefore = elBallonBeforeInDOM;
+            var elParent = elBallonBeforeInDOM.parentElement;
+            while (elParent.children.length > 2)
+                elParent.lastElementChild.remove();
+            return ($(elBallonBeforeInDOM));
+        }
+    };
+    DrapoViewportHandler.prototype.GetBallonBefore = function (eljTemplate) {
+        var elTemplate = eljTemplate[0];
+        var elTemplateNext = elTemplate.nextElementSibling;
+        if (elTemplateNext == null)
+            return (null);
+        var isBallonBefore = elTemplateNext.getAttribute('d-ballon') === 'before';
+        if (!isBallonBefore)
+            return (null);
+        return (elTemplateNext);
+    };
+    DrapoViewportHandler.prototype.GetElementItemHeight = function (elTemplate) {
+        var elParent = elTemplate.parentElement;
+        if (elParent == null)
+            return (null);
+        if (elParent.children.length < 4)
+            return (null);
+        var elBallonBefore = elTemplate.nextElementSibling;
+        var elItem = elBallonBefore.nextElementSibling;
+        var height = this.GetElementClientHeight(elItem);
+        return (height);
     };
     DrapoViewportHandler.prototype.AppendViewportControlFlowBallonAfter = function (viewport, fragment) {
         if (viewport === null)
@@ -22555,6 +22615,15 @@ var DrapoViewportHandler = (function () {
         elBallonAfter.style.height = viewport.HeightBallonAfter + 'px';
         viewport.ElementBallonAfter = elBallonAfter;
         fragment.appendChild(elBallonAfter);
+    };
+    DrapoViewportHandler.prototype.ActivateViewportControlFlow = function (viewport) {
+        if (viewport == null)
+            return;
+        if (viewport.ScrollTop != null) {
+            this.UpdateValuesBallon(viewport);
+            this.UpdateElementsBallon(viewport);
+            viewport.ElementScroll.scrollTop = viewport.ScrollTop;
+        }
         this.Application.Binder.BindControlFlowViewport(viewport);
     };
     DrapoViewportHandler.prototype.GetViewportControlFlowStart = function (viewport, start) {

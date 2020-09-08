@@ -21,6 +21,7 @@ declare class DrapoViewport {
     private _dataLength;
     private _factor;
     private _eventScrollTimeout;
+    private _scrollTop;
     get Busy(): boolean;
     set Busy(value: boolean);
     get Sector(): string;
@@ -65,4 +66,6 @@ declare class DrapoViewport {
     set Factor(value: number);
     get EventScrollTimeout(): number;
     set EventScrollTimeout(value: number);
+    get ScrollTop(): number;
+    set ScrollTop(value: number);
 }

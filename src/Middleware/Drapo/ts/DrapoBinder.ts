@@ -203,6 +203,12 @@ class DrapoBinder {
         return (remaining < 50);
     }
 
+    public UnbindControlFlowViewport(viewport: DrapoViewport): void {
+        const binder: JQuery = $(viewport.ElementScroll);
+        const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
+        binder.unbind(eventNamespace);
+    }
+
     public BindControlFlowViewport(viewport: DrapoViewport) : void
     {
         const application: DrapoApplication = this.Application;

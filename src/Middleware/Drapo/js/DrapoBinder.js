@@ -268,6 +268,11 @@ var DrapoBinder = (function () {
         var remaining = scrollHeight - (scrollTop + clientHeight);
         return (remaining < 50);
     };
+    DrapoBinder.prototype.UnbindControlFlowViewport = function (viewport) {
+        var binder = $(viewport.ElementScroll);
+        var eventNamespace = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
+        binder.unbind(eventNamespace);
+    };
     DrapoBinder.prototype.BindControlFlowViewport = function (viewport) {
         var application = this.Application;
         var viewportCurrent = viewport;

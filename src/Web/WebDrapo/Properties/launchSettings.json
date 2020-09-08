@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/ControlFlowForViewportHeightBefore.html",
+      "launchUrl": "DrapoPages/ControlFlowForViewportNotify.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
