@@ -26,8 +26,10 @@ declare class DrapoContext {
     set Sector(value: string);
     get Sector(): string;
     get Item(): DrapoContextItem;
+    set Index(value: number);
     get Index(): number;
     get IsEmpty(): boolean;
+    set IndexRelative(value: number);
     get IndexRelative(): number;
     get Level(): number;
     get IsInsideRecursion(): boolean;

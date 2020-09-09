@@ -268,5 +268,62 @@ var DrapoBinder = (function () {
         var remaining = scrollHeight - (scrollTop + clientHeight);
         return (remaining < 50);
     };
+    DrapoBinder.prototype.UnbindControlFlowViewport = function (viewport) {
+        var binder = $(viewport.ElementScroll);
+        var eventNamespace = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
+        binder.unbind(eventNamespace);
+    };
+    DrapoBinder.prototype.BindControlFlowViewport = function (viewport) {
+        var application = this.Application;
+        var viewportCurrent = viewport;
+        var binder = $(viewport.ElementScroll);
+        var eventNamespace = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
+        binder.unbind(eventNamespace);
+        binder.bind(eventNamespace, function (e) {
+            application.Binder.BindControlFlowViewportScroll(viewportCurrent);
+        });
+    };
+    DrapoBinder.prototype.BindControlFlowViewportScroll = function (viewport) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                clearTimeout(viewport.EventScrollTimeout);
+                viewport.EventScrollTimeout = setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                    var e_1;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                clearTimeout(viewport.EventScrollTimeout);
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 6, , 8]);
+                                _a.label = 2;
+                            case 2:
+                                if (!viewport.Busy) return [3, 4];
+                                return [4, this.Application.Document.Sleep(50)];
+                            case 3:
+                                _a.sent();
+                                return [3, 2];
+                            case 4:
+                                viewport.Busy = true;
+                                return [4, this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport)];
+                            case 5:
+                                _a.sent();
+                                viewport.Busy = false;
+                                return [3, 8];
+                            case 6:
+                                e_1 = _a.sent();
+                                return [4, this.Application.ExceptionHandler.Handle(e_1, 'DrapoBinder - BindControlFlowViewportScroll')];
+                            case 7:
+                                _a.sent();
+                                return [3, 8];
+                            case 8: return [2];
+                        }
+                    });
+                }); }, 50);
+                return [2];
+            });
+        });
+    };
     return DrapoBinder;
 }());

@@ -871,6 +871,12 @@ var DrapoSolver = (function () {
             clone.push(list[i]);
         return (clone);
     };
+    DrapoSolver.prototype.CloneElement = function (el) {
+        if (el == null)
+            return (null);
+        var elj = $(el).clone();
+        return (elj[0]);
+    };
     DrapoSolver.prototype.GetSystemContextPathValue = function (sector, context, dataPath) {
         if (dataPath.length != 2)
             return (null);

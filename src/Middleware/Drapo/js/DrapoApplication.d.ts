@@ -30,6 +30,7 @@ declare class DrapoApplication {
     private _exceptionHandler;
     private _globalization;
     private _stylist;
+    private _viewportHandler;
     private _debugger;
     get IsLoaded(): boolean;
     get Log(): DrapoLogger;
@@ -62,6 +63,7 @@ declare class DrapoApplication {
     get ExceptionHandler(): DrapoExceptionHandler;
     get Globalization(): DrapoGlobalization;
     get Stylist(): DrapoStylist;
+    get ViewportHandler(): DrapoViewportHandler;
     get Debugger(): DrapoDebugger;
     constructor();
     OnLoad(): Promise<void>;

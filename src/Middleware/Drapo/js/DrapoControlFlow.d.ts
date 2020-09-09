@@ -36,4 +36,6 @@ declare class DrapoControlFlow {
     ApplyRange(data: any[], range: DrapoRange): any[];
     GetRangeIndex(data: any[], rangeIndex: string): number;
     ExecuteDataItem(sector: string, context: DrapoContext, expression: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string): Promise<boolean>;
+    ResolveControlFlowForViewportScroll(viewport: DrapoViewport): Promise<void>;
+    private CreateControlFlowForViewportFragment;
 }

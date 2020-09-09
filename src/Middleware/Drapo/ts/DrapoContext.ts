@@ -37,12 +37,20 @@ class DrapoContext {
         return (this._itemCurrent);
     }
 
+    set Index(value: number) {
+        this._index = value;
+    }
+
     get Index(): number {
         return (this._index);
     }
 
     get IsEmpty(): boolean {
         return (this._index === -1);
+    }
+
+    set IndexRelative(value: number) {
+        this._indexRelative = value;
     }
 
     get IndexRelative(): number {

@@ -108,4 +108,5 @@ declare class DrapoParser {
     ParseHeader(data: string): [string, string];
     ParseFormat(format: string): string[];
     private IsFormatCharacterCompatible;
+    ParsePixels(value: string): number;
 }

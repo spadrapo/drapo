@@ -30,6 +30,7 @@ declare class DrapoApplication {
     private _exceptionHandler;
     private _globalization;
     private _stylist;
+    private _viewportHandler;
     private _debugger;
     get IsLoaded(): boolean;
     get Log(): DrapoLogger;
@@ -62,6 +63,7 @@ declare class DrapoApplication {
     get ExceptionHandler(): DrapoExceptionHandler;
     get Globalization(): DrapoGlobalization;
     get Stylist(): DrapoStylist;
+    get ViewportHandler(): DrapoViewportHandler;
     get Debugger(): DrapoDebugger;
     constructor();
     OnLoad(): Promise<void>;
@@ -171,6 +173,9 @@ declare class DrapoBinder {
     private IsElementScrollVisible;
     private HasElementVerticalScroll;
     IsElementScrollVerticalAlmostEnd(el: JQuery): boolean;
+    UnbindControlFlowViewport(viewport: DrapoViewport): void;
+    BindControlFlowViewport(viewport: DrapoViewport): void;
+    BindControlFlowViewportScroll(viewport: DrapoViewport): Promise<void>;
 }
 
 declare class DrapoClassHandler {
@@ -287,8 +292,10 @@ declare class DrapoContext {
     set Sector(value: string);
     get Sector(): string;
     get Item(): DrapoContextItem;
+    set Index(value: number);
     get Index(): number;
     get IsEmpty(): boolean;
+    set IndexRelative(value: number);
     get IndexRelative(): number;
     get Level(): number;
     get IsInsideRecursion(): boolean;
@@ -408,6 +415,8 @@ declare class DrapoControlFlow {
     ApplyRange(data: any[], range: DrapoRange): any[];
     GetRangeIndex(data: any[], rangeIndex: string): number;
     ExecuteDataItem(sector: string, context: DrapoContext, expression: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string): Promise<boolean>;
+    ResolveControlFlowForViewportScroll(viewport: DrapoViewport): Promise<void>;
+    private CreateControlFlowForViewportFragment;
 }
 
 declare class DrapoCookieHandler {
@@ -1209,6 +1218,7 @@ declare class DrapoParser {
     ParseHeader(data: string): [string, string];
     ParseFormat(format: string): string[];
     private IsFormatCharacterCompatible;
+    ParsePixels(value: string): number;
 }
 
 declare class DrapoPipeMessage {
@@ -1558,6 +1568,7 @@ declare class DrapoSolver {
     CloneArrayString(list: string[]): string[];
     CloneArrayElement(list: HTMLElement[]): HTMLElement[];
     CloneArrayAny(list: any[]): any[];
+    CloneElement(el: HTMLElement): HTMLElement;
     private GetSystemContextPathValue;
     private GetSystemPathValue;
     private GetSystemContextPathValueIndex;
@@ -1905,6 +1916,104 @@ declare class DrapoView {
     set Tag(value: string);
     get Condition(): string;
     set Condition(value: string);
+}
+
+declare class DrapoViewport {
+    private _busy;
+    private _sector;
+    private _dataKey;
+    private _key;
+    private _dataKeyIteratorRange;
+    private _data;
+    private _el;
+    private _elScroll;
+    private _elTemplate;
+    private _elBallonBefore;
+    private _elBallonAfter;
+    private _heightScroll;
+    private _heightBefore;
+    private _heightAfter;
+    private _heightItem;
+    private _heightBallonBefore;
+    private _heightBallonAfter;
+    private _dataStart;
+    private _dataEnd;
+    private _dataLength;
+    private _factor;
+    private _eventScrollTimeout;
+    private _scrollTop;
+    get Busy(): boolean;
+    set Busy(value: boolean);
+    get Sector(): string;
+    set Sector(value: string);
+    get DataKey(): string;
+    set DataKey(value: string);
+    get Key(): string;
+    set Key(value: string);
+    get DataKeyIteratorRange(): string;
+    set DataKeyIteratorRange(value: string);
+    get Data(): any[];
+    set Data(value: any[]);
+    get Element(): HTMLElement;
+    set Element(value: HTMLElement);
+    get ElementTemplate(): HTMLElement;
+    set ElementTemplate(value: HTMLElement);
+    get ElementBallonBefore(): HTMLElement;
+    set ElementBallonBefore(value: HTMLElement);
+    get ElementBallonAfter(): HTMLElement;
+    set ElementBallonAfter(value: HTMLElement);
+    get ElementScroll(): HTMLElement;
+    set ElementScroll(value: HTMLElement);
+    get HeightScroll(): number;
+    set HeightScroll(value: number);
+    get HeightBefore(): number;
+    set HeightBefore(value: number);
+    get HeightAfter(): number;
+    set HeightAfter(value: number);
+    get HeightItem(): number;
+    set HeightItem(value: number);
+    get HeightBallonBefore(): number;
+    set HeightBallonBefore(value: number);
+    get HeightBallonAfter(): number;
+    set HeightBallonAfter(value: number);
+    get DataStart(): number;
+    set DataStart(value: number);
+    get DataEnd(): number;
+    set DataEnd(value: number);
+    get DataLength(): number;
+    set DataLength(value: number);
+    get Factor(): number;
+    set Factor(value: number);
+    get EventScrollTimeout(): number;
+    set EventScrollTimeout(value: number);
+    get ScrollTop(): number;
+    set ScrollTop(value: number);
+}
+
+declare class DrapoViewportHandler {
+    private _application;
+    get Application(): DrapoApplication;
+    constructor(application: DrapoApplication);
+    IsElementControlFlowRenderViewport(el: HTMLElement): boolean;
+    CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[], canCreateViewport: boolean): DrapoViewport;
+    CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: JQuery): JQuery;
+    private GetBallonBefore;
+    private GetElementItemHeight;
+    AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, fragment: DocumentFragment): void;
+    ActivateViewportControlFlow(viewport: DrapoViewport): void;
+    GetViewportControlFlowStart(viewport: DrapoViewport, start: number): number;
+    GetViewportControlFlowEnd(viewport: DrapoViewport, length: number): number;
+    UpdateHeightItem(viewport: DrapoViewport, elItem: HTMLElement): boolean;
+    private UpdateValues;
+    private UpdateValuesBallon;
+    UpdateElementsBallon(viewport: DrapoViewport): void;
+    private GetElementStyleHeight;
+    private GetElementClientHeight;
+    private GetScrollViewport;
+    private HasOverflowY;
+    private IsOverflowEnabled;
+    GetView(viewport: DrapoViewport): [number, number, number, number, number, number];
+    private GetViewFactorCurrent;
 }
 
 declare class DrapoWindow {

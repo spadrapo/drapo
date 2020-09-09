@@ -202,4 +202,40 @@ class DrapoBinder {
         const remaining: number = scrollHeight - (scrollTop + clientHeight);
         return (remaining < 50);
     }
+
+    public UnbindControlFlowViewport(viewport: DrapoViewport): void {
+        const binder: JQuery = $(viewport.ElementScroll);
+        const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
+        binder.unbind(eventNamespace);
+    }
+
+    public BindControlFlowViewport(viewport: DrapoViewport) : void
+    {
+        const application: DrapoApplication = this.Application;
+        const viewportCurrent: DrapoViewport = viewport;
+        const binder: JQuery = $(viewport.ElementScroll);
+        const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
+        binder.unbind(eventNamespace);
+        binder.bind(eventNamespace, (e) => {
+            // tslint:disable-next-line:no-floating-promises
+            application.Binder.BindControlFlowViewportScroll(viewportCurrent);
+        });
+    }
+
+    public async BindControlFlowViewportScroll(viewport: DrapoViewport): Promise<void> {
+        clearTimeout(viewport.EventScrollTimeout);
+        viewport.EventScrollTimeout = setTimeout(async () => {
+            clearTimeout(viewport.EventScrollTimeout);
+            try {
+                while (viewport.Busy) {
+                    await this.Application.Document.Sleep(50);
+                }
+                viewport.Busy = true;
+                await this.Application.ControlFlow.ResolveControlFlowForViewportScroll(viewport);
+                viewport.Busy = false;
+            } catch (e) {
+                await this.Application.ExceptionHandler.Handle(e, 'DrapoBinder - BindControlFlowViewportScroll');
+            }
+        }, 50);
+    }
 }

@@ -47,6 +47,7 @@ declare class DrapoSolver {
     CloneArrayString(list: string[]): string[];
     CloneArrayElement(list: HTMLElement[]): HTMLElement[];
     CloneArrayAny(list: any[]): any[];
+    CloneElement(el: HTMLElement): HTMLElement;
     private GetSystemContextPathValue;
     private GetSystemPathValue;
     private GetSystemContextPathValueIndex;

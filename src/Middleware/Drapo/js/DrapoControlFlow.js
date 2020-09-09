@@ -161,7 +161,7 @@ var DrapoControlFlow = (function () {
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, canFragmentElements, fragment, template, jQueryForReferenceTemplate, canUseTemplate, templateVariables, _a, nodesRemovedCount, j, data, templateKey, _b, templateData, _c, templateJ, template, nodeIndex, oldNode, item, _d, template;
+            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, isRenderViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, length, canCreateViewport, viewport, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, j, data, templateKey, _b, templateData, _c, templateJ, template, nodeIndex, oldNode, item, _d, template;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -200,7 +200,8 @@ var DrapoControlFlow = (function () {
                         content = isContextRoot ? forJQuery[0].outerHTML : null;
                         if (isContextRoot)
                             this.InitializeContext(context, content);
-                        isDifference = ((canUseDifference) && (!isIncremental) && (!hasIfText));
+                        isRenderViewport = this.Application.ViewportHandler.IsElementControlFlowRenderViewport(elementForTemplate);
+                        isDifference = ((canUseDifference) && (!isRenderViewport) && (!isIncremental) && (!hasIfText));
                         isLastChild = this.Application.Document.IsLastChild(anchor);
                         if ((isDifference) && (isContextRoot) && (isLastChild))
                             isDifference = false;
@@ -274,7 +275,7 @@ var DrapoControlFlow = (function () {
                         }
                         if ((!isDifference) && (type == DrapoStorageLinkType.RenderClass))
                             type = DrapoStorageLinkType.Render;
-                        if ((!isIncremental) && (!isDifference) && (!isContextRootFullExclusive))
+                        if ((!isIncremental) && (!isDifference) && (!isContextRootFullExclusive) && (!isRenderViewport))
                             this.RemoveList(items);
                         if (isDifference) {
                             dataLength = datas.length;
@@ -282,8 +283,6 @@ var DrapoControlFlow = (function () {
                                 this.RemoveListIndex(items, i);
                             }
                         }
-                        canFragmentElements = true;
-                        fragment = document.createDocumentFragment();
                         if ((datas.length !== null) && (datas.length === 0)) {
                             if (isIncremental)
                                 return [2, (false)];
@@ -303,6 +302,14 @@ var DrapoControlFlow = (function () {
                         jQueryForReferenceTemplate.removeAttr('d-for');
                         if (ifText != null)
                             jQueryForReferenceTemplate.removeAttr('d-if');
+                        length = datas.length;
+                        canCreateViewport = ((isContextRoot) && (isFirstChild) && (!wasWrapped) && (!hasIfText) && (range === null));
+                        viewport = this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas, canCreateViewport);
+                        if (viewport !== null)
+                            jQueryForReferenceTemplate.removeAttr('d-for-render');
+                        lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
+                        canFragmentElements = viewport == null;
+                        fragment = document.createDocumentFragment();
                         canUseTemplate = isContextRootFullExclusive && (type == DrapoStorageLinkType.Render) && (datas.length > 3);
                         if (!canUseTemplate) return [3, 9];
                         return [4, this.GetTemplateVariables(sector, context, dataKey, key, jQueryForReferenceTemplate)];
@@ -315,10 +322,10 @@ var DrapoControlFlow = (function () {
                     case 10:
                         templateVariables = _a;
                         nodesRemovedCount = 0;
-                        j = start;
+                        j = this.Application.ViewportHandler.GetViewportControlFlowStart(viewport, start);
                         _e.label = 11;
                     case 11:
-                        if (!(j < datas.length)) return [3, 26];
+                        if (!(j < this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length))) return [3, 26];
                         data = datas[j];
                         if (!(templateVariables !== null)) return [3, 13];
                         return [4, this.CreateTemplateKey(sector, context, dataKey, templateVariables, data, key, j)];
@@ -380,6 +387,8 @@ var DrapoControlFlow = (function () {
                         else {
                             lastInserted.after(templateJ);
                             lastInserted = templateJ;
+                            this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
+                            canFragmentElements = true;
                         }
                         return [3, 25];
                     case 23:
@@ -393,7 +402,8 @@ var DrapoControlFlow = (function () {
                         j++;
                         return [3, 11];
                     case 26:
-                        if ((isContextRootFullExclusive) && (!isIncremental)) {
+                        this.Application.ViewportHandler.AppendViewportControlFlowBallonAfter(viewport, fragment);
+                        if ((viewport == null) && (isContextRootFullExclusive) && (!isIncremental)) {
                             this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
                             if (forJQueryParent.children().length !== 1)
                                 forJQueryParent.html(content);
@@ -406,6 +416,7 @@ var DrapoControlFlow = (function () {
                             if (fragment.childNodes.length > 0)
                                 lastInserted.after(fragment);
                         }
+                        this.Application.ViewportHandler.ActivateViewportControlFlow(viewport);
                         this.Application.Observer.IsEnabledNotifyIncremental = true;
                         if ((context.IsInsideRecursion) && (!context.IsElementTemplateRoot(key)))
                             jQueryForReference.remove();
@@ -945,6 +956,109 @@ var DrapoControlFlow = (function () {
                         j++;
                         return [3, 1];
                     case 9: return [2, (false)];
+                }
+            });
+        });
+    };
+    DrapoControlFlow.prototype.ResolveControlFlowForViewportScroll = function (viewport) {
+        return __awaiter(this, void 0, void 0, function () {
+            var view, rowsBeforeRemove, rowsBeforeInsertStart, rowsBeforeInsertEnd, rowsAfterRemove, rowsAfterInsertStart, rowsAfterInsertEnd, rowRemove, elBallonAfter, rowNext, rowRemove, i, rowNext, fragmentBefore, rowRemove, i, rowPrevious, fragmentAfter, elementAfterPrevious;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        view = this.Application.ViewportHandler.GetView(viewport);
+                        if (view === null)
+                            return [2];
+                        rowsBeforeRemove = view[0];
+                        rowsBeforeInsertStart = view[1];
+                        rowsBeforeInsertEnd = view[2];
+                        rowsAfterRemove = view[3];
+                        rowsAfterInsertStart = view[4];
+                        rowsAfterInsertEnd = view[5];
+                        if (rowsBeforeRemove !== null) {
+                            if (rowsBeforeRemove === -1) {
+                                rowRemove = viewport.ElementBallonBefore.nextElementSibling;
+                                elBallonAfter = viewport.ElementBallonAfter;
+                                while (rowRemove !== elBallonAfter) {
+                                    rowNext = rowRemove.nextElementSibling;
+                                    rowRemove.remove();
+                                    rowRemove = rowNext;
+                                }
+                            }
+                            else {
+                                rowRemove = viewport.ElementBallonBefore.nextElementSibling;
+                                for (i = 0; i < rowsBeforeRemove; i++) {
+                                    rowNext = rowRemove.nextElementSibling;
+                                    rowRemove.remove();
+                                    rowRemove = rowNext;
+                                }
+                            }
+                        }
+                        return [4, this.CreateControlFlowForViewportFragment(viewport, rowsBeforeInsertStart, rowsBeforeInsertEnd)];
+                    case 1:
+                        fragmentBefore = _a.sent();
+                        if (fragmentBefore !== null) {
+                            $(viewport.ElementBallonBefore).after(fragmentBefore);
+                        }
+                        if (rowsAfterRemove !== null) {
+                            rowRemove = viewport.ElementBallonAfter.previousElementSibling;
+                            for (i = 0; i < rowsBeforeRemove; i++) {
+                                rowPrevious = rowRemove.previousElementSibling;
+                                rowRemove.remove();
+                                rowRemove = rowPrevious;
+                            }
+                        }
+                        return [4, this.CreateControlFlowForViewportFragment(viewport, rowsAfterInsertStart, rowsAfterInsertEnd)];
+                    case 2:
+                        fragmentAfter = _a.sent();
+                        if (fragmentAfter !== null) {
+                            elementAfterPrevious = viewport.ElementBallonAfter.previousElementSibling;
+                            $(elementAfterPrevious).after(fragmentAfter);
+                        }
+                        this.Application.ViewportHandler.UpdateElementsBallon(viewport);
+                        return [4, this.Application.ComponentHandler.UnloadComponentInstancesDetached(viewport.Sector)];
+                    case 3:
+                        _a.sent();
+                        return [4, this.Application.Document.CollectSector(viewport.Sector)];
+                    case 4:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    DrapoControlFlow.prototype.CreateControlFlowForViewportFragment = function (viewport, start, end) {
+        return __awaiter(this, void 0, void 0, function () {
+            var fragment, context, content, renderContext, i, data, template, item;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if ((start === null) || (end == start))
+                            return [2, (null)];
+                        fragment = document.createDocumentFragment();
+                        context = new DrapoContext();
+                        context.Sector = viewport.Sector;
+                        context.Index = start;
+                        context.IndexRelative = start;
+                        content = viewport.ElementTemplate.outerHTML;
+                        this.InitializeContext(context, content);
+                        renderContext = new DrapoRenderContext();
+                        i = start;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < end)) return [3, 4];
+                        data = viewport.Data[i];
+                        template = this.Application.Solver.CloneElement(viewport.ElementTemplate);
+                        item = context.Create(data, template, template, viewport.DataKey, viewport.Key, viewport.DataKeyIteratorRange, i, null);
+                        return [4, this.ResolveControlFlowForIterationRender(viewport.Sector, context, template, renderContext, true, true)];
+                    case 2:
+                        _a.sent();
+                        fragment.appendChild(template);
+                        _a.label = 3;
+                    case 3:
+                        i++;
+                        return [3, 1];
+                    case 4: return [2, (fragment)];
                 }
             });
         });
