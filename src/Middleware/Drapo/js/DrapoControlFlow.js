@@ -1016,6 +1016,12 @@ var DrapoControlFlow = (function () {
                             $(elementAfterPrevious).after(fragmentAfter);
                         }
                         this.Application.ViewportHandler.UpdateElementsBallon(viewport);
+                        return [4, this.Application.ComponentHandler.UnloadComponentInstancesDetached(viewport.Sector)];
+                    case 3:
+                        _a.sent();
+                        return [4, this.Application.Document.CollectSector(viewport.Sector)];
+                    case 4:
+                        _a.sent();
                         return [2];
                 }
             });

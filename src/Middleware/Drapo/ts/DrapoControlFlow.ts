@@ -756,6 +756,11 @@ class DrapoControlFlow {
         }
         //Ballon
         this.Application.ViewportHandler.UpdateElementsBallon(viewport);
+        //Garbage Collector
+        //Unload Components Detached
+        await this.Application.ComponentHandler.UnloadComponentInstancesDetached(viewport.Sector);
+        //Collect Sectors
+        await this.Application.Document.CollectSector(viewport.Sector);
     }
 
     private async CreateControlFlowForViewportFragment(viewport: DrapoViewport, start: number, end: number): Promise<DocumentFragment> {

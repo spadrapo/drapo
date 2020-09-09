@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Viewport - Component</title>
+</head>
+<body>
+    <span>Control Flow - For - Viewport - Component</span>
+    <div d-dataKey="items" d-dataUrlGet="/Data/GetLevels?Levels=0&Children=200"></div>
+    <div d-sector="1">
+        <div d-dataKey="functionAction" d-dataType="value" d-dataLoadType="startup" d-dataValue="Notify(items)"></div>
+        <input type="button" value="Refresh" d-on-click="{{functionAction}}" />
+        <div style="overflow-y: scroll; height: 200px; width: 400px;float:left">
+            <div d-for="item in items" d-for-render="viewport">
+                <d-checkbox dc-value="{{item.Visible}}" dc-label="{{item.Key}}"></d-checkbox>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
