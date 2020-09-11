@@ -22538,7 +22538,7 @@ var DrapoViewportHandler = (function () {
         if (scroll == null)
             return (null);
         var elScroll = scroll[0];
-        var height = this.GetElementStyleHeight(elScroll);
+        var height = this.GetElementHeight(elScroll);
         if (height == null)
             return (null);
         var viewport = new DrapoViewport();
@@ -22610,7 +22610,7 @@ var DrapoViewportHandler = (function () {
             return (null);
         var elBallonBefore = elTemplate.nextElementSibling;
         var elItem = elBallonBefore.nextElementSibling;
-        var height = this.GetElementClientHeight(elItem);
+        var height = this.GetElementHeight(elItem);
         return (height);
     };
     DrapoViewportHandler.prototype.AppendViewportControlFlowBallonAfter = function (viewport, fragment) {
@@ -22649,7 +22649,7 @@ var DrapoViewportHandler = (function () {
             return (false);
         if (elItem === null)
             return (false);
-        var height = this.GetElementClientHeight(elItem);
+        var height = this.GetElementHeight(elItem);
         if (height === null)
             return (false);
         viewport.HeightItem = height;
@@ -22673,15 +22673,26 @@ var DrapoViewportHandler = (function () {
         viewport.ElementBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
         viewport.ElementBallonAfter.style.height = viewport.HeightBallonAfter + 'px';
     };
+    DrapoViewportHandler.prototype.GetElementHeightRect = function (el) {
+        var rect = el.getBoundingClientRect();
+        return (rect.height);
+    };
     DrapoViewportHandler.prototype.GetElementStyleHeight = function (el) {
         var elStyle = window.getComputedStyle(el);
         var heightString = elStyle.getPropertyValue('height');
+        if (heightString.indexOf('px') < 0)
+            return (0);
         var height = this.Application.Parser.ParsePixels(heightString);
         return (height);
     };
-    DrapoViewportHandler.prototype.GetElementClientHeight = function (el) {
-        var rect = el.getBoundingClientRect();
-        return (rect.height);
+    DrapoViewportHandler.prototype.GetElementHeight = function (el) {
+        var height = this.GetElementHeightRect(el);
+        if (height != 0)
+            return (height);
+        height = this.GetElementStyleHeight(el);
+        if (height != 0)
+            return (height);
+        return (0);
     };
     DrapoViewportHandler.prototype.GetScrollViewport = function (el) {
         var elCurrent = el;
@@ -22704,7 +22715,7 @@ var DrapoViewportHandler = (function () {
                             isBefore = false;
                         }
                         else {
-                            var height = this.GetElementClientHeight(elChild);
+                            var height = this.GetElementHeight(elChild);
                             if (isBefore)
                                 heightBefore = heightBefore + height;
                             else
