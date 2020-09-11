@@ -15,8 +15,9 @@ declare class DrapoViewportHandler {
     private UpdateValues;
     private UpdateValuesBallon;
     UpdateElementsBallon(viewport: DrapoViewport): void;
+    private GetElementHeightRect;
     private GetElementStyleHeight;
-    private GetElementClientHeight;
+    private GetElementHeight;
     private GetScrollViewport;
     private HasOverflowY;
     private IsOverflowEnabled;

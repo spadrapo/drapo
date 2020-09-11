@@ -24,7 +24,7 @@
         if (scroll == null)
             return (null);
         const elScroll: HTMLElement = scroll[0];
-        const height: number = this.GetElementStyleHeight(elScroll);
+        const height: number = this.GetElementHeight(elScroll);
         if (height == null)
             return (null);
         const viewport: DrapoViewport = new DrapoViewport();
@@ -99,7 +99,7 @@
             return (null);
         const elBallonBefore: HTMLElement = elTemplate.nextElementSibling as HTMLElement;
         const elItem: HTMLElement = elBallonBefore.nextElementSibling as HTMLElement;
-        const height: number = this.GetElementClientHeight(elItem);
+        const height: number = this.GetElementHeight(elItem);
         return (height);
     }
 
@@ -143,7 +143,7 @@
             return (false);
         if (elItem === null)
             return (false);
-        const height: number = this.GetElementClientHeight(elItem);
+        const height: number = this.GetElementHeight(elItem);
         if (height === null)
             return (false);
         viewport.HeightItem = height;
@@ -171,16 +171,30 @@
         viewport.ElementBallonAfter.style.height = viewport.HeightBallonAfter + 'px';
     }
 
+    private GetElementHeightRect(el: HTMLElement): number {
+        const rect: DOMRect = el.getBoundingClientRect();
+        return (rect.height);
+    }
+
     private GetElementStyleHeight(el: HTMLElement): number {
         const elStyle: CSSStyleDeclaration = window.getComputedStyle(el);
         const heightString: string = elStyle.getPropertyValue('height');
+        if (heightString.indexOf('px') < 0)
+            return (0);
         const height: number = this.Application.Parser.ParsePixels(heightString);
         return (height);
     }
 
-    private GetElementClientHeight(el: HTMLElement): number {
-        const rect: DOMRect = el.getBoundingClientRect();
-        return (rect.height);
+    private GetElementHeight(el: HTMLElement): number {
+        //Rect
+        let height: number = this.GetElementHeightRect(el);
+        if (height != 0)
+            return (height);
+        //Style
+        height = this.GetElementStyleHeight(el);
+        if (height != 0)
+            return (height);
+        return (0);
     }
 
     private GetScrollViewport(el: HTMLElement): [HTMLElement, number, number] {
@@ -202,7 +216,7 @@
                         if (elChild === elCurrent) {
                             isBefore = false;
                         } else {
-                            const height: number = this.GetElementClientHeight(elChild);
+                            const height: number = this.GetElementHeight(elChild);
                             if (isBefore)
                                 heightBefore = heightBefore + height;
                             else
