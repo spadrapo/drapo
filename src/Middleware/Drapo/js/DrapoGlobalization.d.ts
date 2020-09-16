@@ -29,6 +29,7 @@ declare class DrapoGlobalization {
     GetDateFormat(dateFormatType: string, culture: string): string;
     GetDateFormatsRegex(culture?: string): string;
     private GetDateFormatRegex;
+    GetDateFormatsRegularExpressions(culture?: string): DrapoRegularExpression[];
     private ReplaceDataFormatRegex;
     private GetResourceValueDictionary;
     private GetResourceCultureDictionary;

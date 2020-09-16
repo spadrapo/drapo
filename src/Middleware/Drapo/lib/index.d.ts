@@ -901,6 +901,7 @@ declare class DrapoGlobalization {
     GetDateFormat(dateFormatType: string, culture: string): string;
     GetDateFormatsRegex(culture?: string): string;
     private GetDateFormatRegex;
+    GetDateFormatsRegularExpressions(culture?: string): DrapoRegularExpression[];
     private ReplaceDataFormatRegex;
     private GetResourceValueDictionary;
     private GetResourceCultureDictionary;
@@ -1125,6 +1126,7 @@ declare class DrapoParser {
     private readonly _tokensComparator;
     private readonly _tokensLogical;
     private readonly _tokensArithmetic;
+    private readonly _canUseRegexGroups;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     Tokenize(data: string, splitter?: string): string[];
@@ -1187,6 +1189,8 @@ declare class DrapoParser {
     private ParseAttribute;
     ParseDate(data: string): Date;
     ParseDateCulture(data: string, culture?: string): Date;
+    private ParseDateCultureRegex;
+    private ParseDateCultureRegularExpression;
     private IsDate;
     private ParseDateGroupNumber;
     ParseNumber(data: string, valueDefault?: number): number;
@@ -1285,6 +1289,29 @@ declare class DrapoRegister {
     private GetCacheData;
     private AddCacheData;
     private IsEndsWith;
+}
+
+declare class DrapoRegularExpression {
+    private _expression;
+    private _items;
+    get Expression(): string;
+    set Expression(value: string);
+    get Items(): DrapoRegularExpressionItem[];
+    CreateItem(expression: string, name?: string): DrapoRegularExpressionItem;
+    IsValid(value: string): boolean;
+    GetValue(name: string): string;
+}
+
+declare class DrapoRegularExpressionItem {
+    private _expression;
+    private _name;
+    private _value;
+    get Expression(): string;
+    set Expression(value: string);
+    get Name(): string;
+    set Name(value: string);
+    get Value(): string;
+    set Value(value: string);
 }
 
 declare class DrapoRenderContext {

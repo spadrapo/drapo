@@ -208,6 +208,33 @@ var DrapoGlobalization = (function () {
         format = this.ReplaceDataFormatRegex(format, 'dd', 'day', '(\\d{1,2})');
         return (format);
     };
+    DrapoGlobalization.prototype.GetDateFormatsRegularExpressions = function (culture) {
+        if (culture === void 0) { culture = null; }
+        if (culture == null)
+            culture = this.GetCulture();
+        var regularExpressions = [];
+        if ((culture === 'pt') || (culture === 'es')) {
+            var regularExpression = new DrapoRegularExpression();
+            regularExpression.Expression = '^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})$';
+            regularExpression.CreateItem('(\\d{1,2})', 'day');
+            regularExpression.CreateItem('\\/');
+            regularExpression.CreateItem('(\\d{1,2})', 'month');
+            regularExpression.CreateItem('\\/');
+            regularExpression.CreateItem('(\\d{4})', 'year');
+            regularExpressions.push(regularExpression);
+        }
+        else if (culture === 'en') {
+            var regularExpression = new DrapoRegularExpression();
+            regularExpression.Expression = '^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})$';
+            regularExpression.CreateItem('(\\d{1,2})', 'month');
+            regularExpression.CreateItem('\\/');
+            regularExpression.CreateItem('(\\d{1,2})', 'day');
+            regularExpression.CreateItem('\\/');
+            regularExpression.CreateItem('(\\d{4})', 'year');
+            regularExpressions.push(regularExpression);
+        }
+        return (regularExpressions);
+    };
     DrapoGlobalization.prototype.ReplaceDataFormatRegex = function (format, symbol, name, expression) {
         var regex = '(?<' + name + '>' + expression + ')';
         format = format.replace(symbol, regex);

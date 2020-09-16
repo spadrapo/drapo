@@ -15,6 +15,7 @@ declare class DrapoParser {
     private readonly _tokensComparator;
     private readonly _tokensLogical;
     private readonly _tokensArithmetic;
+    private readonly _canUseRegexGroups;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     Tokenize(data: string, splitter?: string): string[];
@@ -77,6 +78,8 @@ declare class DrapoParser {
     private ParseAttribute;
     ParseDate(data: string): Date;
     ParseDateCulture(data: string, culture?: string): Date;
+    private ParseDateCultureRegex;
+    private ParseDateCultureRegularExpression;
     private IsDate;
     private ParseDateGroupNumber;
     ParseNumber(data: string, valueDefault?: number): number;
