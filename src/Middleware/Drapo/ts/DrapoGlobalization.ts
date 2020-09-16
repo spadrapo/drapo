@@ -173,8 +173,7 @@
             culture = this.GetCulture();
         const formats: string[] = [this.GetDateFormat('d', culture)];
         let formatsRegex: string = '';
-        for (let i: number = 0; i < formats.length; i++)
-        {
+        for (let i: number = 0; i < formats.length; i++) {
             const format: string = formats[i];
             const formatRegex: string = this.GetDateFormatRegex(format);
             if (formatsRegex.length > 0)
@@ -196,7 +195,33 @@
         return (format);
     }
 
-    private ReplaceDataFormatRegex(format: string, symbol: string, name: string, expression: string): string{
+    public GetDateFormatsRegularExpressions(culture: string = null): DrapoRegularExpression[] {
+        if (culture == null)
+            culture = this.GetCulture();
+        const regularExpressions: DrapoRegularExpression[] = [];
+        //TODO: This need to be based in the d format in the future
+        if ((culture === 'pt') || (culture === 'es')) {
+            const regularExpression: DrapoRegularExpression = new DrapoRegularExpression();
+            regularExpression.Expression = '^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})$';
+            regularExpression.CreateItem('(\\d{1,2})', 'day');
+            regularExpression.CreateItem('\\/');
+            regularExpression.CreateItem('(\\d{1,2})', 'month');
+            regularExpression.CreateItem('\\/');
+            regularExpression.CreateItem('(\\d{4})', 'year');
+            regularExpressions.push(regularExpression);
+        } else if (culture === 'en') {
+            const regularExpression: DrapoRegularExpression = new DrapoRegularExpression();
+            regularExpression.Expression = '^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})$';
+            regularExpression.CreateItem('(\\d{1,2})', 'month');
+            regularExpression.CreateItem('\\/');
+            regularExpression.CreateItem('(\\d{1,2})', 'day');
+            regularExpression.CreateItem('\\/');
+            regularExpression.CreateItem('(\\d{4})', 'year');
+            regularExpressions.push(regularExpression);
+        }
+        return (regularExpressions);
+    }
+    private ReplaceDataFormatRegex(format: string, symbol: string, name: string, expression: string): string {
         const regex: string = '(?<' + name + '>' + expression + ')';
         format = format.replace(symbol, regex);
         return (format);

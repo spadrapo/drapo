@@ -12106,6 +12106,33 @@ var DrapoGlobalization = (function () {
         format = this.ReplaceDataFormatRegex(format, 'dd', 'day', '(\\d{1,2})');
         return (format);
     };
+    DrapoGlobalization.prototype.GetDateFormatsRegularExpressions = function (culture) {
+        if (culture === void 0) { culture = null; }
+        if (culture == null)
+            culture = this.GetCulture();
+        var regularExpressions = [];
+        if ((culture === 'pt') || (culture === 'es')) {
+            var regularExpression = new DrapoRegularExpression();
+            regularExpression.Expression = '^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})$';
+            regularExpression.CreateItem('(\\d{1,2})', 'day');
+            regularExpression.CreateItem('\\/');
+            regularExpression.CreateItem('(\\d{1,2})', 'month');
+            regularExpression.CreateItem('\\/');
+            regularExpression.CreateItem('(\\d{4})', 'year');
+            regularExpressions.push(regularExpression);
+        }
+        else if (culture === 'en') {
+            var regularExpression = new DrapoRegularExpression();
+            regularExpression.Expression = '^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})$';
+            regularExpression.CreateItem('(\\d{1,2})', 'month');
+            regularExpression.CreateItem('\\/');
+            regularExpression.CreateItem('(\\d{1,2})', 'day');
+            regularExpression.CreateItem('\\/');
+            regularExpression.CreateItem('(\\d{4})', 'year');
+            regularExpressions.push(regularExpression);
+        }
+        return (regularExpressions);
+    };
     DrapoGlobalization.prototype.ReplaceDataFormatRegex = function (format, symbol, name, expression) {
         var regex = '(?<' + name + '>' + expression + ')';
         format = format.replace(symbol, regex);
@@ -14127,6 +14154,7 @@ var DrapoParser = (function () {
         this._tokensComparator = ['=', '!=', '>', '>=', '<', '<=', 'LIKE'];
         this._tokensLogical = ['&&', '||'];
         this._tokensArithmetic = ['+', '-', '*', '/'];
+        this._canUseRegexGroups = false;
         this._application = application;
     }
     Object.defineProperty(DrapoParser.prototype, "Application", {
@@ -14749,6 +14777,11 @@ var DrapoParser = (function () {
             return (null);
         if (culture === null)
             culture = this.Application.Globalization.GetCulture();
+        if (this._canUseRegexGroups)
+            return (this.ParseDateCultureRegex(data, culture));
+        return (this.ParseDateCultureRegularExpression(data, culture));
+    };
+    DrapoParser.prototype.ParseDateCultureRegex = function (data, culture) {
         var dateFormatRegex = this.Application.Globalization.GetDateFormatsRegex(culture);
         var match = data.match(dateFormatRegex);
         if (match == null)
@@ -14770,6 +14803,31 @@ var DrapoParser = (function () {
         if (date.getUTCDate() !== day)
             return (null);
         return (date);
+    };
+    DrapoParser.prototype.ParseDateCultureRegularExpression = function (data, culture) {
+        var regularExpressions = this.Application.Globalization.GetDateFormatsRegularExpressions(culture);
+        for (var i = 0; i < regularExpressions.length; i++) {
+            var regularExpression = regularExpressions[i];
+            if (!regularExpression.IsValid(data))
+                continue;
+            var year = this.ParseDateGroupNumber(regularExpression.GetValue('year'));
+            if (year == null)
+                return (null);
+            var month = this.ParseDateGroupNumber(regularExpression.GetValue('month'), 12);
+            if (month == null)
+                return (null);
+            var day = this.ParseDateGroupNumber(regularExpression.GetValue('day'), 31);
+            if (day == null)
+                return (null);
+            var hours = 12;
+            var date = new Date(Date.UTC(year, month - 1, day, hours, 0, 0, 0));
+            if (!this.IsDate(date))
+                return (null);
+            if (date.getUTCDate() !== day)
+                return (null);
+            return (date);
+        }
+        return (null);
     };
     DrapoParser.prototype.IsDate = function (date) {
         return (!((date == null) || (date.toString() == 'Invalid Date')));
@@ -15769,6 +15827,102 @@ var DrapoRegister = (function () {
         return (text.substr(text.length - length) === value);
     };
     return DrapoRegister;
+}());
+
+"use strict";
+var DrapoRegularExpression = (function () {
+    function DrapoRegularExpression() {
+        this._items = [];
+    }
+    Object.defineProperty(DrapoRegularExpression.prototype, "Expression", {
+        get: function () {
+            return (this._expression);
+        },
+        set: function (value) {
+            this._expression = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoRegularExpression.prototype, "Items", {
+        get: function () {
+            return (this._items);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    DrapoRegularExpression.prototype.CreateItem = function (expression, name) {
+        if (name === void 0) { name = null; }
+        var item = new DrapoRegularExpressionItem();
+        item.Expression = expression;
+        item.Name = name;
+        this._items.push(item);
+        return (item);
+    };
+    DrapoRegularExpression.prototype.IsValid = function (value) {
+        var regex = new RegExp(this.Expression);
+        if (!regex.test(value))
+            return (false);
+        var valueCurrent = value;
+        for (var i = 0; i < this._items.length; i++) {
+            var item = this._items[i];
+            var match = valueCurrent.match(item.Expression);
+            if (match == null)
+                return (null);
+            var matchValue = match[0];
+            if (valueCurrent.indexOf(matchValue) != 0)
+                return (null);
+            item.Value = matchValue;
+            valueCurrent = valueCurrent.substring(matchValue.length);
+        }
+        return (true);
+    };
+    DrapoRegularExpression.prototype.GetValue = function (name) {
+        for (var i = 0; i < this._items.length; i++) {
+            var item = this._items[i];
+            if (item.Name === name)
+                return (item.Value);
+        }
+        return (null);
+    };
+    return DrapoRegularExpression;
+}());
+
+"use strict";
+var DrapoRegularExpressionItem = (function () {
+    function DrapoRegularExpressionItem() {
+    }
+    Object.defineProperty(DrapoRegularExpressionItem.prototype, "Expression", {
+        get: function () {
+            return (this._expression);
+        },
+        set: function (value) {
+            this._expression = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoRegularExpressionItem.prototype, "Name", {
+        get: function () {
+            return (this._name);
+        },
+        set: function (value) {
+            this._name = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoRegularExpressionItem.prototype, "Value", {
+        get: function () {
+            return (this._value);
+        },
+        set: function (value) {
+            this._value = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return DrapoRegularExpressionItem;
 }());
 
 "use strict";

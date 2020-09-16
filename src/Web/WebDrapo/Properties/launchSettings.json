@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/ControlFlowForViewportHeightBeforeDynamic.html",
+      "launchUrl": "DrapoPages/Parsedate.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

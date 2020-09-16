@@ -17,6 +17,7 @@ class DrapoParser {
     private readonly _tokensComparator: string[] = ['=', '!=', '>', '>=', '<', '<=', 'LIKE'];
     private readonly _tokensLogical: string[] = ['&&', '||'];
     private readonly _tokensArithmetic: string[] = ['+', '-', '*', '/'];
+    private readonly _canUseRegexGroups: boolean = false;
 
     //Properties
     get Application(): DrapoApplication {
@@ -682,11 +683,18 @@ class DrapoParser {
         return (date);
     }
 
-    public ParseDateCulture(data: string, culture : string = null): Date {
+    public ParseDateCulture(data: string, culture: string = null): Date {
         if (data === null)
             return (null);
         if (culture === null)
             culture = this.Application.Globalization.GetCulture();
+        //Regex macthing groups is not supported in IE11
+        if (this._canUseRegexGroups)
+            return (this.ParseDateCultureRegex(data, culture));
+        return (this.ParseDateCultureRegularExpression(data, culture));
+    }
+
+    private ParseDateCultureRegex(data: string, culture: string): Date {
         const dateFormatRegex: string = this.Application.Globalization.GetDateFormatsRegex(culture);
         const match: any = data.match(dateFormatRegex) as any;
         if (match == null)
@@ -708,6 +716,32 @@ class DrapoParser {
         if (date.getUTCDate() !== day)
             return (null);
         return (date);
+    }
+
+    private ParseDateCultureRegularExpression(data: string, culture: string): Date {
+        const regularExpressions: DrapoRegularExpression[] = this.Application.Globalization.GetDateFormatsRegularExpressions(culture);
+        for (let i: number = 0; i < regularExpressions.length; i++) {
+            const regularExpression: DrapoRegularExpression = regularExpressions[i];
+            if (!regularExpression.IsValid(data))
+                continue;
+            const year: number = this.ParseDateGroupNumber(regularExpression.GetValue('year'));
+            if (year == null)
+                return (null);
+            const month: number = this.ParseDateGroupNumber(regularExpression.GetValue('month'), 12);
+            if (month == null)
+                return (null);
+            const day: number = this.ParseDateGroupNumber(regularExpression.GetValue('day'), 31);
+            if (day == null)
+                return (null);
+            const hours: number = 12;
+            const date = new Date(Date.UTC(year, month - 1, day, hours, 0, 0, 0));
+            if (!this.IsDate(date))
+                return (null);
+            if (date.getUTCDate() !== day)
+                return (null);
+            return (date);
+        }
+        return (null);
     }
 
     private IsDate(date : any) : boolean

@@ -15,6 +15,7 @@ var DrapoParser = (function () {
         this._tokensComparator = ['=', '!=', '>', '>=', '<', '<=', 'LIKE'];
         this._tokensLogical = ['&&', '||'];
         this._tokensArithmetic = ['+', '-', '*', '/'];
+        this._canUseRegexGroups = false;
         this._application = application;
     }
     Object.defineProperty(DrapoParser.prototype, "Application", {
@@ -637,6 +638,11 @@ var DrapoParser = (function () {
             return (null);
         if (culture === null)
             culture = this.Application.Globalization.GetCulture();
+        if (this._canUseRegexGroups)
+            return (this.ParseDateCultureRegex(data, culture));
+        return (this.ParseDateCultureRegularExpression(data, culture));
+    };
+    DrapoParser.prototype.ParseDateCultureRegex = function (data, culture) {
         var dateFormatRegex = this.Application.Globalization.GetDateFormatsRegex(culture);
         var match = data.match(dateFormatRegex);
         if (match == null)
@@ -658,6 +664,31 @@ var DrapoParser = (function () {
         if (date.getUTCDate() !== day)
             return (null);
         return (date);
+    };
+    DrapoParser.prototype.ParseDateCultureRegularExpression = function (data, culture) {
+        var regularExpressions = this.Application.Globalization.GetDateFormatsRegularExpressions(culture);
+        for (var i = 0; i < regularExpressions.length; i++) {
+            var regularExpression = regularExpressions[i];
+            if (!regularExpression.IsValid(data))
+                continue;
+            var year = this.ParseDateGroupNumber(regularExpression.GetValue('year'));
+            if (year == null)
+                return (null);
+            var month = this.ParseDateGroupNumber(regularExpression.GetValue('month'), 12);
+            if (month == null)
+                return (null);
+            var day = this.ParseDateGroupNumber(regularExpression.GetValue('day'), 31);
+            if (day == null)
+                return (null);
+            var hours = 12;
+            var date = new Date(Date.UTC(year, month - 1, day, hours, 0, 0, 0));
+            if (!this.IsDate(date))
+                return (null);
+            if (date.getUTCDate() !== day)
+                return (null);
+            return (date);
+        }
+        return (null);
     };
     DrapoParser.prototype.IsDate = function (date) {
         return (!((date == null) || (date.toString() == 'Invalid Date')));
