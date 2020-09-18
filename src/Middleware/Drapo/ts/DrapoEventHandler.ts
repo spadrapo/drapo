@@ -1,6 +1,9 @@
 class DrapoEventHandler {
     //Field
     private _application: DrapoApplication;
+    private readonly _debounceDefault: number = 500;
+    private readonly _debounceDefaultClick: number = 200;
+    private readonly _debounce: string = 'debounce';
 
     //Properties
     get Application(): DrapoApplication {
@@ -80,7 +83,13 @@ class DrapoEventHandler {
             if (binder === null)
                 continue;
             const propagation: boolean = this.GetEventPropagation(el, eventType);
-            const isDelay: boolean = this.IsEventDelay(el, eventType);
+            let isDelay: boolean = this.IsEventDelay(el, eventType);
+            let debounceTimeout: number = this._debounceDefaultClick;
+            const elDebounceTimeout: number = isDelay ? null : this.GetEventDebounce(el, eventType);
+            if (elDebounceTimeout !== null) {
+                isDelay = true;
+                debounceTimeout = elDebounceTimeout;
+            }
             let delayTimeout: number = null;
             const eventAttribute: string = event[0];
             binder.unbind(eventNamespace);
@@ -96,15 +105,14 @@ class DrapoEventHandler {
                     // tslint:disable-next-line:no-floating-promises
                     application.EventHandler.ExecuteEvent(sector, null, el, e, eventType, location, functionsValueCurrent, isSectorDynamic);
                 } else {
-                    if (delayTimeout == null) {
-                        delayTimeout = setTimeout(() => {
-                            clearTimeout(delayTimeout);
-                            // tslint:disable-next-line:no-floating-promises
-                            application.EventHandler.ExecuteEvent(sector, null, el, e, eventType, location, functionsValueCurrent, isSectorDynamic);
-                        }, 200);
-                    } else {
+                    if (delayTimeout != null)
                         clearTimeout(delayTimeout);
-                    }
+                    delayTimeout = setTimeout(() => {
+                        clearTimeout(delayTimeout);
+                        delayTimeout = null;
+                        // tslint:disable-next-line:no-floating-promises
+                        application.EventHandler.ExecuteEvent(sector, null, el, e, eventType, location, functionsValueCurrent, isSectorDynamic);
+                    }, debounceTimeout);
                 }
                 return (propagation);
             });
@@ -135,7 +143,13 @@ class DrapoEventHandler {
             if (binder === null)
                 continue;
             const propagation: boolean = this.GetEventPropagation(el, eventType);
-            const isDelay: boolean = this.IsEventDelay(el, eventType);
+            let isDelay: boolean = this.IsEventDelay(el, eventType);
+            let debounceTimeout: number = this._debounceDefaultClick;
+            const elDebounceTimeout: number = isDelay ? null : this.GetEventDebounce(el, eventType);
+            if (elDebounceTimeout !== null) {
+                isDelay = true;
+                debounceTimeout = elDebounceTimeout;
+            }
             let delayTimeout: number = null;
             binder.unbind(eventNamespace);
             binder.bind(eventNamespace, (e) => {
@@ -150,17 +164,14 @@ class DrapoEventHandler {
                     // tslint:disable-next-line:no-floating-promises
                     application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, eventType, location, functionsValue);
                 } else {
-                    if (delayTimeout == null) {
-                        delayTimeout = setTimeout(() => {
-                            clearTimeout(delayTimeout);
-                            delayTimeout = null;
-                            // tslint:disable-next-line:no-floating-promises
-                            application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, eventType, location, functionsValue);
-                        }, 200);
-                    } else {
+                    if (delayTimeout != null)
+                        clearTimeout(delayTimeout);
+                    delayTimeout = setTimeout(() => {
                         clearTimeout(delayTimeout);
                         delayTimeout = null;
-                    }
+                        // tslint:disable-next-line:no-floating-promises
+                        application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, eventType, location, functionsValue);
+                    }, debounceTimeout);
                 }
                 return (propagation);
             });
@@ -216,6 +227,15 @@ class DrapoEventHandler {
         return (this.HasEventDoubleClickInParent(el));
     }
 
+    public GetEventDebounce(el: HTMLElement, eventType: string): number {
+        const elEventTypeDebounce: string = el.getAttribute('d-on-' + eventType + '-' + this._debounce);
+        if ((elEventTypeDebounce == null) || (elEventTypeDebounce == ''))
+            return (null);
+        if (elEventTypeDebounce === 'true')
+            return (this._debounceDefault);
+        return (this.Application.Parser.ParseNumber(elEventTypeDebounce, this._debounceDefault));
+    }
+
     private HasEventDoubleClickInParent(el: HTMLElement) : boolean
     {
         if (el == null)
@@ -257,7 +277,7 @@ class DrapoEventHandler {
         {
             const attribute: Attr = el.attributes[i];
             const event: [string, string, string, string, string] = this.Application.Parser.ParseEventProperty(attribute.nodeName, attribute.nodeValue);
-            if (event != null)
+            if ((event != null) && (event[4] !== this._debounce))
                 events.push(event);
         }
         return (events);

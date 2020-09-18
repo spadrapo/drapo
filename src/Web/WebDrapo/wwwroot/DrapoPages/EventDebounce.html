@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Event Debounce</title>
+</head>
+<body class="noSelect">
+    <span>Event Debounce</span>
+    <div d-dataKey="reset" d-dataType="value" d-dataValue="NewValue"></div>
+    <div d-dataKey="value" d-dataType="value" d-dataValue="NewValue"></div>
+    <span>1000ms</span>
+    <br />
+    <input type="text" d-model="{{value}}" d-model-event="blur,keyup" style="width:300px;" d-on-keyup-debounce="1000" />
+    <br />
+    <span>true</span>
+    <br />
+    <input type="text" d-model="{{value}}" d-model-event="blur,keyup" style="width:300px;" d-on-keyup-debounce="true" />
+    <br />
+    <br />
+    <input type="button" value="reset 5s" d-on-click="UpdateData(value,{{reset}})" d-on-click-debounce="5000" />
+    <br />
+    <br />
+    <span>Value</span>
+    <br />
+    <span d-model="{{value}}"></span>
+</body>
+</html>

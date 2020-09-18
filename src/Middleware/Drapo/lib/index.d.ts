@@ -658,6 +658,9 @@ declare class DrapoDrag {
 
 declare class DrapoEventHandler {
     private _application;
+    private readonly _debounceDefault;
+    private readonly _debounceDefaultClick;
+    private readonly _debounce;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     HasContentEventContext(content: string): boolean;
@@ -671,6 +674,7 @@ declare class DrapoEventHandler {
     private ExecuteEvent;
     private IsEventTypeValid;
     private IsEventDelay;
+    GetEventDebounce(el: HTMLElement, eventType: string): number;
     private HasEventDoubleClickInParent;
     private IsEventTypeKeyboard;
     IsValidEventFilter(e: Event, eventFilter: string): boolean;

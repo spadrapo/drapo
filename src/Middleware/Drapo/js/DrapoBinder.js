@@ -74,9 +74,22 @@ var DrapoBinder = (function () {
             var eventType = event_1[0];
             var eventFilter = event_1[1];
             var eventNamespace = this_1.Application.EventHandler.CreateEventNamespace(null, null, eventType, 'model');
+            var debounceTimeout = this_1.Application.EventHandler.GetEventDebounce(el, eventType);
+            var delayTimeout = null;
             $(el).unbind(eventNamespace);
             $(el).bind(eventNamespace, function (e) {
-                application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index);
+                if (debounceTimeout == null) {
+                    application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index);
+                }
+                else {
+                    if (delayTimeout != null)
+                        clearTimeout(delayTimeout);
+                    delayTimeout = setTimeout(function () {
+                        clearTimeout(delayTimeout);
+                        delayTimeout = null;
+                        application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index);
+                    }, debounceTimeout);
+                }
             });
         };
         var this_1 = this;
