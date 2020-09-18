@@ -37,6 +37,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var DrapoEventHandler = (function () {
     function DrapoEventHandler(application) {
+        this._debounceDefault = 500;
+        this._debounceDefaultClick = 200;
+        this._debounce = 'debounce';
         this._application = application;
     }
     Object.defineProperty(DrapoEventHandler.prototype, "Application", {
@@ -102,7 +105,7 @@ var DrapoEventHandler = (function () {
                     case 2:
                         isSectorDynamic = _a.sent();
                         _loop_1 = function (i) {
-                            var event_1, eventType, functionsValue, _a, eventFilter, location_1, isLocationBody, eventNamespace, binder, propagation, isDelay, delayTimeout, eventAttribute;
+                            var event_1, eventType, functionsValue, _a, eventFilter, location_1, isLocationBody, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout, eventAttribute;
                             return __generator(this, function (_b) {
                                 switch (_b.label) {
                                     case 0:
@@ -129,6 +132,12 @@ var DrapoEventHandler = (function () {
                                             return [2, "continue"];
                                         propagation = this_1.GetEventPropagation(el, eventType);
                                         isDelay = this_1.IsEventDelay(el, eventType);
+                                        debounceTimeout = this_1._debounceDefaultClick;
+                                        elDebounceTimeout = isDelay ? null : this_1.GetEventDebounce(el, eventType);
+                                        if (elDebounceTimeout !== null) {
+                                            isDelay = true;
+                                            debounceTimeout = elDebounceTimeout;
+                                        }
                                         delayTimeout = null;
                                         eventAttribute = event_1[0];
                                         binder.unbind(eventNamespace);
@@ -144,15 +153,13 @@ var DrapoEventHandler = (function () {
                                                 application.EventHandler.ExecuteEvent(sector, null, el, e, eventType, location_1, functionsValueCurrent, isSectorDynamic);
                                             }
                                             else {
-                                                if (delayTimeout == null) {
-                                                    delayTimeout = setTimeout(function () {
-                                                        clearTimeout(delayTimeout);
-                                                        application.EventHandler.ExecuteEvent(sector, null, el, e, eventType, location_1, functionsValueCurrent, isSectorDynamic);
-                                                    }, 200);
-                                                }
-                                                else {
+                                                if (delayTimeout != null)
                                                     clearTimeout(delayTimeout);
-                                                }
+                                                delayTimeout = setTimeout(function () {
+                                                    clearTimeout(delayTimeout);
+                                                    delayTimeout = null;
+                                                    application.EventHandler.ExecuteEvent(sector, null, el, e, eventType, location_1, functionsValueCurrent, isSectorDynamic);
+                                                }, debounceTimeout);
                                             }
                                             return (propagation);
                                         });
@@ -189,7 +196,7 @@ var DrapoEventHandler = (function () {
                         application = this.Application;
                         contextItem = context.Item;
                         _loop_2 = function (i) {
-                            var event_2, eventType, functionsValueOriginal, eventFilter, location_2, isLocationBody, functionsValue, eventNamespace, binder, propagation, isDelay, delayTimeout;
+                            var event_2, eventType, functionsValueOriginal, eventFilter, location_2, isLocationBody, functionsValue, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
@@ -212,6 +219,12 @@ var DrapoEventHandler = (function () {
                                             return [2, "continue"];
                                         propagation = this_2.GetEventPropagation(el, eventType);
                                         isDelay = this_2.IsEventDelay(el, eventType);
+                                        debounceTimeout = this_2._debounceDefaultClick;
+                                        elDebounceTimeout = isDelay ? null : this_2.GetEventDebounce(el, eventType);
+                                        if (elDebounceTimeout !== null) {
+                                            isDelay = true;
+                                            debounceTimeout = elDebounceTimeout;
+                                        }
                                         delayTimeout = null;
                                         binder.unbind(eventNamespace);
                                         binder.bind(eventNamespace, function (e) {
@@ -226,17 +239,13 @@ var DrapoEventHandler = (function () {
                                                 application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, eventType, location_2, functionsValue);
                                             }
                                             else {
-                                                if (delayTimeout == null) {
-                                                    delayTimeout = setTimeout(function () {
-                                                        clearTimeout(delayTimeout);
-                                                        delayTimeout = null;
-                                                        application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, eventType, location_2, functionsValue);
-                                                    }, 200);
-                                                }
-                                                else {
+                                                if (delayTimeout != null)
+                                                    clearTimeout(delayTimeout);
+                                                delayTimeout = setTimeout(function () {
                                                     clearTimeout(delayTimeout);
                                                     delayTimeout = null;
-                                                }
+                                                    application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, eventType, location_2, functionsValue);
+                                                }, debounceTimeout);
                                             }
                                             return (propagation);
                                         });
@@ -329,6 +338,14 @@ var DrapoEventHandler = (function () {
             return (false);
         return (this.HasEventDoubleClickInParent(el));
     };
+    DrapoEventHandler.prototype.GetEventDebounce = function (el, eventType) {
+        var elEventTypeDebounce = el.getAttribute('d-on-' + eventType + '-' + this._debounce);
+        if ((elEventTypeDebounce == null) || (elEventTypeDebounce == ''))
+            return (null);
+        if (elEventTypeDebounce === 'true')
+            return (this._debounceDefault);
+        return (this.Application.Parser.ParseNumber(elEventTypeDebounce, this._debounceDefault));
+    };
     DrapoEventHandler.prototype.HasEventDoubleClickInParent = function (el) {
         if (el == null)
             return (false);
@@ -363,7 +380,7 @@ var DrapoEventHandler = (function () {
         for (var i = 0; i < el.attributes.length; i++) {
             var attribute = el.attributes[i];
             var event_3 = this.Application.Parser.ParseEventProperty(attribute.nodeName, attribute.nodeValue);
-            if (event_3 != null)
+            if ((event_3 != null) && (event_3[4] !== this._debounce))
                 events.push(event_3);
         }
         return (events);

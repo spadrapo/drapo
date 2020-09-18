@@ -43,10 +43,23 @@ class DrapoBinder {
             const eventType: string = event[0];
             const eventFilter: string = event[1];
             const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, eventType, 'model');
+            const debounceTimeout: number = this.Application.EventHandler.GetEventDebounce(el, eventType);
+            let delayTimeout: number = null;
             $(el).unbind(eventNamespace);
             $(el).bind(eventNamespace, (e) => {
-                // tslint:disable-next-line:no-floating-promises
-                application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index);
+                if (debounceTimeout == null) {
+                    // tslint:disable-next-line:no-floating-promises
+                    application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index);
+                } else {
+                    if (delayTimeout != null)
+                        clearTimeout(delayTimeout);
+                    delayTimeout = setTimeout(() => {
+                        clearTimeout(delayTimeout);
+                        delayTimeout = null;
+                        // tslint:disable-next-line:no-floating-promises
+                        application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index);
+                    }, debounceTimeout);
+                }
             });
         }
         //Cancel
