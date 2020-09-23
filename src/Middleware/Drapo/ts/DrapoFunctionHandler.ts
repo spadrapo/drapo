@@ -502,7 +502,9 @@ class DrapoFunctionHandler {
         const dataPath: string[] = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
         const recursiveText: string = functionParsed.Parameters.length > 3 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3]) : null;
         const recursive: boolean = ((recursiveText == null) || (recursiveText == '')) ? false : await this.Application.Solver.ResolveConditional(recursiveText);
-        const item: any = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive);
+        const resolveText: string = functionParsed.Parameters.length > 4 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4]) : null;
+        const resolve: boolean = ((resolveText == null) || (resolveText == '')) ? true : await this.Application.Solver.ResolveConditional(resolveText);
+        const item: any = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive) : functionParsed.Parameters[1];
         const notifyText: string = functionParsed.Parameters[2];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, item, notify);
@@ -541,7 +543,9 @@ class DrapoFunctionHandler {
         const dataFields: string[] = await this.ResolveFunctionParameterDataFields(sector, contextItem, element, functionParsed.Parameters[1], executionContext);
         const recursiveText: string = functionParsed.Parameters.length > 4 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4]) : null;
         const recursive: boolean = ((recursiveText == null) || (recursiveText == '')) ? false : await this.Application.Solver.ResolveConditional(recursiveText);
-        const value: any = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2], true, true, recursive);
+        const resolveText: string = functionParsed.Parameters.length > 5 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[5]) : null;
+        const resolve: boolean = ((resolveText == null) || (resolveText == '')) ? true : await this.Application.Solver.ResolveConditional(resolveText);
+        const value: any = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2], true, true, recursive) : functionParsed.Parameters[2];
         const notifyText: string = functionParsed.Parameters.length > 3 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3]) : null;
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         await this.Application.Storage.SetDataKeyField(dataKey, sector, dataFields, value, notify);
@@ -805,7 +809,12 @@ class DrapoFunctionHandler {
 
     private async ExecuteFunctionUpdateData(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = functionParsed.Parameters[0];
-        const dataSource: any = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true);
+        const recursiveText: string = functionParsed.Parameters.length > 3 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3]) : null;
+        const recursive: boolean = ((recursiveText == null) || (recursiveText == '')) ? true : await this.Application.Solver.ResolveConditional(recursiveText);
+        const resolveText: string = functionParsed.Parameters.length > 4 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4]) : null;
+        const resolve: boolean = ((resolveText == null) || (resolveText == '')) ? true : await this.Application.Solver.ResolveConditional(resolveText);
+        const value: string = functionParsed.Parameters[1];
+        const dataSource: any = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, value, true, recursive) : value;
         const data: any = this.Application.Solver.Clone(dataSource, true);
         const notifyText: string = functionParsed.Parameters[2];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
