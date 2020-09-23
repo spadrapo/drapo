@@ -606,7 +606,7 @@ declare class DrapoDocument {
     private CleanSectorMetadataInternal;
     GetSectorsAllowed(sector: string): string[];
     IsSectorAllowed(sector: string, sectors: string[]): boolean;
-    AddSectorFriends(sector: string, sectorFriendsText: string): void;
+    AddSectorFriends(sector: string, sectorFriendsText: string): Promise<void>;
     private GetSectorFriends;
     CollectSector(sector: string): Promise<void>;
     IsFirstChild(elj: JQuery): boolean;
