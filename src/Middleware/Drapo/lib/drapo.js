@@ -9906,19 +9906,19 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionUpdateItemField = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataPath, recursiveText, _a, recursive, _b, item, notifyText, notify, _c;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var dataPath, recursiveText, _a, recursive, _b, resolveText, _c, resolve, _d, item, _e, notifyText, notify, _f;
+            return __generator(this, function (_g) {
+                switch (_g.label) {
                     case 0:
                         dataPath = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
                         if (!(functionParsed.Parameters.length > 3)) return [3, 2];
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3])];
                     case 1:
-                        _a = _d.sent();
+                        _a = _g.sent();
                         return [3, 3];
                     case 2:
                         _a = null;
-                        _d.label = 3;
+                        _g.label = 3;
                     case 3:
                         recursiveText = _a;
                         if (!((recursiveText == null) || (recursiveText == ''))) return [3, 4];
@@ -9926,26 +9926,52 @@ var DrapoFunctionHandler = (function () {
                         return [3, 6];
                     case 4: return [4, this.Application.Solver.ResolveConditional(recursiveText)];
                     case 5:
-                        _b = _d.sent();
-                        _d.label = 6;
+                        _b = _g.sent();
+                        _g.label = 6;
                     case 6:
                         recursive = _b;
-                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive)];
+                        if (!(functionParsed.Parameters.length > 4)) return [3, 8];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4])];
                     case 7:
-                        item = _d.sent();
-                        notifyText = functionParsed.Parameters[2];
-                        if (!((notifyText == null) || (notifyText == ''))) return [3, 8];
-                        _c = true;
-                        return [3, 10];
-                    case 8: return [4, this.Application.Solver.ResolveConditional(notifyText)];
+                        _c = _g.sent();
+                        return [3, 9];
+                    case 8:
+                        _c = null;
+                        _g.label = 9;
                     case 9:
-                        _c = _d.sent();
-                        _d.label = 10;
-                    case 10:
-                        notify = _c;
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, item, notify)];
+                        resolveText = _c;
+                        if (!((resolveText == null) || (resolveText == ''))) return [3, 10];
+                        _d = true;
+                        return [3, 12];
+                    case 10: return [4, this.Application.Solver.ResolveConditional(resolveText)];
                     case 11:
-                        _d.sent();
+                        _d = _g.sent();
+                        _g.label = 12;
+                    case 12:
+                        resolve = _d;
+                        if (!resolve) return [3, 14];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive)];
+                    case 13:
+                        _e = _g.sent();
+                        return [3, 15];
+                    case 14:
+                        _e = functionParsed.Parameters[1];
+                        _g.label = 15;
+                    case 15:
+                        item = _e;
+                        notifyText = functionParsed.Parameters[2];
+                        if (!((notifyText == null) || (notifyText == ''))) return [3, 16];
+                        _f = true;
+                        return [3, 18];
+                    case 16: return [4, this.Application.Solver.ResolveConditional(notifyText)];
+                    case 17:
+                        _f = _g.sent();
+                        _g.label = 18;
+                    case 18:
+                        notify = _f;
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, item, notify)];
+                    case 19:
+                        _g.sent();
                         return [2, ('')];
                 }
             });
@@ -10037,23 +10063,23 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionUpdateDataField = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, dataFields, recursiveText, _a, recursive, _b, value, notifyText, _c, notify, _d;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
+            var dataKey, dataFields, recursiveText, _a, recursive, _b, resolveText, _c, resolve, _d, value, _e, notifyText, _f, notify, _g;
+            return __generator(this, function (_h) {
+                switch (_h.label) {
                     case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
                     case 1:
-                        dataKey = _e.sent();
+                        dataKey = _h.sent();
                         return [4, this.ResolveFunctionParameterDataFields(sector, contextItem, element, functionParsed.Parameters[1], executionContext)];
                     case 2:
-                        dataFields = _e.sent();
+                        dataFields = _h.sent();
                         if (!(functionParsed.Parameters.length > 4)) return [3, 4];
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4])];
                     case 3:
-                        _a = _e.sent();
+                        _a = _h.sent();
                         return [3, 5];
                     case 4:
                         _a = null;
-                        _e.label = 5;
+                        _h.label = 5;
                     case 5:
                         recursiveText = _a;
                         if (!((recursiveText == null) || (recursiveText == ''))) return [3, 6];
@@ -10061,35 +10087,61 @@ var DrapoFunctionHandler = (function () {
                         return [3, 8];
                     case 6: return [4, this.Application.Solver.ResolveConditional(recursiveText)];
                     case 7:
-                        _b = _e.sent();
-                        _e.label = 8;
+                        _b = _h.sent();
+                        _h.label = 8;
                     case 8:
                         recursive = _b;
-                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2], true, true, recursive)];
+                        if (!(functionParsed.Parameters.length > 5)) return [3, 10];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[5])];
                     case 9:
-                        value = _e.sent();
-                        if (!(functionParsed.Parameters.length > 3)) return [3, 11];
-                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3])];
+                        _c = _h.sent();
+                        return [3, 11];
                     case 10:
-                        _c = _e.sent();
-                        return [3, 12];
-                    case 11:
                         _c = null;
-                        _e.label = 12;
-                    case 12:
-                        notifyText = _c;
-                        if (!((notifyText == null) || (notifyText == ''))) return [3, 13];
+                        _h.label = 11;
+                    case 11:
+                        resolveText = _c;
+                        if (!((resolveText == null) || (resolveText == ''))) return [3, 12];
                         _d = true;
-                        return [3, 15];
-                    case 13: return [4, this.Application.Solver.ResolveConditional(notifyText)];
+                        return [3, 14];
+                    case 12: return [4, this.Application.Solver.ResolveConditional(resolveText)];
+                    case 13:
+                        _d = _h.sent();
+                        _h.label = 14;
                     case 14:
-                        _d = _e.sent();
-                        _e.label = 15;
+                        resolve = _d;
+                        if (!resolve) return [3, 16];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2], true, true, recursive)];
                     case 15:
-                        notify = _d;
-                        return [4, this.Application.Storage.SetDataKeyField(dataKey, sector, dataFields, value, notify)];
+                        _e = _h.sent();
+                        return [3, 17];
                     case 16:
-                        _e.sent();
+                        _e = functionParsed.Parameters[2];
+                        _h.label = 17;
+                    case 17:
+                        value = _e;
+                        if (!(functionParsed.Parameters.length > 3)) return [3, 19];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3])];
+                    case 18:
+                        _f = _h.sent();
+                        return [3, 20];
+                    case 19:
+                        _f = null;
+                        _h.label = 20;
+                    case 20:
+                        notifyText = _f;
+                        if (!((notifyText == null) || (notifyText == ''))) return [3, 21];
+                        _g = true;
+                        return [3, 23];
+                    case 21: return [4, this.Application.Solver.ResolveConditional(notifyText)];
+                    case 22:
+                        _g = _h.sent();
+                        _h.label = 23;
+                    case 23:
+                        notify = _g;
+                        return [4, this.Application.Storage.SetDataKeyField(dataKey, sector, dataFields, value, notify)];
+                    case 24:
+                        _h.sent();
                         return [2, ('')];
                 }
             });
@@ -10704,28 +10756,74 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionUpdateData = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, dataSource, data, notifyText, notify, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var dataKey, recursiveText, _a, recursive, _b, resolveText, _c, resolve, _d, value, dataSource, _e, data, notifyText, notify, _f;
+            return __generator(this, function (_g) {
+                switch (_g.label) {
                     case 0:
                         dataKey = functionParsed.Parameters[0];
-                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true)];
+                        if (!(functionParsed.Parameters.length > 3)) return [3, 2];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3])];
                     case 1:
-                        dataSource = _b.sent();
+                        _a = _g.sent();
+                        return [3, 3];
+                    case 2:
+                        _a = null;
+                        _g.label = 3;
+                    case 3:
+                        recursiveText = _a;
+                        if (!((recursiveText == null) || (recursiveText == ''))) return [3, 4];
+                        _b = true;
+                        return [3, 6];
+                    case 4: return [4, this.Application.Solver.ResolveConditional(recursiveText)];
+                    case 5:
+                        _b = _g.sent();
+                        _g.label = 6;
+                    case 6:
+                        recursive = _b;
+                        if (!(functionParsed.Parameters.length > 4)) return [3, 8];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4])];
+                    case 7:
+                        _c = _g.sent();
+                        return [3, 9];
+                    case 8:
+                        _c = null;
+                        _g.label = 9;
+                    case 9:
+                        resolveText = _c;
+                        if (!((resolveText == null) || (resolveText == ''))) return [3, 10];
+                        _d = true;
+                        return [3, 12];
+                    case 10: return [4, this.Application.Solver.ResolveConditional(resolveText)];
+                    case 11:
+                        _d = _g.sent();
+                        _g.label = 12;
+                    case 12:
+                        resolve = _d;
+                        value = functionParsed.Parameters[1];
+                        if (!resolve) return [3, 14];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, value, true, recursive)];
+                    case 13:
+                        _e = _g.sent();
+                        return [3, 15];
+                    case 14:
+                        _e = value;
+                        _g.label = 15;
+                    case 15:
+                        dataSource = _e;
                         data = this.Application.Solver.Clone(dataSource, true);
                         notifyText = functionParsed.Parameters[2];
-                        if (!((notifyText == null) || (notifyText == ''))) return [3, 2];
-                        _a = true;
-                        return [3, 4];
-                    case 2: return [4, this.Application.Solver.ResolveConditional(notifyText)];
-                    case 3:
-                        _a = _b.sent();
-                        _b.label = 4;
-                    case 4:
-                        notify = _a;
+                        if (!((notifyText == null) || (notifyText == ''))) return [3, 16];
+                        _f = true;
+                        return [3, 18];
+                    case 16: return [4, this.Application.Solver.ResolveConditional(notifyText)];
+                    case 17:
+                        _f = _g.sent();
+                        _g.label = 18;
+                    case 18:
+                        notify = _f;
                         return [4, this.Application.Storage.UpdateData(dataKey, sector, data, notify)];
-                    case 5:
-                        _b.sent();
+                    case 19:
+                        _g.sent();
                         return [2, ('')];
                 }
             });

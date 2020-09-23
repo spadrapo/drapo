@@ -564,21 +564,22 @@ namespace WebDrapo.Test
         {
             ValidatePage("ControlFlowForUlNullable");
         }
-        [TestCase]
-        public void ControlFlowForViewportTest()
-        {
-            ValidatePage("ControlFlowForViewport");
-        }
-        [TestCase]
-        public void ControlFlowForViewportHeightBeforeTest()
-        {
-            ValidatePage("ControlFlowForViewportHeightBefore");
-        }
-        [TestCase]
-        public void ControlFlowForViewportNotifyTest()
-        {
-            ValidatePage("ControlFlowForViewportNotify");
-        }
+        //We need to enable this again in the future
+        //[TestCase]
+        //public void ControlFlowForViewportTest()
+        //{
+        //    ValidatePage("ControlFlowForViewport");
+        //}
+        //[TestCase]
+        //public void ControlFlowForViewportHeightBeforeTest()
+        //{
+        //    ValidatePage("ControlFlowForViewportHeightBefore");
+        //}
+        //[TestCase]
+        //public void ControlFlowForViewportNotifyTest()
+        //{
+        //    ValidatePage("ControlFlowForViewportNotify");
+        //}
         [TestCase]
         public void ControlFlowIfSelectTest()
         {
@@ -1069,6 +1070,21 @@ namespace WebDrapo.Test
         public void FunctionUpdateDataFieldRecursiveTest()
         {
             ValidatePage("FunctionUpdateDataFieldRecursive");
+        }
+        [TestCase]
+        public void FunctionUpdateDataFieldResolveTest()
+        {
+            ValidatePage("FunctionUpdateDataFieldResolve");
+        }
+        [TestCase]
+        public void FunctionUpdateDataResolveTest()
+        {
+            ValidatePage("FunctionUpdateDataResolve");
+        }
+        [TestCase]
+        public void FunctionUpdateItemFieldResolveTest()
+        {
+            ValidatePage("FunctionUpdateItemFieldResolve");
         }
         [TestCase]
         public void FunctionUpdateSectorTest()
