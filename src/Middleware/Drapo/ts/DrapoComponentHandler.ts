@@ -96,7 +96,7 @@ class DrapoComponentHandler {
             elNew.setAttribute('d-sector', elSector);
             await this.Application.Document.AddSectorHierarchy(elSector, sector);
             //Sector Friend
-            this.Application.Document.AddSectorFriends(sector, elNew.getAttribute('d-sector-friend'));
+            await this.Application.Document.AddSectorFriends(sector, elNew.getAttribute('d-sector-friend'));
         } else if (elSector == null) {
             isSectorContext = ((context != null) && (context.Sector != null));
             if (isSectorContext)
