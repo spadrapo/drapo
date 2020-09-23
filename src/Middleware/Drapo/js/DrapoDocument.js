@@ -183,31 +183,33 @@ var DrapoDocument = (function () {
                         }
                         if (this.Application.Log.ShowHTML)
                             this.Application.Log.WriteVerbose('Document - ResolveParentResponse - childHtml - {0}', childHtml);
-                        this.AddSectorFriends(parentSector, divChildSector.attr('d-sector-friend'));
+                        return [4, this.AddSectorFriends(parentSector, divChildSector.attr('d-sector-friend'))];
+                    case 1:
+                        _a.sent();
                         divChildSector.html(childHtml);
                         i = 0;
-                        _a.label = 1;
-                    case 1:
-                        if (!(i < sectors.length)) return [3, 5];
+                        _a.label = 2;
+                    case 2:
+                        if (!(i < sectors.length)) return [3, 6];
                         sector = sectors[i];
                         sectorName = sector[0];
                         url = sector[1];
                         container = sector[2];
                         return [4, this.AddSectorHierarchy(sectorName, parentSector)];
-                    case 2:
+                    case 3:
                         _a.sent();
                         this.StartUpdate(sectorName);
                         return [4, this.LoadChildSector(sectorName, url, null, true, false, container)];
-                    case 3:
-                        _a.sent();
-                        _a.label = 4;
                     case 4:
-                        i++;
-                        return [3, 1];
+                        _a.sent();
+                        _a.label = 5;
                     case 5:
+                        i++;
+                        return [3, 2];
+                    case 6:
                         this.Application.Log.WriteVerbose('Document - ResolveParentResponse - Finished');
                         return [4, this.ResolveInternal()];
-                    case 6:
+                    case 7:
                         _a.sent();
                         return [2];
                 }
@@ -370,70 +372,72 @@ var DrapoDocument = (function () {
                         return [4, this.AddSectorHierarchy(sector, sectorParent)];
                     case 8:
                         _a.sent();
-                        this.AddSectorFriends(sector, elSector.getAttribute('d-sector-friend'));
+                        return [4, this.AddSectorFriends(sector, elSector.getAttribute('d-sector-friend'))];
+                    case 9:
+                        _a.sent();
                         eljSector = $(elSector);
-                        if (!canLoadDefaultSectors) return [3, 13];
+                        if (!canLoadDefaultSectors) return [3, 14];
                         divChildSectorLoaded = eljSector.children();
                         divElement = divChildSectorLoaded.length > 0 ? divChildSectorLoaded.get(0) : null;
                         sectors = divElement != null ? this.ExtractSectors(divElement) : [];
                         i = 0;
-                        _a.label = 9;
-                    case 9:
-                        if (!(i < sectors.length)) return [3, 13];
+                        _a.label = 10;
+                    case 10:
+                        if (!(i < sectors.length)) return [3, 14];
                         sectorInfo = sectors[i];
                         sectorName = sectorInfo[0];
                         sectorUrl = sectorInfo[1];
                         sectorContainer = sectorInfo[2];
                         return [4, this.AddSectorHierarchy(sectorName, sector)];
-                    case 10:
+                    case 11:
                         _a.sent();
                         this.StartUpdate(sectorName);
                         return [4, this.LoadChildSector(sectorName, sectorUrl, null, true, false, sectorContainer)];
-                    case 11:
-                        _a.sent();
-                        _a.label = 12;
                     case 12:
-                        i++;
-                        return [3, 9];
+                        _a.sent();
+                        _a.label = 13;
                     case 13:
+                        i++;
+                        return [3, 10];
+                    case 14:
                         if (data == '')
                             return [2];
                         elSectorContent = container !== null ? elSector.children[elSector.children.length - 1] : elSector;
                         eljSectorContent = $(elSectorContent);
                         return [4, this.Application.Storage.ResolveData(false, elSectorContent)];
-                    case 14:
-                        _a.sent();
-                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(eljSectorContent)];
                     case 15:
                         _a.sent();
-                        return [4, this.Application.ComponentHandler.ResolveComponents(eljSectorContent)];
+                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(eljSectorContent)];
                     case 16:
                         _a.sent();
-                        return [4, this.Application.Storage.ResolveData(true, elSectorContent)];
+                        return [4, this.Application.ComponentHandler.ResolveComponents(eljSectorContent)];
                     case 17:
                         _a.sent();
-                        return [4, this.Application.Barber.ResolveMustaches(eljSectorContent)];
+                        return [4, this.Application.Storage.ResolveData(true, elSectorContent)];
                     case 18:
                         _a.sent();
-                        return [4, this.ResolveChildren(eljSectorContent)];
+                        return [4, this.Application.Barber.ResolveMustaches(eljSectorContent)];
                     case 19:
                         _a.sent();
-                        return [4, this.Application.Storage.LoadDataDelayedAndNotify()];
+                        return [4, this.ResolveChildren(eljSectorContent)];
                     case 20:
                         _a.sent();
-                        onload = elSector.getAttribute("d-on-load");
-                        if (!(onload != null)) return [3, 22];
-                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(sector, elSector, onload)];
+                        return [4, this.Application.Storage.LoadDataDelayedAndNotify()];
                     case 21:
                         _a.sent();
-                        _a.label = 22;
-                    case 22: return [4, this.TryOnAuthorizationRequest()];
-                    case 23:
+                        onload = elSector.getAttribute("d-on-load");
+                        if (!(onload != null)) return [3, 23];
+                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(sector, elSector, onload)];
+                    case 22:
+                        _a.sent();
+                        _a.label = 23;
+                    case 23: return [4, this.TryOnAuthorizationRequest()];
+                    case 24:
                         _a.sent();
                         if (container !== null)
                             this.InitializeSectorElementDetach(elSectorContent);
                         return [4, this.Application.ComponentHandler.UnloadComponentInstancesDetached(sector)];
-                    case 24:
+                    case 25:
                         _a.sent();
                         return [2];
                 }
@@ -523,10 +527,12 @@ var DrapoDocument = (function () {
                         return [4, this.AddSectorHierarchy(sector, sectorParent)];
                     case 1:
                         _a.sent();
-                        this.AddSectorFriends(sector, el.getAttribute('d-sector-friend'));
+                        return [4, this.AddSectorFriends(sector, el.getAttribute('d-sector-friend'))];
+                    case 2:
+                        _a.sent();
                         this.MarkSectorAsLoaded(sector);
                         return [4, this.Application.Storage.ResolveData(true, el)];
-                    case 2:
+                    case 3:
                         _a.sent();
                         return [2];
                 }
@@ -1571,18 +1577,42 @@ var DrapoDocument = (function () {
         return (false);
     };
     DrapoDocument.prototype.AddSectorFriends = function (sector, sectorFriendsText) {
-        if (sectorFriendsText == null)
-            return;
-        var friends = this.Application.Parser.ParseTags(sectorFriendsText);
-        for (var i = 0; i < this._sectorFriends.length; i++) {
-            var sectorFriendsCurrent = this._sectorFriends[i];
-            if (sectorFriendsCurrent[0] !== sector)
-                continue;
-            sectorFriendsCurrent[1] = friends;
-            return;
-        }
-        var sectorFriends = [sector, friends];
-        this._sectorFriends.push(sectorFriends);
+        return __awaiter(this, void 0, void 0, function () {
+            var friends, i, sectorFriend, i, sectorFriendsCurrent, sectorFriends;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (sectorFriendsText == null)
+                            return [2];
+                        friends = this.Application.Parser.ParseTags(sectorFriendsText);
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < friends.length)) return [3, 4];
+                        if (!this.Application.Parser.IsMustache(friends[i])) return [3, 3];
+                        return [4, this.Application.Storage.RetrieveDataValue(sector, friends[i])];
+                    case 2:
+                        sectorFriend = _a.sent();
+                        friends.splice(i, 1);
+                        friends.push(sectorFriend);
+                        _a.label = 3;
+                    case 3:
+                        i++;
+                        return [3, 1];
+                    case 4:
+                        for (i = 0; i < this._sectorFriends.length; i++) {
+                            sectorFriendsCurrent = this._sectorFriends[i];
+                            if (sectorFriendsCurrent[0] !== sector)
+                                continue;
+                            sectorFriendsCurrent[1] = friends;
+                            return [2];
+                        }
+                        sectorFriends = [sector, friends];
+                        this._sectorFriends.push(sectorFriends);
+                        return [2];
+                }
+            });
+        });
     };
     DrapoDocument.prototype.GetSectorFriends = function (sector) {
         for (var i = 0; i < this._sectorFriends.length; i++) {

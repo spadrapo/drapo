@@ -172,42 +172,44 @@ var DrapoComponentHandler = (function () {
                             $(elContent).html(content);
                         isSectorContext = false;
                         elSector = elNew.getAttribute('d-sector');
-                        if (!(elSector === "@")) return [3, 10];
+                        if (!(elSector === "@")) return [3, 11];
                         elSector = this.CreateGuidContext(elNew, context);
                         elNew.setAttribute('d-sector', elSector);
                         return [4, this.Application.Document.AddSectorHierarchy(elSector, sector)];
                     case 9:
                         _a.sent();
-                        this.Application.Document.AddSectorFriends(sector, elNew.getAttribute('d-sector-friend'));
-                        return [3, 11];
+                        return [4, this.Application.Document.AddSectorFriends(sector, elNew.getAttribute('d-sector-friend'))];
                     case 10:
+                        _a.sent();
+                        return [3, 12];
+                    case 11:
                         if (elSector == null) {
                             isSectorContext = ((context != null) && (context.Sector != null));
                             if (isSectorContext)
                                 elNew.setAttribute('d-sector', context.Sector);
                         }
-                        _a.label = 11;
-                    case 11:
-                        _a.trys.push([11, 13, , 15]);
-                        return [4, this.Application.Register.CreateInstanceComponent(tagName, elNew)];
+                        _a.label = 12;
                     case 12:
+                        _a.trys.push([12, 14, , 16]);
+                        return [4, this.Application.Register.CreateInstanceComponent(tagName, elNew)];
+                    case 13:
                         instance = _a.sent();
                         if (instance != null)
                             this.SubscribeComponentInstance(sector, tagName, elNew, instance);
-                        return [3, 15];
-                    case 13:
+                        return [3, 16];
+                    case 14:
                         e_1 = _a.sent();
                         return [4, this.Application.ExceptionHandler.HandleError('There is an error in component: {0} contructor. {1}', tagName, e_1.toString())];
-                    case 14:
+                    case 15:
                         _a.sent();
-                        return [3, 15];
-                    case 15: return [4, this.Application.Document.ResolveComponentUpdate(elNew, context)];
-                    case 16:
+                        return [3, 16];
+                    case 16: return [4, this.Application.Document.ResolveComponentUpdate(elNew, context)];
+                    case 17:
                         _a.sent();
                         if (isSectorContext)
                             elNew.removeAttribute('d-sector');
                         return [4, this.Application.Debugger.NotifyComponents()];
-                    case 17:
+                    case 18:
                         _a.sent();
                         return [2];
                 }

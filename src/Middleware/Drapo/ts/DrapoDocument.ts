@@ -107,7 +107,7 @@ class DrapoDocument {
         }
         if (this.Application.Log.ShowHTML)
             this.Application.Log.WriteVerbose('Document - ResolveParentResponse - childHtml - {0}', childHtml);
-        this.AddSectorFriends(parentSector, divChildSector.attr('d-sector-friend'));
+        await this.AddSectorFriends(parentSector, divChildSector.attr('d-sector-friend'));
         divChildSector.html(childHtml);
         //Sectors
         for (let i: number = 0; i < sectors.length; i++) {
@@ -229,7 +229,7 @@ class DrapoDocument {
         await this.Application.Debugger.AddSectorUpdate(sector, sectorParent, url);
         await this.AddSectorHierarchy(sector, sectorParent);
         //Sector Friend
-        this.AddSectorFriends(sector, elSector.getAttribute('d-sector-friend'));
+        await this.AddSectorFriends(sector, elSector.getAttribute('d-sector-friend'));
         const eljSector: JQuery = $(elSector);
         //Load Default Sectors
         if (canLoadDefaultSectors) {
@@ -338,7 +338,7 @@ class DrapoDocument {
             el.setAttribute('d-sector', sector);
         await this.AddSectorHierarchy(sector, sectorParent);
         //Sector Friend
-        this.AddSectorFriends(sector, el.getAttribute('d-sector-friend'));
+        await this.AddSectorFriends(sector, el.getAttribute('d-sector-friend'));
         this.MarkSectorAsLoaded(sector);
         //Storage
         await this.Application.Storage.ResolveData(true, el);
@@ -1347,10 +1347,18 @@ class DrapoDocument {
         return (false);
     }
 
-    public AddSectorFriends(sector: string, sectorFriendsText: string): void {
+    public async AddSectorFriends(sector: string, sectorFriendsText: string): Promise<void> {
         if (sectorFriendsText == null)
             return;
         const friends: string[] = this.Application.Parser.ParseTags(sectorFriendsText);
+        //Mustache
+        for (let i: number = 0; i < friends.length; i++) {
+            if (this.Application.Parser.IsMustache(friends[i])) {
+                const sectorFriend: any = await this.Application.Storage.RetrieveDataValue(sector, friends[i]);
+                friends.splice(i, 1);
+                friends.push(sectorFriend);
+            }
+        }
         //Update
         for (let i: number = 0; i < this._sectorFriends.length; i++) {
             const sectorFriendsCurrent: [string, string[]] = this._sectorFriends[i];
