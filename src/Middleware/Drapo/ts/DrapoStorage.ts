@@ -296,6 +296,12 @@ class DrapoStorage {
         const storageItem: DrapoStorageItem = this.GetCacheDataItem(cacheIndex);
         if (!storageItem.IsDelay)
             return (true);
+        const hasData: boolean = this.Application.Solver.ContainsItemStoragePathObject(storageItem, dataPath);
+        if (hasData)
+            return (true);
+        const isLoaded: boolean = this.Application.CacheHandler.EnsureLoaded(storageItem, sector, dataKey, dataPath);
+        if (!isLoaded)
+            return (false);
         return (this.Application.Solver.ContainsItemStoragePathObject(storageItem, dataPath));
     }
 
@@ -534,6 +540,7 @@ class DrapoStorage {
         const groups: string[] = ((groupsAttribute == null) || (groupsAttribute == '')) ? null : this.Application.Parser.ParsePipes(groupsAttribute);
         const pipes: string[] = this.Application.Parser.ParsePipes(el.getAttribute('d-dataPipes'));
         const canCache: boolean = this.Application.Parser.ParseBoolean(el.getAttribute('d-dataCache'), true);
+        const cacheKeys: string[] = this.Application.Parser.ParsePipes(el.getAttribute('d-dataCacheKeys'));
         const onLoad: string = type === 'function' ? value : null;
         const onAfterContainerLoad: string = el.getAttribute('d-dataOnAfterContainerLoad');
         const onBeforeContainerUnload: string = el.getAttribute('d-dataOnBeforeContainerUnLoad');
@@ -541,7 +548,7 @@ class DrapoStorage {
         const headersGet: [string, string][] = this.ExtractDataHeaderGet(el);
         const headersSet: [string, string][] = this.ExtractDataHeaderSet(el);
         const headersResponse: [string, string][] = ((isCookieChange) || (type === 'file')) ? [] : null;
-        const data: any[] = await this.RetrieveDataKey(dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, headersGet, headersResponse);
+        const data: any[] = await this.RetrieveDataKey(dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, cacheKeys, headersGet, headersResponse);
         if (data == null) {
             return (null);
         }
@@ -553,14 +560,14 @@ class DrapoStorage {
         }
         const increment: number = this.Application.Parser.GetStringAsNumber(dataIncrement);
         const isFull: boolean = ((isLazy) && (data.length < increment)) ? true : false;
-        const item: DrapoStorageItem = new DrapoStorageItem(type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, canCache, onLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, headersGet, headersSet);
+        const item: DrapoStorageItem = new DrapoStorageItem(type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, canCache, cacheKeys, onLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, headersGet, headersSet);
         return (item);
     }
 
-    private async RetrieveDataKey(dataKey: string, sector: string, el: HTMLElement, dataUrlGet: string, dataUrlParameters: string, dataPostGet: string, dataStart: string, dataIncrement: string, isDelay: boolean, dataDelayFields: string[], cookieName: string, type: string, isToken: boolean, headersGet: [string, string][], headersResponse: [string, string][]): Promise<any[]> {
+    private async RetrieveDataKey(dataKey: string, sector: string, el: HTMLElement, dataUrlGet: string, dataUrlParameters: string, dataPostGet: string, dataStart: string, dataIncrement: string, isDelay: boolean, dataDelayFields: string[], cookieName: string, type: string, isToken: boolean, cacheKeys: string[], headersGet: [string, string][], headersResponse: [string, string][]): Promise<any[]> {
         //Url
         if (dataUrlGet != null)
-            return (await this.RetrieveDataKeyUrl(dataKey, sector, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, type, isToken, isDelay, dataDelayFields, headersGet, headersResponse));
+            return (await this.RetrieveDataKeyUrl(dataKey, sector, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, type, isToken, cacheKeys, isDelay, dataDelayFields, headersGet, headersResponse));
         //Cookie
         if (cookieName != null)
             return (this.RetrieveDataKeyCookie(cookieName));
@@ -574,11 +581,17 @@ class DrapoStorage {
         return (null);
     }
 
-    private async RetrieveDataKeyUrl(dataKey: string, sector: string, dataUrlGet: string, dataUrlParameters: string, dataPostGet: string, dataStart: string, dataIncrement: string, type: string, isToken: boolean, isDelay: boolean = false, dataDelayFields: string[] = null, headersGet: [string, string][] = null, headersResponse: [string, string][] = null): Promise<any[]> {
+    private async RetrieveDataKeyUrl(dataKey: string, sector: string, dataUrlGet: string, dataUrlParameters: string, dataPostGet: string, dataStart: string, dataIncrement: string, type: string, isToken: boolean, cacheKeys: string[] = null, isDelay: boolean = false, dataDelayFields: string[] = null, headersGet: [string, string][] = null, headersResponse: [string, string][] = null): Promise<any[]> {
         let url: string = dataUrlGet;
         if ((false) && (isToken) && (!this.Application.Server.HasToken())) {
             await this.Application.Document.RequestAuthorization(dataKey, 'notify');
             return ([]);
+        }
+        //Cache LocalStorage
+        if (!isDelay) {
+            const cachedData: any[] = this.Application.CacheHandler.GetCachedData(cacheKeys, sector, dataKey);
+            if (cachedData != null)
+                return (cachedData);
         }
         //Internal Parameters
         if (dataStart != null)
@@ -621,6 +634,8 @@ class DrapoStorage {
             dataResponse = await this.Application.Server.GetFile(url, dataKey, headers, headersResponse);
         else
             dataResponse = await this.Application.Server.GetJSON(url, verb, data, contentType, dataKey, headers, headersResponse);
+        //Cache
+        this.Application.CacheHandler.AppendCacheData(cacheKeys, sector, dataKey, dataResponse, isDelay);
         return (dataResponse);
     }
 
@@ -996,7 +1011,7 @@ class DrapoStorage {
                 return (null);
             current = current[dataKeyCurrent];
         }
-        return (new DrapoStorageItem('array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, false, null, null, null, null, null, null));
+        return (new DrapoStorageItem('array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, false, null, null, null, null, null, null, null));
     }
 
     public async AddDataItem(dataKey: string, sector: string, item: any, notify: boolean = true): Promise<boolean> {
@@ -1534,7 +1549,7 @@ class DrapoStorage {
     }
 
     private CreateDataItemInternal(dataKey: string, data: any, canCache: boolean = true): DrapoStorageItem {
-        const item: DrapoStorageItem = new DrapoStorageItem(data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, canCache, null, null, null, null, null, null);
+        const item: DrapoStorageItem = new DrapoStorageItem(data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, canCache, null, null, null, null, null, null, null);
         return (item);
     }
 

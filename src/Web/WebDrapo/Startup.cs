@@ -93,6 +93,7 @@ namespace WebDrapo
             options.Config.UsePipes = true;
             options.Config.UseRouter = false;
             options.Config.UseCacheStatic = true;
+            options.Config.UseCacheLocalStorage = true;
             options.Config.ApplicationBuild = "1.0";
             options.Config.CreateTheme("Default", "");
             options.Config.CreateTheme("Dark", "dark");

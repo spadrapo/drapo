@@ -99,6 +99,10 @@ class DrapoConfig {
         return (await this.GetPropertyBoolean('UseRouter'));
     }
 
+    public async GetUseCacheLocalStorage(): Promise<boolean> {
+        return (await this.GetPropertyBoolean('UseCacheLocalStorage'));
+    }
+
     public async GetUseCacheStatic(): Promise<boolean> {
         return (await this.GetPropertyBoolean('UseCacheStatic'));
     }
