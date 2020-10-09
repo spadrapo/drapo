@@ -2198,7 +2198,7 @@ var DrapoStorage = (function () {
                         canCache = this.Application.Parser.ParseBoolean(el.getAttribute('d-dataCache'), true);
                         if ((!executeNoCache) && (!canCache))
                             return [2];
-                        return [4, this.RetrieveDataItem(dataKey, sector)];
+                        return [4, this.RetrieveDataItem(dataKey, sector, true, null)];
                     case 1:
                         _a.sent();
                         return [2];

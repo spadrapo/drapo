@@ -4,6 +4,8 @@ declare class DrapoCacheHandler {
     private _useLocalStorage;
     private _applicationBuild;
     private readonly TYPE_DATA;
+    private readonly TYPE_COMPONENT;
+    private readonly TYPE_VIEW;
     private get Application();
     private get CanUseLocalStorage();
     constructor(application: DrapoApplication);

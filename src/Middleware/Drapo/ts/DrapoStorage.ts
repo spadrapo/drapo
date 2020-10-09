@@ -1468,7 +1468,7 @@ class DrapoStorage {
         const canCache: boolean = this.Application.Parser.ParseBoolean(el.getAttribute('d-dataCache'), true);
         if ((!executeNoCache) && (!canCache))
             return;
-        await this.RetrieveDataItem(dataKey, sector);
+        await this.RetrieveDataItem(dataKey, sector, true, null);
     }
 
     public CreateErrorForStorage(type: string = null, message: string = null, content: string = null): any {

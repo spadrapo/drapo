@@ -7,7 +7,7 @@
 <body>
     <div>
         <span>Data Group</span>
-        <div d-dataKey="culture" d-dataDelay="true" d-dataCacheKeys="culture,datapath" d-dataUrlGet="/Data/GetCulture"></div>
+        <div d-dataKey="culture" d-dataLoadType="startup" d-dataDelay="true" d-dataCacheKeys="culture,datapath" d-dataUrlGet="/Data/GetCulture"></div>
         <ul>
             <li d-model="{{culture.User}}"></li>
             <li d-model="{{culture.Name}}"></li>

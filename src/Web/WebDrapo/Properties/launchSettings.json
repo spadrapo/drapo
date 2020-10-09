@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/DataLocalStorageCacheString.html",
+      "launchUrl": "DrapoPages/DataLocalStorageCacheDelay.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

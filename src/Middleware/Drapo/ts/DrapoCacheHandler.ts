@@ -3,7 +3,9 @@
     private _hasLocalStorage: boolean = null;
     private _useLocalStorage: boolean = false;
     private _applicationBuild: string = null;
-    private readonly TYPE_DATA: string = "data";
+    private readonly TYPE_DATA: string = "d";
+    private readonly TYPE_COMPONENT: string = "c";
+    private readonly TYPE_VIEW: string = "v";
 
     //Properties
     private get Application(): DrapoApplication {
@@ -35,7 +37,7 @@
         const valueCached: any = this.GetClientDataCache(cacheKey);
         if (valueCached == null)
             return (false);
-        const appended: boolean = this.AppendStorageDataCache(storageItem, valueCached);
+        const appended: boolean = this.AppendStorageDataCache(storageItem, dataPath, valueCached);
         return (appended);
     }
 
@@ -112,10 +114,11 @@
         return (null);
     }
 
-    private AppendStorageDataCache(storageItem: DrapoStorageItem, valueCached: any[]): boolean {
+    private AppendStorageDataCache(storageItem: DrapoStorageItem, dataPath: string[], valueCached: any): boolean {
         if (storageItem.IsDelay) {
-            for (const dataField in valueCached)
-                storageItem.Data[dataField] = valueCached[dataField];
+            const data: any = storageItem.Data;
+            const dataField: string = dataPath[1];
+            data[dataField] = valueCached;
         } else {
             storageItem.Data = valueCached;
         }
@@ -123,14 +126,24 @@
     }
 
     private GetClientDataCache(cacheKey: string): any {
-        const value: any = window.localStorage.getItem(cacheKey);
-        if (value == null)
-            return (null);
-        return(this.Application.Serializer.Deserialize(value));
+        try {
+            const value: any = window.localStorage.getItem(cacheKey);
+            if (value == null)
+                return (null);
+            return (this.Application.Serializer.Deserialize(value));
+        } catch (e) {
+            this._useLocalStorage = false;
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - GetClientDataCache');
+        }
     }
 
     private SetClientDataCache(cacheKey: string, value: any): void {
-        const valueSerialized: string = this.Application.Serializer.SerializeObject(value);
-        window.localStorage.setItem(cacheKey, valueSerialized);
+        try {
+            const valueSerialized: string = this.Application.Serializer.SerializeObject(value);
+            window.localStorage.setItem(cacheKey, valueSerialized);
+        } catch (e) {
+            this._useLocalStorage = false;
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - SetClientDataCache');
+        }
     }
 }
