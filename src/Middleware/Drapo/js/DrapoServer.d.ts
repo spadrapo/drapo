@@ -13,6 +13,7 @@ declare class DrapoServer {
     ResolveUrl(url: string): string;
     AppendUrlQueryStringCacheStatic(url: string): Promise<string>;
     private AppendUrlQueryStringTimestamp;
+    GetViewHTML(url: string): Promise<string>;
     GetHTML(url: string): Promise<string>;
     GetJSON(url: string, verb?: string, data?: string, contentType?: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
     GetFile(url: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;

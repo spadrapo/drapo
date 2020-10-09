@@ -33,7 +33,7 @@ class DrapoWindowHandler {
         if ((!allowMultipleInstanceUrl) && (this.IsWindowLoaded(uri, did)))
             return;
         //Content
-        const windowContent: string = await this.Application.Server.GetHTML(uri);
+        const windowContent: string = await this.Application.Server.GetViewHTML(uri);
         if (windowContent === null)
             return;
         //Parameters
@@ -61,7 +61,7 @@ class DrapoWindowHandler {
         //Init d-on-Load
         let onLoad: string = null;
         //Template Url Content
-        const templateUrlContent = templateUrl === null ? null : await this.Application.Server.GetHTML(templateUrl);
+        const templateUrlContent = templateUrl === null ? null : await this.Application.Server.GetViewHTML(templateUrl);
         const templateContent = templateUrlContent === null ? null : this.Application.Parser.ParseDocumentContent(templateUrlContent);
         if (templateContent !== null) {
             //Append Template

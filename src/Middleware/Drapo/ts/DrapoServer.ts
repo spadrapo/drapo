@@ -62,6 +62,15 @@ class DrapoServer {
         return (url + (url.indexOf('?') >= 0 ? '&' : '?') + 'ts=' + timestamp);
     }
 
+    public async GetViewHTML(url: string): Promise<string> {
+        const htmlCached: string = this.Application.CacheHandler.GetCachedView(url);
+        if (htmlCached != null)
+            return (htmlCached);
+        const html: string = await this.Application.Server.GetHTML(url);
+        this.Application.CacheHandler.SetCachedView(url, html);
+        return (html);
+    }
+
     public async GetHTML(url: string): Promise<string> {
         const requestHeaders: [string, string][] = [];
         this.InsertHeader(requestHeaders, 'X-Requested-With', 'XMLHttpRequest');

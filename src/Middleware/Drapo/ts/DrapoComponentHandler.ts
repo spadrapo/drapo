@@ -203,7 +203,7 @@ class DrapoComponentHandler {
     }
 
     private async ResolveContentElement(el: HTMLElement, context: DrapoContext, contentUrl: string, checkSectorReady: boolean, handleDynamicSectors: boolean): Promise<void> {
-        const html: string = await this.Application.Server.GetHTML(contentUrl);
+        const html: string = await this.Application.Server.GetViewHTML(contentUrl);
         if (html == null) {
             await this.Application.ExceptionHandler.HandleError('There is an error getting html for the contenturl: {0}', contentUrl);
             return;

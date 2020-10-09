@@ -185,8 +185,14 @@ declare class DrapoCacheHandler {
     private _hasLocalStorage;
     private _useLocalStorage;
     private _applicationBuild;
+    private _cacheKeysView;
+    private _cacheKeysComponentView;
+    private _cacheKeysComponentStyle;
+    private _cacheKeysComponentScript;
     private readonly TYPE_DATA;
-    private readonly TYPE_COMPONENT;
+    private readonly TYPE_COMPONENTVIEW;
+    private readonly TYPE_COMPONENTSTYLE;
+    private readonly TYPE_COMPONENTSCRIPT;
     private readonly TYPE_VIEW;
     private get Application();
     private get CanUseLocalStorage();
@@ -195,6 +201,11 @@ declare class DrapoCacheHandler {
     EnsureLoaded(storageItem: DrapoStorageItem, sector: string, dataKey: string, dataPath?: string[]): boolean;
     GetCachedData(cacheKeys: string[], sector: string, dataKey: string): any[];
     AppendCacheData(cacheKeys: string[], sector: string, dataKey: string, value: any, isDelay?: boolean): boolean;
+    GetCachedView(url: string): string;
+    SetCachedView(url: string, value: string): boolean;
+    GetCachedComponentView(url: string): string;
+    SetCachedComponentView(url: string, value: string): boolean;
+    private GetConfigurationKeys;
     private AppendCacheDataEntry;
     private CreateCacheKey;
     private GetKey;
@@ -267,7 +278,7 @@ declare class DrapoConfig {
     private GetCacheKeyIndex;
     private GetCacheData;
     private AddCacheData;
-    private GetProperty;
+    GetProperty(name: string): Promise<string>;
     private GetPropertyBoolean;
     private GetPropertyArray;
     GetUsePipes(): Promise<boolean>;
@@ -461,6 +472,8 @@ declare class DrapoCookieHandler {
     private HandleCookieValueChange;
     private GetCookieValuesNamedChanged;
     private HasCookieValueChanged;
+    GetTheme(): string;
+    GetView(): string;
 }
 
 declare class DrapoDebugger {
@@ -1517,6 +1530,7 @@ declare class DrapoServer {
     ResolveUrl(url: string): string;
     AppendUrlQueryStringCacheStatic(url: string): Promise<string>;
     private AppendUrlQueryStringTimestamp;
+    GetViewHTML(url: string): Promise<string>;
     GetHTML(url: string): Promise<string>;
     GetJSON(url: string, verb?: string, data?: string, contentType?: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
     GetFile(url: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;

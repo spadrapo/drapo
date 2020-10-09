@@ -136,4 +136,18 @@ class DrapoCookieHandler {
         }
         return (true);
     }
+
+    public GetTheme(): string {
+        const cookieData: any = this.Application.CookieHandler.RetrieveData();
+        if (cookieData == null)
+            return ('');
+        return (cookieData.theme);
+    }
+
+    public GetView(): string {
+        const cookieData: any = this.Application.CookieHandler.RetrieveData();
+        if (cookieData == null)
+            return ('');
+        return (cookieData.view);
+    }
 }

@@ -14,4 +14,6 @@ declare class DrapoCookieHandler {
     private HandleCookieValueChange;
     private GetCookieValuesNamedChanged;
     private HasCookieValueChanged;
+    GetTheme(): string;
+    GetView(): string;
 }

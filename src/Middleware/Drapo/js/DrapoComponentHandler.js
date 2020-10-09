@@ -296,7 +296,7 @@ var DrapoComponentHandler = (function () {
             var html, content, eljNew;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.Application.Server.GetHTML(contentUrl)];
+                    case 0: return [4, this.Application.Server.GetViewHTML(contentUrl)];
                     case 1:
                         html = _a.sent();
                         if (!(html == null)) return [3, 3];
