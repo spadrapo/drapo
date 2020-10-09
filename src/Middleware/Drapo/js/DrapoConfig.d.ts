@@ -19,6 +19,7 @@ declare class DrapoConfig {
     private GetPropertyArray;
     GetUsePipes(): Promise<boolean>;
     GetUseRouter(): Promise<boolean>;
+    GetUseCacheLocalStorage(): Promise<boolean>;
     GetUseCacheStatic(): Promise<boolean>;
     GetPipeHubName(): Promise<string>;
     GetPipeActionRegister(): Promise<string>;
