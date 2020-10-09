@@ -271,14 +271,20 @@ var DrapoRegister = (function () {
     };
     DrapoRegister.prototype.GetRegisteredComponentFileContentInternal = function (component, file) {
         return __awaiter(this, void 0, void 0, function () {
-            var url;
+            var url, htmlCached, html;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.GetComponentFileUrl(component, file)];
                     case 1:
                         url = _a.sent();
+                        htmlCached = this.Application.CacheHandler.GetCachedComponentView(url);
+                        if (htmlCached != null)
+                            return [2, (htmlCached)];
                         return [4, this.Application.Server.GetHTML(url)];
-                    case 2: return [2, (_a.sent())];
+                    case 2:
+                        html = _a.sent();
+                        this.Application.CacheHandler.SetCachedComponentView(url, html);
+                        return [2, (html)];
                 }
             });
         });

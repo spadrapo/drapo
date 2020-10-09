@@ -105,6 +105,24 @@ var DrapoServer = (function () {
         var timestamp = new Date().getTime();
         return (url + (url.indexOf('?') >= 0 ? '&' : '?') + 'ts=' + timestamp);
     };
+    DrapoServer.prototype.GetViewHTML = function (url) {
+        return __awaiter(this, void 0, void 0, function () {
+            var htmlCached, html;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        htmlCached = this.Application.CacheHandler.GetCachedView(url);
+                        if (htmlCached != null)
+                            return [2, (htmlCached)];
+                        return [4, this.Application.Server.GetHTML(url)];
+                    case 1:
+                        html = _a.sent();
+                        this.Application.CacheHandler.SetCachedView(url, html);
+                        return [2, (html)];
+                }
+            });
+        });
+    };
     DrapoServer.prototype.GetHTML = function (url) {
         return __awaiter(this, void 0, void 0, function () {
             var requestHeaders, urlResolved, _a, request, response, responseText, responseStatus;

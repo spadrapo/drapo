@@ -82,7 +82,7 @@ var DrapoWindowHandler = (function () {
                         allowMultipleInstanceUrl = (!(elWindowsDid.getAttribute('d-window-allowMultipleInstanceUrl') === 'false'));
                         if ((!allowMultipleInstanceUrl) && (this.IsWindowLoaded(uri, did)))
                             return [2];
-                        return [4, this.Application.Server.GetHTML(uri)];
+                        return [4, this.Application.Server.GetViewHTML(uri)];
                     case 1:
                         windowContent = _b.sent();
                         if (windowContent === null)
@@ -108,7 +108,7 @@ var DrapoWindowHandler = (function () {
                         if (!(templateUrl === null)) return [3, 2];
                         _a = null;
                         return [3, 4];
-                    case 2: return [4, this.Application.Server.GetHTML(templateUrl)];
+                    case 2: return [4, this.Application.Server.GetViewHTML(templateUrl)];
                     case 3:
                         _a = _b.sent();
                         _b.label = 4;

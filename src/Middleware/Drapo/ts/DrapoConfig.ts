@@ -70,7 +70,7 @@ class DrapoConfig {
         this._cacheDatas.push(data);
     }
 
-    private async GetProperty(name: string): Promise<string> {
+    public async GetProperty(name: string): Promise<string> {
         const config: any = await this.GetSector(name);
         if ((config === undefined) || (config === null))
             return (null);
