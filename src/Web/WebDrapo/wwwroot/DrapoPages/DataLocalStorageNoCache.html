@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Cache - No Cache</title>
+</head>
+<body>
+    <div>
+        <span>Data Cache - No Cache</span>
+        <div d-dataKey="number" d-dataType="value" d-dataValue="1"></div>
+        <div d-dataKey="update" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateSector(s1,~/Server/GetNoCache?value={{number}});UpdateData(number,2);UpdateSector(s1,~/Server/GetNoCache?value={{number}})"></div>
+        <br />
+        <span d-model="{{number}}"></span>
+        <br />
+        <input type="text" d-model="{{number}}" />
+        <div d-sector="s1"></div>
+    </div>
+</body>
+</html>
