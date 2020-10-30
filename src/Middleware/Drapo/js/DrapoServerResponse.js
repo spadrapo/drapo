@@ -38,5 +38,19 @@ var DrapoServerResponse = (function () {
         enumerable: true,
         configurable: true
     });
+    DrapoServerResponse.prototype.IsCacheAllowed = function () {
+        if (this._headers == null)
+            return (true);
+        for (var i = 0; i < this._headers.length; i++) {
+            var entry = this._headers[i];
+            var key = entry[0].toLowerCase();
+            if (key != 'cache-control')
+                continue;
+            var value = entry[1].toLowerCase();
+            if (value == 'no-store')
+                return (false);
+        }
+        return (true);
+    };
     return DrapoServerResponse;
 }());

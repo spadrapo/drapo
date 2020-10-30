@@ -1531,7 +1531,7 @@ declare class DrapoServer {
     AppendUrlQueryStringCacheStatic(url: string): Promise<string>;
     private AppendUrlQueryStringTimestamp;
     GetViewHTML(url: string): Promise<string>;
-    GetHTML(url: string): Promise<string>;
+    GetHTML(url: string): Promise<[string, boolean]>;
     GetJSON(url: string, verb?: string, data?: string, contentType?: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
     GetFile(url: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
     private CreateFileObject;
@@ -1588,6 +1588,7 @@ declare class DrapoServerResponse {
     get Body(): any;
     set Body(value: any);
     constructor(status: number, headers: [string, string][], body: any);
+    IsCacheAllowed(): boolean;
 }
 
 declare class DrapoSolver {

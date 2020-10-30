@@ -9,4 +9,5 @@ declare class DrapoServerResponse {
     get Body(): any;
     set Body(value: any);
     constructor(status: number, headers: [string, string][], body: any);
+    IsCacheAllowed(): boolean;
 }

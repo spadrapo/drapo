@@ -271,7 +271,7 @@ var DrapoRegister = (function () {
     };
     DrapoRegister.prototype.GetRegisteredComponentFileContentInternal = function (component, file) {
         return __awaiter(this, void 0, void 0, function () {
-            var url, htmlCached, html;
+            var url, htmlCached, response, html, allowCache;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.GetComponentFileUrl(component, file)];
@@ -282,8 +282,13 @@ var DrapoRegister = (function () {
                             return [2, (htmlCached)];
                         return [4, this.Application.Server.GetHTML(url)];
                     case 2:
-                        html = _a.sent();
-                        this.Application.CacheHandler.SetCachedComponentView(url, html);
+                        response = _a.sent();
+                        if (response == null)
+                            return [2, (null)];
+                        html = response[0];
+                        allowCache = response[1];
+                        if (allowCache)
+                            this.Application.CacheHandler.SetCachedComponentView(url, html);
                         return [2, (html)];
                 }
             });
