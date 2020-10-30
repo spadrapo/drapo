@@ -153,7 +153,7 @@ var DrapoDocument = (function () {
                         }
                         sectors = this.ExtractSectors(divElement);
                         this.Application.Log.WriteVerbose('Document - ResolveParent - parent = {0}, parentSector = {1}', parent, parentSector);
-                        return [4, this.Application.Server.GetHTML(parent)];
+                        return [4, this.Application.Server.GetViewHTML(parent)];
                     case 1:
                         html = _a.sent();
                         return [4, this.ResolveParentResponse(html, parent, parentSector, divElement.outerHTML, sectors)];
@@ -309,7 +309,7 @@ var DrapoDocument = (function () {
                         _c.label = 10;
                     case 10:
                         if (!(urlResolved != null)) return [3, 12];
-                        return [4, this.Application.Server.GetHTML(urlResolved)];
+                        return [4, this.Application.Server.GetViewHTML(urlResolved)];
                     case 11:
                         _b = _c.sent();
                         return [3, 13];
@@ -464,7 +464,7 @@ var DrapoDocument = (function () {
                         template = this.Application.Solver.Get(attributes, 'd-template');
                         if (template === null)
                             template = 'template';
-                        return [4, this.Application.Server.GetHTML(templateUrl)];
+                        return [4, this.Application.Server.GetViewHTML(templateUrl)];
                     case 1:
                         templateUrlContent = _a.sent();
                         templateContent = this.Application.Parser.ParseDocumentContent(templateUrlContent);
@@ -633,7 +633,7 @@ var DrapoDocument = (function () {
                         if (!((urlResolved === null) || (urlResolved === ''))) return [3, 4];
                         _b = '';
                         return [3, 6];
-                    case 4: return [4, this.Application.Server.GetHTML(urlResolved)];
+                    case 4: return [4, this.Application.Server.GetViewHTML(urlResolved)];
                     case 5:
                         _b = _c.sent();
                         _c.label = 6;

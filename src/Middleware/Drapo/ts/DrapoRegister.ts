@@ -133,8 +133,13 @@ class DrapoRegister {
 
     private async GetRegisteredComponentFileContentInternal(component: any, file: any): Promise<string>
     {
-        const url: string = await this.GetComponentFileUrl(component,file);
-        return (await this.Application.Server.GetHTML(url));
+        const url: string = await this.GetComponentFileUrl(component, file);
+        const htmlCached: string = this.Application.CacheHandler.GetCachedComponentView(url);
+        if (htmlCached != null)
+            return (htmlCached);
+        const html: string = await this.Application.Server.GetHTML(url);
+        this.Application.CacheHandler.SetCachedComponentView(url, html);
+        return (html);
     }
 
     private CreateKeyComponentFile(component: any, file: any) : string

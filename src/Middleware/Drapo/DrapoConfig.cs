@@ -22,6 +22,10 @@ namespace Sysphera.Middleware.Drapo
         private bool _useRouter = true;
         private bool _useCacheStatic = false;
         private bool _useCacheLocalStorage = true;
+        private string _cacheKeysComponentView = null;
+        private string _cacheKeysComponentStyle = null;
+        private string _cacheKeysComponentScript = null;
+        private string _cacheKeysView = null;
         private string _pipeHubName = "drapoHub";
         private string _pipeActionRegister = "Register";
         private string _pipeActionNotify = "Notify";
@@ -49,6 +53,10 @@ namespace Sysphera.Middleware.Drapo
         public bool UseRouter { get => _useRouter; set => _useRouter = value; }
         public bool UseCacheStatic { get => (_useCacheStatic) && (!string.IsNullOrEmpty(this._applicationBuild)); set => _useCacheStatic = value; }
         public bool UseCacheLocalStorage { get => _useCacheLocalStorage; set => _useCacheLocalStorage = value; }
+        public string CacheKeysComponentView { get => _cacheKeysComponentView; set => _cacheKeysComponentView = value; }
+        public string CacheKeysComponentStyle { get => _cacheKeysComponentStyle; set => _cacheKeysComponentStyle = value; }
+        public string CacheKeysComponentScript { get => _cacheKeysComponentScript; set => _cacheKeysComponentScript = value; }
+        public string CacheKeysView { get => _cacheKeysView; set => _cacheKeysView = value; }
         public string PipeHubName { get => _pipeHubName; set => _pipeHubName = value; }
         public string PipeActionRegister { get => _pipeActionRegister; set => _pipeActionRegister = value; }
         public string PipeActionNotify { get => _pipeActionNotify; set => _pipeActionNotify = value; }
