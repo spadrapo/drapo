@@ -17971,6 +17971,8 @@ var DrapoServerResponse = (function () {
             var value = entry[1].toLowerCase();
             if (value == 'no-store')
                 return (false);
+            if (value == 'no-cache')
+                return (false);
         }
         return (true);
     };
@@ -23224,7 +23226,7 @@ var DrapoViewportHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoViewportHandler.prototype.IsElementControlFlowRenderViewport = function (el) {
