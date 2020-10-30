@@ -18,5 +18,11 @@ namespace WebDrapo.Controllers
             Response.Headers.Add("Location", "~/DrapoPages/ServerResponseRedirected.html");
             return (content);
         }
+
+        public ActionResult GetNoCache([FromQuery] string value) {
+            string content = $"<div><span>{value}</span></div>";
+            this.Response.Headers.Add("cache-control", "no-store");
+            return (Ok(content));
+        }
     }
 }

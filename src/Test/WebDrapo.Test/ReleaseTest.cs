@@ -721,6 +721,11 @@ namespace WebDrapo.Test
             ValidatePage("DataIncrementalLoadTemplateLimited");
         }
         [TestCase]
+        public void DataLocalStorageNoCacheTest()
+        {
+            ValidatePage("DataLocalStorageNoCache");
+        }
+        [TestCase]
         public void DataMappingTest()
         {
             ValidatePage("DataMapping");

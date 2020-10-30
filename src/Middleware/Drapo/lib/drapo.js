@@ -16262,7 +16262,7 @@ var DrapoRegister = (function () {
     };
     DrapoRegister.prototype.GetRegisteredComponentFileContentInternal = function (component, file) {
         return __awaiter(this, void 0, void 0, function () {
-            var url, htmlCached, html;
+            var url, htmlCached, response, html, allowCache;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.GetComponentFileUrl(component, file)];
@@ -16273,8 +16273,13 @@ var DrapoRegister = (function () {
                             return [2, (htmlCached)];
                         return [4, this.Application.Server.GetHTML(url)];
                     case 2:
-                        html = _a.sent();
-                        this.Application.CacheHandler.SetCachedComponentView(url, html);
+                        response = _a.sent();
+                        if (response == null)
+                            return [2, (null)];
+                        html = response[0];
+                        allowCache = response[1];
+                        if (allowCache)
+                            this.Application.CacheHandler.SetCachedComponentView(url, html);
                         return [2, (html)];
                 }
             });
@@ -17386,7 +17391,7 @@ var DrapoServer = (function () {
     };
     DrapoServer.prototype.GetViewHTML = function (url) {
         return __awaiter(this, void 0, void 0, function () {
-            var htmlCached, html;
+            var htmlCached, response, html, allowCache;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -17395,8 +17400,13 @@ var DrapoServer = (function () {
                             return [2, (htmlCached)];
                         return [4, this.Application.Server.GetHTML(url)];
                     case 1:
-                        html = _a.sent();
-                        this.Application.CacheHandler.SetCachedView(url, html);
+                        response = _a.sent();
+                        if (response == null)
+                            return [2, (null)];
+                        html = response[0];
+                        allowCache = response[1];
+                        if (allowCache)
+                            this.Application.CacheHandler.SetCachedView(url, html);
                         return [2, (html)];
                 }
             });
@@ -17415,14 +17425,14 @@ var DrapoServer = (function () {
                         return [4, this.AppendUrlQueryStringCacheStatic(url)];
                     case 1:
                         urlResolved = _a + _b.sent();
-                        request = new DrapoServerRequest('GET', urlResolved, requestHeaders, null, false);
+                        request = new DrapoServerRequest('GET', urlResolved, requestHeaders, null, true);
                         return [4, this.Request(request)];
                     case 2:
                         response = _b.sent();
                         responseText = response.Body;
                         responseStatus = response.Status;
                         if (responseStatus == 200) {
-                            return [2, (responseText)];
+                            return [2, ([responseText, response.IsCacheAllowed()])];
                         }
                         return [2, (null)];
                 }
@@ -17950,6 +17960,20 @@ var DrapoServerResponse = (function () {
         enumerable: false,
         configurable: true
     });
+    DrapoServerResponse.prototype.IsCacheAllowed = function () {
+        if (this._headers == null)
+            return (true);
+        for (var i = 0; i < this._headers.length; i++) {
+            var entry = this._headers[i];
+            var key = entry[0].toLowerCase();
+            if (key != 'cache-control')
+                continue;
+            var value = entry[1].toLowerCase();
+            if (value == 'no-store')
+                return (false);
+        }
+        return (true);
+    };
     return DrapoServerResponse;
 }());
 
@@ -23200,7 +23224,7 @@ var DrapoViewportHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoViewportHandler.prototype.IsElementControlFlowRenderViewport = function (el) {

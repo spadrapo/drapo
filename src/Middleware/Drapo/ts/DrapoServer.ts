@@ -66,22 +66,27 @@ class DrapoServer {
         const htmlCached: string = this.Application.CacheHandler.GetCachedView(url);
         if (htmlCached != null)
             return (htmlCached);
-        const html: string = await this.Application.Server.GetHTML(url);
-        this.Application.CacheHandler.SetCachedView(url, html);
+        const response: [string, boolean] = await this.Application.Server.GetHTML(url);
+        if (response == null)
+            return (null);
+        const html: string = response[0];
+        const allowCache: boolean = response[1];
+        if (allowCache)
+            this.Application.CacheHandler.SetCachedView(url, html);
         return (html);
     }
 
-    public async GetHTML(url: string): Promise<string> {
+    public async GetHTML(url: string): Promise<[string,boolean]> {
         const requestHeaders: [string, string][] = [];
         this.InsertHeader(requestHeaders, 'X-Requested-With', 'XMLHttpRequest');
         let urlResolved: string = this.ResolveUrl(url);
         urlResolved += await this.AppendUrlQueryStringCacheStatic(url);
-        const request: DrapoServerRequest = new DrapoServerRequest('GET', urlResolved, requestHeaders, null, false);
+        const request: DrapoServerRequest = new DrapoServerRequest('GET', urlResolved, requestHeaders, null, true);
         const response: DrapoServerResponse = await this.Request(request);
         const responseText: string = response.Body;
         const responseStatus: number = response.Status;
         if (responseStatus == 200) {
-            return (responseText);
+            return ([responseText, response.IsCacheAllowed()]);
         }
         return (null);
     }

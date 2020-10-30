@@ -107,7 +107,7 @@ var DrapoServer = (function () {
     };
     DrapoServer.prototype.GetViewHTML = function (url) {
         return __awaiter(this, void 0, void 0, function () {
-            var htmlCached, html;
+            var htmlCached, response, html, allowCache;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -116,8 +116,13 @@ var DrapoServer = (function () {
                             return [2, (htmlCached)];
                         return [4, this.Application.Server.GetHTML(url)];
                     case 1:
-                        html = _a.sent();
-                        this.Application.CacheHandler.SetCachedView(url, html);
+                        response = _a.sent();
+                        if (response == null)
+                            return [2, (null)];
+                        html = response[0];
+                        allowCache = response[1];
+                        if (allowCache)
+                            this.Application.CacheHandler.SetCachedView(url, html);
                         return [2, (html)];
                 }
             });
@@ -136,14 +141,14 @@ var DrapoServer = (function () {
                         return [4, this.AppendUrlQueryStringCacheStatic(url)];
                     case 1:
                         urlResolved = _a + _b.sent();
-                        request = new DrapoServerRequest('GET', urlResolved, requestHeaders, null, false);
+                        request = new DrapoServerRequest('GET', urlResolved, requestHeaders, null, true);
                         return [4, this.Request(request)];
                     case 2:
                         response = _b.sent();
                         responseText = response.Body;
                         responseStatus = response.Status;
                         if (responseStatus == 200) {
-                            return [2, (responseText)];
+                            return [2, ([responseText, response.IsCacheAllowed()])];
                         }
                         return [2, (null)];
                 }
