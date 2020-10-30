@@ -41,6 +41,8 @@
             const value: string = entry[1].toLowerCase();
             if (value == 'no-store')
                 return (false);
+            if (value == 'no-cache')
+                return (false);
         }
         return (true);
     }
