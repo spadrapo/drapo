@@ -189,5 +189,17 @@ var DrapoCookieHandler = (function () {
         }
         return (true);
     };
+    DrapoCookieHandler.prototype.GetTheme = function () {
+        var cookieData = this.Application.CookieHandler.RetrieveData();
+        if (cookieData == null)
+            return ('');
+        return (cookieData.theme);
+    };
+    DrapoCookieHandler.prototype.GetView = function () {
+        var cookieData = this.Application.CookieHandler.RetrieveData();
+        if (cookieData == null)
+            return ('');
+        return (cookieData.view);
+    };
     return DrapoCookieHandler;
 }());

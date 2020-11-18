@@ -25,6 +25,7 @@ declare class DrapoStorageItem {
     private _groups;
     private _pipes;
     private _canCache;
+    private _cacheKeys;
     private _onLoad;
     private _onAfterContainerLoad;
     private _onBeforeContainerUnload;
@@ -89,6 +90,8 @@ declare class DrapoStorageItem {
     set Pipes(value: string[]);
     get CanCache(): boolean;
     set CanCache(value: boolean);
+    get CacheKeys(): string[];
+    set CacheKeys(value: string[]);
     get OnLoad(): string;
     set OnLoad(value: string);
     get OnAfterContainerLoad(): string;
@@ -103,7 +106,7 @@ declare class DrapoStorageItem {
     set HeadersSet(value: [string, string][]);
     get HasChanges(): boolean;
     set HasChanges(value: boolean);
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, headersGet: [string, string][], headersSet: [string, string][]);
+    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, headersGet: [string, string][], headersSet: [string, string][]);
     private Initialize;
     ContainsGroup(group: string): boolean;
 }

@@ -517,5 +517,10 @@ namespace WebDrapo.Controllers
                 values.Add(new KeyValueVO() { Key = $"K{value[i]}", Value = $"V{value[i]}" });
             dictionary.Add(value, values);
         }
+
+        [HttpGet]
+        public string GetApplicationBuild() {
+            return ("1.0");
+        }
     }
 }

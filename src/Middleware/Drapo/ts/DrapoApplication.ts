@@ -32,6 +32,7 @@
     private _globalization: DrapoGlobalization;
     private _stylist: DrapoStylist;
     private _viewportHandler: DrapoViewportHandler;
+    private _cacheHandler: DrapoCacheHandler;
     private _debugger: DrapoDebugger;
 
     // Properties
@@ -164,6 +165,10 @@
         return (this._viewportHandler);
     }
 
+    get CacheHandler(): DrapoCacheHandler {
+        return (this._cacheHandler);
+    }
+
     get Debugger(): DrapoDebugger {
         return (this._debugger);
     }
@@ -201,6 +206,7 @@
         this._globalization = new DrapoGlobalization(this);
         this._stylist = new DrapoStylist(this);
         this._viewportHandler = new DrapoViewportHandler(this);
+        this._cacheHandler = new DrapoCacheHandler(this);
         this._debugger = new DrapoDebugger(this);
     }
 
@@ -209,6 +215,7 @@
             this.Log.WriteVerbose('Application - OnLoad - Started');
             await this.Debugger.Initialize();
             await this.Plumber.ConnectPipe();
+            await this.CacheHandler.Initialize();
             await this.Document.Resolve();
             await this.Document.StartUnitTest();
             await this.Debugger.ConnectDebugger();

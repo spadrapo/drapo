@@ -14,11 +14,12 @@ declare class DrapoConfig {
     private GetCacheKeyIndex;
     private GetCacheData;
     private AddCacheData;
-    private GetProperty;
+    GetProperty(name: string): Promise<string>;
     private GetPropertyBoolean;
     private GetPropertyArray;
     GetUsePipes(): Promise<boolean>;
     GetUseRouter(): Promise<boolean>;
+    GetUseCacheLocalStorage(): Promise<boolean>;
     GetUseCacheStatic(): Promise<boolean>;
     GetPipeHubName(): Promise<string>;
     GetPipeActionRegister(): Promise<string>;

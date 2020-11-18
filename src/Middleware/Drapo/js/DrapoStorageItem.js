@@ -1,6 +1,6 @@
 "use strict";
 var DrapoStorageItem = (function () {
-    function DrapoStorageItem(type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, canCache, onLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, headersGet, headersSet) {
+    function DrapoStorageItem(type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, canCache, cacheKeys, onLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, headersGet, headersSet) {
         this._type = null;
         this._access = null;
         this._data = [];
@@ -26,6 +26,7 @@ var DrapoStorageItem = (function () {
         this._groups = null;
         this._pipes = null;
         this._canCache = true;
+        this._cacheKeys = null;
         this._onLoad = null;
         this._onAfterContainerLoad = null;
         this._onBeforeContainerUnload = null;
@@ -55,6 +56,7 @@ var DrapoStorageItem = (function () {
         this._groups = groups;
         this._pipes = pipes;
         this._canCache = canCache;
+        this._cacheKeys = cacheKeys;
         this._onLoad = onLoad;
         this._onAfterContainerLoad = onAfterContainerLoad == null ? null : onAfterContainerLoad;
         this._onBeforeContainerUnload = onBeforeContainerUnload == null ? null : onBeforeContainerUnload;
@@ -364,6 +366,16 @@ var DrapoStorageItem = (function () {
         },
         set: function (value) {
             this._canCache = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoStorageItem.prototype, "CacheKeys", {
+        get: function () {
+            return (this._cacheKeys);
+        },
+        set: function (value) {
+            this._cacheKeys = value;
         },
         enumerable: true,
         configurable: true

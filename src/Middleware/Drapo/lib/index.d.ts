@@ -31,6 +31,7 @@ declare class DrapoApplication {
     private _globalization;
     private _stylist;
     private _viewportHandler;
+    private _cacheHandler;
     private _debugger;
     get IsLoaded(): boolean;
     get Log(): DrapoLogger;
@@ -64,6 +65,7 @@ declare class DrapoApplication {
     get Globalization(): DrapoGlobalization;
     get Stylist(): DrapoStylist;
     get ViewportHandler(): DrapoViewportHandler;
+    get CacheHandler(): DrapoCacheHandler;
     get Debugger(): DrapoDebugger;
     constructor();
     OnLoad(): Promise<void>;
@@ -178,6 +180,40 @@ declare class DrapoBinder {
     BindControlFlowViewportScroll(viewport: DrapoViewport): Promise<void>;
 }
 
+declare class DrapoCacheHandler {
+    private _application;
+    private _hasLocalStorage;
+    private _useLocalStorage;
+    private _applicationBuild;
+    private _cacheKeysView;
+    private _cacheKeysComponentView;
+    private _cacheKeysComponentStyle;
+    private _cacheKeysComponentScript;
+    private readonly TYPE_DATA;
+    private readonly TYPE_COMPONENTVIEW;
+    private readonly TYPE_COMPONENTSTYLE;
+    private readonly TYPE_COMPONENTSCRIPT;
+    private readonly TYPE_VIEW;
+    private get Application();
+    private get CanUseLocalStorage();
+    constructor(application: DrapoApplication);
+    Initialize(): Promise<boolean>;
+    EnsureLoaded(storageItem: DrapoStorageItem, sector: string, dataKey: string, dataPath?: string[]): boolean;
+    GetCachedData(cacheKeys: string[], sector: string, dataKey: string): any[];
+    AppendCacheData(cacheKeys: string[], sector: string, dataKey: string, value: any, isDelay?: boolean): boolean;
+    GetCachedView(url: string): string;
+    SetCachedView(url: string, value: string): boolean;
+    GetCachedComponentView(url: string): string;
+    SetCachedComponentView(url: string, value: string): boolean;
+    private GetConfigurationKeys;
+    private AppendCacheDataEntry;
+    private CreateCacheKey;
+    private GetKey;
+    private AppendStorageDataCache;
+    private GetClientDataCache;
+    private SetClientDataCache;
+}
+
 declare class DrapoClassHandler {
     private _application;
     get Application(): DrapoApplication;
@@ -242,11 +278,12 @@ declare class DrapoConfig {
     private GetCacheKeyIndex;
     private GetCacheData;
     private AddCacheData;
-    private GetProperty;
+    GetProperty(name: string): Promise<string>;
     private GetPropertyBoolean;
     private GetPropertyArray;
     GetUsePipes(): Promise<boolean>;
     GetUseRouter(): Promise<boolean>;
+    GetUseCacheLocalStorage(): Promise<boolean>;
     GetUseCacheStatic(): Promise<boolean>;
     GetPipeHubName(): Promise<string>;
     GetPipeActionRegister(): Promise<string>;
@@ -435,6 +472,8 @@ declare class DrapoCookieHandler {
     private HandleCookieValueChange;
     private GetCookieValuesNamedChanged;
     private HasCookieValueChanged;
+    GetTheme(): string;
+    GetView(): string;
 }
 
 declare class DrapoDebugger {
@@ -1491,7 +1530,8 @@ declare class DrapoServer {
     ResolveUrl(url: string): string;
     AppendUrlQueryStringCacheStatic(url: string): Promise<string>;
     private AppendUrlQueryStringTimestamp;
-    GetHTML(url: string): Promise<string>;
+    GetViewHTML(url: string): Promise<string>;
+    GetHTML(url: string): Promise<[string, boolean]>;
     GetJSON(url: string, verb?: string, data?: string, contentType?: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
     GetFile(url: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
     private CreateFileObject;
@@ -1548,6 +1588,7 @@ declare class DrapoServerResponse {
     get Body(): any;
     set Body(value: any);
     constructor(status: number, headers: [string, string][], body: any);
+    IsCacheAllowed(): boolean;
 }
 
 declare class DrapoSolver {
@@ -1781,6 +1822,7 @@ declare class DrapoStorageItem {
     private _groups;
     private _pipes;
     private _canCache;
+    private _cacheKeys;
     private _onLoad;
     private _onAfterContainerLoad;
     private _onBeforeContainerUnload;
@@ -1845,6 +1887,8 @@ declare class DrapoStorageItem {
     set Pipes(value: string[]);
     get CanCache(): boolean;
     set CanCache(value: boolean);
+    get CacheKeys(): string[];
+    set CacheKeys(value: string[]);
     get OnLoad(): string;
     set OnLoad(value: string);
     get OnAfterContainerLoad(): string;
@@ -1859,7 +1903,7 @@ declare class DrapoStorageItem {
     set HeadersSet(value: [string, string][]);
     get HasChanges(): boolean;
     set HasChanges(value: boolean);
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, headersGet: [string, string][], headersSet: [string, string][]);
+    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, headersGet: [string, string][], headersSet: [string, string][]);
     private Initialize;
     ContainsGroup(group: string): boolean;
 }

@@ -70,7 +70,7 @@ class DrapoConfig {
         this._cacheDatas.push(data);
     }
 
-    private async GetProperty(name: string): Promise<string> {
+    public async GetProperty(name: string): Promise<string> {
         const config: any = await this.GetSector(name);
         if ((config === undefined) || (config === null))
             return (null);
@@ -97,6 +97,10 @@ class DrapoConfig {
 
     public async GetUseRouter(): Promise<boolean> {
         return (await this.GetPropertyBoolean('UseRouter'));
+    }
+
+    public async GetUseCacheLocalStorage(): Promise<boolean> {
+        return (await this.GetPropertyBoolean('UseCacheLocalStorage'));
     }
 
     public async GetUseCacheStatic(): Promise<boolean> {

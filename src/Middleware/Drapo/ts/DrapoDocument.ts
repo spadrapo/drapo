@@ -86,7 +86,7 @@ class DrapoDocument {
         //Sector
         const sectors: [string, string, string][] = this.ExtractSectors(divElement);
         this.Application.Log.WriteVerbose('Document - ResolveParent - parent = {0}, parentSector = {1}', parent, parentSector);
-        const html: string = await this.Application.Server.GetHTML(parent);
+        const html: string = await this.Application.Server.GetViewHTML(parent);
         await this.ResolveParentResponse(html, parent, parentSector, divElement.outerHTML, sectors);
         this.Application.Log.WriteVerbose('Document - ResolveParent - Finished');
         return (true);
@@ -199,7 +199,7 @@ class DrapoDocument {
                     container = childContainer;
                 }
             }
-            const html: string = urlResolved != null ? await this.Application.Server.GetHTML(urlResolved) : null;
+            const html: string = urlResolved != null ? await this.Application.Server.GetViewHTML(urlResolved) : null;
             await this.LoadChildSectorInternal(urlResolved, html, childSector, elChild, null, true, false, container);
         }
     }
@@ -296,7 +296,7 @@ class DrapoDocument {
         if (template === null)
             template = 'template';
         //Template Url Content
-        const templateUrlContent = await this.Application.Server.GetHTML(templateUrl);
+        const templateUrlContent = await this.Application.Server.GetViewHTML(templateUrl);
         const templateContent = this.Application.Parser.ParseDocumentContent(templateUrlContent);
         //Insert Template
         divChildSector.html(templateContent);
@@ -412,7 +412,7 @@ class DrapoDocument {
             return (false);
         }
         const urlResolved: string = ((url === null) || (url === '')) ? '' : await this.Application.Storage.ResolveDataUrlMustaches(null, null, url, null);
-        const html: string = ((urlResolved === null) || (urlResolved === '')) ? '' : await this.Application.Server.GetHTML(urlResolved);
+        const html: string = ((urlResolved === null) || (urlResolved === '')) ? '' : await this.Application.Server.GetViewHTML(urlResolved);
         await this.LoadChildSectorInternal(url, html, sectorName, elSector, title, canRoute, canLoadDefaultSectors, container);
         return (true);
     }

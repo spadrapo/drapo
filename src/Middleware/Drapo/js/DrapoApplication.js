@@ -69,6 +69,7 @@ var DrapoApplication = (function () {
         this._globalization = new DrapoGlobalization(this);
         this._stylist = new DrapoStylist(this);
         this._viewportHandler = new DrapoViewportHandler(this);
+        this._cacheHandler = new DrapoCacheHandler(this);
         this._debugger = new DrapoDebugger(this);
     }
     Object.defineProperty(DrapoApplication.prototype, "IsLoaded", {
@@ -295,6 +296,13 @@ var DrapoApplication = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(DrapoApplication.prototype, "CacheHandler", {
+        get: function () {
+            return (this._cacheHandler);
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(DrapoApplication.prototype, "Debugger", {
         get: function () {
             return (this._debugger);
@@ -308,7 +316,7 @@ var DrapoApplication = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 6, , 8]);
+                        _a.trys.push([0, 7, , 9]);
                         this.Log.WriteVerbose('Application - OnLoad - Started');
                         return [4, this.Debugger.Initialize()];
                     case 1:
@@ -316,25 +324,28 @@ var DrapoApplication = (function () {
                         return [4, this.Plumber.ConnectPipe()];
                     case 2:
                         _a.sent();
-                        return [4, this.Document.Resolve()];
+                        return [4, this.CacheHandler.Initialize()];
                     case 3:
                         _a.sent();
-                        return [4, this.Document.StartUnitTest()];
+                        return [4, this.Document.Resolve()];
                     case 4:
                         _a.sent();
-                        return [4, this.Debugger.ConnectDebugger()];
+                        return [4, this.Document.StartUnitTest()];
                     case 5:
+                        _a.sent();
+                        return [4, this.Debugger.ConnectDebugger()];
+                    case 6:
                         _a.sent();
                         this._isLoaded = true;
                         this.Log.WriteVerbose('Application - OnLoad - Finished');
-                        return [3, 8];
-                    case 6:
+                        return [3, 9];
+                    case 7:
                         e_1 = _a.sent();
                         return [4, this.ExceptionHandler.Handle(e_1, 'OnLoad')];
-                    case 7:
+                    case 8:
                         _a.sent();
-                        return [3, 8];
-                    case 8: return [2];
+                        return [3, 9];
+                    case 9: return [2];
                 }
             });
         });
