@@ -58,6 +58,8 @@
     }
 
     public GetNode(context: string[]): DrapoLinkedCubeNode<T> {
+        if (context == null)
+            return (null);
         let node: DrapoLinkedCubeNode<T> = this._head;
         while (node !== null) {
             if (this.IsEqualContext(context, node.Context, false))
