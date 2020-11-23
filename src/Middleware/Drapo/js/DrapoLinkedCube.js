@@ -56,6 +56,8 @@ var DrapoLinkedCube = (function () {
         return (null);
     };
     DrapoLinkedCube.prototype.GetNode = function (context) {
+        if (context == null)
+            return (null);
         var node = this._head;
         while (node !== null) {
             if (this.IsEqualContext(context, node.Context, false))
