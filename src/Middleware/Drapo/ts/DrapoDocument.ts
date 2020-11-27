@@ -1430,10 +1430,14 @@ class DrapoDocument {
     }
 
     public async GetClipboard(): Promise<string> {
-        const value: string = await this.GetClipboardValueAsync();
-        if (value !== null)
-            return (value);
-        return (this.GetClipboardValueExecCommand());
+        try {
+            const value: string = await this.GetClipboardValueAsync();
+            if (value !== null)
+                return (value);
+            return (this.GetClipboardValueExecCommand());
+        } catch{
+            return ('');
+        }
     }
 
     private async GetClipboardValueAsync(): Promise<string> {
@@ -1456,14 +1460,15 @@ class DrapoDocument {
         return (value);
     }
 
-    public async SetClipboard(value: string): Promise<void> {
+    public async SetClipboard(value: string): Promise<boolean> {
         const el = document.createElement('textarea');
         el.setAttribute('style', 'width:1px;height:0px;border:0;opacity:0;');
         el.value = value;
         document.body.appendChild(el);
         el.select();
-        document.execCommand('copy');
+        const result : boolean = document.execCommand('copy');
         document.body.removeChild(el);
+        return (result);
     }
 
     public async StartUnitTest(): Promise<void> {
