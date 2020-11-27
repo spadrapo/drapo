@@ -1724,15 +1724,21 @@ var DrapoDocument = (function () {
     };
     DrapoDocument.prototype.GetClipboard = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var value;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, this.GetClipboardValueAsync()];
+            var value, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        return [4, this.GetClipboardValueAsync()];
                     case 1:
-                        value = _a.sent();
+                        value = _b.sent();
                         if (value !== null)
                             return [2, (value)];
                         return [2, (this.GetClipboardValueExecCommand())];
+                    case 2:
+                        _a = _b.sent();
+                        return [2, ('')];
+                    case 3: return [2];
                 }
             });
         });
@@ -1772,16 +1778,16 @@ var DrapoDocument = (function () {
     };
     DrapoDocument.prototype.SetClipboard = function (value) {
         return __awaiter(this, void 0, void 0, function () {
-            var el;
+            var el, result;
             return __generator(this, function (_a) {
                 el = document.createElement('textarea');
                 el.setAttribute('style', 'width:1px;height:0px;border:0;opacity:0;');
                 el.value = value;
                 document.body.appendChild(el);
                 el.select();
-                document.execCommand('copy');
+                result = document.execCommand('copy');
                 document.body.removeChild(el);
-                return [2];
+                return [2, (result)];
             });
         });
     };

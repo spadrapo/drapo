@@ -56,14 +56,14 @@ var DrapoCacheHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoCacheHandler.prototype, "CanUseLocalStorage", {
         get: function () {
             return ((this._hasLocalStorage) && (this._useLocalStorage));
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoCacheHandler.prototype.Initialize = function () {
@@ -253,15 +253,21 @@ var DrapoCacheHandler = (function () {
         return (true);
     };
     DrapoCacheHandler.prototype.GetClientDataCache = function (cacheKey) {
+        var value = null;
         try {
-            var value = window.localStorage.getItem(cacheKey);
+            value = window.localStorage.getItem(cacheKey);
             if (value == null)
                 return (null);
-            return (this.Application.Serializer.Deserialize(value));
         }
         catch (e) {
             this._useLocalStorage = false;
-            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - GetClientDataCache');
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - GetClientDataCache :' + cacheKey);
+        }
+        try {
+            return (this.Application.Serializer.Deserialize(value));
+        }
+        catch (_a) {
+            return (null);
         }
     };
     DrapoCacheHandler.prototype.SetClientDataCache = function (cacheKey, value) {
