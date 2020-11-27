@@ -34,19 +34,19 @@ stages:
       inputs:
         gulpFile: src/Web/WebDrapo/gulpfile.js
         targets: 'buildDrapoLib:tslint'
-    - task: DotNetCoreCLI@1
+    - task: DotNetCoreCLI@2
       displayName: Build
       inputs:
         projects: '**/*.csproj'
         arguments: '--configuration $(BuildConfiguration)'
-    - task: DotNetCoreCLI@1
+    - task: DotNetCoreCLI@2
       displayName: Test
       inputs:
         command: test
         projects: '**/*Tests/*.csproj'
         arguments: '--configuration $(BuildConfiguration)'
       enabled: false
-    - task: DotNetCoreCLI@1
+    - task: DotNetCoreCLI@2
       displayName: Publish
       inputs:
         command: publish
