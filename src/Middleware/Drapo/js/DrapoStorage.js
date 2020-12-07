@@ -48,7 +48,7 @@ var DrapoStorage = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoStorage.prototype.Retrieve = function (elj, dataKey, sector, context, dataKeyParts) {
@@ -1348,8 +1348,14 @@ var DrapoStorage = (function () {
                     case 5:
                         _a.sent();
                         return [2, ([])];
-                    case 6: return [4, this.ExecuteQuery(sector, dataKey, query)];
-                    case 7: return [2, (_a.sent())];
+                    case 6:
+                        if (!(query.Sources.length > 2)) return [3, 8];
+                        return [4, this.Application.ExceptionHandler.HandleError('Only support for 2 sources in query: {0}', dataKey)];
+                    case 7:
+                        _a.sent();
+                        return [2, ([])];
+                    case 8: return [4, this.ExecuteQuery(sector, dataKey, query)];
+                    case 9: return [2, (_a.sent())];
                 }
             });
         });
@@ -2611,7 +2617,7 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.ExecuteQuery = function (sector, dataKey, query) {
         return __awaiter(this, void 0, void 0, function () {
-            var objects, objectsId, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, object;
+            var objects, objectsId, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, object, count, i;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -2650,18 +2656,49 @@ var DrapoStorage = (function () {
                     case 3:
                         i++;
                         return [3, 1];
-                    case 4: return [2, (objects)];
+                    case 4:
+                        count = query.Sources.length;
+                        if (count > 1) {
+                            for (i = objects.length - 1; i >= 0; i--) {
+                                if (objectsId[i].length === count)
+                                    continue;
+                                objects.splice(i, 1);
+                            }
+                        }
+                        return [2, (objects)];
                 }
             });
         });
     };
-    DrapoStorage.prototype.EnsureQueryObject = function (query, querySource, indexSource, objects, objectsId, querySourceObject) {
+    DrapoStorage.prototype.EnsureQueryObject = function (query, querySource, indexSource, objects, objectsIds, querySourceObject) {
         var object = null;
+        if (query.Sources.length == 1) {
+            object = {};
+            objects.push(object);
+            return (object);
+        }
+        var joinCondition = query.Sources[1].JoinConditions[0];
+        var column = joinCondition.SourceLeft == querySource.Alias ? joinCondition.ColumnLeft : joinCondition.ColumnRight;
+        var id = querySourceObject[column];
         if (indexSource === 0) {
             object = {};
             objects.push(object);
+            var ids = [];
+            ids.push(id);
+            objectsIds.push(ids);
+            return (object);
         }
-        return (object);
+        for (var i = 0; i < objects.length; i++) {
+            var objectsId = objectsIds[i];
+            if (objectsId.length > 1)
+                continue;
+            var objectId = objectsId[0];
+            if (objectId !== id)
+                continue;
+            objectsId.push(objectId);
+            return (objects[i]);
+        }
+        return (null);
     };
     DrapoStorage.prototype.InjectQueryObjectProjections = function (query, querySource, object, sourceObject) {
         var _a;
@@ -2679,7 +2716,7 @@ var DrapoStorage = (function () {
                     continue;
             }
             var value = sourceObject[projection.Column];
-            object[_a = projection.Alias, (_a !== null && _a !== void 0 ? _a : projection.Column)] = value;
+            object[(_a = projection.Alias) !== null && _a !== void 0 ? _a : projection.Column] = value;
         }
     };
     return DrapoStorage;

@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Simple</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Simple</span>
+        <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children=5"></div>
+        <div d-datakey="objectsQuery" d-datatype="query" d-datavalue="SELECT Key FROM objects"></div>
+        <div>
+            <div d-for="object in objectsQuery" style="display: none;">
+                <span>{{object.Key}}</span>
+                <br />
+            </div>
+        <div>
+                <span>L0K0</span>
+                <br />
+            </div><div>
+                <span>L0K1</span>
+                <br />
+            </div><div>
+                <span>L0K2</span>
+                <br />
+            </div><div>
+                <span>L0K3</span>
+                <br />
+            </div><div>
+                <span>L0K4</span>
+                <br />
+            </div></div>
+    </div>
+
+</body></html>

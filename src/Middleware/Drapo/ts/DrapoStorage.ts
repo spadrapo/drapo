@@ -906,6 +906,10 @@ class DrapoStorage {
             await this.Application.ExceptionHandler.HandleError('Error parsing the query in: {0}. {1}', dataKey, query.Error);
             return ([]);
         }
+        if (query.Sources.length > 2) {
+            await this.Application.ExceptionHandler.HandleError('Only support for 2 sources in query: {0}', dataKey);
+            return ([]);
+        }
         return (await this.ExecuteQuery(sector, dataKey, query));
     }
 
@@ -1777,17 +1781,47 @@ class DrapoStorage {
             }
         }
         //Unmatched
-
+        const count: number = query.Sources.length;
+        if (count > 1) {
+            for (let i: number = objects.length - 1; i >= 0; i--) {
+                if (objectsId[i].length === count)
+                    continue;
+                objects.splice(i, 1);
+            }
+        }
         return (objects);
     }
 
-    private EnsureQueryObject(query: DrapoQuery, querySource: DrapoQuerySource, indexSource: number, objects: any[], objectsId: string[][], querySourceObject: any): any {
+    private EnsureQueryObject(query: DrapoQuery, querySource: DrapoQuerySource, indexSource: number, objects: any[], objectsIds: string[][], querySourceObject: any): any {
         let object: any = null;
+        //Only One
+        if (query.Sources.length == 1) {
+            object = {};
+            objects.push(object);
+            return (object);
+        }
+        const joinCondition = query.Sources[1].JoinConditions[0];
+        const column: string = joinCondition.SourceLeft == querySource.Alias ? joinCondition.ColumnLeft : joinCondition.ColumnRight;
+        const id: string = querySourceObject[column];
         if (indexSource === 0) {
             object = {};
             objects.push(object);
+            const ids: string[] = [];
+            ids.push(id);
+            objectsIds.push(ids);
+            return (object);
         }
-        return (object);
+        for (let i: number = 0; i < objects.length; i++) {
+            const objectsId: string[] = objectsIds[i];
+            if (objectsId.length > 1)
+                continue;
+            const objectId = objectsId[0];
+            if (objectId !== id)
+                continue;
+            objectsId.push(objectId);
+            return (objects[i]);
+        }
+        return (null);
     }
 
     private InjectQueryObjectProjections(query: DrapoQuery, querySource: DrapoQuerySource, object: any, sourceObject: any) : void {
