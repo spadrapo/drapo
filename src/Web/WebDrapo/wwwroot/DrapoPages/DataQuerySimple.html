@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Simple</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Simple</span>
+        <div d-dataKey="objects" d-dataUrlGet="~/Data/GetLevels?children=5"></div>
+        <div d-dataKey="objectsQuery" d-dataType="query" d-dataValue="SELECT Key FROM objects"></div>
+        <div>
+            <div d-for="object in objectsQuery">
+                <span>{{object.Key}}</span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

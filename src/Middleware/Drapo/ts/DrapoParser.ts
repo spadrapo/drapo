@@ -1148,4 +1148,173 @@ class DrapoParser {
         const valueNumber: number = this.ParseNumber(value.substr(0, value.length - 2));
         return (valueNumber);
     }
+
+    public ParseQuery(value: string): DrapoQuery {
+        if ((value == null) || (value === ''))
+            return (null);
+        const query: DrapoQuery = new DrapoQuery();
+        //Projections
+        const projections: DrapoQueryProjection[] = this.ParseQueryProjections(value);
+        if (projections === null) {
+            query.Error = "Can't parse the projections.";
+            return (query);
+        }
+        query.Projections = projections;
+        //Sources
+        const sources: DrapoQuerySource[] = this.ParseQuerySources(value);
+        if (sources === null) {
+            query.Error = "Can't parse the sources.";
+            return (query);
+        }
+        query.Sources = sources;
+        //Where: Work in the future
+        return (query);
+    }
+
+    public ParseQueryProjections(value: string): DrapoQueryProjection[] {
+        const tokenProjections: string = this.ParseSubstring(value, "SELECT", "FROM");
+        if (tokenProjections === null)
+            return (null);
+        const projections: DrapoQueryProjection[] = [];
+        const tokenProjectionsSplit: string[] = this.ParseBlock(tokenProjections, ',');
+        for (let i: number = 0; i < tokenProjectionsSplit.length; i++) {
+            const tokenProjection: string = tokenProjectionsSplit[i];
+            const projection: DrapoQueryProjection = this.ParseQueryProjection(tokenProjection);
+            if (projection === null)
+                return (null);
+            projections.push(projection);
+        }
+        return (projections);
+    }
+
+    private ParseQueryProjection(value: string): DrapoQueryProjection {
+        const valueTrim: string = this.Trim(value);
+        const valueTrimSplit: string[] = this.ParseBlock(valueTrim, ' ');
+        const alias: string = this.ParseQueryProjectionAlias(valueTrimSplit);
+        const valueTrimFirst: string = valueTrimSplit[0];
+        const isMustache: boolean = this.IsMustache(valueTrimFirst);
+        const valueTrimFirstSplit: string[] = isMustache ? [valueTrimFirst]: this.ParseBlock(valueTrimFirst, '.');
+        const source: string = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[0] : null;
+        const column: string = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[1] : valueTrimFirstSplit[0];
+        const projection: DrapoQueryProjection = new DrapoQueryProjection();
+        projection.Alias = alias;
+        projection.Source = source;
+        projection.Column = column;
+        return (projection);
+    }
+
+    private ParseQueryProjectionAlias(values: string[]): string {
+        if (values.length != 3)
+            return (null);
+        if (values[1].toUpperCase() !== 'AS')
+            return (null);
+        return (values[2]);
+    }
+
+    private ParseQuerySources(value: string): DrapoQuerySource[] {
+        const tokenSources: string = this.ParseSubstring(value, 'FROM', 'WHERE', true);
+        const tokenSourcesSplit: string[] = this.ParseQuerySourcesSplit(tokenSources);
+        const sources: DrapoQuerySource[] = [];
+        for (let i: number = 0; i < tokenSourcesSplit.length; i++)
+        {
+            const source : DrapoQuerySource = this.ParseQuerySource(tokenSourcesSplit[i]);
+            if (source === null)
+                return (null);
+            sources.push(source);
+        }
+        return (sources);
+    }
+
+    private ParseQuerySource(value: string): DrapoQuerySource {
+        const source: DrapoQuerySource = new DrapoQuerySource();
+        //Join
+        const joinType: string = this.ParseQuerySourceHeadValue(value, 'JOIN');
+        source.JoinType = this.Trim(joinType);
+        //Source
+        const sourceToken: string = joinType === null ? value : this.ParseSubstring(value, 'JOIN', 'ON');
+        const sourceProjection: DrapoQueryProjection = this.ParseQueryProjection(sourceToken);
+        source.Source = sourceProjection.Column;
+        source.Alias = sourceProjection.Alias;
+        //On
+        if (joinType !== null)
+        {
+            const indexOn: number = value.indexOf('ON');
+            if (indexOn < 0)
+                return (null);
+            const onToken: string = value.substring(indexOn + 2);
+            const onConditional: DrapoQueryCondition = this.ParseQueryConditional(onToken);
+            if (onConditional === null)
+                return (null);
+            if (onConditional.Comparator !== '=')
+                return (null);
+            source.JoinConditions.push(onConditional);
+        }
+        return (source);
+    }
+
+    private ParseQueryConditional(value: string): DrapoQueryCondition {
+        const conditional: DrapoQueryCondition = new DrapoQueryCondition();
+        const item: DrapoExpressionItem = this.ParseExpression(value);
+        //Left
+        const leftProjection: DrapoQueryProjection = this.ParseQueryProjection(item.Items[0].Value);
+        conditional.SourceLeft = leftProjection.Source;
+        conditional.ColumnLeft = leftProjection.Column;
+        //Comparator
+        conditional.Comparator = item.Items[1].Value;
+        //Right
+        const rightProjection: DrapoQueryProjection = this.ParseQueryProjection(item.Items[2].Value);
+        conditional.SourceRight = rightProjection.Source;
+        conditional.ColumnRight = rightProjection.Column;
+        return (conditional);
+    }
+
+    private ParseSubstring(value: string, start: string, end: string, canMissEnd : boolean = false): string {
+        const indexStart: number = value.indexOf(start);
+        if (indexStart < 0)
+            return (null);
+        let indexEnd: number = value.indexOf(end);
+        if (indexEnd < 0) {
+            if (canMissEnd)
+                indexEnd = value.length;
+            else
+                return (null);
+        }
+        const substring: string = value.substring(indexStart + start.length, indexEnd);
+        return (substring);
+    }
+
+    private ParseQuerySourcesSplit(value: string): string[] {
+        value = this.Trim(value);
+        const sources: string[] = [];
+        while (value.length != 0) {
+            const source: string = this.ParseQuerySourceHead(value);
+            sources.push(source);
+            if (value === source)
+                break;
+            value = value.substring(source.length, value.length);
+            value = this.Trim(value);
+        }
+        return (sources);
+    }
+
+    private ParseQuerySourceHead(value: string): string {
+        let header: string = this.ParseQuerySourceHeadValue(value, 'INNER JOIN');
+        if (header !== null)
+            return (header);
+        header = this.ParseQuerySourceHeadValue(value, 'LEFT JOIN');
+        if (header !== null)
+            return (header);
+        header = this.ParseQuerySourceHeadValue(value, 'RIGHT JOIN');
+        if (header !== null)
+            return (header);
+        return (value);
+    }
+
+    private ParseQuerySourceHeadValue(value: string, search: string): string {
+        const index: number = value.indexOf(search, 1);
+        if (index < 0)
+            return (null);
+        const header: string = value.substring(0, index);
+        return (header);
+    }
 }

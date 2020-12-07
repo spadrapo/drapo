@@ -1068,5 +1068,153 @@ var DrapoParser = (function () {
         var valueNumber = this.ParseNumber(value.substr(0, value.length - 2));
         return (valueNumber);
     };
+    DrapoParser.prototype.ParseQuery = function (value) {
+        if ((value == null) || (value === ''))
+            return (null);
+        var query = new DrapoQuery();
+        var projections = this.ParseQueryProjections(value);
+        if (projections === null) {
+            query.Error = "Can't parse the projections.";
+            return (query);
+        }
+        query.Projections = projections;
+        var sources = this.ParseQuerySources(value);
+        if (sources === null) {
+            query.Error = "Can't parse the sources.";
+            return (query);
+        }
+        query.Sources = sources;
+        return (query);
+    };
+    DrapoParser.prototype.ParseQueryProjections = function (value) {
+        var tokenProjections = this.ParseSubstring(value, "SELECT", "FROM");
+        if (tokenProjections === null)
+            return (null);
+        var projections = [];
+        var tokenProjectionsSplit = this.ParseBlock(tokenProjections, ',');
+        for (var i = 0; i < tokenProjectionsSplit.length; i++) {
+            var tokenProjection = tokenProjectionsSplit[i];
+            var projection = this.ParseQueryProjection(tokenProjection);
+            if (projection === null)
+                return (null);
+            projections.push(projection);
+        }
+        return (projections);
+    };
+    DrapoParser.prototype.ParseQueryProjection = function (value) {
+        var valueTrim = this.Trim(value);
+        var valueTrimSplit = this.ParseBlock(valueTrim, ' ');
+        var alias = this.ParseQueryProjectionAlias(valueTrimSplit);
+        var valueTrimFirst = valueTrimSplit[0];
+        var isMustache = this.IsMustache(valueTrimFirst);
+        var valueTrimFirstSplit = isMustache ? [valueTrimFirst] : this.ParseBlock(valueTrimFirst, '.');
+        var source = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[0] : null;
+        var column = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[1] : valueTrimFirstSplit[0];
+        var projection = new DrapoQueryProjection();
+        projection.Alias = alias;
+        projection.Source = source;
+        projection.Column = column;
+        return (projection);
+    };
+    DrapoParser.prototype.ParseQueryProjectionAlias = function (values) {
+        if (values.length != 3)
+            return (null);
+        if (values[1].toUpperCase() !== 'AS')
+            return (null);
+        return (values[2]);
+    };
+    DrapoParser.prototype.ParseQuerySources = function (value) {
+        var tokenSources = this.ParseSubstring(value, 'FROM', 'WHERE', true);
+        var tokenSourcesSplit = this.ParseQuerySourcesSplit(tokenSources);
+        var sources = [];
+        for (var i = 0; i < tokenSourcesSplit.length; i++) {
+            var source = this.ParseQuerySource(tokenSourcesSplit[i]);
+            if (source === null)
+                return (null);
+            sources.push(source);
+        }
+        return (sources);
+    };
+    DrapoParser.prototype.ParseQuerySource = function (value) {
+        var source = new DrapoQuerySource();
+        var joinType = this.ParseQuerySourceHeadValue(value, 'JOIN');
+        source.JoinType = this.Trim(joinType);
+        var sourceToken = joinType === null ? value : this.ParseSubstring(value, 'JOIN', 'ON');
+        var sourceProjection = this.ParseQueryProjection(sourceToken);
+        source.Source = sourceProjection.Column;
+        source.Alias = sourceProjection.Alias;
+        if (joinType !== null) {
+            var indexOn = value.indexOf('ON');
+            if (indexOn < 0)
+                return (null);
+            var onToken = value.substring(indexOn + 2);
+            var onConditional = this.ParseQueryConditional(onToken);
+            if (onConditional === null)
+                return (null);
+            if (onConditional.Comparator !== '=')
+                return (null);
+            source.JoinConditions.push(onConditional);
+        }
+        return (source);
+    };
+    DrapoParser.prototype.ParseQueryConditional = function (value) {
+        var conditional = new DrapoQueryCondition();
+        var item = this.ParseExpression(value);
+        var leftProjection = this.ParseQueryProjection(item.Items[0].Value);
+        conditional.SourceLeft = leftProjection.Source;
+        conditional.ColumnLeft = leftProjection.Column;
+        conditional.Comparator = item.Items[1].Value;
+        var rightProjection = this.ParseQueryProjection(item.Items[2].Value);
+        conditional.SourceRight = rightProjection.Source;
+        conditional.ColumnRight = rightProjection.Column;
+        return (conditional);
+    };
+    DrapoParser.prototype.ParseSubstring = function (value, start, end, canMissEnd) {
+        if (canMissEnd === void 0) { canMissEnd = false; }
+        var indexStart = value.indexOf(start);
+        if (indexStart < 0)
+            return (null);
+        var indexEnd = value.indexOf(end);
+        if (indexEnd < 0) {
+            if (canMissEnd)
+                indexEnd = value.length;
+            else
+                return (null);
+        }
+        var substring = value.substring(indexStart + start.length, indexEnd);
+        return (substring);
+    };
+    DrapoParser.prototype.ParseQuerySourcesSplit = function (value) {
+        value = this.Trim(value);
+        var sources = [];
+        while (value.length != 0) {
+            var source = this.ParseQuerySourceHead(value);
+            sources.push(source);
+            if (value === source)
+                break;
+            value = value.substring(source.length, value.length);
+            value = this.Trim(value);
+        }
+        return (sources);
+    };
+    DrapoParser.prototype.ParseQuerySourceHead = function (value) {
+        var header = this.ParseQuerySourceHeadValue(value, 'INNER JOIN');
+        if (header !== null)
+            return (header);
+        header = this.ParseQuerySourceHeadValue(value, 'LEFT JOIN');
+        if (header !== null)
+            return (header);
+        header = this.ParseQuerySourceHeadValue(value, 'RIGHT JOIN');
+        if (header !== null)
+            return (header);
+        return (value);
+    };
+    DrapoParser.prototype.ParseQuerySourceHeadValue = function (value, search) {
+        var index = value.indexOf(search, 1);
+        if (index < 0)
+            return (null);
+        var header = value.substring(0, index);
+        return (header);
+    };
     return DrapoParser;
 }());

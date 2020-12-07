@@ -112,4 +112,15 @@ declare class DrapoParser {
     ParseFormat(format: string): string[];
     private IsFormatCharacterCompatible;
     ParsePixels(value: string): number;
+    ParseQuery(value: string): DrapoQuery;
+    ParseQueryProjections(value: string): DrapoQueryProjection[];
+    private ParseQueryProjection;
+    private ParseQueryProjectionAlias;
+    private ParseQuerySources;
+    private ParseQuerySource;
+    private ParseQueryConditional;
+    private ParseSubstring;
+    private ParseQuerySourcesSplit;
+    private ParseQuerySourceHead;
+    private ParseQuerySourceHeadValue;
 }

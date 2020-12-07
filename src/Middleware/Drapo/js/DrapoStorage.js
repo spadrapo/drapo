@@ -48,7 +48,7 @@ var DrapoStorage = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoStorage.prototype.Retrieve = function (elj, dataKey, sector, context, dataKeyParts) {
@@ -1199,6 +1199,8 @@ var DrapoStorage = (function () {
                     case 4:
                         if (type == 'querystring')
                             return [2, (this.RetrieveDataKeyInitializeQueryString(el, sector))];
+                        if (type == 'query')
+                            return [2, (this.RetrieveDataKeyInitializeQuery(el, sector, dataKey))];
                         if (type == 'parent')
                             return [2, (this.RetrieveDataKeyInitializeParent(el, sector))];
                         return [2, (null)];
@@ -1317,6 +1319,43 @@ var DrapoStorage = (function () {
                             object[key] = value;
                         }
                         return [2, (object)];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.RetrieveDataKeyInitializeQuery = function (el, sector, dataKey) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dataValue, query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dataValue = el.getAttribute('d-dataValue');
+                        if (!(dataValue == null)) return [3, 2];
+                        return [4, this.Application.ExceptionHandler.HandleError('There is no d-datavalue in: {0}', dataKey)];
+                    case 1:
+                        _a.sent();
+                        return [2, ([])];
+                    case 2:
+                        query = this.Application.Parser.ParseQuery(dataValue);
+                        if (!(query === null)) return [3, 4];
+                        return [4, this.Application.ExceptionHandler.HandleError('There is an error in query d-datavalue in: {0}', dataKey)];
+                    case 3:
+                        _a.sent();
+                        return [2, ([])];
+                    case 4:
+                        if (!(query.Error !== null)) return [3, 6];
+                        return [4, this.Application.ExceptionHandler.HandleError('Error parsing the query in: {0}. {1}', dataKey, query.Error)];
+                    case 5:
+                        _a.sent();
+                        return [2, ([])];
+                    case 6:
+                        if (!(query.Sources.length > 2)) return [3, 8];
+                        return [4, this.Application.ExceptionHandler.HandleError('Only support for 2 sources in query: {0}', dataKey)];
+                    case 7:
+                        _a.sent();
+                        return [2, ([])];
+                    case 8: return [4, this.ExecuteQuery(sector, dataKey, query)];
+                    case 9: return [2, (_a.sent())];
                 }
             });
         });
@@ -2575,6 +2614,110 @@ var DrapoStorage = (function () {
                 return [2, (item)];
             });
         });
+    };
+    DrapoStorage.prototype.ExecuteQuery = function (sector, dataKey, query) {
+        return __awaiter(this, void 0, void 0, function () {
+            var objects, objectsId, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, object, count, i;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        objects = [];
+                        objectsId = [];
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < query.Sources.length)) return [3, 4];
+                        querySource = query.Sources[i];
+                        querySourcePath = querySource.Source;
+                        isQuerySourceMustache = this.Application.Parser.IsMustache(querySourcePath);
+                        sourceDataKey = querySourcePath;
+                        sourceMustache = sourceDataKey;
+                        if (isQuerySourceMustache) {
+                            mustacheParts = this.Application.Parser.ParseMustache(querySourcePath);
+                            mustacheDataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
+                            sourceDataKey = mustacheDataKey;
+                        }
+                        else {
+                            sourceMustache = this.Application.Solver.CreateMustache([sourceDataKey]);
+                        }
+                        this.Application.Observer.SubscribeStorage(sourceDataKey, null, dataKey);
+                        return [4, this.RetrieveDataValue(sector, sourceMustache)];
+                    case 2:
+                        querySourceData = _a.sent();
+                        querySourceObjects = querySourceData.length ? querySourceData : [querySourceData];
+                        for (j = 0; j < querySourceObjects.length; j++) {
+                            querySourceObject = querySourceObjects[j];
+                            object = this.EnsureQueryObject(query, querySource, i, objects, objectsId, querySourceObject);
+                            if (object === null)
+                                continue;
+                            this.InjectQueryObjectProjections(query, querySource, object, querySourceObject);
+                        }
+                        _a.label = 3;
+                    case 3:
+                        i++;
+                        return [3, 1];
+                    case 4:
+                        count = query.Sources.length;
+                        if (count > 1) {
+                            for (i = objects.length - 1; i >= 0; i--) {
+                                if (objectsId[i].length === count)
+                                    continue;
+                                objects.splice(i, 1);
+                            }
+                        }
+                        return [2, (objects)];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.EnsureQueryObject = function (query, querySource, indexSource, objects, objectsIds, querySourceObject) {
+        var object = null;
+        if (query.Sources.length == 1) {
+            object = {};
+            objects.push(object);
+            return (object);
+        }
+        var joinCondition = query.Sources[1].JoinConditions[0];
+        var column = joinCondition.SourceLeft == querySource.Alias ? joinCondition.ColumnLeft : joinCondition.ColumnRight;
+        var id = querySourceObject[column];
+        if (indexSource === 0) {
+            object = {};
+            objects.push(object);
+            var ids = [];
+            ids.push(id);
+            objectsIds.push(ids);
+            return (object);
+        }
+        for (var i = 0; i < objects.length; i++) {
+            var objectsId = objectsIds[i];
+            if (objectsId.length > 1)
+                continue;
+            var objectId = objectsId[0];
+            if (objectId !== id)
+                continue;
+            objectsId.push(objectId);
+            return (objects[i]);
+        }
+        return (null);
+    };
+    DrapoStorage.prototype.InjectQueryObjectProjections = function (query, querySource, object, sourceObject) {
+        var _a;
+        for (var i = 0; i < query.Projections.length; i++) {
+            var projection = query.Projections[i];
+            var source = projection.Source;
+            if (source !== null) {
+                if ((querySource.Alias !== null) && (source !== querySource.Alias))
+                    continue;
+                if ((querySource.Alias === null) && (source !== querySource.Source))
+                    continue;
+            }
+            else {
+                if (!sourceObject[projection.Column])
+                    continue;
+            }
+            var value = sourceObject[projection.Column];
+            object[(_a = projection.Alias) !== null && _a !== void 0 ? _a : projection.Column] = value;
+        }
     };
     return DrapoStorage;
 }());
