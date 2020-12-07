@@ -56,14 +56,14 @@ var DrapoCacheHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoCacheHandler.prototype, "CanUseLocalStorage", {
         get: function () {
             return ((this._hasLocalStorage) && (this._useLocalStorage));
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoCacheHandler.prototype.Initialize = function () {
