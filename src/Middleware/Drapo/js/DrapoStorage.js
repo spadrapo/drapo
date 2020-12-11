@@ -48,7 +48,7 @@ var DrapoStorage = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoStorage.prototype.Retrieve = function (elj, dataKey, sector, context, dataKeyParts) {
@@ -2679,7 +2679,8 @@ var DrapoStorage = (function () {
         }
         var joinCondition = query.Sources[1].JoinConditions[0];
         var column = joinCondition.SourceLeft == querySource.Alias ? joinCondition.ColumnLeft : joinCondition.ColumnRight;
-        var id = querySourceObject[column];
+        var isObject = typeof querySourceObject === 'object';
+        var id = isObject ? querySourceObject[column] : querySourceObject;
         if (indexSource === 0) {
             object = {};
             objects.push(object);
@@ -2701,10 +2702,11 @@ var DrapoStorage = (function () {
         return (null);
     };
     DrapoStorage.prototype.InjectQueryObjectProjections = function (query, querySource, object, sourceObject) {
-        var _a;
+        var _a, _b;
         for (var i = 0; i < query.Projections.length; i++) {
             var projection = query.Projections[i];
             var source = projection.Source;
+            var isObject = typeof sourceObject === 'object';
             if (source !== null) {
                 if ((querySource.Alias !== null) && (source !== querySource.Alias))
                     continue;
@@ -2712,11 +2714,13 @@ var DrapoStorage = (function () {
                     continue;
             }
             else {
-                if (!sourceObject[projection.Column])
+                if ((isObject) && (!sourceObject[projection.Column]))
+                    continue;
+                if ((!isObject) && ((_a = querySource.Alias, (_a !== null && _a !== void 0 ? _a : querySource.Source)) !== projection.Column))
                     continue;
             }
-            var value = sourceObject[projection.Column];
-            object[(_a = projection.Alias) !== null && _a !== void 0 ? _a : projection.Column] = value;
+            var value = isObject ? sourceObject[projection.Column] : sourceObject;
+            object[_b = projection.Alias, (_b !== null && _b !== void 0 ? _b : projection.Column)] = value;
         }
     };
     return DrapoStorage;
