@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/DataQueryInnerJoinMustache.html",
+      "launchUrl": "DrapoPages/DataQueryArray.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

@@ -781,6 +781,11 @@ namespace WebDrapo.Test
             ValidatePage("DataPostGetMustache");
         }
         [TestCase]
+        public void DataQueryArrayTest()
+        {
+            ValidatePage("DataQueryArray");
+        }
+        [TestCase]
         public void DataQueryInnerJoinTest()
         {
             ValidatePage("DataQueryInnerJoin");

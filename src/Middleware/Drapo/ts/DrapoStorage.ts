@@ -1802,7 +1802,8 @@ class DrapoStorage {
         }
         const joinCondition = query.Sources[1].JoinConditions[0];
         const column: string = joinCondition.SourceLeft == querySource.Alias ? joinCondition.ColumnLeft : joinCondition.ColumnRight;
-        const id: string = querySourceObject[column];
+        const isObject: boolean = typeof querySourceObject === 'object';
+        const id: string = isObject ? querySourceObject[column] : querySourceObject;
         if (indexSource === 0) {
             object = {};
             objects.push(object);
@@ -1828,16 +1829,19 @@ class DrapoStorage {
         for (let i: number = 0; i < query.Projections.length; i++) {
             const projection: DrapoQueryProjection = query.Projections[i];
             const source: string = projection.Source;
+            const isObject: boolean = typeof sourceObject === 'object';
             if (source !== null) {
                 if ((querySource.Alias !== null) && (source !== querySource.Alias))
                     continue;
                 if ((querySource.Alias === null) && (source !== querySource.Source))
                     continue;
             } else {
-                if (!sourceObject[projection.Column])
+                if ((isObject) && (!sourceObject[projection.Column]))
+                    continue;
+                if ((!isObject) && ((querySource.Alias ?? querySource.Source) !== projection.Column))
                     continue;
             }
-            const value: any = sourceObject[projection.Column];
+            const value: any = isObject ? sourceObject[projection.Column] : sourceObject;
             object[projection.Alias ?? projection.Column] = value;
         }
     }
