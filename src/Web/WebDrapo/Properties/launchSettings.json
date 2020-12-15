@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/DataQueryArray.html",
+      "launchUrl": "DrapoPages/FunctionClipboardAsync.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
