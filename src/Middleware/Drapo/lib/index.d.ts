@@ -657,6 +657,8 @@ declare class DrapoDocument {
     private GetClipboardValueAsync;
     private GetClipboardValueExecCommand;
     SetClipboard(value: string): Promise<boolean>;
+    private SetClipboardEvent;
+    private SetClipboardTextArea;
     StartUnitTest(): Promise<void>;
 }
 

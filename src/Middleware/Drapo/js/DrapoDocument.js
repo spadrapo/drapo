@@ -1778,6 +1778,47 @@ var DrapoDocument = (function () {
     };
     DrapoDocument.prototype.SetClipboard = function (value) {
         return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.SetClipboardEvent(value)];
+                    case 1:
+                        if (_a.sent())
+                            return [2, (true)];
+                        return [4, this.SetClipboardTextArea(value)];
+                    case 2: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
+    DrapoDocument.prototype.SetClipboardEvent = function (value) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result, listener;
+            return __generator(this, function (_a) {
+                result = false;
+                listener = function (ev) {
+                    if (!ev.clipboardData)
+                        return (false);
+                    ev.preventDefault();
+                    ev.clipboardData.setData('text/plain', value);
+                    result = true;
+                    return (true);
+                };
+                try {
+                    document.addEventListener('copy', listener);
+                    document.execCommand('copy');
+                }
+                catch (_b) {
+                    return [2, (false)];
+                }
+                finally {
+                    document.removeEventListener('copy', listener);
+                }
+                return [2, (result)];
+            });
+        });
+    };
+    DrapoDocument.prototype.SetClipboardTextArea = function (value) {
+        return __awaiter(this, void 0, void 0, function () {
             var el, result;
             return __generator(this, function (_a) {
                 el = document.createElement('textarea');

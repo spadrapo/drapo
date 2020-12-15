@@ -1461,6 +1461,33 @@ class DrapoDocument {
     }
 
     public async SetClipboard(value: string): Promise<boolean> {
+        if (await this.SetClipboardEvent(value))
+            return (true);
+        return (await this.SetClipboardTextArea(value));
+    }
+
+    private async SetClipboardEvent(value: string): Promise<boolean> {
+        let result: boolean = false;
+        const listener = (ev: any) => {
+            if (!ev.clipboardData)
+                return (false);
+            ev.preventDefault();
+            ev.clipboardData.setData('text/plain', value);
+            result = true;
+            return (true);
+        };
+        try {
+            document.addEventListener('copy', listener);
+            document.execCommand('copy');
+        } catch{
+            return (false);
+        } finally {
+            document.removeEventListener('copy', listener);
+        }
+        return (result);
+    }
+
+    private async SetClipboardTextArea(value: string): Promise<boolean> {
         const el = document.createElement('textarea');
         el.setAttribute('style', 'width:1px;height:0px;border:0;opacity:0;');
         el.value = value;
