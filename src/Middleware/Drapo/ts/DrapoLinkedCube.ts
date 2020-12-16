@@ -18,7 +18,7 @@
         //Context
         for (let i: number = 0; i < context.length; i++) {
             const contextValue: string = context[i];
-            while ((compare = contextValue.localeCompare(node.Context[i])) !== 0) {
+            while ((compare = this.Compare(contextValue,node.Context[i])) !== 0) {
                 if (compare < 0) {
                     const nodeNew: DrapoLinkedCubeNode<T> = this.CreateNode(context, value);
                     this.AddNodeNext(nodeNew, node, i);
@@ -48,11 +48,17 @@
     }
 
     public Get(context: string[]): T {
+        let entry: [DrapoLinkedCubeNode<T>, number] = null;
         let node: DrapoLinkedCubeNode<T> = this._head;
+        let index: number = 0;
         while (node !== null) {
             if (this.IsEqualContext(node.Context, context))
                 return (node.Value);
-            node = this.GetNextInContext(node, context);
+            entry = this.GetNextInContext(node, context, index);
+            if (entry === null)
+                break;
+            node = entry[0];
+            index = entry[1];
         }
         return (null);
     }
@@ -60,11 +66,17 @@
     public GetNode(context: string[]): DrapoLinkedCubeNode<T> {
         if (context == null)
             return (null);
+        let entry: [DrapoLinkedCubeNode<T>,number] = null;
         let node: DrapoLinkedCubeNode<T> = this._head;
+        let index: number = 0;
         while (node !== null) {
             if (this.IsEqualContext(context, node.Context, false))
                 return (node);
-            node = this.GetNextInContext(node, context);
+            entry = this.GetNextInContext(node, context, index);
+            if (entry === null)
+                break;
+            node = entry[0];
+            index = entry[1];
         }
         return (null);
     }
@@ -83,7 +95,7 @@
         //Context
         for (let i: number = 0; ((i < context.length) && (node !== null)); i++) {
             const contextValue: string = context[i];
-            while ((compare = contextValue.localeCompare(node.Context[i])) !== 0) {
+            while ((compare = this.Compare(contextValue,node.Context[i])) !== 0) {
                 if (compare < 0) {
                     return (null);
                 } else {
@@ -125,18 +137,26 @@
         return (node);
     }
 
-    private GetNextInContext(node: DrapoLinkedCubeNode<T>, context: string[]): DrapoLinkedCubeNode<T> {
-        for (let i: number = 0; i < context.length; i++) {
-            const compare: number = context[i].localeCompare(node.Context[i]);
+    private GetNextInContext(node: DrapoLinkedCubeNode<T>, context: string[], index : number): [DrapoLinkedCubeNode<T>,number] {
+        for (let i: number = index; i < context.length; i++) {
+            const compare: number = this.Compare(context[i],node.Context[i]);
             if (compare < 0)
                 return (null);
             else if (compare === 0)
                 continue;
             if ((node.Next === null) || (node.Next.length <= i))
                 return (null);
-            return (node.Next[i]);
+            return ([node.Next[i], i]);
         }
         return (null);
+    }
+
+    private Compare(value1: string, value2: string): number {
+        if (value1 < value2)
+            return (-1);
+        if (value1 > value2)
+            return (1);
+        return (0);
     }
 
     private GetNextReverse(node: DrapoLinkedCubeNode<T>, index: number = null): DrapoLinkedCubeNode<T> {

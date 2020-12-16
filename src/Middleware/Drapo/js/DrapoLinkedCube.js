@@ -18,7 +18,7 @@ var DrapoLinkedCube = (function () {
         var compare = 0;
         for (var i = 0; i < context.length; i++) {
             var contextValue = context[i];
-            while ((compare = contextValue.localeCompare(node.Context[i])) !== 0) {
+            while ((compare = this.Compare(contextValue, node.Context[i])) !== 0) {
                 if (compare < 0) {
                     var nodeNew = this.CreateNode(context, value);
                     this.AddNodeNext(nodeNew, node, i);
@@ -47,22 +47,34 @@ var DrapoLinkedCube = (function () {
         return (node);
     };
     DrapoLinkedCube.prototype.Get = function (context) {
+        var entry = null;
         var node = this._head;
+        var index = 0;
         while (node !== null) {
             if (this.IsEqualContext(node.Context, context))
                 return (node.Value);
-            node = this.GetNextInContext(node, context);
+            entry = this.GetNextInContext(node, context, index);
+            if (entry === null)
+                break;
+            node = entry[0];
+            index = entry[1];
         }
         return (null);
     };
     DrapoLinkedCube.prototype.GetNode = function (context) {
         if (context == null)
             return (null);
+        var entry = null;
         var node = this._head;
+        var index = 0;
         while (node !== null) {
             if (this.IsEqualContext(context, node.Context, false))
                 return (node);
-            node = this.GetNextInContext(node, context);
+            entry = this.GetNextInContext(node, context, index);
+            if (entry === null)
+                break;
+            node = entry[0];
+            index = entry[1];
         }
         return (null);
     };
@@ -78,7 +90,7 @@ var DrapoLinkedCube = (function () {
         var compare = 0;
         for (var i = 0; ((i < context.length) && (node !== null)); i++) {
             var contextValue = context[i];
-            while ((compare = contextValue.localeCompare(node.Context[i])) !== 0) {
+            while ((compare = this.Compare(contextValue, node.Context[i])) !== 0) {
                 if (compare < 0) {
                     return (null);
                 }
@@ -118,18 +130,25 @@ var DrapoLinkedCube = (function () {
         node.Value = value;
         return (node);
     };
-    DrapoLinkedCube.prototype.GetNextInContext = function (node, context) {
-        for (var i = 0; i < context.length; i++) {
-            var compare = context[i].localeCompare(node.Context[i]);
+    DrapoLinkedCube.prototype.GetNextInContext = function (node, context, index) {
+        for (var i = index; i < context.length; i++) {
+            var compare = this.Compare(context[i], node.Context[i]);
             if (compare < 0)
                 return (null);
             else if (compare === 0)
                 continue;
             if ((node.Next === null) || (node.Next.length <= i))
                 return (null);
-            return (node.Next[i]);
+            return ([node.Next[i], i]);
         }
         return (null);
+    };
+    DrapoLinkedCube.prototype.Compare = function (value1, value2) {
+        if (value1 < value2)
+            return (-1);
+        if (value1 > value2)
+            return (1);
+        return (0);
     };
     DrapoLinkedCube.prototype.GetNextReverse = function (node, index) {
         if (index === void 0) { index = null; }

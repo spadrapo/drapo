@@ -8,6 +8,7 @@ declare class DrapoLinkedCube<T> {
     GetHead(): DrapoLinkedCubeNode<T>;
     private CreateNode;
     private GetNextInContext;
+    private Compare;
     private GetNextReverse;
     private GetNextReverseIndex;
     private IsEqualContext;
