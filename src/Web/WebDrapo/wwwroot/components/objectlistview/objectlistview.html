@@ -1,0 +1,36 @@
+<div d-sector="@" dc-title="" dc-subtitle="" dc-datakey="" dc-dataitem="" dc-count="" dc-listname="">
+    <div style="width:100%">
+        <div>
+            <!--Data-->
+            <div d-dataKey="dcProperties" d-dataType="parent" d-dataLoadType="reference" d-dataValue="dc-"></div>
+            <div d-dataKey="dcObjectListViewSelectedObjectsCode" d-dataType="mapping" d-dataValue="{{dcProperties.datakey}}" d-dataMappingField="{{dcProperties.dataitem}}"></div>
+            <div d-dataKey="dcObjectListViewListObjects" d-dataUrlGet="~/api/Explorer/GetObjectsForSecurity"></div>
+            <div d-dataKey="dcObjectListViewListSelectedObjectsList" d-dataType="query" d-dataValue="SELECT LO.Code AS Code, LO.Name, LO.TypeImageClass FROM dcObjectListViewListObjects AS LO INNER JOIN dcObjectListViewSelectedObjectsCode AS SO ON LO.Code = SO"></div>
+            <!--Action-->
+            <div d-dataKey="dcObjectListViewOpenPanel" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateDataField(panelDefinitionClipboard,Sector,GetSector());UpdateDataField(panelDefinitionClipboard,Title,{{dcProperties.title}},true,true);UpdateDataField(panelDefinitionClipboard,Subtitle,{{dcProperties.subtitle}},true,true);UpdateDataField(panelObjectClipboard,codeObjectsSelectedObjectClipboard,{{dcObjectListViewSelectedObjectsCode}});ShowWindow(~/app/components/objectlistview/panelObjectNewEdit.html,panel)"></div>
+        </div>
+        <!--Layout-->
+        <div class="suFlexContainerContentAuto">
+            <div class="suFlexContainerRow suListViewHeader">
+                <div class="suFlexContainerRowItem">
+                    <label class="suListViewHeaderTitle" d-model="{{dcProperties.listname}}"></label>
+                    <span class="suListViewHeaderNumber" d-model="{{dcObjectListViewListSelectedObjectsList.length}}"></span>
+                </div>
+                <div class="suFlexContainerRowItem suListViewHeaderButtons">
+                    <input type="button" class="suButtonText suButtonSmall" d-attr-value="{{word.Edit}}" d-on-click="{{dcObjectListViewOpenPanel}}" />
+                </div>
+            </div>
+            <div class="suContainerPadding">
+                <div class="suListViewTable">
+                    <div d-for="object in dcObjectListViewListSelectedObjectsList" d-if="({{object._Index}} < {{dcProperties.count}}) || ({{dcProperties.count}}=)" class="suListViewTableTr">
+                        <div class="suListViewTableTd">
+                            <span d-class="{{{object.TypeImageClass}}}"></span>
+                            <span d-model="{{object.Name}}" ></span>
+                        </div>
+                    </div>
+                </div>
+                <span d-if="({{dcObjectListViewListSelectedObjectsList.length}} > {{dcProperties.count}}) && ({{dcProperties.count}} !=)" d-on-click="{{dcObjectListViewOpenPanel}}" class="suListViewShowAllButton" d-model="{{text.ShowAll}}"></span>
+            </div>
+        </div>
+    </div>
+</div>
