@@ -61,6 +61,7 @@ declare class DrapoStorage {
     private RetrieveDataKeyInitializeMapping;
     private RetrieveDataKeyInitializeFunction;
     private RetrieveDataKeyInitializeQueryString;
+    private RetrieveDataKeyInitializeQuery;
     private RetrieveDataKeyInitializeParent;
     private BuildObject;
     private RetrieveDataKeyInitializeObject;
@@ -131,4 +132,7 @@ declare class DrapoStorage {
     private RetrieveDataItemInternalSystemObjectsWatchsValues;
     private RetrieveDataItemInternalSystemBrowser;
     private RetrieveDataItemInternalSystemDebuggerProperties;
+    private ExecuteQuery;
+    private EnsureQueryObject;
+    private InjectQueryObjectProjections;
 }

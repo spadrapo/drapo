@@ -802,6 +802,8 @@ class DrapoStorage {
             return (await this.RetrieveDataKeyInitializeFunction(dataKey, el));
         if (type == 'querystring')
             return (this.RetrieveDataKeyInitializeQueryString(el, sector));
+        if (type == 'query')
+            return (this.RetrieveDataKeyInitializeQuery(el, sector, dataKey));
         if (type == 'parent')
             return (this.RetrieveDataKeyInitializeParent(el, sector));
         return (null);
@@ -885,6 +887,30 @@ class DrapoStorage {
             object[key] = value;
         }
         return (object);
+    }
+
+    private async RetrieveDataKeyInitializeQuery(el: HTMLElement, sector: string, dataKey: string): Promise<any[]> {
+        const dataValue: string = el.getAttribute('d-dataValue');
+        if (dataValue == null)
+        {
+            await this.Application.ExceptionHandler.HandleError('There is no d-datavalue in: {0}', dataKey);
+            return ([]);
+        }
+        const query: DrapoQuery = this.Application.Parser.ParseQuery(dataValue);
+        if (query === null)
+        {
+            await this.Application.ExceptionHandler.HandleError('There is an error in query d-datavalue in: {0}', dataKey);
+            return ([]);
+        }
+        if (query.Error !== null) {
+            await this.Application.ExceptionHandler.HandleError('Error parsing the query in: {0}. {1}', dataKey, query.Error);
+            return ([]);
+        }
+        if (query.Sources.length > 2) {
+            await this.Application.ExceptionHandler.HandleError('Only support for 2 sources in query: {0}', dataKey);
+            return ([]);
+        }
+        return (await this.ExecuteQuery(sector, dataKey, query));
     }
 
     private RetrieveDataKeyInitializeParent(el: HTMLElement, sector: string): any {
@@ -1720,5 +1746,103 @@ class DrapoStorage {
         data.persist = false;
         const item: DrapoStorageItem = this.CreateDataItemInternal(dataKey, data);
         return (item);
+    }
+
+    private async ExecuteQuery(sector: string, dataKey: string, query: DrapoQuery): Promise<any[]> {
+        const objects: any[] = [];
+        const objectsId: string[][] = [];
+        for (let i: number = 0; i < query.Sources.length; i++) {
+            const querySource: DrapoQuerySource = query.Sources[i];
+            const querySourcePath: string = querySource.Source;
+            const isQuerySourceMustache: boolean = this.Application.Parser.IsMustache(querySourcePath);
+            //DataKey
+            let sourceDataKey: string = querySourcePath;
+            let sourceMustache: string = sourceDataKey;
+            if (isQuerySourceMustache) {
+                const mustacheParts: string[] = this.Application.Parser.ParseMustache(querySourcePath);
+                const mustacheDataKey: string = this.Application.Solver.ResolveDataKey(mustacheParts);
+                sourceDataKey = mustacheDataKey;
+            } else {
+                sourceMustache = this.Application.Solver.CreateMustache([sourceDataKey]);
+            }
+            //Subscribe
+            this.Application.Observer.SubscribeStorage(sourceDataKey, null, dataKey);
+            //Data
+            const querySourceData = await this.RetrieveDataValue(sector, sourceMustache);
+            const querySourceObjects: any[] = querySourceData.length ? querySourceData : [querySourceData];
+            for (let j: number = 0; j < querySourceObjects.length; j++) {
+                const querySourceObject: any = querySourceObjects[j];
+                //Search
+                const object: any = this.EnsureQueryObject(query, querySource, i, objects, objectsId, querySourceObject);
+                if (object === null)
+                    continue;
+                //Inject
+                this.InjectQueryObjectProjections(query, querySource, object, querySourceObject);
+            }
+        }
+        //Unmatched
+        const count: number = query.Sources.length;
+        if (count > 1) {
+            for (let i: number = objects.length - 1; i >= 0; i--) {
+                if (objectsId[i].length === count)
+                    continue;
+                objects.splice(i, 1);
+            }
+        }
+        return (objects);
+    }
+
+    private EnsureQueryObject(query: DrapoQuery, querySource: DrapoQuerySource, indexSource: number, objects: any[], objectsIds: string[][], querySourceObject: any): any {
+        let object: any = null;
+        //Only One
+        if (query.Sources.length == 1) {
+            object = {};
+            objects.push(object);
+            return (object);
+        }
+        const joinCondition = query.Sources[1].JoinConditions[0];
+        const column: string = joinCondition.SourceLeft == querySource.Alias ? joinCondition.ColumnLeft : joinCondition.ColumnRight;
+        const isObject: boolean = typeof querySourceObject === 'object';
+        const id: string = isObject ? querySourceObject[column] : querySourceObject;
+        if (indexSource === 0) {
+            object = {};
+            objects.push(object);
+            const ids: string[] = [];
+            ids.push(id);
+            objectsIds.push(ids);
+            return (object);
+        }
+        for (let i: number = 0; i < objects.length; i++) {
+            const objectsId: string[] = objectsIds[i];
+            if (objectsId.length > 1)
+                continue;
+            const objectId = objectsId[0];
+            if (objectId !== id)
+                continue;
+            objectsId.push(objectId);
+            return (objects[i]);
+        }
+        return (null);
+    }
+
+    private InjectQueryObjectProjections(query: DrapoQuery, querySource: DrapoQuerySource, object: any, sourceObject: any) : void {
+        for (let i: number = 0; i < query.Projections.length; i++) {
+            const projection: DrapoQueryProjection = query.Projections[i];
+            const source: string = projection.Source;
+            const isObject: boolean = typeof sourceObject === 'object';
+            if (source !== null) {
+                if ((querySource.Alias !== null) && (source !== querySource.Alias))
+                    continue;
+                if ((querySource.Alias === null) && (source !== querySource.Source))
+                    continue;
+            } else {
+                if ((isObject) && (!sourceObject[projection.Column]))
+                    continue;
+                if ((!isObject) && ((querySource.Alias ?? querySource.Source) !== projection.Column))
+                    continue;
+            }
+            const value: any = isObject ? sourceObject[projection.Column] : sourceObject;
+            object[projection.Alias ?? projection.Column] = value;
+        }
     }
 }

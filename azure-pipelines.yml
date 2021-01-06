@@ -34,19 +34,19 @@ stages:
       inputs:
         gulpFile: src/Web/WebDrapo/gulpfile.js
         targets: 'buildDrapoLib:tslint'
-    - task: DotNetCoreCLI@1
+    - task: DotNetCoreCLI@2
       displayName: Build
       inputs:
         projects: '**/*.csproj'
         arguments: '--configuration $(BuildConfiguration)'
-    - task: DotNetCoreCLI@1
+    - task: DotNetCoreCLI@2
       displayName: Test
       inputs:
         command: test
         projects: '**/*Tests/*.csproj'
         arguments: '--configuration $(BuildConfiguration)'
       enabled: false
-    - task: DotNetCoreCLI@1
+    - task: DotNetCoreCLI@2
       displayName: Publish
       inputs:
         command: publish
@@ -60,13 +60,6 @@ stages:
         command: 'pack'
         packagesToPack: '**\*.nuspec'
         versioningScheme: byBuildNumber
-    # - task: NuGetCommand@2
-    #   displayName: 'NuGet push VSTS'
-    #   condition: eq(variables['isCD'], 'true')
-    #   inputs:
-    #     command: push
-    #     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    #     publishVstsFeed: '716f73eb-2942-4cb4-811d-b2f48cf0c105'
     - task: NuGetCommand@2
       displayName: 'NuGet push nuget'
       condition: eq(variables['isCD'], 'true')

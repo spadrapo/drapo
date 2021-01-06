@@ -656,7 +656,9 @@ declare class DrapoDocument {
     GetClipboard(): Promise<string>;
     private GetClipboardValueAsync;
     private GetClipboardValueExecCommand;
-    SetClipboard(value: string): Promise<void>;
+    SetClipboard(value: string): Promise<boolean>;
+    private SetClipboardEvent;
+    private SetClipboardTextArea;
     StartUnitTest(): Promise<void>;
 }
 
@@ -961,6 +963,7 @@ declare class DrapoLinkedCube<T> {
     GetHead(): DrapoLinkedCubeNode<T>;
     private CreateNode;
     private GetNextInContext;
+    private Compare;
     private GetNextReverse;
     private GetNextReverseIndex;
     private IsEqualContext;
@@ -1266,6 +1269,17 @@ declare class DrapoParser {
     ParseFormat(format: string): string[];
     private IsFormatCharacterCompatible;
     ParsePixels(value: string): number;
+    ParseQuery(value: string): DrapoQuery;
+    ParseQueryProjections(value: string): DrapoQueryProjection[];
+    private ParseQueryProjection;
+    private ParseQueryProjectionAlias;
+    private ParseQuerySources;
+    private ParseQuerySource;
+    private ParseQueryConditional;
+    private ParseSubstring;
+    private ParseQuerySourcesSplit;
+    private ParseQuerySourceHead;
+    private ParseQuerySourceHeadValue;
 }
 
 declare class DrapoPipeMessage {
@@ -1296,6 +1310,63 @@ declare class DrapoPlumber {
     NotifyPipeStorage(message: DrapoPipeMessage): Promise<void>;
     private NofityPipeRegister;
     private NofityPipeExecute;
+}
+
+declare class DrapoQuery {
+    private _error;
+    private _projections;
+    private _sources;
+    get Error(): string;
+    set Error(value: string);
+    get Projections(): DrapoQueryProjection[];
+    set Projections(value: DrapoQueryProjection[]);
+    get Sources(): DrapoQuerySource[];
+    set Sources(value: DrapoQuerySource[]);
+}
+
+declare class DrapoQueryCondition {
+    private _sourceLeft;
+    private _columnLeft;
+    private _comparator;
+    private _sourceRight;
+    private _columnRight;
+    get SourceLeft(): string;
+    set SourceLeft(value: string);
+    get ColumnLeft(): string;
+    set ColumnLeft(value: string);
+    get Comparator(): string;
+    set Comparator(value: string);
+    get SourceRight(): string;
+    set SourceRight(value: string);
+    get ColumnRight(): string;
+    set ColumnRight(value: string);
+}
+
+declare class DrapoQueryProjection {
+    private _source;
+    private _column;
+    private _alias;
+    get Source(): string;
+    set Source(value: string);
+    get Column(): string;
+    set Column(value: string);
+    get Alias(): string;
+    set Alias(value: string);
+}
+
+declare class DrapoQuerySource {
+    private _joinType;
+    private _source;
+    private _alias;
+    private _joinConditions;
+    get JoinType(): string;
+    set JoinType(value: string);
+    get Source(): string;
+    set Source(value: string);
+    get Alias(): string;
+    set Alias(value: string);
+    get JoinConditions(): DrapoQueryCondition[];
+    set JoinConditions(value: DrapoQueryCondition[]);
 }
 
 declare class DrapoRange {
@@ -1723,6 +1794,7 @@ declare class DrapoStorage {
     private RetrieveDataKeyInitializeMapping;
     private RetrieveDataKeyInitializeFunction;
     private RetrieveDataKeyInitializeQueryString;
+    private RetrieveDataKeyInitializeQuery;
     private RetrieveDataKeyInitializeParent;
     private BuildObject;
     private RetrieveDataKeyInitializeObject;
@@ -1793,6 +1865,9 @@ declare class DrapoStorage {
     private RetrieveDataItemInternalSystemObjectsWatchsValues;
     private RetrieveDataItemInternalSystemBrowser;
     private RetrieveDataItemInternalSystemDebuggerProperties;
+    private ExecuteQuery;
+    private EnsureQueryObject;
+    private InjectQueryObjectProjections;
 }
 
 declare class DrapoStorageItem {

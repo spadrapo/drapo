@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Array</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Array</span>
+        <div d-datakey="objects1" d-dataurlget="~/Data/GetLevels?children=5&amp;prefix=O1"></div>
+        <div d-datakey="objects2" d-dataurlget="~/Data/GetArray?prefix=L0V&amp;divisor=2"></div>
+        <div d-datakey="objectsQuery" d-datatype="query" d-datavalue="SELECT O1.Key AS Key, O2 AS Value FROM objects1 AS O1 INNER JOIN objects2 AS O2 ON O1.Value = O2"></div>
+        <div>
+            <div d-for="object in objectsQuery" style="display: none;">
+                <span>{{object.Key}}</span>
+                <span>{{object.Value}}</span>
+                <br />
+            </div>
+        <div>
+                <span>O1L0K0</span>
+                <span>L0V0</span>
+                <br />
+            </div><div>
+                <span>O1L0K2</span>
+                <span>L0V2</span>
+                <br />
+            </div><div>
+                <span>O1L0K4</span>
+                <span>L0V4</span>
+                <br />
+            </div></div>
+    </div>
+
+</body></html>

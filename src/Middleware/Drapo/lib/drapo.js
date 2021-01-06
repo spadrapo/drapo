@@ -2570,15 +2570,21 @@ var DrapoCacheHandler = (function () {
         return (true);
     };
     DrapoCacheHandler.prototype.GetClientDataCache = function (cacheKey) {
+        var value = null;
         try {
-            var value = window.localStorage.getItem(cacheKey);
+            value = window.localStorage.getItem(cacheKey);
             if (value == null)
                 return (null);
-            return (this.Application.Serializer.Deserialize(value));
         }
         catch (e) {
             this._useLocalStorage = false;
-            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - GetClientDataCache');
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - GetClientDataCache :' + cacheKey);
+        }
+        try {
+            return (this.Application.Serializer.Deserialize(value));
+        }
+        catch (_a) {
+            return (null);
         }
     };
     DrapoCacheHandler.prototype.SetClientDataCache = function (cacheKey, value) {
@@ -8101,15 +8107,21 @@ var DrapoDocument = (function () {
     };
     DrapoDocument.prototype.GetClipboard = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var value;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, this.GetClipboardValueAsync()];
+            var value, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        return [4, this.GetClipboardValueAsync()];
                     case 1:
-                        value = _a.sent();
+                        value = _b.sent();
                         if (value !== null)
                             return [2, (value)];
                         return [2, (this.GetClipboardValueExecCommand())];
+                    case 2:
+                        _a = _b.sent();
+                        return [2, ('')];
+                    case 3: return [2];
                 }
             });
         });
@@ -8149,16 +8161,57 @@ var DrapoDocument = (function () {
     };
     DrapoDocument.prototype.SetClipboard = function (value) {
         return __awaiter(this, void 0, void 0, function () {
-            var el;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.SetClipboardEvent(value)];
+                    case 1:
+                        if (_a.sent())
+                            return [2, (true)];
+                        return [4, this.SetClipboardTextArea(value)];
+                    case 2: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
+    DrapoDocument.prototype.SetClipboardEvent = function (value) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result, listener;
+            return __generator(this, function (_a) {
+                result = false;
+                listener = function (ev) {
+                    if (!ev.clipboardData)
+                        return (false);
+                    ev.preventDefault();
+                    ev.clipboardData.setData('text/plain', value);
+                    result = true;
+                    return (true);
+                };
+                try {
+                    document.addEventListener('copy', listener);
+                    document.execCommand('copy');
+                }
+                catch (_b) {
+                    return [2, (false)];
+                }
+                finally {
+                    document.removeEventListener('copy', listener);
+                }
+                return [2, (result)];
+            });
+        });
+    };
+    DrapoDocument.prototype.SetClipboardTextArea = function (value) {
+        return __awaiter(this, void 0, void 0, function () {
+            var el, result;
             return __generator(this, function (_a) {
                 el = document.createElement('textarea');
                 el.setAttribute('style', 'width:1px;height:0px;border:0;opacity:0;');
                 el.value = value;
                 document.body.appendChild(el);
                 el.select();
-                document.execCommand('copy');
+                result = document.execCommand('copy');
                 document.body.removeChild(el);
-                return [2];
+                return [2, (result)];
             });
         });
     };
@@ -12657,7 +12710,7 @@ var DrapoLinkedCube = (function () {
         var compare = 0;
         for (var i = 0; i < context.length; i++) {
             var contextValue = context[i];
-            while ((compare = contextValue.localeCompare(node.Context[i])) !== 0) {
+            while ((compare = this.Compare(contextValue, node.Context[i])) !== 0) {
                 if (compare < 0) {
                     var nodeNew = this.CreateNode(context, value);
                     this.AddNodeNext(nodeNew, node, i);
@@ -12686,20 +12739,34 @@ var DrapoLinkedCube = (function () {
         return (node);
     };
     DrapoLinkedCube.prototype.Get = function (context) {
+        var entry = null;
         var node = this._head;
+        var index = 0;
         while (node !== null) {
             if (this.IsEqualContext(node.Context, context))
                 return (node.Value);
-            node = this.GetNextInContext(node, context);
+            entry = this.GetNextInContext(node, context, index);
+            if (entry === null)
+                break;
+            node = entry[0];
+            index = entry[1];
         }
         return (null);
     };
     DrapoLinkedCube.prototype.GetNode = function (context) {
+        if (context == null)
+            return (null);
+        var entry = null;
         var node = this._head;
+        var index = 0;
         while (node !== null) {
             if (this.IsEqualContext(context, node.Context, false))
                 return (node);
-            node = this.GetNextInContext(node, context);
+            entry = this.GetNextInContext(node, context, index);
+            if (entry === null)
+                break;
+            node = entry[0];
+            index = entry[1];
         }
         return (null);
     };
@@ -12715,7 +12782,7 @@ var DrapoLinkedCube = (function () {
         var compare = 0;
         for (var i = 0; ((i < context.length) && (node !== null)); i++) {
             var contextValue = context[i];
-            while ((compare = contextValue.localeCompare(node.Context[i])) !== 0) {
+            while ((compare = this.Compare(contextValue, node.Context[i])) !== 0) {
                 if (compare < 0) {
                     return (null);
                 }
@@ -12755,18 +12822,25 @@ var DrapoLinkedCube = (function () {
         node.Value = value;
         return (node);
     };
-    DrapoLinkedCube.prototype.GetNextInContext = function (node, context) {
-        for (var i = 0; i < context.length; i++) {
-            var compare = context[i].localeCompare(node.Context[i]);
+    DrapoLinkedCube.prototype.GetNextInContext = function (node, context, index) {
+        for (var i = index; i < context.length; i++) {
+            var compare = this.Compare(context[i], node.Context[i]);
             if (compare < 0)
                 return (null);
             else if (compare === 0)
                 continue;
             if ((node.Next === null) || (node.Next.length <= i))
                 return (null);
-            return (node.Next[i]);
+            return ([node.Next[i], i]);
         }
         return (null);
+    };
+    DrapoLinkedCube.prototype.Compare = function (value1, value2) {
+        if (value1 < value2)
+            return (-1);
+        if (value1 > value2)
+            return (1);
+        return (0);
     };
     DrapoLinkedCube.prototype.GetNextReverse = function (node, index) {
         if (index === void 0) { index = null; }
@@ -15679,6 +15753,154 @@ var DrapoParser = (function () {
         var valueNumber = this.ParseNumber(value.substr(0, value.length - 2));
         return (valueNumber);
     };
+    DrapoParser.prototype.ParseQuery = function (value) {
+        if ((value == null) || (value === ''))
+            return (null);
+        var query = new DrapoQuery();
+        var projections = this.ParseQueryProjections(value);
+        if (projections === null) {
+            query.Error = "Can't parse the projections.";
+            return (query);
+        }
+        query.Projections = projections;
+        var sources = this.ParseQuerySources(value);
+        if (sources === null) {
+            query.Error = "Can't parse the sources.";
+            return (query);
+        }
+        query.Sources = sources;
+        return (query);
+    };
+    DrapoParser.prototype.ParseQueryProjections = function (value) {
+        var tokenProjections = this.ParseSubstring(value, "SELECT", "FROM");
+        if (tokenProjections === null)
+            return (null);
+        var projections = [];
+        var tokenProjectionsSplit = this.ParseBlock(tokenProjections, ',');
+        for (var i = 0; i < tokenProjectionsSplit.length; i++) {
+            var tokenProjection = tokenProjectionsSplit[i];
+            var projection = this.ParseQueryProjection(tokenProjection);
+            if (projection === null)
+                return (null);
+            projections.push(projection);
+        }
+        return (projections);
+    };
+    DrapoParser.prototype.ParseQueryProjection = function (value) {
+        var valueTrim = this.Trim(value);
+        var valueTrimSplit = this.ParseBlock(valueTrim, ' ');
+        var alias = this.ParseQueryProjectionAlias(valueTrimSplit);
+        var valueTrimFirst = valueTrimSplit[0];
+        var isMustache = this.IsMustache(valueTrimFirst);
+        var valueTrimFirstSplit = isMustache ? [valueTrimFirst] : this.ParseBlock(valueTrimFirst, '.');
+        var source = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[0] : null;
+        var column = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[1] : valueTrimFirstSplit[0];
+        var projection = new DrapoQueryProjection();
+        projection.Alias = alias;
+        projection.Source = source;
+        projection.Column = column;
+        return (projection);
+    };
+    DrapoParser.prototype.ParseQueryProjectionAlias = function (values) {
+        if (values.length != 3)
+            return (null);
+        if (values[1].toUpperCase() !== 'AS')
+            return (null);
+        return (values[2]);
+    };
+    DrapoParser.prototype.ParseQuerySources = function (value) {
+        var tokenSources = this.ParseSubstring(value, 'FROM', 'WHERE', true);
+        var tokenSourcesSplit = this.ParseQuerySourcesSplit(tokenSources);
+        var sources = [];
+        for (var i = 0; i < tokenSourcesSplit.length; i++) {
+            var source = this.ParseQuerySource(tokenSourcesSplit[i]);
+            if (source === null)
+                return (null);
+            sources.push(source);
+        }
+        return (sources);
+    };
+    DrapoParser.prototype.ParseQuerySource = function (value) {
+        var source = new DrapoQuerySource();
+        var joinType = this.ParseQuerySourceHeadValue(value, 'JOIN');
+        source.JoinType = this.Trim(joinType);
+        var sourceToken = joinType === null ? value : this.ParseSubstring(value, 'JOIN', 'ON');
+        var sourceProjection = this.ParseQueryProjection(sourceToken);
+        source.Source = sourceProjection.Column;
+        source.Alias = sourceProjection.Alias;
+        if (joinType !== null) {
+            var indexOn = value.indexOf('ON');
+            if (indexOn < 0)
+                return (null);
+            var onToken = value.substring(indexOn + 2);
+            var onConditional = this.ParseQueryConditional(onToken);
+            if (onConditional === null)
+                return (null);
+            if (onConditional.Comparator !== '=')
+                return (null);
+            source.JoinConditions.push(onConditional);
+        }
+        return (source);
+    };
+    DrapoParser.prototype.ParseQueryConditional = function (value) {
+        var conditional = new DrapoQueryCondition();
+        var item = this.ParseExpression(value);
+        var leftProjection = this.ParseQueryProjection(item.Items[0].Value);
+        conditional.SourceLeft = leftProjection.Source;
+        conditional.ColumnLeft = leftProjection.Column;
+        conditional.Comparator = item.Items[1].Value;
+        var rightProjection = this.ParseQueryProjection(item.Items[2].Value);
+        conditional.SourceRight = rightProjection.Source;
+        conditional.ColumnRight = rightProjection.Column;
+        return (conditional);
+    };
+    DrapoParser.prototype.ParseSubstring = function (value, start, end, canMissEnd) {
+        if (canMissEnd === void 0) { canMissEnd = false; }
+        var indexStart = value.indexOf(start);
+        if (indexStart < 0)
+            return (null);
+        var indexEnd = value.indexOf(end);
+        if (indexEnd < 0) {
+            if (canMissEnd)
+                indexEnd = value.length;
+            else
+                return (null);
+        }
+        var substring = value.substring(indexStart + start.length, indexEnd);
+        return (substring);
+    };
+    DrapoParser.prototype.ParseQuerySourcesSplit = function (value) {
+        value = this.Trim(value);
+        var sources = [];
+        while (value.length != 0) {
+            var source = this.ParseQuerySourceHead(value);
+            sources.push(source);
+            if (value === source)
+                break;
+            value = value.substring(source.length, value.length);
+            value = this.Trim(value);
+        }
+        return (sources);
+    };
+    DrapoParser.prototype.ParseQuerySourceHead = function (value) {
+        var header = this.ParseQuerySourceHeadValue(value, 'INNER JOIN');
+        if (header !== null)
+            return (header);
+        header = this.ParseQuerySourceHeadValue(value, 'LEFT JOIN');
+        if (header !== null)
+            return (header);
+        header = this.ParseQuerySourceHeadValue(value, 'RIGHT JOIN');
+        if (header !== null)
+            return (header);
+        return (value);
+    };
+    DrapoParser.prototype.ParseQuerySourceHeadValue = function (value, search) {
+        var index = value.indexOf(search, 1);
+        if (index < 0)
+            return (null);
+        var header = value.substring(0, index);
+        return (header);
+    };
     return DrapoParser;
 }());
 
@@ -15954,6 +16176,199 @@ var DrapoPlumber = (function () {
         });
     };
     return DrapoPlumber;
+}());
+
+"use strict";
+var DrapoQuery = (function () {
+    function DrapoQuery() {
+        this._error = null;
+        this._projections = [];
+        this._sources = [];
+    }
+    Object.defineProperty(DrapoQuery.prototype, "Error", {
+        get: function () {
+            return (this._error);
+        },
+        set: function (value) {
+            this._error = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQuery.prototype, "Projections", {
+        get: function () {
+            return (this._projections);
+        },
+        set: function (value) {
+            this._projections = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQuery.prototype, "Sources", {
+        get: function () {
+            return (this._sources);
+        },
+        set: function (value) {
+            this._sources = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return DrapoQuery;
+}());
+
+"use strict";
+var DrapoQueryCondition = (function () {
+    function DrapoQueryCondition() {
+        this._sourceLeft = null;
+        this._columnLeft = null;
+        this._comparator = null;
+        this._sourceRight = null;
+        this._columnRight = null;
+    }
+    Object.defineProperty(DrapoQueryCondition.prototype, "SourceLeft", {
+        get: function () {
+            return (this._sourceLeft);
+        },
+        set: function (value) {
+            this._sourceLeft = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQueryCondition.prototype, "ColumnLeft", {
+        get: function () {
+            return (this._columnLeft);
+        },
+        set: function (value) {
+            this._columnLeft = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQueryCondition.prototype, "Comparator", {
+        get: function () {
+            return (this._comparator);
+        },
+        set: function (value) {
+            this._comparator = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQueryCondition.prototype, "SourceRight", {
+        get: function () {
+            return (this._sourceRight);
+        },
+        set: function (value) {
+            this._sourceRight = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQueryCondition.prototype, "ColumnRight", {
+        get: function () {
+            return (this._columnRight);
+        },
+        set: function (value) {
+            this._columnRight = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return DrapoQueryCondition;
+}());
+
+"use strict";
+var DrapoQueryProjection = (function () {
+    function DrapoQueryProjection() {
+        this._source = null;
+        this._column = null;
+        this._alias = null;
+    }
+    Object.defineProperty(DrapoQueryProjection.prototype, "Source", {
+        get: function () {
+            return (this._source);
+        },
+        set: function (value) {
+            this._source = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQueryProjection.prototype, "Column", {
+        get: function () {
+            return (this._column);
+        },
+        set: function (value) {
+            this._column = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQueryProjection.prototype, "Alias", {
+        get: function () {
+            return (this._alias);
+        },
+        set: function (value) {
+            this._alias = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return DrapoQueryProjection;
+}());
+
+"use strict";
+var DrapoQuerySource = (function () {
+    function DrapoQuerySource() {
+        this._joinType = null;
+        this._source = null;
+        this._alias = null;
+        this._joinConditions = [];
+    }
+    Object.defineProperty(DrapoQuerySource.prototype, "JoinType", {
+        get: function () {
+            return (this._joinType);
+        },
+        set: function (value) {
+            this._joinType = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQuerySource.prototype, "Source", {
+        get: function () {
+            return (this._source);
+        },
+        set: function (value) {
+            this._source = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQuerySource.prototype, "Alias", {
+        get: function () {
+            return (this._alias);
+        },
+        set: function (value) {
+            this._alias = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQuerySource.prototype, "JoinConditions", {
+        get: function () {
+            return (this._joinConditions);
+        },
+        set: function (value) {
+            this._joinConditions = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return DrapoQuerySource;
 }());
 
 "use strict";
@@ -20257,6 +20672,8 @@ var DrapoStorage = (function () {
                     case 4:
                         if (type == 'querystring')
                             return [2, (this.RetrieveDataKeyInitializeQueryString(el, sector))];
+                        if (type == 'query')
+                            return [2, (this.RetrieveDataKeyInitializeQuery(el, sector, dataKey))];
                         if (type == 'parent')
                             return [2, (this.RetrieveDataKeyInitializeParent(el, sector))];
                         return [2, (null)];
@@ -20375,6 +20792,43 @@ var DrapoStorage = (function () {
                             object[key] = value;
                         }
                         return [2, (object)];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.RetrieveDataKeyInitializeQuery = function (el, sector, dataKey) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dataValue, query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dataValue = el.getAttribute('d-dataValue');
+                        if (!(dataValue == null)) return [3, 2];
+                        return [4, this.Application.ExceptionHandler.HandleError('There is no d-datavalue in: {0}', dataKey)];
+                    case 1:
+                        _a.sent();
+                        return [2, ([])];
+                    case 2:
+                        query = this.Application.Parser.ParseQuery(dataValue);
+                        if (!(query === null)) return [3, 4];
+                        return [4, this.Application.ExceptionHandler.HandleError('There is an error in query d-datavalue in: {0}', dataKey)];
+                    case 3:
+                        _a.sent();
+                        return [2, ([])];
+                    case 4:
+                        if (!(query.Error !== null)) return [3, 6];
+                        return [4, this.Application.ExceptionHandler.HandleError('Error parsing the query in: {0}. {1}', dataKey, query.Error)];
+                    case 5:
+                        _a.sent();
+                        return [2, ([])];
+                    case 6:
+                        if (!(query.Sources.length > 2)) return [3, 8];
+                        return [4, this.Application.ExceptionHandler.HandleError('Only support for 2 sources in query: {0}', dataKey)];
+                    case 7:
+                        _a.sent();
+                        return [2, ([])];
+                    case 8: return [4, this.ExecuteQuery(sector, dataKey, query)];
+                    case 9: return [2, (_a.sent())];
                 }
             });
         });
@@ -21633,6 +22087,114 @@ var DrapoStorage = (function () {
                 return [2, (item)];
             });
         });
+    };
+    DrapoStorage.prototype.ExecuteQuery = function (sector, dataKey, query) {
+        return __awaiter(this, void 0, void 0, function () {
+            var objects, objectsId, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, object, count, i;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        objects = [];
+                        objectsId = [];
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < query.Sources.length)) return [3, 4];
+                        querySource = query.Sources[i];
+                        querySourcePath = querySource.Source;
+                        isQuerySourceMustache = this.Application.Parser.IsMustache(querySourcePath);
+                        sourceDataKey = querySourcePath;
+                        sourceMustache = sourceDataKey;
+                        if (isQuerySourceMustache) {
+                            mustacheParts = this.Application.Parser.ParseMustache(querySourcePath);
+                            mustacheDataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
+                            sourceDataKey = mustacheDataKey;
+                        }
+                        else {
+                            sourceMustache = this.Application.Solver.CreateMustache([sourceDataKey]);
+                        }
+                        this.Application.Observer.SubscribeStorage(sourceDataKey, null, dataKey);
+                        return [4, this.RetrieveDataValue(sector, sourceMustache)];
+                    case 2:
+                        querySourceData = _a.sent();
+                        querySourceObjects = querySourceData.length ? querySourceData : [querySourceData];
+                        for (j = 0; j < querySourceObjects.length; j++) {
+                            querySourceObject = querySourceObjects[j];
+                            object = this.EnsureQueryObject(query, querySource, i, objects, objectsId, querySourceObject);
+                            if (object === null)
+                                continue;
+                            this.InjectQueryObjectProjections(query, querySource, object, querySourceObject);
+                        }
+                        _a.label = 3;
+                    case 3:
+                        i++;
+                        return [3, 1];
+                    case 4:
+                        count = query.Sources.length;
+                        if (count > 1) {
+                            for (i = objects.length - 1; i >= 0; i--) {
+                                if (objectsId[i].length === count)
+                                    continue;
+                                objects.splice(i, 1);
+                            }
+                        }
+                        return [2, (objects)];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.EnsureQueryObject = function (query, querySource, indexSource, objects, objectsIds, querySourceObject) {
+        var object = null;
+        if (query.Sources.length == 1) {
+            object = {};
+            objects.push(object);
+            return (object);
+        }
+        var joinCondition = query.Sources[1].JoinConditions[0];
+        var column = joinCondition.SourceLeft == querySource.Alias ? joinCondition.ColumnLeft : joinCondition.ColumnRight;
+        var isObject = typeof querySourceObject === 'object';
+        var id = isObject ? querySourceObject[column] : querySourceObject;
+        if (indexSource === 0) {
+            object = {};
+            objects.push(object);
+            var ids = [];
+            ids.push(id);
+            objectsIds.push(ids);
+            return (object);
+        }
+        for (var i = 0; i < objects.length; i++) {
+            var objectsId = objectsIds[i];
+            if (objectsId.length > 1)
+                continue;
+            var objectId = objectsId[0];
+            if (objectId !== id)
+                continue;
+            objectsId.push(objectId);
+            return (objects[i]);
+        }
+        return (null);
+    };
+    DrapoStorage.prototype.InjectQueryObjectProjections = function (query, querySource, object, sourceObject) {
+        var _a, _b;
+        for (var i = 0; i < query.Projections.length; i++) {
+            var projection = query.Projections[i];
+            var source = projection.Source;
+            var isObject = typeof sourceObject === 'object';
+            if (source !== null) {
+                if ((querySource.Alias !== null) && (source !== querySource.Alias))
+                    continue;
+                if ((querySource.Alias === null) && (source !== querySource.Source))
+                    continue;
+            }
+            else {
+                if ((isObject) && (!sourceObject[projection.Column]))
+                    continue;
+                if ((!isObject) && (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== projection.Column))
+                    continue;
+            }
+            var value = isObject ? sourceObject[projection.Column] : sourceObject;
+            object[(_b = projection.Alias) !== null && _b !== void 0 ? _b : projection.Column] = value;
+        }
     };
     return DrapoStorage;
 }());

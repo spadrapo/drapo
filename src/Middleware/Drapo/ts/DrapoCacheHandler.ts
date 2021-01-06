@@ -189,14 +189,19 @@
     }
 
     private GetClientDataCache(cacheKey: string): any {
+        let value: any = null;
         try {
-            const value: any = window.localStorage.getItem(cacheKey);
+            value = window.localStorage.getItem(cacheKey);
             if (value == null)
                 return (null);
-            return (this.Application.Serializer.Deserialize(value));
         } catch (e) {
             this._useLocalStorage = false;
-            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - GetClientDataCache');
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - GetClientDataCache :' + cacheKey);
+        }
+        try {
+            return (this.Application.Serializer.Deserialize(value));
+        } catch{
+            return (null);
         }
     }
 
