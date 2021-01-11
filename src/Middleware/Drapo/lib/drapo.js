@@ -4215,6 +4215,11 @@ var DrapoContextItem = (function () {
         enumerable: false,
         configurable: true
     });
+    DrapoContextItem.prototype.GetAbsolute = function (mustachePart) {
+        if (this.Key === mustachePart)
+            return ([this.DataKey, '[' + this.Index + ']']);
+        return ([mustachePart]);
+    };
     return DrapoContextItem;
 }());
 
@@ -9937,31 +9942,35 @@ var DrapoFunctionHandler = (function () {
                         return [4, this.ExecuteFunctionCreateTimer(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 127: return [2, (_a.sent())];
                     case 128:
-                        if (!(functionParsed.Name === 'wait')) return [3, 130];
-                        return [4, this.ExecuteFunctionWait(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'createreference')) return [3, 130];
+                        return [4, this.ExecuteFunctionCreateReference(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 129: return [2, (_a.sent())];
                     case 130:
-                        if (!(functionParsed.Name === 'executevalidation')) return [3, 132];
-                        return [4, this.ExecuteFunctionExecuteValidation(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'wait')) return [3, 132];
+                        return [4, this.ExecuteFunctionWait(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 131: return [2, (_a.sent())];
                     case 132:
-                        if (!(functionParsed.Name === 'clearvalidation')) return [3, 134];
-                        return [4, this.ExecuteFunctionClearValidation(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'executevalidation')) return [3, 134];
+                        return [4, this.ExecuteFunctionExecuteValidation(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 133: return [2, (_a.sent())];
                     case 134:
-                        if (!(functionParsed.Name === 'downloaddata')) return [3, 136];
-                        return [4, this.ExecuteFunctionDownloadData(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'clearvalidation')) return [3, 136];
+                        return [4, this.ExecuteFunctionClearValidation(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 135: return [2, (_a.sent())];
                     case 136:
-                        if (!(functionParsed.Name === 'detectview')) return [3, 138];
-                        return [4, this.ExecuteFunctionDetectView(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'downloaddata')) return [3, 138];
+                        return [4, this.ExecuteFunctionDownloadData(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 137: return [2, (_a.sent())];
                     case 138:
-                        if (!(functionParsed.Name === 'debugger')) return [3, 140];
-                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'detectview')) return [3, 140];
+                        return [4, this.ExecuteFunctionDetectView(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 139: return [2, (_a.sent())];
-                    case 140: return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name)];
-                    case 141:
+                    case 140:
+                        if (!(functionParsed.Name === 'debugger')) return [3, 142];
+                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 141: return [2, (_a.sent())];
+                    case 142: return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name)];
+                    case 143:
                         _a.sent();
                         return [2, ('')];
                 }
@@ -12135,6 +12144,21 @@ var DrapoFunctionHandler = (function () {
                         };
                         setTimeout(timerFunction, timeAsNumber);
                         return [2, ('')];
+                }
+            });
+        });
+    };
+    DrapoFunctionHandler.prototype.ExecuteFunctionCreateReference = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var value, mustacheReference;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        value = functionParsed.Parameters[0];
+                        return [4, this.Application.Solver.CreateMustacheReference(sector, contextItem, value)];
+                    case 1:
+                        mustacheReference = _a.sent();
+                        return [2, (mustacheReference)];
                 }
             });
         });
@@ -18835,6 +18859,39 @@ var DrapoSolver = (function () {
             return (mustacheRecursiveContext);
         return (mustacheRecursive);
     };
+    DrapoSolver.prototype.CreateMustacheReference = function (sector, contextItem, mustache) {
+        return __awaiter(this, void 0, void 0, function () {
+            var mustacheContext, mustacheParts, i, mustachePart, mustacheRelative, j, dataKey, storageItem, sectorStorage, mustacheReference;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        mustacheContext = [];
+                        mustacheParts = this.Application.Parser.ParseMustache(mustache);
+                        for (i = 0; i < mustacheParts.length; i++) {
+                            mustachePart = mustacheParts[i];
+                            if (contextItem != null) {
+                                mustacheRelative = contextItem.GetAbsolute(mustachePart);
+                                for (j = 0; j < mustacheRelative.length; j++)
+                                    mustacheContext.push(mustacheRelative[j]);
+                            }
+                            else {
+                                mustacheContext.push(mustachePart);
+                            }
+                        }
+                        dataKey = mustacheContext[0];
+                        return [4, this.Application.Storage.RetrieveDataItem(dataKey, sector)];
+                    case 1:
+                        storageItem = _a.sent();
+                        if (storageItem == null)
+                            return [2, ('')];
+                        sectorStorage = storageItem.Sector != null ? storageItem.Sector : '';
+                        mustacheContext.splice(0, 0, '@' + sectorStorage);
+                        mustacheReference = this.CreateMustache(mustacheContext);
+                        return [2, (mustacheReference)];
+                }
+            });
+        });
+    };
     DrapoSolver.prototype.ResolveDataPathMustache = function (context, elementJQuery, sector, mustacheParts) {
         return __awaiter(this, void 0, void 0, function () {
             var updated, i, mustachePart, mustachePartParts, dataValue;
@@ -19121,12 +19178,25 @@ var DrapoSolver = (function () {
             });
         });
     };
+    DrapoSolver.prototype.ResolveSector = function (mustacheParts, sector) {
+        var mustacheSector = mustacheParts[0];
+        if (mustacheSector === '@')
+            return (null);
+        if (mustacheSector.startsWith("@"))
+            return (mustacheSector.substring(1));
+        return (sector);
+    };
+    DrapoSolver.prototype.HasMustachePartsSector = function (mustacheParts) {
+        return (mustacheParts[0].startsWith('@'));
+    };
     DrapoSolver.prototype.ResolveDataKey = function (mustacheParts) {
-        return (mustacheParts[0]);
+        var index = this.HasMustachePartsSector(mustacheParts) ? 1 : 0;
+        return (mustacheParts[index]);
     };
     DrapoSolver.prototype.ResolveDataFields = function (mustacheParts) {
         var dataFields = [];
-        for (var i = 1; i < mustacheParts.length; i++)
+        var start = this.HasMustachePartsSector(mustacheParts) ? 2 : 1;
+        for (var i = start; i < mustacheParts.length; i++)
             dataFields.push(mustacheParts[i]);
         return (dataFields);
     };
@@ -19219,9 +19289,17 @@ var DrapoSolver = (function () {
         if (data == null)
             return (false);
         var dataField = dataPath[dataPath.length - 1];
-        if (data[dataField] === value)
-            return (false);
-        data[dataField] = value;
+        var indexDataField = this.GetDataObjectPathObjectPropertyIndex(dataField);
+        if (indexDataField === null) {
+            if (data[dataField] === value)
+                return (false);
+            data[dataField] = value;
+        }
+        else {
+            if (data[indexDataField] === value)
+                return (false);
+            data[indexDataField] = value;
+        }
         return (true);
     };
     DrapoSolver.prototype.Clone = function (object, deepCopy) {
@@ -19615,25 +19693,27 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.RetrieveDataValue = function (sector, mustache) {
         return __awaiter(this, void 0, void 0, function () {
-            var mustacheParts, dataKey, mustacheDataFields, item, cacheIndex, cacheItem, dataFieldCurrent, data;
+            var mustacheFullParts, dataSector, dataKey, mustacheDataFields, mustacheParts, item, cacheIndex, cacheItem, dataFieldCurrent, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        mustacheParts = this.Application.Parser.ParseMustache(mustache);
-                        dataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
-                        mustacheDataFields = this.Application.Solver.ResolveDataFields(mustacheParts);
-                        return [4, this.EnsureDataKeyFieldReady(dataKey, sector, mustacheParts)];
+                        mustacheFullParts = this.Application.Parser.ParseMustache(mustache);
+                        dataSector = this.Application.Solver.ResolveSector(mustacheFullParts, sector);
+                        dataKey = this.Application.Solver.ResolveDataKey(mustacheFullParts);
+                        mustacheDataFields = this.Application.Solver.ResolveDataFields(mustacheFullParts);
+                        mustacheParts = this.Application.Solver.CreateDataPath(dataKey, mustacheDataFields);
+                        return [4, this.EnsureDataKeyFieldReady(dataKey, dataSector, mustacheParts)];
                     case 1:
                         if (_a.sent())
-                            return [2, (this.Application.Storage.GetDataKeyField(dataKey, sector, mustacheParts))];
-                        return [4, this.RetrieveDataItemInternal(dataKey, sector, true, mustacheDataFields)];
+                            return [2, (this.Application.Storage.GetDataKeyField(dataKey, dataSector, mustacheParts))];
+                        return [4, this.RetrieveDataItemInternal(dataKey, dataSector, true, mustacheDataFields)];
                     case 2:
                         item = _a.sent();
                         if ((item == null) || (item.Data == null))
                             return [2, ('')];
-                        cacheIndex = this.GetCacheKeyIndex(dataKey, sector);
+                        cacheIndex = this.GetCacheKeyIndex(dataKey, dataSector);
                         if (!(cacheIndex == null)) return [3, 4];
-                        return [4, this.AddCacheData(dataKey, sector, item)];
+                        return [4, this.AddCacheData(dataKey, dataSector, item)];
                     case 3:
                         _a.sent();
                         return [3, 5];
@@ -20698,51 +20778,59 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.RetrieveDataKeyInitializeMapping = function (el, sector) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataValue, dataValueResolved, storageItemMapped, data, dataMappingField, dataMappingFieldResolved, dataPath, dataPathFull, dataMappingSearchField, dataMappingSearchValue, dataMappingSearchHierarchyField, dataPath;
+            var dataValue, isReference, dataValueResolved, dataReference, storageItemMapped, data, dataMappingField, dataMappingFieldResolved, dataPath, dataPathFull, dataMappingSearchField, dataMappingSearchValue, dataMappingSearchHierarchyField, dataPath;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         dataValue = el.getAttribute('d-dataValue');
                         if (dataValue == null)
                             return [2, ([])];
+                        isReference = el.getAttribute('d-dataLoadType') === 'reference';
                         dataValueResolved = dataValue;
                         if (!this.Application.Parser.IsMustache(dataValue)) return [3, 2];
                         return [4, this.ResolveMustaches(sector, dataValue)];
                     case 1:
                         dataValueResolved = _a.sent();
                         _a.label = 2;
-                    case 2: return [4, this.RetrieveDataItem(dataValueResolved, sector)];
+                    case 2:
+                        if (!isReference) return [3, 4];
+                        el.setAttribute('d-dataValue', dataValueResolved);
+                        return [4, this.RetrieveDataValue(sector, dataValueResolved)];
                     case 3:
+                        dataReference = _a.sent();
+                        return [2, (this.Application.Solver.Clone(dataReference, true))];
+                    case 4: return [4, this.RetrieveDataItem(dataValueResolved, sector)];
+                    case 5:
                         storageItemMapped = _a.sent();
                         if (storageItemMapped === null)
                             return [2, (null)];
                         data = storageItemMapped.Data;
                         dataMappingField = el.getAttribute('d-dataMappingField');
-                        if (!((dataMappingField != null) && (dataMappingField != ''))) return [3, 5];
+                        if (!((dataMappingField != null) && (dataMappingField != ''))) return [3, 7];
                         return [4, this.ResolveMustaches(sector, dataMappingField)];
-                    case 4:
+                    case 6:
                         dataMappingFieldResolved = _a.sent();
                         dataPath = this.Application.Parser.ParsePath(dataMappingFieldResolved);
                         dataPathFull = this.Application.Solver.CreateDataPath(dataValueResolved, dataPath);
                         data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPathFull);
                         if (data === null)
                             return [2, (null)];
-                        _a.label = 5;
-                    case 5:
+                        _a.label = 7;
+                    case 7:
                         dataMappingSearchField = el.getAttribute('d-dataMappingSearchField');
                         dataMappingSearchValue = el.getAttribute('d-dataMappingSearchValue');
                         dataMappingSearchHierarchyField = el.getAttribute('d-dataMappingSearchHierarchyField');
-                        if (!((dataMappingSearchField != null) && (dataMappingSearchField != '') && (dataMappingSearchValue != null) && (dataMappingSearchValue != ''))) return [3, 8];
-                        if (!this.Application.Parser.IsMustache(dataMappingSearchValue)) return [3, 7];
+                        if (!((dataMappingSearchField != null) && (dataMappingSearchField != '') && (dataMappingSearchValue != null) && (dataMappingSearchValue != ''))) return [3, 10];
+                        if (!this.Application.Parser.IsMustache(dataMappingSearchValue)) return [3, 9];
                         dataPath = this.Application.Parser.ParseMustache(dataMappingSearchValue);
                         return [4, this.Application.Solver.ResolveItemDataPathObject(sector, null, dataPath)];
-                    case 6:
+                    case 8:
                         dataMappingSearchValue = _a.sent();
-                        _a.label = 7;
-                    case 7:
+                        _a.label = 9;
+                    case 9:
                         data = this.Application.Solver.ResolveDataObjectLookupHierarchy(data, dataMappingSearchField, dataMappingSearchValue, dataMappingSearchHierarchyField);
-                        _a.label = 8;
-                    case 8: return [2, (this.Application.Solver.Clone(data, true))];
+                        _a.label = 10;
+                    case 10: return [2, (this.Application.Solver.Clone(data, true))];
                 }
             });
         });
@@ -21369,7 +21457,7 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.PostDataMapping = function (dataKey, sector, dataItem, notify, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var el, dataValue, dataValueResolved, storageItemMapped, updated, dataMappingField, dataMappingSearchField, dataMappingSearchValue, dataMappingSearchHierarchyField, data, dataPath, dataMappingFieldResolved, dataPathFull, dataPathCurrent, updatedDataObject;
+            var el, dataValue, updated, isReference, mustacheFullPartsReference, dataSectorReference, dataKeyReference, mustacheDataFieldsReference, mustachePartsReference, dataValueResolved, storageItemMapped, dataMappingField, dataMappingSearchField, dataMappingSearchValue, dataMappingSearchHierarchyField, data, dataPath, dataMappingFieldResolved, dataPathFull, dataPathCurrent, updatedDataObject;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -21379,18 +21467,30 @@ var DrapoStorage = (function () {
                         dataValue = el.getAttribute('d-dataValue');
                         if (dataValue == null)
                             return [2, (false)];
-                        dataValueResolved = dataValue;
-                        if (!this.Application.Parser.IsMustache(dataValue)) return [3, 2];
-                        return [4, this.ResolveMustaches(sector, dataValue)];
+                        updated = false;
+                        isReference = el.getAttribute('d-dataLoadType') === 'reference';
+                        if (!isReference) return [3, 2];
+                        mustacheFullPartsReference = this.Application.Parser.ParseMustache(dataValue);
+                        dataSectorReference = this.Application.Solver.ResolveSector(mustacheFullPartsReference, sector);
+                        dataKeyReference = this.Application.Solver.ResolveDataKey(mustacheFullPartsReference);
+                        mustacheDataFieldsReference = this.Application.Solver.ResolveDataFields(mustacheFullPartsReference);
+                        mustachePartsReference = this.Application.Solver.CreateDataPath(dataKeyReference, mustacheDataFieldsReference);
+                        return [4, this.UpdateDataPath(dataSectorReference, null, mustachePartsReference, dataItem.Data, notify)];
                     case 1:
-                        dataValueResolved = _a.sent();
-                        _a.label = 2;
-                    case 2: return [4, this.RetrieveDataItem(dataValueResolved, sector)];
+                        updated = _a.sent();
+                        return [2, (updated)];
+                    case 2:
+                        dataValueResolved = dataValue;
+                        if (!this.Application.Parser.IsMustache(dataValue)) return [3, 4];
+                        return [4, this.ResolveMustaches(sector, dataValue)];
                     case 3:
+                        dataValueResolved = _a.sent();
+                        _a.label = 4;
+                    case 4: return [4, this.RetrieveDataItem(dataValueResolved, sector)];
+                    case 5:
                         storageItemMapped = _a.sent();
                         if (storageItemMapped === null)
                             return [2, (null)];
-                        updated = false;
                         dataMappingField = el.getAttribute('d-dataMappingField');
                         dataMappingSearchField = el.getAttribute('d-dataMappingSearchField');
                         dataMappingSearchValue = el.getAttribute('d-dataMappingSearchValue');
@@ -21401,39 +21501,39 @@ var DrapoStorage = (function () {
                             updated = true;
                             storageItemMapped.Data = dataItem.Data;
                         }
-                        if (!!updated) return [3, 10];
+                        if (!!updated) return [3, 12];
                         data = storageItemMapped.Data;
                         dataPath = null;
-                        if (!((dataMappingField != null) && (dataMappingField != ''))) return [3, 5];
+                        if (!((dataMappingField != null) && (dataMappingField != ''))) return [3, 7];
                         return [4, this.ResolveMustaches(sector, dataMappingField)];
-                    case 4:
+                    case 6:
                         dataMappingFieldResolved = _a.sent();
                         dataPath = this.Application.Parser.ParsePath(dataMappingFieldResolved);
                         dataPathFull = this.Application.Solver.CreateDataPath(dataValueResolved, dataPath);
                         data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPathFull);
                         if (data === null)
                             return [2, (false)];
-                        _a.label = 5;
-                    case 5:
-                        if (!((dataMappingSearchField != null) && (dataMappingSearchField != '') && (dataMappingSearchValue != null) && (dataMappingSearchValue != ''))) return [3, 8];
-                        if (!this.Application.Parser.IsMustache(dataMappingSearchValue)) return [3, 7];
-                        dataPathCurrent = this.Application.Parser.ParseMustache(dataMappingSearchValue);
-                        return [4, this.Application.Solver.ResolveItemDataPathObject(sector, null, dataPathCurrent)];
-                    case 6:
-                        dataMappingSearchValue = _a.sent();
                         _a.label = 7;
                     case 7:
+                        if (!((dataMappingSearchField != null) && (dataMappingSearchField != '') && (dataMappingSearchValue != null) && (dataMappingSearchValue != ''))) return [3, 10];
+                        if (!this.Application.Parser.IsMustache(dataMappingSearchValue)) return [3, 9];
+                        dataPathCurrent = this.Application.Parser.ParseMustache(dataMappingSearchValue);
+                        return [4, this.Application.Solver.ResolveItemDataPathObject(sector, null, dataPathCurrent)];
+                    case 8:
+                        dataMappingSearchValue = _a.sent();
+                        _a.label = 9;
+                    case 9:
                         updatedDataObject = this.Application.Solver.UpdateDataObjectLookupHierarchy(data, dataMappingSearchField, dataMappingSearchValue, dataItem.Data, dataMappingSearchHierarchyField);
                         if (updatedDataObject == null)
                             return [2, (false)];
                         updated = updatedDataObject;
-                        return [3, 10];
-                    case 8: return [4, this.SetDataKeyField(dataValueResolved, sector, dataPath, dataItem.Data, false)];
-                    case 9:
-                        updated = _a.sent();
-                        _a.label = 10;
-                    case 10: return [4, this.NotifyChanges(dataItem, ((updated) && (notify)), dataValue, null, null)];
+                        return [3, 12];
+                    case 10: return [4, this.SetDataKeyField(dataValueResolved, sector, dataPath, dataItem.Data, false)];
                     case 11:
+                        updated = _a.sent();
+                        _a.label = 12;
+                    case 12: return [4, this.NotifyChanges(dataItem, ((updated) && (notify)), dataValue, null, null)];
+                    case 13:
                         _a.sent();
                         return [2, (true)];
                 }

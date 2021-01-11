@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Mapping Reference</title>
+</head>
+<body>
+    <span>Data Mapping Reference</span>
+    <div>
+        <div d-dataKey="transfer" d-dataType="value" d-dataValue=""></div>
+    </div>
+    <div d-sector="show">
+        <div>
+            <div d-datakey="persons" d-datatype="array" d-datavalue="[{&quot;name&quot;: &quot;John&quot;},{&quot;name&quot;: &quot;Mary&quot;},{&quot;name&quot;: &quot;Thiago&quot;}]"></div>
+        </div>
+        <div>
+            <ul>
+                <li d-for="person in persons" d-model="{{person.name}}" d-on-click="CloseWindow(,true);UpdateDataField(transfer,,CreateReference({{person}}));ShowWindow(~/DrapoPages/DataMappingReferenceEdit.html,edit)"></li>
+            </ul>
+        </div>
+    </div>
+    <div d-id="edit" d-sector="edit"></div>
+</body>
+</html>

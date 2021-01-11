@@ -339,6 +339,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionSetClipboard(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'createtimer')
             return (await this.ExecuteFunctionCreateTimer(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'createreference')
+            return (await this.ExecuteFunctionCreateReference(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'wait')
             return (await this.ExecuteFunctionWait(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'executevalidation')
@@ -1230,6 +1232,12 @@ class DrapoFunctionHandler {
         };
         setTimeout(timerFunction, timeAsNumber);
         return ('');
+    }
+
+    private async ExecuteFunctionCreateReference(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const value: string = functionParsed.Parameters[0];
+        const mustacheReference: string = await this.Application.Solver.CreateMustacheReference(sector, contextItem, value);
+        return (mustacheReference);
     }
 
     private async ExecuteFunctionWait(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {

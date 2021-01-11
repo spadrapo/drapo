@@ -93,4 +93,10 @@
         this._context = context;
         this._parent = parent;
     }
+
+    public GetAbsolute(mustachePart: string): string[] {
+        if (this.Key === mustachePart)
+            return ([this.DataKey, '[' + this.Index + ']']);
+        return ([mustachePart]);
+    }
 }

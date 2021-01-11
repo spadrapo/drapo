@@ -320,6 +320,29 @@ class DrapoSolver {
         return (mustacheRecursive);
     }
 
+    public async CreateMustacheReference(sector: string, contextItem: DrapoContextItem, mustache: string): Promise<string> {
+        const mustacheContext: string[] = [];
+        const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustache);
+        for (let i: number = 0; i < mustacheParts.length; i++) {
+            const mustachePart: string = mustacheParts[i];
+            if (contextItem != null) {
+                const mustacheRelative: string[] = contextItem.GetAbsolute(mustachePart);
+                for (let j: number = 0; j < mustacheRelative.length; j++)
+                    mustacheContext.push(mustacheRelative[j]);
+            } else {
+                mustacheContext.push(mustachePart);
+            }
+        }
+        const dataKey: string = mustacheContext[0];
+        const storageItem: DrapoStorageItem = await this.Application.Storage.RetrieveDataItem(dataKey, sector);
+        if (storageItem == null)
+            return ('');
+        const sectorStorage: string = storageItem.Sector != null ? storageItem.Sector : '';
+        mustacheContext.splice(0, 0, '@' + sectorStorage);
+        const mustacheReference: string = this.CreateMustache(mustacheContext);
+        return (mustacheReference);
+    }
+
     public async ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string> {
         let updated: boolean = false;
         for (let i: number = 1; i < mustacheParts.length; i++) {
@@ -532,13 +555,28 @@ class DrapoSolver {
         return (context.Create(dataItem.Data, null, null, dataKey, null, null, null));
     }
 
+    public ResolveSector(mustacheParts: string[], sector: string): string {
+        const mustacheSector: string = mustacheParts[0];
+        if (mustacheSector === '@')
+            return (null);
+        if (mustacheSector.startsWith("@"))
+            return (mustacheSector.substring(1));
+        return (sector);
+    }
+
+    private HasMustachePartsSector(mustacheParts: string[]): boolean {
+        return (mustacheParts[0].startsWith('@'));
+    }
+
     public ResolveDataKey(mustacheParts: string[]): string {
-        return (mustacheParts[0]);
+        const index: number = this.HasMustachePartsSector(mustacheParts) ? 1 : 0;
+        return (mustacheParts[index]);
     }
 
     public ResolveDataFields(mustacheParts: string[]): string[] {
         const dataFields: string[] = [];
-        for (let i: number = 1; i < mustacheParts.length; i++)
+        const start: number = this.HasMustachePartsSector(mustacheParts) ? 2 : 1;
+        for (let i: number = start; i < mustacheParts.length; i++)
             dataFields.push(mustacheParts[i]);
         return (dataFields);
     }
@@ -619,9 +657,17 @@ class DrapoSolver {
         if (data == null)
             return (false);
         const dataField: string = dataPath[dataPath.length - 1];
-        if (data[dataField] === value)
-            return (false);
-        data[dataField] = value;
+        //Mustache is ending in indexer
+        const indexDataField: number = this.GetDataObjectPathObjectPropertyIndex(dataField);
+        if (indexDataField === null) {
+            if (data[dataField] === value)
+                return (false);
+            data[dataField] = value;
+        } else {
+            if (data[indexDataField] === value)
+                return (false);
+            data[indexDataField] = value;
+        }
         return (true);
     }
 
