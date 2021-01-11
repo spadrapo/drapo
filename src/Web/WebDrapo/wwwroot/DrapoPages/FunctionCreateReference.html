@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function Create Reference</title>
+</head>
+<body>
+    <span>Function Create Reference</span>
+    <div>
+        <div d-dataKey="transfer" d-dataType="value" d-dataValue=""></div>
+        <div d-dataKey="transferReference" d-dataType="value" d-dataValue=""></div>
+    </div>
+    <div d-sector="show">
+        <div d-datakey="persons" d-datatype="array" d-datavalue="[{&quot;name&quot;: &quot;John&quot;},{&quot;name&quot;: &quot;Mary&quot;},{&quot;name&quot;: &quot;Thiago&quot;}]"></div>
+        <div d-sector="loader">
+            <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateDataField(transferReference,,CreateReference({{transfer}}));ExecuteDataItem(UpdateDataField(transfer,,CreateReference({{person}})),person in persons,{{person._Index}}=1)"></div>
+        </div>
+    </div>
+    <span>{{transfer}}</span>
+    <br />
+    <span>{{transferReference}}</span>
+</body>
+</html>

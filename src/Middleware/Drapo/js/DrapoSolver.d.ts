@@ -23,6 +23,7 @@ declare class DrapoSolver {
     CreateContextItemFromPath(sector: string, dataPath: string[]): Promise<DrapoContextItem>;
     CreateMustache(dataPath: string[]): string;
     CreateMustacheContext(context: DrapoContext, mustacheParts: string[]): string;
+    CreateMustacheReference(sector: string, contextItem: DrapoContextItem, mustache: string): Promise<string>;
     ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string>;
     ExistDataPath(context: DrapoContext, sector: string, path: string[]): Promise<boolean>;
     private ExistDataPathObject;
@@ -36,6 +37,8 @@ declare class DrapoSolver {
     UpdateDataObjectLookupHierarchy(data: any, searchField: string, searchValue: any, value: any, searchHierarchyField?: string): boolean;
     ContainsItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): boolean;
     ResolveDataPathObjectItem(contextItem: DrapoContextItem, dataKey: string, sector: string, canForceLoadDataDelay?: boolean, dataPath?: string[]): Promise<DrapoContextItem>;
+    ResolveSector(mustacheParts: string[], sector: string): string;
+    private HasMustachePartsSector;
     ResolveDataKey(mustacheParts: string[]): string;
     ResolveDataFields(mustacheParts: string[]): string[];
     CreateDataPath(dataKey: string, dataFields: string[]): string[];

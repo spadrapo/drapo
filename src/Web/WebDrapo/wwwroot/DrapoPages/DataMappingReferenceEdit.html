@@ -1,0 +1,10 @@
+﻿<div d-sector="@">
+    <span>Edit</span>
+    <div d-datakey="personDetail" d-datatype="mapping" d-dataloadtype="reference" d-datavalue="{{transfer}}"></div>
+    <span>Name:</span>
+    <input type="text" d-model="{{personDetail.name}}" />
+    <br />
+    <br />
+    <input type="button" value="Update" d-on-click="PostData(personDetail);CloseWindow()">
+    <input type="button" value="Cancel" d-on-click="CloseWindow()">
+</div>

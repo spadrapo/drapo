@@ -74,17 +74,19 @@ class DrapoStorage {
     }
 
     public async RetrieveDataValue(sector: string, mustache: string): Promise<any> {
-        const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustache);
-        const dataKey: string = this.Application.Solver.ResolveDataKey(mustacheParts);
-        const mustacheDataFields: string[] = this.Application.Solver.ResolveDataFields(mustacheParts);
-        if (await this.EnsureDataKeyFieldReady(dataKey, sector, mustacheParts))
-            return (this.Application.Storage.GetDataKeyField(dataKey, sector, mustacheParts));
-        const item: DrapoStorageItem = await this.RetrieveDataItemInternal(dataKey, sector, true, mustacheDataFields);
+        const mustacheFullParts: string[] = this.Application.Parser.ParseMustache(mustache);
+        const dataSector: string = this.Application.Solver.ResolveSector(mustacheFullParts, sector);
+        const dataKey: string = this.Application.Solver.ResolveDataKey(mustacheFullParts);
+        const mustacheDataFields: string[] = this.Application.Solver.ResolveDataFields(mustacheFullParts);
+        const mustacheParts: string[] = this.Application.Solver.CreateDataPath(dataKey, mustacheDataFields);
+        if (await this.EnsureDataKeyFieldReady(dataKey, dataSector, mustacheParts))
+            return (this.Application.Storage.GetDataKeyField(dataKey, dataSector, mustacheParts));
+        const item: DrapoStorageItem = await this.RetrieveDataItemInternal(dataKey, dataSector, true, mustacheDataFields);
         if ((item == null) || (item.Data == null))
             return ('');
-        const cacheIndex: number = this.GetCacheKeyIndex(dataKey, sector);
+        const cacheIndex: number = this.GetCacheKeyIndex(dataKey, dataSector);
         if (cacheIndex == null) {
-            await this.AddCacheData(dataKey, sector, item);
+            await this.AddCacheData(dataKey, dataSector, item);
         } else {
             const cacheItem: DrapoStorageItem = this.GetCacheDataItem(cacheIndex);
             for (const dataFieldCurrent in item.Data)
@@ -830,9 +832,15 @@ class DrapoStorage {
         const dataValue: string = el.getAttribute('d-dataValue');
         if (dataValue == null)
             return ([]);
+        const isReference: boolean = el.getAttribute('d-dataLoadType') === 'reference';
         let dataValueResolved: string = dataValue;
         if (this.Application.Parser.IsMustache(dataValue))
             dataValueResolved = await this.ResolveMustaches(sector, dataValue);
+        if (isReference) {
+            el.setAttribute('d-dataValue', dataValueResolved);
+            const dataReference: any[] = await this.RetrieveDataValue(sector, dataValueResolved);
+            return (this.Application.Solver.Clone(dataReference, true));
+        }
         const storageItemMapped = await this.RetrieveDataItem(dataValueResolved, sector);
         if (storageItemMapped === null)
             return (null);
@@ -1307,13 +1315,23 @@ class DrapoStorage {
         const dataValue: string = el.getAttribute('d-dataValue');
         if (dataValue == null)
             return (false);
+        let updated: boolean = false;
+        const isReference: boolean = el.getAttribute('d-dataLoadType') === 'reference';
+        if (isReference) {
+            const mustacheFullPartsReference: string[] = this.Application.Parser.ParseMustache(dataValue);
+            const dataSectorReference: string = this.Application.Solver.ResolveSector(mustacheFullPartsReference, sector);
+            const dataKeyReference: string = this.Application.Solver.ResolveDataKey(mustacheFullPartsReference);
+            const mustacheDataFieldsReference: string[] = this.Application.Solver.ResolveDataFields(mustacheFullPartsReference);
+            const mustachePartsReference: string[] = this.Application.Solver.CreateDataPath(dataKeyReference, mustacheDataFieldsReference);
+            updated = await this.UpdateDataPath(dataSectorReference, null, mustachePartsReference, dataItem.Data, notify);
+            return (updated);
+        }
         let dataValueResolved: string = dataValue;
         if (this.Application.Parser.IsMustache(dataValue))
             dataValueResolved = await this.ResolveMustaches(sector, dataValue);
         const storageItemMapped = await this.RetrieveDataItem(dataValueResolved, sector);
         if (storageItemMapped === null)
             return (null);
-        let updated: boolean = false;
         const dataMappingField: string = el.getAttribute('d-dataMappingField');
         const dataMappingSearchField: string = el.getAttribute('d-dataMappingSearchField');
         let dataMappingSearchValue: string = el.getAttribute('d-dataMappingSearchValue');

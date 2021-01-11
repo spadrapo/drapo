@@ -629,31 +629,35 @@ var DrapoFunctionHandler = (function () {
                         return [4, this.ExecuteFunctionCreateTimer(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 127: return [2, (_a.sent())];
                     case 128:
-                        if (!(functionParsed.Name === 'wait')) return [3, 130];
-                        return [4, this.ExecuteFunctionWait(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'createreference')) return [3, 130];
+                        return [4, this.ExecuteFunctionCreateReference(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 129: return [2, (_a.sent())];
                     case 130:
-                        if (!(functionParsed.Name === 'executevalidation')) return [3, 132];
-                        return [4, this.ExecuteFunctionExecuteValidation(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'wait')) return [3, 132];
+                        return [4, this.ExecuteFunctionWait(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 131: return [2, (_a.sent())];
                     case 132:
-                        if (!(functionParsed.Name === 'clearvalidation')) return [3, 134];
-                        return [4, this.ExecuteFunctionClearValidation(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'executevalidation')) return [3, 134];
+                        return [4, this.ExecuteFunctionExecuteValidation(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 133: return [2, (_a.sent())];
                     case 134:
-                        if (!(functionParsed.Name === 'downloaddata')) return [3, 136];
-                        return [4, this.ExecuteFunctionDownloadData(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'clearvalidation')) return [3, 136];
+                        return [4, this.ExecuteFunctionClearValidation(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 135: return [2, (_a.sent())];
                     case 136:
-                        if (!(functionParsed.Name === 'detectview')) return [3, 138];
-                        return [4, this.ExecuteFunctionDetectView(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'downloaddata')) return [3, 138];
+                        return [4, this.ExecuteFunctionDownloadData(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 137: return [2, (_a.sent())];
                     case 138:
-                        if (!(functionParsed.Name === 'debugger')) return [3, 140];
-                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'detectview')) return [3, 140];
+                        return [4, this.ExecuteFunctionDetectView(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 139: return [2, (_a.sent())];
-                    case 140: return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name)];
-                    case 141:
+                    case 140:
+                        if (!(functionParsed.Name === 'debugger')) return [3, 142];
+                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 141: return [2, (_a.sent())];
+                    case 142: return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name)];
+                    case 143:
                         _a.sent();
                         return [2, ('')];
                 }
@@ -2827,6 +2831,21 @@ var DrapoFunctionHandler = (function () {
                         };
                         setTimeout(timerFunction, timeAsNumber);
                         return [2, ('')];
+                }
+            });
+        });
+    };
+    DrapoFunctionHandler.prototype.ExecuteFunctionCreateReference = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var value, mustacheReference;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        value = functionParsed.Parameters[0];
+                        return [4, this.Application.Solver.CreateMustacheReference(sector, contextItem, value)];
+                    case 1:
+                        mustacheReference = _a.sent();
+                        return [2, (mustacheReference)];
                 }
             });
         });

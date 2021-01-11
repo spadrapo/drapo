@@ -439,6 +439,39 @@ var DrapoSolver = (function () {
             return (mustacheRecursiveContext);
         return (mustacheRecursive);
     };
+    DrapoSolver.prototype.CreateMustacheReference = function (sector, contextItem, mustache) {
+        return __awaiter(this, void 0, void 0, function () {
+            var mustacheContext, mustacheParts, i, mustachePart, mustacheRelative, j, dataKey, storageItem, sectorStorage, mustacheReference;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        mustacheContext = [];
+                        mustacheParts = this.Application.Parser.ParseMustache(mustache);
+                        for (i = 0; i < mustacheParts.length; i++) {
+                            mustachePart = mustacheParts[i];
+                            if (contextItem != null) {
+                                mustacheRelative = contextItem.GetAbsolute(mustachePart);
+                                for (j = 0; j < mustacheRelative.length; j++)
+                                    mustacheContext.push(mustacheRelative[j]);
+                            }
+                            else {
+                                mustacheContext.push(mustachePart);
+                            }
+                        }
+                        dataKey = mustacheContext[0];
+                        return [4, this.Application.Storage.RetrieveDataItem(dataKey, sector)];
+                    case 1:
+                        storageItem = _a.sent();
+                        if (storageItem == null)
+                            return [2, ('')];
+                        sectorStorage = storageItem.Sector != null ? storageItem.Sector : '';
+                        mustacheContext.splice(0, 0, '@' + sectorStorage);
+                        mustacheReference = this.CreateMustache(mustacheContext);
+                        return [2, (mustacheReference)];
+                }
+            });
+        });
+    };
     DrapoSolver.prototype.ResolveDataPathMustache = function (context, elementJQuery, sector, mustacheParts) {
         return __awaiter(this, void 0, void 0, function () {
             var updated, i, mustachePart, mustachePartParts, dataValue;
@@ -725,12 +758,25 @@ var DrapoSolver = (function () {
             });
         });
     };
+    DrapoSolver.prototype.ResolveSector = function (mustacheParts, sector) {
+        var mustacheSector = mustacheParts[0];
+        if (mustacheSector === '@')
+            return (null);
+        if (mustacheSector.startsWith("@"))
+            return (mustacheSector.substring(1));
+        return (sector);
+    };
+    DrapoSolver.prototype.HasMustachePartsSector = function (mustacheParts) {
+        return (mustacheParts[0].startsWith('@'));
+    };
     DrapoSolver.prototype.ResolveDataKey = function (mustacheParts) {
-        return (mustacheParts[0]);
+        var index = this.HasMustachePartsSector(mustacheParts) ? 1 : 0;
+        return (mustacheParts[index]);
     };
     DrapoSolver.prototype.ResolveDataFields = function (mustacheParts) {
         var dataFields = [];
-        for (var i = 1; i < mustacheParts.length; i++)
+        var start = this.HasMustachePartsSector(mustacheParts) ? 2 : 1;
+        for (var i = start; i < mustacheParts.length; i++)
             dataFields.push(mustacheParts[i]);
         return (dataFields);
     };
@@ -823,9 +869,17 @@ var DrapoSolver = (function () {
         if (data == null)
             return (false);
         var dataField = dataPath[dataPath.length - 1];
-        if (data[dataField] === value)
-            return (false);
-        data[dataField] = value;
+        var indexDataField = this.GetDataObjectPathObjectPropertyIndex(dataField);
+        if (indexDataField === null) {
+            if (data[dataField] === value)
+                return (false);
+            data[dataField] = value;
+        }
+        else {
+            if (data[indexDataField] === value)
+                return (false);
+            data[indexDataField] = value;
+        }
         return (true);
     };
     DrapoSolver.prototype.Clone = function (object, deepCopy) {

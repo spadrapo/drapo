@@ -78,6 +78,7 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionAddRequestHeader;
     private ExecuteFunctionSetClipboard;
     private ExecuteFunctionCreateTimer;
+    private ExecuteFunctionCreateReference;
     private ExecuteFunctionWait;
     private ExecuteFunctionDownloadData;
     private DownloadData;
