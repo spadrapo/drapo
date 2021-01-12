@@ -244,7 +244,7 @@ var DrapoServer = (function () {
                         storageErrors = _a.sent();
                         if (!(storageErrors !== null)) return [3, 19];
                         error = this.Application.Serializer.IsJson(response.Body) ? this.Application.Serializer.Deserialize(response.Body) : response.Body;
-                        return [4, this.Application.Storage.AddDataItem(storageErrors, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error))];
+                        return [4, this.Application.Storage.AddDataItem(storageErrors, null, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error))];
                     case 18:
                         _a.sent();
                         _a.label = 19;
@@ -340,7 +340,7 @@ var DrapoServer = (function () {
                         storageErrors = _a.sent();
                         if (!(storageErrors !== null)) return [3, 19];
                         error = this.Application.Serializer.IsJson(response.Body) ? this.Application.Serializer.Deserialize(response.Body) : response.Body;
-                        return [4, this.Application.Storage.AddDataItem(storageErrors, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error))];
+                        return [4, this.Application.Storage.AddDataItem(storageErrors, null, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error))];
                     case 18:
                         _a.sent();
                         _a.label = 19;

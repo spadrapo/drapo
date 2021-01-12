@@ -160,7 +160,7 @@ class DrapoDebugger {
             return;
         if (this.Application.Document.IsHiddenKey(dataKey))
             return;
-        await this.Application.Storage.AddDataItem('__notifys', '', dataKey);
+        await this.Application.Storage.AddDataItem('__notifys', null, '', dataKey);
         await this.Application.Storage.ReloadData('__objectswatchsvalues', '');
     }
 
@@ -169,7 +169,7 @@ class DrapoDebugger {
             return;
         if (this.Application.Document.IsHiddenKey(pipe))
             return;
-        await this.Application.Storage.AddDataItem('__pipes', '', pipe);
+        await this.Application.Storage.AddDataItem('__pipes', null, '', pipe);
     }
 
     public async AddFunction(functionParsed: DrapoFunction): Promise<void> {
@@ -184,7 +184,7 @@ class DrapoDebugger {
             functionText += functionParsed.Parameters[i];
         }
         functionText += ')';
-        await this.Application.Storage.AddDataItem('__functions', '', functionText);
+        await this.Application.Storage.AddDataItem('__functions', null, '', functionText);
     }
 
     public async AddError(error: string): Promise<void> {
@@ -193,7 +193,7 @@ class DrapoDebugger {
         const lastError: any = await this.Application.Storage.GetDataItemLast('__errors', '');
         if (lastError == error)
             return;
-        await this.Application.Storage.AddDataItem('__errors', '', error);
+        await this.Application.Storage.AddDataItem('__errors', null, '', error);
     }
 
     public async GetObjects(): Promise<any[]> {
@@ -410,7 +410,7 @@ class DrapoDebugger {
         const request: any = {};
         request.Url = url;
         request.Start = new Date(Date.now()).toJSON();
-        await this.Application.Storage.AddDataItem('__requests', '', request, false);
+        await this.Application.Storage.AddDataItem('__requests', null, '', request, false);
         return (request);
     }
 
@@ -437,7 +437,7 @@ class DrapoDebugger {
         sectorUpdate.Name = name;
         sectorUpdate.Parent = parent;
         sectorUpdate.Url = url;
-        await this.Application.Storage.AddDataItem('__sectorsupdate', '', sectorUpdate);
+        await this.Application.Storage.AddDataItem('__sectorsupdate', null, '', sectorUpdate);
     }
 
     private async ExecuteFunctionDebuggerReload(): Promise<void> {

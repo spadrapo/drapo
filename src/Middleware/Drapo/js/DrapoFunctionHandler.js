@@ -1405,11 +1405,14 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionAddDataItem = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, itemText, item, dataPath, dataItem, itemPath, notifyText, notify, _a;
+            var source, isSourceMustache, mustacheParts, dataKey, itemText, item, dataPath, dataItem, itemPath, notifyText, notify, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        dataKey = functionParsed.Parameters[0];
+                        source = functionParsed.Parameters[0];
+                        isSourceMustache = this.Application.Parser.IsMustache(source);
+                        mustacheParts = isSourceMustache ? this.Application.Parser.ParseMustache(source) : null;
+                        dataKey = mustacheParts != null ? this.Application.Solver.ResolveDataKey(mustacheParts) : source;
                         itemText = functionParsed.Parameters[1];
                         item = null;
                         if (!this.Application.Parser.IsMustache(itemText)) return [3, 2];
@@ -1450,7 +1453,7 @@ var DrapoFunctionHandler = (function () {
                         _b.label = 10;
                     case 10:
                         notify = _a;
-                        return [4, this.Application.Storage.AddDataItem(dataKey, sector, this.Application.Solver.Clone(item), notify)];
+                        return [4, this.Application.Storage.AddDataItem(dataKey, mustacheParts, sector, this.Application.Solver.Clone(item), notify)];
                     case 11:
                         _b.sent();
                         return [2];
