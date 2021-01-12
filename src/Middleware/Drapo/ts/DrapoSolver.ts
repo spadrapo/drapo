@@ -326,7 +326,7 @@ class DrapoSolver {
         for (let i: number = 0; i < mustacheParts.length; i++) {
             const mustachePart: string = mustacheParts[i];
             if (contextItem != null) {
-                const mustacheRelative: string[] = contextItem.GetAbsolute(mustachePart);
+                const mustacheRelative: string[] = this.GetContextItemAbsolute(contextItem, mustachePart);
                 for (let j: number = 0; j < mustacheRelative.length; j++)
                     mustacheContext.push(mustacheRelative[j]);
             } else {
@@ -341,6 +341,14 @@ class DrapoSolver {
         mustacheContext.splice(0, 0, '@' + sectorStorage);
         const mustacheReference: string = this.CreateMustache(mustacheContext);
         return (mustacheReference);
+    }
+
+    private GetContextItemAbsolute(contextItem: DrapoContextItem, mustachePart: string): string[] {
+        if (contextItem.Key !== mustachePart)
+            return ([mustachePart]);
+        const iteratorParts: string[] = this.Application.Parser.ParseForIterable(contextItem.Iterator);
+        const mustachePartsAbsolute: string[] = iteratorParts.concat('[' + contextItem.Index + ']');
+        return (mustachePartsAbsolute);
     }
 
     public async ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string> {

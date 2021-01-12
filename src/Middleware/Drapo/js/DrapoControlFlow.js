@@ -896,7 +896,7 @@ var DrapoControlFlow = (function () {
             return (data.length);
         return (numberHat);
     };
-    DrapoControlFlow.prototype.ExecuteDataItem = function (sector, context, expression, forText, ifText, all, datas, dataKey, key) {
+    DrapoControlFlow.prototype.ExecuteDataItem = function (sector, context, expression, iterator, forText, ifText, all, datas, dataKey, key) {
         return __awaiter(this, void 0, void 0, function () {
             var j, data, item, execute, conditionalText, conditional, parsedFor, keyChildren, dataKeyIteratorRange, range, dataKeyIterator, dataKeyChildren, dataKeyIteratorParts, datasChildren, childExecuted;
             return __generator(this, function (_a) {
@@ -907,7 +907,7 @@ var DrapoControlFlow = (function () {
                     case 1:
                         if (!(j < datas.length)) return [3, 9];
                         data = datas[j];
-                        item = context.Create(data, null, null, dataKey, key, null, j);
+                        item = context.Create(data, null, null, dataKey, key, iterator, j);
                         execute = true;
                         if (!(ifText != null)) return [3, 4];
                         return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, ifText, null)];
@@ -946,7 +946,7 @@ var DrapoControlFlow = (function () {
                             datasChildren = this.Application.ControlFlow.ApplyRange(datasChildren, range);
                         if (datasChildren.length === 0)
                             return [3, 8];
-                        return [4, this.ExecuteDataItem(sector, context, expression, forText, ifText, all, datasChildren, dataKeyChildren, keyChildren)];
+                        return [4, this.ExecuteDataItem(sector, context, expression, dataKeyIterator, forText, ifText, all, datasChildren, dataKeyChildren, keyChildren)];
                     case 7:
                         childExecuted = _a.sent();
                         if ((childExecuted) && (!all))

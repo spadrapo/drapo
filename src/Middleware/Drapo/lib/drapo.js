@@ -4215,11 +4215,6 @@ var DrapoContextItem = (function () {
         enumerable: false,
         configurable: true
     });
-    DrapoContextItem.prototype.GetAbsolute = function (mustachePart) {
-        if (this.Key === mustachePart)
-            return ([this.DataKey, '[' + this.Index + ']']);
-        return ([mustachePart]);
-    };
     return DrapoContextItem;
 }());
 
@@ -5121,7 +5116,7 @@ var DrapoControlFlow = (function () {
             return (data.length);
         return (numberHat);
     };
-    DrapoControlFlow.prototype.ExecuteDataItem = function (sector, context, expression, forText, ifText, all, datas, dataKey, key) {
+    DrapoControlFlow.prototype.ExecuteDataItem = function (sector, context, expression, iterator, forText, ifText, all, datas, dataKey, key) {
         return __awaiter(this, void 0, void 0, function () {
             var j, data, item, execute, conditionalText, conditional, parsedFor, keyChildren, dataKeyIteratorRange, range, dataKeyIterator, dataKeyChildren, dataKeyIteratorParts, datasChildren, childExecuted;
             return __generator(this, function (_a) {
@@ -5132,7 +5127,7 @@ var DrapoControlFlow = (function () {
                     case 1:
                         if (!(j < datas.length)) return [3, 9];
                         data = datas[j];
-                        item = context.Create(data, null, null, dataKey, key, null, j);
+                        item = context.Create(data, null, null, dataKey, key, iterator, j);
                         execute = true;
                         if (!(ifText != null)) return [3, 4];
                         return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, ifText, null)];
@@ -5171,7 +5166,7 @@ var DrapoControlFlow = (function () {
                             datasChildren = this.Application.ControlFlow.ApplyRange(datasChildren, range);
                         if (datasChildren.length === 0)
                             return [3, 8];
-                        return [4, this.ExecuteDataItem(sector, context, expression, forText, ifText, all, datasChildren, dataKeyChildren, keyChildren)];
+                        return [4, this.ExecuteDataItem(sector, context, expression, dataKeyIterator, forText, ifText, all, datasChildren, dataKeyChildren, keyChildren)];
                     case 7:
                         childExecuted = _a.sent();
                         if ((childExecuted) && (!all))
@@ -11948,7 +11943,7 @@ var DrapoFunctionHandler = (function () {
                             datas = this.Application.ControlFlow.ApplyRange(datas, range);
                         if ((datas.length !== null) && (datas.length === 0))
                             return [2, ('')];
-                        return [4, this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, forHierarchyText, ifText, all, datas, dataKey, key)];
+                        return [4, this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, dataKeyIterator, forHierarchyText, ifText, all, datas, dataKey, key)];
                     case 10:
                         _c.sent();
                         return [2, ('')];
@@ -18870,7 +18865,7 @@ var DrapoSolver = (function () {
                         for (i = 0; i < mustacheParts.length; i++) {
                             mustachePart = mustacheParts[i];
                             if (contextItem != null) {
-                                mustacheRelative = contextItem.GetAbsolute(mustachePart);
+                                mustacheRelative = this.GetContextItemAbsolute(contextItem, mustachePart);
                                 for (j = 0; j < mustacheRelative.length; j++)
                                     mustacheContext.push(mustacheRelative[j]);
                             }
@@ -18891,6 +18886,13 @@ var DrapoSolver = (function () {
                 }
             });
         });
+    };
+    DrapoSolver.prototype.GetContextItemAbsolute = function (contextItem, mustachePart) {
+        if (contextItem.Key !== mustachePart)
+            return ([mustachePart]);
+        var iteratorParts = this.Application.Parser.ParseForIterable(contextItem.Iterator);
+        var mustachePartsAbsolute = iteratorParts.concat('[' + contextItem.Index + ']');
+        return (mustachePartsAbsolute);
     };
     DrapoSolver.prototype.ResolveDataPathMustache = function (context, elementJQuery, sector, mustacheParts) {
         return __awaiter(this, void 0, void 0, function () {
@@ -20990,6 +20992,10 @@ var DrapoStorage = (function () {
         });
     };
     DrapoStorage.prototype.RetrieveDataKeyInitializeObject = function (el) {
+        var dataValue = el.getAttribute('d-dataValue');
+        if ((dataValue != null) && (this.Application.Serializer.IsJson(dataValue))) {
+            return (this.Application.Serializer.Deserialize(dataValue));
+        }
         var object = {};
         var propertyKeys = [];
         var propertyNames = [];

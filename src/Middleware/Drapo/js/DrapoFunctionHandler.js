@@ -2635,7 +2635,7 @@ var DrapoFunctionHandler = (function () {
                             datas = this.Application.ControlFlow.ApplyRange(datas, range);
                         if ((datas.length !== null) && (datas.length === 0))
                             return [2, ('')];
-                        return [4, this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, forHierarchyText, ifText, all, datas, dataKey, key)];
+                        return [4, this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, dataKeyIterator, forHierarchyText, ifText, all, datas, dataKey, key)];
                     case 10:
                         _c.sent();
                         return [2, ('')];

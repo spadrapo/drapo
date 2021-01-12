@@ -133,10 +133,5 @@ var DrapoContextItem = (function () {
         enumerable: true,
         configurable: true
     });
-    DrapoContextItem.prototype.GetAbsolute = function (mustachePart) {
-        if (this.Key === mustachePart)
-            return ([this.DataKey, '[' + this.Index + ']']);
-        return ([mustachePart]);
-    };
     return DrapoContextItem;
 }());

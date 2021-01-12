@@ -1439,6 +1439,10 @@ var DrapoStorage = (function () {
         });
     };
     DrapoStorage.prototype.RetrieveDataKeyInitializeObject = function (el) {
+        var dataValue = el.getAttribute('d-dataValue');
+        if ((dataValue != null) && (this.Application.Serializer.IsJson(dataValue))) {
+            return (this.Application.Serializer.Deserialize(dataValue));
+        }
         var object = {};
         var propertyKeys = [];
         var propertyNames = [];

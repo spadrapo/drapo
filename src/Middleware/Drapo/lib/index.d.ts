@@ -412,7 +412,6 @@ declare class DrapoContextItem {
     get RootItem(): DrapoContextItem;
     get RootElement(): HTMLElement;
     constructor(context: DrapoContext, parent?: DrapoContextItem);
-    GetAbsolute(mustachePart: string): string[];
 }
 
 /// <reference path="../typings/index.d.ts" />
@@ -452,7 +451,7 @@ declare class DrapoControlFlow {
     private IsValidRangeIndex;
     ApplyRange(data: any[], range: DrapoRange): any[];
     GetRangeIndex(data: any[], rangeIndex: string): number;
-    ExecuteDataItem(sector: string, context: DrapoContext, expression: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string): Promise<boolean>;
+    ExecuteDataItem(sector: string, context: DrapoContext, expression: string, iterator: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string): Promise<boolean>;
     ResolveControlFlowForViewportScroll(viewport: DrapoViewport): Promise<void>;
     private CreateControlFlowForViewportFragment;
 }
@@ -1690,6 +1689,7 @@ declare class DrapoSolver {
     CreateMustache(dataPath: string[]): string;
     CreateMustacheContext(context: DrapoContext, mustacheParts: string[]): string;
     CreateMustacheReference(sector: string, contextItem: DrapoContextItem, mustache: string): Promise<string>;
+    private GetContextItemAbsolute;
     ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string>;
     ExistDataPath(context: DrapoContext, sector: string, path: string[]): Promise<boolean>;
     private ExistDataPathObject;
