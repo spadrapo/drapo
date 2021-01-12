@@ -651,7 +651,10 @@ class DrapoFunctionHandler {
     }
 
     private async ExecuteFunctionRemoveDataItem(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
-        const dataKey: string = functionParsed.Parameters[0];
+        const source: string = functionParsed.Parameters[0];
+        const isSourceMustache: boolean = this.Application.Parser.IsMustache(source);
+        const mustacheParts: string[] = isSourceMustache ? this.Application.Parser.ParseMustache(source) : null;
+        const dataKey: string = mustacheParts != null ? this.Application.Solver.ResolveDataKey(mustacheParts) : source;
         const itemText: string = functionParsed.Parameters[1];
         let itemPath: string[] = [];
         if (this.Application.Parser.IsMustache(itemText)) {
@@ -664,7 +667,7 @@ class DrapoFunctionHandler {
             return (null);
         const notifyText: string = functionParsed.Parameters[2];
         const nofity: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        const deleted: boolean = await this.Application.Storage.DeleteDataItem(dataKey, sector, item);
+        const deleted: boolean = await this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item);
         if (!deleted)
             return (null);
         if (nofity)

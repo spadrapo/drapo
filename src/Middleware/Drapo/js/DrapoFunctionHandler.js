@@ -1460,11 +1460,14 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionRemoveDataItem = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, itemText, itemPath, item, notifyText, nofity, _a, deleted;
+            var source, isSourceMustache, mustacheParts, dataKey, itemText, itemPath, item, notifyText, nofity, _a, deleted;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        dataKey = functionParsed.Parameters[0];
+                        source = functionParsed.Parameters[0];
+                        isSourceMustache = this.Application.Parser.IsMustache(source);
+                        mustacheParts = isSourceMustache ? this.Application.Parser.ParseMustache(source) : null;
+                        dataKey = mustacheParts != null ? this.Application.Solver.ResolveDataKey(mustacheParts) : source;
                         itemText = functionParsed.Parameters[1];
                         itemPath = [];
                         if (this.Application.Parser.IsMustache(itemText)) {
@@ -1488,7 +1491,7 @@ var DrapoFunctionHandler = (function () {
                         _b.label = 4;
                     case 4:
                         nofity = _a;
-                        return [4, this.Application.Storage.DeleteDataItem(dataKey, sector, item)];
+                        return [4, this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item)];
                     case 5:
                         deleted = _b.sent();
                         if (!deleted)
