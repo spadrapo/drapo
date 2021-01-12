@@ -32,5 +32,4 @@ declare class DrapoContextItem {
     get RootItem(): DrapoContextItem;
     get RootElement(): HTMLElement;
     constructor(context: DrapoContext, parent?: DrapoContextItem);
-    GetAbsolute(mustachePart: string): string[];
 }

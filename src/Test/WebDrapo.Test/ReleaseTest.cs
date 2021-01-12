@@ -937,6 +937,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionCreateReference");
         }
         [TestCase]
+        public void FunctionCreateReferenceObjectTest()
+        {
+            ValidatePage("FunctionCreateReferenceObject");
+        }
+        [TestCase]
         public void FunctionCreateTimerAsyncTest()
         {
             ValidatePage("FunctionCreateTimerAsync");

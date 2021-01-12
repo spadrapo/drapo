@@ -24,6 +24,7 @@ declare class DrapoSolver {
     CreateMustache(dataPath: string[]): string;
     CreateMustacheContext(context: DrapoContext, mustacheParts: string[]): string;
     CreateMustacheReference(sector: string, contextItem: DrapoContextItem, mustache: string): Promise<string>;
+    private GetContextItemAbsolute;
     ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string>;
     ExistDataPath(context: DrapoContext, sector: string, path: string[]): Promise<boolean>;
     private ExistDataPathObject;

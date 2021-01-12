@@ -450,7 +450,7 @@ var DrapoSolver = (function () {
                         for (i = 0; i < mustacheParts.length; i++) {
                             mustachePart = mustacheParts[i];
                             if (contextItem != null) {
-                                mustacheRelative = contextItem.GetAbsolute(mustachePart);
+                                mustacheRelative = this.GetContextItemAbsolute(contextItem, mustachePart);
                                 for (j = 0; j < mustacheRelative.length; j++)
                                     mustacheContext.push(mustacheRelative[j]);
                             }
@@ -471,6 +471,13 @@ var DrapoSolver = (function () {
                 }
             });
         });
+    };
+    DrapoSolver.prototype.GetContextItemAbsolute = function (contextItem, mustachePart) {
+        if (contextItem.Key !== mustachePart)
+            return ([mustachePart]);
+        var iteratorParts = this.Application.Parser.ParseForIterable(contextItem.Iterator);
+        var mustachePartsAbsolute = iteratorParts.concat('[' + contextItem.Index + ']');
+        return (mustachePartsAbsolute);
     };
     DrapoSolver.prototype.ResolveDataPathMustache = function (context, elementJQuery, sector, mustacheParts) {
         return __awaiter(this, void 0, void 0, function () {

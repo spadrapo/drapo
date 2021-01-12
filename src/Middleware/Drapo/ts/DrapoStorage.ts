@@ -960,6 +960,10 @@ class DrapoStorage {
     }
 
     private RetrieveDataKeyInitializeObject(el: HTMLElement): any {
+        const dataValue: string = el.getAttribute('d-dataValue');
+        if ((dataValue != null) && (this.Application.Serializer.IsJson(dataValue))) {
+            return (this.Application.Serializer.Deserialize(dataValue));
+        }
         const object: any = {};
         const propertyKeys: string[] = [];
         const propertyNames: string[] = [];

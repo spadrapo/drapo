@@ -1136,7 +1136,7 @@ class DrapoFunctionHandler {
             datas = this.Application.ControlFlow.ApplyRange(datas, range);
         if ((datas.length !== null) && (datas.length === 0))
             return ('');
-        await this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, forHierarchyText, ifText, all, datas, dataKey, key);
+        await this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, dataKeyIterator, forHierarchyText, ifText, all, datas, dataKey, key);
         return ('');
     }
 

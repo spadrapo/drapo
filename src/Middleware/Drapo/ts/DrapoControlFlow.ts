@@ -661,10 +661,10 @@ class DrapoControlFlow {
         return (numberHat);
     }
 
-    public async ExecuteDataItem(sector: string, context: DrapoContext, expression: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string): Promise<boolean> {
+    public async ExecuteDataItem(sector: string, context: DrapoContext, expression: string, iterator: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string): Promise<boolean> {
         for (let j: number = 0; j < datas.length; j++) {
             const data: any = datas[j];
-            const item: DrapoContextItem = context.Create(data, null, null, dataKey, key, null, j);
+            const item: DrapoContextItem = context.Create(data, null, null, dataKey, key, iterator, j);
             let execute: boolean = true;
             if (ifText != null) {
                 const conditionalText: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, ifText, null);
@@ -697,7 +697,7 @@ class DrapoControlFlow {
                 datasChildren = this.Application.ControlFlow.ApplyRange(datasChildren, range);
             if (datasChildren.length === 0)
                 continue;
-            const childExecuted: boolean = await this.ExecuteDataItem(sector, context, expression, forText, ifText, all, datasChildren, dataKeyChildren, keyChildren);
+            const childExecuted: boolean = await this.ExecuteDataItem(sector, context, expression, dataKeyIterator, forText, ifText, all, datasChildren, dataKeyChildren, keyChildren);
             if ((childExecuted) && (!all))
                 return (true);
         }
