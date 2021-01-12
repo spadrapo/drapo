@@ -149,9 +149,14 @@ class DrapoStorage {
         const item: DrapoContextItem = contextItem == null ? context.Create(dataItem.Data, null, null, dataKey, null, null, null) : contextItem;
         if (item == null)
             return (false);
-        const data: any = item.Data;
-        if (!this.Application.Solver.UpdateDataPathObject(item.Data, dataPath, value))
-            return (false);
+        if ((dataPath == null) || (dataPath.length == 1)) {
+            if (dataItem.Data == value)
+                return (false);
+            dataItem.Data = value;
+        } else {
+            if (!this.Application.Solver.UpdateDataPathObject(item.Data, dataPath, value))
+                return (false);
+        }
         if (canNotify)
             await this.Application.Observer.Notify(item.DataKey, item.Index, this.Application.Solver.ResolveDataFields(dataPath));
         await this.NotifyChanges(dataItem, false, dataKey, null, this.Application.Solver.ResolveDataFields(dataPath), false);
