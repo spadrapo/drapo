@@ -48,7 +48,7 @@ var DrapoStorage = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoStorage.prototype.Retrieve = function (elj, dataKey, sector, context, dataKeyParts) {
@@ -253,7 +253,7 @@ var DrapoStorage = (function () {
     DrapoStorage.prototype.UpdateDataPath = function (sector, contextItem, dataPath, value, canNotify) {
         if (canNotify === void 0) { canNotify = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, dataItem, context, item, data;
+            var dataKey, dataItem, context, item;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -267,9 +267,15 @@ var DrapoStorage = (function () {
                         item = contextItem == null ? context.Create(dataItem.Data, null, null, dataKey, null, null, null) : contextItem;
                         if (item == null)
                             return [2, (false)];
-                        data = item.Data;
-                        if (!this.Application.Solver.UpdateDataPathObject(item.Data, dataPath, value))
-                            return [2, (false)];
+                        if ((dataPath == null) || (dataPath.length == 1)) {
+                            if (dataItem.Data == value)
+                                return [2, (false)];
+                            dataItem.Data = value;
+                        }
+                        else {
+                            if (!this.Application.Solver.UpdateDataPathObject(item.Data, dataPath, value))
+                                return [2, (false)];
+                        }
                         if (!canNotify) return [3, 3];
                         return [4, this.Application.Observer.Notify(item.DataKey, item.Index, this.Application.Solver.ResolveDataFields(dataPath))];
                     case 2:
@@ -2776,11 +2782,11 @@ var DrapoStorage = (function () {
             else {
                 if ((isObject) && (!sourceObject[projection.Column]))
                     continue;
-                if ((!isObject) && ((_a = querySource.Alias, (_a !== null && _a !== void 0 ? _a : querySource.Source)) !== projection.Column))
+                if ((!isObject) && (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== projection.Column))
                     continue;
             }
             var value = isObject ? sourceObject[projection.Column] : sourceObject;
-            object[_b = projection.Alias, (_b !== null && _b !== void 0 ? _b : projection.Column)] = value;
+            object[(_b = projection.Alias) !== null && _b !== void 0 ? _b : projection.Column] = value;
         }
     };
     return DrapoStorage;
