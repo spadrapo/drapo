@@ -1,6 +1,6 @@
 "use strict";
 var DrapoStorageItem = (function () {
-    function DrapoStorageItem(type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, canCache, cacheKeys, onLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, headersGet, headersSet) {
+    function DrapoStorageItem(type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, canCache, cacheKeys, onLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet) {
         this._type = null;
         this._access = null;
         this._data = [];
@@ -31,6 +31,7 @@ var DrapoStorageItem = (function () {
         this._onAfterContainerLoad = null;
         this._onBeforeContainerUnload = null;
         this._onAfterCached = null;
+        this._onNotify = null;
         this._headersGet = [];
         this._headersSet = [];
         this._hasChanges = false;
@@ -61,6 +62,7 @@ var DrapoStorageItem = (function () {
         this._onAfterContainerLoad = onAfterContainerLoad == null ? null : onAfterContainerLoad;
         this._onBeforeContainerUnload = onBeforeContainerUnload == null ? null : onBeforeContainerUnload;
         this._onAfterCached = onAfterCached == null ? null : onAfterCached;
+        this._onNotify = onNotify == null ? null : onNotify;
         this._headersGet = headersGet;
         this._headersSet = headersSet;
         this.Initialize();
@@ -416,6 +418,16 @@ var DrapoStorageItem = (function () {
         },
         set: function (value) {
             this._onAfterCached = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoStorageItem.prototype, "OnNotify", {
+        get: function () {
+            return (this._onNotify);
+        },
+        set: function (value) {
+            this._onNotify = value;
         },
         enumerable: true,
         configurable: true

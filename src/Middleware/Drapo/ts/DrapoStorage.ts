@@ -547,6 +547,7 @@ class DrapoStorage {
         const onAfterContainerLoad: string = el.getAttribute('d-dataOnAfterContainerLoad');
         const onBeforeContainerUnload: string = el.getAttribute('d-dataOnBeforeContainerUnLoad');
         const onAfterCached: string = el.getAttribute('d-dataOnAfterCached');
+        const onNotify: string = el.getAttribute('d-dataOnNotify');
         const headersGet: [string, string][] = this.ExtractDataHeaderGet(el);
         const headersSet: [string, string][] = this.ExtractDataHeaderSet(el);
         const headersResponse: [string, string][] = ((isCookieChange) || (type === 'file')) ? [] : null;
@@ -562,7 +563,7 @@ class DrapoStorage {
         }
         const increment: number = this.Application.Parser.GetStringAsNumber(dataIncrement);
         const isFull: boolean = ((isLazy) && (data.length < increment)) ? true : false;
-        const item: DrapoStorageItem = new DrapoStorageItem(type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, canCache, cacheKeys, onLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, headersGet, headersSet);
+        const item: DrapoStorageItem = new DrapoStorageItem(type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, canCache, cacheKeys, onLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet);
         return (item);
     }
 
@@ -1049,14 +1050,17 @@ class DrapoStorage {
                 return (null);
             current = current[dataKeyCurrent];
         }
-        return (new DrapoStorageItem('array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, false, null, null, null, null, null, null, null));
+        return (new DrapoStorageItem('array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, false, null, null, null, null, null, null, null, null));
     }
 
-    public async AddDataItem(dataKey: string, sector: string, item: any, notify: boolean = true): Promise<boolean> {
+    public async AddDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify: boolean = true): Promise<boolean> {
         const dataItem: DrapoStorageItem = await this.RetrieveDataItem(dataKey, sector);
         if (dataItem == null)
             return (false);
-        dataItem.Data.push(item);
+        let data: any[] = dataItem.Data;
+        if (dataPath != null)
+            data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
+        data.push(item);
         if (dataItem.IsUnitOfWork)
             dataItem.DataInserted.push(item);
         await this.NotifyChanges(dataItem, notify, dataKey, null, null);
@@ -1150,6 +1154,18 @@ class DrapoStorage {
         if ((canFireEventOnAfterCached) && (dataItem.OnAfterCached != null))
             await this.Application.FunctionHandler.ResolveFunctionWithoutContext(sector, dataItem.Element, dataItem.OnAfterCached);
         return (index);
+    }
+
+    public async FireEventOnNotify(dataKey: string): Promise<void> {
+        for (let i: number = this._cacheKeys.length - 1; i >= 0; i--) {
+            const cacheKey: string = this._cacheKeys[i];
+            if (cacheKey != dataKey)
+                continue;
+            const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem.OnNotify == null)
+                continue;
+            await this.Application.FunctionHandler.ResolveFunctionWithoutContext(storageItem.Sector, null, storageItem.OnNotify);
+        }
     }
 
     private RemoveCacheData(index: number, canRemoveObservers = true): void {
@@ -1599,7 +1615,7 @@ class DrapoStorage {
     }
 
     private CreateDataItemInternal(dataKey: string, data: any, canCache: boolean = true): DrapoStorageItem {
-        const item: DrapoStorageItem = new DrapoStorageItem(data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, canCache, null, null, null, null, null, null, null);
+        const item: DrapoStorageItem = new DrapoStorageItem(data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, canCache, null, null, null, null, null, null, null, null);
         return (item);
     }
 

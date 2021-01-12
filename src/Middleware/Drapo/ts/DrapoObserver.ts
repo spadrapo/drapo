@@ -199,6 +199,8 @@ class DrapoObserver {
         await this.NotifyLink(dataKey, dataFields);
         //Components
         await this.NotifyComponent(dataKey);
+        //Storage Event OnNotify
+        await this.Application.Storage.FireEventOnNotify(dataKey);
     }
 
     public async NotifyFor(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render): Promise<void> {

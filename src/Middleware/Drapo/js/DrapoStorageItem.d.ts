@@ -30,6 +30,7 @@ declare class DrapoStorageItem {
     private _onAfterContainerLoad;
     private _onBeforeContainerUnload;
     private _onAfterCached;
+    private _onNotify;
     private _headersGet;
     private _headersSet;
     private _hasChanges;
@@ -100,13 +101,15 @@ declare class DrapoStorageItem {
     set OnBeforeContainerUnload(value: string);
     get OnAfterCached(): string;
     set OnAfterCached(value: string);
+    get OnNotify(): string;
+    set OnNotify(value: string);
     get HeadersGet(): [string, string][];
     set HeadersGet(value: [string, string][]);
     get HeadersSet(): [string, string][];
     set HeadersSet(value: [string, string][]);
     get HasChanges(): boolean;
     set HasChanges(value: boolean);
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, headersGet: [string, string][], headersSet: [string, string][]);
+    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
     private Initialize;
     ContainsGroup(group: string): boolean;
 }

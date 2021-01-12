@@ -886,6 +886,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionAcceptDataChanges");
         }
         [TestCase]
+        public void FunctionAddDataItemMustacheTest()
+        {
+            ValidatePage("FunctionAddDataItemMustache");
+        }
+        [TestCase]
         public void FunctionAddRequestHeaderTest()
         {
             ValidatePage("FunctionAddRequestHeader");

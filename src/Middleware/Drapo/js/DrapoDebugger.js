@@ -323,7 +323,7 @@ var DrapoDebugger = (function () {
                             return [2];
                         if (this.Application.Document.IsHiddenKey(dataKey))
                             return [2];
-                        return [4, this.Application.Storage.AddDataItem('__notifys', '', dataKey)];
+                        return [4, this.Application.Storage.AddDataItem('__notifys', null, '', dataKey)];
                     case 1:
                         _a.sent();
                         return [4, this.Application.Storage.ReloadData('__objectswatchsvalues', '')];
@@ -343,7 +343,7 @@ var DrapoDebugger = (function () {
                             return [2];
                         if (this.Application.Document.IsHiddenKey(pipe))
                             return [2];
-                        return [4, this.Application.Storage.AddDataItem('__pipes', '', pipe)];
+                        return [4, this.Application.Storage.AddDataItem('__pipes', null, '', pipe)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -368,7 +368,7 @@ var DrapoDebugger = (function () {
                             functionText += functionParsed.Parameters[i];
                         }
                         functionText += ')';
-                        return [4, this.Application.Storage.AddDataItem('__functions', '', functionText)];
+                        return [4, this.Application.Storage.AddDataItem('__functions', null, '', functionText)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -389,7 +389,7 @@ var DrapoDebugger = (function () {
                         lastError = _a.sent();
                         if (lastError == error)
                             return [2];
-                        return [4, this.Application.Storage.AddDataItem('__errors', '', error)];
+                        return [4, this.Application.Storage.AddDataItem('__errors', null, '', error)];
                     case 2:
                         _a.sent();
                         return [2];
@@ -788,7 +788,7 @@ var DrapoDebugger = (function () {
                         request = {};
                         request.Url = url;
                         request.Start = new Date(Date.now()).toJSON();
-                        return [4, this.Application.Storage.AddDataItem('__requests', '', request, false)];
+                        return [4, this.Application.Storage.AddDataItem('__requests', null, '', request, false)];
                     case 1:
                         _a.sent();
                         return [2, (request)];
@@ -835,7 +835,7 @@ var DrapoDebugger = (function () {
                         sectorUpdate.Name = name;
                         sectorUpdate.Parent = parent;
                         sectorUpdate.Url = url;
-                        return [4, this.Application.Storage.AddDataItem('__sectorsupdate', '', sectorUpdate)];
+                        return [4, this.Application.Storage.AddDataItem('__sectorsupdate', null, '', sectorUpdate)];
                     case 1:
                         _a.sent();
                         return [2];
