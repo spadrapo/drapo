@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/FunctionCreateReferenceObject.html",
+      "launchUrl": "DrapoPages/FunctionRemoveDataItemMustache.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

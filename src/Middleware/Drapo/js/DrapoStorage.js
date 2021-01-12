@@ -1736,7 +1736,7 @@ var DrapoStorage = (function () {
         }
         return (removed);
     };
-    DrapoStorage.prototype.DeleteDataItem = function (dataKey, sector, item) {
+    DrapoStorage.prototype.DeleteDataItem = function (dataKey, dataPath, sector, item) {
         return __awaiter(this, void 0, void 0, function () {
             var dataItem, data, index;
             return __generator(this, function (_a) {
@@ -1749,6 +1749,8 @@ var DrapoStorage = (function () {
                         data = dataItem.Data;
                         if (data == null)
                             return [2, (false)];
+                        if (dataPath != null)
+                            data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
                         index = this.GetDataItemIndex(data, item);
                         if (index == null)
                             return [2, (false)];

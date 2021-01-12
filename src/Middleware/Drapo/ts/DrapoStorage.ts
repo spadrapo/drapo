@@ -1207,13 +1207,15 @@ class DrapoStorage {
         return (removed);
     }
 
-    public async DeleteDataItem(dataKey: string, sector: string, item: any): Promise<boolean> {
+    public async DeleteDataItem(dataKey: string, dataPath : string[], sector: string, item: any): Promise<boolean> {
         const dataItem: DrapoStorageItem = await this.RetrieveDataItem(dataKey, sector);
         if (dataItem == null)
             return (false);
-        const data: any[] = dataItem.Data;
+        let data: any[] = dataItem.Data;
         if (data == null)
             return (false);
+        if (dataPath != null)
+            data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
         const index: number = this.GetDataItemIndex(data, item);
         if (index == null)
             return (false);

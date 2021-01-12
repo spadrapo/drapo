@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function RemoveDataItem Mustache</title>
+</head>
+<body>
+    <span>Function RemoveDataItem Mustache</span>
+    <div d-datakey="object" d-datatype="object" d-datavalue="{&quot;Persons&quot;:[{&quot;name&quot;: &quot;John&quot;},{&quot;name&quot;: &quot;Mary&quot;},{&quot;name&quot;: &quot;Thiago&quot;}]}"></div>
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="ExecuteDataItem(RemoveDataItem({{object.Persons}},{{person}}),person in object.Persons,{{person._Index}}=1)"></div>
+    <ul>
+        <li d-for="person in object.Persons" d-model="{{person.name}}" d-on-click="RemoveDataItem({{object.Persons}},{{person}})"></li>
+    </ul>
+</body>
+</html>
