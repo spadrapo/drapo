@@ -339,6 +339,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionSetClipboard(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'createtimer')
             return (await this.ExecuteFunctionCreateTimer(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'createreference')
+            return (await this.ExecuteFunctionCreateReference(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'wait')
             return (await this.ExecuteFunctionWait(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'executevalidation')
@@ -622,7 +624,10 @@ class DrapoFunctionHandler {
     }
 
     private async ExecuteFunctionAddDataItem(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
-        const dataKey: string = functionParsed.Parameters[0];
+        const source: string = functionParsed.Parameters[0];
+        const isSourceMustache: boolean = this.Application.Parser.IsMustache(source);
+        const mustacheParts: string[] = isSourceMustache ? this.Application.Parser.ParseMustache(source) : null;
+        const dataKey: string = mustacheParts != null ? this.Application.Solver.ResolveDataKey(mustacheParts) : source;
         const itemText: string = functionParsed.Parameters[1];
         let item: any = null;
         if (this.Application.Parser.IsMustache(itemText)) {
@@ -645,11 +650,14 @@ class DrapoFunctionHandler {
             return (null);
         const notifyText: string = functionParsed.Parameters[2];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        await this.Application.Storage.AddDataItem(dataKey, sector, this.Application.Solver.Clone(item), notify);
+        await this.Application.Storage.AddDataItem(dataKey, mustacheParts, sector, this.Application.Solver.Clone(item), notify);
     }
 
     private async ExecuteFunctionRemoveDataItem(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
-        const dataKey: string = functionParsed.Parameters[0];
+        const source: string = functionParsed.Parameters[0];
+        const isSourceMustache: boolean = this.Application.Parser.IsMustache(source);
+        const mustacheParts: string[] = isSourceMustache ? this.Application.Parser.ParseMustache(source) : null;
+        const dataKey: string = mustacheParts != null ? this.Application.Solver.ResolveDataKey(mustacheParts) : source;
         const itemText: string = functionParsed.Parameters[1];
         let itemPath: string[] = [];
         if (this.Application.Parser.IsMustache(itemText)) {
@@ -662,7 +670,7 @@ class DrapoFunctionHandler {
             return (null);
         const notifyText: string = functionParsed.Parameters[2];
         const nofity: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        const deleted: boolean = await this.Application.Storage.DeleteDataItem(dataKey, sector, item);
+        const deleted: boolean = await this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item);
         if (!deleted)
             return (null);
         if (nofity)
@@ -1134,7 +1142,7 @@ class DrapoFunctionHandler {
             datas = this.Application.ControlFlow.ApplyRange(datas, range);
         if ((datas.length !== null) && (datas.length === 0))
             return ('');
-        await this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, forHierarchyText, ifText, all, datas, dataKey, key);
+        await this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, dataKeyIterator, forHierarchyText, ifText, all, datas, dataKey, key);
         return ('');
     }
 
@@ -1230,6 +1238,12 @@ class DrapoFunctionHandler {
         };
         setTimeout(timerFunction, timeAsNumber);
         return ('');
+    }
+
+    private async ExecuteFunctionCreateReference(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const value: string = functionParsed.Parameters[0];
+        const mustacheReference: string = await this.Application.Solver.CreateMustacheReference(sector, contextItem, value);
+        return (mustacheReference);
     }
 
     private async ExecuteFunctionWait(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {

@@ -150,7 +150,7 @@ class DrapoServer {
                 const storageErrors: string = await this.Application.Config.GetStorageErrors();
                 if (storageErrors !== null) {
                     const error: any = this.Application.Serializer.IsJson(response.Body) ? this.Application.Serializer.Deserialize(response.Body) : response.Body;
-                    await this.Application.Storage.AddDataItem(storageErrors, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error));
+                    await this.Application.Storage.AddDataItem(storageErrors, null, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error));
                 }
                 await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onError, this.Application.FunctionHandler.CreateExecutionContext(false));
                 return ([]);
@@ -215,7 +215,7 @@ class DrapoServer {
                 const storageErrors: string = await this.Application.Config.GetStorageErrors();
                 if (storageErrors !== null) {
                     const error: any = this.Application.Serializer.IsJson(response.Body) ? this.Application.Serializer.Deserialize(response.Body) : response.Body;
-                    await this.Application.Storage.AddDataItem(storageErrors, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error));
+                    await this.Application.Storage.AddDataItem(storageErrors, null, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error));
                 }
                 await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onError, this.Application.FunctionHandler.CreateExecutionContext(false));
                 return ([]);

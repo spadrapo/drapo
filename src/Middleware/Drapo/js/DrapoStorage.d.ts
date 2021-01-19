@@ -71,7 +71,7 @@ declare class DrapoStorage {
     private RetrieveDataKeyCookie;
     RetrieveIterator(dataKey: string, dataKeyParts: string[], context: DrapoContext): DrapoStorageItem;
     RetrieveIteratorChild(dataKey: string, dataKeyParts: string[], contextData: any): DrapoStorageItem;
-    AddDataItem(dataKey: string, sector: string, item: any, notify?: boolean): Promise<boolean>;
+    AddDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify?: boolean): Promise<boolean>;
     GetDataItemLast(dataKey: string, sector: string): Promise<any>;
     FlagDataItemAsUpdated(dataKey: string, sector: string, index: number, notify?: boolean): Promise<boolean>;
     NotifyChanges(dataItem: DrapoStorageItem, notify: boolean, dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean): Promise<void>;
@@ -84,13 +84,14 @@ declare class DrapoStorage {
     private GetCacheData;
     private GetCacheDataItem;
     private AddCacheData;
+    FireEventOnNotify(dataKey: string): Promise<void>;
     private RemoveCacheData;
     AppendCacheDataItemBySector(storageItems: [string, DrapoStorageItem][], sector: string): void;
     AddCacheDataItems(storageItems: [string, DrapoStorageItem][]): void;
     RemoveBySector(sector: string): void;
     DiscardCacheData(dataKey: string, sector: string, canRemoveObservers?: boolean): boolean;
     DiscardCacheDataBySector(sector: string): boolean;
-    DeleteDataItem(dataKey: string, sector: string, item: any): Promise<boolean>;
+    DeleteDataItem(dataKey: string, dataPath: string[], sector: string, item: any): Promise<boolean>;
     DeleteDataItemIndex(dataItem: DrapoStorageItem, index: number): boolean;
     private GetDataItemIndex;
     PostData(dataKey: string, sector: string, dataKeyResponse: string, notify: boolean, executionContext: DrapoExecutionContext<any>): Promise<boolean>;

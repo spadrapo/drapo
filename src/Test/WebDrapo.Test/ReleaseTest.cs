@@ -886,6 +886,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionAcceptDataChanges");
         }
         [TestCase]
+        public void FunctionAddDataItemMustacheTest()
+        {
+            ValidatePage("FunctionAddDataItemMustache");
+        }
+        [TestCase]
         public void FunctionAddRequestHeaderTest()
         {
             ValidatePage("FunctionAddRequestHeader");
@@ -930,6 +935,16 @@ namespace WebDrapo.Test
         public void FunctionCreateDataTest()
         {
             ValidatePage("FunctionCreateData");
+        }
+        [TestCase]
+        public void FunctionCreateReferenceTest()
+        {
+            ValidatePage("FunctionCreateReference");
+        }
+        [TestCase]
+        public void FunctionCreateReferenceObjectTest()
+        {
+            ValidatePage("FunctionCreateReferenceObject");
         }
         [TestCase]
         public void FunctionCreateTimerAsyncTest()
@@ -1050,6 +1065,11 @@ namespace WebDrapo.Test
         public void FunctionRemoveDataItemLookupMappingTest()
         {
             ValidatePage("FunctionRemoveDataItemLookupMapping");
+        }
+        [TestCase]
+        public void FunctionRemoveDataItemMustacheTest()
+        {
+            ValidatePage("FunctionRemoveDataItemMustache");
         }
         [TestCase]
         public void FunctionSwitchSectorIframeTest()

@@ -31,6 +31,7 @@
     private _onAfterContainerLoad: string = null;
     private _onBeforeContainerUnload: string = null;
     private _onAfterCached: string = null;
+    private _onNotify: string = null;
     private _headersGet: [string, string][] = [];
     private _headersSet: [string, string][] = [];
     private _hasChanges: boolean = false;
@@ -277,6 +278,13 @@
         this._onAfterCached = value;
     }
 
+    get OnNotify(): string {
+        return (this._onNotify);
+    }
+    set OnNotify(value: string) {
+        this._onNotify = value;
+    }
+
     get HeadersGet(): [string, string][] {
         return (this._headersGet);
     }
@@ -299,7 +307,7 @@
     }
 
     //Constructor
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, headersGet: [string, string][], headersSet: [string, string][]) {
+    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]) {
         this._type = type;
         this._access = access;
         this._element = element;
@@ -327,6 +335,7 @@
         this._onAfterContainerLoad = onAfterContainerLoad == null ? null : onAfterContainerLoad;
         this._onBeforeContainerUnload = onBeforeContainerUnload == null ? null : onBeforeContainerUnload;
         this._onAfterCached = onAfterCached == null ? null : onAfterCached;
+        this._onNotify = onNotify == null ? null : onNotify;
         this._headersGet = headersGet;
         this._headersSet = headersSet;
         this.Initialize();

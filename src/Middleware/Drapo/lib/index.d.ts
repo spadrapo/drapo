@@ -451,7 +451,7 @@ declare class DrapoControlFlow {
     private IsValidRangeIndex;
     ApplyRange(data: any[], range: DrapoRange): any[];
     GetRangeIndex(data: any[], rangeIndex: string): number;
-    ExecuteDataItem(sector: string, context: DrapoContext, expression: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string): Promise<boolean>;
+    ExecuteDataItem(sector: string, context: DrapoContext, expression: string, iterator: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string): Promise<boolean>;
     ResolveControlFlowForViewportScroll(viewport: DrapoViewport): Promise<void>;
     private CreateControlFlowForViewportFragment;
 }
@@ -898,6 +898,7 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionAddRequestHeader;
     private ExecuteFunctionSetClipboard;
     private ExecuteFunctionCreateTimer;
+    private ExecuteFunctionCreateReference;
     private ExecuteFunctionWait;
     private ExecuteFunctionDownloadData;
     private DownloadData;
@@ -1687,6 +1688,8 @@ declare class DrapoSolver {
     CreateContextItemFromPath(sector: string, dataPath: string[]): Promise<DrapoContextItem>;
     CreateMustache(dataPath: string[]): string;
     CreateMustacheContext(context: DrapoContext, mustacheParts: string[]): string;
+    CreateMustacheReference(sector: string, contextItem: DrapoContextItem, mustache: string): Promise<string>;
+    private GetContextItemAbsolute;
     ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string>;
     ExistDataPath(context: DrapoContext, sector: string, path: string[]): Promise<boolean>;
     private ExistDataPathObject;
@@ -1700,6 +1703,8 @@ declare class DrapoSolver {
     UpdateDataObjectLookupHierarchy(data: any, searchField: string, searchValue: any, value: any, searchHierarchyField?: string): boolean;
     ContainsItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): boolean;
     ResolveDataPathObjectItem(contextItem: DrapoContextItem, dataKey: string, sector: string, canForceLoadDataDelay?: boolean, dataPath?: string[]): Promise<DrapoContextItem>;
+    ResolveSector(mustacheParts: string[], sector: string): string;
+    private HasMustachePartsSector;
     ResolveDataKey(mustacheParts: string[]): string;
     ResolveDataFields(mustacheParts: string[]): string[];
     CreateDataPath(dataKey: string, dataFields: string[]): string[];
@@ -1804,7 +1809,7 @@ declare class DrapoStorage {
     private RetrieveDataKeyCookie;
     RetrieveIterator(dataKey: string, dataKeyParts: string[], context: DrapoContext): DrapoStorageItem;
     RetrieveIteratorChild(dataKey: string, dataKeyParts: string[], contextData: any): DrapoStorageItem;
-    AddDataItem(dataKey: string, sector: string, item: any, notify?: boolean): Promise<boolean>;
+    AddDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify?: boolean): Promise<boolean>;
     GetDataItemLast(dataKey: string, sector: string): Promise<any>;
     FlagDataItemAsUpdated(dataKey: string, sector: string, index: number, notify?: boolean): Promise<boolean>;
     NotifyChanges(dataItem: DrapoStorageItem, notify: boolean, dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean): Promise<void>;
@@ -1817,13 +1822,14 @@ declare class DrapoStorage {
     private GetCacheData;
     private GetCacheDataItem;
     private AddCacheData;
+    FireEventOnNotify(dataKey: string): Promise<void>;
     private RemoveCacheData;
     AppendCacheDataItemBySector(storageItems: [string, DrapoStorageItem][], sector: string): void;
     AddCacheDataItems(storageItems: [string, DrapoStorageItem][]): void;
     RemoveBySector(sector: string): void;
     DiscardCacheData(dataKey: string, sector: string, canRemoveObservers?: boolean): boolean;
     DiscardCacheDataBySector(sector: string): boolean;
-    DeleteDataItem(dataKey: string, sector: string, item: any): Promise<boolean>;
+    DeleteDataItem(dataKey: string, dataPath: string[], sector: string, item: any): Promise<boolean>;
     DeleteDataItemIndex(dataItem: DrapoStorageItem, index: number): boolean;
     private GetDataItemIndex;
     PostData(dataKey: string, sector: string, dataKeyResponse: string, notify: boolean, executionContext: DrapoExecutionContext<any>): Promise<boolean>;
@@ -1902,6 +1908,7 @@ declare class DrapoStorageItem {
     private _onAfterContainerLoad;
     private _onBeforeContainerUnload;
     private _onAfterCached;
+    private _onNotify;
     private _headersGet;
     private _headersSet;
     private _hasChanges;
@@ -1972,13 +1979,15 @@ declare class DrapoStorageItem {
     set OnBeforeContainerUnload(value: string);
     get OnAfterCached(): string;
     set OnAfterCached(value: string);
+    get OnNotify(): string;
+    set OnNotify(value: string);
     get HeadersGet(): [string, string][];
     set HeadersGet(value: [string, string][]);
     get HeadersSet(): [string, string][];
     set HeadersSet(value: [string, string][]);
     get HasChanges(): boolean;
     set HasChanges(value: boolean);
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, headersGet: [string, string][], headersSet: [string, string][]);
+    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
     private Initialize;
     ContainsGroup(group: string): boolean;
 }

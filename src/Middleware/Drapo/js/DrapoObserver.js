@@ -235,6 +235,9 @@ var DrapoObserver = (function () {
                         return [4, this.NotifyComponent(dataKey)];
                     case 6:
                         _a.sent();
+                        return [4, this.Application.Storage.FireEventOnNotify(dataKey)];
+                    case 7:
+                        _a.sent();
                         return [2];
                 }
             });

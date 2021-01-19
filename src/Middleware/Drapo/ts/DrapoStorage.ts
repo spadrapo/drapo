@@ -74,17 +74,19 @@ class DrapoStorage {
     }
 
     public async RetrieveDataValue(sector: string, mustache: string): Promise<any> {
-        const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustache);
-        const dataKey: string = this.Application.Solver.ResolveDataKey(mustacheParts);
-        const mustacheDataFields: string[] = this.Application.Solver.ResolveDataFields(mustacheParts);
-        if (await this.EnsureDataKeyFieldReady(dataKey, sector, mustacheParts))
-            return (this.Application.Storage.GetDataKeyField(dataKey, sector, mustacheParts));
-        const item: DrapoStorageItem = await this.RetrieveDataItemInternal(dataKey, sector, true, mustacheDataFields);
+        const mustacheFullParts: string[] = this.Application.Parser.ParseMustache(mustache);
+        const dataSector: string = this.Application.Solver.ResolveSector(mustacheFullParts, sector);
+        const dataKey: string = this.Application.Solver.ResolveDataKey(mustacheFullParts);
+        const mustacheDataFields: string[] = this.Application.Solver.ResolveDataFields(mustacheFullParts);
+        const mustacheParts: string[] = this.Application.Solver.CreateDataPath(dataKey, mustacheDataFields);
+        if (await this.EnsureDataKeyFieldReady(dataKey, dataSector, mustacheParts))
+            return (this.Application.Storage.GetDataKeyField(dataKey, dataSector, mustacheParts));
+        const item: DrapoStorageItem = await this.RetrieveDataItemInternal(dataKey, dataSector, true, mustacheDataFields);
         if ((item == null) || (item.Data == null))
             return ('');
-        const cacheIndex: number = this.GetCacheKeyIndex(dataKey, sector);
+        const cacheIndex: number = this.GetCacheKeyIndex(dataKey, dataSector);
         if (cacheIndex == null) {
-            await this.AddCacheData(dataKey, sector, item);
+            await this.AddCacheData(dataKey, dataSector, item);
         } else {
             const cacheItem: DrapoStorageItem = this.GetCacheDataItem(cacheIndex);
             for (const dataFieldCurrent in item.Data)
@@ -147,9 +149,14 @@ class DrapoStorage {
         const item: DrapoContextItem = contextItem == null ? context.Create(dataItem.Data, null, null, dataKey, null, null, null) : contextItem;
         if (item == null)
             return (false);
-        const data: any = item.Data;
-        if (!this.Application.Solver.UpdateDataPathObject(item.Data, dataPath, value))
-            return (false);
+        if ((dataPath == null) || (dataPath.length == 1)) {
+            if (dataItem.Data == value)
+                return (false);
+            dataItem.Data = value;
+        } else {
+            if (!this.Application.Solver.UpdateDataPathObject(item.Data, dataPath, value))
+                return (false);
+        }
         if (canNotify)
             await this.Application.Observer.Notify(item.DataKey, item.Index, this.Application.Solver.ResolveDataFields(dataPath));
         await this.NotifyChanges(dataItem, false, dataKey, null, this.Application.Solver.ResolveDataFields(dataPath), false);
@@ -545,6 +552,7 @@ class DrapoStorage {
         const onAfterContainerLoad: string = el.getAttribute('d-dataOnAfterContainerLoad');
         const onBeforeContainerUnload: string = el.getAttribute('d-dataOnBeforeContainerUnLoad');
         const onAfterCached: string = el.getAttribute('d-dataOnAfterCached');
+        const onNotify: string = el.getAttribute('d-dataOnNotify');
         const headersGet: [string, string][] = this.ExtractDataHeaderGet(el);
         const headersSet: [string, string][] = this.ExtractDataHeaderSet(el);
         const headersResponse: [string, string][] = ((isCookieChange) || (type === 'file')) ? [] : null;
@@ -560,7 +568,7 @@ class DrapoStorage {
         }
         const increment: number = this.Application.Parser.GetStringAsNumber(dataIncrement);
         const isFull: boolean = ((isLazy) && (data.length < increment)) ? true : false;
-        const item: DrapoStorageItem = new DrapoStorageItem(type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, canCache, cacheKeys, onLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, headersGet, headersSet);
+        const item: DrapoStorageItem = new DrapoStorageItem(type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, canCache, cacheKeys, onLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet);
         return (item);
     }
 
@@ -830,9 +838,15 @@ class DrapoStorage {
         const dataValue: string = el.getAttribute('d-dataValue');
         if (dataValue == null)
             return ([]);
+        const isReference: boolean = el.getAttribute('d-dataLoadType') === 'reference';
         let dataValueResolved: string = dataValue;
         if (this.Application.Parser.IsMustache(dataValue))
             dataValueResolved = await this.ResolveMustaches(sector, dataValue);
+        if (isReference) {
+            el.setAttribute('d-dataValue', dataValueResolved);
+            const dataReference: any[] = await this.RetrieveDataValue(sector, dataValueResolved);
+            return (this.Application.Solver.Clone(dataReference, true));
+        }
         const storageItemMapped = await this.RetrieveDataItem(dataValueResolved, sector);
         if (storageItemMapped === null)
             return (null);
@@ -952,6 +966,10 @@ class DrapoStorage {
     }
 
     private RetrieveDataKeyInitializeObject(el: HTMLElement): any {
+        const dataValue: string = el.getAttribute('d-dataValue');
+        if ((dataValue != null) && (this.Application.Serializer.IsJson(dataValue))) {
+            return (this.Application.Serializer.Deserialize(dataValue));
+        }
         const object: any = {};
         const propertyKeys: string[] = [];
         const propertyNames: string[] = [];
@@ -1037,14 +1055,17 @@ class DrapoStorage {
                 return (null);
             current = current[dataKeyCurrent];
         }
-        return (new DrapoStorageItem('array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, false, null, null, null, null, null, null, null));
+        return (new DrapoStorageItem('array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, false, null, null, null, null, null, null, null, null));
     }
 
-    public async AddDataItem(dataKey: string, sector: string, item: any, notify: boolean = true): Promise<boolean> {
+    public async AddDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify: boolean = true): Promise<boolean> {
         const dataItem: DrapoStorageItem = await this.RetrieveDataItem(dataKey, sector);
         if (dataItem == null)
             return (false);
-        dataItem.Data.push(item);
+        let data: any[] = dataItem.Data;
+        if (dataPath != null)
+            data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
+        data.push(item);
         if (dataItem.IsUnitOfWork)
             dataItem.DataInserted.push(item);
         await this.NotifyChanges(dataItem, notify, dataKey, null, null);
@@ -1140,6 +1161,18 @@ class DrapoStorage {
         return (index);
     }
 
+    public async FireEventOnNotify(dataKey: string): Promise<void> {
+        for (let i: number = this._cacheKeys.length - 1; i >= 0; i--) {
+            const cacheKey: string = this._cacheKeys[i];
+            if (cacheKey != dataKey)
+                continue;
+            const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem.OnNotify == null)
+                continue;
+            await this.Application.FunctionHandler.ResolveFunctionWithoutContext(storageItem.Sector, null, storageItem.OnNotify);
+        }
+    }
+
     private RemoveCacheData(index: number, canRemoveObservers = true): void {
         if (canRemoveObservers)
             this.Application.Observer.Unsubscribe(this._cacheKeys[index]);
@@ -1195,13 +1228,15 @@ class DrapoStorage {
         return (removed);
     }
 
-    public async DeleteDataItem(dataKey: string, sector: string, item: any): Promise<boolean> {
+    public async DeleteDataItem(dataKey: string, dataPath : string[], sector: string, item: any): Promise<boolean> {
         const dataItem: DrapoStorageItem = await this.RetrieveDataItem(dataKey, sector);
         if (dataItem == null)
             return (false);
-        const data: any[] = dataItem.Data;
+        let data: any[] = dataItem.Data;
         if (data == null)
             return (false);
+        if (dataPath != null)
+            data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
         const index: number = this.GetDataItemIndex(data, item);
         if (index == null)
             return (false);
@@ -1307,13 +1342,23 @@ class DrapoStorage {
         const dataValue: string = el.getAttribute('d-dataValue');
         if (dataValue == null)
             return (false);
+        let updated: boolean = false;
+        const isReference: boolean = el.getAttribute('d-dataLoadType') === 'reference';
+        if (isReference) {
+            const mustacheFullPartsReference: string[] = this.Application.Parser.ParseMustache(dataValue);
+            const dataSectorReference: string = this.Application.Solver.ResolveSector(mustacheFullPartsReference, sector);
+            const dataKeyReference: string = this.Application.Solver.ResolveDataKey(mustacheFullPartsReference);
+            const mustacheDataFieldsReference: string[] = this.Application.Solver.ResolveDataFields(mustacheFullPartsReference);
+            const mustachePartsReference: string[] = this.Application.Solver.CreateDataPath(dataKeyReference, mustacheDataFieldsReference);
+            updated = await this.UpdateDataPath(dataSectorReference, null, mustachePartsReference, dataItem.Data, notify);
+            return (updated);
+        }
         let dataValueResolved: string = dataValue;
         if (this.Application.Parser.IsMustache(dataValue))
             dataValueResolved = await this.ResolveMustaches(sector, dataValue);
         const storageItemMapped = await this.RetrieveDataItem(dataValueResolved, sector);
         if (storageItemMapped === null)
             return (null);
-        let updated: boolean = false;
         const dataMappingField: string = el.getAttribute('d-dataMappingField');
         const dataMappingSearchField: string = el.getAttribute('d-dataMappingSearchField');
         let dataMappingSearchValue: string = el.getAttribute('d-dataMappingSearchValue');
@@ -1575,7 +1620,7 @@ class DrapoStorage {
     }
 
     private CreateDataItemInternal(dataKey: string, data: any, canCache: boolean = true): DrapoStorageItem {
-        const item: DrapoStorageItem = new DrapoStorageItem(data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, canCache, null, null, null, null, null, null, null);
+        const item: DrapoStorageItem = new DrapoStorageItem(data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, canCache, null, null, null, null, null, null, null, null);
         return (item);
     }
 
