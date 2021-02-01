@@ -31,18 +31,21 @@ namespace Sysphera.Middleware.Drapo.Pipe
             await proxy.SendAsync(this._options.Config.PipeActionNotify, message);
         }
 
-        public override Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
             string connectionId = Context.ConnectionId;
-            string domain = Context.UserIdentifier;
+            string domain = Context.UserIdentifier ?? string.Empty;
             DrapoPlumber._connections.TryAdd(connectionId, new DrapoConnection(connectionId, domain));
-            return base.OnConnectedAsync();
+            await Groups.AddToGroupAsync(connectionId, domain);
+            await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             string connectionId = Context.ConnectionId;
+            string domain = Context.UserIdentifier ?? string.Empty;
             DrapoPlumber._connections.TryRemove(connectionId, out _);
+            await Groups.RemoveFromGroupAsync(connectionId, domain);
             await base.OnDisconnectedAsync(exception);
         }
     }
