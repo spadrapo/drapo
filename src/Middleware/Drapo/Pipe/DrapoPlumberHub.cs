@@ -33,14 +33,15 @@ namespace Sysphera.Middleware.Drapo.Pipe
 
         public override Task OnConnectedAsync()
         {
-            var connectionId = Context.ConnectionId;
-            DrapoPlumber._connections.TryAdd(connectionId, new DrapoConnection(connectionId));
+            string connectionId = Context.ConnectionId;
+            string domain = Context.UserIdentifier;
+            DrapoPlumber._connections.TryAdd(connectionId, new DrapoConnection(connectionId, domain));
             return base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var connectionId = Context.ConnectionId;
+            string connectionId = Context.ConnectionId;
             DrapoPlumber._connections.TryRemove(connectionId, out _);
             await base.OnDisconnectedAsync(exception);
         }
