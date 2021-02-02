@@ -40,6 +40,8 @@ namespace Sysphera.Middleware.Drapo
         private string _validatorValidClass = null;
         private string _validatorInvalidClass = null;
         private string _applicationBuild = null;
+        private string _domainRegex = null;
+        private string _domainGroup = "domain";
         #endregion
         #region Properties
         public Dictionary<string, string> Properties { get => _properties; set => _properties = value; }
@@ -72,6 +74,8 @@ namespace Sysphera.Middleware.Drapo
         public string ValidatorValidClass { get => _validatorValidClass; set => _validatorValidClass = value; }
         public string ValidatorInvalidClass { get => _validatorInvalidClass; set => _validatorInvalidClass = value; }
         public string ApplicationBuild { get => _applicationBuild; set => _applicationBuild = value; }
+        public string DomainRegex { get => _domainRegex; set => _domainRegex = value; }
+        public string DomainGroup { get => _domainGroup; set => _domainGroup = value; }
         #endregion
 
         #region Constructors
