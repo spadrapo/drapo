@@ -3,6 +3,7 @@ using Sysphera.Middleware.Drapo.Request;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,9 +42,10 @@ namespace Sysphera.Middleware.Drapo.Pipe
             return (null);
         }
 
-        public async Task<long> Count()
+        public async Task<long> Count(string domain = null)
         {
-            return (await Task.FromResult<long>(_connections.Count));
+            string domainCurrent = domain ?? string.Empty;
+            return (await Task.FromResult<long>(_connections.Values.ToList().FindAll(c => c.Domain == domainCurrent).Count()));
         }
 
         public async Task<bool> Identify(long identity)
@@ -57,9 +59,10 @@ namespace Sysphera.Middleware.Drapo.Pipe
             return (await Task.FromResult<bool>(true));
         }
 
-        public async Task<List<DrapoConnection>> GetConnections()
+        public async Task<List<DrapoConnection>> GetConnections(string domain = null)
         {
-            List<DrapoConnection> connections = new List<DrapoConnection>(DrapoPlumber._connections.Values);
+            string domainCurrent = domain ?? string.Empty;
+            List<DrapoConnection> connections = new List<DrapoConnection>(_connections.Values.ToList().FindAll(c => c.Domain == domainCurrent));
             return (await Task.FromResult<List<DrapoConnection>>(connections));
         }
     }
