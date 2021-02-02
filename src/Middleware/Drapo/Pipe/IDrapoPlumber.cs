@@ -8,8 +8,8 @@ namespace Sysphera.Middleware.Drapo.Pipe
     public interface IDrapoPlumber
     {
         Task<bool> Send(DrapoPipeMessage message, DrapoPipeAudienceType recipient = DrapoPipeAudienceType.Others);
-        Task<long> Count();
+        Task<long> Count(string domain = null);
         Task<bool> Identify(long identity);
-        Task<List<DrapoConnection>> GetConnections();
+        Task<List<DrapoConnection>> GetConnections(string domain = null);
     }
 }
