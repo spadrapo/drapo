@@ -8,5 +8,6 @@ namespace Sysphera.Middleware.Drapo.Request
     {
         string Get(string key);
         string GetPipeHeaderConnectionId();
+        void SetPipeHeaderConnectionId(string connectionId);
     }
 }

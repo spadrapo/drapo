@@ -18,7 +18,7 @@ namespace Sysphera.Middleware.Drapo
                 throw new ArgumentNullException(nameof(services));
             //Prerequisites for Drapo here
             services.Add(new ServiceDescriptor(typeof(DrapoMiddlewareOptions), options ?? new DrapoMiddlewareOptions()));
-            services.Add(new ServiceDescriptor(typeof(IDrapoRequestHeaderReader), typeof(DrapoRequestHeaderReader), ServiceLifetime.Transient));
+            services.AddScoped<IDrapoRequestHeaderReader,DrapoRequestHeaderReader>();
             services.Add(new ServiceDescriptor(typeof(IDrapoUserConfig), typeof(DrapoUserConfig), ServiceLifetime.Transient));
             services.Add(new ServiceDescriptor(typeof(IDrapoPlumber), typeof(DrapoPlumber), ServiceLifetime.Transient));
         }
