@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Left Join</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Left Join</span>
+        <div d-datakey="selections" d-datatype="array" d-datavalue="[1,2,4]"></div>
+        <div d-datakey="persons" d-datatype="array" d-datavalue="[{&quot;Code&quot;:1,&quot;Name&quot;:&quot;Thiago&quot;},{&quot;Code&quot;:2,&quot;Name&quot;:&quot;Henrique&quot;},{&quot;Code&quot;:3,&quot;Name&quot;:&quot;Silva&quot;},{&quot;Code&quot;:4,&quot;Name&quot;:&quot;Catarina&quot;},{&quot;Code&quot;:5,&quot;Name&quot;:&quot;Augusto&quot;}]"></div>
+        <div d-datakey="personsSelected" d-datatype="query" d-datavalue="SELECT S AS Selected, P.Code AS Code, P.Name as Name FROM persons AS P LEFT JOIN selections AS S ON P.Code = S"></div>
+        <div>
+            <div d-for="personSelected in personsSelected" style="display: none;">
+                <input type="checkbox" d-model="{{personSelected.Selected}}" d-on-model-change="ToggleData({{selections}},{{personSelected.Code}})" />
+                <span>{{personSelected.Name}}</span>
+                <br />
+            </div>
+        <div>
+                <input type="checkbox" d-on-model-change="ToggleData({{selections}},{{personSelected.Code}})" />
+                <span>Thiago</span>
+                <br />
+            </div><div>
+                <input type="checkbox" d-on-model-change="ToggleData({{selections}},{{personSelected.Code}})" />
+                <span>Henrique</span>
+                <br />
+            </div><div>
+                <input type="checkbox" d-on-model-change="ToggleData({{selections}},{{personSelected.Code}})" />
+                <span>Silva</span>
+                <br />
+            </div><div>
+                <input type="checkbox" d-on-model-change="ToggleData({{selections}},{{personSelected.Code}})" />
+                <span>Catarina</span>
+                <br />
+            </div><div>
+                <input type="checkbox" d-on-model-change="ToggleData({{selections}},{{personSelected.Code}})" />
+                <span>Augusto</span>
+                <br />
+            </div></div>
+        <div d-for="selection in selections" style="display: none;">
+            <span d-model="{{selection}}"></span><br />
+        </div><div>
+            <span>1</span><br />
+        </div><div>
+            <span>2</span><br />
+        </div><div>
+            <span>4</span><br />
+        </div>
+    </div>
+
+</body></html>

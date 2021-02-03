@@ -1071,6 +1071,25 @@ class DrapoStorage {
         await this.NotifyChanges(dataItem, notify, dataKey, null, null);
     }
 
+    public async ToggleData(dataKey: string, dataPath: string[], sector: string, item: any, notify: boolean = true): Promise<boolean> {
+        const dataItem: DrapoStorageItem = await this.RetrieveDataItem(dataKey, sector);
+        if (dataItem == null)
+            return (false);
+        let data: any[] = dataItem.Data;
+        if (dataPath != null)
+            data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
+        let found: boolean = false;
+        for (let i: number = 0; i < data.length; i++) {
+            if (data[i] != item)
+                continue;
+            found = true;
+            data.splice(i, 1);
+        }
+        if (!found)
+            data.push(item);
+        await this.NotifyChanges(dataItem, notify, dataKey, null, null);
+    }
+
     public async GetDataItemLast(dataKey: string, sector: string): Promise<any> {
         const dataItem: DrapoStorageItem = await this.RetrieveDataItem(dataKey, sector);
         if (dataItem == null)
@@ -1827,7 +1846,7 @@ class DrapoStorage {
         }
         //Unmatched
         const count: number = query.Sources.length;
-        if (count > 1) {
+        if ((count > 1) && (query.Sources[1].JoinType == 'INNER')) {
             for (let i: number = objects.length - 1; i >= 0; i--) {
                 if (objectsId[i].length === count)
                     continue;
@@ -1862,7 +1881,7 @@ class DrapoStorage {
             if (objectsId.length > 1)
                 continue;
             const objectId = objectsId[0];
-            if (objectId !== id)
+            if (objectId != id)
                 continue;
             objectsId.push(objectId);
             return (objects[i]);

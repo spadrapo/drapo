@@ -72,6 +72,7 @@ declare class DrapoStorage {
     RetrieveIterator(dataKey: string, dataKeyParts: string[], context: DrapoContext): DrapoStorageItem;
     RetrieveIteratorChild(dataKey: string, dataKeyParts: string[], contextData: any): DrapoStorageItem;
     AddDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify?: boolean): Promise<boolean>;
+    ToggleData(dataKey: string, dataPath: string[], sector: string, item: any, notify?: boolean): Promise<boolean>;
     GetDataItemLast(dataKey: string, sector: string): Promise<any>;
     FlagDataItemAsUpdated(dataKey: string, sector: string, index: number, notify?: boolean): Promise<boolean>;
     NotifyChanges(dataItem: DrapoStorageItem, notify: boolean, dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean): Promise<void>;
