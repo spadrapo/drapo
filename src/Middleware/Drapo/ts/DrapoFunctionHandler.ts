@@ -211,6 +211,8 @@ class DrapoFunctionHandler {
             return (this.ExecuteFunctionExternal(contextItem, element, event, functionParsed));
         if (functionParsed.Name === 'toggleitemfield')
             return (await this.ExecuteFunctionToggleItemField(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'toggledata')
+            return (await this.ExecuteFunctionToggleData(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'uncheckitemfield')
             return (await this.ExecuteFunctionUncheckItemField(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'clearitemfield')
@@ -483,6 +485,37 @@ class DrapoFunctionHandler {
         const state: boolean = this.Application.Solver.ResolveConditionalBoolean(((stateAny == null) || ((typeof stateAny) === 'string')) ? stateAny : stateAny.toString());
         const stateUpdated: boolean = !state;
         await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, stateUpdated, notify);
+        return ('');
+    }
+
+    private async ExecuteFunctionToggleData(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const source: string = functionParsed.Parameters[0];
+        const isSourceMustache: boolean = this.Application.Parser.IsMustache(source);
+        const mustacheParts: string[] = isSourceMustache ? this.Application.Parser.ParseMustache(source) : null;
+        const dataKey: string = mustacheParts != null ? this.Application.Solver.ResolveDataKey(mustacheParts) : source;
+        const itemText: string = functionParsed.Parameters[1];
+        let item: any = null;
+        if (this.Application.Parser.IsMustache(itemText)) {
+            const dataPath: string[] = this.Application.Parser.ParseMustache(itemText);
+            item = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataPath);
+        } else {
+            if (this.Application.Storage.IsDataKey(itemText, sector)) {
+                const dataItem: DrapoStorageItem = await this.Application.Storage.RetrieveDataItem(itemText, sector);
+                if (dataItem != null)
+                    item = dataItem.Data;
+            } else if (contextItem == null) {
+                item = itemText;
+            } else {
+                const itemPath: string[] = [];
+                itemPath.push(itemText);
+                item = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, itemPath);
+            }
+        }
+        if (item == null)
+            return (null);
+        const notifyText: string = functionParsed.Parameters[2];
+        const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
+        await this.Application.Storage.ToggleData(dataKey, mustacheParts, sector, item, notify);
         return ('');
     }
 

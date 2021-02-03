@@ -22,6 +22,7 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionSetExternalFrameMessage;
     private ExecuteFunctionGetExternalFrameMessage;
     private ExecuteFunctionToggleItemField;
+    private ExecuteFunctionToggleData;
     private ExecuteFunctionUncheckItemField;
     private ExecuteFunctionClearItemField;
     private ExecuteFunctionUpdateItemField;

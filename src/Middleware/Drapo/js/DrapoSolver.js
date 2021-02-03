@@ -59,6 +59,8 @@ var DrapoSolver = (function () {
                     case 0:
                         if (typeof expression === 'boolean')
                             return [2, (expression)];
+                        if (typeof expression === 'number')
+                            return [2, (expression > 0)];
                         block = this.Application.Parser.ParseExpression(expression);
                         return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, block)];
                     case 1:

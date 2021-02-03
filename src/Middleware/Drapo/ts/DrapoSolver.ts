@@ -12,9 +12,11 @@ class DrapoSolver {
         this._application = application;
     }
 
-    public async ResolveConditional(expression: string | boolean, elj: JQuery = null, sector: string = null, context: DrapoContext = null, renderContext: DrapoRenderContext = null, eljForTemplate: HTMLElement = null): Promise<boolean> {
+    public async ResolveConditional(expression: string | boolean | number, elj: JQuery = null, sector: string = null, context: DrapoContext = null, renderContext: DrapoRenderContext = null, eljForTemplate: HTMLElement = null): Promise<boolean> {
         if (typeof expression === 'boolean')
             return (expression);
+        if (typeof expression === 'number')
+            return (expression > 0);
         //Parser
         const block: DrapoExpressionItem = this.Application.Parser.ParseExpression(expression);
         //Resolve
