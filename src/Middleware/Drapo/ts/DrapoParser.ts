@@ -1167,7 +1167,8 @@ class DrapoParser {
             return (query);
         }
         query.Sources = sources;
-        //Where: Work in the future
+        //Filters
+        query.Filter = this.ParseQueryFilter(value);
         return (query);
     }
 
@@ -1272,7 +1273,7 @@ class DrapoParser {
         const indexStart: number = value.indexOf(start);
         if (indexStart < 0)
             return (null);
-        let indexEnd: number = value.indexOf(end);
+        let indexEnd: number = end === null ? -1 : value.indexOf(end);
         if (indexEnd < 0) {
             if (canMissEnd)
                 indexEnd = value.length;
@@ -1316,5 +1317,13 @@ class DrapoParser {
             return (null);
         const header: string = value.substring(0, index);
         return (header);
+    }
+
+    private ParseQueryFilter(value: string): DrapoQueryCondition {
+        const whereToken: string = this.ParseSubstring(value, 'WHERE', null, true);
+        if (whereToken === null)
+            return (null);
+        const filter: DrapoQueryCondition = this.ParseQueryConditional(whereToken);
+        return (filter);
     }
 }

@@ -811,6 +811,11 @@ namespace WebDrapo.Test
             ValidatePage("DataQueryStringValue");
         }
         [TestCase]
+        public void DataQueryWhereTest()
+        {
+            ValidatePage("DataQueryWhere");
+        }
+        [TestCase]
         public void DataSameKeyTest()
         {
             ValidatePage("DataSameKey");

@@ -14,4 +14,5 @@ declare class DrapoQueryCondition {
     set SourceRight(value: string);
     get ColumnRight(): string;
     set ColumnRight(value: string);
+    Clone(): DrapoQueryCondition;
 }

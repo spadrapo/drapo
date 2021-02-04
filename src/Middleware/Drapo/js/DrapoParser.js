@@ -1084,6 +1084,7 @@ var DrapoParser = (function () {
             return (query);
         }
         query.Sources = sources;
+        query.Filter = this.ParseQueryFilter(value);
         return (query);
     };
     DrapoParser.prototype.ParseQueryProjections = function (value) {
@@ -1174,7 +1175,7 @@ var DrapoParser = (function () {
         var indexStart = value.indexOf(start);
         if (indexStart < 0)
             return (null);
-        var indexEnd = value.indexOf(end);
+        var indexEnd = end === null ? -1 : value.indexOf(end);
         if (indexEnd < 0) {
             if (canMissEnd)
                 indexEnd = value.length;
@@ -1215,6 +1216,13 @@ var DrapoParser = (function () {
             return (null);
         var header = value.substring(0, index);
         return (header);
+    };
+    DrapoParser.prototype.ParseQueryFilter = function (value) {
+        var whereToken = this.ParseSubstring(value, 'WHERE', null, true);
+        if (whereToken === null)
+            return (null);
+        var filter = this.ParseQueryConditional(whereToken);
+        return (filter);
     };
     return DrapoParser;
 }());
