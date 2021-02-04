@@ -35,4 +35,14 @@
     set ColumnRight(value: string) {
         this._columnRight = value;
     }
+
+    public Clone(): DrapoQueryCondition {
+        const clone: DrapoQueryCondition = new DrapoQueryCondition();
+        clone.SourceLeft = this.SourceLeft;
+        clone.ColumnLeft = this.ColumnLeft;
+        clone.Comparator = this.Comparator;
+        clone.SourceRight = this.SourceRight;
+        clone.ColumnRight = this.ColumnRight;
+        return (clone);
+    }
 }

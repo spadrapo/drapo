@@ -2714,12 +2714,14 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.ExecuteQuery = function (sector, dataKey, query) {
         return __awaiter(this, void 0, void 0, function () {
-            var objects, objectsId, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, object, count, i;
+            var objects, objectsId, filters, hasFilters, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, object, isAdd, filter, count, i, i, filter;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         objects = [];
                         objectsId = [];
+                        filters = [];
+                        hasFilters = query.Filter !== null;
                         i = 0;
                         _a.label = 1;
                     case 1:
@@ -2748,6 +2750,13 @@ var DrapoStorage = (function () {
                             if (object === null)
                                 continue;
                             this.InjectQueryObjectProjections(query, querySource, object, querySourceObject);
+                            if (hasFilters) {
+                                isAdd = (i === 0);
+                                filter = isAdd ? query.Filter.Clone() : filters[j];
+                                if (isAdd)
+                                    filters.push(filter);
+                                this.ResolveQueryConditionSource(query, querySource, querySourceObject, filter);
+                            }
                         }
                         _a.label = 3;
                     case 3:
@@ -2758,6 +2767,16 @@ var DrapoStorage = (function () {
                         if ((count > 1) && (query.Sources[1].JoinType == 'INNER')) {
                             for (i = objects.length - 1; i >= 0; i--) {
                                 if (objectsId[i].length === count)
+                                    continue;
+                                objects.splice(i, 1);
+                                if (hasFilters)
+                                    filters.splice(i, 1);
+                            }
+                        }
+                        if (hasFilters) {
+                            for (i = filters.length - 1; i >= 0; i--) {
+                                filter = filters[i];
+                                if (this.IsValidQueryCondition(filter))
                                     continue;
                                 objects.splice(i, 1);
                             }
@@ -2800,10 +2819,10 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.InjectQueryObjectProjections = function (query, querySource, object, sourceObject) {
         var _a, _b;
+        var isObject = typeof sourceObject === 'object';
         for (var i = 0; i < query.Projections.length; i++) {
             var projection = query.Projections[i];
             var source = projection.Source;
-            var isObject = typeof sourceObject === 'object';
             if (source !== null) {
                 if ((querySource.Alias !== null) && (source !== querySource.Alias))
                     continue;
@@ -2819,6 +2838,41 @@ var DrapoStorage = (function () {
             var value = isObject ? sourceObject[projection.Column] : sourceObject;
             object[_b = projection.Alias, (_b !== null && _b !== void 0 ? _b : projection.Column)] = value;
         }
+    };
+    DrapoStorage.prototype.ResolveQueryConditionSource = function (query, querySource, sourceObject, filter) {
+        var valueLeft = this.ResolveQueryConditionSourceColumn(query, querySource, sourceObject, filter.SourceLeft, filter.ColumnLeft);
+        if (valueLeft != null) {
+            filter.SourceLeft = null;
+            filter.ColumnLeft = valueLeft;
+        }
+        var valueRight = this.ResolveQueryConditionSourceColumn(query, querySource, sourceObject, filter.SourceRight, filter.ColumnRight);
+        if (valueRight != null) {
+            filter.SourceRight = null;
+            filter.ColumnRight = valueRight;
+        }
+    };
+    DrapoStorage.prototype.ResolveQueryConditionSourceColumn = function (query, querySource, sourceObject, source, column) {
+        var _a;
+        var isObject = typeof sourceObject === 'object';
+        if (source !== null) {
+            if ((querySource.Alias !== null) && (source !== querySource.Alias))
+                return (null);
+            if ((querySource.Alias === null) && (source !== querySource.Source))
+                return (null);
+        }
+        else {
+            if ((isObject) && (!sourceObject[column]))
+                return (null);
+            if ((!isObject) && ((_a = querySource.Alias, (_a !== null && _a !== void 0 ? _a : querySource.Source)) !== column))
+                return (null);
+        }
+        var value = isObject ? sourceObject[column] : sourceObject;
+        return (value);
+    };
+    DrapoStorage.prototype.IsValidQueryCondition = function (filter) {
+        if ((filter.Comparator === '=') && (filter.ColumnLeft == filter.ColumnRight))
+            return (true);
+        return (false);
     };
     return DrapoStorage;
 }());

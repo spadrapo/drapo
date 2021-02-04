@@ -57,5 +57,14 @@ var DrapoQueryCondition = (function () {
         enumerable: true,
         configurable: true
     });
+    DrapoQueryCondition.prototype.Clone = function () {
+        var clone = new DrapoQueryCondition();
+        clone.SourceLeft = this.SourceLeft;
+        clone.ColumnLeft = this.ColumnLeft;
+        clone.Comparator = this.Comparator;
+        clone.SourceRight = this.SourceRight;
+        clone.ColumnRight = this.ColumnRight;
+        return (clone);
+    };
     return DrapoQueryCondition;
 }());

@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Where</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Where</span>
+        <div d-dataKey="selections" d-dataType="array" d-dataValue="[1,2,4]"></div>
+        <div d-dataKey="persons" d-dataType="array" d-dataValue='[{"Code":1,"Name":"Thiago"},{"Code":2,"Name":"Henrique"},{"Code":3,"Name":"Silva"},{"Code":4,"Name":"Catarina"},{"Code":5,"Name":"Augusto"}]'></div>
+        <div d-dataKey="personsSelected2" d-dataType="query" d-dataValue="SELECT S AS Selected, P.Code AS Code, P.Name as Name FROM persons AS P LEFT JOIN selections AS S ON P.Code = S WHERE P.Code = 2"></div>
+        <div d-dataKey="personsSelected3" d-dataType="query" d-dataValue="SELECT S AS Selected, P.Code AS Code, P.Name as Name FROM persons AS P LEFT JOIN selections AS S ON P.Code = S WHERE P.Code = 3"></div>
+        <div>
+            <div d-for="personSelected in personsSelected2">
+                <input type="checkbox" d-model="{{personSelected.Selected}}" d-on-model-change="ToggleData({{selections}},{{personSelected.Code}})" />
+                <span>{{personSelected.Name}}</span>
+                <br />
+            </div>
+        </div>
+        <div>
+            <div d-for="personSelected in personsSelected3">
+                <input type="checkbox" d-model="{{personSelected.Selected}}" d-on-model-change="ToggleData({{selections}},{{personSelected.Code}})" />
+                <span>{{personSelected.Name}}</span>
+                <br />
+            </div>
+        </div>
+        <div d-for="selection in selections">
+            <span d-model="{{selection}}"></span><br />
+        </div>
+    </div>
+</body>
+</html>

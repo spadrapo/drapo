@@ -1282,6 +1282,7 @@ declare class DrapoParser {
     private ParseQuerySourcesSplit;
     private ParseQuerySourceHead;
     private ParseQuerySourceHeadValue;
+    private ParseQueryFilter;
 }
 
 declare class DrapoPipeMessage {
@@ -1318,12 +1319,15 @@ declare class DrapoQuery {
     private _error;
     private _projections;
     private _sources;
+    private _filter;
     get Error(): string;
     set Error(value: string);
     get Projections(): DrapoQueryProjection[];
     set Projections(value: DrapoQueryProjection[]);
     get Sources(): DrapoQuerySource[];
     set Sources(value: DrapoQuerySource[]);
+    get Filter(): DrapoQueryCondition;
+    set Filter(value: DrapoQueryCondition);
 }
 
 declare class DrapoQueryCondition {
@@ -1342,6 +1346,7 @@ declare class DrapoQueryCondition {
     set SourceRight(value: string);
     get ColumnRight(): string;
     set ColumnRight(value: string);
+    Clone(): DrapoQueryCondition;
 }
 
 declare class DrapoQueryProjection {
@@ -1876,6 +1881,9 @@ declare class DrapoStorage {
     private ExecuteQuery;
     private EnsureQueryObject;
     private InjectQueryObjectProjections;
+    private ResolveQueryConditionSource;
+    private ResolveQueryConditionSourceColumn;
+    private IsValidQueryCondition;
 }
 
 declare class DrapoStorageItem {

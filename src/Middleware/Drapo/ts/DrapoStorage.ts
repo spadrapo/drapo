@@ -1815,6 +1815,8 @@ class DrapoStorage {
     private async ExecuteQuery(sector: string, dataKey: string, query: DrapoQuery): Promise<any[]> {
         const objects: any[] = [];
         const objectsId: string[][] = [];
+        const filters: DrapoQueryCondition[] = [];
+        const hasFilters: boolean = query.Filter !== null;
         for (let i: number = 0; i < query.Sources.length; i++) {
             const querySource: DrapoQuerySource = query.Sources[i];
             const querySourcePath: string = querySource.Source;
@@ -1840,8 +1842,17 @@ class DrapoStorage {
                 const object: any = this.EnsureQueryObject(query, querySource, i, objects, objectsId, querySourceObject);
                 if (object === null)
                     continue;
-                //Inject
+                //Projections
                 this.InjectQueryObjectProjections(query, querySource, object, querySourceObject);
+                //Filter
+                if (hasFilters)
+                {
+                    const isAdd: boolean = (i === 0);
+                    const filter: DrapoQueryCondition = isAdd ? query.Filter.Clone() : filters[j];
+                    if (isAdd)
+                        filters.push(filter);
+                    this.ResolveQueryConditionSource(query, querySource, querySourceObject, filter);
+                }
             }
         }
         //Unmatched
@@ -1849,6 +1860,17 @@ class DrapoStorage {
         if ((count > 1) && (query.Sources[1].JoinType == 'INNER')) {
             for (let i: number = objects.length - 1; i >= 0; i--) {
                 if (objectsId[i].length === count)
+                    continue;
+                objects.splice(i, 1);
+                if (hasFilters)
+                    filters.splice(i, 1);
+            }
+        }
+        //Filters
+        if (hasFilters) {
+            for (let i: number = filters.length - 1; i >= 0; i--) {
+                const filter: DrapoQueryCondition = filters[i];
+                if (this.IsValidQueryCondition(filter))
                     continue;
                 objects.splice(i, 1);
             }
@@ -1889,11 +1911,11 @@ class DrapoStorage {
         return (null);
     }
 
-    private InjectQueryObjectProjections(query: DrapoQuery, querySource: DrapoQuerySource, object: any, sourceObject: any) : void {
+    private InjectQueryObjectProjections(query: DrapoQuery, querySource: DrapoQuerySource, object: any, sourceObject: any): void {
+        const isObject: boolean = typeof sourceObject === 'object';
         for (let i: number = 0; i < query.Projections.length; i++) {
             const projection: DrapoQueryProjection = query.Projections[i];
             const source: string = projection.Source;
-            const isObject: boolean = typeof sourceObject === 'object';
             if (source !== null) {
                 if ((querySource.Alias !== null) && (source !== querySource.Alias))
                     continue;
@@ -1908,5 +1930,45 @@ class DrapoStorage {
             const value: any = isObject ? sourceObject[projection.Column] : sourceObject;
             object[projection.Alias ?? projection.Column] = value;
         }
+    }
+
+    private ResolveQueryConditionSource(query: DrapoQuery, querySource: DrapoQuerySource, sourceObject: any, filter: DrapoQueryCondition) : void {
+        //Left
+        const valueLeft: string = this.ResolveQueryConditionSourceColumn(query, querySource, sourceObject, filter.SourceLeft, filter.ColumnLeft);
+        if (valueLeft != null)
+        {
+            filter.SourceLeft = null;
+            filter.ColumnLeft = valueLeft;
+        }
+        //Right
+        const valueRight: string = this.ResolveQueryConditionSourceColumn(query, querySource, sourceObject, filter.SourceRight, filter.ColumnRight);
+        if (valueRight != null) {
+            filter.SourceRight = null;
+            filter.ColumnRight = valueRight;
+        }
+    }
+
+    private ResolveQueryConditionSourceColumn(query: DrapoQuery, querySource: DrapoQuerySource, sourceObject: any, source: string, column: string): string {
+        const isObject: boolean = typeof sourceObject === 'object';
+        if (source !== null) {
+            if ((querySource.Alias !== null) && (source !== querySource.Alias))
+                return(null);
+            if ((querySource.Alias === null) && (source !== querySource.Source))
+                return (null);
+        } else {
+            if ((isObject) && (!sourceObject[column]))
+                return (null);
+            if ((!isObject) && ((querySource.Alias ?? querySource.Source) !== column))
+                return (null);
+        }
+        const value: any = isObject ? sourceObject[column] : sourceObject;
+        return (value);
+    }
+
+    private IsValidQueryCondition(filter: DrapoQueryCondition): boolean {
+        if ((filter.Comparator === '=') && (filter.ColumnLeft == filter.ColumnRight))
+            return (true);
+        //We only support equal right now
+        return (false);
     }
 }

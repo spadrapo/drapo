@@ -123,4 +123,5 @@ declare class DrapoParser {
     private ParseQuerySourcesSplit;
     private ParseQuerySourceHead;
     private ParseQuerySourceHeadValue;
+    private ParseQueryFilter;
 }

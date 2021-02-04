@@ -137,4 +137,7 @@ declare class DrapoStorage {
     private ExecuteQuery;
     private EnsureQueryObject;
     private InjectQueryObjectProjections;
+    private ResolveQueryConditionSource;
+    private ResolveQueryConditionSourceColumn;
+    private IsValidQueryCondition;
 }
