@@ -736,6 +736,11 @@ namespace WebDrapo.Test
             ValidatePage("DataMappingField");
         }
         [TestCase]
+        public void DataMappingFieldEmptyTest()
+        {
+            ValidatePage("DataMappingFieldEmpty");
+        }
+        [TestCase]
         public void DataMappingFieldMustacheTest()
         {
             ValidatePage("DataMappingFieldMustache");
