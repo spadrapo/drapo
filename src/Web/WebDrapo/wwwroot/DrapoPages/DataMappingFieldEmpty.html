@@ -8,8 +8,9 @@
     <span>Data Mapping</span>
     <div>
         <div>
+            <div d-dataKey="valueEmpty" d-dataType="value" d-dataValue=""></div>
             <div d-dataKey="value" d-dataType="value" d-dataValue="NewValue"></div>
-            <div d-dataKey="mapping" d-dataType="mapping" d-dataValue="value" d-dataMappingField="{{value.Empty}}"></div>
+            <div d-dataKey="mapping" d-dataType="mapping" d-dataValue="value" d-dataMappingField="{{valueEmpty}}"></div>
         </div>
         <div>
             <span d-model="{{mapping}}"></span>

@@ -854,11 +854,13 @@ class DrapoStorage {
         const dataMappingField: string = el.getAttribute('d-dataMappingField');
         if ((dataMappingField != null) && (dataMappingField != '')) {
             const dataMappingFieldResolved: string = await this.ResolveMustaches(sector, dataMappingField);
-            const dataPath: string[] = this.Application.Parser.ParsePath(dataMappingFieldResolved);
-            const dataPathFull: string[] = this.Application.Solver.CreateDataPath(dataValueResolved, dataPath);
-            data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPathFull);
-            if (data === null)
-                return (null);
+            if ((dataMappingFieldResolved != null) && (dataMappingFieldResolved != '')) {
+                const dataPath: string[] = this.Application.Parser.ParsePath(dataMappingFieldResolved);
+                const dataPathFull: string[] = this.Application.Solver.CreateDataPath(dataValueResolved, dataPath);
+                data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPathFull);
+                if (data === null)
+                    return (null);
+            }
         }
         const dataMappingSearchField: string = el.getAttribute('d-dataMappingSearchField');
         let dataMappingSearchValue: string = el.getAttribute('d-dataMappingSearchValue');
