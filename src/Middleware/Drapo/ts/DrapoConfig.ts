@@ -159,6 +159,10 @@ class DrapoConfig {
         return (await this.GetProperty('ApplicationBuild'));
     }
 
+    public async GetHeaderContainerId(): Promise<string> {
+        return (await this.GetProperty('HeaderContainerId'));
+    }
+
     public async GetViews(): Promise<DrapoView[]> {
         return (await this.GetPropertyArray('Views'));
     }

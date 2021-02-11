@@ -298,6 +298,7 @@ declare class DrapoConfig {
     GetValidatorValidClass(): Promise<string>;
     GetValidatorInvalidClass(): Promise<string>;
     GetApplicationBuild(): Promise<string>;
+    GetHeaderContainerId(): Promise<string>;
     GetViews(): Promise<DrapoView[]>;
 }
 
@@ -1600,6 +1601,8 @@ declare class DrapoServer {
     private _requestHeaders;
     private _requestHeadersNext;
     private _hasBadRequest;
+    private _headerContainerIdKey;
+    private _headerContainerIdValue;
     get Application(): DrapoApplication;
     get HasBadRequest(): boolean;
     set HasBadRequest(value: boolean);
@@ -1631,6 +1634,7 @@ declare class DrapoServer {
     EnsureUrlEncoded(url: string): string;
     EnsureUrlComponentEncoded(url: string): string;
     private IsUrlEncoded;
+    private SetContainerId;
 }
 
 declare class DrapoServerRequest {

@@ -6,6 +6,8 @@ class DrapoServer {
     private _requestHeaders: [string, string][] = [];
     private _requestHeadersNext: [string, string][] = [];
     private _hasBadRequest: boolean = false;
+    private _headerContainerIdKey: string = null;
+    private _headerContainerIdValue : string = null;
 
     //Properties
     get Application(): DrapoApplication {
@@ -79,6 +81,8 @@ class DrapoServer {
     public async GetHTML(url: string): Promise<[string,boolean]> {
         const requestHeaders: [string, string][] = [];
         this.InsertHeader(requestHeaders, 'X-Requested-With', 'XMLHttpRequest');
+        if (this._headerContainerIdValue !== null)
+            requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
         let urlResolved: string = this.ResolveUrl(url);
         urlResolved += await this.AppendUrlQueryStringCacheStatic(url);
         const request: DrapoServerRequest = new DrapoServerRequest('GET', urlResolved, requestHeaders, null, true);
@@ -99,6 +103,8 @@ class DrapoServer {
             this.InsertHeader(requestHeaders, 'Content-Type', contentType);
         this.InsertHeader(requestHeaders, 'X-Requested-With', 'XMLHttpRequest');
         this.InsertHeader(requestHeaders, 'Cache-Control', 'no-cache, no-store, must-revalidate');
+        if (this._headerContainerIdValue !== null)
+            requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
         const urlResolved: string = this.ResolveUrl(url);
         const urlResolvedTimestamp: string = this.AppendUrlQueryStringTimestamp(urlResolved);
         const cookieValues: [string, string][] = this.Application.CookieHandler.GetCookieValues();
@@ -166,6 +172,8 @@ class DrapoServer {
         this.InsertHeaders(requestHeaders, headers);
         this.InsertHeader(requestHeaders, 'X-Requested-With', 'XMLHttpRequest');
         this.InsertHeader(requestHeaders, 'Cache-Control', 'no-cache, no-store, must-revalidate');
+        if (this._headerContainerIdValue !== null)
+            requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
         const urlResolved: string = this.ResolveUrl(url);
         const urlResolvedTimestamp: string = this.AppendUrlQueryStringTimestamp(urlResolved);
         const request: DrapoServerRequest = new DrapoServerRequest('GET', urlResolvedTimestamp, requestHeaders, null, true, true);
@@ -271,6 +279,7 @@ class DrapoServer {
     private async Request(request: DrapoServerRequest): Promise<DrapoServerResponse> {
         const requestDebbuger: any = await this.Application.Debugger.CreateRequest(request.Url);
         const response: DrapoServerResponse = await this.RequestInternal(request);
+        this.SetContainerId(response);
         await this.Application.Debugger.FinishRequest(requestDebbuger);
         return (response);
     }
@@ -414,5 +423,19 @@ class DrapoServer {
             return (false);
         const hasPercentageEncoded: boolean = url.indexOf('%25') >= 0;
         return (hasPercentageEncoded);
+    }
+
+    private async SetContainerId(response: DrapoServerResponse): Promise<void> {
+        if (this._headerContainerIdKey == null)
+            this._headerContainerIdKey = await this.Application.Config.GetHeaderContainerId();
+        if ((this._headerContainerIdKey == null) || (this._headerContainerIdKey == ''))
+            return;
+        for (let i: number = 0; i < response.Headers.length; i++) {
+            const header: [string, string] = response.Headers[i];
+            if (header[0].toLowerCase() !== this._headerContainerIdKey.toLowerCase())
+                continue;
+            this._headerContainerIdValue = header[1];
+            break;
+        }
     }
 }
