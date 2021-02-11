@@ -340,6 +340,16 @@ var DrapoConfig = (function () {
             });
         });
     };
+    DrapoConfig.prototype.GetHeaderContainerId = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.GetProperty('HeaderContainerId')];
+                    case 1: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
     DrapoConfig.prototype.GetViews = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

@@ -42,6 +42,7 @@ namespace Sysphera.Middleware.Drapo
         private string _applicationBuild = null;
         private string _domainRegex = null;
         private string _domainGroup = "domain";
+        private string _headerContainerId = null;
         #endregion
         #region Properties
         public Dictionary<string, string> Properties { get => _properties; set => _properties = value; }
@@ -76,6 +77,7 @@ namespace Sysphera.Middleware.Drapo
         public string ApplicationBuild { get => _applicationBuild; set => _applicationBuild = value; }
         public string DomainRegex { get => _domainRegex; set => _domainRegex = value; }
         public string DomainGroup { get => _domainGroup; set => _domainGroup = value; }
+        public string HeaderContainerId { get => _headerContainerId; set => _headerContainerId = value; }
         #endregion
 
         #region Constructors

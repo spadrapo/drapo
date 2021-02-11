@@ -104,6 +104,7 @@ namespace Sysphera.Middleware.Drapo
                     httpContext.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
                     httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
                     httpContext.Response.Headers.Add("Content-Type", new[] { "application/javascript" });
+                    AppendHeaderContainerId(httpContext);
                     return Task.FromResult(0);
                 }, context);
                 if (!isCache)
@@ -121,6 +122,7 @@ namespace Sysphera.Middleware.Drapo
                     httpContext.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
                     httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
                     httpContext.Response.Headers.Add("Content-Type", new[] { "application/json" });
+                    AppendHeaderContainerId(httpContext);
                     return Task.FromResult(0);
                 }, context);
                 if (!isCache)
@@ -140,6 +142,7 @@ namespace Sysphera.Middleware.Drapo
                     httpContext.Response.Headers.Add("Last-Modified", new[] { this.GetComponentFileLastModified(component, file, key) });
                     httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
                     httpContext.Response.Headers.Add("Content-Type", new[] { this.GetComponentFileContentType(component, file, key) });
+                    AppendHeaderContainerId(httpContext);
                     return Task.FromResult(0);
                 }, context);
                 if (!isCache)
@@ -163,6 +166,7 @@ namespace Sysphera.Middleware.Drapo
                     if (dynamic.Headers != null)
                         foreach (KeyValuePair<string, string> entry in dynamic.Headers)
                             httpContext.Response.Headers.Add(entry.Key, new[] { entry.Value });
+                    AppendHeaderContainerId(httpContext);
                     return Task.FromResult(0);
                 }, context);
                 if ((!isCache) && (!string.IsNullOrEmpty(dynamic.ContentData)))
@@ -170,8 +174,28 @@ namespace Sysphera.Middleware.Drapo
             }
             else
             {
+                if (HasHeaderContainerId())
+                {
+                    context.Response.OnStarting(state =>
+                    {
+                        var httpContext = (HttpContext)state;
+                        AppendHeaderContainerId(httpContext);
+                        return Task.FromResult(0);
+                    }, context);
+                }
                 await _next.Invoke(context);
             }
+        }
+
+        private bool HasHeaderContainerId() {
+            return (!string.IsNullOrEmpty(this._options.Config.HeaderContainerId));
+        }
+
+        private void AppendHeaderContainerId(HttpContext httpContext) {
+            string headerContainerId = this._options.Config.HeaderContainerId;
+            if (string.IsNullOrEmpty(headerContainerId))
+                return;
+            httpContext.Response.Headers.Add(headerContainerId, new[] { Environment.MachineName });
         }
         #endregion
 

@@ -34,5 +34,6 @@ declare class DrapoConfig {
     GetValidatorValidClass(): Promise<string>;
     GetValidatorInvalidClass(): Promise<string>;
     GetApplicationBuild(): Promise<string>;
+    GetHeaderContainerId(): Promise<string>;
     GetViews(): Promise<DrapoView[]>;
 }
