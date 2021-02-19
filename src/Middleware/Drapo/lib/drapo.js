@@ -15892,15 +15892,32 @@ var DrapoParser = (function () {
         var valueTrimSplit = this.ParseBlock(valueTrim, ' ');
         var alias = this.ParseQueryProjectionAlias(valueTrimSplit);
         var valueTrimFirst = valueTrimSplit[0];
-        var isMustache = this.IsMustache(valueTrimFirst);
-        var valueTrimFirstSplit = isMustache ? [valueTrimFirst] : this.ParseBlock(valueTrimFirst, '.');
+        var aggregation = this.ParseQueryProjectionAggregation(valueTrimFirst);
+        var valueDefinition = aggregation == null ? valueTrimFirst : this.ParseQueryProjectionAggregationDefinition(valueTrimFirst);
+        var isMustache = this.IsMustache(valueDefinition);
+        var valueTrimFirstSplit = isMustache ? [valueDefinition] : this.ParseBlock(valueDefinition, '.');
         var source = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[0] : null;
         var column = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[1] : valueTrimFirstSplit[0];
         var projection = new DrapoQueryProjection();
         projection.Alias = alias;
         projection.Source = source;
         projection.Column = column;
+        projection.Aggregation = aggregation;
         return (projection);
+    };
+    DrapoParser.prototype.ParseQueryProjectionAggregation = function (value) {
+        var index = value.indexOf('(');
+        if (index < 0)
+            return (null);
+        var aggregation = value.substr(0, index).toUpperCase();
+        return (aggregation);
+    };
+    DrapoParser.prototype.ParseQueryProjectionAggregationDefinition = function (value) {
+        var index = value.indexOf('(');
+        if (index < 0)
+            return (null);
+        var definition = value.substring(index + 1, value.length - 1);
+        return (definition);
     };
     DrapoParser.prototype.ParseQueryProjectionAlias = function (values) {
         if (values.length != 3)
@@ -16414,6 +16431,7 @@ var DrapoQueryProjection = (function () {
         this._source = null;
         this._column = null;
         this._alias = null;
+        this._aggregation = null;
     }
     Object.defineProperty(DrapoQueryProjection.prototype, "Source", {
         get: function () {
@@ -16441,6 +16459,16 @@ var DrapoQueryProjection = (function () {
         },
         set: function (value) {
             this._alias = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQueryProjection.prototype, "Aggregation", {
+        get: function () {
+            return (this._aggregation);
+        },
+        set: function (value) {
+            this._aggregation = value;
         },
         enumerable: true,
         configurable: true
@@ -22418,7 +22446,7 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.ExecuteQuery = function (sector, dataKey, query) {
         return __awaiter(this, void 0, void 0, function () {
-            var objects, objectsId, filters, hasFilters, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, object, isAdd, filter, count, i, i, filter;
+            var objects, objectsId, filters, hasFilters, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, object, isAdd, filter, count, i, i, filter, objectAggregation;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -22484,6 +22512,11 @@ var DrapoStorage = (function () {
                                     continue;
                                 objects.splice(i, 1);
                             }
+                        }
+                        if (query.Projections[0].Aggregation !== null) {
+                            objectAggregation = {};
+                            objectAggregation[query.Projections[0].Alias] = objects.length;
+                            return [2, (objectAggregation)];
                         }
                         return [2, (objects)];
                 }

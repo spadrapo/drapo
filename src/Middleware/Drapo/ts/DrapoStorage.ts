@@ -1879,6 +1879,13 @@ class DrapoStorage {
                 objects.splice(i, 1);
             }
         }
+        //Aggregations
+        if (query.Projections[0].Aggregation !== null) {
+            //We only support count right now
+            const objectAggregation: any = {};
+            objectAggregation[query.Projections[0].Alias] = objects.length;
+            return (objectAggregation);
+        }
         return (objects);
     }
 

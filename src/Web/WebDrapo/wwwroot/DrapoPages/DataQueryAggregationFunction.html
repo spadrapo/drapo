@@ -10,7 +10,7 @@
         <div d-dataKey="objects" d-dataUrlGet="~/Data/GetLevels?children=5"></div>
         <div d-dataKey="objectsQuery" d-dataType="query" d-dataValue="SELECT Count(Key) AS Count FROM objects"></div>
         <div>
-            <span>{{objectsQuery}}</span>
+            <span>{{objectsQuery.Count}}</span>
         </div>
     </div>
 </body>
