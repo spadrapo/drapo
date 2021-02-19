@@ -1396,11 +1396,13 @@ class DrapoStorage {
             let dataPath: string[] = null;
             if ((dataMappingField != null) && (dataMappingField != '')) {
                 const dataMappingFieldResolved: string = await this.ResolveMustaches(sector, dataMappingField);
-                dataPath = this.Application.Parser.ParsePath(dataMappingFieldResolved);
-                const dataPathFull: string[] = this.Application.Solver.CreateDataPath(dataValueResolved, dataPath);
-                data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPathFull);
-                if (data === null)
-                    return (false);
+                if ((dataMappingFieldResolved != null) && (dataMappingFieldResolved != '')) {
+                    dataPath = this.Application.Parser.ParsePath(dataMappingFieldResolved);
+                    const dataPathFull: string[] = this.Application.Solver.CreateDataPath(dataValueResolved, dataPath);
+                    data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPathFull);
+                    if (data === null)
+                        return (false);
+                }
             }
             if ((dataMappingSearchField != null) && (dataMappingSearchField != '') && (dataMappingSearchValue != null) && (dataMappingSearchValue != '')) {
                 if (this.Application.Parser.IsMustache(dataMappingSearchValue)) {

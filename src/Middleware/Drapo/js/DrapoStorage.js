@@ -2034,11 +2034,13 @@ var DrapoStorage = (function () {
                         return [4, this.ResolveMustaches(sector, dataMappingField)];
                     case 6:
                         dataMappingFieldResolved = _a.sent();
-                        dataPath = this.Application.Parser.ParsePath(dataMappingFieldResolved);
-                        dataPathFull = this.Application.Solver.CreateDataPath(dataValueResolved, dataPath);
-                        data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPathFull);
-                        if (data === null)
-                            return [2, (false)];
+                        if ((dataMappingFieldResolved != null) && (dataMappingFieldResolved != '')) {
+                            dataPath = this.Application.Parser.ParsePath(dataMappingFieldResolved);
+                            dataPathFull = this.Application.Solver.CreateDataPath(dataValueResolved, dataPath);
+                            data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPathFull);
+                            if (data === null)
+                                return [2, (false)];
+                        }
                         _a.label = 7;
                     case 7:
                         if (!((dataMappingSearchField != null) && (dataMappingSearchField != '') && (dataMappingSearchValue != null) && (dataMappingSearchValue != ''))) return [3, 10];
