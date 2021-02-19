@@ -115,6 +115,8 @@ declare class DrapoParser {
     ParseQuery(value: string): DrapoQuery;
     ParseQueryProjections(value: string): DrapoQueryProjection[];
     private ParseQueryProjection;
+    private ParseQueryProjectionAggregation;
+    private ParseQueryProjectionAggregationDefinition;
     private ParseQueryProjectionAlias;
     private ParseQuerySources;
     private ParseQuerySource;

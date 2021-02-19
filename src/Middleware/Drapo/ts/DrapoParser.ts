@@ -1193,15 +1193,34 @@ class DrapoParser {
         const valueTrimSplit: string[] = this.ParseBlock(valueTrim, ' ');
         const alias: string = this.ParseQueryProjectionAlias(valueTrimSplit);
         const valueTrimFirst: string = valueTrimSplit[0];
-        const isMustache: boolean = this.IsMustache(valueTrimFirst);
-        const valueTrimFirstSplit: string[] = isMustache ? [valueTrimFirst]: this.ParseBlock(valueTrimFirst, '.');
+        const aggregation: string = this.ParseQueryProjectionAggregation(valueTrimFirst);
+        const valueDefinition: string = aggregation == null ? valueTrimFirst : this.ParseQueryProjectionAggregationDefinition(valueTrimFirst);
+        const isMustache: boolean = this.IsMustache(valueDefinition);
+        const valueTrimFirstSplit: string[] = isMustache ? [valueDefinition] : this.ParseBlock(valueDefinition, '.');
         const source: string = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[0] : null;
         const column: string = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[1] : valueTrimFirstSplit[0];
         const projection: DrapoQueryProjection = new DrapoQueryProjection();
         projection.Alias = alias;
         projection.Source = source;
         projection.Column = column;
+        projection.Aggregation = aggregation;
         return (projection);
+    }
+
+    private ParseQueryProjectionAggregation(value: string): string {
+        const index: number = value.indexOf('(');
+        if (index < 0)
+            return (null);
+        const aggregation : string = value.substr(0, index).toUpperCase();
+        return (aggregation);
+    }
+
+    private ParseQueryProjectionAggregationDefinition(value: string): string {
+        const index: number = value.indexOf('(');
+        if (index < 0)
+            return (null);
+        const definition: string = value.substring(index + 1,value.length - 1);
+        return (definition);
     }
 
     private ParseQueryProjectionAlias(values: string[]): string {

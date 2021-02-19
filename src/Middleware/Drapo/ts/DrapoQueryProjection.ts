@@ -2,6 +2,7 @@
     private _source: string = null;
     private _column: string = null;
     private _alias: string = null;
+    private _aggregation: string = null;
 
     get Source(): string {
         return (this._source);
@@ -20,5 +21,12 @@
     }
     set Alias(value: string) {
         this._alias = value;
+    }
+
+    get Aggregation(): string {
+        return (this._aggregation);
+    }
+    set Aggregation(value: string) {
+        this._aggregation = value;
     }
 }

@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Aggregation Function</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Aggregation Function</span>
+        <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children=5"></div>
+        <div d-datakey="objectsQuery" d-datatype="query" d-datavalue="SELECT Count(Key) AS Count FROM objects"></div>
+        <div>
+            <span>5</span>
+        </div>
+    </div>
+
+</body></html>

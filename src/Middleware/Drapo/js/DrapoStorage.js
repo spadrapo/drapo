@@ -2718,7 +2718,7 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.ExecuteQuery = function (sector, dataKey, query) {
         return __awaiter(this, void 0, void 0, function () {
-            var objects, objectsId, filters, hasFilters, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, object, isAdd, filter, count, i, i, filter;
+            var objects, objectsId, filters, hasFilters, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, object, isAdd, filter, count, i, i, filter, objectAggregation;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -2784,6 +2784,11 @@ var DrapoStorage = (function () {
                                     continue;
                                 objects.splice(i, 1);
                             }
+                        }
+                        if (query.Projections[0].Aggregation !== null) {
+                            objectAggregation = {};
+                            objectAggregation[query.Projections[0].Alias] = objects.length;
+                            return [2, (objectAggregation)];
                         }
                         return [2, (objects)];
                 }
