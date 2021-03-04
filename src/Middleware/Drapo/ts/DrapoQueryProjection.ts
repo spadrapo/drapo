@@ -2,7 +2,8 @@
     private _source: string = null;
     private _column: string = null;
     private _alias: string = null;
-    private _aggregation: string = null;
+    private _functionName: string = null;
+    private _functionParameters: string[] = null;
 
     get Source(): string {
         return (this._source);
@@ -22,11 +23,16 @@
     set Alias(value: string) {
         this._alias = value;
     }
-
-    get Aggregation(): string {
-        return (this._aggregation);
+    get FunctionName(): string {
+        return (this._functionName);
     }
-    set Aggregation(value: string) {
-        this._aggregation = value;
+    set FunctionName(value: string) {
+        this._functionName = value;
+    }
+    get FunctionParameters(): string[] {
+        return (this._functionParameters);
+    }
+    set FunctionParameters(value: string[]) {
+        this._functionParameters = value;
     }
 }

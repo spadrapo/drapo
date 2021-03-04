@@ -1275,8 +1275,10 @@ declare class DrapoParser {
     ParseQuery(value: string): DrapoQuery;
     ParseQueryProjections(value: string): DrapoQueryProjection[];
     private ParseQueryProjection;
-    private ParseQueryProjectionAggregation;
-    private ParseQueryProjectionAggregationDefinition;
+    private ParseQueryProjectionFunctionName;
+    private ParseQueryProjectionFunctionParameters;
+    private ParseQueryProjectionFunctionParametersBlock;
+    ParseQueryProjectionFunctionParameterValue(value: string): string[];
     private ParseQueryProjectionAlias;
     private ParseQuerySources;
     private ParseQuerySource;
@@ -1356,15 +1358,18 @@ declare class DrapoQueryProjection {
     private _source;
     private _column;
     private _alias;
-    private _aggregation;
+    private _functionName;
+    private _functionParameters;
     get Source(): string;
     set Source(value: string);
     get Column(): string;
     set Column(value: string);
     get Alias(): string;
     set Alias(value: string);
-    get Aggregation(): string;
-    set Aggregation(value: string);
+    get FunctionName(): string;
+    set FunctionName(value: string);
+    get FunctionParameters(): string[];
+    set FunctionParameters(value: string[]);
 }
 
 declare class DrapoQuerySource {
@@ -1892,6 +1897,10 @@ declare class DrapoStorage {
     private InjectQueryObjectProjections;
     private ResolveQueryConditionSource;
     private ResolveQueryConditionSourceColumn;
+    private ResolveQueryFunctionParameterName;
+    private ResolveQueryFunctions;
+    private ResolveQueryFunction;
+    private ResolveQueryFunctionCoalesce;
     private IsValidQueryCondition;
 }
 

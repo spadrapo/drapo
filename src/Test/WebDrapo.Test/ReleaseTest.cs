@@ -816,6 +816,11 @@ namespace WebDrapo.Test
             ValidatePage("DataQueryOuterJoin");
         }
         [TestCase]
+        public void DataQueryOuterJoinCoalesceTest()
+        {
+            ValidatePage("DataQueryOuterJoinCoalesce");
+        }
+        [TestCase]
         public void DataQuerySimpleTest()
         {
             ValidatePage("DataQuerySimple");

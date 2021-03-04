@@ -139,5 +139,9 @@ declare class DrapoStorage {
     private InjectQueryObjectProjections;
     private ResolveQueryConditionSource;
     private ResolveQueryConditionSourceColumn;
+    private ResolveQueryFunctionParameterName;
+    private ResolveQueryFunctions;
+    private ResolveQueryFunction;
+    private ResolveQueryFunctionCoalesce;
     private IsValidQueryCondition;
 }
