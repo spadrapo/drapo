@@ -1324,6 +1324,9 @@ class DrapoParser {
         header = this.ParseQuerySourceHeadValue(value, 'LEFT JOIN');
         if (header !== null)
             return (header);
+        header = this.ParseQuerySourceHeadValue(value, 'OUTER JOIN');
+        if (header !== null)
+            return (header);
         header = this.ParseQuerySourceHeadValue(value, 'RIGHT JOIN');
         if (header !== null)
             return (header);

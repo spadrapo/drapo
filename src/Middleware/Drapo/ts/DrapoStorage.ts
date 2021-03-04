@@ -1919,6 +1919,15 @@ class DrapoStorage {
             objectsId.push(objectId);
             return (objects[i]);
         }
+        if (querySource.JoinType === 'OUTER')
+        {
+            object = {};
+            objects.push(object);
+            const ids: string[] = [];
+            ids.push(id);
+            objectsIds.push(ids);
+            return (object);
+        }
         return (null);
     }
 

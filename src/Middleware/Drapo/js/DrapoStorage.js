@@ -2824,6 +2824,14 @@ var DrapoStorage = (function () {
             objectsId.push(objectId);
             return (objects[i]);
         }
+        if (querySource.JoinType === 'OUTER') {
+            object = {};
+            objects.push(object);
+            var ids = [];
+            ids.push(id);
+            objectsIds.push(ids);
+            return (object);
+        }
         return (null);
     };
     DrapoStorage.prototype.InjectQueryObjectProjections = function (query, querySource, object, sourceObject) {
