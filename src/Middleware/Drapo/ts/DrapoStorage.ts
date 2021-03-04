@@ -1819,6 +1819,7 @@ class DrapoStorage {
     private async ExecuteQuery(sector: string, dataKey: string, query: DrapoQuery): Promise<any[]> {
         const objects: any[] = [];
         const objectsId: string[][] = [];
+        const objectsInformation: any[] = [];
         const filters: DrapoQueryCondition[] = [];
         const hasFilters: boolean = query.Filter !== null;
         for (let i: number = 0; i < query.Sources.length; i++) {
@@ -1843,11 +1844,13 @@ class DrapoStorage {
             for (let j: number = 0; j < querySourceObjects.length; j++) {
                 const querySourceObject: any = querySourceObjects[j];
                 //Search
-                const object: any = this.EnsureQueryObject(query, querySource, i, objects, objectsId, querySourceObject);
-                if (object === null)
+                const objectIndex: number = this.EnsureQueryObject(query, querySource, i, objects, objectsId, objectsInformation, querySourceObject);
+                if (objectIndex === null)
                     continue;
+                const object: any = objects[objectIndex];
+                const objectInformation: any = objectsInformation[objectIndex];
                 //Projections
-                this.InjectQueryObjectProjections(query, querySource, object, querySourceObject);
+                this.InjectQueryObjectProjections(query, querySource, object, objectInformation, querySourceObject);
                 //Filter
                 if (hasFilters)
                 {
@@ -1866,6 +1869,7 @@ class DrapoStorage {
                 if (objectsId[i].length === count)
                     continue;
                 objects.splice(i, 1);
+                objectsInformation.splice(i, 1);
                 if (hasFilters)
                     filters.splice(i, 1);
             }
@@ -1877,25 +1881,29 @@ class DrapoStorage {
                 if (this.IsValidQueryCondition(filter))
                     continue;
                 objects.splice(i, 1);
+                objectsInformation.splice(i, 1);
             }
         }
         //Aggregations
-        if (query.Projections[0].Aggregation !== null) {
+        if (query.Projections[0].FunctionName === 'COUNT') {
             //We only support count right now
             const objectAggregation: any = {};
             objectAggregation[query.Projections[0].Alias] = objects.length;
             return (objectAggregation);
         }
+        //Functions
+        this.ResolveQueryFunctions(query, objects, objectsInformation);
         return (objects);
     }
 
-    private EnsureQueryObject(query: DrapoQuery, querySource: DrapoQuerySource, indexSource: number, objects: any[], objectsIds: string[][], querySourceObject: any): any {
+    private EnsureQueryObject(query: DrapoQuery, querySource: DrapoQuerySource, indexSource: number, objects: any[], objectsIds: string[][], objectsInformation: any[], querySourceObject: any): number {
         let object: any = null;
         //Only One
         if (query.Sources.length == 1) {
             object = {};
             objects.push(object);
-            return (object);
+            objectsInformation.push({});
+            return (objects.length - 1);
         }
         const joinCondition = query.Sources[1].JoinConditions[0];
         const column: string = joinCondition.SourceLeft == querySource.Alias ? joinCondition.ColumnLeft : joinCondition.ColumnRight;
@@ -1907,7 +1915,8 @@ class DrapoStorage {
             const ids: string[] = [];
             ids.push(id);
             objectsIds.push(ids);
-            return (object);
+            objectsInformation.push({});
+            return (objects.length - 1);
         }
         for (let i: number = 0; i < objects.length; i++) {
             const objectsId: string[] = objectsIds[i];
@@ -1917,29 +1926,56 @@ class DrapoStorage {
             if (objectId != id)
                 continue;
             objectsId.push(objectId);
-            return (objects[i]);
+            return (i);
+        }
+        if (querySource.JoinType === 'OUTER')
+        {
+            object = {};
+            objects.push(object);
+            const ids: string[] = [];
+            ids.push(id);
+            objectsIds.push(ids);
+            objectsInformation.push({});
+            return (objects.length - 1);
         }
         return (null);
     }
 
-    private InjectQueryObjectProjections(query: DrapoQuery, querySource: DrapoQuerySource, object: any, sourceObject: any): void {
+    private InjectQueryObjectProjections(query: DrapoQuery, querySource: DrapoQuerySource, object: any, objectInformation : any, sourceObject: any): void {
         const isObject: boolean = typeof sourceObject === 'object';
         for (let i: number = 0; i < query.Projections.length; i++) {
             const projection: DrapoQueryProjection = query.Projections[i];
-            const source: string = projection.Source;
-            if (source !== null) {
-                if ((querySource.Alias !== null) && (source !== querySource.Alias))
-                    continue;
-                if ((querySource.Alias === null) && (source !== querySource.Source))
-                    continue;
+            if (projection.FunctionName !== null) {
+                //Function
+                for (let j: number = 0; j < projection.FunctionParameters.length; j++) {
+                    const functionParameter: string = projection.FunctionParameters[j];
+                    const functionParameterName: string = this.ResolveQueryFunctionParameterName(functionParameter);
+                    if (objectInformation[functionParameterName] != null)
+                        continue;
+                    const functionParameterValues: string[] = this.Application.Parser.ParseQueryProjectionFunctionParameterValue(functionParameterName);
+                    const source: string = functionParameterValues[0];
+                    if ((querySource.Alias ?? querySource.Source) !== source)
+                        continue;
+                    const value: any = isObject ? sourceObject[projection.Column] : sourceObject;
+                    objectInformation[functionParameterName] = value;
+                }
             } else {
-                if ((isObject) && (!sourceObject[projection.Column]))
-                    continue;
-                if ((!isObject) && ((querySource.Alias ?? querySource.Source) !== projection.Column))
-                    continue;
+                //Projection
+                const source: string = projection.Source;
+                if (source !== null) {
+                    if ((querySource.Alias !== null) && (source !== querySource.Alias))
+                        continue;
+                    if ((querySource.Alias === null) && (source !== querySource.Source))
+                        continue;
+                } else {
+                    if ((isObject) && (!sourceObject[projection.Column]))
+                        continue;
+                    if ((!isObject) && ((querySource.Alias ?? querySource.Source) !== projection.Column))
+                        continue;
+                }
+                const value: any = isObject ? sourceObject[projection.Column] : sourceObject;
+                object[projection.Alias ?? projection.Column] = value;
             }
-            const value: any = isObject ? sourceObject[projection.Column] : sourceObject;
-            object[projection.Alias ?? projection.Column] = value;
         }
     }
 
@@ -1974,6 +2010,39 @@ class DrapoStorage {
         }
         const value: any = isObject ? sourceObject[column] : sourceObject;
         return (value);
+    }
+
+    private ResolveQueryFunctionParameterName(value: string): string {
+        value = value.replace('.', '_');
+        return (value);
+    }
+
+    private ResolveQueryFunctions(query: DrapoQuery, objects: any[], objectsInformation: any[]): void {
+        for (let i: number = 0; i < query.Projections.length; i++) {
+            const projection: DrapoQueryProjection = query.Projections[i];
+            if (projection.FunctionName !== null)
+                this.ResolveQueryFunction(projection.Alias, projection.FunctionName, projection.FunctionParameters, objects, objectsInformation);
+        }
+    }
+
+    private ResolveQueryFunction(projectionAlias : string, functionName: string, functionParameters: string[], objects: any[], objectsInformation: any[]): void {
+        if (functionName === 'COALESCE')
+            this.ResolveQueryFunctionCoalesce(projectionAlias, functionParameters, objects, objectsInformation);
+    }
+
+    private ResolveQueryFunctionCoalesce(projectionAlias: string, functionParameters: string[], objects: any[], objectsInformation: any[]): void {
+        for (let i: number = 0; i < objects.length; i++) {
+            const object: any = objects[i];
+            const objectInformation: any = objectsInformation[i];
+            for (let j: number = 0; j < functionParameters.length; j++) {
+                const functionParameter: string = functionParameters[j];
+                const functionParameterName: string = this.ResolveQueryFunctionParameterName(functionParameter);
+                if (objectInformation[functionParameterName] == null)
+                    continue;
+                object[projectionAlias] = objectInformation[functionParameterName];
+                break;
+            }
+        }
     }
 
     private IsValidQueryCondition(filter: DrapoQueryCondition): boolean {

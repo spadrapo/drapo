@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Outer Join</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Outer Join</span>
+        <div d-datakey="objects1" d-dataurlget="~/Data/GetArray?start=0&amp;length=5"></div>
+        <div d-datakey="objects2" d-dataurlget="~/Data/GetArray?start=3&amp;length=8"></div>
+        <div d-datakey="objectsQuery" d-datatype="query" d-datavalue="SELECT O1 AS Code1, O2 as Code2 FROM objects1 AS O1 OUTER JOIN objects2 AS O2 ON O1 = O2"></div>
+        <div>
+            <div d-for="object in objectsQuery" style="display: none;">
+                <span>{{object.Code1}}</span>
+                <span>{{object.Code2}}</span>
+                <br />
+            </div>
+        <div>
+                <span>0</span>
+                <span></span>
+                <br />
+            </div><div>
+                <span>1</span>
+                <span></span>
+                <br />
+            </div><div>
+                <span>2</span>
+                <span></span>
+                <br />
+            </div><div>
+                <span>3</span>
+                <span>3</span>
+                <br />
+            </div><div>
+                <span>4</span>
+                <span>4</span>
+                <br />
+            </div><div>
+                <span></span>
+                <span>5</span>
+                <br />
+            </div><div>
+                <span></span>
+                <span>6</span>
+                <br />
+            </div><div>
+                <span></span>
+                <span>7</span>
+                <br />
+            </div></div>
+    </div>
+
+</body></html>

@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Outer Join</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Outer Join</span>
+        <div d-dataKey="objects1" d-dataUrlGet="~/Data/GetArray?start=0&length=5"></div>
+        <div d-dataKey="objects2" d-dataUrlGet="~/Data/GetArray?start=3&length=8"></div>
+        <div d-dataKey="objectsQuery" d-dataType="query" d-dataValue="SELECT O1 AS Code1, O2 as Code2 FROM objects1 AS O1 OUTER JOIN objects2 AS O2 ON O1 = O2"></div>
+        <div>
+            <div d-for="object in objectsQuery">
+                <span>{{object.Code1}}</span>
+                <span>{{object.Code2}}</span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

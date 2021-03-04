@@ -1189,38 +1189,51 @@ class DrapoParser {
     }
 
     private ParseQueryProjection(value: string): DrapoQueryProjection {
+        const projection: DrapoQueryProjection = new DrapoQueryProjection();
         const valueTrim: string = this.Trim(value);
         const valueTrimSplit: string[] = this.ParseBlock(valueTrim, ' ');
         const alias: string = this.ParseQueryProjectionAlias(valueTrimSplit);
-        const valueTrimFirst: string = valueTrimSplit[0];
-        const aggregation: string = this.ParseQueryProjectionAggregation(valueTrimFirst);
-        const valueDefinition: string = aggregation == null ? valueTrimFirst : this.ParseQueryProjectionAggregationDefinition(valueTrimFirst);
-        const isMustache: boolean = this.IsMustache(valueDefinition);
-        const valueTrimFirstSplit: string[] = isMustache ? [valueDefinition] : this.ParseBlock(valueDefinition, '.');
-        const source: string = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[0] : null;
-        const column: string = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[1] : valueTrimFirstSplit[0];
-        const projection: DrapoQueryProjection = new DrapoQueryProjection();
         projection.Alias = alias;
-        projection.Source = source;
-        projection.Column = column;
-        projection.Aggregation = aggregation;
+        const valueTrimFirst: string = valueTrimSplit[0];
+        const functionName: string = this.ParseQueryProjectionFunctionName(valueTrimFirst);
+        if (functionName !== null) {
+            projection.FunctionName = functionName;
+            const functionParameters: string = this.ParseQueryProjectionFunctionParameters(valueTrimFirst);
+            projection.FunctionParameters = this.ParseQueryProjectionFunctionParametersBlock(functionParameters);
+        } else {
+            const valueDefinition: string = valueTrimFirst;
+            const isMustache: boolean = this.IsMustache(valueDefinition);
+            const valueTrimFirstSplit: string[] = isMustache ? [valueDefinition] : this.ParseBlock(valueDefinition, '.');
+            const source: string = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[0] : null;
+            const column: string = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[1] : valueTrimFirstSplit[0];
+            projection.Source = source;
+            projection.Column = column;
+        }
         return (projection);
     }
 
-    private ParseQueryProjectionAggregation(value: string): string {
+    private ParseQueryProjectionFunctionName(value: string): string {
         const index: number = value.indexOf('(');
         if (index < 0)
             return (null);
-        const aggregation : string = value.substr(0, index).toUpperCase();
-        return (aggregation);
+        const functionName : string = value.substr(0, index).toUpperCase();
+        return (functionName);
     }
 
-    private ParseQueryProjectionAggregationDefinition(value: string): string {
+    private ParseQueryProjectionFunctionParameters(value: string): string {
         const index: number = value.indexOf('(');
         if (index < 0)
             return (null);
-        const definition: string = value.substring(index + 1,value.length - 1);
-        return (definition);
+        const parameters: string = value.substring(index + 1,value.length - 1);
+        return (parameters);
+    }
+
+    private ParseQueryProjectionFunctionParametersBlock(value: string): string[] {
+        return (this.ParseBlock(value, ','));
+    }
+
+    public ParseQueryProjectionFunctionParameterValue(value: string): string[] {
+        return (this.ParseBlock(value, '.'));
     }
 
     private ParseQueryProjectionAlias(values: string[]): string {
@@ -1322,6 +1335,9 @@ class DrapoParser {
         if (header !== null)
             return (header);
         header = this.ParseQuerySourceHeadValue(value, 'LEFT JOIN');
+        if (header !== null)
+            return (header);
+        header = this.ParseQuerySourceHeadValue(value, 'OUTER JOIN');
         if (header !== null)
             return (header);
         header = this.ParseQuerySourceHeadValue(value, 'RIGHT JOIN');
