@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Sequential</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Sequential</span>
+        <div d-dataKey="objects1" d-dataUrlGet="~/Data/GetLevels?levels=2&children=5&prefix=O1"></div>
+        <div d-dataKey="objects2" d-dataUrlGet="~/Data/GetLevels?levels=2&children=5&prefix=O2"></div>
+        <div d-dataKey="objectsQuery" d-dataType="query" d-dataValue="SELECT O1.Key AS Key1, O2.Key as Key2, O1.Value FROM {{objects1.[1].Children}} AS O1 INNER JOIN {{objects2.[1].Children}} AS O2 ON O1.Value = O2.Value"></div>
+        <div d-dataKey="objects3" d-dataUrlGet="~/Data/GetArray?prefix=L0V&divisor=2"></div>
+        <div d-dataKey="objectsQuery2" d-dataType="query" d-dataValue="SELECT O1.Key AS Key, O2 AS Value FROM objectsQuery AS O1 INNER JOIN objects3 AS O2 ON O1.Value = O2"></div>
+        <div>
+            <div d-for="object in objectsQuery2">
+                <span>{{object.Key}}</span>
+                <span>{{object.Value}}</span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>
