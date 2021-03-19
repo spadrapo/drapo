@@ -11,11 +11,13 @@ namespace Sysphera.Middleware.Drapo.Pipe
 {
     public class DrapoPlumberHub : Hub
     {
-        private DrapoMiddlewareOptions _options;
-        
-        public DrapoPlumberHub(DrapoMiddlewareOptions options)
+        private readonly DrapoMiddlewareOptions _options;
+        private readonly IDrapoConnectionManager _connectionManager;
+
+        public DrapoPlumberHub(DrapoMiddlewareOptions options, IDrapoConnectionManager connectionManager)
         {
             this._options = options;
+            this._connectionManager = connectionManager;
         }
         public string GetConnectionId()
         {
@@ -36,7 +38,7 @@ namespace Sysphera.Middleware.Drapo.Pipe
         {
             string connectionId = this.GetConnectionId();
             string domain = this.GetDomain() ?? string.Empty;
-            DrapoPlumber._connections.TryAdd(connectionId, new DrapoConnection(connectionId, domain));
+            _connectionManager.Create(domain, connectionId);
             await Groups.AddToGroupAsync(connectionId, domain);
             await base.OnConnectedAsync();
         }
@@ -44,8 +46,9 @@ namespace Sysphera.Middleware.Drapo.Pipe
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             string connectionId = this.GetConnectionId();
-            if(DrapoPlumber._connections.TryRemove(connectionId, out DrapoConnection connection))
-                await Groups.RemoveFromGroupAsync(connectionId, connection.Domain);
+            string domain = this.GetDomain() ?? string.Empty;
+            _connectionManager.Remove(domain, connectionId);
+            await Groups.RemoveFromGroupAsync(connectionId, domain);
             await base.OnDisconnectedAsync(exception);
         }
 
