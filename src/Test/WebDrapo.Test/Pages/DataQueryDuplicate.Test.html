@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Duplicate</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Duplicate</span>
+        <div d-datakey="persons" d-datatype="array" d-datavalue="[{&quot;Code&quot;:1,&quot;Name&quot;:&quot;Thiago&quot;, &quot;GenderCode&quot;: 1},{&quot;Code&quot;:2,&quot;Name&quot;:&quot;Augusto&quot;, &quot;GenderCode&quot;: 1}]"></div>
+        <div d-datakey="genders" d-datatype="array" d-datavalue="[{&quot;Code&quot;:1,&quot;Name&quot;:&quot;Masculine&quot;},{&quot;Code&quot;:2,&quot;Name&quot;:&quot;Feminine&quot;}]"></div>
+        <div d-datakey="personsGenders" d-datatype="query" d-datavalue="SELECT P.Code, P.Name as Name, G.Name AS Gender FROM persons AS P INNER JOIN genders AS G ON P.GenderCode = G.Code"></div>
+        <div>
+            <div d-for="personGender in personsGenders" style="display: none;">
+                <span>{{personGender.Code}}</span>
+                <span>{{personGender.Name}}</span>
+                <span>{{personGender.Gender}}</span>
+                <br />
+            </div>
+        <div>
+                <span>1</span>
+                <span>Thiago</span>
+                <span>Masculine</span>
+                <br />
+            </div><div>
+                <span>2</span>
+                <span>Augusto</span>
+                <span>Masculine</span>
+                <br />
+            </div></div>
+    </div>
+
+</body></html>

@@ -1844,21 +1844,23 @@ class DrapoStorage {
             for (let j: number = 0; j < querySourceObjects.length; j++) {
                 const querySourceObject: any = querySourceObjects[j];
                 //Search
-                const objectIndex: number = this.EnsureQueryObject(query, querySource, i, objects, objectsId, objectsInformation, querySourceObject);
-                if (objectIndex === null)
+                const objectIndexes: number[] = this.EnsureQueryObject(query, querySource, i, objects, objectsId, objectsInformation, querySourceObject);
+                if ((objectIndexes === null) || (objectIndexes.length === 0))
                     continue;
-                const object: any = objects[objectIndex];
-                const objectInformation: any = objectsInformation[objectIndex];
-                //Projections
-                this.InjectQueryObjectProjections(query, querySource, object, objectInformation, querySourceObject);
-                //Filter
-                if (hasFilters)
-                {
-                    const isAdd: boolean = (i === 0);
-                    const filter: DrapoQueryCondition = isAdd ? query.Filter.Clone() : filters[j];
-                    if (isAdd)
-                        filters.push(filter);
-                    this.ResolveQueryConditionSource(query, querySource, querySourceObject, filter);
+                for (let k: number = 0; k < objectIndexes.length; k++) {
+                    const objectIndex: number = objectIndexes[k];
+                    const object: any = objects[objectIndex];
+                    const objectInformation: any = objectsInformation[objectIndex];
+                    //Projections
+                    this.InjectQueryObjectProjections(query, querySource, object, objectInformation, querySourceObject);
+                    //Filter
+                    if (hasFilters) {
+                        const isAdd: boolean = (i === 0);
+                        const filter: DrapoQueryCondition = isAdd ? query.Filter.Clone() : filters[objectIndex];
+                        if (isAdd)
+                            filters.push(filter);
+                        this.ResolveQueryConditionSource(query, querySource, querySourceObject, filter);
+                    }
                 }
             }
         }
@@ -1896,14 +1898,14 @@ class DrapoStorage {
         return (objects);
     }
 
-    private EnsureQueryObject(query: DrapoQuery, querySource: DrapoQuerySource, indexSource: number, objects: any[], objectsIds: string[][], objectsInformation: any[], querySourceObject: any): number {
+    private EnsureQueryObject(query: DrapoQuery, querySource: DrapoQuerySource, indexSource: number, objects: any[], objectsIds: string[][], objectsInformation: any[], querySourceObject: any): number[] {
         let object: any = null;
         //Only One
         if (query.Sources.length == 1) {
             object = {};
             objects.push(object);
             objectsInformation.push({});
-            return (objects.length - 1);
+            return ([objects.length - 1]);
         }
         const joinCondition = query.Sources[1].JoinConditions[0];
         const column: string = joinCondition.SourceLeft == querySource.Alias ? joinCondition.ColumnLeft : joinCondition.ColumnRight;
@@ -1916,8 +1918,9 @@ class DrapoStorage {
             ids.push(id);
             objectsIds.push(ids);
             objectsInformation.push({});
-            return (objects.length - 1);
+            return ([objects.length - 1]);
         }
+        const indexes: number[] = [];
         for (let i: number = 0; i < objects.length; i++) {
             const objectsId: string[] = objectsIds[i];
             if (objectsId.length > 1)
@@ -1926,9 +1929,9 @@ class DrapoStorage {
             if (objectId != id)
                 continue;
             objectsId.push(objectId);
-            return (i);
+            indexes.push(i);
         }
-        if (querySource.JoinType === 'OUTER')
+        if ((indexes.length == 0) && (querySource.JoinType === 'OUTER'))
         {
             object = {};
             objects.push(object);
@@ -1936,9 +1939,9 @@ class DrapoStorage {
             ids.push(id);
             objectsIds.push(ids);
             objectsInformation.push({});
-            return (objects.length - 1);
+            return ([objects.length - 1]);
         }
-        return (null);
+        return (indexes);
     }
 
     private InjectQueryObjectProjections(query: DrapoQuery, querySource: DrapoQuerySource, object: any, objectInformation : any, sourceObject: any): void {

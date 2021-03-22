@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Duplicate</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Duplicate</span>
+        <div d-dataKey="persons" d-dataType="array" d-dataValue='[{"Code":1,"Name":"Thiago", "GenderCode": 1},{"Code":2,"Name":"Augusto", "GenderCode": 1}]'></div>
+        <div d-dataKey="genders" d-dataType="array" d-dataValue='[{"Code":1,"Name":"Masculine"},{"Code":2,"Name":"Feminine"}]'></div>
+        <div d-dataKey="personsGenders" d-dataType="query" d-dataValue="SELECT P.Code, P.Name as Name, G.Name AS Gender FROM persons AS P INNER JOIN genders AS G ON P.GenderCode = G.Code"></div>
+        <div>
+            <div d-for="personGender in personsGenders">
+                <span>{{personGender.Code}}</span>
+                <span>{{personGender.Name}}</span>
+                <span>{{personGender.Gender}}</span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>
