@@ -10,6 +10,7 @@ namespace Sysphera.Middleware.Drapo
         #region Properties
         public bool Debug { set; get;}
         public bool UseInternalComponents { set; get; }
+        public string BackplaneRedis { set; get; }
         public DrapoConfig Config
         {
             get

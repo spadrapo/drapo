@@ -3,15 +3,16 @@ using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Sysphera.Middleware.Drapo.Request
 {
-    public class DrapoRequestHeaderReader : IDrapoRequestHeaderReader
+    public class DrapoRequestReader : IDrapoRequestReader
     {
         private DrapoMiddlewareOptions _options;
         private IHttpContextAccessor _context;
         private string _connectionId = null;
-        public DrapoRequestHeaderReader(DrapoMiddlewareOptions options, IHttpContextAccessor context)
+        public DrapoRequestReader(DrapoMiddlewareOptions options, IHttpContextAccessor context)
         {
             this._options = options;
             this._context = context;
@@ -33,6 +34,23 @@ namespace Sysphera.Middleware.Drapo.Request
         public void SetPipeHeaderConnectionId(string connectionId) 
         {
             this._connectionId = connectionId;
+        }
+
+        public string GetDomain()
+        {
+            string domainRegex = this._options.Config.DomainRegex;
+            if (string.IsNullOrEmpty(domainRegex))
+                return (string.Empty);
+            string host = this._context.HttpContext.Request.Host.Host;
+            if (string.IsNullOrEmpty(host))
+                return (string.Empty);
+            Match match = Regex.Match(host, domainRegex);
+            if (match == null)
+                return (string.Empty);
+            string domain = match.Groups[this._options.Config.DomainGroup].Value;
+            if (string.IsNullOrEmpty(domain))
+                return (string.Empty);
+            return (domain);
         }
     }
 }
