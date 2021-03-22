@@ -22472,7 +22472,7 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.ExecuteQuery = function (sector, dataKey, query) {
         return __awaiter(this, void 0, void 0, function () {
-            var objects, objectsId, objectsInformation, filters, hasFilters, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, objectIndex, object, objectInformation, isAdd, filter, count, i, i, filter, objectAggregation;
+            var objects, objectsId, objectsInformation, filters, hasFilters, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, objectIndexes, k, objectIndex, object, objectInformation, isAdd, filter, count, i, i, filter, objectAggregation;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -22505,18 +22505,21 @@ var DrapoStorage = (function () {
                         querySourceObjects = querySourceData.length ? querySourceData : [querySourceData];
                         for (j = 0; j < querySourceObjects.length; j++) {
                             querySourceObject = querySourceObjects[j];
-                            objectIndex = this.EnsureQueryObject(query, querySource, i, objects, objectsId, objectsInformation, querySourceObject);
-                            if (objectIndex === null)
+                            objectIndexes = this.EnsureQueryObject(query, querySource, i, objects, objectsId, objectsInformation, querySourceObject);
+                            if ((objectIndexes === null) || (objectIndexes.length === 0))
                                 continue;
-                            object = objects[objectIndex];
-                            objectInformation = objectsInformation[objectIndex];
-                            this.InjectQueryObjectProjections(query, querySource, object, objectInformation, querySourceObject);
-                            if (hasFilters) {
-                                isAdd = (i === 0);
-                                filter = isAdd ? query.Filter.Clone() : filters[j];
-                                if (isAdd)
-                                    filters.push(filter);
-                                this.ResolveQueryConditionSource(query, querySource, querySourceObject, filter);
+                            for (k = 0; k < objectIndexes.length; k++) {
+                                objectIndex = objectIndexes[k];
+                                object = objects[objectIndex];
+                                objectInformation = objectsInformation[objectIndex];
+                                this.InjectQueryObjectProjections(query, querySource, object, objectInformation, querySourceObject);
+                                if (hasFilters) {
+                                    isAdd = (i === 0);
+                                    filter = isAdd ? query.Filter.Clone() : filters[objectIndex];
+                                    if (isAdd)
+                                        filters.push(filter);
+                                    this.ResolveQueryConditionSource(query, querySource, querySourceObject, filter);
+                                }
                             }
                         }
                         _a.label = 3;
@@ -22561,7 +22564,7 @@ var DrapoStorage = (function () {
             object = {};
             objects.push(object);
             objectsInformation.push({});
-            return (objects.length - 1);
+            return ([objects.length - 1]);
         }
         var joinCondition = query.Sources[1].JoinConditions[0];
         var column = joinCondition.SourceLeft == querySource.Alias ? joinCondition.ColumnLeft : joinCondition.ColumnRight;
@@ -22574,8 +22577,9 @@ var DrapoStorage = (function () {
             ids.push(id);
             objectsIds.push(ids);
             objectsInformation.push({});
-            return (objects.length - 1);
+            return ([objects.length - 1]);
         }
+        var indexes = [];
         for (var i = 0; i < objects.length; i++) {
             var objectsId = objectsIds[i];
             if (objectsId.length > 1)
@@ -22584,18 +22588,18 @@ var DrapoStorage = (function () {
             if (objectId != id)
                 continue;
             objectsId.push(objectId);
-            return (i);
+            indexes.push(i);
         }
-        if (querySource.JoinType === 'OUTER') {
+        if ((indexes.length == 0) && (querySource.JoinType === 'OUTER')) {
             object = {};
             objects.push(object);
             var ids = [];
             ids.push(id);
             objectsIds.push(ids);
             objectsInformation.push({});
-            return (objects.length - 1);
+            return ([objects.length - 1]);
         }
-        return (null);
+        return (indexes);
     };
     DrapoStorage.prototype.InjectQueryObjectProjections = function (query, querySource, object, objectInformation, sourceObject) {
         var _a, _b, _c;
