@@ -15,7 +15,6 @@ namespace Sysphera.Middleware.Drapo.Pipe
         public bool Remove(string domain, string connectionId) {
             return(_connections.TryRemove(connectionId, out _));
         }
-
         public long Count(string domain) {
             return (this.GetAll(domain).Count);
         }
@@ -23,6 +22,13 @@ namespace Sysphera.Middleware.Drapo.Pipe
             if (_connections.TryGetValue(connectionId, out DrapoConnection connection))
                 return (connection);
             return (null);
+        }
+        public bool Identify(string domain, string connectionId, long identity) {
+            DrapoConnection connection = this.Get(domain, connectionId);
+            if (connection == null)
+                return (false);
+            connection.Identity = identity;
+            return (true);
         }
         public List<DrapoConnection> GetAll(string domain) {
             List<DrapoConnection> connections = new List<DrapoConnection>(_connections.Values.ToList().FindAll(c => c.Domain == domain));

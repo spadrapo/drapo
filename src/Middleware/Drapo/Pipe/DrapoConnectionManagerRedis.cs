@@ -46,6 +46,20 @@ namespace Sysphera.Middleware.Drapo.Pipe
                 return(client.Get<DrapoConnection>(this.CreateConnectionKey(domain, connectionId)));
             }
         }
+
+        public bool Identify(string domain, string connectionId, long identity)
+        {
+            using (IRedisClient client = _redisManagerPool.GetClient())
+            {
+                DrapoConnection connection = client.Get<DrapoConnection>(this.CreateConnectionKey(domain, connectionId));
+                if (connection == null)
+                    return (false);
+                connection.Identity = identity;
+                client.Set<DrapoConnection>(this.CreateConnectionKey(domain, connectionId), connection);
+            }
+            return (true);
+        }
+
         public List<DrapoConnection> GetAll(string domain)
         {
             List<DrapoConnection> connections = new List<DrapoConnection>();

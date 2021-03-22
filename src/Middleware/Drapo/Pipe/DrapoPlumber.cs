@@ -60,11 +60,8 @@ namespace Sysphera.Middleware.Drapo.Pipe
             string connectionId = this._requestReader.GetPipeHeaderConnectionId();
             if (string.IsNullOrEmpty(connectionId))
                 return (false);
-            DrapoConnection connection = _connectionManager.Get(_requestReader.GetDomain() ?? string.Empty, connectionId);
-            if (connection == null)
-                return (false);
-            connection.Identity = identity;
-            return (await Task.FromResult<bool>(true));
+            bool updated = _connectionManager.Identify(_requestReader.GetDomain() ?? string.Empty, connectionId, identity);
+            return (await Task.FromResult<bool>(updated));
         }
 
         public async Task<List<DrapoConnection>> GetConnections()
