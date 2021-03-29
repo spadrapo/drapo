@@ -38,7 +38,7 @@ namespace Sysphera.Middleware.Drapo.Pipe
             string connectionId = this._requestReader.GetPipeHeaderConnectionId();
             if (string.IsNullOrEmpty(connectionId))
                 return (null);
-            DrapoConnection connection = _connectionManager.Get(connectionId, _requestReader.GetDomain() ?? string.Empty);
+            DrapoConnection connection = _connectionManager.Get(_requestReader.GetDomain() ?? string.Empty, connectionId);
             if (connection == null)
                 return (null);
             if (recipient == DrapoPipeAudienceType.Others)

@@ -1417,7 +1417,7 @@ class DrapoStorage {
                 updated = await this.SetDataKeyField(dataValueResolved, sector, dataPath, dataItem.Data, false);
             }
         }
-        await this.NotifyChanges(dataItem, ((updated) && (notify)), dataValue, null, null);
+        await this.NotifyChanges(dataItem, ((updated) && (notify)), dataValueResolved, null, null);
         return (true);
     }
 

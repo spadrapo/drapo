@@ -2060,7 +2060,7 @@ var DrapoStorage = (function () {
                     case 11:
                         updated = _a.sent();
                         _a.label = 12;
-                    case 12: return [4, this.NotifyChanges(dataItem, ((updated) && (notify)), dataValue, null, null)];
+                    case 12: return [4, this.NotifyChanges(dataItem, ((updated) && (notify)), dataValueResolved, null, null)];
                     case 13:
                         _a.sent();
                         return [2, (true)];
