@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Where NULL</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Where NULL</span>
+        <div d-dataKey="selections" d-dataType="array" d-dataValue="[1,2,3,4,5]"></div>
+        <div d-dataKey="persons" d-dataType="array" d-dataValue='[{"Code":1,"Name":"Thiago","Age":35},{"Code":2,"Name":"Henrique","Age":""},{"Code":3,"Name":"Silva","Age":null},{"Code":4,"Name":"Catarina"},{"Code":5,"Name":"Augusto"}]'></div>
+        <div d-dataKey="personsSelected2" d-dataType="query" d-dataValue="SELECT S AS Selected, P.Code AS Code, P.Name as Name FROM persons AS P LEFT JOIN selections AS S ON P.Code = S WHERE P.Age IS NULL"></div>
+        <div d-dataKey="personsSelected3" d-dataType="query" d-dataValue="SELECT S AS Selected, P.Code AS Code, P.Name as Name FROM persons AS P LEFT JOIN selections AS S ON P.Code = S WHERE P.Age IS NOT NULL"></div>
+        <span>Null</span><br />
+        <div>
+            <div d-for="personSelected in personsSelected2">
+                <span>{{personSelected.Name}}</span>
+                <br />
+            </div>
+        </div>
+        <br /><span>Not Null</span><br />
+        <div>
+            <div d-for="personSelected in personsSelected3">
+                <span>{{personSelected.Name}}</span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

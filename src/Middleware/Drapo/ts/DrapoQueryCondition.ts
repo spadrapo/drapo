@@ -1,9 +1,12 @@
 ﻿class DrapoQueryCondition {
     private _sourceLeft: string = null;
     private _columnLeft: string = null;
+    private _valueLeft: string = null;
     private _comparator: string = null;
     private _sourceRight: string = null;
     private _columnRight: string = null;
+    private _valueRight: string = null;
+    private _isNullRight: boolean = false;
 
     get SourceLeft(): string {
         return (this._sourceLeft);
@@ -16,6 +19,12 @@
     }
     set ColumnLeft(value: string) {
         this._columnLeft = value;
+    }
+    get ValueLeft(): string {
+        return (this._valueLeft);
+    }
+    set ValueLeft(value: string) {
+        this._valueLeft = value;
     }
     get Comparator(): string {
         return (this._comparator);
@@ -35,14 +44,29 @@
     set ColumnRight(value: string) {
         this._columnRight = value;
     }
+    get ValueRight(): string {
+        return (this._valueRight);
+    }
+    set ValueRight(value: string) {
+        this._valueRight = value;
+    }
+    get IsNullRight(): boolean {
+        return (this._isNullRight);
+    }
+    set IsNullRight(value: boolean) {
+        this._isNullRight = value;
+    }
 
     public Clone(): DrapoQueryCondition {
         const clone: DrapoQueryCondition = new DrapoQueryCondition();
         clone.SourceLeft = this.SourceLeft;
         clone.ColumnLeft = this.ColumnLeft;
+        clone.ValueLeft = this.ValueLeft;
         clone.Comparator = this.Comparator;
         clone.SourceRight = this.SourceRight;
         clone.ColumnRight = this.ColumnRight;
+        clone.ValueRight = this.ValueRight;
+        clone.IsNullRight = this.IsNullRight;
         return (clone);
     }
 }
