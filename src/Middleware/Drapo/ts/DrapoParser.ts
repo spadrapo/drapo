@@ -1292,12 +1292,26 @@ class DrapoParser {
         const leftProjection: DrapoQueryProjection = this.ParseQueryProjection(item.Items[0].Value);
         conditional.SourceLeft = leftProjection.Source;
         conditional.ColumnLeft = leftProjection.Column;
+        if (conditional.SourceLeft == null)
+            conditional.ValueLeft = conditional.ColumnLeft;
         //Comparator
-        conditional.Comparator = item.Items[1].Value;
+        conditional.Comparator = item.Items[1].Value.toUpperCase();
+        let index: number = 2;
+        if ((item.Items.length === 4) && (conditional.Comparator === 'IS') && (item.Items[index].Value === 'NOT')) {
+            conditional.Comparator = 'IS NOT';
+            index++;
+        }
         //Right
-        const rightProjection: DrapoQueryProjection = this.ParseQueryProjection(item.Items[2].Value);
-        conditional.SourceRight = rightProjection.Source;
-        conditional.ColumnRight = rightProjection.Column;
+        const valueRight = item.Items[index].Value;
+        if (valueRight.toUpperCase() === 'NULL') {
+            conditional.IsNullRight = true;
+        } else {
+            const rightProjection: DrapoQueryProjection = this.ParseQueryProjection(valueRight);
+            conditional.SourceRight = rightProjection.Source;
+            conditional.ColumnRight = rightProjection.Column;
+            if (conditional.SourceRight == null)
+                conditional.ValueRight = conditional.ColumnRight;
+        }
         return (conditional);
     }
 

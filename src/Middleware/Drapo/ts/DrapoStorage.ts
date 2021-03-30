@@ -1985,17 +1985,14 @@ class DrapoStorage {
     private ResolveQueryConditionSource(query: DrapoQuery, querySource: DrapoQuerySource, sourceObject: any, filter: DrapoQueryCondition) : void {
         //Left
         const valueLeft: string = this.ResolveQueryConditionSourceColumn(query, querySource, sourceObject, filter.SourceLeft, filter.ColumnLeft);
-        if (valueLeft != null)
-        {
-            filter.SourceLeft = null;
-            filter.ColumnLeft = valueLeft;
-        }
+        if (valueLeft !== null)
+            filter.ValueLeft = valueLeft;
         //Right
+        if (filter.IsNullRight)
+            return;
         const valueRight: string = this.ResolveQueryConditionSourceColumn(query, querySource, sourceObject, filter.SourceRight, filter.ColumnRight);
-        if (valueRight != null) {
-            filter.SourceRight = null;
-            filter.ColumnRight = valueRight;
-        }
+        if (valueRight !== null)
+            filter.ValueRight = valueRight;
     }
 
     private ResolveQueryConditionSourceColumn(query: DrapoQuery, querySource: DrapoQuerySource, sourceObject: any, source: string, column: string): string {
@@ -2049,9 +2046,12 @@ class DrapoStorage {
     }
 
     private IsValidQueryCondition(filter: DrapoQueryCondition): boolean {
-        if ((filter.Comparator === '=') && (filter.ColumnLeft == filter.ColumnRight))
+        if ((filter.Comparator === '=') && (filter.ValueLeft == filter.ValueRight))
             return (true);
-        //We only support equal right now
+        if ((filter.Comparator === 'IS') && (filter.IsNullRight) && (filter.ValueLeft == null))
+            return (true);
+        if ((filter.Comparator === 'IS NOT') && (filter.IsNullRight) && (filter.ValueLeft != null))
+            return (true);
         return (false);
     }
 }

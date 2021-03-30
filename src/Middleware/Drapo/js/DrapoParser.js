@@ -1193,10 +1193,25 @@ var DrapoParser = (function () {
         var leftProjection = this.ParseQueryProjection(item.Items[0].Value);
         conditional.SourceLeft = leftProjection.Source;
         conditional.ColumnLeft = leftProjection.Column;
-        conditional.Comparator = item.Items[1].Value;
-        var rightProjection = this.ParseQueryProjection(item.Items[2].Value);
-        conditional.SourceRight = rightProjection.Source;
-        conditional.ColumnRight = rightProjection.Column;
+        if (conditional.SourceLeft == null)
+            conditional.ValueLeft = conditional.ColumnLeft;
+        conditional.Comparator = item.Items[1].Value.toUpperCase();
+        var index = 2;
+        if ((item.Items.length === 4) && (conditional.Comparator === 'IS') && (item.Items[index].Value === 'NOT')) {
+            conditional.Comparator = 'IS NOT';
+            index++;
+        }
+        var valueRight = item.Items[index].Value;
+        if (valueRight.toUpperCase() === 'NULL') {
+            conditional.IsNullRight = true;
+        }
+        else {
+            var rightProjection = this.ParseQueryProjection(valueRight);
+            conditional.SourceRight = rightProjection.Source;
+            conditional.ColumnRight = rightProjection.Column;
+            if (conditional.SourceRight == null)
+                conditional.ValueRight = conditional.ColumnRight;
+        }
         return (conditional);
     };
     DrapoParser.prototype.ParseSubstring = function (value, start, end, canMissEnd) {

@@ -2887,15 +2887,13 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.ResolveQueryConditionSource = function (query, querySource, sourceObject, filter) {
         var valueLeft = this.ResolveQueryConditionSourceColumn(query, querySource, sourceObject, filter.SourceLeft, filter.ColumnLeft);
-        if (valueLeft != null) {
-            filter.SourceLeft = null;
-            filter.ColumnLeft = valueLeft;
-        }
+        if (valueLeft !== null)
+            filter.ValueLeft = valueLeft;
+        if (filter.IsNullRight)
+            return;
         var valueRight = this.ResolveQueryConditionSourceColumn(query, querySource, sourceObject, filter.SourceRight, filter.ColumnRight);
-        if (valueRight != null) {
-            filter.SourceRight = null;
-            filter.ColumnRight = valueRight;
-        }
+        if (valueRight !== null)
+            filter.ValueRight = valueRight;
     };
     DrapoStorage.prototype.ResolveQueryConditionSourceColumn = function (query, querySource, sourceObject, source, column) {
         var _a;
@@ -2945,7 +2943,11 @@ var DrapoStorage = (function () {
         }
     };
     DrapoStorage.prototype.IsValidQueryCondition = function (filter) {
-        if ((filter.Comparator === '=') && (filter.ColumnLeft == filter.ColumnRight))
+        if ((filter.Comparator === '=') && (filter.ValueLeft == filter.ValueRight))
+            return (true);
+        if ((filter.Comparator === 'IS') && (filter.IsNullRight) && (filter.ValueLeft == null))
+            return (true);
+        if ((filter.Comparator === 'IS NOT') && (filter.IsNullRight) && (filter.ValueLeft != null))
             return (true);
         return (false);
     };
