@@ -2003,13 +2003,13 @@ class DrapoStorage {
             if ((querySource.Alias === null) && (source !== querySource.Source))
                 return (null);
         } else {
-            if ((isObject) && (!sourceObject[column]))
+            if ((isObject) && (!(column in sourceObject)))
                 return (null);
             if ((!isObject) && ((querySource.Alias ?? querySource.Source) !== column))
                 return (null);
         }
         const value: any = isObject ? sourceObject[column] : sourceObject;
-        return (value);
+        return (value == null ? null : this.Application.Solver.EnsureString(value));
     }
 
     private ResolveQueryFunctionParameterName(value: string): string {
