@@ -22710,13 +22710,13 @@ var DrapoStorage = (function () {
                 return (null);
         }
         else {
-            if ((isObject) && (!sourceObject[column]))
+            if ((isObject) && (!(column in sourceObject)))
                 return (null);
             if ((!isObject) && (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== column))
                 return (null);
         }
         var value = isObject ? sourceObject[column] : sourceObject;
-        return (value);
+        return (value == null ? null : this.Application.Solver.EnsureString(value));
     };
     DrapoStorage.prototype.ResolveQueryFunctionParameterName = function (value) {
         value = value.replace('.', '_');
