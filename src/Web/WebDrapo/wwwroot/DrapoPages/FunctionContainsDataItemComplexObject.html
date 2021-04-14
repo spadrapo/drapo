@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function ContainsDataItem Complex Object</title>
+</head>
+<body>
+    <span>Function ContainsDataItem Complex Object</span>
+    <div d-dataKey="items" d-dataType="array" d-dataValue='[1,2,3,4,5]'></div>
+    <div d-dataKey="selected" d-dataType="array" d-dataValue='[2,4,6]'></div>
+    <div>
+        <ul>
+            <li d-for="item in items" d-if="ContainsDataItem({{selected}},{{item}})">{{item}}</li>
+        </ul>
+    </div>
+</body>
+</html>
