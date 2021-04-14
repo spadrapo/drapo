@@ -6,11 +6,13 @@
 </head>
 <body>
     <span>Function ContainsDataItem Complex Object</span>
-    <div d-dataKey="items" d-dataType="array" d-dataValue='[1,2,3,4,5]'></div>
-    <div d-dataKey="selected" d-dataType="array" d-dataValue='[2,4,6]'></div>
+    <div d-dataKey="nodesSelected" d-dataType="array" d-dataValue='[{"Key":"I1L2K0","Value":"Thiago"},{"Key":"I27L1K1","Value":"Henrique"}]'></div>
+    <div d-dataKey="nodes" d-dataUrlGet="/Data/GetLevels?Levels=3&Children=2&includeIndex=true"></div>
+    <div d-dataKey="nodesVisible" d-dataType="array"></div>
+    <div d-dataKey="fillNodesVisible" d-dataType="function" d-dataLoadType="startup" d-dataValue="ExecuteDataItem(AddDataItem(nodesVisible,{{node}}),node in nodes,ContainsDataItem({{nodesSelected.Key}},{{node.Key}}),true,node in node.Children)"></div>
     <div>
         <ul>
-            <li d-for="item in items" d-if="ContainsDataItem({{selected}},{{item}})">{{item}}</li>
+            <li d-for="node in nodesVisible">{{node.Key}}</li>
         </ul>
     </div>
 </body>
