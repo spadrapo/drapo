@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Function Multiples CreateTimer Async</title>
+</head>
+<body>
+    <span>Function Multiples CreateTimer Async</span>
+    <div class="cloak" d-cloak="cloak">
+        <!--Data-->
+        <div d-dataKey="object" d-dataType="object" d-dataProperty-title-name="Title" d-dataProperty-title-value="Drapo" d-dataProperty-subtitle-name="Subtitle" d-dataProperty-subtitle-value="spa drapo"></div>
+        <div d-dataKey="timer1" d-datatype="value" d-dataloadtype="startup" d-dataValue="UpdateDataField(object,Title,Drapo Multiples CreateTimer - 1)"></div>
+        <div d-dataKey="timer2" d-datatype="value" d-dataloadtype="startup" d-dataValue="UpdateDataField(object,Title,Drapo Multiples CreateTimer - 2)"></div>
+        <div d-dataKey="timer3" d-datatype="value" d-dataloadtype="startup" d-dataValue="UpdateDataField(object,Title,Drapo Multiples CreateTimer - 3)"></div>
+        <ul>
+            <li d-for="property in object">{{property.Key}} - {{property.Value}}</li>
+        </ul>
+    </div>
+    <div d-dataKey="functionStartup1" d-dataType="function" d-dataLoadType="startup" d-dataValue="CreateTimer({{timer1}},5000)"></div>
+    <div d-dataKey="functionStartup2" d-dataType="function" d-dataLoadType="startup" d-dataValue="CreateTimer({{timer2}},10000)"></div>
+    <div d-dataKey="functionStartup3" d-dataType="function" d-dataLoadType="startup" d-dataValue="CreateTimer({{timer3}},15000)"></div>
+</body>
+</html>

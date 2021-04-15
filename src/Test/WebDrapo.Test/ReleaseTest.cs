@@ -1107,6 +1107,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionMoveItem");
         }
         [TestCase]
+        public void FunctionMultiplesCreateTimerAsyncTest()
+        {
+            ValidatePage("FunctionMultiplesCreateTimerAsync");
+        }
+        [TestCase]
         public void FunctionPostDataItemTest()
         {
             ValidatePage("FunctionPostDataItem");
