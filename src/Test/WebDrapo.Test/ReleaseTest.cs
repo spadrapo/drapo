@@ -982,6 +982,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionContainsDataItem");
         }
         [TestCase]
+        public void FunctionContainsDataItemComplexObjectTest()
+        {
+            ValidatePage("FunctionContainsDataItemComplexObject");
+        }
+        [TestCase]
         public void FunctionCreateDataTest()
         {
             ValidatePage("FunctionCreateData");
