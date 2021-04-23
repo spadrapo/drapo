@@ -10785,9 +10785,9 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionAddDataItem = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var source, isSourceMustache, mustacheParts, dataKey, itemText, item, dataPath, dataItem, itemPath, notifyText, notify, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var source, isSourceMustache, mustacheParts, dataKey, itemText, item, dataPath, dataItem, itemPath, notifyText, notify, _a, isCloneText, isClone, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         source = functionParsed.Parameters[0];
                         isSourceMustache = this.Application.Parser.IsMustache(source);
@@ -10799,13 +10799,13 @@ var DrapoFunctionHandler = (function () {
                         dataPath = this.Application.Parser.ParseMustache(itemText);
                         return [4, this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataPath)];
                     case 1:
-                        item = _b.sent();
+                        item = _c.sent();
                         return [3, 7];
                     case 2:
                         if (!this.Application.Storage.IsDataKey(itemText, sector)) return [3, 4];
                         return [4, this.Application.Storage.RetrieveDataItem(itemText, sector)];
                     case 3:
-                        dataItem = _b.sent();
+                        dataItem = _c.sent();
                         if (dataItem != null)
                             item = dataItem.Data;
                         return [3, 7];
@@ -10818,8 +10818,8 @@ var DrapoFunctionHandler = (function () {
                         itemPath.push(itemText);
                         return [4, this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, itemPath)];
                     case 6:
-                        item = _b.sent();
-                        _b.label = 7;
+                        item = _c.sent();
+                        _c.label = 7;
                     case 7:
                         if (item == null)
                             return [2, (null)];
@@ -10829,13 +10829,23 @@ var DrapoFunctionHandler = (function () {
                         return [3, 10];
                     case 8: return [4, this.Application.Solver.ResolveConditional(notifyText)];
                     case 9:
-                        _a = _b.sent();
-                        _b.label = 10;
+                        _a = _c.sent();
+                        _c.label = 10;
                     case 10:
                         notify = _a;
-                        return [4, this.Application.Storage.AddDataItem(dataKey, mustacheParts, sector, this.Application.Solver.Clone(item), notify)];
-                    case 11:
-                        _b.sent();
+                        isCloneText = functionParsed.Parameters[3];
+                        if (!((isCloneText == null) || (isCloneText == ''))) return [3, 11];
+                        _b = true;
+                        return [3, 13];
+                    case 11: return [4, this.Application.Solver.ResolveConditional(isCloneText)];
+                    case 12:
+                        _b = _c.sent();
+                        _c.label = 13;
+                    case 13:
+                        isClone = _b;
+                        return [4, this.Application.Storage.AddDataItem(dataKey, mustacheParts, sector, isClone ? this.Application.Solver.Clone(item) : item, notify)];
+                    case 14:
+                        _c.sent();
                         return [2];
                 }
             });
