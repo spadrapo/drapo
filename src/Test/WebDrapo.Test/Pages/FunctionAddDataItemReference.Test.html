@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function - AddDataItem - Reference</title>
+</head>
+<body>
+    <br />
+    <span>AddDataItem - Reference</span>
+    <div d-datakey="personCurrent" d-datatype="object" d-datavalue="{&quot;Code&quot;:1,&quot;Name&quot;:&quot;Thiago&quot;}"></div>
+    <div d-datakey="persons" d-datatype="array"></div>
+    <span>Current: </span><input type="text" d-model="{{personCurrent.Name}}" /><br />
+    <div>
+        <input type="button" value="Add" d-on-click="AddDataItem(persons,{{personCurrent}},true,false)" />
+        <ul>
+            <li d-for="person in persons" style="display: none;">{{person.Name}}</li>
+        <li>John</li><li>John</li></ul>
+    </div>
+    <div d-datakey="startup" d-datatype="function" d-dataloadtype="startup" d-datavalue="AddDataItem(persons,{{personCurrent}},false,false);UpdateDataField(personCurrent,Name,John);AddDataItem(persons,{{personCurrent}},false,false);Notify(persons)"></div>
+
+</body></html>
