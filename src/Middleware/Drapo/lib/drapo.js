@@ -14253,7 +14253,7 @@ var DrapoObserver = (function () {
                         _a.label = 1;
                     case 1:
                         if (!(i < dataStorageFields.length)) return [3, 11];
-                        if ((dataField != null) && (dataStorageFields[i] !== dataField))
+                        if ((dataField != null) && (dataStorageFields[i] != null) && (dataStorageFields[i] !== dataField))
                             return [3, 10];
                         dataReferenceKey = dataReferenceKeys[i];
                         type = dataTypes[i];
