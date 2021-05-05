@@ -255,7 +255,7 @@ class DrapoObserver {
         const dataReferenceKeys: string[] = this._dataStorageKeyReferenceKey[dataKeyIndex];
         const dataTypes: DrapoStorageLinkType[] = this._dataStorageType[dataKeyIndex];
         for (let i = 0; i < dataStorageFields.length; i++) {
-            if ((dataField != null) && (dataStorageFields[i] !== dataField))
+            if ((dataField != null) && (dataStorageFields[i] != null) && (dataStorageFields[i] !== dataField))
                 continue;
             const dataReferenceKey: string = dataReferenceKeys[i];
             const type: DrapoStorageLinkType = dataTypes[i];
