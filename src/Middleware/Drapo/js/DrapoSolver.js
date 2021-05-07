@@ -43,7 +43,7 @@ var DrapoSolver = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoSolver.prototype.ResolveConditional = function (expression, elj, sector, context, renderContext, eljForTemplate) {
@@ -776,7 +776,14 @@ var DrapoSolver = (function () {
         return (sector);
     };
     DrapoSolver.prototype.HasMustachePartsSector = function (mustacheParts) {
-        return (mustacheParts[0].startsWith('@'));
+        if (mustacheParts == null)
+            return (false);
+        var part = mustacheParts[0];
+        if (part == null)
+            return (false);
+        if (part.length == 0)
+            return (false);
+        return (part[0] === '@');
     };
     DrapoSolver.prototype.ResolveDataKey = function (mustacheParts) {
         var index = this.HasMustachePartsSector(mustacheParts) ? 1 : 0;

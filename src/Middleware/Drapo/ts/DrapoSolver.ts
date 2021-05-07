@@ -575,7 +575,14 @@ class DrapoSolver {
     }
 
     private HasMustachePartsSector(mustacheParts: string[]): boolean {
-        return (mustacheParts[0].startsWith('@'));
+        if (mustacheParts == null)
+            return (false);
+        const part: string = mustacheParts[0];
+        if (part == null)
+            return (false);
+        if (part.length == 0)
+            return (false);
+        return (part[0] === '@');
     }
 
     public ResolveDataKey(mustacheParts: string[]): string {
