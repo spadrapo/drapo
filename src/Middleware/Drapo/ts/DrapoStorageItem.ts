@@ -28,6 +28,7 @@
     private _canCache: boolean = true;
     private _cacheKeys: string[] = null;
     private _onLoad: string = null;
+    private _onAfterLoad: string = null;
     private _onAfterContainerLoad: string = null;
     private _onBeforeContainerUnload: string = null;
     private _onAfterCached: string = null;
@@ -257,6 +258,13 @@
         this._onLoad = value;
     }
 
+    get OnAfterLoad(): string {
+        return (this._onAfterLoad);
+    }
+    set OnAfterLoad(value: string) {
+        this._onAfterLoad = value;
+    }
+
     get OnAfterContainerLoad(): string {
         return (this._onAfterContainerLoad);
     }
@@ -307,7 +315,7 @@
     }
 
     //Constructor
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]) {
+    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]) {
         this._type = type;
         this._access = access;
         this._element = element;
@@ -332,6 +340,7 @@
         this._canCache = canCache;
         this._cacheKeys = cacheKeys;
         this._onLoad = onLoad;
+        this._onAfterLoad = onAfterLoad == null ? null : onAfterLoad;
         this._onAfterContainerLoad = onAfterContainerLoad == null ? null : onAfterContainerLoad;
         this._onBeforeContainerUnload = onBeforeContainerUnload == null ? null : onBeforeContainerUnload;
         this._onAfterCached = onAfterCached == null ? null : onAfterCached;

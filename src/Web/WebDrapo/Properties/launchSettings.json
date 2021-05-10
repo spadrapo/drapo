@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/FunctionAddDataItemReference.html",
+      "launchUrl": "DrapoPages/DataOnAfterLoad.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
