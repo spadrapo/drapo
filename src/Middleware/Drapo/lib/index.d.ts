@@ -1942,6 +1942,7 @@ declare class DrapoStorageItem {
     private _canCache;
     private _cacheKeys;
     private _onLoad;
+    private _onAfterLoad;
     private _onAfterContainerLoad;
     private _onBeforeContainerUnload;
     private _onAfterCached;
@@ -2010,6 +2011,8 @@ declare class DrapoStorageItem {
     set CacheKeys(value: string[]);
     get OnLoad(): string;
     set OnLoad(value: string);
+    get OnAfterLoad(): string;
+    set OnAfterLoad(value: string);
     get OnAfterContainerLoad(): string;
     set OnAfterContainerLoad(value: string);
     get OnBeforeContainerUnload(): string;
@@ -2024,7 +2027,7 @@ declare class DrapoStorageItem {
     set HeadersSet(value: [string, string][]);
     get HasChanges(): boolean;
     set HasChanges(value: boolean);
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
+    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
     private Initialize;
     ContainsGroup(group: string): boolean;
 }
