@@ -813,11 +813,11 @@ class DrapoStorage {
         if (type == 'value')
             return (this.RetrieveDataKeyInitializeValue(el));
         if (type == 'mapping')
-            return (await this.RetrieveDataKeyInitializeMapping(el, sector));
+            return (await this.RetrieveDataKeyInitializeMapping(el, sector, dataKey));
         if (type == 'function')
             return (await this.RetrieveDataKeyInitializeFunction(dataKey, el));
         if (type == 'querystring')
-            return (this.RetrieveDataKeyInitializeQueryString(el, sector));
+            return (this.RetrieveDataKeyInitializeQueryString(el, sector, dataKey));
         if (type == 'query')
             return (this.RetrieveDataKeyInitializeQuery(el, sector, dataKey));
         if (type == 'parent')
@@ -842,7 +842,7 @@ class DrapoStorage {
         return ([data]);
     }
 
-    private async RetrieveDataKeyInitializeMapping(el: HTMLElement, sector: string): Promise<any[]> {
+    private async RetrieveDataKeyInitializeMapping(el: HTMLElement, sector: string, dataKey: string): Promise<any[]> {
         const dataValue: string = el.getAttribute('d-dataValue');
         if (dataValue == null)
             return ([]);
@@ -855,6 +855,9 @@ class DrapoStorage {
             const dataReference: any[] = await this.RetrieveDataValue(sector, dataValueResolved);
             return (this.Application.Solver.Clone(dataReference, true));
         }
+        const isSubscribe: boolean = el.getAttribute('d-dataMappingSubscribe') === 'true';
+        if (isSubscribe)
+            this.Application.Observer.SubscribeStorage(dataValueResolved, null, dataKey, DrapoStorageLinkType.Reload);
         const storageItemMapped = await this.RetrieveDataItem(dataValueResolved, sector);
         if (storageItemMapped === null)
             return (null);
@@ -897,8 +900,8 @@ class DrapoStorage {
         return ([]);
     }
 
-    private async RetrieveDataKeyInitializeQueryString(el: HTMLElement, sector: string): Promise<any[]> {
-        let object: any = await this.RetrieveDataKeyInitializeMapping(el, sector);
+    private async RetrieveDataKeyInitializeQueryString(el: HTMLElement, sector: string, dataKey: string): Promise<any[]> {
+        let object: any = await this.RetrieveDataKeyInitializeMapping(el, sector, dataKey);
         if ((object !== null) && (((object.length) && (object.length > 0)) || (Object.keys(object).length > 0)))
             return (object);
         object = {};

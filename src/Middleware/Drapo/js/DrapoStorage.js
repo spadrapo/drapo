@@ -1213,7 +1213,7 @@ var DrapoStorage = (function () {
                         if (type == 'value')
                             return [2, (this.RetrieveDataKeyInitializeValue(el))];
                         if (!(type == 'mapping')) return [3, 2];
-                        return [4, this.RetrieveDataKeyInitializeMapping(el, sector)];
+                        return [4, this.RetrieveDataKeyInitializeMapping(el, sector, dataKey)];
                     case 1: return [2, (_a.sent())];
                     case 2:
                         if (!(type == 'function')) return [3, 4];
@@ -1221,7 +1221,7 @@ var DrapoStorage = (function () {
                     case 3: return [2, (_a.sent())];
                     case 4:
                         if (type == 'querystring')
-                            return [2, (this.RetrieveDataKeyInitializeQueryString(el, sector))];
+                            return [2, (this.RetrieveDataKeyInitializeQueryString(el, sector, dataKey))];
                         if (type == 'query')
                             return [2, (this.RetrieveDataKeyInitializeQuery(el, sector, dataKey))];
                         if (type == 'parent')
@@ -1246,9 +1246,9 @@ var DrapoStorage = (function () {
             return (data);
         return ([data]);
     };
-    DrapoStorage.prototype.RetrieveDataKeyInitializeMapping = function (el, sector) {
+    DrapoStorage.prototype.RetrieveDataKeyInitializeMapping = function (el, sector, dataKey) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataValue, isReference, dataValueResolved, dataReference, storageItemMapped, data, dataMappingField, dataMappingFieldResolved, dataPath, dataPathFull, dataMappingSearchField, dataMappingSearchValue, dataMappingSearchHierarchyField, dataPath;
+            var dataValue, isReference, dataValueResolved, dataReference, isSubscribe, storageItemMapped, data, dataMappingField, dataMappingFieldResolved, dataPath, dataPathFull, dataMappingSearchField, dataMappingSearchValue, dataMappingSearchHierarchyField, dataPath;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1269,7 +1269,11 @@ var DrapoStorage = (function () {
                     case 3:
                         dataReference = _a.sent();
                         return [2, (this.Application.Solver.Clone(dataReference, true))];
-                    case 4: return [4, this.RetrieveDataItem(dataValueResolved, sector)];
+                    case 4:
+                        isSubscribe = el.getAttribute('d-dataMappingSubscribe') === 'true';
+                        if (isSubscribe)
+                            this.Application.Observer.SubscribeStorage(dataValueResolved, null, dataKey, DrapoStorageLinkType.Reload);
+                        return [4, this.RetrieveDataItem(dataValueResolved, sector)];
                     case 5:
                         storageItemMapped = _a.sent();
                         if (storageItemMapped === null)
@@ -1328,12 +1332,12 @@ var DrapoStorage = (function () {
             });
         });
     };
-    DrapoStorage.prototype.RetrieveDataKeyInitializeQueryString = function (el, sector) {
+    DrapoStorage.prototype.RetrieveDataKeyInitializeQueryString = function (el, sector, dataKey) {
         return __awaiter(this, void 0, void 0, function () {
             var object, canUseRouter, dictionary, i, keyValuePair, key, value;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.RetrieveDataKeyInitializeMapping(el, sector)];
+                    case 0: return [4, this.RetrieveDataKeyInitializeMapping(el, sector, dataKey)];
                     case 1:
                         object = _a.sent();
                         if ((object !== null) && (((object.length) && (object.length > 0)) || (Object.keys(object).length > 0)))
