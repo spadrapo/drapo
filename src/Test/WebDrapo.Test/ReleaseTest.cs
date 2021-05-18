@@ -756,6 +756,11 @@ namespace WebDrapo.Test
             ValidatePage("DataMappingMustache");
         }
         [TestCase]
+        public void DataMappingSubscribeTest()
+        {
+            ValidatePage("DataMappingSubscribe");
+        }
+        [TestCase]
         public void DataOnAfterLoadTest()
         {
             ValidatePage("DataOnAfterLoad");
