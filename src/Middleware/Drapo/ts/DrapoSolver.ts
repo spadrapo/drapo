@@ -569,7 +569,7 @@ class DrapoSolver {
         const mustacheSector: string = mustacheParts[0];
         if (mustacheSector === '@')
             return (null);
-        if (mustacheSector.startsWith("@"))
+        if (mustacheSector.indexOf("@") === 0)
             return (mustacheSector.substring(1));
         return (sector);
     }
