@@ -186,11 +186,12 @@ class DrapoObserver {
         }
     }
 
-    public async Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference: boolean = true): Promise<void> {
+    public async Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference: boolean = true, canNotifyStorage : boolean = true): Promise<void> {
         //Debugger
         await this.Application.Debugger.AddNotify(dataKey);
         //Storage
-        await this.NotifyStorage(dataKey, dataFields);
+        if (canNotifyStorage)
+            await this.NotifyStorage(dataKey, dataFields);
         //Control Flow
         await this.NotifyFor(dataKey, dataIndex, dataFields, canUseDifference);
         //Mustaches
@@ -265,6 +266,8 @@ class DrapoObserver {
                     await this.Application.Storage.ReloadData(dataReferenceKey, sectors[j], true, false);
             } else if (type == DrapoStorageLinkType.RenderClass) {
                 await this.NotifyStorageRenderClass(dataReferenceKey);
+            } else if (type == DrapoStorageLinkType.Notify) {
+                await this.Application.Observer.Notify(dataReferenceKey, null, null, true, false);
             } else {
                 await this.Application.Observer.Notify(dataReferenceKey, null, null);
             }

@@ -814,6 +814,8 @@ class DrapoStorage {
             return (this.RetrieveDataKeyInitializeValue(el));
         if (type == 'mapping')
             return (await this.RetrieveDataKeyInitializeMapping(el, sector, dataKey));
+        if (type == 'pointer')
+            return (await this.RetrieveDataKeyInitializePointer(el, sector, dataKey));
         if (type == 'function')
             return (await this.RetrieveDataKeyInitializeFunction(dataKey, el));
         if (type == 'querystring')
@@ -884,6 +886,37 @@ class DrapoStorage {
             data = this.Application.Solver.ResolveDataObjectLookupHierarchy(data, dataMappingSearchField, dataMappingSearchValue, dataMappingSearchHierarchyField);
         }
         return (this.Application.Solver.Clone(data, true));
+    }
+
+    private async RetrieveDataKeyInitializePointer(el: HTMLElement, sector: string, dataKey: string): Promise<any[]> {
+        const dataValue: string = el.getAttribute('d-dataValue');
+        if (dataValue == null) {
+            await this.Application.ExceptionHandler.HandleError('DrapoStorage - value of a pointer cant be null - {0}', dataKey);
+            return ([]);
+        }
+        if (!this.Application.Parser.IsMustache(dataValue)) {
+            await this.Application.ExceptionHandler.HandleError('DrapoStorage - value of a pointer must be a mustache - {0}', dataKey);
+            return ([]);
+        }
+        //We need to resolve the dataValue to the last mustache
+        let dataMustache: string = dataValue;
+        while (this.Application.Parser.IsMustache(dataMustache)) {
+            const dataMustacheResolved: string = await this.ResolveMustaches(sector, dataMustache);
+            if ((dataMustacheResolved == null) || (dataMustacheResolved === '')) {
+                return (null);
+            }
+            if (!this.Application.Parser.IsMustache(dataMustacheResolved))
+                break;
+            dataMustache = dataMustacheResolved;
+        }
+        //Subscribe
+        const mustacheParts: string[] = this.Application.Parser.ParseMustache(dataMustache);
+        const mustacheDataKey: string = this.Application.Solver.ResolveDataKey(mustacheParts);
+        this.Application.Observer.SubscribeStorage(mustacheDataKey, null, dataKey, DrapoStorageLinkType.Notify);
+        this.Application.Observer.SubscribeStorage(dataKey, null, mustacheDataKey, DrapoStorageLinkType.Notify);
+        //Return the same reference data
+        const dataReference: any[] = await this.RetrieveDataValue(sector, dataMustache);
+        return (dataReference);
     }
 
     private async RetrieveDataKeyInitializeFunction(dataKey: string, el: HTMLElement): Promise<any[]> {

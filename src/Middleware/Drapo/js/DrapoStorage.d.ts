@@ -59,6 +59,7 @@ declare class DrapoStorage {
     private RetrieveDataKeyInitializeValue;
     private RetrieveDataKeyInitializeArray;
     private RetrieveDataKeyInitializeMapping;
+    private RetrieveDataKeyInitializePointer;
     private RetrieveDataKeyInitializeFunction;
     private RetrieveDataKeyInitializeQueryString;
     private RetrieveDataKeyInitializeQuery;

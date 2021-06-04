@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Mapping Pointer</title>
+</head>
+<body>
+    <span>Data Mapping Pointer</span>
+    <div>
+        <div d-datakey="persons" d-datatype="array" d-datavalue="[{&quot;name&quot;: &quot;John&quot;},{&quot;name&quot;: &quot;Mary&quot;},{&quot;name&quot;: &quot;Thiago&quot;}]"></div>
+        <div d-datakey="personsPointer" d-datatype="pointer" d-datavalue="{{persons}}"></div>
+        <div d-datakey="functionStartup" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateItemField({{persons.[0].name}},James);UpdateItemField({{personsPointer.[1].name}},Brown)"></div>
+    </div>
+    <span>Original:</span>
+    <br />
+    <div>
+        <div d-for="person in persons" style="display: none;">
+            <span d-model="{{person.name}}"></span>
+            <input d-model="{{person.name}}" type="text" />
+            <br />
+        </div>
+    <div>
+            <span>James</span>
+            <input type="text" />
+            <br />
+        </div><div>
+            <span>Brown</span>
+            <input type="text" />
+            <br />
+        </div><div>
+            <span>Thiago</span>
+            <input type="text" />
+            <br />
+        </div></div>
+    <span>Pointer:</span>
+    <br />
+    <div>
+        <div d-for="personPointer in personsPointer" style="display: none;">
+            <span d-model="{{personPointer.name}}"></span>
+            <input d-model="{{personPointer.name}}" type="text" />
+            <br />
+        </div>
+    <div>
+            <span>James</span>
+            <input type="text" />
+            <br />
+        </div><div>
+            <span>Brown</span>
+            <input type="text" />
+            <br />
+        </div><div>
+            <span>Thiago</span>
+            <input type="text" />
+            <br />
+        </div></div>
+
+</body></html>
