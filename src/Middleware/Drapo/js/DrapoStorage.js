@@ -1216,10 +1216,14 @@ var DrapoStorage = (function () {
                         return [4, this.RetrieveDataKeyInitializeMapping(el, sector, dataKey)];
                     case 1: return [2, (_a.sent())];
                     case 2:
-                        if (!(type == 'function')) return [3, 4];
-                        return [4, this.RetrieveDataKeyInitializeFunction(dataKey, el)];
+                        if (!(type == 'pointer')) return [3, 4];
+                        return [4, this.RetrieveDataKeyInitializePointer(el, sector, dataKey)];
                     case 3: return [2, (_a.sent())];
                     case 4:
+                        if (!(type == 'function')) return [3, 6];
+                        return [4, this.RetrieveDataKeyInitializeFunction(dataKey, el)];
+                    case 5: return [2, (_a.sent())];
+                    case 6:
                         if (type == 'querystring')
                             return [2, (this.RetrieveDataKeyInitializeQueryString(el, sector, dataKey))];
                         if (type == 'query')
@@ -1307,6 +1311,52 @@ var DrapoStorage = (function () {
                         data = this.Application.Solver.ResolveDataObjectLookupHierarchy(data, dataMappingSearchField, dataMappingSearchValue, dataMappingSearchHierarchyField);
                         _a.label = 10;
                     case 10: return [2, (this.Application.Solver.Clone(data, true))];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.RetrieveDataKeyInitializePointer = function (el, sector, dataKey) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dataValue, dataMustache, dataMustacheResolved, mustacheParts, mustacheDataKey, dataReference;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dataValue = el.getAttribute('d-dataValue');
+                        if (!(dataValue == null)) return [3, 2];
+                        return [4, this.Application.ExceptionHandler.HandleError('DrapoStorage - value of a pointer cant be null - {0}', dataKey)];
+                    case 1:
+                        _a.sent();
+                        return [2, ([])];
+                    case 2:
+                        if (!!this.Application.Parser.IsMustache(dataValue)) return [3, 4];
+                        return [4, this.Application.ExceptionHandler.HandleError('DrapoStorage - value of a pointer must be a mustache - {0}', dataKey)];
+                    case 3:
+                        _a.sent();
+                        return [2, ([])];
+                    case 4:
+                        dataMustache = dataValue;
+                        _a.label = 5;
+                    case 5:
+                        if (!this.Application.Parser.IsMustache(dataMustache)) return [3, 7];
+                        return [4, this.ResolveMustaches(sector, dataMustache)];
+                    case 6:
+                        dataMustacheResolved = _a.sent();
+                        if ((dataMustacheResolved == null) || (dataMustacheResolved === '')) {
+                            return [2, (null)];
+                        }
+                        if (!this.Application.Parser.IsMustache(dataMustacheResolved))
+                            return [3, 7];
+                        dataMustache = dataMustacheResolved;
+                        return [3, 5];
+                    case 7:
+                        mustacheParts = this.Application.Parser.ParseMustache(dataMustache);
+                        mustacheDataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
+                        this.Application.Observer.SubscribeStorage(mustacheDataKey, null, dataKey, DrapoStorageLinkType.Notify);
+                        this.Application.Observer.SubscribeStorage(dataKey, null, mustacheDataKey, DrapoStorageLinkType.Notify);
+                        return [4, this.RetrieveDataValue(sector, dataMustache)];
+                    case 8:
+                        dataReference = _a.sent();
+                        return [2, (dataReference)];
                 }
             });
         });

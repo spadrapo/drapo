@@ -1116,7 +1116,7 @@ declare class DrapoObserver {
     private UnsubscribeStorage;
     private UnsubscribeStorageReferenceKey;
     UnsubscribeFor(dataKey: string, elementForTemplate?: HTMLElement): void;
-    Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean): Promise<void>;
+    Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, canNotifyStorage?: boolean): Promise<void>;
     NotifyFor(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, type?: DrapoStorageLinkType): Promise<void>;
     NotifyBarber(dataKey: string, dataFields: string[]): Promise<void>;
     NotifyStorage(dataKey: string, dataFields: string[]): Promise<void>;
@@ -1826,6 +1826,7 @@ declare class DrapoStorage {
     private RetrieveDataKeyInitializeValue;
     private RetrieveDataKeyInitializeArray;
     private RetrieveDataKeyInitializeMapping;
+    private RetrieveDataKeyInitializePointer;
     private RetrieveDataKeyInitializeFunction;
     private RetrieveDataKeyInitializeQueryString;
     private RetrieveDataKeyInitializeQuery;
@@ -2035,7 +2036,8 @@ declare class DrapoStorageItem {
 declare enum DrapoStorageLinkType {
     Render = 0,
     RenderClass = 1,
-    Reload = 2
+    Reload = 2,
+    Notify = 3
 }
 
 declare class DrapoStylist {

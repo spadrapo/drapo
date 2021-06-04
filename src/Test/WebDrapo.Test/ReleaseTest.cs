@@ -786,6 +786,11 @@ namespace WebDrapo.Test
             ValidatePage("DataParentSectorSide");
         }
         [TestCase]
+        public void DataPointerTest()
+        {
+            ValidatePage("DataPointer");
+        }
+        [TestCase]
         public void DataPostGetTest()
         {
             ValidatePage("DataPostGet");
