@@ -345,7 +345,7 @@ class DrapoServer {
     private GetHeaderValue(headers: [string, string][], name: string): string {
         for (let i: number = 0; i < headers.length; i++) {
             const header: [string, string] = headers[i];
-            if (header[0] === name)
+            if (header[0].toLowerCase() === name.toLowerCase())
                 return (header[1]);
         }
         return (null);

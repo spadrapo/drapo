@@ -482,7 +482,7 @@ var DrapoServer = (function () {
     DrapoServer.prototype.GetHeaderValue = function (headers, name) {
         for (var i = 0; i < headers.length; i++) {
             var header = headers[i];
-            if (header[0] === name)
+            if (header[0].toLowerCase() === name.toLowerCase())
                 return (header[1]);
         }
         return (null);
