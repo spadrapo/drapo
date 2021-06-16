@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Channel</title>
+</head>
+<body>
+    <span>Data Channel</span>
+    <div d-datakey="value0" d-datatype="value" d-datavalue="value0" d-datachannels="c012"></div>
+    <span>0: </span>
+    <span d-model="{{value0}}">startup</span>
+    <input type="text" d-model="{{value0}}" />
+    <div d-sector="@">
+        <div d-datakey="value1" d-datatype="value" d-datavalue="value1" d-datachannels="c012"></div>
+        <span>1: </span>
+        <span d-model="{{value1}}">startup</span>
+        <input type="text" d-model="{{value1}}" />
+    </div>
+    <div d-sector="@">
+        <div d-datakey="value2" d-datatype="value" d-datavalue="value2" d-datachannels="c012"></div>
+        <span>2: </span>
+        <span d-model="{{value2}}">startup</span>
+        <input type="text" d-model="{{value2}}" />
+    </div>
+    <div d-sector="@">
+        <div d-datakey="value3" d-datatype="value" d-datavalue="value3" d-datachannels="c34"></div>
+        <span>3: </span>
+        <span d-model="{{value3}}">value3</span>
+        <input type="text" d-model="{{value3}}" />
+    </div>
+    <div d-sector="@">
+        <div d-datakey="value4" d-datatype="value" d-datavalue="value4" d-datachannels="c34"></div>
+        <span>4: </span>
+        <span d-model="{{value4}}">value3</span>
+        <input type="text" d-model="{{value4}}" />
+    </div>
+    <div d-datakey="dataFunction" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateData(value0,startup)"></div>
+
+</body></html>

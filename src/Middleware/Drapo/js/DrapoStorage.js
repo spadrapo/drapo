@@ -806,7 +806,7 @@ var DrapoStorage = (function () {
         if (canLoadDelay === void 0) { canLoadDelay = false; }
         if (dataDelayFields === void 0) { dataDelayFields = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var itemSystem, el, dataUrlGet, isDelay, dataUrlParameters, dataUrlSet, dataPostGet, isLazy, dataStart, dataIncrement, isUnitOfWork, cookieName, isCookieChange, userConfig, isToken, type, access, value, dataSector, groupsAttribute, groups, pipes, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet, headersResponse, data, increment, isFull, item;
+            var itemSystem, el, dataUrlGet, isDelay, dataUrlParameters, dataUrlSet, dataPostGet, isLazy, dataStart, dataIncrement, isUnitOfWork, cookieName, isCookieChange, userConfig, isToken, type, access, value, dataSector, groupsAttribute, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet, headersResponse, data, increment, isFull, item;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.RetrieveDataItemInternalSystem(dataKey)];
@@ -845,6 +845,7 @@ var DrapoStorage = (function () {
                         groupsAttribute = el.getAttribute('d-dataGroups');
                         groups = ((groupsAttribute == null) || (groupsAttribute == '')) ? null : this.Application.Parser.ParsePipes(groupsAttribute);
                         pipes = this.Application.Parser.ParsePipes(el.getAttribute('d-dataPipes'));
+                        channels = this.Application.Parser.ParsePipes(el.getAttribute('d-dataChannels'));
                         canCache = this.Application.Parser.ParseBoolean(el.getAttribute('d-dataCache'), true);
                         cacheKeys = this.Application.Parser.ParsePipes(el.getAttribute('d-dataCacheKeys'));
                         onLoad = type === 'function' ? value : null;
@@ -856,7 +857,7 @@ var DrapoStorage = (function () {
                         headersGet = this.ExtractDataHeaderGet(el);
                         headersSet = this.ExtractDataHeaderSet(el);
                         headersResponse = ((isCookieChange) || (type === 'file')) ? [] : null;
-                        return [4, this.RetrieveDataKey(dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, cacheKeys, headersGet, headersResponse)];
+                        return [4, this.RetrieveDataKey(dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, cacheKeys, channels, headersGet, headersResponse)];
                     case 4:
                         data = _a.sent();
                         if (data == null) {
@@ -870,18 +871,23 @@ var DrapoStorage = (function () {
                         }
                         increment = this.Application.Parser.GetStringAsNumber(dataIncrement);
                         isFull = ((isLazy) && (data.length < increment)) ? true : false;
-                        item = new DrapoStorageItem(type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet);
+                        item = new DrapoStorageItem(type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet);
                         return [2, (item)];
                 }
             });
         });
     };
-    DrapoStorage.prototype.RetrieveDataKey = function (dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, cacheKeys, headersGet, headersResponse) {
+    DrapoStorage.prototype.RetrieveDataKey = function (dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, cacheKeys, channels, headersGet, headersResponse) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataConfig;
+            var dataChannels, dataConfig;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        if (channels !== null) {
+                            dataChannels = this.RetrieveDataChannels(channels);
+                            if (dataChannels != null)
+                                return [2, (dataChannels)];
+                        }
                         if (!(dataUrlGet != null)) return [3, 2];
                         return [4, this.RetrieveDataKeyUrl(dataKey, sector, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, type, isToken, cacheKeys, isDelay, dataDelayFields, headersGet, headersResponse)];
                     case 1: return [2, (_a.sent())];
@@ -984,6 +990,70 @@ var DrapoStorage = (function () {
                     case 15:
                         this.Application.CacheHandler.AppendCacheData(cacheKeys, sector, dataKey, dataResponse, isDelay);
                         return [2, (dataResponse)];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.RetrieveDataChannels = function (channels) {
+        if (channels == null)
+            return (null);
+        for (var i = 0; i < channels.length; i++) {
+            var dataChannel = this.RetrieveDataChannel(channels[i]);
+            if (dataChannel !== null)
+                return (dataChannel);
+        }
+        return (null);
+    };
+    DrapoStorage.prototype.ContainsDataChannel = function (dataItem, channel) {
+        if (dataItem.Channels === null)
+            return (false);
+        for (var i = 0; i < dataItem.Channels.length; i++) {
+            if (channel === dataItem.Channels[i])
+                return (true);
+        }
+        return (false);
+    };
+    DrapoStorage.prototype.RetrieveDataChannel = function (channel) {
+        for (var i = 0; i < this._cacheItems.length; i++) {
+            var dataItem = this._cacheItems[i];
+            if (this.ContainsDataChannel(dataItem, channel))
+                return (this.Application.Solver.Clone(dataItem.Data, true));
+        }
+        return (null);
+    };
+    DrapoStorage.prototype.PropagateDataChannels = function (dataItem) {
+        return __awaiter(this, void 0, void 0, function () {
+            var i, channel, j, dataItemCurrent;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (dataItem.Channels === null)
+                            return [2, (false)];
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < dataItem.Channels.length)) return [3, 6];
+                        channel = dataItem.Channels[i];
+                        j = 0;
+                        _a.label = 2;
+                    case 2:
+                        if (!(j < this._cacheItems.length)) return [3, 5];
+                        dataItemCurrent = this._cacheItems[j];
+                        if (!this.ContainsDataChannel(dataItemCurrent, channel))
+                            return [3, 4];
+                        if (dataItem.Data === dataItemCurrent.Data)
+                            return [3, 4];
+                        return [4, this.Application.Storage.UpdateData(this._cacheKeys[j], dataItemCurrent.Sector, dataItem.Data, true)];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4:
+                        j++;
+                        return [3, 2];
+                    case 5:
+                        i++;
+                        return [3, 1];
+                    case 6: return [2, (true)];
                 }
             });
         });
@@ -1605,7 +1675,7 @@ var DrapoStorage = (function () {
                 return (null);
             current = current[dataKeyCurrent];
         }
-        return (new DrapoStorageItem('array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, false, null, null, null, null, null, null, null, null, null));
+        return (new DrapoStorageItem('array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, null, false, null, null, null, null, null, null, null, null, null));
     };
     DrapoStorage.prototype.AddDataItem = function (dataKey, dataPath, sector, item, notify) {
         if (notify === void 0) { notify = true; }
@@ -1712,7 +1782,10 @@ var DrapoStorage = (function () {
                     case 1:
                         _a.sent();
                         _a.label = 2;
-                    case 2: return [2];
+                    case 2: return [4, this.PropagateDataChannels(dataItem)];
+                    case 3:
+                        _a.sent();
+                        return [2];
                 }
             });
         });
@@ -2506,7 +2579,7 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.CreateDataItemInternal = function (dataKey, data, canCache) {
         if (canCache === void 0) { canCache = true; }
-        var item = new DrapoStorageItem(data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, canCache, null, null, null, null, null, null, null, null, null);
+        var item = new DrapoStorageItem(data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, null, canCache, null, null, null, null, null, null, null, null, null);
         return (item);
     };
     DrapoStorage.prototype.RetrieveDataItemInternalSystemDebugger = function (dataKey) {

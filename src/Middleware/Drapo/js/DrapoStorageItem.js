@@ -1,6 +1,6 @@
 "use strict";
 var DrapoStorageItem = (function () {
-    function DrapoStorageItem(type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet) {
+    function DrapoStorageItem(type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet) {
         this._type = null;
         this._access = null;
         this._data = [];
@@ -25,6 +25,7 @@ var DrapoStorageItem = (function () {
         this._sector = null;
         this._groups = null;
         this._pipes = null;
+        this._channels = null;
         this._canCache = true;
         this._cacheKeys = null;
         this._onLoad = null;
@@ -57,6 +58,7 @@ var DrapoStorageItem = (function () {
         this._sector = sector;
         this._groups = groups;
         this._pipes = pipes;
+        this._channels = channels;
         this._canCache = canCache;
         this._cacheKeys = cacheKeys;
         this._onLoad = onLoad;
@@ -360,6 +362,16 @@ var DrapoStorageItem = (function () {
         },
         set: function (value) {
             this._pipes = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoStorageItem.prototype, "Channels", {
+        get: function () {
+            return (this._channels);
+        },
+        set: function (value) {
+            this._channels = value;
         },
         enumerable: true,
         configurable: true
