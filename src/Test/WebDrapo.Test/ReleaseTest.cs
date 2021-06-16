@@ -661,6 +661,11 @@ namespace WebDrapo.Test
             ValidatePage("DataBadRequest");
         }
         [TestCase]
+        public void DataChannelTest()
+        {
+            ValidatePage("DataChannel");
+        }
+        [TestCase]
         public void DataDelayLoadTest()
         {
             ValidatePage("DataDelayLoad");

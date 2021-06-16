@@ -99,238 +99,238 @@ var DrapoApplication = (function () {
         get: function () {
             return (this._isLoaded);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Log", {
         get: function () {
             return (this._logger);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Router", {
         get: function () {
             return (this._router);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Server", {
         get: function () {
             return (this._server);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Observer", {
         get: function () {
             return (this._observer);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Document", {
         get: function () {
             return (this._document);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ControlFlow", {
         get: function () {
             return (this._controlFlow);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Parser", {
         get: function () {
             return (this._parser);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Storage", {
         get: function () {
             return (this._storage);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Solver", {
         get: function () {
             return (this._solver);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Binder", {
         get: function () {
             return (this._binder);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Config", {
         get: function () {
             return (this._config);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Register", {
         get: function () {
             return (this._register);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Serializer", {
         get: function () {
             return (this._serializer);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Barber", {
         get: function () {
             return (this._barber);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ModelHandler", {
         get: function () {
             return (this._modelHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "AttributeHandler", {
         get: function () {
             return (this._attributeHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ClassHandler", {
         get: function () {
             return (this._classHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "EventHandler", {
         get: function () {
             return (this._eventHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "FunctionHandler", {
         get: function () {
             return (this._functionHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ComponentHandler", {
         get: function () {
             return (this._componentHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "CookieHandler", {
         get: function () {
             return (this._cookieHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "SectorContainerHandler", {
         get: function () {
             return (this._sectorContainerHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "WindowHandler", {
         get: function () {
             return (this._windowHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "BehaviorHandler", {
         get: function () {
             return (this._behaviorHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Plumber", {
         get: function () {
             return (this._plumber);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Formatter", {
         get: function () {
             return (this._formatter);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Validator", {
         get: function () {
             return (this._validator);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ExceptionHandler", {
         get: function () {
             return (this._exceptionHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Globalization", {
         get: function () {
             return (this._globalization);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Stylist", {
         get: function () {
             return (this._stylist);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ViewportHandler", {
         get: function () {
             return (this._viewportHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "CacheHandler", {
         get: function () {
             return (this._cacheHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Debugger", {
         get: function () {
             return (this._debugger);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoApplication.prototype.OnLoad = function () {
@@ -445,7 +445,7 @@ var DrapoAttributeHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoAttributeHandler.prototype.HasContentIDContext = function (content) {
@@ -757,7 +757,7 @@ var DrapoBarber = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoBarber.prototype.HasContentMustacheNodesContext = function (content) {
@@ -1386,7 +1386,7 @@ var DrapoBehaviorHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoBehaviorHandler.prototype.HasContentBehaviorContext = function (content) {
@@ -2017,7 +2017,7 @@ var DrapoBinder = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoBinder.prototype.BindReaderWriter = function (contextItem, el, dataFields, eventTypes, eventTypesCancel) {
@@ -2373,14 +2373,14 @@ var DrapoCacheHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoCacheHandler.prototype, "CanUseLocalStorage", {
         get: function () {
             return ((this._hasLocalStorage) && (this._useLocalStorage));
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoCacheHandler.prototype.Initialize = function () {
@@ -2645,7 +2645,7 @@ var DrapoClassHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoClassHandler.prototype.HasContentClassContext = function (content) {
@@ -2862,7 +2862,7 @@ var DrapoComponentHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoComponentHandler.prototype.ResolveComponents = function (jQueryStart) {
@@ -3424,7 +3424,7 @@ var DrapoConfig = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoConfig.prototype.GetUrl = function () {
@@ -3781,14 +3781,14 @@ var DrapoContext = (function () {
         set: function (value) {
             this._sector = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "Item", {
         get: function () {
             return (this._itemCurrent);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "Index", {
@@ -3798,14 +3798,14 @@ var DrapoContext = (function () {
         set: function (value) {
             this._index = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "IsEmpty", {
         get: function () {
             return (this._index === -1);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "IndexRelative", {
@@ -3815,21 +3815,21 @@ var DrapoContext = (function () {
         set: function (value) {
             this._indexRelative = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "Level", {
         get: function () {
             return (this._level);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "IsInsideRecursion", {
         get: function () {
             return (this._level > 0);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckMustacheNodes", {
@@ -3839,7 +3839,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkMustacheNodes = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckMustacheAttributes", {
@@ -3849,7 +3849,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkMustacheAttributes = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckModel", {
@@ -3859,7 +3859,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkModel = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckID", {
@@ -3869,7 +3869,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkID = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckAttribute", {
@@ -3879,7 +3879,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkAttribute = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckClass", {
@@ -3889,7 +3889,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkClass = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckEvent", {
@@ -3899,7 +3899,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkEvent = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckBehavior", {
@@ -3909,7 +3909,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkBehavior = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckComponent", {
@@ -3919,7 +3919,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkComponent = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckValidation", {
@@ -3929,7 +3929,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkValidation = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CanUpdateTemplate", {
@@ -3939,7 +3939,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._canUpdateTemplate = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoContext.prototype.Create = function (data, element, elementForTemplate, dataKey, key, iterator, index, elementOld) {
@@ -4112,21 +4112,21 @@ var DrapoContextItem = (function () {
         get: function () {
             return (this._context);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Parent", {
         get: function () {
             return (this._parent);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Children", {
         get: function () {
             return (this._children);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Data", {
@@ -4136,7 +4136,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._data = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "DataKey", {
@@ -4146,7 +4146,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._dataKey = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Key", {
@@ -4156,7 +4156,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._key = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Iterator", {
@@ -4166,7 +4166,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._iterator = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Index", {
@@ -4176,7 +4176,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._index = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Element", {
@@ -4186,7 +4186,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._element = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "ElementForTemplate", {
@@ -4196,7 +4196,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._elementForTemplate = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "ElementOld", {
@@ -4206,7 +4206,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._elementOld = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "RootItem", {
@@ -4215,14 +4215,14 @@ var DrapoContextItem = (function () {
                 return (this.Parent.RootItem);
             return (this);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "RootElement", {
         get: function () {
             return (this.RootItem.Element);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     return DrapoContextItem;
@@ -4273,7 +4273,7 @@ var DrapoControlFlow = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoControlFlow.prototype.ResolveControlFlowDocument = function () {
@@ -5341,7 +5341,7 @@ var DrapoCookieHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoCookieHandler.prototype.RetrieveData = function (name) {
@@ -5551,21 +5551,21 @@ var DrapoDebugger = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoDebugger.prototype, "Visible", {
         get: function () {
             return (this._visible);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoDebugger.prototype, "Active", {
         get: function () {
             return (this._active);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoDebugger.prototype.ConnectDebugger = function () {
@@ -6442,7 +6442,7 @@ var DrapoDocument = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoDocument.prototype, "Message", {
@@ -6452,7 +6452,7 @@ var DrapoDocument = (function () {
         set: function (value) {
             this._message = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoDocument.prototype.ResetPendingAuthorizations = function (count) {
@@ -8253,7 +8253,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._code = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "Action", {
@@ -8263,7 +8263,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._action = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "Item", {
@@ -8273,7 +8273,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._contextItem = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "Tags", {
@@ -8283,7 +8283,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._tags = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "Notify", {
@@ -8293,7 +8293,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._notify = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "OnBefore", {
@@ -8303,7 +8303,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._onBefore = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "OnAfter", {
@@ -8313,7 +8313,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._onAfter = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "DataKey", {
@@ -8323,7 +8323,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._dataKey = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "Sector", {
@@ -8333,7 +8333,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._sector = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "Custom", {
@@ -8343,7 +8343,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._custom = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoDrag.prototype.IsMatch = function (tags) {
@@ -8407,7 +8407,7 @@ var DrapoEventHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoEventHandler.prototype.HasContentEventContext = function (content) {
@@ -8794,7 +8794,7 @@ var DrapoExceptionHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoExceptionHandler.prototype.Handle = function (e, context) {
@@ -8889,7 +8889,7 @@ var DrapoExecutionContext = (function () {
         set: function (value) {
             this._hasError = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoExecutionContext.prototype, "CanReset", {
@@ -8899,7 +8899,7 @@ var DrapoExecutionContext = (function () {
         set: function (value) {
             this._canReset = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoExecutionContext.prototype, "HasBreakpoint", {
@@ -8909,7 +8909,7 @@ var DrapoExecutionContext = (function () {
         set: function (value) {
             this._hasBreakpoint = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoExecutionContext.prototype, "Sector", {
@@ -8919,7 +8919,7 @@ var DrapoExecutionContext = (function () {
         set: function (value) {
             this._sector = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoExecutionContext.prototype, "DataKey", {
@@ -8929,7 +8929,7 @@ var DrapoExecutionContext = (function () {
         set: function (value) {
             this._dataKey = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoExecutionContext.prototype, "Data", {
@@ -8939,7 +8939,7 @@ var DrapoExecutionContext = (function () {
         set: function (value) {
             this._data = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoExecutionContext.prototype.Continue = function () {
@@ -9000,7 +9000,7 @@ var DrapoExpressionItem = (function () {
         set: function (value) {
             this._type = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoExpressionItem.prototype, "Value", {
@@ -9015,7 +9015,7 @@ var DrapoExpressionItem = (function () {
             else
                 this._value = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoExpressionItem.prototype, "Items", {
@@ -9025,7 +9025,7 @@ var DrapoExpressionItem = (function () {
         set: function (value) {
             this._items = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoExpressionItem.prototype.GetItemIndex = function (value) {
@@ -9059,7 +9059,7 @@ var DrapoFormatter = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoFormatter.prototype.Format = function (value, format, culture) {
@@ -9300,7 +9300,7 @@ var DrapoFunction = (function () {
         set: function (value) {
             this._name = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoFunction.prototype, "Parameters", {
@@ -9310,7 +9310,7 @@ var DrapoFunction = (function () {
         set: function (value) {
             this._parameters = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     return DrapoFunction;
@@ -9361,7 +9361,7 @@ var DrapoFunctionHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoFunctionHandler.prototype.ResolveFunctionWithoutContext = function (sector, element, functionsValue, executionContext) {
@@ -18001,7 +18001,7 @@ var DrapoServer = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoServer.prototype, "HasBadRequest", {
@@ -18011,7 +18011,7 @@ var DrapoServer = (function () {
         set: function (value) {
             this._hasBadRequest = value;
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoServer.prototype.InitializeServer = function () {
@@ -20637,7 +20637,7 @@ var DrapoStorage = (function () {
         if (canLoadDelay === void 0) { canLoadDelay = false; }
         if (dataDelayFields === void 0) { dataDelayFields = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var itemSystem, el, dataUrlGet, isDelay, dataUrlParameters, dataUrlSet, dataPostGet, isLazy, dataStart, dataIncrement, isUnitOfWork, cookieName, isCookieChange, userConfig, isToken, type, access, value, dataSector, groupsAttribute, groups, pipes, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet, headersResponse, data, increment, isFull, item;
+            var itemSystem, el, dataUrlGet, isDelay, dataUrlParameters, dataUrlSet, dataPostGet, isLazy, dataStart, dataIncrement, isUnitOfWork, cookieName, isCookieChange, userConfig, isToken, type, access, value, dataSector, groupsAttribute, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet, headersResponse, data, increment, isFull, item;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.RetrieveDataItemInternalSystem(dataKey)];
@@ -20676,6 +20676,7 @@ var DrapoStorage = (function () {
                         groupsAttribute = el.getAttribute('d-dataGroups');
                         groups = ((groupsAttribute == null) || (groupsAttribute == '')) ? null : this.Application.Parser.ParsePipes(groupsAttribute);
                         pipes = this.Application.Parser.ParsePipes(el.getAttribute('d-dataPipes'));
+                        channels = this.Application.Parser.ParsePipes(el.getAttribute('d-dataChannels'));
                         canCache = this.Application.Parser.ParseBoolean(el.getAttribute('d-dataCache'), true);
                         cacheKeys = this.Application.Parser.ParsePipes(el.getAttribute('d-dataCacheKeys'));
                         onLoad = type === 'function' ? value : null;
@@ -20687,7 +20688,7 @@ var DrapoStorage = (function () {
                         headersGet = this.ExtractDataHeaderGet(el);
                         headersSet = this.ExtractDataHeaderSet(el);
                         headersResponse = ((isCookieChange) || (type === 'file')) ? [] : null;
-                        return [4, this.RetrieveDataKey(dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, cacheKeys, headersGet, headersResponse)];
+                        return [4, this.RetrieveDataKey(dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, cacheKeys, channels, headersGet, headersResponse)];
                     case 4:
                         data = _a.sent();
                         if (data == null) {
@@ -20701,18 +20702,23 @@ var DrapoStorage = (function () {
                         }
                         increment = this.Application.Parser.GetStringAsNumber(dataIncrement);
                         isFull = ((isLazy) && (data.length < increment)) ? true : false;
-                        item = new DrapoStorageItem(type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet);
+                        item = new DrapoStorageItem(type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet);
                         return [2, (item)];
                 }
             });
         });
     };
-    DrapoStorage.prototype.RetrieveDataKey = function (dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, cacheKeys, headersGet, headersResponse) {
+    DrapoStorage.prototype.RetrieveDataKey = function (dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, cacheKeys, channels, headersGet, headersResponse) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataConfig;
+            var dataChannels, dataConfig;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        if (channels !== null) {
+                            dataChannels = this.RetrieveDataChannels(channels);
+                            if (dataChannels != null)
+                                return [2, (dataChannels)];
+                        }
                         if (!(dataUrlGet != null)) return [3, 2];
                         return [4, this.RetrieveDataKeyUrl(dataKey, sector, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, type, isToken, cacheKeys, isDelay, dataDelayFields, headersGet, headersResponse)];
                     case 1: return [2, (_a.sent())];
@@ -20815,6 +20821,70 @@ var DrapoStorage = (function () {
                     case 15:
                         this.Application.CacheHandler.AppendCacheData(cacheKeys, sector, dataKey, dataResponse, isDelay);
                         return [2, (dataResponse)];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.RetrieveDataChannels = function (channels) {
+        if (channels == null)
+            return (null);
+        for (var i = 0; i < channels.length; i++) {
+            var dataChannel = this.RetrieveDataChannel(channels[i]);
+            if (dataChannel !== null)
+                return (dataChannel);
+        }
+        return (null);
+    };
+    DrapoStorage.prototype.ContainsDataChannel = function (dataItem, channel) {
+        if (dataItem.Channels === null)
+            return (false);
+        for (var i = 0; i < dataItem.Channels.length; i++) {
+            if (channel === dataItem.Channels[i])
+                return (true);
+        }
+        return (false);
+    };
+    DrapoStorage.prototype.RetrieveDataChannel = function (channel) {
+        for (var i = 0; i < this._cacheItems.length; i++) {
+            var dataItem = this._cacheItems[i];
+            if (this.ContainsDataChannel(dataItem, channel))
+                return (this.Application.Solver.Clone(dataItem.Data, true));
+        }
+        return (null);
+    };
+    DrapoStorage.prototype.PropagateDataChannels = function (dataItem) {
+        return __awaiter(this, void 0, void 0, function () {
+            var i, channel, j, dataItemCurrent;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (dataItem.Channels === null)
+                            return [2, (false)];
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < dataItem.Channels.length)) return [3, 6];
+                        channel = dataItem.Channels[i];
+                        j = 0;
+                        _a.label = 2;
+                    case 2:
+                        if (!(j < this._cacheItems.length)) return [3, 5];
+                        dataItemCurrent = this._cacheItems[j];
+                        if (!this.ContainsDataChannel(dataItemCurrent, channel))
+                            return [3, 4];
+                        if (dataItem.Data === dataItemCurrent.Data)
+                            return [3, 4];
+                        return [4, this.Application.Storage.UpdateData(this._cacheKeys[j], dataItemCurrent.Sector, dataItem.Data, true)];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4:
+                        j++;
+                        return [3, 2];
+                    case 5:
+                        i++;
+                        return [3, 1];
+                    case 6: return [2, (true)];
                 }
             });
         });
@@ -21436,7 +21506,7 @@ var DrapoStorage = (function () {
                 return (null);
             current = current[dataKeyCurrent];
         }
-        return (new DrapoStorageItem('array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, false, null, null, null, null, null, null, null, null, null));
+        return (new DrapoStorageItem('array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, null, false, null, null, null, null, null, null, null, null, null));
     };
     DrapoStorage.prototype.AddDataItem = function (dataKey, dataPath, sector, item, notify) {
         if (notify === void 0) { notify = true; }
@@ -21543,7 +21613,10 @@ var DrapoStorage = (function () {
                     case 1:
                         _a.sent();
                         _a.label = 2;
-                    case 2: return [2];
+                    case 2: return [4, this.PropagateDataChannels(dataItem)];
+                    case 3:
+                        _a.sent();
+                        return [2];
                 }
             });
         });
@@ -22337,7 +22410,7 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.CreateDataItemInternal = function (dataKey, data, canCache) {
         if (canCache === void 0) { canCache = true; }
-        var item = new DrapoStorageItem(data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, canCache, null, null, null, null, null, null, null, null, null);
+        var item = new DrapoStorageItem(data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, null, canCache, null, null, null, null, null, null, null, null, null);
         return (item);
     };
     DrapoStorage.prototype.RetrieveDataItemInternalSystemDebugger = function (dataKey) {
@@ -22855,7 +22928,7 @@ var DrapoStorage = (function () {
 
 "use strict";
 var DrapoStorageItem = (function () {
-    function DrapoStorageItem(type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet) {
+    function DrapoStorageItem(type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet) {
         this._type = null;
         this._access = null;
         this._data = [];
@@ -22880,6 +22953,7 @@ var DrapoStorageItem = (function () {
         this._sector = null;
         this._groups = null;
         this._pipes = null;
+        this._channels = null;
         this._canCache = true;
         this._cacheKeys = null;
         this._onLoad = null;
@@ -22912,6 +22986,7 @@ var DrapoStorageItem = (function () {
         this._sector = sector;
         this._groups = groups;
         this._pipes = pipes;
+        this._channels = channels;
         this._canCache = canCache;
         this._cacheKeys = cacheKeys;
         this._onLoad = onLoad;
@@ -23215,6 +23290,16 @@ var DrapoStorageItem = (function () {
         },
         set: function (value) {
             this._pipes = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoStorageItem.prototype, "Channels", {
+        get: function () {
+            return (this._channels);
+        },
+        set: function (value) {
+            this._channels = value;
         },
         enumerable: true,
         configurable: true

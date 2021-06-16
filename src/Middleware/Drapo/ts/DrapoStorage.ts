@@ -553,6 +553,7 @@ class DrapoStorage {
         const groupsAttribute: string = el.getAttribute('d-dataGroups');
         const groups: string[] = ((groupsAttribute == null) || (groupsAttribute == '')) ? null : this.Application.Parser.ParsePipes(groupsAttribute);
         const pipes: string[] = this.Application.Parser.ParsePipes(el.getAttribute('d-dataPipes'));
+        const channels: string[] = this.Application.Parser.ParsePipes(el.getAttribute('d-dataChannels'));
         const canCache: boolean = this.Application.Parser.ParseBoolean(el.getAttribute('d-dataCache'), true);
         const cacheKeys: string[] = this.Application.Parser.ParsePipes(el.getAttribute('d-dataCacheKeys'));
         const onLoad: string = type === 'function' ? value : null;
@@ -564,7 +565,7 @@ class DrapoStorage {
         const headersGet: [string, string][] = this.ExtractDataHeaderGet(el);
         const headersSet: [string, string][] = this.ExtractDataHeaderSet(el);
         const headersResponse: [string, string][] = ((isCookieChange) || (type === 'file')) ? [] : null;
-        const data: any[] = await this.RetrieveDataKey(dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, cacheKeys, headersGet, headersResponse);
+        const data: any[] = await this.RetrieveDataKey(dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, cacheKeys, channels, headersGet, headersResponse);
         if (data == null) {
             return (null);
         }
@@ -576,11 +577,17 @@ class DrapoStorage {
         }
         const increment: number = this.Application.Parser.GetStringAsNumber(dataIncrement);
         const isFull: boolean = ((isLazy) && (data.length < increment)) ? true : false;
-        const item: DrapoStorageItem = new DrapoStorageItem(type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet);
+        const item: DrapoStorageItem = new DrapoStorageItem(type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet);
         return (item);
     }
 
-    private async RetrieveDataKey(dataKey: string, sector: string, el: HTMLElement, dataUrlGet: string, dataUrlParameters: string, dataPostGet: string, dataStart: string, dataIncrement: string, isDelay: boolean, dataDelayFields: string[], cookieName: string, type: string, isToken: boolean, cacheKeys: string[], headersGet: [string, string][], headersResponse: [string, string][]): Promise<any[]> {
+    private async RetrieveDataKey(dataKey: string, sector: string, el: HTMLElement, dataUrlGet: string, dataUrlParameters: string, dataPostGet: string, dataStart: string, dataIncrement: string, isDelay: boolean, dataDelayFields: string[], cookieName: string, type: string, isToken: boolean, cacheKeys: string[], channels: string[], headersGet: [string, string][], headersResponse: [string, string][]): Promise<any[]> {
+        //Channels
+        if (channels !== null) {
+            const dataChannels: any[] = this.RetrieveDataChannels(channels);
+            if (dataChannels != null)
+                return (dataChannels);
+        }
         //Url
         if (dataUrlGet != null)
             return (await this.RetrieveDataKeyUrl(dataKey, sector, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, type, isToken, cacheKeys, isDelay, dataDelayFields, headersGet, headersResponse));
@@ -653,6 +660,54 @@ class DrapoStorage {
         //Cache
         this.Application.CacheHandler.AppendCacheData(cacheKeys, sector, dataKey, dataResponse, isDelay);
         return (dataResponse);
+    }
+
+    private RetrieveDataChannels(channels: string[]): any[] {
+        if (channels == null)
+            return (null);
+        for (let i: number = 0; i < channels.length; i++) {
+            const dataChannel: any[] = this.RetrieveDataChannel(channels[i]);
+            if (dataChannel !== null)
+                return (dataChannel);
+        }
+        return (null);
+    }
+
+    private ContainsDataChannel(dataItem: DrapoStorageItem, channel: string): boolean {
+        if (dataItem.Channels === null)
+            return(false);
+        for (let i: number = 0; i < dataItem.Channels.length; i++) {
+            if (channel === dataItem.Channels[i])
+                return (true);
+        }
+        return (false);
+    }
+
+    private RetrieveDataChannel(channel: string): any[] {
+        for (let i: number = 0; i < this._cacheItems.length; i++) {
+            const dataItem: DrapoStorageItem = this._cacheItems[i];
+            if (this.ContainsDataChannel(dataItem, channel))
+                return (this.Application.Solver.Clone(dataItem.Data, true));
+        }
+        return (null);
+    }
+
+    private async PropagateDataChannels(dataItem: DrapoStorageItem): Promise<boolean> {
+        if (dataItem.Channels === null)
+            return (false);
+        for (let i: number = 0; i < dataItem.Channels.length; i++) {
+            const channel: string = dataItem.Channels[i];
+            for (let j: number = 0; j < this._cacheItems.length; j++) {
+                const dataItemCurrent: DrapoStorageItem = this._cacheItems[j];
+                if (!this.ContainsDataChannel(dataItemCurrent, channel))
+                    continue;
+                //We only suppport primitive types right now
+                if (dataItem.Data === dataItemCurrent.Data)
+                    continue;
+                await this.Application.Storage.UpdateData(this._cacheKeys[j], dataItemCurrent.Sector, dataItem.Data, true);
+            }
+        }
+        return (true);
     }
 
     private HasChangeNullOrEmpty(changes: [string, string][]): boolean {
@@ -1101,7 +1156,7 @@ class DrapoStorage {
                 return (null);
             current = current[dataKeyCurrent];
         }
-        return (new DrapoStorageItem('array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, false, null, null, null, null, null, null, null, null, null));
+        return (new DrapoStorageItem('array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, null, false, null, null, null, null, null, null, null, null, null));
     }
 
     public async AddDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify: boolean = true): Promise<boolean> {
@@ -1158,6 +1213,8 @@ class DrapoStorage {
         dataItem.HasChanges = true;
         if (notify)
             await this.Application.Observer.Notify(dataKey, dataIndex, dataFields, canUseDifference);
+        //Channels
+        await this.PropagateDataChannels(dataItem);
     }
 
     public async NotifyNoChanges(dataItem: DrapoStorageItem, notify: boolean, dataKey: string): Promise<void> {
@@ -1687,7 +1744,7 @@ class DrapoStorage {
     }
 
     private CreateDataItemInternal(dataKey: string, data: any, canCache: boolean = true): DrapoStorageItem {
-        const item: DrapoStorageItem = new DrapoStorageItem(data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, canCache, null, null, null, null, null, null, null, null, null);
+        const item: DrapoStorageItem = new DrapoStorageItem(data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, null, canCache, null, null, null, null, null, null, null, null, null);
         return (item);
     }
 
