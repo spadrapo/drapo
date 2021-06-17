@@ -48,7 +48,7 @@ var DrapoStorage = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoStorage.prototype.Retrieve = function (elj, dataKey, sector, context, dataKeyParts) {
@@ -845,7 +845,9 @@ var DrapoStorage = (function () {
                         groupsAttribute = el.getAttribute('d-dataGroups');
                         groups = ((groupsAttribute == null) || (groupsAttribute == '')) ? null : this.Application.Parser.ParsePipes(groupsAttribute);
                         pipes = this.Application.Parser.ParsePipes(el.getAttribute('d-dataPipes'));
-                        channels = this.Application.Parser.ParsePipes(el.getAttribute('d-dataChannels'));
+                        return [4, this.ParseChannels(sector, el.getAttribute('d-dataChannels'))];
+                    case 4:
+                        channels = _a.sent();
                         canCache = this.Application.Parser.ParseBoolean(el.getAttribute('d-dataCache'), true);
                         cacheKeys = this.Application.Parser.ParsePipes(el.getAttribute('d-dataCacheKeys'));
                         onLoad = type === 'function' ? value : null;
@@ -858,7 +860,7 @@ var DrapoStorage = (function () {
                         headersSet = this.ExtractDataHeaderSet(el);
                         headersResponse = ((isCookieChange) || (type === 'file')) ? [] : null;
                         return [4, this.RetrieveDataKey(dataKey, sector, el, dataUrlGet, dataUrlParameters, dataPostGet, dataStart, dataIncrement, isDelay, dataDelayFields, cookieName, type, isToken, cacheKeys, channels, headersGet, headersResponse)];
-                    case 4:
+                    case 5:
                         data = _a.sent();
                         if (data == null) {
                             return [2, (null)];
@@ -990,6 +992,22 @@ var DrapoStorage = (function () {
                     case 15:
                         this.Application.CacheHandler.AppendCacheData(cacheKeys, sector, dataKey, dataResponse, isDelay);
                         return [2, (dataResponse)];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.ParseChannels = function (sector, channels) {
+        return __awaiter(this, void 0, void 0, function () {
+            var channelsResolved;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (channels == null)
+                            return [2, (null)];
+                        return [4, this.ResolveDataUrlMustaches(null, sector, channels, null)];
+                    case 1:
+                        channelsResolved = _a.sent();
+                        return [2, (this.Application.Parser.ParsePipes(channelsResolved))];
                 }
             });
         });
@@ -3001,7 +3019,7 @@ var DrapoStorage = (function () {
                         continue;
                     var functionParameterValues = this.Application.Parser.ParseQueryProjectionFunctionParameterValue(functionParameterName);
                     var source = functionParameterValues[0];
-                    if ((_a = querySource.Alias, (_a !== null && _a !== void 0 ? _a : querySource.Source)) !== source)
+                    if (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== source)
                         continue;
                     var value = isObject ? sourceObject[projection.Column] : sourceObject;
                     objectInformation[functionParameterName] = value;
@@ -3018,11 +3036,11 @@ var DrapoStorage = (function () {
                 else {
                     if ((isObject) && (!sourceObject[projection.Column]))
                         continue;
-                    if ((!isObject) && ((_b = querySource.Alias, (_b !== null && _b !== void 0 ? _b : querySource.Source)) !== projection.Column))
+                    if ((!isObject) && (((_b = querySource.Alias) !== null && _b !== void 0 ? _b : querySource.Source) !== projection.Column))
                         continue;
                 }
                 var value = isObject ? sourceObject[projection.Column] : sourceObject;
-                object[_c = projection.Alias, (_c !== null && _c !== void 0 ? _c : projection.Column)] = value;
+                object[(_c = projection.Alias) !== null && _c !== void 0 ? _c : projection.Column] = value;
             }
         }
     };
@@ -3048,7 +3066,7 @@ var DrapoStorage = (function () {
         else {
             if ((isObject) && (!(column in sourceObject)))
                 return (null);
-            if ((!isObject) && ((_a = querySource.Alias, (_a !== null && _a !== void 0 ? _a : querySource.Source)) !== column))
+            if ((!isObject) && (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== column))
                 return (null);
         }
         var value = isObject ? sourceObject[column] : sourceObject;
