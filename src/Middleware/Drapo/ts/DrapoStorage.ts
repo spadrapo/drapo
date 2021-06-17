@@ -553,7 +553,7 @@ class DrapoStorage {
         const groupsAttribute: string = el.getAttribute('d-dataGroups');
         const groups: string[] = ((groupsAttribute == null) || (groupsAttribute == '')) ? null : this.Application.Parser.ParsePipes(groupsAttribute);
         const pipes: string[] = this.Application.Parser.ParsePipes(el.getAttribute('d-dataPipes'));
-        const channels: string[] = this.Application.Parser.ParsePipes(el.getAttribute('d-dataChannels'));
+        const channels: string[] = await this.ParseChannels(sector, el.getAttribute('d-dataChannels'));
         const canCache: boolean = this.Application.Parser.ParseBoolean(el.getAttribute('d-dataCache'), true);
         const cacheKeys: string[] = this.Application.Parser.ParsePipes(el.getAttribute('d-dataCacheKeys'));
         const onLoad: string = type === 'function' ? value : null;
@@ -660,6 +660,13 @@ class DrapoStorage {
         //Cache
         this.Application.CacheHandler.AppendCacheData(cacheKeys, sector, dataKey, dataResponse, isDelay);
         return (dataResponse);
+    }
+
+    private async ParseChannels(sector: string, channels: string): Promise<string[]> {
+        if (channels == null)
+            return (null);
+        const channelsResolved: string = await this.ResolveDataUrlMustaches(null, sector, channels, null);
+        return (this.Application.Parser.ParsePipes(channelsResolved));
     }
 
     private RetrieveDataChannels(channels: string[]): any[] {

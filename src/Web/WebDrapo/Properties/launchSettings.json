@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/DataChannel.html",
+      "launchUrl": "DrapoPages/DataChannelMustache.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

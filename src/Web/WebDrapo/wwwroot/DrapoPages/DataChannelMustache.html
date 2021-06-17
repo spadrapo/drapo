@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Channel</title>
+</head>
+<body>
+    <span>Data Channel</span>
+    <div d-dataKey="channelPartial" d-dataType="value" d-dataValue="012"></div>
+    <div d-dataKey="channelFull" d-dataType="value" d-dataValue="c012"></div>
+    <div d-dataKey="value0" d-dataType="value" d-dataValue="value0" d-dataChannels="c012"></div>
+    <span>0: </span>
+    <span d-model="{{value0}}"></span>
+    <input type="text" d-model="{{value0}}" />
+    <div d-sector="1">
+        <div d-dataKey="value1" d-dataType="value" d-dataValue="value1" d-dataChannels="c{{channelPartial}}"></div>
+        <span>1: </span>
+        <span d-model="{{value1}}"></span>
+        <input type="text" d-model="{{value1}}" />
+    </div>
+    <div d-sector="2">
+        <div d-dataKey="value2" d-dataType="value" d-dataValue="value2" d-dataChannels="{{channelFull}}"></div>
+        <span>2: </span>
+        <span d-model="{{value2}}"></span>
+        <input type="text" d-model="{{value2}}" />
+    </div>
+    <div d-sector="3">
+        <div d-dataKey="value3" d-dataType="value" d-dataValue="value3" d-dataChannels="c34"></div>
+        <span>3: </span>
+        <span d-model="{{value3}}"></span>
+        <input type="text" d-model="{{value3}}" />
+    </div>
+    <div d-sector="4">
+        <div d-dataKey="value4" d-dataType="value" d-dataValue="value4" d-dataChannels="c34"></div>
+        <span>4: </span>
+        <span d-model="{{value4}}"></span>
+        <input type="text" d-model="{{value4}}" />
+    </div>
+    <div d-dataKey="dataFunction" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateData(value0,startup)"></div>
+</body>
+</html>
