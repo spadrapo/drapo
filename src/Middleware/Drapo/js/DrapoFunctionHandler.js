@@ -2591,16 +2591,19 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionCreateGuid = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, dataField, value, notifyText, _a, notify, _b;
+            var value, dataKey, dataField, notifyText, _a, notify, _b;
             return __generator(this, function (_c) {
                 switch (_c.label) {
-                    case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
+                    case 0:
+                        value = this.Application.Document.CreateGuid();
+                        if (functionParsed.Parameters.length == 0)
+                            return [2, (value)];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
                     case 1:
                         dataKey = _c.sent();
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1])];
                     case 2:
                         dataField = _c.sent();
-                        value = this.Application.Document.CreateGuid();
                         if (!(functionParsed.Parameters.length > 2)) return [3, 4];
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2])];
                     case 3:
