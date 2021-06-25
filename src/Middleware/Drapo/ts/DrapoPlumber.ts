@@ -26,7 +26,10 @@ class DrapoPlumber {
         const urlRelative = '~/' + pipHubName;
         const urlAbsolute = this.Application.Server.ResolveUrl(urlRelative);
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(urlAbsolute)
+            .withUrl(urlAbsolute, {
+                skipNegotiation: true,
+                transport: signalR.HttpTransportType.WebSockets
+            })
             .build();
         await connection.start();
         const actionNotify = await this.Application.Config.GetPipeActionNotify();

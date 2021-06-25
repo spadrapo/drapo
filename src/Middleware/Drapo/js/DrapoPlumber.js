@@ -73,7 +73,10 @@ var DrapoPlumber = (function () {
                         urlRelative = '~/' + pipHubName;
                         urlAbsolute = this.Application.Server.ResolveUrl(urlRelative);
                         connection = new signalR.HubConnectionBuilder()
-                            .withUrl(urlAbsolute)
+                            .withUrl(urlAbsolute, {
+                            skipNegotiation: true,
+                            transport: signalR.HttpTransportType.WebSockets
+                        })
                             .build();
                         return [4, connection.start()];
                     case 3:
