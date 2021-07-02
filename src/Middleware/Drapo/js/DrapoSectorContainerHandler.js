@@ -46,7 +46,7 @@ var DrapoSectorContainerHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoSectorContainerHandler.prototype.IsElementContainerized = function (element) {
@@ -222,7 +222,7 @@ var DrapoSectorContainerHandler = (function () {
             var container = this._containers[i];
             if (container.ContainerCode !== containerCode)
                 continue;
-            if (container.Element.parentElement != null)
+            if (container.Element != null && container.Element.parentElement != null)
                 container.Element.parentElement.removeChild(container.Element);
             this._containers.splice(i, 1);
             removed = true;
