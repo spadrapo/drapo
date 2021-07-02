@@ -683,7 +683,9 @@ class DrapoFunctionHandler {
             return (null);
         const notifyText: string = functionParsed.Parameters[2];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        await this.Application.Storage.AddDataItem(dataKey, mustacheParts, sector, this.Application.Solver.Clone(item), notify);
+        const isCloneText: string = functionParsed.Parameters[3];
+        const isClone: boolean = ((isCloneText == null) || (isCloneText == '')) ? true : await this.Application.Solver.ResolveConditional(isCloneText);
+        await this.Application.Storage.AddDataItem(dataKey, mustacheParts, sector, isClone ? this.Application.Solver.Clone(item) : item, notify);
     }
 
     private async ExecuteFunctionRemoveDataItem(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
@@ -1126,9 +1128,11 @@ class DrapoFunctionHandler {
     }
 
     private async ExecuteFunctionCreateGuid(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const value: string = this.Application.Document.CreateGuid();
+        if (functionParsed.Parameters.length == 0)
+            return (value);
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const dataField: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
-        const value: string = this.Application.Document.CreateGuid();
         const notifyText: string = functionParsed.Parameters.length > 2 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]) : null;
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         await this.Application.Storage.SetDataKeyField(dataKey, sector, [dataField], value, notify);

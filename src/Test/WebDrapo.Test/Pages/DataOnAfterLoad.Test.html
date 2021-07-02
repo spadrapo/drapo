@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data OnAfterLoad</title>
+</head>
+<body>
+    <div>
+        <span>Data OnAfterLoad</span>
+        <div class="state" dc-levels="0" dc-children="1">
+            <div d-datakey="dataClone" d-datatype="array"></div>
+            <div d-datakey="data" d-dataurlget="/Data/GetLevels?levels=1&amp;children=5" d-dataonafterload="UpdateData(dataClone,{{data}})"></div>
+            <div>
+                <div d-for="item in dataClone" style="display: none;">
+                    <br />
+                    <span>Key: {{item.Key}}</span><br />
+                    <span>Value: {{item.Value}}</span><br />
+                </div>
+            <div>
+                    <br />
+                    <span>Key: L1K0</span><br />
+                    <span>Value: L1V0</span><br />
+                </div><div>
+                    <br />
+                    <span>Key: L1K1</span><br />
+                    <span>Value: L1V1</span><br />
+                </div><div>
+                    <br />
+                    <span>Key: L1K2</span><br />
+                    <span>Value: L1V2</span><br />
+                </div><div>
+                    <br />
+                    <span>Key: L1K3</span><br />
+                    <span>Value: L1V3</span><br />
+                </div><div>
+                    <br />
+                    <span>Key: L1K4</span><br />
+                    <span>Value: L1V4</span><br />
+                </div></div>
+            <div>
+                <div d-for="item in data" style="display: none;">
+                    <br />
+                    <span>Key: {{item.Key}}</span><br />
+                    <span>Value: {{item.Value}}</span><br />
+                </div>
+            <div>
+                    <br />
+                    <span>Key: L1K0</span><br />
+                    <span>Value: L1V0</span><br />
+                </div><div>
+                    <br />
+                    <span>Key: L1K1</span><br />
+                    <span>Value: L1V1</span><br />
+                </div><div>
+                    <br />
+                    <span>Key: L1K2</span><br />
+                    <span>Value: L1V2</span><br />
+                </div><div>
+                    <br />
+                    <span>Key: L1K3</span><br />
+                    <span>Value: L1V3</span><br />
+                </div><div>
+                    <br />
+                    <span>Key: L1K4</span><br />
+                    <span>Value: L1V4</span><br />
+                </div></div>
+        </div>
+    </div>
+
+</body></html>

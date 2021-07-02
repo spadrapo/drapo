@@ -661,6 +661,16 @@ namespace WebDrapo.Test
             ValidatePage("DataBadRequest");
         }
         [TestCase]
+        public void DataChannelTest()
+        {
+            ValidatePage("DataChannel");
+        }
+        [TestCase]
+        public void DataChannelMustacheTest()
+        {
+            ValidatePage("DataChannelMustache");
+        }
+        [TestCase]
         public void DataDelayLoadTest()
         {
             ValidatePage("DataDelayLoad");
@@ -756,6 +766,16 @@ namespace WebDrapo.Test
             ValidatePage("DataMappingMustache");
         }
         [TestCase]
+        public void DataMappingSubscribeTest()
+        {
+            ValidatePage("DataMappingSubscribe");
+        }
+        [TestCase]
+        public void DataOnAfterLoadTest()
+        {
+            ValidatePage("DataOnAfterLoad");
+        }
+        [TestCase]
         public void DataParentTest()
         {
             ValidatePage("DataParent");
@@ -774,6 +794,11 @@ namespace WebDrapo.Test
         public void DataParentSectorSideTest()
         {
             ValidatePage("DataParentSectorSide");
+        }
+        [TestCase]
+        public void DataPointerTest()
+        {
+            ValidatePage("DataPointer");
         }
         [TestCase]
         public void DataPostGetTest()
@@ -941,6 +966,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionAddDataItemMustache");
         }
         [TestCase]
+        public void FunctionAddDataItemReferenceTest()
+        {
+            ValidatePage("FunctionAddDataItemReference");
+        }
+        [TestCase]
         public void FunctionAddRequestHeaderTest()
         {
             ValidatePage("FunctionAddRequestHeader");
@@ -980,6 +1010,11 @@ namespace WebDrapo.Test
         public void FunctionContainsDataItemTest()
         {
             ValidatePage("FunctionContainsDataItem");
+        }
+        [TestCase]
+        public void FunctionContainsDataItemComplexObjectTest()
+        {
+            ValidatePage("FunctionContainsDataItemComplexObject");
         }
         [TestCase]
         public void FunctionCreateDataTest()

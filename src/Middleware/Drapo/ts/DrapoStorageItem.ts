@@ -25,9 +25,11 @@
     private _sector: string = null;
     private _groups: string[] = null;
     private _pipes: string[] = null;
+    private _channels: string[] = null;
     private _canCache: boolean = true;
     private _cacheKeys: string[] = null;
     private _onLoad: string = null;
+    private _onAfterLoad: string = null;
     private _onAfterContainerLoad: string = null;
     private _onBeforeContainerUnload: string = null;
     private _onAfterCached: string = null;
@@ -236,6 +238,13 @@
         this._pipes = value;
     }
 
+    get Channels(): string[] {
+        return (this._channels);
+    }
+    set Channels(value: string[]) {
+        this._channels = value;
+    }
+
     get CanCache(): boolean {
         return (this._canCache);
     }
@@ -255,6 +264,13 @@
     }
     set OnLoad(value: string) {
         this._onLoad = value;
+    }
+
+    get OnAfterLoad(): string {
+        return (this._onAfterLoad);
+    }
+    set OnAfterLoad(value: string) {
+        this._onAfterLoad = value;
     }
 
     get OnAfterContainerLoad(): string {
@@ -307,7 +323,7 @@
     }
 
     //Constructor
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]) {
+    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]) {
         this._type = type;
         this._access = access;
         this._element = element;
@@ -329,9 +345,11 @@
         this._sector = sector;
         this._groups = groups;
         this._pipes = pipes;
+        this._channels = channels;
         this._canCache = canCache;
         this._cacheKeys = cacheKeys;
         this._onLoad = onLoad;
+        this._onAfterLoad = onAfterLoad == null ? null : onAfterLoad;
         this._onAfterContainerLoad = onAfterContainerLoad == null ? null : onAfterContainerLoad;
         this._onBeforeContainerUnload = onBeforeContainerUnload == null ? null : onBeforeContainerUnload;
         this._onAfterCached = onAfterCached == null ? null : onAfterCached;

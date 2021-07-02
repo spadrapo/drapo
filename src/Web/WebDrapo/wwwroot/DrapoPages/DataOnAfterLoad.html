@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data OnAfterLoad</title>
+</head>
+<body>
+    <div>
+        <span>Data OnAfterLoad</span>
+        <div class="state" dc-levels="0" dc-children="1">
+            <div d-dataKey="dataClone" d-dataType="array"></div>
+            <div d-dataKey="data" d-dataUrlGet="/Data/GetLevels?levels=1&children=5" d-dataOnAfterLoad="UpdateData(dataClone,{{data}})"></div>
+            <div>
+                <div d-for="item in dataClone">
+                    <br>
+                    <span>Key: {{item.Key}}</span><br>
+                    <span>Value: {{item.Value}}</span><br>
+                </div>
+            </div>
+            <div>
+                <div d-for="item in data">
+                    <br>
+                    <span>Key: {{item.Key}}</span><br>
+                    <span>Value: {{item.Value}}</span><br>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

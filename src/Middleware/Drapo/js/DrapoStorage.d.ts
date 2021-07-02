@@ -45,6 +45,11 @@ declare class DrapoStorage {
     private RetrieveDataItemInternal;
     private RetrieveDataKey;
     private RetrieveDataKeyUrl;
+    private ParseChannels;
+    private RetrieveDataChannels;
+    private ContainsDataChannel;
+    private RetrieveDataChannel;
+    private PropagateDataChannels;
     private HasChangeNullOrEmpty;
     private ExtractDataHeaderGet;
     ExtractDataHeaderGetProperty(property: string): string;
@@ -59,6 +64,7 @@ declare class DrapoStorage {
     private RetrieveDataKeyInitializeValue;
     private RetrieveDataKeyInitializeArray;
     private RetrieveDataKeyInitializeMapping;
+    private RetrieveDataKeyInitializePointer;
     private RetrieveDataKeyInitializeFunction;
     private RetrieveDataKeyInitializeQueryString;
     private RetrieveDataKeyInitializeQuery;

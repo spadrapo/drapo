@@ -1116,7 +1116,7 @@ declare class DrapoObserver {
     private UnsubscribeStorage;
     private UnsubscribeStorageReferenceKey;
     UnsubscribeFor(dataKey: string, elementForTemplate?: HTMLElement): void;
-    Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean): Promise<void>;
+    Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, canNotifyStorage?: boolean): Promise<void>;
     NotifyFor(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, type?: DrapoStorageLinkType): Promise<void>;
     NotifyBarber(dataKey: string, dataFields: string[]): Promise<void>;
     NotifyStorage(dataKey: string, dataFields: string[]): Promise<void>;
@@ -1812,6 +1812,11 @@ declare class DrapoStorage {
     private RetrieveDataItemInternal;
     private RetrieveDataKey;
     private RetrieveDataKeyUrl;
+    private ParseChannels;
+    private RetrieveDataChannels;
+    private ContainsDataChannel;
+    private RetrieveDataChannel;
+    private PropagateDataChannels;
     private HasChangeNullOrEmpty;
     private ExtractDataHeaderGet;
     ExtractDataHeaderGetProperty(property: string): string;
@@ -1826,6 +1831,7 @@ declare class DrapoStorage {
     private RetrieveDataKeyInitializeValue;
     private RetrieveDataKeyInitializeArray;
     private RetrieveDataKeyInitializeMapping;
+    private RetrieveDataKeyInitializePointer;
     private RetrieveDataKeyInitializeFunction;
     private RetrieveDataKeyInitializeQueryString;
     private RetrieveDataKeyInitializeQuery;
@@ -1939,9 +1945,11 @@ declare class DrapoStorageItem {
     private _sector;
     private _groups;
     private _pipes;
+    private _channels;
     private _canCache;
     private _cacheKeys;
     private _onLoad;
+    private _onAfterLoad;
     private _onAfterContainerLoad;
     private _onBeforeContainerUnload;
     private _onAfterCached;
@@ -2004,12 +2012,16 @@ declare class DrapoStorageItem {
     set Sector(value: string);
     get Pipes(): string[];
     set Pipes(value: string[]);
+    get Channels(): string[];
+    set Channels(value: string[]);
     get CanCache(): boolean;
     set CanCache(value: boolean);
     get CacheKeys(): string[];
     set CacheKeys(value: string[]);
     get OnLoad(): string;
     set OnLoad(value: string);
+    get OnAfterLoad(): string;
+    set OnAfterLoad(value: string);
     get OnAfterContainerLoad(): string;
     set OnAfterContainerLoad(value: string);
     get OnBeforeContainerUnload(): string;
@@ -2024,7 +2036,7 @@ declare class DrapoStorageItem {
     set HeadersSet(value: [string, string][]);
     get HasChanges(): boolean;
     set HasChanges(value: boolean);
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
+    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
     private Initialize;
     ContainsGroup(group: string): boolean;
 }
@@ -2032,7 +2044,8 @@ declare class DrapoStorageItem {
 declare enum DrapoStorageLinkType {
     Render = 0,
     RenderClass = 1,
-    Reload = 2
+    Reload = 2,
+    Notify = 3
 }
 
 declare class DrapoStylist {
