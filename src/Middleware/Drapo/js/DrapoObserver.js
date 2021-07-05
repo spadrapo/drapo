@@ -418,6 +418,8 @@ var DrapoObserver = (function () {
                         _a.label = 1;
                     case 1:
                         if (!(i >= 0)) return [3, 5];
+                        if (i >= elements.length)
+                            return [3, 4];
                         element = elements[i];
                         if (!(element.parentElement === null)) return [3, 2];
                         elements.splice(i, 1);
