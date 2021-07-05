@@ -293,6 +293,8 @@ class DrapoObserver {
             return;
         const elements: HTMLElement[] = this._dataIncrementalElements[dataKeyIndex];
         for (let i = elements.length - 1; i >= 0; i--) {
+            if (i >= elements.length)
+                continue;
             const element: HTMLElement = elements[i];
             if (element.parentElement === null)
                 elements.splice(i, 1);
