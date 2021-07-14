@@ -10,12 +10,14 @@ namespace Sysphera.Middleware.Drapo.Pipe
         public string Domain { private set; get; }
         public DateTime Start { private set;  get; }
         public long Identity { set; get; }
+        public string ContainerId { set; get; }
 
         public DrapoConnection(string connectionId, string domain)
         {
             this.ConnectionId = connectionId;
             this.Domain = domain;
             this.Start = DateTime.Now;
+            this.ContainerId = System.Environment.MachineName;
         }
     }
 }
