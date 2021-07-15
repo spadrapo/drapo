@@ -38,7 +38,8 @@ namespace Sysphera.Middleware.Drapo.Pipe
         {
             string connectionId = this.GetConnectionId();
             string domain = this.GetDomain() ?? string.Empty;
-            _connectionManager.Create(domain, connectionId);
+            string containerId = GetContainerId();
+            _connectionManager.Create(domain, connectionId, containerId);
             await Groups.AddToGroupAsync(connectionId, domain);
             await base.OnConnectedAsync();
         }
@@ -67,6 +68,10 @@ namespace Sysphera.Middleware.Drapo.Pipe
             if (string.IsNullOrEmpty(domain))
                 return (string.Empty);
             return (domain);
+        }
+
+        private string GetContainerId() {
+            return (Environment.MachineName);
         }
     }
 }

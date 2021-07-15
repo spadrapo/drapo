@@ -1,7 +1,9 @@
 ﻿using ServiceStack.Redis;
+using ServiceStack.Redis.Pipeline;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Sysphera.Middleware.Drapo.Pipe
 {
@@ -10,6 +12,7 @@ namespace Sysphera.Middleware.Drapo.Pipe
         private readonly RedisManagerPool _redisManagerPool = null;
         public DrapoConnectionManagerRedis(DrapoMiddlewareOptions options) {
             _redisManagerPool = new RedisManagerPool(options.BackplaneRedis);
+            Check();
         }
 
         private string CreateDomainKey(string domain) {
@@ -20,11 +23,11 @@ namespace Sysphera.Middleware.Drapo.Pipe
             return ($"drapo_connection_{domain}_{connectionId}");
         }
 
-        public void Create(string domain, string connectionId)
+        public void Create(string domain, string connectionId, string containerId)
         {
             using (IRedisClient client = _redisManagerPool.GetClient()) 
             {
-                DrapoConnection connection = new DrapoConnection(connectionId, domain);
+                DrapoConnection connection = new DrapoConnection(connectionId, domain, containerId);
                 client.Set<DrapoConnection>(this.CreateConnectionKey(domain, connectionId), connection);
             }
         }
@@ -73,6 +76,39 @@ namespace Sysphera.Middleware.Drapo.Pipe
                 }
             }
             return (connections);
+        }
+
+        public bool Check()
+        {
+            bool updated = false;
+            Dictionary<string, bool> containers = new Dictionary<string, bool>();
+            using (IRedisClient client = _redisManagerPool.GetClient())
+            {
+                foreach (string key in client.GetKeysByPattern(this.CreateDomainKey(string.Empty) + "*"))
+                {
+                    DrapoConnection connection = client.Get<DrapoConnection>(key);
+                    if (connection == null)
+                        continue;
+                    if (string.IsNullOrEmpty(connection.ContainerId))
+                        continue;
+                    if (!containers.ContainsKey(connection.ContainerId))
+                        containers.Add(connection.ContainerId, IsContainerConnected(client, connection.ContainerId));
+                    if (containers[connection.ContainerId])
+                        continue;
+                    if (client.Remove(key))
+                        updated = true;
+                }
+            }
+            return (updated);
+        }
+
+        private bool IsContainerConnected(IRedisClient client, string containerId) {
+            bool connected = false;
+            RedisText result = client.Custom("PUBSUB", "channels", "*" + containerId + "*");
+            if(result == null)
+                return (connected);
+            connected = result.GetResults<string>().Count > 0;
+            return (connected);
         }
     }
 }

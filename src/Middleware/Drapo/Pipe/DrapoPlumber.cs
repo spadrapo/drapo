@@ -69,5 +69,9 @@ namespace Sysphera.Middleware.Drapo.Pipe
             List<DrapoConnection> connections = _connectionManager.GetAll(_requestReader.GetDomain() ?? string.Empty);
             return (await Task.FromResult<List<DrapoConnection>>(connections));
         }
+
+        public bool CheckConnections() {
+            return (_connectionManager.Check());
+        }
     }
 }
