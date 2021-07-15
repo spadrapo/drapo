@@ -11,5 +11,6 @@ namespace Sysphera.Middleware.Drapo.Pipe
         Task<long> Count();
         Task<bool> Identify(long identity);
         Task<List<DrapoConnection>> GetConnections();
+        bool CheckConnections();
     }
 }
