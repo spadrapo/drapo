@@ -526,6 +526,13 @@ var DrapoServer = (function () {
             headers.push(headersInsert[i]);
     };
     DrapoServer.prototype.AddRequestHeader = function (key, value) {
+        for (var i = this._requestHeaders.length - 1; i >= 0; i--) {
+            var requestHeader = this._requestHeaders[i];
+            if (requestHeader[0] !== key)
+                continue;
+            requestHeader[1] = value;
+            return;
+        }
         this._requestHeaders.push([key, value]);
     };
     DrapoServer.prototype.GetRequestHeader = function (key) {

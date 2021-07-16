@@ -383,6 +383,13 @@ class DrapoServer {
     }
 
     public AddRequestHeader(key: string, value: string): void {
+        for (let i: number = this._requestHeaders.length - 1; i >= 0; i--) {
+            const requestHeader: [string, string] = this._requestHeaders[i];
+            if (requestHeader[0] !== key)
+                continue;
+            requestHeader[1] = value;
+            return;
+        }
         this._requestHeaders.push([key, value]);
     }
 

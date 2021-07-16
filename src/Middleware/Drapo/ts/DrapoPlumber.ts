@@ -30,12 +30,27 @@ class DrapoPlumber {
                 skipNegotiation: true,
                 transport: signalR.HttpTransportType.WebSockets
             })
+            .withAutomaticReconnect({
+                nextRetryDelayInMilliseconds: (retryContext: { previousRetryCount : number; }) => {
+                    if (retryContext.previousRetryCount < 10)
+                        return (1000);
+                    if (retryContext.previousRetryCount < 100)
+                        return (10000);
+                    return (60000);
+                }
+            })
             .build();
         await connection.start();
         const actionNotify = await this.Application.Config.GetPipeActionNotify();
         connection.on(actionNotify, (message: any) => {
             // tslint:disable-next-line:no-floating-promises
             application.Plumber.NotifyPipe(message);
+        });
+        connection.onreconnected(async (connectionId: string) => {
+            await this.RequestPipeRegister(connection);
+            const onReconnect = await this.Application.Config.GetOnReconnect();
+            if ((onReconnect != null) && (onReconnect != ''))
+                await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onReconnect);
         });
         await this.RequestPipeRegister(connection);
         return (true);
