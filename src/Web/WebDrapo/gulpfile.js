@@ -18,13 +18,13 @@ gulp.task('buildDrapoLib:tslint', function () {
 });
 
 gulp.task('buildDrapoLib:debug', function () {
-    return gulp.src(['../../Middleware/Drapo/node_modules/jquery/dist/jquery.min.js', '../../Middleware/Drapo/node_modules/es6-promise/dist/es6-promise.auto.min.js', '../../Middleware/Drapo/node_modules/@aspnet/signalr/dist/browser/signalr.min.js', '../../Middleware/Drapo/js/*.js'])
+    return gulp.src(['../../Middleware/Drapo/node_modules/jquery/dist/jquery.min.js', '../../Middleware/Drapo/node_modules/es6-promise/dist/es6-promise.auto.min.js', '../../Middleware/Drapo/node_modules/@microsoft/signalr/dist/browser/signalr.min.js', '../../Middleware/Drapo/js/*.js'])
         .pipe(gulp_concat('drapo.js'))
         .pipe(gulp.dest('../../Middleware/Drapo/lib'));
 }); 
 
 gulp.task('buildDrapoLib:release', function () {
-    return gulp.src(['../../Middleware/Drapo/node_modules/jquery/dist/jquery.min.js', '../../Middleware/Drapo/node_modules/es6-promise/dist/es6-promise.auto.min.js', '../../Middleware/Drapo/node_modules/@aspnet/signalr/dist/browser/signalr.min.js', '../../Middleware/Drapo/js/*.js'])
+    return gulp.src(['../../Middleware/Drapo/node_modules/jquery/dist/jquery.min.js', '../../Middleware/Drapo/node_modules/es6-promise/dist/es6-promise.auto.min.js', '../../Middleware/Drapo/node_modules/@microsoft/signalr/dist/browser/signalr.min.js', '../../Middleware/Drapo/js/*.js'])
         .pipe(gulp_concat('drapo.min.js'))
         .pipe(gulp.dest('../../Middleware/Drapo/lib'))
         .pipe(gulp_rename('drapo.min.js'))

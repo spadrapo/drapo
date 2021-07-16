@@ -59,6 +59,7 @@ var DrapoPlumber = (function () {
     DrapoPlumber.prototype.ConnectPipe = function () {
         return __awaiter(this, void 0, void 0, function () {
             var usePipes, application, pipHubName, urlRelative, urlAbsolute, connection, actionNotify;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.CanUsePipes()];
@@ -77,6 +78,15 @@ var DrapoPlumber = (function () {
                             skipNegotiation: true,
                             transport: signalR.HttpTransportType.WebSockets
                         })
+                            .withAutomaticReconnect({
+                            nextRetryDelayInMilliseconds: function (retryContext) {
+                                if (retryContext.previousRetryCount < 10)
+                                    return (1000);
+                                if (retryContext.previousRetryCount < 100)
+                                    return (10000);
+                                return (60000);
+                            }
+                        })
                             .build();
                         return [4, connection.start()];
                     case 3:
@@ -87,6 +97,25 @@ var DrapoPlumber = (function () {
                         connection.on(actionNotify, function (message) {
                             application.Plumber.NotifyPipe(message);
                         });
+                        connection.onreconnected(function (connectionId) { return __awaiter(_this, void 0, void 0, function () {
+                            var onReconnect;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4, this.RequestPipeRegister(connection)];
+                                    case 1:
+                                        _a.sent();
+                                        return [4, this.Application.Config.GetOnReconnect()];
+                                    case 2:
+                                        onReconnect = _a.sent();
+                                        if (!((onReconnect != null) && (onReconnect != ''))) return [3, 4];
+                                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onReconnect)];
+                                    case 3:
+                                        _a.sent();
+                                        _a.label = 4;
+                                    case 4: return [2];
+                                }
+                            });
+                        }); });
                         return [4, this.RequestPipeRegister(connection)];
                     case 5:
                         _a.sent();

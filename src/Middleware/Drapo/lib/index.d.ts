@@ -291,6 +291,7 @@ declare class DrapoConfig {
     GetPipeHeaderConnectionId(): Promise<string>;
     GetOnAuthorizationRequest(): Promise<string>;
     GetOnError(): Promise<string>;
+    GetOnReconnect(): Promise<string>;
     GetStorageErrors(): Promise<string>;
     GetOnBadRequest(): Promise<string>;
     GetStorageBadRequest(): Promise<string>;
