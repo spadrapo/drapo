@@ -12,6 +12,7 @@ namespace Sysphera.Middleware.Drapo.Request
         private DrapoMiddlewareOptions _options;
         private IHttpContextAccessor _context;
         private string _connectionId = null;
+        private string _domain = null;
         public DrapoRequestReader(DrapoMiddlewareOptions options, IHttpContextAccessor context)
         {
             this._options = options;
@@ -38,6 +39,8 @@ namespace Sysphera.Middleware.Drapo.Request
 
         public string GetDomain()
         {
+            if (this._domain != null)
+                return (this._domain);
             string domainRegex = this._options.Config.DomainRegex;
             if (string.IsNullOrEmpty(domainRegex))
                 return (string.Empty);
@@ -51,6 +54,10 @@ namespace Sysphera.Middleware.Drapo.Request
             if (string.IsNullOrEmpty(domain))
                 return (string.Empty);
             return (domain);
+        }
+
+        public void SetDomain(string domain) {
+            this._domain = domain;
         }
     }
 }
