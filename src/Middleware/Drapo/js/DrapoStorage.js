@@ -981,7 +981,7 @@ var DrapoStorage = (function () {
                     case 11:
                         dataResponse = null;
                         if (!(type === 'file')) return [3, 13];
-                        return [4, this.Application.Server.GetFile(url, dataKey, headers, headersResponse)];
+                        return [4, this.Application.Server.GetFile(url, verb, data, contentType, dataKey, headers, headersResponse)];
                     case 12:
                         dataResponse = _b.sent();
                         return [3, 15];

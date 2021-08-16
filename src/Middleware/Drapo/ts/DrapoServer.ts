@@ -166,7 +166,7 @@ class DrapoServer {
         return ([]);
     }
 
-    public async GetFile(url: string, dataKey: string = null, headers: [string, string][] = null, headersResponse: [string, string][] = null): Promise<any[]> {
+    public async GetFile(url: string, verb: string, data: string, contentType: string = null, dataKey: string = null, headers: [string, string][] = null, headersResponse: [string, string][] = null): Promise<any[]> {
         const requestHeaders: [string, string][] = [];
         this.InsertHeaders(requestHeaders, this.GetRequestHeaders());
         this.InsertHeaders(requestHeaders, headers);
@@ -174,9 +174,11 @@ class DrapoServer {
         this.InsertHeader(requestHeaders, 'Cache-Control', 'no-cache, no-store, must-revalidate');
         if (this._headerContainerIdValue !== null)
             requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
+        if (contentType != null)
+            this.InsertHeader(requestHeaders, 'Content-Type', contentType);
         const urlResolved: string = this.ResolveUrl(url);
         const urlResolvedTimestamp: string = this.AppendUrlQueryStringTimestamp(urlResolved);
-        const request: DrapoServerRequest = new DrapoServerRequest('GET', urlResolvedTimestamp, requestHeaders, null, true, true);
+        const request: DrapoServerRequest = new DrapoServerRequest(verb, urlResolvedTimestamp, requestHeaders, data, true, true);
         const response: DrapoServerResponse = await this.Request(request);
         //Redirect
         if ((200 <= response.Status) && (response.Status < 400)) {

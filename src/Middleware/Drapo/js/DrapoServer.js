@@ -264,7 +264,8 @@ var DrapoServer = (function () {
             });
         });
     };
-    DrapoServer.prototype.GetFile = function (url, dataKey, headers, headersResponse) {
+    DrapoServer.prototype.GetFile = function (url, verb, data, contentType, dataKey, headers, headersResponse) {
+        if (contentType === void 0) { contentType = null; }
         if (dataKey === void 0) { dataKey = null; }
         if (headers === void 0) { headers = null; }
         if (headersResponse === void 0) { headersResponse = null; }
@@ -280,9 +281,11 @@ var DrapoServer = (function () {
                         this.InsertHeader(requestHeaders, 'Cache-Control', 'no-cache, no-store, must-revalidate');
                         if (this._headerContainerIdValue !== null)
                             requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
+                        if (contentType != null)
+                            this.InsertHeader(requestHeaders, 'Content-Type', contentType);
                         urlResolved = this.ResolveUrl(url);
                         urlResolvedTimestamp = this.AppendUrlQueryStringTimestamp(urlResolved);
-                        request = new DrapoServerRequest('GET', urlResolvedTimestamp, requestHeaders, null, true, true);
+                        request = new DrapoServerRequest(verb, urlResolvedTimestamp, requestHeaders, data, true, true);
                         return [4, this.Request(request)];
                     case 1:
                         response = _a.sent();

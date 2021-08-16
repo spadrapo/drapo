@@ -654,7 +654,7 @@ class DrapoStorage {
         }
         let dataResponse: any[] = null;
         if (type === 'file')
-            dataResponse = await this.Application.Server.GetFile(url, dataKey, headers, headersResponse);
+            dataResponse = await this.Application.Server.GetFile(url, verb, data, contentType, dataKey, headers, headersResponse);
         else
             dataResponse = await this.Application.Server.GetJSON(url, verb, data, contentType, dataKey, headers, headersResponse);
         //Cache
