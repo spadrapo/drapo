@@ -2907,7 +2907,7 @@ var DrapoStorage = (function () {
                         return [4, this.RetrieveDataValue(sector, sourceMustache)];
                     case 2:
                         querySourceData = _a.sent();
-                        querySourceObjects = querySourceData.length ? querySourceData : [querySourceData];
+                        querySourceObjects = Array.isArray(querySourceData) ? querySourceData : [querySourceData];
                         for (j = 0; j < querySourceObjects.length; j++) {
                             querySourceObject = querySourceObjects[j];
                             objectIndexes = this.EnsureQueryObject(query, querySource, i, objects, objectsId, objectsInformation, querySourceObject);
