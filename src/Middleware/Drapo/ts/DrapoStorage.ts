@@ -1948,7 +1948,7 @@ class DrapoStorage {
             this.Application.Observer.SubscribeStorage(sourceDataKey, null, dataKey);
             //Data
             const querySourceData = await this.RetrieveDataValue(sector, sourceMustache);
-            const querySourceObjects: any[] = querySourceData.length ? querySourceData : [querySourceData];
+            const querySourceObjects: any[] = Array.isArray(querySourceData) ? querySourceData : [querySourceData];
             for (let j: number = 0; j < querySourceObjects.length; j++) {
                 const querySourceObject: any = querySourceObjects[j];
                 //Search

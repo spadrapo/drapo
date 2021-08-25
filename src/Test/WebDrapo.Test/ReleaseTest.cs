@@ -831,6 +831,11 @@ namespace WebDrapo.Test
             ValidatePage("DataQueryDuplicate");
         }
         [TestCase]
+        public void DataQueryEmptyTest()
+        {
+            ValidatePage("DataQueryEmpty");
+        }
+        [TestCase]
         public void DataQueryInnerJoinTest()
         {
             ValidatePage("DataQueryInnerJoin");
