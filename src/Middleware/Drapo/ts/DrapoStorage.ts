@@ -58,8 +58,7 @@ class DrapoStorage {
         const isAllSectors: boolean = ((sector === null) || (sector === ''));
         const isAllData: boolean = ((dataKeyOrDataGroup === null) || (dataKeyOrDataGroup === ''));
         const list: DrapoStorageItem[] = [];
-        for (let i: number = 0; i < this._cacheItems.length; i++)
-        {
+        for (let i: number = 0; i < this._cacheItems.length; i++) {
             const item: DrapoStorageItem = this._cacheItems[i];
             //Sector
             if ((!isAllSectors) && (item.Sector !== sector))
@@ -682,7 +681,7 @@ class DrapoStorage {
 
     private ContainsDataChannel(dataItem: DrapoStorageItem, channel: string): boolean {
         if (dataItem.Channels === null)
-            return(false);
+            return (false);
         for (let i: number = 0; i < dataItem.Channels.length; i++) {
             if (channel === dataItem.Channels[i])
                 return (true);
@@ -1013,14 +1012,12 @@ class DrapoStorage {
 
     private async RetrieveDataKeyInitializeQuery(el: HTMLElement, sector: string, dataKey: string): Promise<any[]> {
         const dataValue: string = el.getAttribute('d-dataValue');
-        if (dataValue == null)
-        {
+        if (dataValue == null) {
             await this.Application.ExceptionHandler.HandleError('There is no d-datavalue in: {0}', dataKey);
             return ([]);
         }
         const query: DrapoQuery = this.Application.Parser.ParseQuery(dataValue);
-        if (query === null)
-        {
+        if (query === null) {
             await this.Application.ExceptionHandler.HandleError('There is an error in query d-datavalue in: {0}', dataKey);
             return ([]);
         }
@@ -1032,6 +1029,10 @@ class DrapoStorage {
             await this.Application.ExceptionHandler.HandleError('Only support for 2 sources in query: {0}', dataKey);
             return ([]);
         }
+        //Options
+        const dataQueryArray: string = el.getAttribute('d-dataQueryArray');
+        if (dataQueryArray != null)
+            query.OutputArray = dataQueryArray;
         return (await this.ExecuteQuery(sector, dataKey, query));
     }
 
@@ -1357,7 +1358,7 @@ class DrapoStorage {
         return (removed);
     }
 
-    public async DeleteDataItem(dataKey: string, dataPath : string[], sector: string, item: any): Promise<boolean> {
+    public async DeleteDataItem(dataKey: string, dataPath: string[], sector: string, item: any): Promise<boolean> {
         const dataItem: DrapoStorageItem = await this.RetrieveDataItem(dataKey, sector);
         if (dataItem == null)
             return (false);
@@ -2003,6 +2004,15 @@ class DrapoStorage {
         }
         //Functions
         this.ResolveQueryFunctions(query, objects, objectsInformation);
+        //Output Array
+        if (query.OutputArray != null) {
+            const outputArray: any[] = [];
+            for (let i: number = 0; i < objects.length; i++) {
+                const object: any = objects[i];
+                outputArray.push(object[query.OutputArray]);
+            }
+            return (outputArray);
+        }
         return (objects);
     }
 
@@ -2039,8 +2049,7 @@ class DrapoStorage {
             objectsId.push(objectId);
             indexes.push(i);
         }
-        if ((indexes.length == 0) && (querySource.JoinType === 'OUTER'))
-        {
+        if ((indexes.length == 0) && (querySource.JoinType === 'OUTER')) {
             object = {};
             objects.push(object);
             const ids: string[] = [];
@@ -2052,7 +2061,7 @@ class DrapoStorage {
         return (indexes);
     }
 
-    private InjectQueryObjectProjections(query: DrapoQuery, querySource: DrapoQuerySource, object: any, objectInformation : any, sourceObject: any): void {
+    private InjectQueryObjectProjections(query: DrapoQuery, querySource: DrapoQuerySource, object: any, objectInformation: any, sourceObject: any): void {
         const isObject: boolean = typeof sourceObject === 'object';
         for (let i: number = 0; i < query.Projections.length; i++) {
             const projection: DrapoQueryProjection = query.Projections[i];
@@ -2090,7 +2099,7 @@ class DrapoStorage {
         }
     }
 
-    private ResolveQueryConditionSource(query: DrapoQuery, querySource: DrapoQuerySource, sourceObject: any, filter: DrapoQueryCondition) : void {
+    private ResolveQueryConditionSource(query: DrapoQuery, querySource: DrapoQuerySource, sourceObject: any, filter: DrapoQueryCondition): void {
         //Left
         const valueLeft: string = this.ResolveQueryConditionSourceColumn(query, querySource, sourceObject, filter.SourceLeft, filter.ColumnLeft);
         if (valueLeft !== null)
@@ -2107,7 +2116,7 @@ class DrapoStorage {
         const isObject: boolean = typeof sourceObject === 'object';
         if (source !== null) {
             if ((querySource.Alias !== null) && (source !== querySource.Alias))
-                return(null);
+                return (null);
             if ((querySource.Alias === null) && (source !== querySource.Source))
                 return (null);
         } else {
@@ -2133,7 +2142,7 @@ class DrapoStorage {
         }
     }
 
-    private ResolveQueryFunction(projectionAlias : string, functionName: string, functionParameters: string[], objects: any[], objectsInformation: any[]): void {
+    private ResolveQueryFunction(projectionAlias: string, functionName: string, functionParameters: string[], objects: any[], objectsInformation: any[]): void {
         if (functionName === 'COALESCE')
             this.ResolveQueryFunctionCoalesce(projectionAlias, functionParameters, objects, objectsInformation);
     }
