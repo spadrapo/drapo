@@ -1500,7 +1500,7 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.RetrieveDataKeyInitializeQuery = function (el, sector, dataKey) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataValue, query;
+            var dataValue, query, dataQueryArray;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1529,7 +1529,11 @@ var DrapoStorage = (function () {
                     case 7:
                         _a.sent();
                         return [2, ([])];
-                    case 8: return [4, this.ExecuteQuery(sector, dataKey, query)];
+                    case 8:
+                        dataQueryArray = el.getAttribute('d-dataQueryArray');
+                        if (dataQueryArray != null)
+                            query.OutputArray = dataQueryArray;
+                        return [4, this.ExecuteQuery(sector, dataKey, query)];
                     case 9: return [2, (_a.sent())];
                 }
             });
@@ -2877,7 +2881,7 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.ExecuteQuery = function (sector, dataKey, query) {
         return __awaiter(this, void 0, void 0, function () {
-            var objects, objectsId, objectsInformation, filters, hasFilters, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, objectIndexes, k, objectIndex, object, objectInformation, isAdd, filter, count, i, i, filter, objectAggregation;
+            var objects, objectsId, objectsInformation, filters, hasFilters, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, objectIndexes, k, objectIndex, object, objectInformation, isAdd, filter, count, i, i, filter, objectAggregation, outputArray, i, object;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -2958,6 +2962,14 @@ var DrapoStorage = (function () {
                             return [2, (objectAggregation)];
                         }
                         this.ResolveQueryFunctions(query, objects, objectsInformation);
+                        if (query.OutputArray != null) {
+                            outputArray = [];
+                            for (i = 0; i < objects.length; i++) {
+                                object = objects[i];
+                                outputArray.push(object[query.OutputArray]);
+                            }
+                            return [2, (outputArray)];
+                        }
                         return [2, (objects)];
                 }
             });

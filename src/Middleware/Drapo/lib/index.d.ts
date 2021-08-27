@@ -1326,6 +1326,7 @@ declare class DrapoQuery {
     private _projections;
     private _sources;
     private _filter;
+    private _outputArray;
     get Error(): string;
     set Error(value: string);
     get Projections(): DrapoQueryProjection[];
@@ -1334,6 +1335,8 @@ declare class DrapoQuery {
     set Sources(value: DrapoQuerySource[]);
     get Filter(): DrapoQueryCondition;
     set Filter(value: DrapoQueryCondition);
+    get OutputArray(): string;
+    set OutputArray(value: string);
 }
 
 declare class DrapoQueryCondition {
