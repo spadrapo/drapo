@@ -1499,6 +1499,7 @@ class DrapoStorage {
                 return (false);
             updated = true;
             storageItemMapped.Data = dataItem.Data;
+            storageItemMapped.HasChanges = true;
         }
         if (!updated) {
             let data: any[] = storageItemMapped.Data;

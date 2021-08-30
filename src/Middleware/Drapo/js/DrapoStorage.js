@@ -2189,6 +2189,7 @@ var DrapoStorage = (function () {
                                 return [2, (false)];
                             updated = true;
                             storageItemMapped.Data = dataItem.Data;
+                            storageItemMapped.HasChanges = true;
                         }
                         if (!!updated) return [3, 12];
                         data = storageItemMapped.Data;
