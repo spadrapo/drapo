@@ -963,9 +963,8 @@ class DrapoStorage {
         let dataMustache: string = dataValue;
         while (this.Application.Parser.IsMustache(dataMustache)) {
             const dataMustacheResolved: string = await this.ResolveMustaches(sector, dataMustache);
-            if ((dataMustacheResolved == null) || (dataMustacheResolved === '')) {
-                return (null);
-            }
+            if ((dataMustacheResolved == null) || (dataMustacheResolved === ''))
+                break;
             if (!this.Application.Parser.IsMustache(dataMustacheResolved))
                 break;
             dataMustache = dataMustacheResolved;

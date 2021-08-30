@@ -1429,9 +1429,8 @@ var DrapoStorage = (function () {
                         return [4, this.ResolveMustaches(sector, dataMustache)];
                     case 6:
                         dataMustacheResolved = _a.sent();
-                        if ((dataMustacheResolved == null) || (dataMustacheResolved === '')) {
-                            return [2, (null)];
-                        }
+                        if ((dataMustacheResolved == null) || (dataMustacheResolved === ''))
+                            return [3, 7];
                         if (!this.Application.Parser.IsMustache(dataMustacheResolved))
                             return [3, 7];
                         dataMustache = dataMustacheResolved;
