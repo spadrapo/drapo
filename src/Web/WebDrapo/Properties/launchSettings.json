@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/DataUrlArrayEmpty.html",
+      "launchUrl": "DrapoPages/DataUrlSelf.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

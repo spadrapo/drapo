@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Url - Array Empty</title>
+</head>
+<body>
+    <div>
+        <span>Data Url - Array Empty</span>
+        <div d-dataKey="properties" d-dataType="object" d-dataProperty-count-name="Count" d-dataProperty-count-value="3"></div>
+        <div d-dataKey="objects" d-dataUrlGet="~/Data/GetLevels?children={{properties.Count}}&prefix={{objects.length}}"></div>
+        <span>Count: </span><input type="text" d-model="{{properties.Count}}" /><br />
+        <div>
+            <div d-for="object in objects">
+                <span d-model="{{object.Key}}"></span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

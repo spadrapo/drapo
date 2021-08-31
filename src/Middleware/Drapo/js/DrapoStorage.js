@@ -293,15 +293,30 @@ var DrapoStorage = (function () {
         if (notify === void 0) { notify = true; }
         if (canUseDifference === void 0) { canUseDifference = false; }
         return __awaiter(this, void 0, void 0, function () {
+            var dataKeyIndex, storageItem, storageItemLoaded;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!((this.DiscardCacheData(dataKey, sector)) && (notify))) return [3, 2];
-                        return [4, this.Application.Observer.Notify(dataKey, null, null, canUseDifference)];
+                        dataKeyIndex = this.GetCacheKeyIndex(dataKey, sector);
+                        if (dataKeyIndex == null)
+                            return [2, (true)];
+                        storageItem = this._cacheItems[dataKeyIndex];
+                        if (!(storageItem.UrlGet !== null)) return [3, 2];
+                        return [4, this.RetrieveDataItemInternal(dataKey, sector)];
                     case 1:
+                        storageItemLoaded = _a.sent();
+                        this._cacheItems[dataKeyIndex] = storageItemLoaded;
+                        return [3, 3];
+                    case 2:
+                        this.RemoveCacheData(dataKeyIndex, false);
+                        _a.label = 3;
+                    case 3:
+                        if (!notify) return [3, 5];
+                        return [4, this.Application.Observer.Notify(dataKey, null, null, canUseDifference)];
+                    case 4:
                         _a.sent();
-                        _a.label = 2;
-                    case 2: return [2, (true)];
+                        _a.label = 5;
+                    case 5: return [2, (true)];
                 }
             });
         });
@@ -1128,15 +1143,15 @@ var DrapoStorage = (function () {
     DrapoStorage.prototype.ResolveDataUrlMustaches = function (dataKey, sector, url, executionContext, changes) {
         if (changes === void 0) { changes = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var mustaches, i, mustache, mustacheParts, mustacheDataKey, change, mustacheDataFields, mustacheData, mustacheDataEncoded;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var mustaches, i, mustache, mustacheParts, mustacheDataKey, change, isSameDataKey, _a, mustacheData, mustacheDataEncoded, mustacheDataFields;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         mustaches = this.Application.Parser.ParseMustaches(url);
                         i = 0;
-                        _a.label = 1;
+                        _b.label = 1;
                     case 1:
-                        if (!(i < mustaches.length)) return [3, 4];
+                        if (!(i < mustaches.length)) return [3, 5];
                         mustache = mustaches[i];
                         mustacheParts = this.Application.Parser.ParseMustache(mustache);
                         mustacheDataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
@@ -1144,25 +1159,32 @@ var DrapoStorage = (function () {
                         if (changes != null)
                             changes.push(change);
                         if (!this.IsDataKey(mustacheDataKey, sector))
-                            return [3, 3];
-                        mustacheDataFields = this.Application.Solver.ResolveDataFields(mustacheParts);
+                            return [3, 4];
+                        isSameDataKey = dataKey === mustacheDataKey;
+                        _a = (!isSameDataKey);
+                        if (!_a) return [3, 3];
                         return [4, this.Application.Storage.EnsureDataKeyFieldReady(mustacheDataKey, sector, mustacheParts)];
                     case 2:
-                        if (!(_a.sent()))
-                            return [3, 3];
+                        _a = (!(_b.sent()));
+                        _b.label = 3;
+                    case 3:
+                        if (_a)
+                            return [3, 4];
                         mustacheData = this.Application.Storage.GetDataKeyField(mustacheDataKey, sector, mustacheParts, executionContext);
-                        if (mustacheData == null)
-                            return [3, 3];
+                        if ((!isSameDataKey) && (mustacheData == null))
+                            return [3, 4];
                         mustacheDataEncoded = this.Application.Server.EnsureUrlComponentEncoded(mustacheData);
                         url = url.replace(mustache, mustacheDataEncoded);
                         change[1] = mustacheDataEncoded;
-                        if (dataKey !== null)
+                        if ((!isSameDataKey) && (dataKey !== null)) {
+                            mustacheDataFields = this.Application.Solver.ResolveDataFields(mustacheParts);
                             this.Application.Observer.SubscribeStorage(mustacheDataKey, mustacheDataFields, dataKey);
-                        _a.label = 3;
-                    case 3:
+                        }
+                        _b.label = 4;
+                    case 4:
                         i++;
                         return [3, 1];
-                    case 4: return [2, (url)];
+                    case 5: return [2, (url)];
                 }
             });
         });
