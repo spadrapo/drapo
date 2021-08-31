@@ -963,9 +963,8 @@ class DrapoStorage {
         let dataMustache: string = dataValue;
         while (this.Application.Parser.IsMustache(dataMustache)) {
             const dataMustacheResolved: string = await this.ResolveMustaches(sector, dataMustache);
-            if ((dataMustacheResolved == null) || (dataMustacheResolved === '')) {
-                return (null);
-            }
+            if ((dataMustacheResolved == null) || (dataMustacheResolved === ''))
+                break;
             if (!this.Application.Parser.IsMustache(dataMustacheResolved))
                 break;
             dataMustache = dataMustacheResolved;
@@ -973,11 +972,30 @@ class DrapoStorage {
         //Subscribe
         const mustacheParts: string[] = this.Application.Parser.ParseMustache(dataMustache);
         const mustacheDataKey: string = this.Application.Solver.ResolveDataKey(mustacheParts);
-        this.Application.Observer.SubscribeStorage(mustacheDataKey, null, dataKey, DrapoStorageLinkType.Notify);
-        this.Application.Observer.SubscribeStorage(dataKey, null, mustacheDataKey, DrapoStorageLinkType.Notify);
+        this.Application.Observer.SubscribeStorage(mustacheDataKey, null, dataKey, DrapoStorageLinkType.Pointer);
+        this.Application.Observer.SubscribeStorage(dataKey, null, mustacheDataKey, DrapoStorageLinkType.Pointer);
         //Return the same reference data
         const dataReference: any[] = await this.RetrieveDataValue(sector, dataMustache);
         return (dataReference);
+    }
+
+    public async MarkPointerStorageItemsAsChanged(dataKey: string, dataReferenceKey: string): Promise<void>{
+        let hasChanged: boolean = false;
+        const storageItems: DrapoStorageItem[] = this.Application.Storage.RetrieveStorageItemsCached(null, dataKey);
+        for (let i: number = 0; i < storageItems.length; i++) {
+            const storageItem: DrapoStorageItem = storageItems[i];
+            if (!storageItem.HasChanges)
+                continue;
+            hasChanged = true;
+            break;
+        }
+        if (!hasChanged)
+            return;
+        const storageReferenceItems: DrapoStorageItem[] = this.Application.Storage.RetrieveStorageItemsCached(null, dataReferenceKey);
+        for (let i: number = 0; i < storageReferenceItems.length; i++) {
+            const storageReferenceItem: DrapoStorageItem = storageReferenceItems[i];
+            storageReferenceItem.HasChanges = true;
+        }
     }
 
     private async RetrieveDataKeyInitializeFunction(dataKey: string, el: HTMLElement): Promise<any[]> {

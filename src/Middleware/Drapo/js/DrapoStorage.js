@@ -1429,9 +1429,8 @@ var DrapoStorage = (function () {
                         return [4, this.ResolveMustaches(sector, dataMustache)];
                     case 6:
                         dataMustacheResolved = _a.sent();
-                        if ((dataMustacheResolved == null) || (dataMustacheResolved === '')) {
-                            return [2, (null)];
-                        }
+                        if ((dataMustacheResolved == null) || (dataMustacheResolved === ''))
+                            return [3, 7];
                         if (!this.Application.Parser.IsMustache(dataMustacheResolved))
                             return [3, 7];
                         dataMustache = dataMustacheResolved;
@@ -1439,13 +1438,37 @@ var DrapoStorage = (function () {
                     case 7:
                         mustacheParts = this.Application.Parser.ParseMustache(dataMustache);
                         mustacheDataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
-                        this.Application.Observer.SubscribeStorage(mustacheDataKey, null, dataKey, DrapoStorageLinkType.Notify);
-                        this.Application.Observer.SubscribeStorage(dataKey, null, mustacheDataKey, DrapoStorageLinkType.Notify);
+                        this.Application.Observer.SubscribeStorage(mustacheDataKey, null, dataKey, DrapoStorageLinkType.Pointer);
+                        this.Application.Observer.SubscribeStorage(dataKey, null, mustacheDataKey, DrapoStorageLinkType.Pointer);
                         return [4, this.RetrieveDataValue(sector, dataMustache)];
                     case 8:
                         dataReference = _a.sent();
                         return [2, (dataReference)];
                 }
+            });
+        });
+    };
+    DrapoStorage.prototype.MarkPointerStorageItemsAsChanged = function (dataKey, dataReferenceKey) {
+        return __awaiter(this, void 0, void 0, function () {
+            var hasChanged, storageItems, i, storageItem, storageReferenceItems, i, storageReferenceItem;
+            return __generator(this, function (_a) {
+                hasChanged = false;
+                storageItems = this.Application.Storage.RetrieveStorageItemsCached(null, dataKey);
+                for (i = 0; i < storageItems.length; i++) {
+                    storageItem = storageItems[i];
+                    if (!storageItem.HasChanges)
+                        continue;
+                    hasChanged = true;
+                    break;
+                }
+                if (!hasChanged)
+                    return [2];
+                storageReferenceItems = this.Application.Storage.RetrieveStorageItemsCached(null, dataReferenceKey);
+                for (i = 0; i < storageReferenceItems.length; i++) {
+                    storageReferenceItem = storageReferenceItems[i];
+                    storageReferenceItem.HasChanges = true;
+                }
+                return [2];
             });
         });
     };
