@@ -65,6 +65,7 @@ declare class DrapoStorage {
     private RetrieveDataKeyInitializeArray;
     private RetrieveDataKeyInitializeMapping;
     private RetrieveDataKeyInitializePointer;
+    MarkPointerStorageItemsAsChanged(dataKey: string, dataReferenceKey: string): Promise<void>;
     private RetrieveDataKeyInitializeFunction;
     private RetrieveDataKeyInitializeQueryString;
     private RetrieveDataKeyInitializeQuery;

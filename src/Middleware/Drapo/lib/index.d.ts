@@ -1836,6 +1836,7 @@ declare class DrapoStorage {
     private RetrieveDataKeyInitializeArray;
     private RetrieveDataKeyInitializeMapping;
     private RetrieveDataKeyInitializePointer;
+    MarkPointerStorageItemsAsChanged(dataKey: string, dataReferenceKey: string): Promise<void>;
     private RetrieveDataKeyInitializeFunction;
     private RetrieveDataKeyInitializeQueryString;
     private RetrieveDataKeyInitializeQuery;
@@ -2049,7 +2050,7 @@ declare enum DrapoStorageLinkType {
     Render = 0,
     RenderClass = 1,
     Reload = 2,
-    Notify = 3
+    Pointer = 3
 }
 
 declare class DrapoStylist {

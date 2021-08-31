@@ -14268,9 +14268,9 @@ var DrapoObserver = (function () {
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < dataStorageFields.length)) return [3, 13];
+                        if (!(i < dataStorageFields.length)) return [3, 14];
                         if ((dataField != null) && (dataStorageFields[i] != null) && (dataStorageFields[i] !== dataField))
-                            return [3, 12];
+                            return [3, 13];
                         dataReferenceKey = dataReferenceKeys[i];
                         type = dataTypes[i];
                         if (!(type == DrapoStorageLinkType.Reload)) return [3, 6];
@@ -14286,27 +14286,30 @@ var DrapoObserver = (function () {
                     case 4:
                         j++;
                         return [3, 2];
-                    case 5: return [3, 12];
+                    case 5: return [3, 13];
                     case 6:
                         if (!(type == DrapoStorageLinkType.RenderClass)) return [3, 8];
                         return [4, this.NotifyStorageRenderClass(dataReferenceKey)];
                     case 7:
                         _a.sent();
-                        return [3, 12];
+                        return [3, 13];
                     case 8:
-                        if (!(type == DrapoStorageLinkType.Notify)) return [3, 10];
-                        return [4, this.Application.Observer.Notify(dataReferenceKey, null, null, true, false)];
+                        if (!(type == DrapoStorageLinkType.Pointer)) return [3, 11];
+                        return [4, this.Application.Storage.MarkPointerStorageItemsAsChanged(dataKey, dataReferenceKey)];
                     case 9:
                         _a.sent();
-                        return [3, 12];
-                    case 10: return [4, this.Application.Observer.Notify(dataReferenceKey, null, null)];
-                    case 11:
+                        return [4, this.Application.Observer.Notify(dataReferenceKey, null, null, true, false)];
+                    case 10:
                         _a.sent();
-                        _a.label = 12;
+                        return [3, 13];
+                    case 11: return [4, this.Application.Observer.Notify(dataReferenceKey, null, null)];
                     case 12:
+                        _a.sent();
+                        _a.label = 13;
+                    case 13:
                         i++;
                         return [3, 1];
-                    case 13: return [2];
+                    case 14: return [2];
                 }
             });
         });
@@ -21337,13 +21340,37 @@ var DrapoStorage = (function () {
                     case 7:
                         mustacheParts = this.Application.Parser.ParseMustache(dataMustache);
                         mustacheDataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
-                        this.Application.Observer.SubscribeStorage(mustacheDataKey, null, dataKey, DrapoStorageLinkType.Notify);
-                        this.Application.Observer.SubscribeStorage(dataKey, null, mustacheDataKey, DrapoStorageLinkType.Notify);
+                        this.Application.Observer.SubscribeStorage(mustacheDataKey, null, dataKey, DrapoStorageLinkType.Pointer);
+                        this.Application.Observer.SubscribeStorage(dataKey, null, mustacheDataKey, DrapoStorageLinkType.Pointer);
                         return [4, this.RetrieveDataValue(sector, dataMustache)];
                     case 8:
                         dataReference = _a.sent();
                         return [2, (dataReference)];
                 }
+            });
+        });
+    };
+    DrapoStorage.prototype.MarkPointerStorageItemsAsChanged = function (dataKey, dataReferenceKey) {
+        return __awaiter(this, void 0, void 0, function () {
+            var hasChanged, storageItems, i, storageItem, storageReferenceItems, i, storageReferenceItem;
+            return __generator(this, function (_a) {
+                hasChanged = false;
+                storageItems = this.Application.Storage.RetrieveStorageItemsCached(null, dataKey);
+                for (i = 0; i < storageItems.length; i++) {
+                    storageItem = storageItems[i];
+                    if (!storageItem.HasChanges)
+                        continue;
+                    hasChanged = true;
+                    break;
+                }
+                if (!hasChanged)
+                    return [2];
+                storageReferenceItems = this.Application.Storage.RetrieveStorageItemsCached(null, dataReferenceKey);
+                for (i = 0; i < storageReferenceItems.length; i++) {
+                    storageReferenceItem = storageReferenceItems[i];
+                    storageReferenceItem.HasChanges = true;
+                }
+                return [2];
             });
         });
     };
@@ -23533,7 +23560,7 @@ var DrapoStorageLinkType;
     DrapoStorageLinkType[DrapoStorageLinkType["Render"] = 0] = "Render";
     DrapoStorageLinkType[DrapoStorageLinkType["RenderClass"] = 1] = "RenderClass";
     DrapoStorageLinkType[DrapoStorageLinkType["Reload"] = 2] = "Reload";
-    DrapoStorageLinkType[DrapoStorageLinkType["Notify"] = 3] = "Notify";
+    DrapoStorageLinkType[DrapoStorageLinkType["Pointer"] = 3] = "Pointer";
 })(DrapoStorageLinkType || (DrapoStorageLinkType = {}));
 
 "use strict";
