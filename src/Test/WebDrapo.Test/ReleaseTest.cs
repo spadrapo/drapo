@@ -916,6 +916,11 @@ namespace WebDrapo.Test
             ValidatePage("DataUrlParameterMissing");
         }
         [TestCase]
+        public void DataUrlSelfTest()
+        {
+            ValidatePage("DataUrlSelf");
+        }
+        [TestCase]
         public void DataValueTest()
         {
             ValidatePage("DataValue");

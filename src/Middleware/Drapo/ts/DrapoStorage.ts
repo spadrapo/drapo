@@ -163,7 +163,17 @@ class DrapoStorage {
     }
 
     public async ReloadData(dataKey: string, sector: string, notify: boolean = true, canUseDifference: boolean = false): Promise<boolean> {
-        if ((this.DiscardCacheData(dataKey, sector)) && (notify))
+        const dataKeyIndex: number = this.GetCacheKeyIndex(dataKey, sector);
+        if (dataKeyIndex == null)
+            return (true);
+        const storageItem: DrapoStorageItem = this._cacheItems[dataKeyIndex];
+        if (storageItem.UrlGet !== null) {
+            const storageItemLoaded: DrapoStorageItem = await this.RetrieveDataItemInternal(dataKey, sector);
+            this._cacheItems[dataKeyIndex] = storageItemLoaded;
+        } else {
+            this.RemoveCacheData(dataKeyIndex, false);
+        }
+        if (notify)
             await this.Application.Observer.Notify(dataKey, null, null, canUseDifference);
         return (true);
     }
@@ -781,17 +791,19 @@ class DrapoStorage {
                 changes.push(change);
             if (!this.IsDataKey(mustacheDataKey, sector))
                 continue;
-            const mustacheDataFields: string[] = this.Application.Solver.ResolveDataFields(mustacheParts);
-            if (!await this.Application.Storage.EnsureDataKeyFieldReady(mustacheDataKey, sector, mustacheParts))
-                continue;
+            const isSameDataKey: boolean = dataKey === mustacheDataKey;
+            if ((!isSameDataKey) && (!await this.Application.Storage.EnsureDataKeyFieldReady(mustacheDataKey, sector, mustacheParts)))
+               continue;
             const mustacheData: string = this.Application.Storage.GetDataKeyField(mustacheDataKey, sector, mustacheParts, executionContext);
-            if (mustacheData == null)
+            if ((!isSameDataKey) && (mustacheData == null))
                 continue;
             const mustacheDataEncoded: string = this.Application.Server.EnsureUrlComponentEncoded(mustacheData);
             url = url.replace(mustache, mustacheDataEncoded);
             change[1] = mustacheDataEncoded;
-            if (dataKey !== null)
+            if ((!isSameDataKey) && (dataKey !== null)) {
+                const mustacheDataFields: string[] = this.Application.Solver.ResolveDataFields(mustacheParts);
                 this.Application.Observer.SubscribeStorage(mustacheDataKey, mustacheDataFields, dataKey);
+            }
         }
         return (url);
     }
