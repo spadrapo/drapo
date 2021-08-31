@@ -368,7 +368,7 @@ var DrapoObserver = (function () {
                         return [3, 13];
                     case 8:
                         if (!(type == DrapoStorageLinkType.Pointer)) return [3, 11];
-                        return [4, this.Application.Storage.MarkPointerStorageItemsAsChanged(dataKey, dataReferenceKey)];
+                        return [4, this.Application.Storage.UpdatePointerStorageItems(dataKey, dataReferenceKey)];
                     case 9:
                         _a.sent();
                         return [4, this.Application.Observer.Notify(dataReferenceKey, null, null, true, false)];

@@ -1470,27 +1470,32 @@ var DrapoStorage = (function () {
             });
         });
     };
-    DrapoStorage.prototype.MarkPointerStorageItemsAsChanged = function (dataKey, dataReferenceKey) {
+    DrapoStorage.prototype.UpdatePointerStorageItems = function (dataKey, dataReferenceKey) {
         return __awaiter(this, void 0, void 0, function () {
-            var hasChanged, storageItems, i, storageItem, storageReferenceItems, i, storageReferenceItem;
+            var storageItems, storageItem, storageReferenceItems, storageReferenceItem, storageItemLoaded;
             return __generator(this, function (_a) {
-                hasChanged = false;
-                storageItems = this.Application.Storage.RetrieveStorageItemsCached(null, dataKey);
-                for (i = 0; i < storageItems.length; i++) {
-                    storageItem = storageItems[i];
-                    if (!storageItem.HasChanges)
-                        continue;
-                    hasChanged = true;
-                    break;
+                switch (_a.label) {
+                    case 0:
+                        storageItems = this.Application.Storage.RetrieveStorageItemsCached(null, dataKey);
+                        if (storageItems.length == 0)
+                            return [2];
+                        storageItem = storageItems[0];
+                        storageReferenceItems = this.Application.Storage.RetrieveStorageItemsCached(null, dataReferenceKey);
+                        if (storageReferenceItems.length == 0)
+                            return [2];
+                        storageReferenceItem = storageReferenceItems[0];
+                        if (storageItem.HasChanges)
+                            storageReferenceItem.HasChanges = true;
+                        if (storageReferenceItem.Type !== 'pointer')
+                            return [2];
+                        return [4, this.RetrieveDataItemInternal(dataReferenceKey, storageReferenceItem.Sector)];
+                    case 1:
+                        storageItemLoaded = _a.sent();
+                        if (storageItemLoaded === null)
+                            return [2];
+                        storageReferenceItem.Data = storageItemLoaded.Data;
+                        return [2];
                 }
-                if (!hasChanged)
-                    return [2];
-                storageReferenceItems = this.Application.Storage.RetrieveStorageItemsCached(null, dataReferenceKey);
-                for (i = 0; i < storageReferenceItems.length; i++) {
-                    storageReferenceItem = storageReferenceItems[i];
-                    storageReferenceItem.HasChanges = true;
-                }
-                return [2];
             });
         });
     };
