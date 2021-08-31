@@ -267,7 +267,7 @@ class DrapoObserver {
             } else if (type == DrapoStorageLinkType.RenderClass) {
                 await this.NotifyStorageRenderClass(dataReferenceKey);
             } else if (type == DrapoStorageLinkType.Pointer) {
-                await this.Application.Storage.MarkPointerStorageItemsAsChanged(dataKey, dataReferenceKey);
+                await this.Application.Storage.UpdatePointerStorageItems(dataKey, dataReferenceKey);
                 await this.Application.Observer.Notify(dataReferenceKey, null, null, true, false);
             } else {
                 await this.Application.Observer.Notify(dataReferenceKey, null, null);

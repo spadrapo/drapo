@@ -991,23 +991,23 @@ class DrapoStorage {
         return (dataReference);
     }
 
-    public async MarkPointerStorageItemsAsChanged(dataKey: string, dataReferenceKey: string): Promise<void>{
-        let hasChanged: boolean = false;
+    public async UpdatePointerStorageItems(dataKey: string, dataReferenceKey: string): Promise<void>{
         const storageItems: DrapoStorageItem[] = this.Application.Storage.RetrieveStorageItemsCached(null, dataKey);
-        for (let i: number = 0; i < storageItems.length; i++) {
-            const storageItem: DrapoStorageItem = storageItems[i];
-            if (!storageItem.HasChanges)
-                continue;
-            hasChanged = true;
-            break;
-        }
-        if (!hasChanged)
+        if (storageItems.length == 0)
             return;
+        const storageItem: DrapoStorageItem = storageItems[0];
         const storageReferenceItems: DrapoStorageItem[] = this.Application.Storage.RetrieveStorageItemsCached(null, dataReferenceKey);
-        for (let i: number = 0; i < storageReferenceItems.length; i++) {
-            const storageReferenceItem: DrapoStorageItem = storageReferenceItems[i];
+        if (storageReferenceItems.length == 0)
+            return;
+        const storageReferenceItem: DrapoStorageItem = storageReferenceItems[0];
+        if (storageItem.HasChanges)
             storageReferenceItem.HasChanges = true;
-        }
+        if (storageReferenceItem.Type !== 'pointer')
+            return;
+        const storageItemLoaded: DrapoStorageItem = await this.RetrieveDataItemInternal(dataReferenceKey, storageReferenceItem.Sector);
+        if (storageItemLoaded === null)
+            return;
+        storageReferenceItem.Data = storageItemLoaded.Data;
     }
 
     private async RetrieveDataKeyInitializeFunction(dataKey: string, el: HTMLElement): Promise<any[]> {
