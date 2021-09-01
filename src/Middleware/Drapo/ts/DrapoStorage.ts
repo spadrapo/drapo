@@ -854,17 +854,18 @@ class DrapoStorage {
         for (let i = 0; i < mustaches.length; i++) {
             const mustache: string = mustaches[i];
             const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustache);
+            const dataSector: string = this.Application.Solver.ResolveSector(mustacheParts, sector);
             const mustacheDataKey: string = this.Application.Solver.ResolveDataKey(mustacheParts);
-            if (!this.IsDataKey(mustacheDataKey, sector))
+            if (!this.IsDataKey(mustacheDataKey, dataSector))
                 continue;
             const mustacheDataFields: string[] = this.Application.Solver.ResolveDataFields(mustacheParts);
-            if (!await this.Application.Storage.EnsureDataKeyFieldReady(mustacheDataKey, sector, mustacheParts)) {
+            if (!await this.Application.Storage.EnsureDataKeyFieldReady(mustacheDataKey, dataSector, mustacheParts)) {
                 if (!canSubscribe)
                     continue;
                 this.Application.Observer.SubscribeDelay(null, mustacheDataKey, this.Application.Solver.ResolveDataFields(mustacheParts));
                 return (data);
             }
-            const mustacheData: string = this.Application.Storage.GetDataKeyField(mustacheDataKey, sector, mustacheParts);
+            const mustacheData: string = this.Application.Storage.GetDataKeyField(mustacheDataKey, dataSector, mustacheParts);
             if (mustacheData == null)
                 continue;
             data = data.replace(mustache, mustacheData);
