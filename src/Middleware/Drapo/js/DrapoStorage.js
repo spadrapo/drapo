@@ -1260,7 +1260,7 @@ var DrapoStorage = (function () {
     DrapoStorage.prototype.ResolveMustaches = function (sector, data, canSubscribe) {
         if (canSubscribe === void 0) { canSubscribe = false; }
         return __awaiter(this, void 0, void 0, function () {
-            var mustaches, i, mustache, mustacheParts, mustacheDataKey, mustacheDataFields, mustacheData;
+            var mustaches, i, mustache, mustacheParts, dataSector, mustacheDataKey, mustacheDataFields, mustacheData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1271,11 +1271,12 @@ var DrapoStorage = (function () {
                         if (!(i < mustaches.length)) return [3, 4];
                         mustache = mustaches[i];
                         mustacheParts = this.Application.Parser.ParseMustache(mustache);
+                        dataSector = this.Application.Solver.ResolveSector(mustacheParts, sector);
                         mustacheDataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
-                        if (!this.IsDataKey(mustacheDataKey, sector))
+                        if (!this.IsDataKey(mustacheDataKey, dataSector))
                             return [3, 3];
                         mustacheDataFields = this.Application.Solver.ResolveDataFields(mustacheParts);
-                        return [4, this.Application.Storage.EnsureDataKeyFieldReady(mustacheDataKey, sector, mustacheParts)];
+                        return [4, this.Application.Storage.EnsureDataKeyFieldReady(mustacheDataKey, dataSector, mustacheParts)];
                     case 2:
                         if (!(_a.sent())) {
                             if (!canSubscribe)
@@ -1283,7 +1284,7 @@ var DrapoStorage = (function () {
                             this.Application.Observer.SubscribeDelay(null, mustacheDataKey, this.Application.Solver.ResolveDataFields(mustacheParts));
                             return [2, (data)];
                         }
-                        mustacheData = this.Application.Storage.GetDataKeyField(mustacheDataKey, sector, mustacheParts);
+                        mustacheData = this.Application.Storage.GetDataKeyField(mustacheDataKey, dataSector, mustacheParts);
                         if (mustacheData == null)
                             return [3, 3];
                         data = data.replace(mustache, mustacheData);
