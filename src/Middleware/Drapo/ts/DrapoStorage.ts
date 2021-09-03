@@ -169,7 +169,8 @@ class DrapoStorage {
         const storageItem: DrapoStorageItem = this._cacheItems[dataKeyIndex];
         if (storageItem.UrlGet !== null) {
             const storageItemLoaded: DrapoStorageItem = await this.RetrieveDataItemInternal(dataKey, sector);
-            this._cacheItems[dataKeyIndex] = storageItemLoaded;
+            if (storageItemLoaded !== null)
+                this._cacheItems[dataKeyIndex] = storageItemLoaded;
         } else {
             this.RemoveCacheData(dataKeyIndex, false);
         }

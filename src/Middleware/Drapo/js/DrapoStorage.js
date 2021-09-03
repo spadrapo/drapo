@@ -305,7 +305,8 @@ var DrapoStorage = (function () {
                         return [4, this.RetrieveDataItemInternal(dataKey, sector)];
                     case 1:
                         storageItemLoaded = _a.sent();
-                        this._cacheItems[dataKeyIndex] = storageItemLoaded;
+                        if (storageItemLoaded !== null)
+                            this._cacheItems[dataKeyIndex] = storageItemLoaded;
                         return [3, 3];
                     case 2:
                         this.RemoveCacheData(dataKeyIndex, false);
