@@ -411,7 +411,7 @@ namespace Sysphera.Middleware.Drapo
             if (string.IsNullOrEmpty(contentType))
                 return (null);
             //Themes
-            if ((contentType == "text/css") && ((this._options.Config.HandlerCustom != null) || (!string.IsNullOrEmpty(theme))))
+            if ((contentType == "text/css") && ((this._options.Config.HandlerCustom != null) || (this._options.Config.Themes.Count > 0)))
                 return (await IsRequestCustomType(context, path, theme, extension, contentType));
             //Views
             if ((contentType == CONTENT_TYPE_HTML) && ((this._options.Config.HandlerCustom != null) || (!string.IsNullOrEmpty(view))))
