@@ -353,6 +353,10 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionDownloadData(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'detectview')
             return (await this.ExecuteFunctionDetectView(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'setconfig')
+            return (await this.ExecuteFunctionSetConfig(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'getconfig')
+            return (await this.ExecuteFunctionGetConfig(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'debugger')
             return (await this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext));
         await this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name);
@@ -1345,6 +1349,27 @@ class DrapoFunctionHandler {
                 return (view.Tag);
             if (await this.Application.Solver.ResolveConditional(view.Condition, null, sector, context))
                 return (view.Tag);
+        }
+        return ('');
+    }
+
+    private async ExecuteFunctionSetConfig(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const key: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        const value: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
+        const valueAsNumber: number = this.Application.Parser.ParseNumber(value, 0);
+        const keyLower: string = key.toLowerCase();
+        if (keyLower === 'timezone')
+            this.Application.Config.SetTimezone(valueAsNumber);
+        return ('');
+    }
+
+    private async ExecuteFunctionGetConfig(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const key: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        const keyLower: string = key.toLowerCase();
+        if (keyLower === 'timezone') {
+            const timeZone: number = this.Application.Config.GetTimezone();
+            if (timeZone != null)
+                return (timeZone.toString());
         }
         return ('');
     }

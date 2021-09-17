@@ -267,6 +267,7 @@ declare class DrapoConfig {
     private _url;
     private _cacheKeys;
     private _cacheDatas;
+    private _timezone;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     private GetUrl;
@@ -301,6 +302,8 @@ declare class DrapoConfig {
     GetApplicationBuild(): Promise<string>;
     GetHeaderContainerId(): Promise<string>;
     GetViews(): Promise<DrapoView[]>;
+    GetTimezone(): number;
+    SetTimezone(value: number): void;
 }
 
 declare class DrapoContext {
@@ -907,6 +910,8 @@ declare class DrapoFunctionHandler {
     private DownloadData;
     private CreateBlob;
     private ExecuteFunctionDetectView;
+    private ExecuteFunctionSetConfig;
+    private ExecuteFunctionGetConfig;
     private ExecuteFunctionDebugger;
     private ExecuteFunctionGetSector;
     private ExecuteFunctionGetClipboard;

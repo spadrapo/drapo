@@ -976,6 +976,11 @@ namespace WebDrapo.Test
             ValidatePage("FormatTimespan");
         }
         [TestCase]
+        public void FormatTimezoneTest()
+        {
+            ValidatePage("FormatTimezone");
+        }
+        [TestCase]
         public void FunctionAcceptDataChangesTest()
         {
             ValidatePage("FunctionAcceptDataChanges");

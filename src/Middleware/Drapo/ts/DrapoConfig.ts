@@ -4,6 +4,7 @@ class DrapoConfig {
     private _url: string = null;
     private _cacheKeys: string[] = null;
     private _cacheDatas: any[][] = null;
+    private _timezone: number = null;
 
     //Properties
     get Application(): DrapoApplication {
@@ -169,5 +170,13 @@ class DrapoConfig {
 
     public async GetViews(): Promise<DrapoView[]> {
         return (await this.GetPropertyArray('Views'));
+    }
+
+    public GetTimezone(): number {
+        return (this._timezone);
+    }
+
+    public SetTimezone(value : number): void {
+        this._timezone = value;
     }
 }
