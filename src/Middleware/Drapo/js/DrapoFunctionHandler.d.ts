@@ -85,6 +85,8 @@ declare class DrapoFunctionHandler {
     private DownloadData;
     private CreateBlob;
     private ExecuteFunctionDetectView;
+    private ExecuteFunctionSetConfig;
+    private ExecuteFunctionGetConfig;
     private ExecuteFunctionDebugger;
     private ExecuteFunctionGetSector;
     private ExecuteFunctionGetClipboard;
