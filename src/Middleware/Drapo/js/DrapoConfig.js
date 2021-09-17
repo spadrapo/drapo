@@ -40,6 +40,7 @@ var DrapoConfig = (function () {
         this._url = null;
         this._cacheKeys = null;
         this._cacheDatas = null;
+        this._timezone = null;
         this._application = application;
     }
     Object.defineProperty(DrapoConfig.prototype, "Application", {
@@ -369,6 +370,12 @@ var DrapoConfig = (function () {
                 }
             });
         });
+    };
+    DrapoConfig.prototype.GetTimezone = function () {
+        return (this._timezone);
+    };
+    DrapoConfig.prototype.SetTimezone = function (value) {
+        this._timezone = value;
     };
     return DrapoConfig;
 }());

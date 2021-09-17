@@ -3418,6 +3418,7 @@ var DrapoConfig = (function () {
         this._url = null;
         this._cacheKeys = null;
         this._cacheDatas = null;
+        this._timezone = null;
         this._application = application;
     }
     Object.defineProperty(DrapoConfig.prototype, "Application", {
@@ -3747,6 +3748,12 @@ var DrapoConfig = (function () {
                 }
             });
         });
+    };
+    DrapoConfig.prototype.GetTimezone = function () {
+        return (this._timezone);
+    };
+    DrapoConfig.prototype.SetTimezone = function (value) {
+        this._timezone = value;
     };
     return DrapoConfig;
 }());
@@ -9086,6 +9093,9 @@ var DrapoFormatter = (function () {
         var date = this.Application.Parser.ParseDate(value);
         if (date === null)
             return (value);
+        var timeZone = this.Application.Config.GetTimezone();
+        if (timeZone != null)
+            date.setHours(date.getHours() + timeZone);
         var formatConverted = this.ConvertDateFormat(format, culture);
         var formatTokens = this.Application.Parser.ParseFormat(formatConverted);
         var dateFormatted = this.GetDateFormattedTokens(date, formatTokens, culture);
@@ -9985,11 +9995,19 @@ var DrapoFunctionHandler = (function () {
                         return [4, this.ExecuteFunctionDetectView(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 141: return [2, (_a.sent())];
                     case 142:
-                        if (!(functionParsed.Name === 'debugger')) return [3, 144];
-                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'setconfig')) return [3, 144];
+                        return [4, this.ExecuteFunctionSetConfig(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 143: return [2, (_a.sent())];
-                    case 144: return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name)];
-                    case 145:
+                    case 144:
+                        if (!(functionParsed.Name === 'getconfig')) return [3, 146];
+                        return [4, this.ExecuteFunctionGetConfig(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 145: return [2, (_a.sent())];
+                    case 146:
+                        if (!(functionParsed.Name === 'debugger')) return [3, 148];
+                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 147: return [2, (_a.sent())];
+                    case 148: return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name)];
+                    case 149:
                         _a.sent();
                         return [2, ('')];
                 }
@@ -12360,6 +12378,45 @@ var DrapoFunctionHandler = (function () {
                         i++;
                         return [3, 2];
                     case 5: return [2, ('')];
+                }
+            });
+        });
+    };
+    DrapoFunctionHandler.prototype.ExecuteFunctionSetConfig = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var key, value, valueAsNumber, keyLower;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
+                    case 1:
+                        key = _a.sent();
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1])];
+                    case 2:
+                        value = _a.sent();
+                        valueAsNumber = this.Application.Parser.ParseNumber(value, 0);
+                        keyLower = key.toLowerCase();
+                        if (keyLower === 'timezone')
+                            this.Application.Config.SetTimezone(valueAsNumber);
+                        return [2, ('')];
+                }
+            });
+        });
+    };
+    DrapoFunctionHandler.prototype.ExecuteFunctionGetConfig = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var key, keyLower, timeZone;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
+                    case 1:
+                        key = _a.sent();
+                        keyLower = key.toLowerCase();
+                        if (keyLower === 'timezone') {
+                            timeZone = this.Application.Config.GetTimezone();
+                            if (timeZone != null)
+                                return [2, (timeZone.toString())];
+                        }
+                        return [2, ('')];
                 }
             });
         });
