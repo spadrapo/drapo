@@ -77,8 +77,15 @@ class DrapoBarber {
                         continue;
                     sector = childSector;
                 }
-                //Children
-                await this.ResolveMustachesInternal(child, sector, renderContext, stopAtSectors);
+                //Render
+                const canRender: boolean = await this.CanRender(el, sector);
+                if (canRender) {
+                    //Children
+                    await this.ResolveMustachesInternal(child, sector, renderContext, stopAtSectors);
+                } else {
+                    await this.Application.Document.RemoveElement(child);
+                    i--;
+                }
             }
         } else {
             //Mustaches
@@ -102,6 +109,18 @@ class DrapoBarber {
         await this.ResolveMustacheElementVisibility(el);
         //Cloak
         await this.ResolveCloak(el);
+    }
+
+    private async CanRender(el: HTMLElement, sector: string): Promise<boolean> {
+        const dRender: string = el.getAttribute('d-render');
+        if (dRender == null)
+            return (true);
+        if (await this.Application.Barber.HasMustacheContext(dRender, sector))
+            return (true);
+        const context: DrapoContext = new DrapoContext();
+        const expression: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, dRender, null, false);
+        const result: boolean = await this.Application.Solver.ResolveConditional(expression);
+        return (result);
     }
 
     public async ResolveFilter(el: HTMLElement, sector: string, canBind: boolean, dataKeyFilter: string, dataFieldFilter: string): Promise<void> {
