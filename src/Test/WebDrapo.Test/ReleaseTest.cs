@@ -1407,6 +1407,11 @@ namespace WebDrapo.Test
             ValidatePage("PropertiesSameTag");
         }
         [TestCase]
+        public void RenderTest()
+        {
+            ValidatePage("Render");
+        }
+        [TestCase]
         public void RouterMasterTest()
         {
             ValidatePage("RouterMaster");

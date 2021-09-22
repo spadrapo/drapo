@@ -78,13 +78,12 @@ class DrapoBarber {
                     sector = childSector;
                 }
                 //Render
-                const canRender: boolean = await this.CanRender(el, sector);
+                const canRender: boolean = await this.CanRender(child, sector);
                 if (canRender) {
                     //Children
                     await this.ResolveMustachesInternal(child, sector, renderContext, stopAtSectors);
                 } else {
-                    await this.Application.Document.RemoveElement(child);
-                    i--;
+                    $(child).remove();
                 }
             }
         } else {
@@ -120,6 +119,7 @@ class DrapoBarber {
         const context: DrapoContext = new DrapoContext();
         const expression: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, dRender, null, false);
         const result: boolean = await this.Application.Solver.ResolveConditional(expression);
+        el.removeAttribute('d-render');
         return (result);
     }
 
