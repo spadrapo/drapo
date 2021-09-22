@@ -99,6 +99,7 @@ declare class DrapoBarber {
     private HasContentMustacheAttributeContextMustache;
     ResolveMustaches(jQueryStart?: JQuery, sector?: string, stopAtSectors?: boolean): Promise<void>;
     private ResolveMustachesInternal;
+    private CanRender;
     ResolveFilter(el: HTMLElement, sector: string, canBind: boolean, dataKeyFilter: string, dataFieldFilter: string): Promise<void>;
     ResolveElementDelayed(el: HTMLElement, sector: string, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
     ResolveMustacheElementLeaf(el: HTMLElement, canUseModel?: boolean, canSubscribeDelay?: boolean, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;

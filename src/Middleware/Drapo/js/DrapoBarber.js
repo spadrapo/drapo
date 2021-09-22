@@ -43,7 +43,7 @@ var DrapoBarber = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoBarber.prototype.HasContentMustacheNodesContext = function (content) {
@@ -115,7 +115,7 @@ var DrapoBarber = (function () {
     };
     DrapoBarber.prototype.ResolveMustachesInternal = function (el, sector, renderContext, stopAtSectors) {
         return __awaiter(this, void 0, void 0, function () {
-            var pre, children, hasChildren, i, child, childSector;
+            var pre, children, hasChildren, i, child, childSector, canRender;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -124,58 +124,91 @@ var DrapoBarber = (function () {
                             return [2];
                         children = [].slice.call(el.children);
                         hasChildren = children.length > 0;
-                        if (!hasChildren) return [3, 5];
+                        if (!hasChildren) return [3, 7];
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < children.length)) return [3, 4];
+                        if (!(i < children.length)) return [3, 6];
                         child = children[i];
                         childSector = child.getAttribute('d-sector');
                         if (childSector != null) {
                             if (stopAtSectors)
-                                return [3, 3];
+                                return [3, 5];
                             sector = childSector;
                         }
-                        return [4, this.ResolveMustachesInternal(child, sector, renderContext, stopAtSectors)];
+                        return [4, this.CanRender(child, sector)];
                     case 2:
-                        _a.sent();
-                        _a.label = 3;
+                        canRender = _a.sent();
+                        if (!canRender) return [3, 4];
+                        return [4, this.ResolveMustachesInternal(child, sector, renderContext, stopAtSectors)];
                     case 3:
+                        _a.sent();
+                        return [3, 5];
+                    case 4:
+                        $(child).remove();
+                        _a.label = 5;
+                    case 5:
                         i++;
                         return [3, 1];
-                    case 4: return [3, 7];
-                    case 5: return [4, this.ResolveMustacheElementLeaf(el)];
-                    case 6:
-                        _a.sent();
-                        _a.label = 7;
-                    case 7: return [4, this.Application.AttributeHandler.ResolveID(el, sector)];
+                    case 6: return [3, 9];
+                    case 7: return [4, this.ResolveMustacheElementLeaf(el)];
                     case 8:
                         _a.sent();
-                        return [4, this.Application.AttributeHandler.ResolveAttr(el)];
-                    case 9:
-                        _a.sent();
-                        return [4, this.ResolveModel(el)];
+                        _a.label = 9;
+                    case 9: return [4, this.Application.AttributeHandler.ResolveID(el, sector)];
                     case 10:
                         _a.sent();
-                        return [4, this.Application.ClassHandler.ResolveClass(el, sector)];
+                        return [4, this.Application.AttributeHandler.ResolveAttr(el)];
                     case 11:
                         _a.sent();
-                        return [4, this.Application.Validator.RegisterValidation(el, sector)];
+                        return [4, this.ResolveModel(el)];
                     case 12:
                         _a.sent();
-                        return [4, this.Application.EventHandler.Attach(el, renderContext)];
+                        return [4, this.Application.ClassHandler.ResolveClass(el, sector)];
                     case 13:
                         _a.sent();
-                        return [4, this.Application.BehaviorHandler.ResolveBehavior(el)];
+                        return [4, this.Application.Validator.RegisterValidation(el, sector)];
                     case 14:
                         _a.sent();
-                        return [4, this.ResolveMustacheElementVisibility(el)];
+                        return [4, this.Application.EventHandler.Attach(el, renderContext)];
                     case 15:
                         _a.sent();
-                        return [4, this.ResolveCloak(el)];
+                        return [4, this.Application.BehaviorHandler.ResolveBehavior(el)];
                     case 16:
                         _a.sent();
+                        return [4, this.ResolveMustacheElementVisibility(el)];
+                    case 17:
+                        _a.sent();
+                        return [4, this.ResolveCloak(el)];
+                    case 18:
+                        _a.sent();
                         return [2];
+                }
+            });
+        });
+    };
+    DrapoBarber.prototype.CanRender = function (el, sector) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dRender, context, expression, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dRender = el.getAttribute('d-render');
+                        if (dRender == null)
+                            return [2, (true)];
+                        return [4, this.Application.Barber.HasMustacheContext(dRender, sector)];
+                    case 1:
+                        if (_a.sent())
+                            return [2, (true)];
+                        context = new DrapoContext();
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, dRender, null, false)];
+                    case 2:
+                        expression = _a.sent();
+                        return [4, this.Application.Solver.ResolveConditional(expression)];
+                    case 3:
+                        result = _a.sent();
+                        el.removeAttribute('d-render');
+                        return [2, (result)];
                 }
             });
         });

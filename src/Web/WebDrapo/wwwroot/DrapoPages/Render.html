@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Render</title>
+</head>
+<body>
+    <div>
+        <span>Render</span>
+        <div d-dataKey="object" d-dataType="object" d-dataProperty-value1="true" d-dataProperty-value2="false"></div>
+        <div d-render="{{object.value1}}">
+            <span>must see</span>
+        </div>
+        <div d-render="{{object.value2}}">
+            <span>must not see</span>
+        </div>
+        <div d-render="true">
+            <span>must see 2</span>
+        </div>
+        <div d-render="false">
+            <span>must not see 2</span>
+        </div>
+    </div>
+</body>
+</html>
