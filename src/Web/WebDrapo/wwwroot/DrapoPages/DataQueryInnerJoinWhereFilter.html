@@ -10,9 +10,18 @@
         <div d-dataKey="objectValue1" d-dataType="value" d-dataLoadType="startup" d-dataValue="L0V1"></div>
         <div d-dataKey="objects1" d-dataUrlGet="~/Data/GetLevels?children=5&prefix=O1"></div>
         <div d-dataKey="objects2" d-dataUrlGet="~/Data/GetLevels?children=5&prefix=O2"></div>
-        <div d-dataKey="objectsQuery" d-dataType="query" d-dataValue="SELECT O1.Key AS Key1, O2.Key as Key2, O1.Value FROM objects1 AS O1 INNER JOIN objects2 AS O2 ON O1.Value = {{objectValue1}}"></div>
+        <div d-dataKey="objectsQuery1" d-dataType="query" d-dataValue="SELECT O1.Key AS Key1, O2.Key as Key2, O1.Value FROM objects1 AS O1 INNER JOIN objects2 AS O2 ON O1.Value = 02.Value WHERE 02.Value = {{objectValue1}}"></div>
+        <div d-dataKey="objectsQuery2" d-dataType="query" d-dataValue="SELECT O1.Key AS Key1, O2.Key as Key2, O1.Value FROM objects1 AS O1 INNER JOIN objects2 AS O2 ON O1.Value = {{objectValue1}}"></div>
         <div>
-            <div d-for="object in objectsQuery">
+            <div d-for="object in objectsQuery1">
+                <span>{{object.Key1}}</span>
+                <span>{{object.Key2}}</span>
+                <span>{{object.Value}}</span>
+                <br />
+            </div>
+        </div>
+        <div>
+            <div d-for="object in objectsQuery2">
                 <span>{{object.Key1}}</span>
                 <span>{{object.Key2}}</span>
                 <span>{{object.Value}}</span>
