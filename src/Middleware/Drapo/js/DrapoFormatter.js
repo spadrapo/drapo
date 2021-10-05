@@ -24,6 +24,9 @@ var DrapoFormatter = (function () {
         var date = this.Application.Parser.ParseDate(value);
         if (date === null)
             return (value);
+        var timeZone = this.Application.Config.GetTimezone();
+        if (timeZone != null)
+            date.setHours(date.getHours() + timeZone);
         var formatConverted = this.ConvertDateFormat(format, culture);
         var formatTokens = this.Application.Parser.ParseFormat(formatConverted);
         var dateFormatted = this.GetDateFormattedTokens(date, formatTokens, culture);

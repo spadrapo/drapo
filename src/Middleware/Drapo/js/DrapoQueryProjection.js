@@ -4,6 +4,8 @@ var DrapoQueryProjection = (function () {
         this._source = null;
         this._column = null;
         this._alias = null;
+        this._functionName = null;
+        this._functionParameters = null;
     }
     Object.defineProperty(DrapoQueryProjection.prototype, "Source", {
         get: function () {
@@ -31,6 +33,26 @@ var DrapoQueryProjection = (function () {
         },
         set: function (value) {
             this._alias = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQueryProjection.prototype, "FunctionName", {
+        get: function () {
+            return (this._functionName);
+        },
+        set: function (value) {
+            this._functionName = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQueryProjection.prototype, "FunctionParameters", {
+        get: function () {
+            return (this._functionParameters);
+        },
+        set: function (value) {
+            this._functionParameters = value;
         },
         enumerable: true,
         configurable: true

@@ -41,6 +41,8 @@ var DrapoServer = (function () {
         this._requestHeaders = [];
         this._requestHeadersNext = [];
         this._hasBadRequest = false;
+        this._headerContainerIdKey = null;
+        this._headerContainerIdValue = null;
         this._application = application;
         this.InitializeServer();
     }
@@ -136,6 +138,8 @@ var DrapoServer = (function () {
                     case 0:
                         requestHeaders = [];
                         this.InsertHeader(requestHeaders, 'X-Requested-With', 'XMLHttpRequest');
+                        if (this._headerContainerIdValue !== null)
+                            requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
                         urlResolved = this.ResolveUrl(url);
                         _a = urlResolved;
                         return [4, this.AppendUrlQueryStringCacheStatic(url)];
@@ -174,6 +178,8 @@ var DrapoServer = (function () {
                             this.InsertHeader(requestHeaders, 'Content-Type', contentType);
                         this.InsertHeader(requestHeaders, 'X-Requested-With', 'XMLHttpRequest');
                         this.InsertHeader(requestHeaders, 'Cache-Control', 'no-cache, no-store, must-revalidate');
+                        if (this._headerContainerIdValue !== null)
+                            requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
                         urlResolved = this.ResolveUrl(url);
                         urlResolvedTimestamp = this.AppendUrlQueryStringTimestamp(urlResolved);
                         cookieValues = this.Application.CookieHandler.GetCookieValues();
@@ -258,7 +264,8 @@ var DrapoServer = (function () {
             });
         });
     };
-    DrapoServer.prototype.GetFile = function (url, dataKey, headers, headersResponse) {
+    DrapoServer.prototype.GetFile = function (url, verb, data, contentType, dataKey, headers, headersResponse) {
+        if (contentType === void 0) { contentType = null; }
         if (dataKey === void 0) { dataKey = null; }
         if (headers === void 0) { headers = null; }
         if (headersResponse === void 0) { headersResponse = null; }
@@ -272,9 +279,13 @@ var DrapoServer = (function () {
                         this.InsertHeaders(requestHeaders, headers);
                         this.InsertHeader(requestHeaders, 'X-Requested-With', 'XMLHttpRequest');
                         this.InsertHeader(requestHeaders, 'Cache-Control', 'no-cache, no-store, must-revalidate');
+                        if (this._headerContainerIdValue !== null)
+                            requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
+                        if (contentType != null)
+                            this.InsertHeader(requestHeaders, 'Content-Type', contentType);
                         urlResolved = this.ResolveUrl(url);
                         urlResolvedTimestamp = this.AppendUrlQueryStringTimestamp(urlResolved);
-                        request = new DrapoServerRequest('GET', urlResolvedTimestamp, requestHeaders, null, true, true);
+                        request = new DrapoServerRequest(verb, urlResolvedTimestamp, requestHeaders, data, true, true);
                         return [4, this.Request(request)];
                     case 1:
                         response = _a.sent();
@@ -405,6 +416,7 @@ var DrapoServer = (function () {
                         return [4, this.RequestInternal(request)];
                     case 2:
                         response = _a.sent();
+                        this.SetContainerId(response);
                         return [4, this.Application.Debugger.FinishRequest(requestDebbuger)];
                     case 3:
                         _a.sent();
@@ -473,7 +485,7 @@ var DrapoServer = (function () {
     DrapoServer.prototype.GetHeaderValue = function (headers, name) {
         for (var i = 0; i < headers.length; i++) {
             var header = headers[i];
-            if (header[0] === name)
+            if (header[0].toLowerCase() === name.toLowerCase())
                 return (header[1]);
         }
         return (null);
@@ -517,6 +529,13 @@ var DrapoServer = (function () {
             headers.push(headersInsert[i]);
     };
     DrapoServer.prototype.AddRequestHeader = function (key, value) {
+        for (var i = this._requestHeaders.length - 1; i >= 0; i--) {
+            var requestHeader = this._requestHeaders[i];
+            if (requestHeader[0] !== key)
+                continue;
+            requestHeader[1] = value;
+            return;
+        }
         this._requestHeaders.push([key, value]);
     };
     DrapoServer.prototype.GetRequestHeader = function (key) {
@@ -552,6 +571,33 @@ var DrapoServer = (function () {
             return (false);
         var hasPercentageEncoded = url.indexOf('%25') >= 0;
         return (hasPercentageEncoded);
+    };
+    DrapoServer.prototype.SetContainerId = function (response) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, i, header;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (!(this._headerContainerIdKey == null)) return [3, 2];
+                        _a = this;
+                        return [4, this.Application.Config.GetHeaderContainerId()];
+                    case 1:
+                        _a._headerContainerIdKey = _b.sent();
+                        _b.label = 2;
+                    case 2:
+                        if ((this._headerContainerIdKey == null) || (this._headerContainerIdKey == ''))
+                            return [2];
+                        for (i = 0; i < response.Headers.length; i++) {
+                            header = response.Headers[i];
+                            if (header[0].toLowerCase() !== this._headerContainerIdKey.toLowerCase())
+                                continue;
+                            this._headerContainerIdValue = header[1];
+                            break;
+                        }
+                        return [2];
+                }
+            });
+        });
     };
     return DrapoServer;
 }());

@@ -1167,7 +1167,8 @@ class DrapoParser {
             return (query);
         }
         query.Sources = sources;
-        //Where: Work in the future
+        //Filters
+        query.Filter = this.ParseQueryFilter(value);
         return (query);
     }
 
@@ -1188,19 +1189,51 @@ class DrapoParser {
     }
 
     private ParseQueryProjection(value: string): DrapoQueryProjection {
+        const projection: DrapoQueryProjection = new DrapoQueryProjection();
         const valueTrim: string = this.Trim(value);
         const valueTrimSplit: string[] = this.ParseBlock(valueTrim, ' ');
         const alias: string = this.ParseQueryProjectionAlias(valueTrimSplit);
-        const valueTrimFirst: string = valueTrimSplit[0];
-        const isMustache: boolean = this.IsMustache(valueTrimFirst);
-        const valueTrimFirstSplit: string[] = isMustache ? [valueTrimFirst]: this.ParseBlock(valueTrimFirst, '.');
-        const source: string = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[0] : null;
-        const column: string = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[1] : valueTrimFirstSplit[0];
-        const projection: DrapoQueryProjection = new DrapoQueryProjection();
         projection.Alias = alias;
-        projection.Source = source;
-        projection.Column = column;
+        const valueTrimFirst: string = valueTrimSplit[0];
+        const functionName: string = this.ParseQueryProjectionFunctionName(valueTrimFirst);
+        if (functionName !== null) {
+            projection.FunctionName = functionName;
+            const functionParameters: string = this.ParseQueryProjectionFunctionParameters(valueTrimFirst);
+            projection.FunctionParameters = this.ParseQueryProjectionFunctionParametersBlock(functionParameters);
+        } else {
+            const valueDefinition: string = valueTrimFirst;
+            const isMustache: boolean = this.IsMustache(valueDefinition);
+            const valueTrimFirstSplit: string[] = isMustache ? [valueDefinition] : this.ParseBlock(valueDefinition, '.');
+            const source: string = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[0] : null;
+            const column: string = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[1] : valueTrimFirstSplit[0];
+            projection.Source = source;
+            projection.Column = column;
+        }
         return (projection);
+    }
+
+    private ParseQueryProjectionFunctionName(value: string): string {
+        const index: number = value.indexOf('(');
+        if (index < 0)
+            return (null);
+        const functionName : string = value.substr(0, index).toUpperCase();
+        return (functionName);
+    }
+
+    private ParseQueryProjectionFunctionParameters(value: string): string {
+        const index: number = value.indexOf('(');
+        if (index < 0)
+            return (null);
+        const parameters: string = value.substring(index + 1,value.length - 1);
+        return (parameters);
+    }
+
+    private ParseQueryProjectionFunctionParametersBlock(value: string): string[] {
+        return (this.ParseBlock(value, ','));
+    }
+
+    public ParseQueryProjectionFunctionParameterValue(value: string): string[] {
+        return (this.ParseBlock(value, '.'));
     }
 
     private ParseQueryProjectionAlias(values: string[]): string {
@@ -1259,12 +1292,26 @@ class DrapoParser {
         const leftProjection: DrapoQueryProjection = this.ParseQueryProjection(item.Items[0].Value);
         conditional.SourceLeft = leftProjection.Source;
         conditional.ColumnLeft = leftProjection.Column;
+        if (conditional.SourceLeft == null)
+            conditional.ValueLeft = conditional.ColumnLeft;
         //Comparator
-        conditional.Comparator = item.Items[1].Value;
+        conditional.Comparator = item.Items[1].Value.toUpperCase();
+        let index: number = 2;
+        if ((item.Items.length === 4) && (conditional.Comparator === 'IS') && (item.Items[index].Value === 'NOT')) {
+            conditional.Comparator = 'IS NOT';
+            index++;
+        }
         //Right
-        const rightProjection: DrapoQueryProjection = this.ParseQueryProjection(item.Items[2].Value);
-        conditional.SourceRight = rightProjection.Source;
-        conditional.ColumnRight = rightProjection.Column;
+        const valueRight = item.Items[index].Value;
+        if (valueRight.toUpperCase() === 'NULL') {
+            conditional.IsNullRight = true;
+        } else {
+            const rightProjection: DrapoQueryProjection = this.ParseQueryProjection(valueRight);
+            conditional.SourceRight = rightProjection.Source;
+            conditional.ColumnRight = rightProjection.Column;
+            if (conditional.SourceRight == null)
+                conditional.ValueRight = conditional.ColumnRight;
+        }
         return (conditional);
     }
 
@@ -1272,7 +1319,7 @@ class DrapoParser {
         const indexStart: number = value.indexOf(start);
         if (indexStart < 0)
             return (null);
-        let indexEnd: number = value.indexOf(end);
+        let indexEnd: number = end === null ? -1 : value.indexOf(end);
         if (indexEnd < 0) {
             if (canMissEnd)
                 indexEnd = value.length;
@@ -1304,6 +1351,9 @@ class DrapoParser {
         header = this.ParseQuerySourceHeadValue(value, 'LEFT JOIN');
         if (header !== null)
             return (header);
+        header = this.ParseQuerySourceHeadValue(value, 'OUTER JOIN');
+        if (header !== null)
+            return (header);
         header = this.ParseQuerySourceHeadValue(value, 'RIGHT JOIN');
         if (header !== null)
             return (header);
@@ -1316,5 +1366,13 @@ class DrapoParser {
             return (null);
         const header: string = value.substring(0, index);
         return (header);
+    }
+
+    private ParseQueryFilter(value: string): DrapoQueryCondition {
+        const whereToken: string = this.ParseSubstring(value, 'WHERE', null, true);
+        if (whereToken === null)
+            return (null);
+        const filter: DrapoQueryCondition = this.ParseQueryConditional(whereToken);
+        return (filter);
     }
 }

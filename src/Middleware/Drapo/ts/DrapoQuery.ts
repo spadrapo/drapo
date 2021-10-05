@@ -2,6 +2,8 @@
     private _error: string = null;
     private _projections: DrapoQueryProjection[] = [];
     private _sources: DrapoQuerySource[] = [];
+    private _filter: DrapoQueryCondition = null;
+    private _outputArray: string = null;
 
     get Error(): string {
         return (this._error);
@@ -20,5 +22,21 @@
     }
     set Sources(value: DrapoQuerySource[]) {
         this._sources = value;
+    }
+
+    get Filter(): DrapoQueryCondition {
+        return (this._filter);
+    }
+
+    set Filter(value: DrapoQueryCondition) {
+        this._filter = value;
+    }
+
+    get OutputArray(): string {
+        return (this._outputArray);
+    }
+
+    set OutputArray(value: string) {
+        this._outputArray = value;
     }
 }

@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Format Timezone</title>
+</head>
+<body>
+    <div d-datakey="dates" d-dataurlget="~/Data/GetDates"></div>
+    <div d-datakey="timezone" d-datatype="value" d-datavalue="0" d-dataonnotify="SetConfig(timezone,{{timezone}});Notify(dates)"></div>
+    <div d-datakey="timezoneFunction" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateData(timezone,-3)"></div>
+    <br />
+    <span>Format Timezone</span>
+    <br />
+    <span>Timezone:</span><input type="text" d-model="{{timezone}}" />
+    <br />
+    <span>Dates:</span>
+    <br />
+    <div>
+        <div d-for="date in dates" style="display: none;">
+            <br />
+            <span d-model="{{date.Date}}" d-format="G"></span>
+        </div>
+    <div>
+            <br />
+            <span>06/02/1980 21:00:00</span>
+        </div><div>
+            <br />
+            <span>06/02/1980 21:00:00</span>
+        </div><div>
+            <br />
+            <span>06/02/1980 21:00:00</span>
+        </div><div>
+            <br />
+            <span>06/02/1980 21:00:00</span>
+        </div><div>
+            <br />
+            <span></span>
+        </div></div>
+
+</body></html>

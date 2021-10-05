@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Empty</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Empty</span>
+        <div d-datakey="objects1" d-dataurlget="~/Data/GetLevels?children=0"></div>
+        <div d-datakey="objects2" d-dataurlget="~/Data/GetLevels?children=0"></div>
+        <div d-datakey="objectsQuery" d-datatype="query" d-datavalue="SELECT O1.Key AS Key, O2 AS Value FROM objects1 AS O1 INNER JOIN objects2 AS O2 ON O1.Value = O2"></div>
+        <div>
+            <div d-for="object in objectsQuery" style="display: none;">
+                <span>{{object.Key}}</span>
+                <span>{{object.Value}}</span>
+                <br />
+            </div>
+        </div>
+        <span d-model="{{objectsQuery.length}}">0</span>
+    </div>
+
+</body></html>

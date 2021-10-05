@@ -212,31 +212,34 @@ var DrapoObserver = (function () {
             this._dataForElement[dataKeyIndex].splice(i, 1);
         }
     };
-    DrapoObserver.prototype.Notify = function (dataKey, dataIndex, dataFields, canUseDifference) {
+    DrapoObserver.prototype.Notify = function (dataKey, dataIndex, dataFields, canUseDifference, canNotifyStorage) {
         if (canUseDifference === void 0) { canUseDifference = true; }
+        if (canNotifyStorage === void 0) { canNotifyStorage = true; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.Application.Debugger.AddNotify(dataKey)];
                     case 1:
                         _a.sent();
+                        if (!canNotifyStorage) return [3, 3];
                         return [4, this.NotifyStorage(dataKey, dataFields)];
                     case 2:
                         _a.sent();
-                        return [4, this.NotifyFor(dataKey, dataIndex, dataFields, canUseDifference)];
-                    case 3:
-                        _a.sent();
-                        return [4, this.NotifyBarber(dataKey, dataFields)];
+                        _a.label = 3;
+                    case 3: return [4, this.NotifyFor(dataKey, dataIndex, dataFields, canUseDifference)];
                     case 4:
                         _a.sent();
-                        return [4, this.NotifyLink(dataKey, dataFields)];
+                        return [4, this.NotifyBarber(dataKey, dataFields)];
                     case 5:
                         _a.sent();
-                        return [4, this.NotifyComponent(dataKey)];
+                        return [4, this.NotifyLink(dataKey, dataFields)];
                     case 6:
                         _a.sent();
-                        return [4, this.Application.Storage.FireEventOnNotify(dataKey)];
+                        return [4, this.NotifyComponent(dataKey)];
                     case 7:
+                        _a.sent();
+                        return [4, this.Application.Storage.FireEventOnNotify(dataKey)];
+                    case 8:
                         _a.sent();
                         return [2];
                 }
@@ -338,9 +341,9 @@ var DrapoObserver = (function () {
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < dataStorageFields.length)) return [3, 11];
-                        if ((dataField != null) && (dataStorageFields[i] !== dataField))
-                            return [3, 10];
+                        if (!(i < dataStorageFields.length)) return [3, 14];
+                        if ((dataField != null) && (dataStorageFields[i] != null) && (dataStorageFields[i] !== dataField))
+                            return [3, 13];
                         dataReferenceKey = dataReferenceKeys[i];
                         type = dataTypes[i];
                         if (!(type == DrapoStorageLinkType.Reload)) return [3, 6];
@@ -356,21 +359,30 @@ var DrapoObserver = (function () {
                     case 4:
                         j++;
                         return [3, 2];
-                    case 5: return [3, 10];
+                    case 5: return [3, 13];
                     case 6:
                         if (!(type == DrapoStorageLinkType.RenderClass)) return [3, 8];
                         return [4, this.NotifyStorageRenderClass(dataReferenceKey)];
                     case 7:
                         _a.sent();
-                        return [3, 10];
-                    case 8: return [4, this.Application.Observer.Notify(dataReferenceKey, null, null)];
+                        return [3, 13];
+                    case 8:
+                        if (!(type == DrapoStorageLinkType.Pointer)) return [3, 11];
+                        return [4, this.Application.Storage.UpdatePointerStorageItems(dataKey, dataReferenceKey)];
                     case 9:
                         _a.sent();
-                        _a.label = 10;
+                        return [4, this.Application.Observer.Notify(dataReferenceKey, null, null, true, false)];
                     case 10:
+                        _a.sent();
+                        return [3, 13];
+                    case 11: return [4, this.Application.Observer.Notify(dataReferenceKey, null, null)];
+                    case 12:
+                        _a.sent();
+                        _a.label = 13;
+                    case 13:
                         i++;
                         return [3, 1];
-                    case 11: return [2];
+                    case 14: return [2];
                 }
             });
         });
@@ -409,6 +421,8 @@ var DrapoObserver = (function () {
                         _a.label = 1;
                     case 1:
                         if (!(i >= 0)) return [3, 5];
+                        if (i >= elements.length)
+                            return [3, 4];
                         element = elements[i];
                         if (!(element.parentElement === null)) return [3, 2];
                         elements.splice(i, 1);

@@ -5,6 +5,8 @@ declare class DrapoServer {
     private _requestHeaders;
     private _requestHeadersNext;
     private _hasBadRequest;
+    private _headerContainerIdKey;
+    private _headerContainerIdValue;
     get Application(): DrapoApplication;
     get HasBadRequest(): boolean;
     set HasBadRequest(value: boolean);
@@ -16,7 +18,7 @@ declare class DrapoServer {
     GetViewHTML(url: string): Promise<string>;
     GetHTML(url: string): Promise<[string, boolean]>;
     GetJSON(url: string, verb?: string, data?: string, contentType?: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
-    GetFile(url: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
+    GetFile(url: string, verb: string, data: string, contentType?: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
     private CreateFileObject;
     private ConvertFileBody;
     private Request;
@@ -36,4 +38,5 @@ declare class DrapoServer {
     EnsureUrlEncoded(url: string): string;
     EnsureUrlComponentEncoded(url: string): string;
     private IsUrlEncoded;
+    private SetContainerId;
 }

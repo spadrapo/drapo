@@ -40,6 +40,7 @@ var DrapoConfig = (function () {
         this._url = null;
         this._cacheKeys = null;
         this._cacheDatas = null;
+        this._timezone = null;
         this._application = application;
     }
     Object.defineProperty(DrapoConfig.prototype, "Application", {
@@ -270,6 +271,16 @@ var DrapoConfig = (function () {
             });
         });
     };
+    DrapoConfig.prototype.GetOnReconnect = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.GetProperty('OnReconnect')];
+                    case 1: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
     DrapoConfig.prototype.GetStorageErrors = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -340,6 +351,16 @@ var DrapoConfig = (function () {
             });
         });
     };
+    DrapoConfig.prototype.GetHeaderContainerId = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.GetProperty('HeaderContainerId')];
+                    case 1: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
     DrapoConfig.prototype.GetViews = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -349,6 +370,12 @@ var DrapoConfig = (function () {
                 }
             });
         });
+    };
+    DrapoConfig.prototype.GetTimezone = function () {
+        return (this._timezone);
+    };
+    DrapoConfig.prototype.SetTimezone = function (value) {
+        this._timezone = value;
     };
     return DrapoConfig;
 }());

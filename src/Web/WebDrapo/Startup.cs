@@ -99,6 +99,7 @@ namespace WebDrapo
             options.Config.CacheKeysComponentStyle = "applicationbuild,url,theme";
             options.Config.CacheKeysComponentScript = "applicationbuild,url";
             options.Config.ApplicationBuild = "1.0";
+            options.Config.HeaderContainerId = "DrapoContainerId";
             options.Config.CreateTheme("Default", "");
             options.Config.CreateTheme("Dark", "dark");
             options.Config.CreateTheme("Light", "light");

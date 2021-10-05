@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Aggregation Function</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Aggregation Function</span>
+        <div d-dataKey="objects" d-dataUrlGet="~/Data/GetLevels?children=5"></div>
+        <div d-dataKey="objectsQuery" d-dataType="query" d-dataValue="SELECT Count(Key) AS Count FROM objects"></div>
+        <div>
+            <span>{{objectsQuery.Count}}</span>
+        </div>
+    </div>
+</body>
+</html>

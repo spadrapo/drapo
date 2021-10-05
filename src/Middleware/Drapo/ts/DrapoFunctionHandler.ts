@@ -211,6 +211,8 @@ class DrapoFunctionHandler {
             return (this.ExecuteFunctionExternal(contextItem, element, event, functionParsed));
         if (functionParsed.Name === 'toggleitemfield')
             return (await this.ExecuteFunctionToggleItemField(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'toggledata')
+            return (await this.ExecuteFunctionToggleData(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'uncheckitemfield')
             return (await this.ExecuteFunctionUncheckItemField(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'clearitemfield')
@@ -351,6 +353,10 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionDownloadData(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'detectview')
             return (await this.ExecuteFunctionDetectView(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'setconfig')
+            return (await this.ExecuteFunctionSetConfig(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'getconfig')
+            return (await this.ExecuteFunctionGetConfig(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'debugger')
             return (await this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext));
         await this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name);
@@ -483,6 +489,37 @@ class DrapoFunctionHandler {
         const state: boolean = this.Application.Solver.ResolveConditionalBoolean(((stateAny == null) || ((typeof stateAny) === 'string')) ? stateAny : stateAny.toString());
         const stateUpdated: boolean = !state;
         await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, stateUpdated, notify);
+        return ('');
+    }
+
+    private async ExecuteFunctionToggleData(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const source: string = functionParsed.Parameters[0];
+        const isSourceMustache: boolean = this.Application.Parser.IsMustache(source);
+        const mustacheParts: string[] = isSourceMustache ? this.Application.Parser.ParseMustache(source) : null;
+        const dataKey: string = mustacheParts != null ? this.Application.Solver.ResolveDataKey(mustacheParts) : source;
+        const itemText: string = functionParsed.Parameters[1];
+        let item: any = null;
+        if (this.Application.Parser.IsMustache(itemText)) {
+            const dataPath: string[] = this.Application.Parser.ParseMustache(itemText);
+            item = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataPath);
+        } else {
+            if (this.Application.Storage.IsDataKey(itemText, sector)) {
+                const dataItem: DrapoStorageItem = await this.Application.Storage.RetrieveDataItem(itemText, sector);
+                if (dataItem != null)
+                    item = dataItem.Data;
+            } else if (contextItem == null) {
+                item = itemText;
+            } else {
+                const itemPath: string[] = [];
+                itemPath.push(itemText);
+                item = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, itemPath);
+            }
+        }
+        if (item == null)
+            return (null);
+        const notifyText: string = functionParsed.Parameters[2];
+        const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
+        await this.Application.Storage.ToggleData(dataKey, mustacheParts, sector, item, notify);
         return ('');
     }
 
@@ -650,7 +687,9 @@ class DrapoFunctionHandler {
             return (null);
         const notifyText: string = functionParsed.Parameters[2];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        await this.Application.Storage.AddDataItem(dataKey, mustacheParts, sector, this.Application.Solver.Clone(item), notify);
+        const isCloneText: string = functionParsed.Parameters[3];
+        const isClone: boolean = ((isCloneText == null) || (isCloneText == '')) ? true : await this.Application.Solver.ResolveConditional(isCloneText);
+        await this.Application.Storage.AddDataItem(dataKey, mustacheParts, sector, isClone ? this.Application.Solver.Clone(item) : item, notify);
     }
 
     private async ExecuteFunctionRemoveDataItem(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
@@ -1093,9 +1132,11 @@ class DrapoFunctionHandler {
     }
 
     private async ExecuteFunctionCreateGuid(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const value: string = this.Application.Document.CreateGuid();
+        if (functionParsed.Parameters.length == 0)
+            return (value);
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const dataField: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
-        const value: string = this.Application.Document.CreateGuid();
         const notifyText: string = functionParsed.Parameters.length > 2 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]) : null;
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         await this.Application.Storage.SetDataKeyField(dataKey, sector, [dataField], value, notify);
@@ -1308,6 +1349,27 @@ class DrapoFunctionHandler {
                 return (view.Tag);
             if (await this.Application.Solver.ResolveConditional(view.Condition, null, sector, context))
                 return (view.Tag);
+        }
+        return ('');
+    }
+
+    private async ExecuteFunctionSetConfig(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const key: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        const value: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
+        const valueAsNumber: number = this.Application.Parser.ParseNumber(value, 0);
+        const keyLower: string = key.toLowerCase();
+        if (keyLower === 'timezone')
+            this.Application.Config.SetTimezone(valueAsNumber);
+        return ('');
+    }
+
+    private async ExecuteFunctionGetConfig(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const key: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        const keyLower: string = key.toLowerCase();
+        if (keyLower === 'timezone') {
+            const timeZone: number = this.Application.Config.GetTimezone();
+            if (timeZone != null)
+                return (timeZone.toString());
         }
         return ('');
     }

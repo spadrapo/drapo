@@ -17,10 +17,16 @@ namespace Sysphera.Middleware.Drapo
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
             //Prerequisites for Drapo here
-            services.Add(new ServiceDescriptor(typeof(DrapoMiddlewareOptions), options ?? new DrapoMiddlewareOptions()));
-            services.Add(new ServiceDescriptor(typeof(IDrapoRequestHeaderReader), typeof(DrapoRequestHeaderReader), ServiceLifetime.Transient));
+            if (options == null)
+                options = new DrapoMiddlewareOptions();
+            services.Add(new ServiceDescriptor(typeof(DrapoMiddlewareOptions), options));
+            services.AddScoped<IDrapoRequestReader,DrapoRequestReader>();
             services.Add(new ServiceDescriptor(typeof(IDrapoUserConfig), typeof(DrapoUserConfig), ServiceLifetime.Transient));
             services.Add(new ServiceDescriptor(typeof(IDrapoPlumber), typeof(DrapoPlumber), ServiceLifetime.Transient));
+            if (!string.IsNullOrEmpty(options.BackplaneRedis))
+                services.Add(new ServiceDescriptor(typeof(IDrapoConnectionManager), typeof(DrapoConnectionManagerRedis), ServiceLifetime.Singleton));
+            else
+                services.Add(new ServiceDescriptor(typeof(IDrapoConnectionManager), typeof(DrapoConnectionManagerSingle), ServiceLifetime.Singleton));
         }
 
         public static IApplicationBuilder UseDrapo(this IApplicationBuilder builder)

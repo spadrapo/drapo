@@ -3,6 +3,7 @@ declare class DrapoConfig {
     private _url;
     private _cacheKeys;
     private _cacheDatas;
+    private _timezone;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     private GetUrl;
@@ -27,6 +28,7 @@ declare class DrapoConfig {
     GetPipeHeaderConnectionId(): Promise<string>;
     GetOnAuthorizationRequest(): Promise<string>;
     GetOnError(): Promise<string>;
+    GetOnReconnect(): Promise<string>;
     GetStorageErrors(): Promise<string>;
     GetOnBadRequest(): Promise<string>;
     GetStorageBadRequest(): Promise<string>;
@@ -34,5 +36,8 @@ declare class DrapoConfig {
     GetValidatorValidClass(): Promise<string>;
     GetValidatorInvalidClass(): Promise<string>;
     GetApplicationBuild(): Promise<string>;
+    GetHeaderContainerId(): Promise<string>;
     GetViews(): Promise<DrapoView[]>;
+    GetTimezone(): number;
+    SetTimezone(value: number): void;
 }

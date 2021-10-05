@@ -22,6 +22,7 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionSetExternalFrameMessage;
     private ExecuteFunctionGetExternalFrameMessage;
     private ExecuteFunctionToggleItemField;
+    private ExecuteFunctionToggleData;
     private ExecuteFunctionUncheckItemField;
     private ExecuteFunctionClearItemField;
     private ExecuteFunctionUpdateItemField;
@@ -84,6 +85,8 @@ declare class DrapoFunctionHandler {
     private DownloadData;
     private CreateBlob;
     private ExecuteFunctionDetectView;
+    private ExecuteFunctionSetConfig;
+    private ExecuteFunctionGetConfig;
     private ExecuteFunctionDebugger;
     private ExecuteFunctionGetSector;
     private ExecuteFunctionGetClipboard;

@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Mapping Subscribe</title>
+</head>
+<body>
+    <span>Data Mapping Subscribe</span>
+    <div>
+        <div>
+            <div d-dataKey="value" d-dataType="value" d-dataValue="NewValue"></div>
+            <div d-dataKey="mapping" d-dataType="mapping" d-dataLoadType="startup" d-dataValue="value" d-dataMappingSubscribe="true"></div>
+            <div d-dataKey="start" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateData(value,UltraNew)"></div>
+        </div>
+        <div>
+            <span d-model="{{value}}"></span>
+            <br />
+            <span d-model="{{mapping}}"></span>
+            <br />
+            <input type="text" d-model="{{value}}" />
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Mapping</title>
+</head>
+<body>
+    <span>Data Mapping</span>
+    <div>
+        <div>
+            <div d-datakey="valueEmpty" d-datatype="value" d-datavalue=""></div>
+            <div d-datakey="value" d-datatype="value" d-datavalue="NewValue"></div>
+            <div d-datakey="mapping" d-datatype="mapping" d-datavalue="value" d-datamappingfield="{{valueEmpty}}"></div>
+        </div>
+        <div>
+            <span d-model="{{mapping}}">NewValue</span>
+        </div>
+    </div>
+
+</body></html>

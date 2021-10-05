@@ -1084,6 +1084,7 @@ var DrapoParser = (function () {
             return (query);
         }
         query.Sources = sources;
+        query.Filter = this.ParseQueryFilter(value);
         return (query);
     };
     DrapoParser.prototype.ParseQueryProjections = function (value) {
@@ -1102,19 +1103,48 @@ var DrapoParser = (function () {
         return (projections);
     };
     DrapoParser.prototype.ParseQueryProjection = function (value) {
+        var projection = new DrapoQueryProjection();
         var valueTrim = this.Trim(value);
         var valueTrimSplit = this.ParseBlock(valueTrim, ' ');
         var alias = this.ParseQueryProjectionAlias(valueTrimSplit);
-        var valueTrimFirst = valueTrimSplit[0];
-        var isMustache = this.IsMustache(valueTrimFirst);
-        var valueTrimFirstSplit = isMustache ? [valueTrimFirst] : this.ParseBlock(valueTrimFirst, '.');
-        var source = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[0] : null;
-        var column = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[1] : valueTrimFirstSplit[0];
-        var projection = new DrapoQueryProjection();
         projection.Alias = alias;
-        projection.Source = source;
-        projection.Column = column;
+        var valueTrimFirst = valueTrimSplit[0];
+        var functionName = this.ParseQueryProjectionFunctionName(valueTrimFirst);
+        if (functionName !== null) {
+            projection.FunctionName = functionName;
+            var functionParameters = this.ParseQueryProjectionFunctionParameters(valueTrimFirst);
+            projection.FunctionParameters = this.ParseQueryProjectionFunctionParametersBlock(functionParameters);
+        }
+        else {
+            var valueDefinition = valueTrimFirst;
+            var isMustache = this.IsMustache(valueDefinition);
+            var valueTrimFirstSplit = isMustache ? [valueDefinition] : this.ParseBlock(valueDefinition, '.');
+            var source = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[0] : null;
+            var column = (valueTrimFirstSplit.length > 1) ? valueTrimFirstSplit[1] : valueTrimFirstSplit[0];
+            projection.Source = source;
+            projection.Column = column;
+        }
         return (projection);
+    };
+    DrapoParser.prototype.ParseQueryProjectionFunctionName = function (value) {
+        var index = value.indexOf('(');
+        if (index < 0)
+            return (null);
+        var functionName = value.substr(0, index).toUpperCase();
+        return (functionName);
+    };
+    DrapoParser.prototype.ParseQueryProjectionFunctionParameters = function (value) {
+        var index = value.indexOf('(');
+        if (index < 0)
+            return (null);
+        var parameters = value.substring(index + 1, value.length - 1);
+        return (parameters);
+    };
+    DrapoParser.prototype.ParseQueryProjectionFunctionParametersBlock = function (value) {
+        return (this.ParseBlock(value, ','));
+    };
+    DrapoParser.prototype.ParseQueryProjectionFunctionParameterValue = function (value) {
+        return (this.ParseBlock(value, '.'));
     };
     DrapoParser.prototype.ParseQueryProjectionAlias = function (values) {
         if (values.length != 3)
@@ -1163,10 +1193,25 @@ var DrapoParser = (function () {
         var leftProjection = this.ParseQueryProjection(item.Items[0].Value);
         conditional.SourceLeft = leftProjection.Source;
         conditional.ColumnLeft = leftProjection.Column;
-        conditional.Comparator = item.Items[1].Value;
-        var rightProjection = this.ParseQueryProjection(item.Items[2].Value);
-        conditional.SourceRight = rightProjection.Source;
-        conditional.ColumnRight = rightProjection.Column;
+        if (conditional.SourceLeft == null)
+            conditional.ValueLeft = conditional.ColumnLeft;
+        conditional.Comparator = item.Items[1].Value.toUpperCase();
+        var index = 2;
+        if ((item.Items.length === 4) && (conditional.Comparator === 'IS') && (item.Items[index].Value === 'NOT')) {
+            conditional.Comparator = 'IS NOT';
+            index++;
+        }
+        var valueRight = item.Items[index].Value;
+        if (valueRight.toUpperCase() === 'NULL') {
+            conditional.IsNullRight = true;
+        }
+        else {
+            var rightProjection = this.ParseQueryProjection(valueRight);
+            conditional.SourceRight = rightProjection.Source;
+            conditional.ColumnRight = rightProjection.Column;
+            if (conditional.SourceRight == null)
+                conditional.ValueRight = conditional.ColumnRight;
+        }
         return (conditional);
     };
     DrapoParser.prototype.ParseSubstring = function (value, start, end, canMissEnd) {
@@ -1174,7 +1219,7 @@ var DrapoParser = (function () {
         var indexStart = value.indexOf(start);
         if (indexStart < 0)
             return (null);
-        var indexEnd = value.indexOf(end);
+        var indexEnd = end === null ? -1 : value.indexOf(end);
         if (indexEnd < 0) {
             if (canMissEnd)
                 indexEnd = value.length;
@@ -1204,6 +1249,9 @@ var DrapoParser = (function () {
         header = this.ParseQuerySourceHeadValue(value, 'LEFT JOIN');
         if (header !== null)
             return (header);
+        header = this.ParseQuerySourceHeadValue(value, 'OUTER JOIN');
+        if (header !== null)
+            return (header);
         header = this.ParseQuerySourceHeadValue(value, 'RIGHT JOIN');
         if (header !== null)
             return (header);
@@ -1215,6 +1263,13 @@ var DrapoParser = (function () {
             return (null);
         var header = value.substring(0, index);
         return (header);
+    };
+    DrapoParser.prototype.ParseQueryFilter = function (value) {
+        var whereToken = this.ParseSubstring(value, 'WHERE', null, true);
+        if (whereToken === null)
+            return (null);
+        var filter = this.ParseQueryConditional(whereToken);
+        return (filter);
     };
     return DrapoParser;
 }());

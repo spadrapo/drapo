@@ -661,6 +661,16 @@ namespace WebDrapo.Test
             ValidatePage("DataBadRequest");
         }
         [TestCase]
+        public void DataChannelTest()
+        {
+            ValidatePage("DataChannel");
+        }
+        [TestCase]
+        public void DataChannelMustacheTest()
+        {
+            ValidatePage("DataChannelMustache");
+        }
+        [TestCase]
         public void DataDelayLoadTest()
         {
             ValidatePage("DataDelayLoad");
@@ -736,6 +746,11 @@ namespace WebDrapo.Test
             ValidatePage("DataMappingField");
         }
         [TestCase]
+        public void DataMappingFieldEmptyTest()
+        {
+            ValidatePage("DataMappingFieldEmpty");
+        }
+        [TestCase]
         public void DataMappingFieldMustacheTest()
         {
             ValidatePage("DataMappingFieldMustache");
@@ -749,6 +764,16 @@ namespace WebDrapo.Test
         public void DataMappingMustacheTest()
         {
             ValidatePage("DataMappingMustache");
+        }
+        [TestCase]
+        public void DataMappingSubscribeTest()
+        {
+            ValidatePage("DataMappingSubscribe");
+        }
+        [TestCase]
+        public void DataOnAfterLoadTest()
+        {
+            ValidatePage("DataOnAfterLoad");
         }
         [TestCase]
         public void DataParentTest()
@@ -771,6 +796,11 @@ namespace WebDrapo.Test
             ValidatePage("DataParentSectorSide");
         }
         [TestCase]
+        public void DataPointerTest()
+        {
+            ValidatePage("DataPointer");
+        }
+        [TestCase]
         public void DataPostGetTest()
         {
             ValidatePage("DataPostGet");
@@ -781,9 +811,29 @@ namespace WebDrapo.Test
             ValidatePage("DataPostGetMustache");
         }
         [TestCase]
+        public void DataQueryAggregationFunctionTest()
+        {
+            ValidatePage("DataQueryAggregationFunction");
+        }
+        [TestCase]
         public void DataQueryArrayTest()
         {
             ValidatePage("DataQueryArray");
+        }
+        [TestCase]
+        public void DataQueryChainTest()
+        {
+            ValidatePage("DataQueryChain");
+        }
+        [TestCase]
+        public void DataQueryDuplicateTest()
+        {
+            ValidatePage("DataQueryDuplicate");
+        }
+        [TestCase]
+        public void DataQueryEmptyTest()
+        {
+            ValidatePage("DataQueryEmpty");
         }
         [TestCase]
         public void DataQueryInnerJoinTest()
@@ -796,6 +846,26 @@ namespace WebDrapo.Test
             ValidatePage("DataQueryInnerJoinMustache");
         }
         [TestCase]
+        public void DataQueryLeftJoinTest()
+        {
+            ValidatePage("DataQueryLeftJoin");
+        }
+        [TestCase]
+        public void DataQueryOuterJoinTest()
+        {
+            ValidatePage("DataQueryOuterJoin");
+        }
+        [TestCase]
+        public void DataQueryOuterJoinCoalesceTest()
+        {
+            ValidatePage("DataQueryOuterJoinCoalesce");
+        }
+        [TestCase]
+        public void DataQueryOutputArrayTest() 
+        {
+            ValidatePage("DataQueryOutputArray");
+        }
+        [TestCase]
         public void DataQuerySimpleTest()
         {
             ValidatePage("DataQuerySimple");
@@ -804,6 +874,21 @@ namespace WebDrapo.Test
         public void DataQueryStringValueTest()
         {
             ValidatePage("DataQueryStringValue");
+        }
+        [TestCase]
+        public void DataQueryWhereTest()
+        {
+            ValidatePage("DataQueryWhere");
+        }
+        [TestCase]
+        public void DataQueryWhereBooleanTest()
+        {
+            ValidatePage("DataQueryWhereBoolean");
+        }
+        [TestCase]
+        public void DataQueryWhereNullTest()
+        {
+            ValidatePage("DataQueryWhereNull");
         }
         [TestCase]
         public void DataSameKeyTest()
@@ -821,9 +906,19 @@ namespace WebDrapo.Test
             ValidatePage("DataStartupFunctionNoCacheInsideSector");
         }
         [TestCase]
+        public void DataUrlArrayEmptyTest()
+        {
+            ValidatePage("DataUrlArrayEmpty");
+        }
+        [TestCase]
         public void DataUrlParameterMissingTest()
         {
             ValidatePage("DataUrlParameterMissing");
+        }
+        [TestCase]
+        public void DataUrlSelfTest()
+        {
+            ValidatePage("DataUrlSelf");
         }
         [TestCase]
         public void DataValueTest()
@@ -881,6 +976,11 @@ namespace WebDrapo.Test
             ValidatePage("FormatTimespan");
         }
         [TestCase]
+        public void FormatTimezoneTest()
+        {
+            ValidatePage("FormatTimezone");
+        }
+        [TestCase]
         public void FunctionAcceptDataChangesTest()
         {
             ValidatePage("FunctionAcceptDataChanges");
@@ -889,6 +989,11 @@ namespace WebDrapo.Test
         public void FunctionAddDataItemMustacheTest()
         {
             ValidatePage("FunctionAddDataItemMustache");
+        }
+        [TestCase]
+        public void FunctionAddDataItemReferenceTest()
+        {
+            ValidatePage("FunctionAddDataItemReference");
         }
         [TestCase]
         public void FunctionAddRequestHeaderTest()
@@ -930,6 +1035,11 @@ namespace WebDrapo.Test
         public void FunctionContainsDataItemTest()
         {
             ValidatePage("FunctionContainsDataItem");
+        }
+        [TestCase]
+        public void FunctionContainsDataItemComplexObjectTest()
+        {
+            ValidatePage("FunctionContainsDataItemComplexObject");
         }
         [TestCase]
         public void FunctionCreateDataTest()
@@ -1295,6 +1405,11 @@ namespace WebDrapo.Test
         public void PropertiesSameTagTest()
         {
             ValidatePage("PropertiesSameTag");
+        }
+        [TestCase]
+        public void RenderTest()
+        {
+            ValidatePage("Render");
         }
         [TestCase]
         public void RouterMasterTest()

@@ -12,9 +12,11 @@ class DrapoSolver {
         this._application = application;
     }
 
-    public async ResolveConditional(expression: string | boolean, elj: JQuery = null, sector: string = null, context: DrapoContext = null, renderContext: DrapoRenderContext = null, eljForTemplate: HTMLElement = null): Promise<boolean> {
+    public async ResolveConditional(expression: string | boolean | number, elj: JQuery = null, sector: string = null, context: DrapoContext = null, renderContext: DrapoRenderContext = null, eljForTemplate: HTMLElement = null): Promise<boolean> {
         if (typeof expression === 'boolean')
             return (expression);
+        if (typeof expression === 'number')
+            return (expression > 0);
         //Parser
         const block: DrapoExpressionItem = this.Application.Parser.ParseExpression(expression);
         //Resolve
@@ -567,13 +569,20 @@ class DrapoSolver {
         const mustacheSector: string = mustacheParts[0];
         if (mustacheSector === '@')
             return (null);
-        if (mustacheSector.startsWith("@"))
+        if (mustacheSector.indexOf("@") === 0)
             return (mustacheSector.substring(1));
         return (sector);
     }
 
     private HasMustachePartsSector(mustacheParts: string[]): boolean {
-        return (mustacheParts[0].startsWith('@'));
+        if (mustacheParts == null)
+            return (false);
+        const part: string = mustacheParts[0];
+        if (part == null)
+            return (false);
+        if (part.length == 0)
+            return (false);
+        return (part[0] === '@');
     }
 
     public ResolveDataKey(mustacheParts: string[]): string {

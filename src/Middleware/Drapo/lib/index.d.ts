@@ -99,6 +99,7 @@ declare class DrapoBarber {
     private HasContentMustacheAttributeContextMustache;
     ResolveMustaches(jQueryStart?: JQuery, sector?: string, stopAtSectors?: boolean): Promise<void>;
     private ResolveMustachesInternal;
+    private CanRender;
     ResolveFilter(el: HTMLElement, sector: string, canBind: boolean, dataKeyFilter: string, dataFieldFilter: string): Promise<void>;
     ResolveElementDelayed(el: HTMLElement, sector: string, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
     ResolveMustacheElementLeaf(el: HTMLElement, canUseModel?: boolean, canSubscribeDelay?: boolean, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
@@ -267,6 +268,7 @@ declare class DrapoConfig {
     private _url;
     private _cacheKeys;
     private _cacheDatas;
+    private _timezone;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     private GetUrl;
@@ -291,6 +293,7 @@ declare class DrapoConfig {
     GetPipeHeaderConnectionId(): Promise<string>;
     GetOnAuthorizationRequest(): Promise<string>;
     GetOnError(): Promise<string>;
+    GetOnReconnect(): Promise<string>;
     GetStorageErrors(): Promise<string>;
     GetOnBadRequest(): Promise<string>;
     GetStorageBadRequest(): Promise<string>;
@@ -298,7 +301,10 @@ declare class DrapoConfig {
     GetValidatorValidClass(): Promise<string>;
     GetValidatorInvalidClass(): Promise<string>;
     GetApplicationBuild(): Promise<string>;
+    GetHeaderContainerId(): Promise<string>;
     GetViews(): Promise<DrapoView[]>;
+    GetTimezone(): number;
+    SetTimezone(value: number): void;
 }
 
 declare class DrapoContext {
@@ -842,6 +848,7 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionSetExternalFrameMessage;
     private ExecuteFunctionGetExternalFrameMessage;
     private ExecuteFunctionToggleItemField;
+    private ExecuteFunctionToggleData;
     private ExecuteFunctionUncheckItemField;
     private ExecuteFunctionClearItemField;
     private ExecuteFunctionUpdateItemField;
@@ -904,6 +911,8 @@ declare class DrapoFunctionHandler {
     private DownloadData;
     private CreateBlob;
     private ExecuteFunctionDetectView;
+    private ExecuteFunctionSetConfig;
+    private ExecuteFunctionGetConfig;
     private ExecuteFunctionDebugger;
     private ExecuteFunctionGetSector;
     private ExecuteFunctionGetClipboard;
@@ -1114,7 +1123,7 @@ declare class DrapoObserver {
     private UnsubscribeStorage;
     private UnsubscribeStorageReferenceKey;
     UnsubscribeFor(dataKey: string, elementForTemplate?: HTMLElement): void;
-    Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean): Promise<void>;
+    Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, canNotifyStorage?: boolean): Promise<void>;
     NotifyFor(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, type?: DrapoStorageLinkType): Promise<void>;
     NotifyBarber(dataKey: string, dataFields: string[]): Promise<void>;
     NotifyStorage(dataKey: string, dataFields: string[]): Promise<void>;
@@ -1273,6 +1282,10 @@ declare class DrapoParser {
     ParseQuery(value: string): DrapoQuery;
     ParseQueryProjections(value: string): DrapoQueryProjection[];
     private ParseQueryProjection;
+    private ParseQueryProjectionFunctionName;
+    private ParseQueryProjectionFunctionParameters;
+    private ParseQueryProjectionFunctionParametersBlock;
+    ParseQueryProjectionFunctionParameterValue(value: string): string[];
     private ParseQueryProjectionAlias;
     private ParseQuerySources;
     private ParseQuerySource;
@@ -1281,6 +1294,7 @@ declare class DrapoParser {
     private ParseQuerySourcesSplit;
     private ParseQuerySourceHead;
     private ParseQuerySourceHeadValue;
+    private ParseQueryFilter;
 }
 
 declare class DrapoPipeMessage {
@@ -1317,42 +1331,64 @@ declare class DrapoQuery {
     private _error;
     private _projections;
     private _sources;
+    private _filter;
+    private _outputArray;
     get Error(): string;
     set Error(value: string);
     get Projections(): DrapoQueryProjection[];
     set Projections(value: DrapoQueryProjection[]);
     get Sources(): DrapoQuerySource[];
     set Sources(value: DrapoQuerySource[]);
+    get Filter(): DrapoQueryCondition;
+    set Filter(value: DrapoQueryCondition);
+    get OutputArray(): string;
+    set OutputArray(value: string);
 }
 
 declare class DrapoQueryCondition {
     private _sourceLeft;
     private _columnLeft;
+    private _valueLeft;
     private _comparator;
     private _sourceRight;
     private _columnRight;
+    private _valueRight;
+    private _isNullRight;
     get SourceLeft(): string;
     set SourceLeft(value: string);
     get ColumnLeft(): string;
     set ColumnLeft(value: string);
+    get ValueLeft(): string;
+    set ValueLeft(value: string);
     get Comparator(): string;
     set Comparator(value: string);
     get SourceRight(): string;
     set SourceRight(value: string);
     get ColumnRight(): string;
     set ColumnRight(value: string);
+    get ValueRight(): string;
+    set ValueRight(value: string);
+    get IsNullRight(): boolean;
+    set IsNullRight(value: boolean);
+    Clone(): DrapoQueryCondition;
 }
 
 declare class DrapoQueryProjection {
     private _source;
     private _column;
     private _alias;
+    private _functionName;
+    private _functionParameters;
     get Source(): string;
     set Source(value: string);
     get Column(): string;
     set Column(value: string);
     get Alias(): string;
     set Alias(value: string);
+    get FunctionName(): string;
+    set FunctionName(value: string);
+    get FunctionParameters(): string[];
+    set FunctionParameters(value: string[]);
 }
 
 declare class DrapoQuerySource {
@@ -1594,6 +1630,8 @@ declare class DrapoServer {
     private _requestHeaders;
     private _requestHeadersNext;
     private _hasBadRequest;
+    private _headerContainerIdKey;
+    private _headerContainerIdValue;
     get Application(): DrapoApplication;
     get HasBadRequest(): boolean;
     set HasBadRequest(value: boolean);
@@ -1605,7 +1643,7 @@ declare class DrapoServer {
     GetViewHTML(url: string): Promise<string>;
     GetHTML(url: string): Promise<[string, boolean]>;
     GetJSON(url: string, verb?: string, data?: string, contentType?: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
-    GetFile(url: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
+    GetFile(url: string, verb: string, data: string, contentType?: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
     private CreateFileObject;
     private ConvertFileBody;
     private Request;
@@ -1625,6 +1663,7 @@ declare class DrapoServer {
     EnsureUrlEncoded(url: string): string;
     EnsureUrlComponentEncoded(url: string): string;
     private IsUrlEncoded;
+    private SetContainerId;
 }
 
 declare class DrapoServerRequest {
@@ -1667,7 +1706,7 @@ declare class DrapoSolver {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    ResolveConditional(expression: string | boolean, elj?: JQuery, sector?: string, context?: DrapoContext, renderContext?: DrapoRenderContext, eljForTemplate?: HTMLElement): Promise<boolean>;
+    ResolveConditional(expression: string | boolean | number, elj?: JQuery, sector?: string, context?: DrapoContext, renderContext?: DrapoRenderContext, eljForTemplate?: HTMLElement): Promise<boolean>;
     private ResolveConditionalExpressionBlock;
     private ResolveConditionalExpressionBlockOperation;
     private EnsureExpressionItemCurrentLevelResolved;
@@ -1783,6 +1822,11 @@ declare class DrapoStorage {
     private RetrieveDataItemInternal;
     private RetrieveDataKey;
     private RetrieveDataKeyUrl;
+    private ParseChannels;
+    private RetrieveDataChannels;
+    private ContainsDataChannel;
+    private RetrieveDataChannel;
+    private PropagateDataChannels;
     private HasChangeNullOrEmpty;
     private ExtractDataHeaderGet;
     ExtractDataHeaderGetProperty(property: string): string;
@@ -1797,6 +1841,8 @@ declare class DrapoStorage {
     private RetrieveDataKeyInitializeValue;
     private RetrieveDataKeyInitializeArray;
     private RetrieveDataKeyInitializeMapping;
+    private RetrieveDataKeyInitializePointer;
+    UpdatePointerStorageItems(dataKey: string, dataReferenceKey: string): Promise<void>;
     private RetrieveDataKeyInitializeFunction;
     private RetrieveDataKeyInitializeQueryString;
     private RetrieveDataKeyInitializeQuery;
@@ -1810,6 +1856,7 @@ declare class DrapoStorage {
     RetrieveIterator(dataKey: string, dataKeyParts: string[], context: DrapoContext): DrapoStorageItem;
     RetrieveIteratorChild(dataKey: string, dataKeyParts: string[], contextData: any): DrapoStorageItem;
     AddDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify?: boolean): Promise<boolean>;
+    ToggleData(dataKey: string, dataPath: string[], sector: string, item: any, notify?: boolean): Promise<boolean>;
     GetDataItemLast(dataKey: string, sector: string): Promise<any>;
     FlagDataItemAsUpdated(dataKey: string, sector: string, index: number, notify?: boolean): Promise<boolean>;
     NotifyChanges(dataItem: DrapoStorageItem, notify: boolean, dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean): Promise<void>;
@@ -1874,6 +1921,13 @@ declare class DrapoStorage {
     private ExecuteQuery;
     private EnsureQueryObject;
     private InjectQueryObjectProjections;
+    private ResolveQueryConditionSource;
+    private ResolveQueryConditionSourceColumn;
+    private ResolveQueryFunctionParameterName;
+    private ResolveQueryFunctions;
+    private ResolveQueryFunction;
+    private ResolveQueryFunctionCoalesce;
+    private IsValidQueryCondition;
 }
 
 declare class DrapoStorageItem {
@@ -1902,9 +1956,11 @@ declare class DrapoStorageItem {
     private _sector;
     private _groups;
     private _pipes;
+    private _channels;
     private _canCache;
     private _cacheKeys;
     private _onLoad;
+    private _onAfterLoad;
     private _onAfterContainerLoad;
     private _onBeforeContainerUnload;
     private _onAfterCached;
@@ -1967,12 +2023,16 @@ declare class DrapoStorageItem {
     set Sector(value: string);
     get Pipes(): string[];
     set Pipes(value: string[]);
+    get Channels(): string[];
+    set Channels(value: string[]);
     get CanCache(): boolean;
     set CanCache(value: boolean);
     get CacheKeys(): string[];
     set CacheKeys(value: string[]);
     get OnLoad(): string;
     set OnLoad(value: string);
+    get OnAfterLoad(): string;
+    set OnAfterLoad(value: string);
     get OnAfterContainerLoad(): string;
     set OnAfterContainerLoad(value: string);
     get OnBeforeContainerUnload(): string;
@@ -1987,7 +2047,7 @@ declare class DrapoStorageItem {
     set HeadersSet(value: [string, string][]);
     get HasChanges(): boolean;
     set HasChanges(value: boolean);
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
+    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
     private Initialize;
     ContainsGroup(group: string): boolean;
 }
@@ -1995,7 +2055,8 @@ declare class DrapoStorageItem {
 declare enum DrapoStorageLinkType {
     Render = 0,
     RenderClass = 1,
-    Reload = 2
+    Reload = 2,
+    Pointer = 3
 }
 
 declare class DrapoStylist {

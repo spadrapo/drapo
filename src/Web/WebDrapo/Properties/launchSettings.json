@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/FunctionAddDataItemMustache.html",
+      "launchUrl": "DrapoPages/Render.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

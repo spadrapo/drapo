@@ -36,10 +36,14 @@ namespace Sysphera.Middleware.Drapo
         private string _onAuthorizationRequest = null;
         private string _onError = null;
         private string _onBadRequest = null;
+        private string _onReconnect = null;
         private string _validatorUncheckedClass = null;
         private string _validatorValidClass = null;
         private string _validatorInvalidClass = null;
         private string _applicationBuild = null;
+        private string _domainRegex = null;
+        private string _domainGroup = "domain";
+        private string _headerContainerId = null;
         #endregion
         #region Properties
         public Dictionary<string, string> Properties { get => _properties; set => _properties = value; }
@@ -67,11 +71,15 @@ namespace Sysphera.Middleware.Drapo
         public string OnAuthorizationRequest { get => _onAuthorizationRequest; set => _onAuthorizationRequest = value; }
         public string OnError { get => _onError; set => _onError = value; }
         public string OnBadRequest { get => _onBadRequest; set => _onBadRequest = value; }
+        public string OnReconnect { get => _onReconnect; set => _onReconnect = value; }
         public List<DrapoWindow> Windows { get => _windows; set => _windows = value; }
         public string ValidatorUncheckedClass { get => _validatorUncheckedClass; set => _validatorUncheckedClass = value; }
         public string ValidatorValidClass { get => _validatorValidClass; set => _validatorValidClass = value; }
         public string ValidatorInvalidClass { get => _validatorInvalidClass; set => _validatorInvalidClass = value; }
         public string ApplicationBuild { get => _applicationBuild; set => _applicationBuild = value; }
+        public string DomainRegex { get => _domainRegex; set => _domainRegex = value; }
+        public string DomainGroup { get => _domainGroup; set => _domainGroup = value; }
+        public string HeaderContainerId { get => _headerContainerId; set => _headerContainerId = value; }
         #endregion
 
         #region Constructors

@@ -59,6 +59,8 @@ var DrapoSolver = (function () {
                     case 0:
                         if (typeof expression === 'boolean')
                             return [2, (expression)];
+                        if (typeof expression === 'number')
+                            return [2, (expression > 0)];
                         block = this.Application.Parser.ParseExpression(expression);
                         return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, block)];
                     case 1:
@@ -769,12 +771,19 @@ var DrapoSolver = (function () {
         var mustacheSector = mustacheParts[0];
         if (mustacheSector === '@')
             return (null);
-        if (mustacheSector.startsWith("@"))
+        if (mustacheSector.indexOf("@") === 0)
             return (mustacheSector.substring(1));
         return (sector);
     };
     DrapoSolver.prototype.HasMustachePartsSector = function (mustacheParts) {
-        return (mustacheParts[0].startsWith('@'));
+        if (mustacheParts == null)
+            return (false);
+        var part = mustacheParts[0];
+        if (part == null)
+            return (false);
+        if (part.length == 0)
+            return (false);
+        return (part[0] === '@');
     };
     DrapoSolver.prototype.ResolveDataKey = function (mustacheParts) {
         var index = this.HasMustachePartsSector(mustacheParts) ? 1 : 0;

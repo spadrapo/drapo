@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Where NULL</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Where NULL</span>
+        <div d-datakey="selections" d-datatype="array" d-datavalue="[1,2,3,4,5]"></div>
+        <div d-datakey="persons" d-datatype="array" d-datavalue="[{&quot;Code&quot;:1,&quot;Name&quot;:&quot;Thiago&quot;,&quot;Age&quot;:35},{&quot;Code&quot;:2,&quot;Name&quot;:&quot;Henrique&quot;,&quot;Age&quot;:&quot;&quot;},{&quot;Code&quot;:3,&quot;Name&quot;:&quot;Silva&quot;,&quot;Age&quot;:null},{&quot;Code&quot;:4,&quot;Name&quot;:&quot;Catarina&quot;},{&quot;Code&quot;:5,&quot;Name&quot;:&quot;Augusto&quot;}]"></div>
+        <div d-datakey="personsSelected2" d-datatype="query" d-datavalue="SELECT S AS Selected, P.Code AS Code, P.Name as Name FROM persons AS P LEFT JOIN selections AS S ON P.Code = S WHERE P.Age IS NULL"></div>
+        <div d-datakey="personsSelected3" d-datatype="query" d-datavalue="SELECT S AS Selected, P.Code AS Code, P.Name as Name FROM persons AS P LEFT JOIN selections AS S ON P.Code = S WHERE P.Age IS NOT NULL"></div>
+        <span>Null</span><br />
+        <div>
+            <div d-for="personSelected in personsSelected2" style="display: none;">
+                <span>{{personSelected.Name}}</span>
+                <br />
+            </div>
+        <div>
+                <span>Silva</span>
+                <br />
+            </div><div>
+                <span>Catarina</span>
+                <br />
+            </div><div>
+                <span>Augusto</span>
+                <br />
+            </div></div>
+        <br /><span>Not Null</span><br />
+        <div>
+            <div d-for="personSelected in personsSelected3" style="display: none;">
+                <span>{{personSelected.Name}}</span>
+                <br />
+            </div>
+        <div>
+                <span>Thiago</span>
+                <br />
+            </div><div>
+                <span>Henrique</span>
+                <br />
+            </div></div>
+    </div>
+
+</body></html>

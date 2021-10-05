@@ -1,6 +1,6 @@
 "use strict";
 var DrapoStorageItem = (function () {
-    function DrapoStorageItem(type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, canCache, cacheKeys, onLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet) {
+    function DrapoStorageItem(type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet) {
         this._type = null;
         this._access = null;
         this._data = [];
@@ -25,9 +25,11 @@ var DrapoStorageItem = (function () {
         this._sector = null;
         this._groups = null;
         this._pipes = null;
+        this._channels = null;
         this._canCache = true;
         this._cacheKeys = null;
         this._onLoad = null;
+        this._onAfterLoad = null;
         this._onAfterContainerLoad = null;
         this._onBeforeContainerUnload = null;
         this._onAfterCached = null;
@@ -56,9 +58,11 @@ var DrapoStorageItem = (function () {
         this._sector = sector;
         this._groups = groups;
         this._pipes = pipes;
+        this._channels = channels;
         this._canCache = canCache;
         this._cacheKeys = cacheKeys;
         this._onLoad = onLoad;
+        this._onAfterLoad = onAfterLoad == null ? null : onAfterLoad;
         this._onAfterContainerLoad = onAfterContainerLoad == null ? null : onAfterContainerLoad;
         this._onBeforeContainerUnload = onBeforeContainerUnload == null ? null : onBeforeContainerUnload;
         this._onAfterCached = onAfterCached == null ? null : onAfterCached;
@@ -362,6 +366,16 @@ var DrapoStorageItem = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(DrapoStorageItem.prototype, "Channels", {
+        get: function () {
+            return (this._channels);
+        },
+        set: function (value) {
+            this._channels = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(DrapoStorageItem.prototype, "CanCache", {
         get: function () {
             return (this._canCache);
@@ -388,6 +402,16 @@ var DrapoStorageItem = (function () {
         },
         set: function (value) {
             this._onLoad = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoStorageItem.prototype, "OnAfterLoad", {
+        get: function () {
+            return (this._onAfterLoad);
+        },
+        set: function (value) {
+            this._onAfterLoad = value;
         },
         enumerable: true,
         configurable: true

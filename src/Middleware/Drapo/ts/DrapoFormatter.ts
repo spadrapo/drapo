@@ -26,7 +26,10 @@ class DrapoFormatter {
         const date: Date = this.Application.Parser.ParseDate(value);
         if (date === null)
             return (value);
-        const formatConverted = this.ConvertDateFormat(format, culture);
+        const timeZone: number = this.Application.Config.GetTimezone();
+        if (timeZone != null)
+            date.setHours(date.getHours() + timeZone);
+        const formatConverted: string = this.ConvertDateFormat(format, culture);
         const formatTokens: string[] = this.Application.Parser.ParseFormat(formatConverted);
         const dateFormatted: string = this.GetDateFormattedTokens(date, formatTokens, culture);
         return (dateFormatted);

@@ -4,6 +4,7 @@ class DrapoConfig {
     private _url: string = null;
     private _cacheKeys: string[] = null;
     private _cacheDatas: any[][] = null;
+    private _timezone: number = null;
 
     //Properties
     get Application(): DrapoApplication {
@@ -131,6 +132,10 @@ class DrapoConfig {
         return (await this.GetProperty('OnError'));
     }
 
+    public async GetOnReconnect(): Promise<string> {
+        return (await this.GetProperty('OnReconnect'));
+    }
+
     public async GetStorageErrors(): Promise<string> {
         return (await this.GetProperty('StorageErrors'));
     }
@@ -159,7 +164,19 @@ class DrapoConfig {
         return (await this.GetProperty('ApplicationBuild'));
     }
 
+    public async GetHeaderContainerId(): Promise<string> {
+        return (await this.GetProperty('HeaderContainerId'));
+    }
+
     public async GetViews(): Promise<DrapoView[]> {
         return (await this.GetPropertyArray('Views'));
+    }
+
+    public GetTimezone(): number {
+        return (this._timezone);
+    }
+
+    public SetTimezone(value : number): void {
+        this._timezone = value;
     }
 }
