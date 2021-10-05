@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Mapping Pointer Notify</title>
+</head>
+<body>
+    <span>Data Mapping Pointer Notify</span>
+    <div d-sector="@">
+        <div d-datakey="count" d-datatype="value" d-dataloadtype="startup" d-datavalue="3"></div>
+        <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children={{count}}&amp;prefix=O1"></div>
+        <span>Count: </span><input type="text" d-model="{{count}}" />
+        <div d-sector="@">
+            <div d-datakey="objectsPointer" d-datatype="pointer" d-datavalue="{{objects}}"></div>
+            <div d-datakey="objectsQuery" d-datatype="query" d-datavalue="SELECT Key, Value FROM objectsPointer"></div>
+            <div>
+                <div d-for="object in objectsQuery" style="display: none;">
+                    <span>{{object.Key}}</span>
+                    <span>{{object.Value}}</span>
+                    <br />
+                </div>
+            <div>
+                    <span>O1L0K0</span>
+                    <span>L0V0</span>
+                    <br />
+                </div><div>
+                    <span>O1L0K1</span>
+                    <span>L0V1</span>
+                    <br />
+                </div><div>
+                    <span>O1L0K2</span>
+                    <span>L0V2</span>
+                    <br />
+                </div></div>
+        </div>
+    </div>
+
+</body></html>

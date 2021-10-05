@@ -14229,9 +14229,10 @@ var DrapoObserver = (function () {
             this._dataForElement[dataKeyIndex].splice(i, 1);
         }
     };
-    DrapoObserver.prototype.Notify = function (dataKey, dataIndex, dataFields, canUseDifference, canNotifyStorage) {
+    DrapoObserver.prototype.Notify = function (dataKey, dataIndex, dataFields, canUseDifference, canNotifyStorage, notifyStorageDataKey) {
         if (canUseDifference === void 0) { canUseDifference = true; }
         if (canNotifyStorage === void 0) { canNotifyStorage = true; }
+        if (notifyStorageDataKey === void 0) { notifyStorageDataKey = null; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -14239,7 +14240,7 @@ var DrapoObserver = (function () {
                     case 1:
                         _a.sent();
                         if (!canNotifyStorage) return [3, 3];
-                        return [4, this.NotifyStorage(dataKey, dataFields)];
+                        return [4, this.NotifyStorage(dataKey, dataFields, notifyStorageDataKey)];
                     case 2:
                         _a.sent();
                         _a.label = 3;
@@ -14342,7 +14343,8 @@ var DrapoObserver = (function () {
             });
         });
     };
-    DrapoObserver.prototype.NotifyStorage = function (dataKey, dataFields) {
+    DrapoObserver.prototype.NotifyStorage = function (dataKey, dataFields, notifyStorageDataKey) {
+        if (notifyStorageDataKey === void 0) { notifyStorageDataKey = null; }
         return __awaiter(this, void 0, void 0, function () {
             var dataKeyIndex, dataField, dataStorageFields, dataReferenceKeys, dataTypes, i, dataReferenceKey, type, sectors, j;
             return __generator(this, function (_a) {
@@ -14362,6 +14364,8 @@ var DrapoObserver = (function () {
                         if ((dataField != null) && (dataStorageFields[i] != null) && (dataStorageFields[i] !== dataField))
                             return [3, 13];
                         dataReferenceKey = dataReferenceKeys[i];
+                        if ((notifyStorageDataKey != null) && (dataReferenceKey === notifyStorageDataKey))
+                            return [3, 13];
                         type = dataTypes[i];
                         if (!(type == DrapoStorageLinkType.Reload)) return [3, 6];
                         sectors = this.Application.Storage.GetSectors(dataReferenceKey);
@@ -14388,7 +14392,7 @@ var DrapoObserver = (function () {
                         return [4, this.Application.Storage.UpdatePointerStorageItems(dataKey, dataReferenceKey)];
                     case 9:
                         _a.sent();
-                        return [4, this.Application.Observer.Notify(dataReferenceKey, null, null, true, false)];
+                        return [4, this.Application.Observer.Notify(dataReferenceKey, null, null, true, true, dataKey)];
                     case 10:
                         _a.sent();
                         return [3, 13];
@@ -20040,7 +20044,7 @@ var DrapoStorage = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoStorage.prototype.Retrieve = function (elj, dataKey, sector, context, dataKeyParts) {
@@ -23079,7 +23083,7 @@ var DrapoStorage = (function () {
                         continue;
                     var functionParameterValues = this.Application.Parser.ParseQueryProjectionFunctionParameterValue(functionParameterName);
                     var source = functionParameterValues[0];
-                    if (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== source)
+                    if ((_a = querySource.Alias, (_a !== null && _a !== void 0 ? _a : querySource.Source)) !== source)
                         continue;
                     var value = isObject ? sourceObject[projection.Column] : sourceObject;
                     objectInformation[functionParameterName] = value;
@@ -23096,11 +23100,11 @@ var DrapoStorage = (function () {
                 else {
                     if ((isObject) && (!sourceObject[projection.Column]))
                         continue;
-                    if ((!isObject) && (((_b = querySource.Alias) !== null && _b !== void 0 ? _b : querySource.Source) !== projection.Column))
+                    if ((!isObject) && ((_b = querySource.Alias, (_b !== null && _b !== void 0 ? _b : querySource.Source)) !== projection.Column))
                         continue;
                 }
                 var value = isObject ? sourceObject[projection.Column] : sourceObject;
-                object[(_c = projection.Alias) !== null && _c !== void 0 ? _c : projection.Column] = value;
+                object[_c = projection.Alias, (_c !== null && _c !== void 0 ? _c : projection.Column)] = value;
             }
         }
     };
@@ -23126,7 +23130,7 @@ var DrapoStorage = (function () {
         else {
             if ((isObject) && (!(column in sourceObject)))
                 return (null);
-            if ((!isObject) && (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== column))
+            if ((!isObject) && ((_a = querySource.Alias, (_a !== null && _a !== void 0 ? _a : querySource.Source)) !== column))
                 return (null);
         }
         var value = isObject ? sourceObject[column] : sourceObject;
