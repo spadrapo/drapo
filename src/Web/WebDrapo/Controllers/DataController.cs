@@ -43,6 +43,23 @@ namespace WebDrapo.Controllers
         }
 
         [HttpGet]
+        public KeyValueVO GetChildren()
+        {
+            KeyValueVO keyValue = new KeyValueVO();
+            keyValue.Key = "L0K0";
+            keyValue.Value = "L0V0";
+            KeyValueVO childKeyValue = new KeyValueVO();
+            childKeyValue.Key = "L1L0";
+            childKeyValue.Value = "L1V0";
+            KeyValueVO childKeyValue2 = new KeyValueVO();
+            childKeyValue2.Key = "L2K0";
+            childKeyValue2.Value = "L2V0";
+            keyValue.Children.Add(childKeyValue);
+            keyValue.Children.Add(childKeyValue2);
+            return keyValue;
+        }
+
+        [HttpGet]
         public KeyValueVO GetNull()
         {
             return (null);
@@ -167,7 +184,7 @@ namespace WebDrapo.Controllers
         private Dictionary<string, string> GetCulturePT()
         {
             Dictionary<string, string> values = new Dictionary<string, string>();
-            values.Add("User", "Usuário");
+            values.Add("User", "Usuï¿½rio");
             values.Add("Name", "Nome");
             values.Add("Date", "Data");
             for (int i = 0; i < 10; i++)
