@@ -1123,10 +1123,10 @@ declare class DrapoObserver {
     private UnsubscribeStorage;
     private UnsubscribeStorageReferenceKey;
     UnsubscribeFor(dataKey: string, elementForTemplate?: HTMLElement): void;
-    Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, canNotifyStorage?: boolean): Promise<void>;
+    Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, canNotifyStorage?: boolean, notifyStorageDataKey?: string): Promise<void>;
     NotifyFor(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, type?: DrapoStorageLinkType): Promise<void>;
     NotifyBarber(dataKey: string, dataFields: string[]): Promise<void>;
-    NotifyStorage(dataKey: string, dataFields: string[]): Promise<void>;
+    NotifyStorage(dataKey: string, dataFields: string[], notifyStorageDataKey?: string): Promise<void>;
     NotifyStorageRenderClass(dataKey: string): Promise<void>;
     SubscribeIncremental(el: HTMLElement, dataKey: string): void;
     NotifyIncremental(dataKey: string): Promise<void>;

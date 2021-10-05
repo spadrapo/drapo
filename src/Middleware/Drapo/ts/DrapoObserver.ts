@@ -186,12 +186,12 @@ class DrapoObserver {
         }
     }
 
-    public async Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference: boolean = true, canNotifyStorage : boolean = true): Promise<void> {
+    public async Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference: boolean = true, canNotifyStorage : boolean = true, notifyStorageDataKey: string = null): Promise<void> {
         //Debugger
         await this.Application.Debugger.AddNotify(dataKey);
         //Storage
         if (canNotifyStorage)
-            await this.NotifyStorage(dataKey, dataFields);
+            await this.NotifyStorage(dataKey, dataFields, notifyStorageDataKey);
         //Control Flow
         await this.NotifyFor(dataKey, dataIndex, dataFields, canUseDifference);
         //Mustaches
@@ -247,7 +247,7 @@ class DrapoObserver {
         }
     }
 
-    public async NotifyStorage(dataKey: string, dataFields: string[]): Promise<void> {
+    public async NotifyStorage(dataKey: string, dataFields: string[], notifyStorageDataKey: string = null): Promise<void> {
         const dataKeyIndex: number = this.GetStorageKeyIndex(dataKey);
         if (dataKeyIndex == null)
             return;
@@ -259,6 +259,8 @@ class DrapoObserver {
             if ((dataField != null) && (dataStorageFields[i] != null) && (dataStorageFields[i] !== dataField))
                 continue;
             const dataReferenceKey: string = dataReferenceKeys[i];
+            if ((notifyStorageDataKey != null) && (dataReferenceKey === notifyStorageDataKey))
+                continue;
             const type: DrapoStorageLinkType = dataTypes[i];
             if (type == DrapoStorageLinkType.Reload) {
                 const sectors: string[] = this.Application.Storage.GetSectors(dataReferenceKey);
@@ -268,7 +270,7 @@ class DrapoObserver {
                 await this.NotifyStorageRenderClass(dataReferenceKey);
             } else if (type == DrapoStorageLinkType.Pointer) {
                 await this.Application.Storage.UpdatePointerStorageItems(dataKey, dataReferenceKey);
-                await this.Application.Observer.Notify(dataReferenceKey, null, null, true, false);
+                await this.Application.Observer.Notify(dataReferenceKey, null, null, true, true, dataKey);
             } else {
                 await this.Application.Observer.Notify(dataReferenceKey, null, null);
             }

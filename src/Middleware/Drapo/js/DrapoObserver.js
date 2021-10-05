@@ -212,9 +212,10 @@ var DrapoObserver = (function () {
             this._dataForElement[dataKeyIndex].splice(i, 1);
         }
     };
-    DrapoObserver.prototype.Notify = function (dataKey, dataIndex, dataFields, canUseDifference, canNotifyStorage) {
+    DrapoObserver.prototype.Notify = function (dataKey, dataIndex, dataFields, canUseDifference, canNotifyStorage, notifyStorageDataKey) {
         if (canUseDifference === void 0) { canUseDifference = true; }
         if (canNotifyStorage === void 0) { canNotifyStorage = true; }
+        if (notifyStorageDataKey === void 0) { notifyStorageDataKey = null; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -222,7 +223,7 @@ var DrapoObserver = (function () {
                     case 1:
                         _a.sent();
                         if (!canNotifyStorage) return [3, 3];
-                        return [4, this.NotifyStorage(dataKey, dataFields)];
+                        return [4, this.NotifyStorage(dataKey, dataFields, notifyStorageDataKey)];
                     case 2:
                         _a.sent();
                         _a.label = 3;
@@ -325,7 +326,8 @@ var DrapoObserver = (function () {
             });
         });
     };
-    DrapoObserver.prototype.NotifyStorage = function (dataKey, dataFields) {
+    DrapoObserver.prototype.NotifyStorage = function (dataKey, dataFields, notifyStorageDataKey) {
+        if (notifyStorageDataKey === void 0) { notifyStorageDataKey = null; }
         return __awaiter(this, void 0, void 0, function () {
             var dataKeyIndex, dataField, dataStorageFields, dataReferenceKeys, dataTypes, i, dataReferenceKey, type, sectors, j;
             return __generator(this, function (_a) {
@@ -345,6 +347,8 @@ var DrapoObserver = (function () {
                         if ((dataField != null) && (dataStorageFields[i] != null) && (dataStorageFields[i] !== dataField))
                             return [3, 13];
                         dataReferenceKey = dataReferenceKeys[i];
+                        if ((notifyStorageDataKey != null) && (dataReferenceKey === notifyStorageDataKey))
+                            return [3, 13];
                         type = dataTypes[i];
                         if (!(type == DrapoStorageLinkType.Reload)) return [3, 6];
                         sectors = this.Application.Storage.GetSectors(dataReferenceKey);
@@ -371,7 +375,7 @@ var DrapoObserver = (function () {
                         return [4, this.Application.Storage.UpdatePointerStorageItems(dataKey, dataReferenceKey)];
                     case 9:
                         _a.sent();
-                        return [4, this.Application.Observer.Notify(dataReferenceKey, null, null, true, false)];
+                        return [4, this.Application.Observer.Notify(dataReferenceKey, null, null, true, true, dataKey)];
                     case 10:
                         _a.sent();
                         return [3, 13];

@@ -801,6 +801,11 @@ namespace WebDrapo.Test
             ValidatePage("DataPointer");
         }
         [TestCase]
+        public void DataPointerNotifyTest()
+        {
+            ValidatePage("DataPointerNotify");
+        }
+        [TestCase]
         public void DataPostGetTest()
         {
             ValidatePage("DataPostGet");
