@@ -1927,6 +1927,9 @@ declare class DrapoStorage {
     private ResolveQueryFunctions;
     private ResolveQueryFunction;
     private ResolveQueryFunctionCoalesce;
+    private ResolveQueryConditionMustaches;
+    private ResolveQueryConditionMustachesFilter;
+    private ResolveQueryConditionMustachesFilterValue;
     private IsValidQueryCondition;
 }
 

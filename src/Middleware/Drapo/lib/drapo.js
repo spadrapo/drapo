@@ -99,238 +99,238 @@ var DrapoApplication = (function () {
         get: function () {
             return (this._isLoaded);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Log", {
         get: function () {
             return (this._logger);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Router", {
         get: function () {
             return (this._router);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Server", {
         get: function () {
             return (this._server);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Observer", {
         get: function () {
             return (this._observer);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Document", {
         get: function () {
             return (this._document);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ControlFlow", {
         get: function () {
             return (this._controlFlow);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Parser", {
         get: function () {
             return (this._parser);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Storage", {
         get: function () {
             return (this._storage);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Solver", {
         get: function () {
             return (this._solver);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Binder", {
         get: function () {
             return (this._binder);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Config", {
         get: function () {
             return (this._config);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Register", {
         get: function () {
             return (this._register);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Serializer", {
         get: function () {
             return (this._serializer);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Barber", {
         get: function () {
             return (this._barber);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ModelHandler", {
         get: function () {
             return (this._modelHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "AttributeHandler", {
         get: function () {
             return (this._attributeHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ClassHandler", {
         get: function () {
             return (this._classHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "EventHandler", {
         get: function () {
             return (this._eventHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "FunctionHandler", {
         get: function () {
             return (this._functionHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ComponentHandler", {
         get: function () {
             return (this._componentHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "CookieHandler", {
         get: function () {
             return (this._cookieHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "SectorContainerHandler", {
         get: function () {
             return (this._sectorContainerHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "WindowHandler", {
         get: function () {
             return (this._windowHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "BehaviorHandler", {
         get: function () {
             return (this._behaviorHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Plumber", {
         get: function () {
             return (this._plumber);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Formatter", {
         get: function () {
             return (this._formatter);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Validator", {
         get: function () {
             return (this._validator);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ExceptionHandler", {
         get: function () {
             return (this._exceptionHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Globalization", {
         get: function () {
             return (this._globalization);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Stylist", {
         get: function () {
             return (this._stylist);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ViewportHandler", {
         get: function () {
             return (this._viewportHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "CacheHandler", {
         get: function () {
             return (this._cacheHandler);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Debugger", {
         get: function () {
             return (this._debugger);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoApplication.prototype.OnLoad = function () {
@@ -445,7 +445,7 @@ var DrapoAttributeHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoAttributeHandler.prototype.HasContentIDContext = function (content) {
@@ -757,7 +757,7 @@ var DrapoBarber = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoBarber.prototype.HasContentMustacheNodesContext = function (content) {
@@ -20040,7 +20040,7 @@ var DrapoStorage = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoStorage.prototype.Retrieve = function (elj, dataKey, sector, context, dataKeyParts) {
@@ -22935,10 +22935,13 @@ var DrapoStorage = (function () {
                         objectsInformation = [];
                         filters = [];
                         hasFilters = query.Filter !== null;
-                        i = 0;
-                        _a.label = 1;
+                        return [4, this.ResolveQueryConditionMustaches(sector, dataKey, query)];
                     case 1:
-                        if (!(i < query.Sources.length)) return [3, 4];
+                        _a.sent();
+                        i = 0;
+                        _a.label = 2;
+                    case 2:
+                        if (!(i < query.Sources.length)) return [3, 5];
                         querySource = query.Sources[i];
                         querySourcePath = querySource.Source;
                         isQuerySourceMustache = this.Application.Parser.IsMustache(querySourcePath);
@@ -22954,7 +22957,7 @@ var DrapoStorage = (function () {
                         }
                         this.Application.Observer.SubscribeStorage(sourceDataKey, null, dataKey);
                         return [4, this.RetrieveDataValue(sector, sourceMustache)];
-                    case 2:
+                    case 3:
                         querySourceData = _a.sent();
                         querySourceObjects = Array.isArray(querySourceData) ? querySourceData : [querySourceData];
                         for (j = 0; j < querySourceObjects.length; j++) {
@@ -22976,11 +22979,11 @@ var DrapoStorage = (function () {
                                 }
                             }
                         }
-                        _a.label = 3;
-                    case 3:
-                        i++;
-                        return [3, 1];
+                        _a.label = 4;
                     case 4:
+                        i++;
+                        return [3, 2];
+                    case 5:
                         count = query.Sources.length;
                         if ((count > 1) && (query.Sources[1].JoinType == 'INNER')) {
                             for (i = objects.length - 1; i >= 0; i--) {
@@ -23076,7 +23079,7 @@ var DrapoStorage = (function () {
                         continue;
                     var functionParameterValues = this.Application.Parser.ParseQueryProjectionFunctionParameterValue(functionParameterName);
                     var source = functionParameterValues[0];
-                    if ((_a = querySource.Alias, (_a !== null && _a !== void 0 ? _a : querySource.Source)) !== source)
+                    if (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== source)
                         continue;
                     var value = isObject ? sourceObject[projection.Column] : sourceObject;
                     objectInformation[functionParameterName] = value;
@@ -23093,11 +23096,11 @@ var DrapoStorage = (function () {
                 else {
                     if ((isObject) && (!sourceObject[projection.Column]))
                         continue;
-                    if ((!isObject) && ((_b = querySource.Alias, (_b !== null && _b !== void 0 ? _b : querySource.Source)) !== projection.Column))
+                    if ((!isObject) && (((_b = querySource.Alias) !== null && _b !== void 0 ? _b : querySource.Source) !== projection.Column))
                         continue;
                 }
                 var value = isObject ? sourceObject[projection.Column] : sourceObject;
-                object[_c = projection.Alias, (_c !== null && _c !== void 0 ? _c : projection.Column)] = value;
+                object[(_c = projection.Alias) !== null && _c !== void 0 ? _c : projection.Column] = value;
             }
         }
     };
@@ -23123,7 +23126,7 @@ var DrapoStorage = (function () {
         else {
             if ((isObject) && (!(column in sourceObject)))
                 return (null);
-            if ((!isObject) && ((_a = querySource.Alias, (_a !== null && _a !== void 0 ? _a : querySource.Source)) !== column))
+            if ((!isObject) && (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== column))
                 return (null);
         }
         var value = isObject ? sourceObject[column] : sourceObject;
@@ -23157,6 +23160,88 @@ var DrapoStorage = (function () {
                 break;
             }
         }
+    };
+    DrapoStorage.prototype.ResolveQueryConditionMustaches = function (sector, dataKey, query) {
+        return __awaiter(this, void 0, void 0, function () {
+            var i, source, j, filter;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(query.Filter != null)) return [3, 2];
+                        return [4, this.ResolveQueryConditionMustachesFilter(sector, dataKey, query.Filter)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        i = 0;
+                        _a.label = 3;
+                    case 3:
+                        if (!(i < query.Sources.length)) return [3, 8];
+                        source = query.Sources[i];
+                        if (source.JoinConditions == null)
+                            return [3, 7];
+                        j = 0;
+                        _a.label = 4;
+                    case 4:
+                        if (!(j < source.JoinConditions.length)) return [3, 7];
+                        filter = source.JoinConditions[j];
+                        return [4, this.ResolveQueryConditionMustachesFilter(sector, dataKey, filter)];
+                    case 5:
+                        _a.sent();
+                        _a.label = 6;
+                    case 6:
+                        j++;
+                        return [3, 4];
+                    case 7:
+                        i++;
+                        return [3, 3];
+                    case 8: return [2];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.ResolveQueryConditionMustachesFilter = function (sector, dataKey, filter) {
+        return __awaiter(this, void 0, void 0, function () {
+            var valueLeft, valueRight;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, filter.ValueLeft)];
+                    case 1:
+                        valueLeft = _a.sent();
+                        if (valueLeft !== undefined) {
+                            filter.ColumnLeft = valueLeft;
+                            filter.ValueLeft = valueLeft;
+                        }
+                        return [4, this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, filter.ValueRight)];
+                    case 2:
+                        valueRight = _a.sent();
+                        if (valueRight !== undefined) {
+                            filter.ColumnRight = valueRight;
+                            filter.ValueRight = valueRight;
+                        }
+                        return [2];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.ResolveQueryConditionMustachesFilterValue = function (sector, dataKey, value) {
+        return __awaiter(this, void 0, void 0, function () {
+            var mustacheParts, mustacheDataKey, valueResolved;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.Application.Parser.IsMustache(value))
+                            return [2, (undefined)];
+                        mustacheParts = this.Application.Parser.ParseMustache(value);
+                        mustacheDataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
+                        this.Application.Observer.SubscribeStorage(mustacheDataKey, null, dataKey);
+                        return [4, this.RetrieveDataValue(sector, value)];
+                    case 1:
+                        valueResolved = _a.sent();
+                        return [2, (valueResolved)];
+                }
+            });
+        });
     };
     DrapoStorage.prototype.IsValidQueryCondition = function (filter) {
         if ((filter.Comparator === '=') && (filter.ValueLeft == filter.ValueRight))
