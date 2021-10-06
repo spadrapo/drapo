@@ -1964,6 +1964,8 @@ class DrapoStorage {
         const objectsInformation: any[] = [];
         const filters: DrapoQueryCondition[] = [];
         const hasFilters: boolean = query.Filter !== null;
+        //Resolve External Mustaches
+        await this.ResolveQueryConditionMustaches(sector, dataKey, query);
         for (let i: number = 0; i < query.Sources.length; i++) {
             const querySource: DrapoQuerySource = query.Sources[i];
             const querySourcePath: string = querySource.Source;
@@ -2193,6 +2195,48 @@ class DrapoStorage {
                 break;
             }
         }
+    }
+
+    private async ResolveQueryConditionMustaches(sector: string, dataKey: string, query: DrapoQuery): Promise<void> {
+        //Filter
+        if (query.Filter != null)
+            await this.ResolveQueryConditionMustachesFilter(sector, dataKey, query.Filter);
+        //Sources
+        for (let i: number = 0; i < query.Sources.length; i++) {
+            const source: DrapoQuerySource = query.Sources[i];
+            if (source.JoinConditions == null)
+                continue;
+            for (let j = 0; j < source.JoinConditions.length; j++) {
+                const filter: DrapoQueryCondition = source.JoinConditions[j];
+                await this.ResolveQueryConditionMustachesFilter(sector, dataKey, filter);
+            }
+        }
+    }
+
+    private async ResolveQueryConditionMustachesFilter(sector: string, dataKey: string, filter: DrapoQueryCondition): Promise<void> {
+        //Left
+        const valueLeft: string = await this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, filter.ValueLeft);
+        if (valueLeft !== undefined) {
+            filter.ColumnLeft = valueLeft;
+            filter.ValueLeft = valueLeft;
+        }
+        //Right
+        const valueRight: string = await this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, filter.ValueRight);
+        if (valueRight !== undefined) {
+            filter.ColumnRight = valueRight;
+            filter.ValueRight = valueRight;
+        }
+    }
+
+    private async ResolveQueryConditionMustachesFilterValue(sector: string, dataKey: string, value: string): Promise<string> {
+        if (!this.Application.Parser.IsMustache(value))
+            return(undefined);
+        const mustacheParts: string[] = this.Application.Parser.ParseMustache(value);
+        const mustacheDataKey: string = this.Application.Solver.ResolveDataKey(mustacheParts);
+        //Subscribe
+        this.Application.Observer.SubscribeStorage(mustacheDataKey, null, dataKey);
+        const valueResolved : string = await this.RetrieveDataValue(sector, value);
+        return (valueResolved);
     }
 
     private IsValidQueryCondition(filter: DrapoQueryCondition): boolean {

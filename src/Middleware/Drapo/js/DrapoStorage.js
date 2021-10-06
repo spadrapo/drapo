@@ -2943,10 +2943,13 @@ var DrapoStorage = (function () {
                         objectsInformation = [];
                         filters = [];
                         hasFilters = query.Filter !== null;
-                        i = 0;
-                        _a.label = 1;
+                        return [4, this.ResolveQueryConditionMustaches(sector, dataKey, query)];
                     case 1:
-                        if (!(i < query.Sources.length)) return [3, 4];
+                        _a.sent();
+                        i = 0;
+                        _a.label = 2;
+                    case 2:
+                        if (!(i < query.Sources.length)) return [3, 5];
                         querySource = query.Sources[i];
                         querySourcePath = querySource.Source;
                         isQuerySourceMustache = this.Application.Parser.IsMustache(querySourcePath);
@@ -2962,7 +2965,7 @@ var DrapoStorage = (function () {
                         }
                         this.Application.Observer.SubscribeStorage(sourceDataKey, null, dataKey);
                         return [4, this.RetrieveDataValue(sector, sourceMustache)];
-                    case 2:
+                    case 3:
                         querySourceData = _a.sent();
                         querySourceObjects = Array.isArray(querySourceData) ? querySourceData : [querySourceData];
                         for (j = 0; j < querySourceObjects.length; j++) {
@@ -2984,11 +2987,11 @@ var DrapoStorage = (function () {
                                 }
                             }
                         }
-                        _a.label = 3;
-                    case 3:
-                        i++;
-                        return [3, 1];
+                        _a.label = 4;
                     case 4:
+                        i++;
+                        return [3, 2];
+                    case 5:
                         count = query.Sources.length;
                         if ((count > 1) && (query.Sources[1].JoinType == 'INNER')) {
                             for (i = objects.length - 1; i >= 0; i--) {
@@ -3165,6 +3168,88 @@ var DrapoStorage = (function () {
                 break;
             }
         }
+    };
+    DrapoStorage.prototype.ResolveQueryConditionMustaches = function (sector, dataKey, query) {
+        return __awaiter(this, void 0, void 0, function () {
+            var i, source, j, filter;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(query.Filter != null)) return [3, 2];
+                        return [4, this.ResolveQueryConditionMustachesFilter(sector, dataKey, query.Filter)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        i = 0;
+                        _a.label = 3;
+                    case 3:
+                        if (!(i < query.Sources.length)) return [3, 8];
+                        source = query.Sources[i];
+                        if (source.JoinConditions == null)
+                            return [3, 7];
+                        j = 0;
+                        _a.label = 4;
+                    case 4:
+                        if (!(j < source.JoinConditions.length)) return [3, 7];
+                        filter = source.JoinConditions[j];
+                        return [4, this.ResolveQueryConditionMustachesFilter(sector, dataKey, filter)];
+                    case 5:
+                        _a.sent();
+                        _a.label = 6;
+                    case 6:
+                        j++;
+                        return [3, 4];
+                    case 7:
+                        i++;
+                        return [3, 3];
+                    case 8: return [2];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.ResolveQueryConditionMustachesFilter = function (sector, dataKey, filter) {
+        return __awaiter(this, void 0, void 0, function () {
+            var valueLeft, valueRight;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, filter.ValueLeft)];
+                    case 1:
+                        valueLeft = _a.sent();
+                        if (valueLeft !== undefined) {
+                            filter.ColumnLeft = valueLeft;
+                            filter.ValueLeft = valueLeft;
+                        }
+                        return [4, this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, filter.ValueRight)];
+                    case 2:
+                        valueRight = _a.sent();
+                        if (valueRight !== undefined) {
+                            filter.ColumnRight = valueRight;
+                            filter.ValueRight = valueRight;
+                        }
+                        return [2];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.ResolveQueryConditionMustachesFilterValue = function (sector, dataKey, value) {
+        return __awaiter(this, void 0, void 0, function () {
+            var mustacheParts, mustacheDataKey, valueResolved;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.Application.Parser.IsMustache(value))
+                            return [2, (undefined)];
+                        mustacheParts = this.Application.Parser.ParseMustache(value);
+                        mustacheDataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
+                        this.Application.Observer.SubscribeStorage(mustacheDataKey, null, dataKey);
+                        return [4, this.RetrieveDataValue(sector, value)];
+                    case 1:
+                        valueResolved = _a.sent();
+                        return [2, (valueResolved)];
+                }
+            });
+        });
     };
     DrapoStorage.prototype.IsValidQueryCondition = function (filter) {
         if ((filter.Comparator === '=') && (filter.ValueLeft == filter.ValueRight))
