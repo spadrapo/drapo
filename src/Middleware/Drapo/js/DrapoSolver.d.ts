@@ -43,6 +43,7 @@ declare class DrapoSolver {
     ResolveDataKey(mustacheParts: string[]): string;
     ResolveDataFields(mustacheParts: string[]): string[];
     CreateDataPath(dataKey: string, dataFields: string[]): string[];
+    CombineDataPath(dataPath1: string[], dataPath2: string[]): string[];
     GetDataPathParent(dataPath: string[]): string[];
     UpdateItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], value: any, canNotify?: boolean): Promise<boolean>;
     UpdateDataPathObject(data: any, dataPath: string[], value: any): boolean;

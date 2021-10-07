@@ -717,12 +717,12 @@ class DrapoFunctionHandler {
     }
 
     private async ExecuteFunctionRemoveDataItemLookup(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
-        const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        const dataPath: string = functionParsed.Parameters[0];
         const dataFieldSeek: string[] = await this.ResolveFunctionParameterDataFields(sector, contextItem, element, functionParsed.Parameters[1], executionContext);
         const valueSeek: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]);
         const notifyText: string = functionParsed.Parameters.length > 3 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3]) : null;
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        await this.Application.Storage.RemoveDataItemLookup(dataKey, sector, dataFieldSeek, valueSeek, notify);
+        await this.Application.Storage.RemoveDataItemLookup(dataPath, sector, dataFieldSeek, valueSeek, notify);
         return ('');
     }
 
