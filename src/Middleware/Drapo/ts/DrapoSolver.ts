@@ -608,6 +608,17 @@ class DrapoSolver {
         return (path);
     }
 
+    public CombineDataPath(dataPath1: string[], dataPath2: string[]): string[] {
+        const path: string[] = [];
+        if (dataPath1 != null)
+            for (let i: number = 0; i < dataPath1.length; i++)
+                path.push(dataPath1[i]);
+        if (dataPath2 != null)
+            for (let i: number = 0; i < dataPath2.length; i++)
+                path.push(dataPath2[i]);
+        return (path);
+    }
+
     public GetDataPathParent(dataPath: string[]): string[] {
         const dataPathParent: string[] = [];
         for (let i = 0; i < dataPath.length - 1; i++)

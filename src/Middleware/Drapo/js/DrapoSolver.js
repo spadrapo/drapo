@@ -805,6 +805,16 @@ var DrapoSolver = (function () {
         }
         return (path);
     };
+    DrapoSolver.prototype.CombineDataPath = function (dataPath1, dataPath2) {
+        var path = [];
+        if (dataPath1 != null)
+            for (var i = 0; i < dataPath1.length; i++)
+                path.push(dataPath1[i]);
+        if (dataPath2 != null)
+            for (var i = 0; i < dataPath2.length; i++)
+                path.push(dataPath2[i]);
+        return (path);
+    };
     DrapoSolver.prototype.GetDataPathParent = function (dataPath) {
         var dataPathParent = [];
         for (var i = 0; i < dataPath.length - 1; i++)
