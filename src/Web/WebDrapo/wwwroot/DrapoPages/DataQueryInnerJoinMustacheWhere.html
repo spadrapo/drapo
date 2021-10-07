@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Inner Join Mustache - Where</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Inner Join Mustache - Where</span>
+        <div d-dataKey="objects" d-dataValue='[{"Code":1,"Level":"01","Children":[{"Code":5,"Parent":1,"Level":"0101"},{"Code":6,"Parent":1,"Level":"0102"}]},{"Code":2,"Level":"02","Children":[{"Code":10,"Parent":2,"Level":"0201"},{"Code":1,"Parent":2,"Level":"0202"}]}]'></div>
+        <div d-dataKey="objectValue" d-dataType="value" d-dataValue="2"></div>
+        <div d-dataKey="objectsQuery" d-dataType="query" d-dataValue="SELECT C.Code, C.Parent, C.Level FROM {{objects}} AS O INNER JOIN {{objects.Children}} AS C ON O.Code = C.Parent WHERE O.Code = {{objectValue}}"></div>
+        <div>
+            <div d-for="object in objectsQuery">
+                <span>{{object.Code}}</span>
+                <span>{{object.Parent}}</span>
+                <span>{{object.Level}}</span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>
