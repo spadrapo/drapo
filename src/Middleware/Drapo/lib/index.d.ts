@@ -99,6 +99,7 @@ declare class DrapoBarber {
     private HasContentMustacheAttributeContextMustache;
     ResolveMustaches(jQueryStart?: JQuery, sector?: string, stopAtSectors?: boolean): Promise<void>;
     private ResolveMustachesInternal;
+    private CanRender;
     ResolveFilter(el: HTMLElement, sector: string, canBind: boolean, dataKeyFilter: string, dataFieldFilter: string): Promise<void>;
     ResolveElementDelayed(el: HTMLElement, sector: string, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
     ResolveMustacheElementLeaf(el: HTMLElement, canUseModel?: boolean, canSubscribeDelay?: boolean, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
@@ -1122,10 +1123,10 @@ declare class DrapoObserver {
     private UnsubscribeStorage;
     private UnsubscribeStorageReferenceKey;
     UnsubscribeFor(dataKey: string, elementForTemplate?: HTMLElement): void;
-    Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, canNotifyStorage?: boolean): Promise<void>;
+    Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, canNotifyStorage?: boolean, notifyStorageDataKey?: string): Promise<void>;
     NotifyFor(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, type?: DrapoStorageLinkType): Promise<void>;
     NotifyBarber(dataKey: string, dataFields: string[]): Promise<void>;
-    NotifyStorage(dataKey: string, dataFields: string[]): Promise<void>;
+    NotifyStorage(dataKey: string, dataFields: string[], notifyStorageDataKey?: string): Promise<void>;
     NotifyStorageRenderClass(dataKey: string): Promise<void>;
     SubscribeIncremental(el: HTMLElement, dataKey: string): void;
     NotifyIncremental(dataKey: string): Promise<void>;
@@ -1746,6 +1747,7 @@ declare class DrapoSolver {
     ResolveDataKey(mustacheParts: string[]): string;
     ResolveDataFields(mustacheParts: string[]): string[];
     CreateDataPath(dataKey: string, dataFields: string[]): string[];
+    CombineDataPath(dataPath1: string[], dataPath2: string[]): string[];
     GetDataPathParent(dataPath: string[]): string[];
     UpdateItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], value: any, canNotify?: boolean): Promise<boolean>;
     UpdateDataPathObject(data: any, dataPath: string[], value: any): boolean;
@@ -1811,7 +1813,9 @@ declare class DrapoStorage {
     GetDataKeyField(dataKey: string, sector: string, dataPath: string[], executionContext?: DrapoExecutionContext<any>): string;
     SetDataKeyField(dataKey: string, sector: string, dataFields: string[], value: any, notify?: boolean): Promise<boolean>;
     UpdateDataFieldLookup(dataKey: string, sector: string, dataFieldSeek: string, valueSeek: string, dataField: string | [string], value: any, notify?: boolean): Promise<boolean>;
-    RemoveDataItemLookup(dataKey: string, sector: string, dataFieldSeek: string | string[], valueSeek: string, notify?: boolean): Promise<boolean>;
+    RemoveDataItemLookup(dataSource: string, sector: string, dataFieldSeek: string | string[], valueSeek: string, notify?: boolean): Promise<boolean>;
+    private RemoveDataItemLookupDataKey;
+    private RemoveDataItemLookupMustache;
     private CreatePath;
     private CreateDataPath;
     LoadDataDelayedAndNotify(): Promise<void>;
@@ -1926,6 +1930,9 @@ declare class DrapoStorage {
     private ResolveQueryFunctions;
     private ResolveQueryFunction;
     private ResolveQueryFunctionCoalesce;
+    private ResolveQueryConditionMustaches;
+    private ResolveQueryConditionMustachesFilter;
+    private ResolveQueryConditionMustachesFilterValue;
     private IsValidQueryCondition;
 }
 

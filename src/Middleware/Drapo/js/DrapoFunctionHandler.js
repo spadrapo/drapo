@@ -1591,39 +1591,38 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionRemoveDataItemLookup = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, dataFieldSeek, valueSeek, notifyText, _a, notify, _b;
+            var dataPath, dataFieldSeek, valueSeek, notifyText, _a, notify, _b;
             return __generator(this, function (_c) {
                 switch (_c.label) {
-                    case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
-                    case 1:
-                        dataKey = _c.sent();
+                    case 0:
+                        dataPath = functionParsed.Parameters[0];
                         return [4, this.ResolveFunctionParameterDataFields(sector, contextItem, element, functionParsed.Parameters[1], executionContext)];
-                    case 2:
+                    case 1:
                         dataFieldSeek = _c.sent();
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2])];
-                    case 3:
+                    case 2:
                         valueSeek = _c.sent();
-                        if (!(functionParsed.Parameters.length > 3)) return [3, 5];
+                        if (!(functionParsed.Parameters.length > 3)) return [3, 4];
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3])];
-                    case 4:
+                    case 3:
                         _a = _c.sent();
-                        return [3, 6];
-                    case 5:
+                        return [3, 5];
+                    case 4:
                         _a = null;
-                        _c.label = 6;
-                    case 6:
+                        _c.label = 5;
+                    case 5:
                         notifyText = _a;
-                        if (!((notifyText == null) || (notifyText == ''))) return [3, 7];
+                        if (!((notifyText == null) || (notifyText == ''))) return [3, 6];
                         _b = true;
-                        return [3, 9];
-                    case 7: return [4, this.Application.Solver.ResolveConditional(notifyText)];
-                    case 8:
+                        return [3, 8];
+                    case 6: return [4, this.Application.Solver.ResolveConditional(notifyText)];
+                    case 7:
                         _b = _c.sent();
-                        _c.label = 9;
-                    case 9:
+                        _c.label = 8;
+                    case 8:
                         notify = _b;
-                        return [4, this.Application.Storage.RemoveDataItemLookup(dataKey, sector, dataFieldSeek, valueSeek, notify)];
-                    case 10:
+                        return [4, this.Application.Storage.RemoveDataItemLookup(dataPath, sector, dataFieldSeek, valueSeek, notify)];
+                    case 9:
                         _c.sent();
                         return [2, ('')];
                 }

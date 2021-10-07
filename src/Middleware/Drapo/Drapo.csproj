@@ -23,6 +23,6 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
     <PackageReference Include="TSLint.MSBuild" Version="1.4.2" />
-    <PackageReference Include="ServiceStack.Redis.Core" Version="5.10.4" />
+    <PackageReference Include="StackExchange.Redis" Version="2.2.50" />
   </ItemGroup>
 </Project>

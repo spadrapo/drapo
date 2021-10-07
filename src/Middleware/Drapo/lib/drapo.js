@@ -829,7 +829,7 @@ var DrapoBarber = (function () {
     };
     DrapoBarber.prototype.ResolveMustachesInternal = function (el, sector, renderContext, stopAtSectors) {
         return __awaiter(this, void 0, void 0, function () {
-            var pre, children, hasChildren, i, child, childSector;
+            var pre, children, hasChildren, i, child, childSector, canRender;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -838,58 +838,91 @@ var DrapoBarber = (function () {
                             return [2];
                         children = [].slice.call(el.children);
                         hasChildren = children.length > 0;
-                        if (!hasChildren) return [3, 5];
+                        if (!hasChildren) return [3, 7];
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < children.length)) return [3, 4];
+                        if (!(i < children.length)) return [3, 6];
                         child = children[i];
                         childSector = child.getAttribute('d-sector');
                         if (childSector != null) {
                             if (stopAtSectors)
-                                return [3, 3];
+                                return [3, 5];
                             sector = childSector;
                         }
-                        return [4, this.ResolveMustachesInternal(child, sector, renderContext, stopAtSectors)];
+                        return [4, this.CanRender(child, sector)];
                     case 2:
-                        _a.sent();
-                        _a.label = 3;
+                        canRender = _a.sent();
+                        if (!canRender) return [3, 4];
+                        return [4, this.ResolveMustachesInternal(child, sector, renderContext, stopAtSectors)];
                     case 3:
+                        _a.sent();
+                        return [3, 5];
+                    case 4:
+                        $(child).remove();
+                        _a.label = 5;
+                    case 5:
                         i++;
                         return [3, 1];
-                    case 4: return [3, 7];
-                    case 5: return [4, this.ResolveMustacheElementLeaf(el)];
-                    case 6:
-                        _a.sent();
-                        _a.label = 7;
-                    case 7: return [4, this.Application.AttributeHandler.ResolveID(el, sector)];
+                    case 6: return [3, 9];
+                    case 7: return [4, this.ResolveMustacheElementLeaf(el)];
                     case 8:
                         _a.sent();
-                        return [4, this.Application.AttributeHandler.ResolveAttr(el)];
-                    case 9:
-                        _a.sent();
-                        return [4, this.ResolveModel(el)];
+                        _a.label = 9;
+                    case 9: return [4, this.Application.AttributeHandler.ResolveID(el, sector)];
                     case 10:
                         _a.sent();
-                        return [4, this.Application.ClassHandler.ResolveClass(el, sector)];
+                        return [4, this.Application.AttributeHandler.ResolveAttr(el)];
                     case 11:
                         _a.sent();
-                        return [4, this.Application.Validator.RegisterValidation(el, sector)];
+                        return [4, this.ResolveModel(el)];
                     case 12:
                         _a.sent();
-                        return [4, this.Application.EventHandler.Attach(el, renderContext)];
+                        return [4, this.Application.ClassHandler.ResolveClass(el, sector)];
                     case 13:
                         _a.sent();
-                        return [4, this.Application.BehaviorHandler.ResolveBehavior(el)];
+                        return [4, this.Application.Validator.RegisterValidation(el, sector)];
                     case 14:
                         _a.sent();
-                        return [4, this.ResolveMustacheElementVisibility(el)];
+                        return [4, this.Application.EventHandler.Attach(el, renderContext)];
                     case 15:
                         _a.sent();
-                        return [4, this.ResolveCloak(el)];
+                        return [4, this.Application.BehaviorHandler.ResolveBehavior(el)];
                     case 16:
                         _a.sent();
+                        return [4, this.ResolveMustacheElementVisibility(el)];
+                    case 17:
+                        _a.sent();
+                        return [4, this.ResolveCloak(el)];
+                    case 18:
+                        _a.sent();
                         return [2];
+                }
+            });
+        });
+    };
+    DrapoBarber.prototype.CanRender = function (el, sector) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dRender, context, expression, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dRender = el.getAttribute('d-render');
+                        if (dRender == null)
+                            return [2, (true)];
+                        return [4, this.Application.Barber.HasMustacheContext(dRender, sector)];
+                    case 1:
+                        if (_a.sent())
+                            return [2, (true)];
+                        context = new DrapoContext();
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, dRender, null, false)];
+                    case 2:
+                        expression = _a.sent();
+                        return [4, this.Application.Solver.ResolveConditional(expression)];
+                    case 3:
+                        result = _a.sent();
+                        el.removeAttribute('d-render');
+                        return [2, (result)];
                 }
             });
         });
@@ -10929,39 +10962,38 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionRemoveDataItemLookup = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, dataFieldSeek, valueSeek, notifyText, _a, notify, _b;
+            var dataPath, dataFieldSeek, valueSeek, notifyText, _a, notify, _b;
             return __generator(this, function (_c) {
                 switch (_c.label) {
-                    case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
-                    case 1:
-                        dataKey = _c.sent();
+                    case 0:
+                        dataPath = functionParsed.Parameters[0];
                         return [4, this.ResolveFunctionParameterDataFields(sector, contextItem, element, functionParsed.Parameters[1], executionContext)];
-                    case 2:
+                    case 1:
                         dataFieldSeek = _c.sent();
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2])];
-                    case 3:
+                    case 2:
                         valueSeek = _c.sent();
-                        if (!(functionParsed.Parameters.length > 3)) return [3, 5];
+                        if (!(functionParsed.Parameters.length > 3)) return [3, 4];
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3])];
-                    case 4:
+                    case 3:
                         _a = _c.sent();
-                        return [3, 6];
-                    case 5:
+                        return [3, 5];
+                    case 4:
                         _a = null;
-                        _c.label = 6;
-                    case 6:
+                        _c.label = 5;
+                    case 5:
                         notifyText = _a;
-                        if (!((notifyText == null) || (notifyText == ''))) return [3, 7];
+                        if (!((notifyText == null) || (notifyText == ''))) return [3, 6];
                         _b = true;
-                        return [3, 9];
-                    case 7: return [4, this.Application.Solver.ResolveConditional(notifyText)];
-                    case 8:
+                        return [3, 8];
+                    case 6: return [4, this.Application.Solver.ResolveConditional(notifyText)];
+                    case 7:
                         _b = _c.sent();
-                        _c.label = 9;
-                    case 9:
+                        _c.label = 8;
+                    case 8:
                         notify = _b;
-                        return [4, this.Application.Storage.RemoveDataItemLookup(dataKey, sector, dataFieldSeek, valueSeek, notify)];
-                    case 10:
+                        return [4, this.Application.Storage.RemoveDataItemLookup(dataPath, sector, dataFieldSeek, valueSeek, notify)];
+                    case 9:
                         _c.sent();
                         return [2, ('')];
                 }
@@ -14196,9 +14228,10 @@ var DrapoObserver = (function () {
             this._dataForElement[dataKeyIndex].splice(i, 1);
         }
     };
-    DrapoObserver.prototype.Notify = function (dataKey, dataIndex, dataFields, canUseDifference, canNotifyStorage) {
+    DrapoObserver.prototype.Notify = function (dataKey, dataIndex, dataFields, canUseDifference, canNotifyStorage, notifyStorageDataKey) {
         if (canUseDifference === void 0) { canUseDifference = true; }
         if (canNotifyStorage === void 0) { canNotifyStorage = true; }
+        if (notifyStorageDataKey === void 0) { notifyStorageDataKey = null; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -14206,7 +14239,7 @@ var DrapoObserver = (function () {
                     case 1:
                         _a.sent();
                         if (!canNotifyStorage) return [3, 3];
-                        return [4, this.NotifyStorage(dataKey, dataFields)];
+                        return [4, this.NotifyStorage(dataKey, dataFields, notifyStorageDataKey)];
                     case 2:
                         _a.sent();
                         _a.label = 3;
@@ -14309,7 +14342,8 @@ var DrapoObserver = (function () {
             });
         });
     };
-    DrapoObserver.prototype.NotifyStorage = function (dataKey, dataFields) {
+    DrapoObserver.prototype.NotifyStorage = function (dataKey, dataFields, notifyStorageDataKey) {
+        if (notifyStorageDataKey === void 0) { notifyStorageDataKey = null; }
         return __awaiter(this, void 0, void 0, function () {
             var dataKeyIndex, dataField, dataStorageFields, dataReferenceKeys, dataTypes, i, dataReferenceKey, type, sectors, j;
             return __generator(this, function (_a) {
@@ -14329,6 +14363,8 @@ var DrapoObserver = (function () {
                         if ((dataField != null) && (dataStorageFields[i] != null) && (dataStorageFields[i] !== dataField))
                             return [3, 13];
                         dataReferenceKey = dataReferenceKeys[i];
+                        if ((notifyStorageDataKey != null) && (dataReferenceKey === notifyStorageDataKey))
+                            return [3, 13];
                         type = dataTypes[i];
                         if (!(type == DrapoStorageLinkType.Reload)) return [3, 6];
                         sectors = this.Application.Storage.GetSectors(dataReferenceKey);
@@ -14355,7 +14391,7 @@ var DrapoObserver = (function () {
                         return [4, this.Application.Storage.UpdatePointerStorageItems(dataKey, dataReferenceKey)];
                     case 9:
                         _a.sent();
-                        return [4, this.Application.Observer.Notify(dataReferenceKey, null, null, true, false)];
+                        return [4, this.Application.Observer.Notify(dataReferenceKey, null, null, true, true, dataKey)];
                     case 10:
                         _a.sent();
                         return [3, 13];
@@ -19617,6 +19653,16 @@ var DrapoSolver = (function () {
         }
         return (path);
     };
+    DrapoSolver.prototype.CombineDataPath = function (dataPath1, dataPath2) {
+        var path = [];
+        if (dataPath1 != null)
+            for (var i = 0; i < dataPath1.length; i++)
+                path.push(dataPath1[i]);
+        if (dataPath2 != null)
+            for (var i = 0; i < dataPath2.length; i++)
+                path.push(dataPath2[i]);
+        return (path);
+    };
     DrapoSolver.prototype.GetDataPathParent = function (dataPath) {
         var dataPathParent = [];
         for (var i = 0; i < dataPath.length - 1; i++)
@@ -20578,7 +20624,24 @@ var DrapoStorage = (function () {
             });
         });
     };
-    DrapoStorage.prototype.RemoveDataItemLookup = function (dataKey, sector, dataFieldSeek, valueSeek, notify) {
+    DrapoStorage.prototype.RemoveDataItemLookup = function (dataSource, sector, dataFieldSeek, valueSeek, notify) {
+        if (notify === void 0) { notify = true; }
+        return __awaiter(this, void 0, void 0, function () {
+            var isDataSourceMustache;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        isDataSourceMustache = this.Application.Parser.IsMustache(dataSource);
+                        if (!isDataSourceMustache) return [3, 2];
+                        return [4, this.RemoveDataItemLookupMustache(dataSource, sector, dataFieldSeek, valueSeek, notify)];
+                    case 1: return [2, (_a.sent())];
+                    case 2: return [4, this.RemoveDataItemLookupDataKey(dataSource, sector, dataFieldSeek, valueSeek, notify)];
+                    case 3: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.RemoveDataItemLookupDataKey = function (dataKey, sector, dataFieldSeek, valueSeek, notify) {
         if (notify === void 0) { notify = true; }
         return __awaiter(this, void 0, void 0, function () {
             var cacheIndex, dataPath, storageItem, length_3, removedArray, context, i, data, dataPathSeek, contextItem, dataPathSeekValue, i, index;
@@ -20623,6 +20686,49 @@ var DrapoStorage = (function () {
                         return [3, 8];
                     case 7: return [2, (false)];
                     case 8: return [2, (true)];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.RemoveDataItemLookupMustache = function (dataSource, sector, dataFieldSeek, valueSeek, notify) {
+        if (notify === void 0) { notify = true; }
+        return __awaiter(this, void 0, void 0, function () {
+            var dataSourcePath, dataKey, cacheIndex, storageItem, dataBase, dataPath, length, removedArray, context, i, data, dataPathSeekValue, i, index;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dataSourcePath = this.Application.Parser.ParseMustache(dataSource);
+                        dataKey = this.Application.Solver.ResolveDataKey(dataSourcePath);
+                        return [4, this.EnsureDataKeyReady(dataKey, sector)];
+                    case 1:
+                        cacheIndex = _a.sent();
+                        if (cacheIndex == null)
+                            return [2, (false)];
+                        storageItem = this.GetCacheStorageItem(dataKey, sector, null);
+                        if (storageItem === null)
+                            return [2, (false)];
+                        dataBase = this.Application.Solver.ResolveItemStoragePathObject(storageItem, dataSourcePath);
+                        if ((dataBase == null) || (dataBase.length == 0))
+                            return [2, (false)];
+                        dataPath = (typeof dataFieldSeek === "string") ? [dataKey, dataFieldSeek] : this.Application.Solver.CreateDataPath(dataKey, dataFieldSeek);
+                        length = dataBase.length;
+                        removedArray = [];
+                        context = new DrapoContext();
+                        for (i = 0; i < length; i++) {
+                            data = dataBase[i];
+                            dataPathSeekValue = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
+                            if (!this.Application.Solver.IsEqualString(valueSeek, dataPathSeekValue))
+                                continue;
+                            removedArray.push(i);
+                        }
+                        for (i = removedArray.length - 1; i >= 0; i--) {
+                            index = removedArray[i];
+                            dataBase.splice(index, 1);
+                        }
+                        return [4, this.NotifyChanges(storageItem, ((notify) && (removedArray.length > 0)), dataKey, null, null)];
+                    case 2:
+                        _a.sent();
+                        return [2, (true)];
                 }
             });
         });
@@ -22902,10 +23008,13 @@ var DrapoStorage = (function () {
                         objectsInformation = [];
                         filters = [];
                         hasFilters = query.Filter !== null;
-                        i = 0;
-                        _a.label = 1;
+                        return [4, this.ResolveQueryConditionMustaches(sector, dataKey, query)];
                     case 1:
-                        if (!(i < query.Sources.length)) return [3, 4];
+                        _a.sent();
+                        i = 0;
+                        _a.label = 2;
+                    case 2:
+                        if (!(i < query.Sources.length)) return [3, 5];
                         querySource = query.Sources[i];
                         querySourcePath = querySource.Source;
                         isQuerySourceMustache = this.Application.Parser.IsMustache(querySourcePath);
@@ -22921,7 +23030,7 @@ var DrapoStorage = (function () {
                         }
                         this.Application.Observer.SubscribeStorage(sourceDataKey, null, dataKey);
                         return [4, this.RetrieveDataValue(sector, sourceMustache)];
-                    case 2:
+                    case 3:
                         querySourceData = _a.sent();
                         querySourceObjects = Array.isArray(querySourceData) ? querySourceData : [querySourceData];
                         for (j = 0; j < querySourceObjects.length; j++) {
@@ -22943,11 +23052,11 @@ var DrapoStorage = (function () {
                                 }
                             }
                         }
-                        _a.label = 3;
-                    case 3:
-                        i++;
-                        return [3, 1];
+                        _a.label = 4;
                     case 4:
+                        i++;
+                        return [3, 2];
+                    case 5:
                         count = query.Sources.length;
                         if ((count > 1) && (query.Sources[1].JoinType == 'INNER')) {
                             for (i = objects.length - 1; i >= 0; i--) {
@@ -23124,6 +23233,88 @@ var DrapoStorage = (function () {
                 break;
             }
         }
+    };
+    DrapoStorage.prototype.ResolveQueryConditionMustaches = function (sector, dataKey, query) {
+        return __awaiter(this, void 0, void 0, function () {
+            var i, source, j, filter;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(query.Filter != null)) return [3, 2];
+                        return [4, this.ResolveQueryConditionMustachesFilter(sector, dataKey, query.Filter)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        i = 0;
+                        _a.label = 3;
+                    case 3:
+                        if (!(i < query.Sources.length)) return [3, 8];
+                        source = query.Sources[i];
+                        if (source.JoinConditions == null)
+                            return [3, 7];
+                        j = 0;
+                        _a.label = 4;
+                    case 4:
+                        if (!(j < source.JoinConditions.length)) return [3, 7];
+                        filter = source.JoinConditions[j];
+                        return [4, this.ResolveQueryConditionMustachesFilter(sector, dataKey, filter)];
+                    case 5:
+                        _a.sent();
+                        _a.label = 6;
+                    case 6:
+                        j++;
+                        return [3, 4];
+                    case 7:
+                        i++;
+                        return [3, 3];
+                    case 8: return [2];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.ResolveQueryConditionMustachesFilter = function (sector, dataKey, filter) {
+        return __awaiter(this, void 0, void 0, function () {
+            var valueLeft, valueRight;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, filter.ValueLeft)];
+                    case 1:
+                        valueLeft = _a.sent();
+                        if (valueLeft !== undefined) {
+                            filter.ColumnLeft = valueLeft;
+                            filter.ValueLeft = valueLeft;
+                        }
+                        return [4, this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, filter.ValueRight)];
+                    case 2:
+                        valueRight = _a.sent();
+                        if (valueRight !== undefined) {
+                            filter.ColumnRight = valueRight;
+                            filter.ValueRight = valueRight;
+                        }
+                        return [2];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.ResolveQueryConditionMustachesFilterValue = function (sector, dataKey, value) {
+        return __awaiter(this, void 0, void 0, function () {
+            var mustacheParts, mustacheDataKey, valueResolved;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.Application.Parser.IsMustache(value))
+                            return [2, (undefined)];
+                        mustacheParts = this.Application.Parser.ParseMustache(value);
+                        mustacheDataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
+                        this.Application.Observer.SubscribeStorage(mustacheDataKey, null, dataKey);
+                        return [4, this.RetrieveDataValue(sector, value)];
+                    case 1:
+                        valueResolved = _a.sent();
+                        return [2, (valueResolved)];
+                }
+            });
+        });
     };
     DrapoStorage.prototype.IsValidQueryCondition = function (filter) {
         if ((filter.Comparator === '=') && (filter.ValueLeft == filter.ValueRight))

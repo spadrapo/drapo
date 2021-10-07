@@ -801,6 +801,11 @@ namespace WebDrapo.Test
             ValidatePage("DataPointer");
         }
         [TestCase]
+        public void DataPointerNotifyTest()
+        {
+            ValidatePage("DataPointerNotify");
+        }
+        [TestCase]
         public void DataPostGetTest()
         {
             ValidatePage("DataPostGet");
@@ -884,6 +889,11 @@ namespace WebDrapo.Test
         public void DataQueryWhereBooleanTest()
         {
             ValidatePage("DataQueryWhereBoolean");
+        }
+        [TestCase]
+        public void DataQueryWhereMustacheTest()
+        {
+            ValidatePage("DataQueryWhereMustache");
         }
         [TestCase]
         public void DataQueryWhereNullTest()
@@ -1172,6 +1182,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionRemoveDataItemLookup");
         }
         [TestCase]
+        public void FunctionRemoveDataItemLookupDataKeyMustacheTest()
+        {
+            ValidatePage("FunctionRemoveDataItemLookupDataKeyMustache");
+        }
+        [TestCase]
         public void FunctionRemoveDataItemLookupMappingTest()
         {
             ValidatePage("FunctionRemoveDataItemLookupMapping");
@@ -1405,6 +1420,11 @@ namespace WebDrapo.Test
         public void PropertiesSameTagTest()
         {
             ValidatePage("PropertiesSameTag");
+        }
+        [TestCase]
+        public void RenderTest()
+        {
+            ValidatePage("Render");
         }
         [TestCase]
         public void RouterMasterTest()
