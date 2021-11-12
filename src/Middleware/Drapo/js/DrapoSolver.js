@@ -657,13 +657,18 @@ var DrapoSolver = (function () {
             return (valueSystem);
         return (this.ResolveDataObjectPathObject(item.Data, dataPath));
     };
-    DrapoSolver.prototype.ResolveDataObjectPathObject = function (dataObject, dataPath) {
+    DrapoSolver.prototype.ResolveDataObjectPathObject = function (dataObject, dataPath, dataEnforce) {
+        if (dataEnforce === void 0) { dataEnforce = null; }
         var data = dataObject;
         for (var i = 1; i < dataPath.length; i++) {
             var currentKey = dataPath[i];
             var index = this.GetDataObjectPathObjectPropertyIndex(currentKey);
             if (index === null) {
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
+                    if ((dataEnforce !== null) && (i === dataPath.length - 1)) {
+                        data[currentKey] = dataEnforce;
+                        return (dataEnforce);
+                    }
                     return ('');
                 }
                 data = data[currentKey];

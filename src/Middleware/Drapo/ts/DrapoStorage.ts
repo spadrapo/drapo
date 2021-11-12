@@ -1243,7 +1243,7 @@ class DrapoStorage {
             return (false);
         let data: any[] = dataItem.Data;
         if (dataPath != null)
-            data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
+            data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath, []);
         data.push(item);
         if (dataItem.IsUnitOfWork)
             dataItem.DataInserted.push(item);
