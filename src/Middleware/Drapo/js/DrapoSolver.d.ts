@@ -32,7 +32,7 @@ declare class DrapoSolver {
     private ResolveDataPathObject;
     ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean): Promise<any>;
     ResolveItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): any;
-    ResolveDataObjectPathObject(dataObject: any, dataPath: string[]): any;
+    ResolveDataObjectPathObject(dataObject: any, dataPath: string[], dataEnforce?: any): any;
     private GetDataObjectPathObjectPropertyIndex;
     ResolveDataObjectLookupHierarchy(data: any, searchField: string, searchValue: any, searchHierarchyField?: string): any;
     UpdateDataObjectLookupHierarchy(data: any, searchField: string, searchValue: any, value: any, searchHierarchyField?: string): boolean;
