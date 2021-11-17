@@ -461,7 +461,7 @@ class DrapoSolver {
         return (this.ResolveDataObjectPathObject(item.Data, dataPath));
     }
 
-    public ResolveDataObjectPathObject(dataObject: any, dataPath: string[]): any {
+    public ResolveDataObjectPathObject(dataObject: any, dataPath: string[], dataEnforce: any = null): any {
         let data: any = dataObject;
         //Path
         for (let i = 1; i < dataPath.length; i++) {
@@ -470,6 +470,10 @@ class DrapoSolver {
             if (index === null) {
                 //Property
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
+                    if ((dataEnforce !== null) && (i === dataPath.length - 1)) { // Enforce Data
+                        data[currentKey] = dataEnforce;
+                        return (dataEnforce);
+                    }
                     return ('');
                 }
                 data = data[currentKey];
@@ -605,6 +609,17 @@ class DrapoSolver {
             for (let i: number = 0; i < dataFields.length; i++)
                 path.push(dataFields[i]);
         }
+        return (path);
+    }
+
+    public CombineDataPath(dataPath1: string[], dataPath2: string[]): string[] {
+        const path: string[] = [];
+        if (dataPath1 != null)
+            for (let i: number = 0; i < dataPath1.length; i++)
+                path.push(dataPath1[i]);
+        if (dataPath2 != null)
+            for (let i: number = 0; i < dataPath2.length; i++)
+                path.push(dataPath2[i]);
         return (path);
     }
 

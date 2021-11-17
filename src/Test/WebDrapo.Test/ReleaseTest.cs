@@ -1001,6 +1001,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionAddDataItemMustache");
         }
         [TestCase]
+        public void FunctionAddDataItemPropertyCreateTest()
+        {
+            ValidatePage("FunctionAddDataItemPropertyCreate");
+        }
+        [TestCase]
         public void FunctionAddDataItemReferenceTest()
         {
             ValidatePage("FunctionAddDataItemReference");
@@ -1180,6 +1185,11 @@ namespace WebDrapo.Test
         public void FunctionRemoveDataItemLookupTest()
         {
             ValidatePage("FunctionRemoveDataItemLookup");
+        }
+        [TestCase]
+        public void FunctionRemoveDataItemLookupDataKeyMustacheTest()
+        {
+            ValidatePage("FunctionRemoveDataItemLookupDataKeyMustache");
         }
         [TestCase]
         public void FunctionRemoveDataItemLookupMappingTest()

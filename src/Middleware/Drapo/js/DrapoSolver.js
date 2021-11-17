@@ -657,13 +657,18 @@ var DrapoSolver = (function () {
             return (valueSystem);
         return (this.ResolveDataObjectPathObject(item.Data, dataPath));
     };
-    DrapoSolver.prototype.ResolveDataObjectPathObject = function (dataObject, dataPath) {
+    DrapoSolver.prototype.ResolveDataObjectPathObject = function (dataObject, dataPath, dataEnforce) {
+        if (dataEnforce === void 0) { dataEnforce = null; }
         var data = dataObject;
         for (var i = 1; i < dataPath.length; i++) {
             var currentKey = dataPath[i];
             var index = this.GetDataObjectPathObjectPropertyIndex(currentKey);
             if (index === null) {
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
+                    if ((dataEnforce !== null) && (i === dataPath.length - 1)) {
+                        data[currentKey] = dataEnforce;
+                        return (dataEnforce);
+                    }
                     return ('');
                 }
                 data = data[currentKey];
@@ -803,6 +808,16 @@ var DrapoSolver = (function () {
             for (var i = 0; i < dataFields.length; i++)
                 path.push(dataFields[i]);
         }
+        return (path);
+    };
+    DrapoSolver.prototype.CombineDataPath = function (dataPath1, dataPath2) {
+        var path = [];
+        if (dataPath1 != null)
+            for (var i = 0; i < dataPath1.length; i++)
+                path.push(dataPath1[i]);
+        if (dataPath2 != null)
+            for (var i = 0; i < dataPath2.length; i++)
+                path.push(dataPath2[i]);
         return (path);
     };
     DrapoSolver.prototype.GetDataPathParent = function (dataPath) {

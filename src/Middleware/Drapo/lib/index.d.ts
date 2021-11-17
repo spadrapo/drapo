@@ -1736,7 +1736,7 @@ declare class DrapoSolver {
     private ResolveDataPathObject;
     ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean): Promise<any>;
     ResolveItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): any;
-    ResolveDataObjectPathObject(dataObject: any, dataPath: string[]): any;
+    ResolveDataObjectPathObject(dataObject: any, dataPath: string[], dataEnforce?: any): any;
     private GetDataObjectPathObjectPropertyIndex;
     ResolveDataObjectLookupHierarchy(data: any, searchField: string, searchValue: any, searchHierarchyField?: string): any;
     UpdateDataObjectLookupHierarchy(data: any, searchField: string, searchValue: any, value: any, searchHierarchyField?: string): boolean;
@@ -1747,6 +1747,7 @@ declare class DrapoSolver {
     ResolveDataKey(mustacheParts: string[]): string;
     ResolveDataFields(mustacheParts: string[]): string[];
     CreateDataPath(dataKey: string, dataFields: string[]): string[];
+    CombineDataPath(dataPath1: string[], dataPath2: string[]): string[];
     GetDataPathParent(dataPath: string[]): string[];
     UpdateItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], value: any, canNotify?: boolean): Promise<boolean>;
     UpdateDataPathObject(data: any, dataPath: string[], value: any): boolean;
@@ -1812,7 +1813,9 @@ declare class DrapoStorage {
     GetDataKeyField(dataKey: string, sector: string, dataPath: string[], executionContext?: DrapoExecutionContext<any>): string;
     SetDataKeyField(dataKey: string, sector: string, dataFields: string[], value: any, notify?: boolean): Promise<boolean>;
     UpdateDataFieldLookup(dataKey: string, sector: string, dataFieldSeek: string, valueSeek: string, dataField: string | [string], value: any, notify?: boolean): Promise<boolean>;
-    RemoveDataItemLookup(dataKey: string, sector: string, dataFieldSeek: string | string[], valueSeek: string, notify?: boolean): Promise<boolean>;
+    RemoveDataItemLookup(dataSource: string, sector: string, dataFieldSeek: string | string[], valueSeek: string, notify?: boolean): Promise<boolean>;
+    private RemoveDataItemLookupDataKey;
+    private RemoveDataItemLookupMustache;
     private CreatePath;
     private CreateDataPath;
     LoadDataDelayedAndNotify(): Promise<void>;

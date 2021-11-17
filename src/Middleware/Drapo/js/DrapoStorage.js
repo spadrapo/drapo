@@ -619,7 +619,24 @@ var DrapoStorage = (function () {
             });
         });
     };
-    DrapoStorage.prototype.RemoveDataItemLookup = function (dataKey, sector, dataFieldSeek, valueSeek, notify) {
+    DrapoStorage.prototype.RemoveDataItemLookup = function (dataSource, sector, dataFieldSeek, valueSeek, notify) {
+        if (notify === void 0) { notify = true; }
+        return __awaiter(this, void 0, void 0, function () {
+            var isDataSourceMustache;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        isDataSourceMustache = this.Application.Parser.IsMustache(dataSource);
+                        if (!isDataSourceMustache) return [3, 2];
+                        return [4, this.RemoveDataItemLookupMustache(dataSource, sector, dataFieldSeek, valueSeek, notify)];
+                    case 1: return [2, (_a.sent())];
+                    case 2: return [4, this.RemoveDataItemLookupDataKey(dataSource, sector, dataFieldSeek, valueSeek, notify)];
+                    case 3: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.RemoveDataItemLookupDataKey = function (dataKey, sector, dataFieldSeek, valueSeek, notify) {
         if (notify === void 0) { notify = true; }
         return __awaiter(this, void 0, void 0, function () {
             var cacheIndex, dataPath, storageItem, length_3, removedArray, context, i, data, dataPathSeek, contextItem, dataPathSeekValue, i, index;
@@ -664,6 +681,49 @@ var DrapoStorage = (function () {
                         return [3, 8];
                     case 7: return [2, (false)];
                     case 8: return [2, (true)];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.RemoveDataItemLookupMustache = function (dataSource, sector, dataFieldSeek, valueSeek, notify) {
+        if (notify === void 0) { notify = true; }
+        return __awaiter(this, void 0, void 0, function () {
+            var dataSourcePath, dataKey, cacheIndex, storageItem, dataBase, dataPath, length, removedArray, context, i, data, dataPathSeekValue, i, index;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dataSourcePath = this.Application.Parser.ParseMustache(dataSource);
+                        dataKey = this.Application.Solver.ResolveDataKey(dataSourcePath);
+                        return [4, this.EnsureDataKeyReady(dataKey, sector)];
+                    case 1:
+                        cacheIndex = _a.sent();
+                        if (cacheIndex == null)
+                            return [2, (false)];
+                        storageItem = this.GetCacheStorageItem(dataKey, sector, null);
+                        if (storageItem === null)
+                            return [2, (false)];
+                        dataBase = this.Application.Solver.ResolveItemStoragePathObject(storageItem, dataSourcePath);
+                        if ((dataBase == null) || (dataBase.length == 0))
+                            return [2, (false)];
+                        dataPath = (typeof dataFieldSeek === "string") ? [dataKey, dataFieldSeek] : this.Application.Solver.CreateDataPath(dataKey, dataFieldSeek);
+                        length = dataBase.length;
+                        removedArray = [];
+                        context = new DrapoContext();
+                        for (i = 0; i < length; i++) {
+                            data = dataBase[i];
+                            dataPathSeekValue = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
+                            if (!this.Application.Solver.IsEqualString(valueSeek, dataPathSeekValue))
+                                continue;
+                            removedArray.push(i);
+                        }
+                        for (i = removedArray.length - 1; i >= 0; i--) {
+                            index = removedArray[i];
+                            dataBase.splice(index, 1);
+                        }
+                        return [4, this.NotifyChanges(storageItem, ((notify) && (removedArray.length > 0)), dataKey, null, null)];
+                    case 2:
+                        _a.sent();
+                        return [2, (true)];
                 }
             });
         });
@@ -1764,7 +1824,7 @@ var DrapoStorage = (function () {
                             return [2, (false)];
                         data = dataItem.Data;
                         if (dataPath != null)
-                            data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
+                            data = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath, []);
                         data.push(item);
                         if (dataItem.IsUnitOfWork)
                             dataItem.DataInserted.push(item);

@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/DataPointerNotify.html",
+      "launchUrl": "DrapoPages/FunctionAddDataItemPropertyCreate.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
