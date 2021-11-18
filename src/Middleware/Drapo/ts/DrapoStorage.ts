@@ -1550,7 +1550,8 @@ class DrapoStorage {
             const dataKeyReference: string = this.Application.Solver.ResolveDataKey(mustacheFullPartsReference);
             const mustacheDataFieldsReference: string[] = this.Application.Solver.ResolveDataFields(mustacheFullPartsReference);
             const mustachePartsReference: string[] = this.Application.Solver.CreateDataPath(dataKeyReference, mustacheDataFieldsReference);
-            updated = await this.UpdateDataPath(dataSectorReference, null, mustachePartsReference, dataItem.Data, notify);
+            const dataClone: any[] = this.Application.Solver.Clone(dataItem.Data, true);
+            updated = await this.UpdateDataPath(dataSectorReference, null, mustachePartsReference, dataClone, notify);
             return (updated);
         }
         let dataValueResolved: string = dataValue;

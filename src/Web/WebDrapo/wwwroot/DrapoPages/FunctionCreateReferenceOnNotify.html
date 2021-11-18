@@ -30,6 +30,7 @@
             <input type="button" value="click here" d-on-click="UpdateDataField(personObject,Nome,nao_aparece_na_lista);UpdateDataField(personMapping,,{{personObject}});PostData(personMapping)">
             <span>this click will not call dataOnNotify</span>
         </div>
+        <div d-dataKey="initialize" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateDataField(personObject,Nome,alex);UpdateDataField(personMapping,,{{personObject}});PostData(personMapping);UpdateDataField(personObject,Nome,nao_aparece_na_lista);UpdateDataField(personMapping,,{{personObject}});PostData(personMapping)"></div>
     </div>
 </body>
 </html>
