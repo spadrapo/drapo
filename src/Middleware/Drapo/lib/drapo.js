@@ -22268,7 +22268,7 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.PostDataMapping = function (dataKey, sector, dataItem, notify, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var el, dataValue, updated, isReference, mustacheFullPartsReference, dataSectorReference, dataKeyReference, mustacheDataFieldsReference, mustachePartsReference, dataValueResolved, storageItemMapped, dataMappingField, dataMappingSearchField, dataMappingSearchValue, dataMappingSearchHierarchyField, data, dataPath, dataMappingFieldResolved, dataPathFull, dataPathCurrent, updatedDataObject;
+            var el, dataValue, updated, isReference, mustacheFullPartsReference, dataSectorReference, dataKeyReference, mustacheDataFieldsReference, mustachePartsReference, dataClone, dataValueResolved, storageItemMapped, dataMappingField, dataMappingSearchField, dataMappingSearchValue, dataMappingSearchHierarchyField, data, dataPath, dataMappingFieldResolved, dataPathFull, dataPathCurrent, updatedDataObject;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -22286,7 +22286,8 @@ var DrapoStorage = (function () {
                         dataKeyReference = this.Application.Solver.ResolveDataKey(mustacheFullPartsReference);
                         mustacheDataFieldsReference = this.Application.Solver.ResolveDataFields(mustacheFullPartsReference);
                         mustachePartsReference = this.Application.Solver.CreateDataPath(dataKeyReference, mustacheDataFieldsReference);
-                        return [4, this.UpdateDataPath(dataSectorReference, null, mustachePartsReference, dataItem.Data, notify)];
+                        dataClone = this.Application.Solver.Clone(dataItem.Data, true);
+                        return [4, this.UpdateDataPath(dataSectorReference, null, mustachePartsReference, dataClone, notify)];
                     case 1:
                         updated = _a.sent();
                         return [2, (updated)];

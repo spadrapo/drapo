@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function Create Reference - Data On Notify</title>
+</head>
+<body>
+    <span>Function Create Reference - Data On Notify</span>
+    <div d-datakey="panelObjectClipboard" d-datatype="object"></div>
+    <div d-sector="@">
+        <div d-datakey="persons" d-datatype="array" d-datavalue="[{&quot;Nome&quot;: &quot;John&quot;},{&quot;Nome&quot;: &quot;Mary&quot;},{&quot;Nome&quot;: &quot;Thiago&quot;}]"></div>
+        <div d-datakey="personReference" d-datatype="object" d-dataonnotify="AddDataItem({{persons}},{{personReference}})"></div>
+        <div d-datakey="createReference" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateDataField(panelObjectClipboard,Person,CreateReference({{personReference}}))"></div>
+
+        <div>
+            <div d-for="person in persons" style="display: none;">
+                <span d-model="{{person.Nome}}"></span><br />
+            </div>
+        <div>
+                <span>John</span><br />
+            </div><div>
+                <span>Mary</span><br />
+            </div><div>
+                <span>Thiago</span><br />
+            </div><div>
+                <span>alex</span><br />
+            </div><div>
+                <span>nao_aparece_na_lista</span><br />
+            </div></div>
+    </div>
+    <div d-sector="@">
+        <div>
+            <div d-datakey="personObject" d-datatype="object" d-dataproperty-nome-name="Nome"></div>
+            <div d-datakey="personMapping" d-datatype="mapping" d-dataloadtype="reference" d-datavalue="{{@abc.personReference}}"></div>
+        </div>
+        <div>
+            <input type="button" value="click" d-on-click="UpdateDataField(personObject,Nome,alex);UpdateDataField(personMapping,,{{personObject}});PostData(personMapping)" />
+        </div>
+        <div>
+            <input type="button" value="click here" d-on-click="UpdateDataField(personObject,Nome,nao_aparece_na_lista);UpdateDataField(personMapping,,{{personObject}});PostData(personMapping)" />
+            <span>this click will not call dataOnNotify</span>
+        </div>
+        <div d-datakey="initialize" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateDataField(personObject,Nome,alex);UpdateDataField(personMapping,,{{personObject}});PostData(personMapping);UpdateDataField(personObject,Nome,nao_aparece_na_lista);UpdateDataField(personMapping,,{{personObject}});PostData(personMapping)"></div>
+    </div>
+
+</body></html>
