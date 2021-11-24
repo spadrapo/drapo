@@ -107,7 +107,7 @@ declare class DrapoStorage {
     PostData(dataKey: string, sector: string, dataKeyResponse: string, notify: boolean, executionContext: DrapoExecutionContext<any>): Promise<boolean>;
     PostDataItem(dataKey: string, sector: string, dataKeyResponse: string, notify: boolean, executionContext: DrapoExecutionContext<any>): Promise<boolean>;
     PostDataMapping(dataKey: string, sector: string, dataItem: DrapoStorageItem, notify: boolean, executionContext: DrapoExecutionContext<any>): Promise<boolean>;
-    ClearData(dataKey: string, sector: string, notify: boolean): Promise<boolean>;
+    ClearData(dataText: string, sector: string, notify: boolean): Promise<boolean>;
     UnloadData(dataKey: string, sector: string): Promise<boolean>;
     ClearDataToken(): Promise<void>;
     FireEventOnBeforeContainerUnload(sector: string): Promise<void>;

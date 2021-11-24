@@ -2345,13 +2345,35 @@ var DrapoStorage = (function () {
             });
         });
     };
-    DrapoStorage.prototype.ClearData = function (dataKey, sector, notify) {
+    DrapoStorage.prototype.ClearData = function (dataText, sector, notify) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataItem, i, item;
+            var mustacheParts, dataKey, dataItem, data, i, item, dataKey, dataItem, i, item;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.RetrieveDataItem(dataKey, sector)];
+                    case 0:
+                        if (!this.Application.Parser.IsMustache(dataText)) return [3, 3];
+                        mustacheParts = this.Application.Parser.ParseMustache(dataText);
+                        dataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
+                        return [4, this.RetrieveDataItem(dataKey, sector)];
                     case 1:
+                        dataItem = _a.sent();
+                        if (dataItem == null)
+                            return [2, (false)];
+                        data = this.Application.Solver.ResolveItemStoragePathObject(dataItem, mustacheParts);
+                        if ((data == null) || (data == undefined) || (data.length == undefined))
+                            return [2, (false)];
+                        for (i = data.length - 1; i >= 0; i--) {
+                            item = data[i];
+                            data.splice(i, 1);
+                        }
+                        return [4, this.NotifyChanges(dataItem, notify, dataKey, null, null)];
+                    case 2:
+                        _a.sent();
+                        return [3, 6];
+                    case 3:
+                        dataKey = dataText;
+                        return [4, this.RetrieveDataItem(dataKey, sector)];
+                    case 4:
                         dataItem = _a.sent();
                         if (dataItem == null)
                             return [2, (false)];
@@ -2362,9 +2384,10 @@ var DrapoStorage = (function () {
                             dataItem.Data.splice(i, 1);
                         }
                         return [4, this.NotifyChanges(dataItem, notify, dataKey, null, null)];
-                    case 2:
+                    case 5:
                         _a.sent();
-                        return [2, (true)];
+                        _a.label = 6;
+                    case 6: return [2, (true)];
                 }
             });
         });
