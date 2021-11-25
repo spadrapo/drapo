@@ -19621,6 +19621,8 @@ var DrapoSolver = (function () {
         });
     };
     DrapoSolver.prototype.ResolveSector = function (mustacheParts, sector) {
+        if (mustacheParts.length == 0)
+            return (sector);
         var mustacheSector = mustacheParts[0];
         if (mustacheSector === '@')
             return (null);

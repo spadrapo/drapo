@@ -570,6 +570,8 @@ class DrapoSolver {
     }
 
     public ResolveSector(mustacheParts: string[], sector: string): string {
+        if (mustacheParts.length == 0)
+            return (sector);
         const mustacheSector: string = mustacheParts[0];
         if (mustacheSector === '@')
             return (null);
