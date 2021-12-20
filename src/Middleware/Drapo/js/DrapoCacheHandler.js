@@ -123,6 +123,15 @@ var DrapoCacheHandler = (function () {
         var valueCached = this.GetClientDataCache(cacheKey);
         return (valueCached);
     };
+    DrapoCacheHandler.prototype.GetCachedDataPath = function (cacheKeys, sector, dataKey, dataPath) {
+        if (!this.CanUseLocalStorage)
+            return (null);
+        var cacheKey = this.CreateCacheKey(this.TYPE_DATA, cacheKeys, sector, dataKey, dataPath, null);
+        if (cacheKey == null)
+            return (null);
+        var valueCached = this.GetClientDataCache(cacheKey);
+        return (valueCached);
+    };
     DrapoCacheHandler.prototype.AppendCacheData = function (cacheKeys, sector, dataKey, value, isDelay) {
         if (isDelay === void 0) { isDelay = false; }
         if (!this.CanUseLocalStorage)

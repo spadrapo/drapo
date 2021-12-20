@@ -2473,6 +2473,15 @@ var DrapoCacheHandler = (function () {
         var valueCached = this.GetClientDataCache(cacheKey);
         return (valueCached);
     };
+    DrapoCacheHandler.prototype.GetCachedDataPath = function (cacheKeys, sector, dataKey, dataPath) {
+        if (!this.CanUseLocalStorage)
+            return (null);
+        var cacheKey = this.CreateCacheKey(this.TYPE_DATA, cacheKeys, sector, dataKey, dataPath, null);
+        if (cacheKey == null)
+            return (null);
+        var valueCached = this.GetClientDataCache(cacheKey);
+        return (valueCached);
+    };
     DrapoCacheHandler.prototype.AppendCacheData = function (cacheKeys, sector, dataKey, value, isDelay) {
         if (isDelay === void 0) { isDelay = false; }
         if (!this.CanUseLocalStorage)
@@ -21004,7 +21013,7 @@ var DrapoStorage = (function () {
         if (headersGet === void 0) { headersGet = null; }
         if (headersResponse === void 0) { headersResponse = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var url, cachedData, changes, verb, data, contentType, headers, dataPostGetKey, _a, item, dataResponse;
+            var url, cachedData, cachedData, changes, verb, data, contentType, headers, dataPostGetKey, _a, item, dataResponse;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -21017,6 +21026,11 @@ var DrapoStorage = (function () {
                     case 2:
                         if (!isDelay) {
                             cachedData = this.Application.CacheHandler.GetCachedData(cacheKeys, sector, dataKey);
+                            if (cachedData != null)
+                                return [2, (cachedData)];
+                        }
+                        if ((isDelay) && (dataDelayFields != null) && (dataDelayFields.length === 1)) {
+                            cachedData = this.Application.CacheHandler.GetCachedDataPath(cacheKeys, sector, dataKey, [dataDelayFields[0]]);
                             if (cachedData != null)
                                 return [2, (cachedData)];
                         }

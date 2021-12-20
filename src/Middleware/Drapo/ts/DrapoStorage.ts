@@ -664,6 +664,11 @@ class DrapoStorage {
             if (cachedData != null)
                 return (cachedData);
         }
+        if ((isDelay) && (dataDelayFields != null) && (dataDelayFields.length === 1)) {
+            const cachedData: any = this.Application.CacheHandler.GetCachedDataPath(cacheKeys, sector, dataKey, [dataDelayFields[0]]);
+            if (cachedData != null)
+                return (cachedData);
+        }
         //Internal Parameters
         if (dataStart != null)
             url = url.replace('{{start}}', dataStart);
