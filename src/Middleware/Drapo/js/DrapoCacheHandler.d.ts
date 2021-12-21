@@ -18,6 +18,7 @@ declare class DrapoCacheHandler {
     Initialize(): Promise<boolean>;
     EnsureLoaded(storageItem: DrapoStorageItem, sector: string, dataKey: string, dataPath?: string[]): boolean;
     GetCachedData(cacheKeys: string[], sector: string, dataKey: string): any[];
+    GetCachedDataPath(cacheKeys: string[], sector: string, dataKey: string, dataPath: string[]): any;
     AppendCacheData(cacheKeys: string[], sector: string, dataKey: string, value: any, isDelay?: boolean): boolean;
     GetCachedView(url: string): string;
     SetCachedView(url: string, value: string): boolean;
