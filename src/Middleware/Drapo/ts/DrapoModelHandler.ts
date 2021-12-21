@@ -36,7 +36,7 @@ class DrapoModelHandler {
         const model: string = el.getAttribute('d-model');
         if (model == null)
             return (false);
-        const isMustacheContext: boolean = await this.Application.Barber.HasMustacheContext(model, sector, renderContext);
+        const isMustacheContext: boolean = this.Application.Barber.HasMustacheContext(model, sector, renderContext);
         if (isContext !== isMustacheContext)
             return;
         const isMustacheOnly: boolean = this.Application.Parser.IsMustacheOnly(model, true);

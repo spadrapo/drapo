@@ -114,7 +114,7 @@ class DrapoBarber {
         const dRender: string = el.getAttribute('d-render');
         if (dRender == null)
             return (true);
-        if (await this.Application.Barber.HasMustacheContext(dRender, sector))
+        if (this.Application.Barber.HasMustacheContext(dRender, sector))
             return (true);
         const context: DrapoContext = new DrapoContext();
         const expression: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, dRender, null, false);
@@ -197,7 +197,7 @@ class DrapoBarber {
         if (model == null)
             return;
         const sector = this.Application.Document.GetSector(el);
-        if (await this.Application.Barber.HasMustacheContext(model, sector))
+        if (this.Application.Barber.HasMustacheContext(model, sector))
             return;
         const isMustacheOnly: boolean = this.Application.Parser.IsMustacheOnly(model, true);
         if (!isMustacheOnly)
@@ -340,7 +340,7 @@ class DrapoBarber {
         if (elIF == null)
             return;
         const sector: string = this.Application.Document.GetSector(el);
-        if (await this.Application.Barber.HasMustacheContext(elIF, sector))
+        if (this.Application.Barber.HasMustacheContext(elIF, sector))
             return;
         const context: DrapoContext = new DrapoContext();
         const elj: JQuery = $(el);
@@ -351,13 +351,13 @@ class DrapoBarber {
             this.Application.Document.Hide(elj);
     }
 
-    public async HasMustacheContext(expression: string, sector: string, renderContext: DrapoRenderContext = null): Promise<boolean> {
+    public HasMustacheContext(expression: string, sector: string, renderContext: DrapoRenderContext = null): boolean {
         const mustaches = this.Application.Parser.ParseMustaches(expression, true);
         for (let j = 0; j < mustaches.length; j++) {
             const mustache = mustaches[j];
             const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustache);
             const dataKey: string = this.Application.Solver.ResolveDataKey(mustacheParts);
-            const isDataKey: boolean = await this.Application.Storage.IsDataKey(dataKey, sector, renderContext);
+            const isDataKey: boolean = this.Application.Storage.IsDataKey(dataKey, sector, renderContext);
             if (!isDataKey)
                 return (true);
         }

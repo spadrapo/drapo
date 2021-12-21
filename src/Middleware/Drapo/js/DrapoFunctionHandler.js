@@ -43,7 +43,7 @@ var DrapoFunctionHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoFunctionHandler.prototype.ResolveFunctionWithoutContext = function (sector, element, functionsValue, executionContext) {
@@ -3200,35 +3200,33 @@ var DrapoFunctionHandler = (function () {
                     case 0:
                         if (this.HasFunctionsContext(functionsValue))
                             return [2, (true)];
-                        if (!!this.Application.Parser.IsMustache(functionsValue)) return [3, 2];
-                        return [4, this.Application.Barber.HasMustacheContext(functionsValue, sector)];
-                    case 1: return [2, (_a.sent())];
-                    case 2:
+                        if (!this.Application.Parser.IsMustache(functionsValue))
+                            return [2, (this.Application.Barber.HasMustacheContext(functionsValue, sector))];
                         mustaches = this.Application.Parser.ParseMustaches(functionsValue);
                         j = 0;
-                        _a.label = 3;
-                    case 3:
-                        if (!(j < mustaches.length)) return [3, 8];
+                        _a.label = 1;
+                    case 1:
+                        if (!(j < mustaches.length)) return [3, 6];
                         mustache = mustaches[j];
                         mustacheParts = this.Application.Parser.ParseMustache(mustache);
                         dataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
                         if (!this.Application.Storage.IsDataKey(dataKey, null))
                             return [2, (true)];
                         value = this.Application.Storage.GetDataKeyField(dataKey, sector, mustacheParts);
-                        if (!(value == null)) return [3, 5];
+                        if (!(value == null)) return [3, 3];
                         return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - HasFunctionMustacheContext - Null Mustache - {0}', mustache)];
-                    case 4:
+                    case 2:
                         _a.sent();
                         return [2, (false)];
-                    case 5: return [4, this.HasFunctionMustacheContextInternal(value, sector)];
-                    case 6:
+                    case 3: return [4, this.HasFunctionMustacheContextInternal(value, sector)];
+                    case 4:
                         if (_a.sent())
                             return [2, (true)];
-                        _a.label = 7;
-                    case 7:
+                        _a.label = 5;
+                    case 5:
                         j++;
-                        return [3, 3];
-                    case 8: return [2, (false)];
+                        return [3, 1];
+                    case 6: return [2, (false)];
                 }
             });
         });

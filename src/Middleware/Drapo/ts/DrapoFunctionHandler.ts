@@ -1420,7 +1420,7 @@ class DrapoFunctionHandler {
         if (this.HasFunctionsContext(functionsValue))
             return (true);
         if (!this.Application.Parser.IsMustache(functionsValue))
-            return (await this.Application.Barber.HasMustacheContext(functionsValue, sector));
+            return (this.Application.Barber.HasMustacheContext(functionsValue, sector));
         const mustaches = this.Application.Parser.ParseMustaches(functionsValue);
         for (let j = 0; j < mustaches.length; j++) {
             const mustache = mustaches[j];
