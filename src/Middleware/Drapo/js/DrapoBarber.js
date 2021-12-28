@@ -610,6 +610,15 @@ var DrapoBarber = (function () {
     };
     DrapoBarber.prototype.HasMustacheContext = function (expression, sector, renderContext) {
         if (renderContext === void 0) { renderContext = null; }
+        var value = this.Application.SectorContainerHandler.HasMustacheContextCache(sector, expression);
+        if (value !== null)
+            return (value);
+        var valueCache = this.HasMustacheContextInternal(expression, sector, renderContext);
+        this.Application.SectorContainerHandler.AddMustacheContextCache(sector, expression, valueCache);
+        return (valueCache);
+    };
+    DrapoBarber.prototype.HasMustacheContextInternal = function (expression, sector, renderContext) {
+        if (renderContext === void 0) { renderContext = null; }
         var mustaches = this.Application.Parser.ParseMustaches(expression, true);
         for (var j = 0; j < mustaches.length; j++) {
             var mustache = mustaches[j];

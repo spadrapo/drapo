@@ -3,6 +3,9 @@ class DrapoSectorContainerHandler {
     private _application: DrapoApplication;
     private _containers: DrapoSectorContainerItem[] = [];
     private _activeSectorContainers: [string, string][] = [];
+    private _sectorContexts: string[] = [];
+    private _sectorContextsExpressions: string[][] = [];
+    private _sectorContextsValues: boolean[][] = [];
 
     //Properties
     get Application(): DrapoApplication {
@@ -149,6 +152,8 @@ class DrapoSectorContainerHandler {
             this.Application.ComponentHandler.UnloadComponentInstances(sectorCurrent);
             //Unload Storage Items
             this.Application.Storage.RemoveBySector(sectorCurrent);
+            //Unload Context Cache
+            this.RemoveMustacheContextCache(sectorCurrent);
         }
         //Unload Storage Local Cache
         this.Application.Storage.ClearCacheLocal();
@@ -230,5 +235,50 @@ class DrapoSectorContainerHandler {
 
     public ReloadStorageItemByPipe(dataPipe: string): void {
         //Here we need to only mark the storage item that needs reload
+    }
+
+    public HasMustacheContextCache(sector: string, expression: string): boolean {
+        const indexSector: number = this.GetMustacheContextIndex(sector);
+        if (indexSector === null)
+            return (null);
+        const indexExpression = this.GetMustacheContextExpressionIndex(indexSector, expression);
+        if (indexExpression === null)
+            return (null);
+        return (this._sectorContextsValues[indexSector][indexExpression]);
+    }
+
+    private RemoveMustacheContextCache(sector: string): void {
+        const indexSector: number = this.GetMustacheContextIndex(sector);
+        if (indexSector === null)
+            return;
+        this._sectorContexts.splice(indexSector, 1);
+        this._sectorContextsExpressions.splice(indexSector, 1);
+        this._sectorContextsValues.splice(indexSector, 1);
+    }
+
+    public AddMustacheContextCache(sector: string, expression: string, value: boolean): void {
+        let indexSector: number = this.GetMustacheContextIndex(sector);
+        if (indexSector === null) {
+            indexSector = this._sectorContexts.push(sector) - 1;
+            this._sectorContextsExpressions.push([]);
+            this._sectorContextsValues.push([]);
+        }
+        this._sectorContextsExpressions[indexSector].push(expression);
+        this._sectorContextsValues[indexSector].push(value);
+    }
+
+    private GetMustacheContextIndex(sector: string): number {
+        for (let i: number = 0; i < this._sectorContexts.length; i++)
+            if (this._sectorContexts[i] === sector)
+                return (i);
+        return (null);
+    }
+
+    private GetMustacheContextExpressionIndex(indexSector: number, expression: string): number {
+        const expressions: string[] = this._sectorContextsExpressions[indexSector];
+        for (let i: number = 0; i < expressions.length; i++)
+            if (expressions[i] === expression)
+                return (i);
+        return (null);
     }
 }

@@ -352,6 +352,15 @@ class DrapoBarber {
     }
 
     public HasMustacheContext(expression: string, sector: string, renderContext: DrapoRenderContext = null): boolean {
+        const value: boolean = this.Application.SectorContainerHandler.HasMustacheContextCache(sector, expression);
+        if (value !== null)
+            return (value);
+        const valueCache: boolean = this.HasMustacheContextInternal(expression, sector, renderContext);
+        this.Application.SectorContainerHandler.AddMustacheContextCache(sector, expression, valueCache);
+        return (valueCache);
+    }
+
+    private HasMustacheContextInternal(expression: string, sector: string, renderContext: DrapoRenderContext = null): boolean {
         const mustaches = this.Application.Parser.ParseMustaches(expression, true);
         for (let j = 0; j < mustaches.length; j++) {
             const mustache = mustaches[j];

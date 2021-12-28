@@ -1320,6 +1320,15 @@ var DrapoBarber = (function () {
     };
     DrapoBarber.prototype.HasMustacheContext = function (expression, sector, renderContext) {
         if (renderContext === void 0) { renderContext = null; }
+        var value = this.Application.SectorContainerHandler.HasMustacheContextCache(sector, expression);
+        if (value !== null)
+            return (value);
+        var valueCache = this.HasMustacheContextInternal(expression, sector, renderContext);
+        this.Application.SectorContainerHandler.AddMustacheContextCache(sector, expression, valueCache);
+        return (valueCache);
+    };
+    DrapoBarber.prototype.HasMustacheContextInternal = function (expression, sector, renderContext) {
+        if (renderContext === void 0) { renderContext = null; }
         var mustaches = this.Application.Parser.ParseMustaches(expression, true);
         for (var j = 0; j < mustaches.length; j++) {
             var mustache = mustaches[j];
@@ -9393,7 +9402,7 @@ var DrapoFunctionHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoFunctionHandler.prototype.ResolveFunctionWithoutContext = function (sector, element, functionsValue, executionContext) {
@@ -17652,6 +17661,9 @@ var DrapoSectorContainerHandler = (function () {
         this.CONTAINER_EQUAL = '=';
         this._containers = [];
         this._activeSectorContainers = [];
+        this._sectorContexts = [];
+        this._sectorContextsExpressions = [];
+        this._sectorContextsValues = [];
         this._application = application;
     }
     Object.defineProperty(DrapoSectorContainerHandler.prototype, "Application", {
@@ -17805,6 +17817,7 @@ var DrapoSectorContainerHandler = (function () {
                         this.Application.Validator.UnloadSector(sectorCurrent);
                         this.Application.ComponentHandler.UnloadComponentInstances(sectorCurrent);
                         this.Application.Storage.RemoveBySector(sectorCurrent);
+                        this.RemoveMustacheContextCache(sectorCurrent);
                         _a.label = 3;
                     case 3:
                         i++;
@@ -17881,6 +17894,46 @@ var DrapoSectorContainerHandler = (function () {
         return (null);
     };
     DrapoSectorContainerHandler.prototype.ReloadStorageItemByPipe = function (dataPipe) {
+    };
+    DrapoSectorContainerHandler.prototype.HasMustacheContextCache = function (sector, expression) {
+        var indexSector = this.GetMustacheContextIndex(sector);
+        if (indexSector === null)
+            return (null);
+        var indexExpression = this.GetMustacheContextExpressionIndex(indexSector, expression);
+        if (indexExpression === null)
+            return (null);
+        return (this._sectorContextsValues[indexSector][indexExpression]);
+    };
+    DrapoSectorContainerHandler.prototype.RemoveMustacheContextCache = function (sector) {
+        var indexSector = this.GetMustacheContextIndex(sector);
+        if (indexSector === null)
+            return;
+        this._sectorContexts.splice(indexSector, 1);
+        this._sectorContextsExpressions.splice(indexSector, 1);
+        this._sectorContextsValues.splice(indexSector, 1);
+    };
+    DrapoSectorContainerHandler.prototype.AddMustacheContextCache = function (sector, expression, value) {
+        var indexSector = this.GetMustacheContextIndex(sector);
+        if (indexSector === null) {
+            indexSector = this._sectorContexts.push(sector) - 1;
+            this._sectorContextsExpressions.push([]);
+            this._sectorContextsValues.push([]);
+        }
+        this._sectorContextsExpressions[indexSector].push(expression);
+        this._sectorContextsValues[indexSector].push(value);
+    };
+    DrapoSectorContainerHandler.prototype.GetMustacheContextIndex = function (sector) {
+        for (var i = 0; i < this._sectorContexts.length; i++)
+            if (this._sectorContexts[i] === sector)
+                return (i);
+        return (null);
+    };
+    DrapoSectorContainerHandler.prototype.GetMustacheContextExpressionIndex = function (indexSector, expression) {
+        var expressions = this._sectorContextsExpressions[indexSector];
+        for (var i = 0; i < expressions.length; i++)
+            if (expressions[i] === expression)
+                return (i);
+        return (null);
     };
     return DrapoSectorContainerHandler;
 }());

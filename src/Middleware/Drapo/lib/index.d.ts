@@ -111,6 +111,7 @@ declare class DrapoBarber {
     ResolveControlFlowMustacheString(context: DrapoContext, renderContext: DrapoRenderContext, expression: string, elementJQuery: JQuery, sector: string, canBind?: boolean, type?: DrapoStorageLinkType, isForIterator?: boolean, elementForTemplate?: HTMLElement): Promise<string>;
     ResolveMustacheElementVisibility(el: HTMLElement, canBind?: boolean): Promise<void>;
     HasMustacheContext(expression: string, sector: string, renderContext?: DrapoRenderContext): boolean;
+    private HasMustacheContextInternal;
     ResolveCloak(el: HTMLElement, canBind?: boolean): Promise<void>;
 }
 
@@ -1563,6 +1564,9 @@ declare class DrapoSectorContainerHandler {
     private _application;
     private _containers;
     private _activeSectorContainers;
+    private _sectorContexts;
+    private _sectorContextsExpressions;
+    private _sectorContextsValues;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     IsElementContainerized(element: HTMLElement): boolean;
@@ -1575,6 +1579,11 @@ declare class DrapoSectorContainerHandler {
     RemoveBySector(sector: string): boolean;
     GetStorageItem(sector: string, containerCode: string, dataKey: string): DrapoStorageItem;
     ReloadStorageItemByPipe(dataPipe: string): void;
+    HasMustacheContextCache(sector: string, expression: string): boolean;
+    private RemoveMustacheContextCache;
+    AddMustacheContextCache(sector: string, expression: string, value: boolean): void;
+    private GetMustacheContextIndex;
+    private GetMustacheContextExpressionIndex;
 }
 
 declare class DrapoSectorContainerItem {
