@@ -63,52 +63,48 @@ var DrapoClassHandler = (function () {
                         dClassMustache = el.getAttribute('d-class');
                         if (dClassMustache == null)
                             return [2];
-                        return [4, this.Application.Barber.HasMustacheContext(dClassMustache, sector)];
-                    case 1:
-                        if (_c.sent())
+                        if (this.Application.Barber.HasMustacheContext(dClassMustache, sector))
                             return [2];
                         elj = $(el);
                         context = new DrapoContext();
-                        if (!this.Application.Parser.IsMustacheOnly(dClassMustache)) return [3, 3];
+                        if (!this.Application.Parser.IsMustacheOnly(dClassMustache)) return [3, 2];
                         return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, null, dClassMustache, elj, sector, canBind)];
-                    case 2:
+                    case 1:
                         _a = _c.sent();
-                        return [3, 4];
-                    case 3:
+                        return [3, 3];
+                    case 2:
                         _a = dClassMustache;
-                        _c.label = 4;
-                    case 4:
+                        _c.label = 3;
+                    case 3:
                         dClass = _a;
-                        return [4, this.Application.Barber.HasMustacheContext(dClass, sector)];
-                    case 5:
-                        if (_c.sent())
+                        if (this.Application.Barber.HasMustacheContext(dClass, sector))
                             return [2];
                         classesExpressions = this.ExtractClasses(dClass);
                         i = 0;
-                        _c.label = 6;
-                    case 6:
-                        if (!(i < classesExpressions.length)) return [3, 14];
+                        _c.label = 4;
+                    case 4:
+                        if (!(i < classesExpressions.length)) return [3, 12];
                         classExpression = classesExpressions[i];
                         classMustachesTrue = classExpression[0];
                         return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, classMustachesTrue, elj, canBind, type)];
-                    case 7:
+                    case 5:
                         classTrue = _c.sent();
-                        if (!(classExpression[2] != null)) return [3, 9];
+                        if (!(classExpression[2] != null)) return [3, 7];
                         return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, classExpression[2], elj, canBind, type)];
-                    case 8:
+                    case 6:
                         _b = _c.sent();
-                        return [3, 10];
-                    case 9:
+                        return [3, 8];
+                    case 7:
                         _b = null;
-                        _c.label = 10;
-                    case 10:
+                        _c.label = 8;
+                    case 8:
                         classFalse = _b;
                         expressionMustaches = classExpression[1];
                         return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, expressionMustaches, elj, canBind, type)];
-                    case 11:
+                    case 9:
                         expressionCurrent = _c.sent();
                         return [4, this.Application.Solver.ResolveConditional(expressionCurrent)];
-                    case 12:
+                    case 10:
                         addClass = _c.sent();
                         if (addClass) {
                             elj.addClass(classTrue);
@@ -120,11 +116,11 @@ var DrapoClassHandler = (function () {
                             if (classFalse != null)
                                 elj.addClass(classFalse);
                         }
-                        _c.label = 13;
-                    case 13:
+                        _c.label = 11;
+                    case 11:
                         i++;
-                        return [3, 6];
-                    case 14: return [2];
+                        return [3, 4];
+                    case 12: return [2];
                 }
             });
         });

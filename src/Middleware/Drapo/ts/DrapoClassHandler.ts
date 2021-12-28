@@ -21,12 +21,12 @@ class DrapoClassHandler {
         const dClassMustache: string = el.getAttribute('d-class');
         if (dClassMustache == null)
             return;
-        if (await this.Application.Barber.HasMustacheContext(dClassMustache, sector))
+        if (this.Application.Barber.HasMustacheContext(dClassMustache, sector))
             return;
         const elj: JQuery = $(el);
         const context: DrapoContext = new DrapoContext();
         const dClass: string = this.Application.Parser.IsMustacheOnly(dClassMustache) ? await this.Application.Barber.ResolveControlFlowMustacheString(context, null, dClassMustache, elj, sector, canBind) : dClassMustache;
-        if (await this.Application.Barber.HasMustacheContext(dClass, sector))
+        if (this.Application.Barber.HasMustacheContext(dClass, sector))
             return;
         const classesExpressions: [string, string, string][] = this.ExtractClasses(dClass);
         for (let i = 0; i < classesExpressions.length; i++) {

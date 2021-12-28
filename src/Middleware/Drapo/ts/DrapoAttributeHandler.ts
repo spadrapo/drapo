@@ -30,7 +30,7 @@ class DrapoAttributeHandler {
             const attribute: [string, string, string] = attributes[i];
             const attributeName: string = attribute[0];
             let attributeValue: string = attribute[1];
-            if (await this.Application.Barber.HasMustacheContext(attributeValue, sector))
+            if (this.Application.Barber.HasMustacheContext(attributeValue, sector))
                 continue;
             const attributeType: string = attribute[2];
             const attributeValueOriginal: string = attributeValue;
@@ -153,7 +153,7 @@ class DrapoAttributeHandler {
         const did: string = el.getAttribute('d-id');
         if (did == null)
             return;
-        if (await this.Application.Barber.HasMustacheContext(did, sector))
+        if (this.Application.Barber.HasMustacheContext(did, sector))
             return;
         const context: DrapoContext = new DrapoContext();
         const expressionCurrent: string = await this.Application.Barber.ResolveControlFlowMustacheString(context, null, did, elj, sector, canBind);

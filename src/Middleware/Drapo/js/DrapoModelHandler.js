@@ -95,9 +95,7 @@ var DrapoModelHandler = (function () {
                         model = el.getAttribute('d-model');
                         if (model == null)
                             return [2, (false)];
-                        return [4, this.Application.Barber.HasMustacheContext(model, sector, renderContext)];
-                    case 1:
-                        isMustacheContext = _c.sent();
+                        isMustacheContext = this.Application.Barber.HasMustacheContext(model, sector, renderContext);
                         if (isContext !== isMustacheContext)
                             return [2];
                         isMustacheOnly = this.Application.Parser.IsMustacheOnly(model, true);
@@ -106,92 +104,92 @@ var DrapoModelHandler = (function () {
                         dataFields = isMustacheOnly ? this.Application.Solver.ResolveDataFields(mustacheParts) : null;
                         onModelInitialize = el.getAttribute('d-on-model-initialize');
                         _a = (onModelInitialize !== null) && (onModelInitialize !== undefined);
-                        if (!_a) return [3, 3];
+                        if (!_a) return [3, 2];
                         return [4, this.Application.Solver.ExistDataPath(context, sector, mustacheParts)];
-                    case 2:
+                    case 1:
                         _a = (!(_c.sent()));
-                        _c.label = 3;
-                    case 3:
-                        if (!_a) return [3, 5];
+                        _c.label = 2;
+                    case 2:
+                        if (!_a) return [3, 4];
                         return [4, this.Application.FunctionHandler.ResolveFunction(sector, context.Item, null, null, onModelInitialize)];
-                    case 4:
+                    case 3:
                         _c.sent();
                         if ((!isContext) || (!context.CanUpdateTemplate))
                             el.removeAttribute('d-on-model-initialize');
-                        _c.label = 5;
-                    case 5:
+                        _c.label = 4;
+                    case 4:
                         modelEvents = this.Application.Parser.ParseEvents(el.getAttribute('d-model-event'));
                         if (modelEvents.length === 0)
                             modelEvents.push('change');
-                        if (!((isMustacheOnly) && (context.CanUpdateTemplate))) return [3, 7];
+                        if (!((isMustacheOnly) && (context.CanUpdateTemplate))) return [3, 6];
                         return [4, this.Application.Solver.ResolveDataPathMustache(context, elj, sector, mustacheParts)];
-                    case 6:
+                    case 5:
                         mustacheResolved = _c.sent();
                         if (mustacheResolved !== null)
                             el.setAttribute('d-model', mustacheResolved);
-                        _c.label = 7;
-                    case 7:
-                        if (!isMustacheOnly) return [3, 8];
+                        _c.label = 6;
+                    case 6:
+                        if (!isMustacheOnly) return [3, 7];
                         _b = model;
-                        return [3, 10];
-                    case 8: return [4, this.ResolveValueExpression(context, el, sector, model, canBind)];
-                    case 9:
+                        return [3, 9];
+                    case 7: return [4, this.ResolveValueExpression(context, el, sector, model, canBind)];
+                    case 8:
                         _b = _c.sent();
-                        _c.label = 10;
-                    case 10:
+                        _c.label = 9;
+                    case 9:
                         modelOrValue = _b;
                         updated = false;
                         tag = el.tagName.toLowerCase();
-                        if (!(tag === 'input')) return [3, 12];
+                        if (!(tag === 'input')) return [3, 11];
                         return [4, this.ResolveModelInput(context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, this.Application.Parser.ParseEvents(el.getAttribute('d-model-event-cancel')))];
+                    case 10:
+                        updated = _c.sent();
+                        return [3, 26];
                     case 11:
-                        updated = _c.sent();
-                        return [3, 27];
-                    case 12:
-                        if (!(tag === 'select')) return [3, 14];
+                        if (!(tag === 'select')) return [3, 13];
                         return [4, this.ResolveModelSelect(context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents)];
+                    case 12:
+                        updated = _c.sent();
+                        return [3, 26];
                     case 13:
-                        updated = _c.sent();
-                        return [3, 27];
-                    case 14:
-                        if (!(tag === 'textarea')) return [3, 16];
+                        if (!(tag === 'textarea')) return [3, 15];
                         return [4, this.ResolveModelTextArea(context, el, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, modelEvents, this.Application.Parser.ParseEvents(el.getAttribute('d-model-event-cancel')))];
+                    case 14:
+                        updated = _c.sent();
+                        return [3, 26];
                     case 15:
-                        updated = _c.sent();
-                        return [3, 27];
+                        if (!(tag === 'span')) return [3, 17];
+                        return [4, this.ResolveModelSpan(context, el, elj, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, ((isContext) && (!context.CanUpdateTemplate)))];
                     case 16:
-                        if (!(tag === 'span')) return [3, 18];
-                        return [4, this.ResolveModelSpan(context, el, elj, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, ((isContext) && (!context.CanUpdateTemplate)))];
+                        updated = _c.sent();
+                        return [3, 26];
                     case 17:
-                        updated = _c.sent();
-                        return [3, 27];
-                    case 18:
-                        if (!(tag === 'li')) return [3, 20];
+                        if (!(tag === 'li')) return [3, 19];
                         return [4, this.ResolveModelLI(context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind)];
+                    case 18:
+                        updated = _c.sent();
+                        return [3, 26];
                     case 19:
-                        updated = _c.sent();
-                        return [3, 27];
-                    case 20:
-                        if (!(tag === 'div')) return [3, 21];
+                        if (!(tag === 'div')) return [3, 20];
                         updated = true;
-                        return [3, 27];
+                        return [3, 26];
+                    case 20:
+                        if (!(tag === 'label')) return [3, 22];
+                        return [4, this.ResolveModelSpan(context, el, elj, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, ((isContext) && (!context.CanUpdateTemplate)))];
                     case 21:
-                        if (!(tag === 'label')) return [3, 23];
-                        return [4, this.ResolveModelSpan(context, el, elj, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, ((isContext) && (!context.CanUpdateTemplate)))];
+                        updated = _c.sent();
+                        return [3, 26];
                     case 22:
-                        updated = _c.sent();
-                        return [3, 27];
-                    case 23:
-                        if (!(tag === 'button')) return [3, 25];
+                        if (!(tag === 'button')) return [3, 24];
                         return [4, this.ResolveModelSpan(context, el, elj, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, ((isContext) && (!context.CanUpdateTemplate)))];
-                    case 24:
+                    case 23:
                         updated = _c.sent();
-                        return [3, 27];
-                    case 25: return [4, this.Application.ExceptionHandler.HandleError('DrapoModelHandler - ResolveModel - model not supported in tag: {0}', tag)];
-                    case 26:
+                        return [3, 26];
+                    case 24: return [4, this.Application.ExceptionHandler.HandleError('DrapoModelHandler - ResolveModel - model not supported in tag: {0}', tag)];
+                    case 25:
                         _c.sent();
-                        _c.label = 27;
-                    case 27:
+                        _c.label = 26;
+                    case 26:
                         if ((updated) && (isContext)) {
                             canRemoveModel = ((!context.CanUpdateTemplate) || (context.IsInsideRecursion));
                             dataKey = isMustacheOnly ? this.Application.Solver.ResolveDataKey(mustacheParts) : null;

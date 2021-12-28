@@ -70,39 +70,37 @@ var DrapoAttributeHandler = (function () {
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < attributes.length)) return [3, 7];
+                        if (!(i < attributes.length)) return [3, 6];
                         attribute = attributes[i];
                         attributeName = attribute[0];
                         attributeValue = attribute[1];
-                        return [4, this.Application.Barber.HasMustacheContext(attributeValue, sector)];
-                    case 2:
-                        if (_a.sent())
-                            return [3, 6];
+                        if (this.Application.Barber.HasMustacheContext(attributeValue, sector))
+                            return [3, 5];
                         attributeType = attribute[2];
                         attributeValueOriginal = attributeValue;
                         return [4, this.Application.ModelHandler.ResolveValueExpression(context, el, sector, attributeValue, canBind)];
-                    case 3:
+                    case 2:
                         attributeValue = _a.sent();
                         attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue);
                         if (attributeValue === attributeValueOriginal)
-                            return [3, 6];
-                        if (!(attributeType == null)) return [3, 4];
+                            return [3, 5];
+                        if (!(attributeType == null)) return [3, 3];
                         el.setAttribute(attributeName, attributeValue);
-                        return [3, 6];
-                    case 4:
-                        if (!(attributeType === 'min')) return [3, 6];
+                        return [3, 5];
+                    case 3:
+                        if (!(attributeType === 'min')) return [3, 5];
                         return [4, this.Application.Solver.ResolveConditional(attributeValue)];
-                    case 5:
+                    case 4:
                         isValid = _a.sent();
                         if (isValid)
                             el.setAttribute(attributeName, '');
                         else
                             el.removeAttribute(attributeName);
-                        _a.label = 6;
-                    case 6:
+                        _a.label = 5;
+                    case 5:
                         i++;
                         return [3, 1];
-                    case 7: return [2];
+                    case 6: return [2];
                 }
             });
         });
@@ -263,13 +261,11 @@ var DrapoAttributeHandler = (function () {
                         did = el.getAttribute('d-id');
                         if (did == null)
                             return [2];
-                        return [4, this.Application.Barber.HasMustacheContext(did, sector)];
-                    case 1:
-                        if (_a.sent())
+                        if (this.Application.Barber.HasMustacheContext(did, sector))
                             return [2];
                         context = new DrapoContext();
                         return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, null, did, elj, sector, canBind)];
-                    case 2:
+                    case 1:
                         expressionCurrent = _a.sent();
                         if (did !== expressionCurrent)
                             el.setAttribute('d-id', expressionCurrent);
