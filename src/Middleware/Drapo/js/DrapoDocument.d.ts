@@ -76,7 +76,7 @@ declare class DrapoDocument {
     private CreateGuidShort;
     private CreateGuidShortInternal;
     EnsureElementHasID(el: HTMLElement): string;
-    ApplyNodeDifferences(parent: HTMLElement, nodeOld: HTMLElement, nodeNew: HTMLElement): void;
+    ApplyNodeDifferences(parent: HTMLElement, nodeOld: HTMLElement, nodeNew: HTMLElement, isHTML: boolean): void;
     ApplyNodeDifferencesRenderClass(nodeOld: HTMLElement, nodeNew: HTMLElement): void;
     private IsNodeDifferentType;
     private ApplyNodeEventsDifferences;

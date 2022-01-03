@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For - Components Slow</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow For - Components Slow</span>
+        <div>
+            <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children=500"></div>
+        </div>
+        <div>
+            <div d-for="object in objects" d-for-render="hash">
+                <d-checkbox dc-value="{{object.Visible}}" dc-label="{{object.Key}}"></d-checkbox>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

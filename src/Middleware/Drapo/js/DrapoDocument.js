@@ -1150,7 +1150,7 @@ var DrapoDocument = (function () {
         el.setAttribute('d-id', id);
         return (id);
     };
-    DrapoDocument.prototype.ApplyNodeDifferences = function (parent, nodeOld, nodeNew) {
+    DrapoDocument.prototype.ApplyNodeDifferences = function (parent, nodeOld, nodeNew, isHTML) {
         if (!nodeOld) {
             parent.appendChild(nodeNew);
         }
@@ -1161,6 +1161,8 @@ var DrapoDocument = (function () {
             parent.replaceChild(nodeNew, nodeOld);
         }
         else {
+            if ((isHTML) && (nodeOld.outerHTML == nodeNew.outerHTML))
+                return;
             this.ApplyNodeEventsDifferences(nodeOld, nodeNew);
             this.ApplyNodeSpecialDifferences(nodeOld, nodeNew);
             this.ApplyNodeAttributesDifferences(nodeOld, nodeNew);
@@ -1174,7 +1176,7 @@ var DrapoDocument = (function () {
             }
             else {
                 for (var i = 0; i < lengthNew || i < lengthOld; i++) {
-                    this.ApplyNodeDifferences(nodeOld, childrenOld[i], childrenNew[i]);
+                    this.ApplyNodeDifferences(nodeOld, childrenOld[i], childrenNew[i], isHTML);
                 }
             }
         }

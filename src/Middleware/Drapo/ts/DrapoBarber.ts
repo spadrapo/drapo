@@ -56,13 +56,17 @@ class DrapoBarber {
         if (sector === null)
             sector = this.Application.Document.GetSector(jQueryStart.get(0));
         const renderContext: DrapoRenderContext = new DrapoRenderContext();
-        for (let i = 0; i < jQueryStart.length; i++)
-            await this.ResolveMustachesInternal(jQueryStart[i], sector, renderContext, stopAtSectors);
+        for (let i = 0; i < jQueryStart.length; i++) {
+            const el: HTMLElement = jQueryStart[i];
+            const context: DrapoContext = new DrapoContext();
+            this.Application.ControlFlow.InitializeContext(context, el.outerHTML);
+            await this.ResolveMustachesInternal(el, sector, context, renderContext, stopAtSectors);
+        }
         //Notify who needs data
         await this.Application.Storage.LoadDataDelayedAndNotify();
     }
 
-    private async ResolveMustachesInternal(el: HTMLElement, sector: string, renderContext: DrapoRenderContext, stopAtSectors: boolean): Promise<void> {
+    private async ResolveMustachesInternal(el: HTMLElement, sector: string, context: DrapoContext, renderContext: DrapoRenderContext, stopAtSectors: boolean): Promise<void> {
         const pre: string = el.getAttribute != null ? el.getAttribute('d-pre') : null;
         if (pre === 'true')
             return;
@@ -81,7 +85,7 @@ class DrapoBarber {
                 const canRender: boolean = await this.CanRender(child, sector);
                 if (canRender) {
                     //Children
-                    await this.ResolveMustachesInternal(child, sector, renderContext, stopAtSectors);
+                    await this.ResolveMustachesInternal(child, sector, context, renderContext, stopAtSectors);
                 } else {
                     $(child).remove();
                 }
@@ -91,19 +95,26 @@ class DrapoBarber {
             await this.ResolveMustacheElementLeaf(el);
         }
         //ID
-        await this.Application.AttributeHandler.ResolveID(el, sector);
+        if (context.CheckID)
+            await this.Application.AttributeHandler.ResolveID(el, sector);
         //Attr
-        await this.Application.AttributeHandler.ResolveAttr(el);
+        if (context.CheckAttribute)
+            await this.Application.AttributeHandler.ResolveAttr(el);
         //Model
-        await this.ResolveModel(el);
+        if (context.CheckModel)
+            await this.ResolveModel(el);
         //Class
-        await this.Application.ClassHandler.ResolveClass(el, sector);
+        if (context.CheckClass)
+            await this.Application.ClassHandler.ResolveClass(el, sector);
         //Validation
-        await this.Application.Validator.RegisterValidation(el, sector);
+        if (context.CheckValidation)
+            await this.Application.Validator.RegisterValidation(el, sector);
         //Events
-        await this.Application.EventHandler.Attach(el, renderContext);
+        if (context.CheckEvent)
+            await this.Application.EventHandler.Attach(el, renderContext);
         //Behavior
-        await this.Application.BehaviorHandler.ResolveBehavior(el);
+        if (context.CheckBehavior)
+            await this.Application.BehaviorHandler.ResolveBehavior(el);
         //Visibility
         await this.ResolveMustacheElementVisibility(el);
         //Cloak

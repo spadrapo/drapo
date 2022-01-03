@@ -432,7 +432,7 @@ declare class DrapoControlFlow {
     private ResolveControlFlowForParent;
     private ResolveControlFlowForRoot;
     ResolveControlFlowFor(forJQuery: JQuery, isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
-    private InitializeContext;
+    InitializeContext(context: DrapoContext, content: string): void;
     IsElementControlFlowTemplate(el: HTMLElement): boolean;
     private ResolveControlFlowForInternal;
     private ResolveControlFlowForIterationRender;
@@ -444,6 +444,8 @@ declare class DrapoControlFlow {
     private RemoveListIndex;
     private IsControlFlowDataKeyIterator;
     private GetControlFlowDataKeyIterators;
+    private GetElementHashTemplate;
+    private GetElementHashValue;
     private GetTemplateVariables;
     private GetControlFlowExpressionsDataKey;
     private GetControlFlowConditionsDataKey;
@@ -615,7 +617,7 @@ declare class DrapoDocument {
     private CreateGuidShort;
     private CreateGuidShortInternal;
     EnsureElementHasID(el: HTMLElement): string;
-    ApplyNodeDifferences(parent: HTMLElement, nodeOld: HTMLElement, nodeNew: HTMLElement): void;
+    ApplyNodeDifferences(parent: HTMLElement, nodeOld: HTMLElement, nodeNew: HTMLElement, isHTML: boolean): void;
     ApplyNodeDifferencesRenderClass(nodeOld: HTMLElement, nodeNew: HTMLElement): void;
     private IsNodeDifferentType;
     private ApplyNodeEventsDifferences;
