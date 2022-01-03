@@ -444,6 +444,8 @@ declare class DrapoControlFlow {
     private RemoveListIndex;
     private IsControlFlowDataKeyIterator;
     private GetControlFlowDataKeyIterators;
+    private GetElementHashTemplate;
+    private GetElementHashValue;
     private GetTemplateVariables;
     private GetControlFlowExpressionsDataKey;
     private GetControlFlowConditionsDataKey;
