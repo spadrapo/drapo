@@ -161,7 +161,7 @@ var DrapoControlFlow = (function () {
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, isRenderViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, length, canCreateViewport, viewport, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, j, data, templateKey, _b, templateData, _c, templateJ, template, nodeIndex, oldNode, item, _d, template;
+            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, isRenderViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, dForRender, isHTML, length, canCreateViewport, viewport, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, j, data, templateKey, _b, templateData, _c, templateJ, template, nodeIndex, oldNode, item, _d, template;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -302,10 +302,12 @@ var DrapoControlFlow = (function () {
                         jQueryForReferenceTemplate.removeAttr('d-for');
                         if (ifText != null)
                             jQueryForReferenceTemplate.removeAttr('d-if');
+                        dForRender = elementForTemplate.getAttribute('d-for-render');
+                        isHTML = dForRender === 'html';
                         length = datas.length;
                         canCreateViewport = ((isContextRoot) && (isFirstChild) && (!wasWrapped) && (!hasIfText) && (range === null));
                         viewport = this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas, canCreateViewport);
-                        if (viewport !== null)
+                        if ((viewport !== null) || (dForRender != null))
                             jQueryForReferenceTemplate.removeAttr('d-for-render');
                         lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
                         canFragmentElements = viewport == null;
@@ -378,7 +380,7 @@ var DrapoControlFlow = (function () {
                     case 22:
                         _e.sent();
                         if ((isDifference) && (oldNode != null)) {
-                            this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template);
+                            this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template, isHTML);
                             lastInserted = $(oldNode);
                         }
                         else if (canFragmentElements) {

@@ -66,7 +66,7 @@ class DrapoControlFlow {
         }
     }
 
-    private InitializeContext(context: DrapoContext, content: string) {
+    public InitializeContext(context: DrapoContext, content: string) {
         //Mustache Nodes
         context.CheckMustacheNodes = this.Application.Barber.HasContentMustacheNodesContext(content);
         //Model
@@ -237,12 +237,16 @@ class DrapoControlFlow {
         jQueryForReferenceTemplate.removeAttr('d-for');
         if (ifText != null)
             jQueryForReferenceTemplate.removeAttr('d-if');
+        //d-for-render
+        const dForRender: string = elementForTemplate.getAttribute('d-for-render');
+        //Html
+        const isHTML: boolean = dForRender === 'html';
         //Data Length
         const length: number = datas.length;
         //Viewport
         const canCreateViewport: boolean = ((isContextRoot) && (isFirstChild) && (!wasWrapped) && (!hasIfText) && (range === null));
         const viewport: DrapoViewport = this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas, canCreateViewport);
-        if (viewport !== null)
+        if ((viewport !== null) || (dForRender != null))
             jQueryForReferenceTemplate.removeAttr('d-for-render');
         //Viewport Ballon Before
         lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
@@ -278,7 +282,7 @@ class DrapoControlFlow {
             if (type == DrapoStorageLinkType.Render) {
                 await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents);
                 if ((isDifference) && (oldNode != null)) {
-                    this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template);
+                    this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template, isHTML);
                     lastInserted = $(oldNode);
                 } else if (canFragmentElements) {
                     fragment.appendChild(template);

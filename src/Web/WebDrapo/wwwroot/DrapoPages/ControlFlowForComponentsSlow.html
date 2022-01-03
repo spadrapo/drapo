@@ -11,7 +11,7 @@
             <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children=500"></div>
         </div>
         <div>
-            <div d-for="object in objects">
+            <div d-for="object in objects" d-for-render="html">
                 <d-checkbox dc-value="{{object.Visible}}" dc-label="{{object.Key}}"></d-checkbox>
             </div>
         </div>

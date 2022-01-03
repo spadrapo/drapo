@@ -8,7 +8,7 @@ declare class DrapoControlFlow {
     private ResolveControlFlowForParent;
     private ResolveControlFlowForRoot;
     ResolveControlFlowFor(forJQuery: JQuery, isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
-    private InitializeContext;
+    InitializeContext(context: DrapoContext, content: string): void;
     IsElementControlFlowTemplate(el: HTMLElement): boolean;
     private ResolveControlFlowForInternal;
     private ResolveControlFlowForIterationRender;
