@@ -293,7 +293,7 @@ var DrapoStorage = (function () {
         if (notify === void 0) { notify = true; }
         if (canUseDifference === void 0) { canUseDifference = false; }
         return __awaiter(this, void 0, void 0, function () {
-            var dataKeyIndex, storageItem, storageItemLoaded;
+            var dataKeyIndex, storageItem, storageItemLoaded, storageItemLoaded, isEqual;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -307,17 +307,29 @@ var DrapoStorage = (function () {
                         storageItemLoaded = _a.sent();
                         if (storageItemLoaded !== null)
                             this._cacheItems[dataKeyIndex] = storageItemLoaded;
-                        return [3, 3];
+                        return [3, 5];
                     case 2:
-                        this.RemoveCacheData(dataKeyIndex, false);
-                        _a.label = 3;
+                        if (!(storageItem.Type === 'query')) return [3, 4];
+                        return [4, this.RetrieveDataItemInternal(dataKey, sector)];
                     case 3:
-                        if (!notify) return [3, 5];
-                        return [4, this.Application.Observer.Notify(dataKey, null, null, canUseDifference)];
+                        storageItemLoaded = _a.sent();
+                        if (storageItemLoaded !== null) {
+                            isEqual = this.Application.Solver.IsEqualAny(storageItem.Data, storageItemLoaded.Data);
+                            if (isEqual)
+                                return [2, (false)];
+                            this._cacheItems[dataKeyIndex] = storageItemLoaded;
+                        }
+                        return [3, 5];
                     case 4:
-                        _a.sent();
+                        this.RemoveCacheData(dataKeyIndex, false);
                         _a.label = 5;
-                    case 5: return [2, (true)];
+                    case 5:
+                        if (!notify) return [3, 7];
+                        return [4, this.Application.Observer.Notify(dataKey, null, null, canUseDifference)];
+                    case 6:
+                        _a.sent();
+                        _a.label = 7;
+                    case 7: return [2, (true)];
                 }
             });
         });

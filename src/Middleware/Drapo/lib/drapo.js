@@ -20026,6 +20026,59 @@ var DrapoSolver = (function () {
         }
         return (null);
     };
+    DrapoSolver.prototype.IsEqualAny = function (data1, data2) {
+        var isData1Null = (data1 == null);
+        var isData2Null = (data2 == null);
+        if (isData1Null !== isData2Null)
+            return (false);
+        if (isData1Null)
+            return (true);
+        var isData1Array = Array.isArray(data1);
+        var isData2Array = Array.isArray(data2);
+        if (isData1Array !== isData2Array)
+            return (false);
+        if (isData1Array)
+            return (this.IsEqualObjectArray(data1, data2));
+        var isData1Object = (typeof data1 == 'object');
+        var isData2Object = (typeof data2 == 'object');
+        if (isData1Object !== isData2Object)
+            return (false);
+        if (isData1Object)
+            return (this.IsEqualObject(data1, data2));
+        return (false);
+    };
+    DrapoSolver.prototype.IsEqualObject = function (value1, value2) {
+        var value1Properties = this.GetObjectProperties(value1);
+        var value2Properties = this.GetObjectProperties(value2);
+        if (value1Properties.length !== value2Properties.length)
+            return (false);
+        for (var i = 0; i < value1Properties.length; i++) {
+            var value1Property = value1Properties[i];
+            var value2Property = value2Properties[i];
+            if (value1Property[0] !== value2Property[0])
+                return (false);
+            if (value1Property[1] !== value2Property[1])
+                return (false);
+        }
+        return (true);
+    };
+    DrapoSolver.prototype.GetObjectProperties = function (value) {
+        var valueAsAny = value;
+        var properties = [];
+        for (var propertyName in value) {
+            properties.push([propertyName, valueAsAny[propertyName]]);
+        }
+        return (properties);
+    };
+    DrapoSolver.prototype.IsEqualObjectArray = function (value1, value2) {
+        if (value1.length !== value2.length)
+            return (false);
+        for (var i = 0; i < value1.length; i++) {
+            if (!this.IsEqualObject(value1[i], value2[i]))
+                return (false);
+        }
+        return (true);
+    };
     DrapoSolver.prototype.IsEqualStringArray = function (list1, list2) {
         if (list1.length !== list2.length)
             return (false);
@@ -20407,7 +20460,7 @@ var DrapoStorage = (function () {
         if (notify === void 0) { notify = true; }
         if (canUseDifference === void 0) { canUseDifference = false; }
         return __awaiter(this, void 0, void 0, function () {
-            var dataKeyIndex, storageItem, storageItemLoaded;
+            var dataKeyIndex, storageItem, storageItemLoaded, storageItemLoaded, isEqual;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -20421,17 +20474,29 @@ var DrapoStorage = (function () {
                         storageItemLoaded = _a.sent();
                         if (storageItemLoaded !== null)
                             this._cacheItems[dataKeyIndex] = storageItemLoaded;
-                        return [3, 3];
+                        return [3, 5];
                     case 2:
-                        this.RemoveCacheData(dataKeyIndex, false);
-                        _a.label = 3;
+                        if (!(storageItem.Type === 'query')) return [3, 4];
+                        return [4, this.RetrieveDataItemInternal(dataKey, sector)];
                     case 3:
-                        if (!notify) return [3, 5];
-                        return [4, this.Application.Observer.Notify(dataKey, null, null, canUseDifference)];
+                        storageItemLoaded = _a.sent();
+                        if (storageItemLoaded !== null) {
+                            isEqual = this.Application.Solver.IsEqualAny(storageItem.Data, storageItemLoaded.Data);
+                            if (isEqual)
+                                return [2, (false)];
+                            this._cacheItems[dataKeyIndex] = storageItemLoaded;
+                        }
+                        return [3, 5];
                     case 4:
-                        _a.sent();
+                        this.RemoveCacheData(dataKeyIndex, false);
                         _a.label = 5;
-                    case 5: return [2, (true)];
+                    case 5:
+                        if (!notify) return [3, 7];
+                        return [4, this.Application.Observer.Notify(dataKey, null, null, canUseDifference)];
+                    case 6:
+                        _a.sent();
+                        _a.label = 7;
+                    case 7: return [2, (true)];
                 }
             });
         });

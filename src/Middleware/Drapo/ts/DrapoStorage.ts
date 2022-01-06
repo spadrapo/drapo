@@ -171,6 +171,14 @@ class DrapoStorage {
             const storageItemLoaded: DrapoStorageItem = await this.RetrieveDataItemInternal(dataKey, sector);
             if (storageItemLoaded !== null)
                 this._cacheItems[dataKeyIndex] = storageItemLoaded;
+        } else if (storageItem.Type === 'query') {
+            const storageItemLoaded: DrapoStorageItem = await this.RetrieveDataItemInternal(dataKey, sector);
+            if (storageItemLoaded !== null) {
+                const isEqual: boolean = this.Application.Solver.IsEqualAny(storageItem.Data, storageItemLoaded.Data);
+                if (isEqual)
+                    return (false);
+                this._cacheItems[dataKeyIndex] = storageItemLoaded;
+            }
         } else {
             this.RemoveCacheData(dataKeyIndex, false);
         }
