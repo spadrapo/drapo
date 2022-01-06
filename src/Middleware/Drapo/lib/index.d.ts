@@ -1781,6 +1781,10 @@ declare class DrapoSolver {
     Contains(data: string[], item: string): boolean;
     Join(list1: string[], list2: string[]): string[];
     Get(dictionary: [string, string][], key: string): string;
+    IsEqualAny(data1: any[] | any, data2: any[] | any): boolean;
+    IsEqualObject(value1: object, value2: object): boolean;
+    private GetObjectProperties;
+    IsEqualObjectArray(value1: object[], value2: object[]): boolean;
     IsEqualStringArray(list1: string[], list2: string[]): boolean;
     IsEqualString(value1: any, value2: any): boolean;
     EnsureString(data: any): string;
