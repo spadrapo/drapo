@@ -2102,7 +2102,7 @@ var DrapoStorage = (function () {
         }
         return (removed);
     };
-    DrapoStorage.prototype.DeleteDataItem = function (dataKey, dataPath, sector, item) {
+    DrapoStorage.prototype.DeleteDataItem = function (dataKey, dataPath, sector, item, notify) {
         return __awaiter(this, void 0, void 0, function () {
             var dataItem, data, index;
             return __generator(this, function (_a) {
@@ -2123,6 +2123,7 @@ var DrapoStorage = (function () {
                         if (dataItem.IsUnitOfWork)
                             dataItem.DataDeleted.push(item);
                         data.splice(index, 1);
+                        this.NotifyChanges(dataItem, notify, dataKey, index, dataPath);
                         return [2, (true)];
                 }
             });

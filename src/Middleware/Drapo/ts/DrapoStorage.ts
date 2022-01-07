@@ -1444,7 +1444,7 @@ class DrapoStorage {
         return (removed);
     }
 
-    public async DeleteDataItem(dataKey: string, dataPath: string[], sector: string, item: any): Promise<boolean> {
+    public async DeleteDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify: boolean): Promise<boolean> {
         const dataItem: DrapoStorageItem = await this.RetrieveDataItem(dataKey, sector);
         if (dataItem == null)
             return (false);
@@ -1459,6 +1459,7 @@ class DrapoStorage {
         if (dataItem.IsUnitOfWork)
             dataItem.DataDeleted.push(item);
         data.splice(index, 1);
+        this.NotifyChanges(dataItem, notify, dataKey, index, dataPath);
         return (true);
     }
 
