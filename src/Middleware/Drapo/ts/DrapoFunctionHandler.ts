@@ -708,12 +708,10 @@ class DrapoFunctionHandler {
         if (item == null)
             return (null);
         const notifyText: string = functionParsed.Parameters[2];
-        const nofity: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        const deleted: boolean = await this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item);
+        const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
+        const deleted: boolean = await this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item, notify);
         if (!deleted)
             return (null);
-        if (nofity)
-            await this.Application.Observer.Notify(dataKey, null, null);
     }
 
     private async ExecuteFunctionRemoveDataItemLookup(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {

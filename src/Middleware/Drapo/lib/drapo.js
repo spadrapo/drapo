@@ -10976,7 +10976,7 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionRemoveDataItem = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var source, isSourceMustache, mustacheParts, dataKey, itemText, itemPath, item, notifyText, nofity, _a, deleted;
+            var source, isSourceMustache, mustacheParts, dataKey, itemText, itemPath, item, notifyText, notify, _a, deleted;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -11006,18 +11006,13 @@ var DrapoFunctionHandler = (function () {
                         _a = _b.sent();
                         _b.label = 4;
                     case 4:
-                        nofity = _a;
-                        return [4, this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item)];
+                        notify = _a;
+                        return [4, this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item, notify)];
                     case 5:
                         deleted = _b.sent();
                         if (!deleted)
                             return [2, (null)];
-                        if (!nofity) return [3, 7];
-                        return [4, this.Application.Observer.Notify(dataKey, null, null)];
-                    case 6:
-                        _b.sent();
-                        _b.label = 7;
-                    case 7: return [2];
+                        return [2];
                 }
             });
         });
@@ -22269,7 +22264,7 @@ var DrapoStorage = (function () {
         }
         return (removed);
     };
-    DrapoStorage.prototype.DeleteDataItem = function (dataKey, dataPath, sector, item) {
+    DrapoStorage.prototype.DeleteDataItem = function (dataKey, dataPath, sector, item, notify) {
         return __awaiter(this, void 0, void 0, function () {
             var dataItem, data, index;
             return __generator(this, function (_a) {
@@ -22290,6 +22285,7 @@ var DrapoStorage = (function () {
                         if (dataItem.IsUnitOfWork)
                             dataItem.DataDeleted.push(item);
                         data.splice(index, 1);
+                        this.NotifyChanges(dataItem, notify, dataKey, index, dataPath);
                         return [2, (true)];
                 }
             });

@@ -1895,7 +1895,7 @@ declare class DrapoStorage {
     RemoveBySector(sector: string): void;
     DiscardCacheData(dataKey: string, sector: string, canRemoveObservers?: boolean): boolean;
     DiscardCacheDataBySector(sector: string): boolean;
-    DeleteDataItem(dataKey: string, dataPath: string[], sector: string, item: any): Promise<boolean>;
+    DeleteDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify: boolean): Promise<boolean>;
     DeleteDataItemIndex(dataItem: DrapoStorageItem, index: number): boolean;
     private GetDataItemIndex;
     PostData(dataKey: string, sector: string, dataKeyResponse: string, notify: boolean, executionContext: DrapoExecutionContext<any>): Promise<boolean>;
