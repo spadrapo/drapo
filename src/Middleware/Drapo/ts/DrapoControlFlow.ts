@@ -307,7 +307,8 @@ class DrapoControlFlow {
                 }
             } else if (type == DrapoStorageLinkType.RenderClass) {
                 await this.ResolveControlFlowForIterationRenderClass(context, renderContext, template, sector);
-                this.Application.Document.ApplyNodeDifferencesRenderClass(oldNode, template);
+                if (oldNode != null)
+                    this.Application.Document.ApplyNodeDifferencesRenderClass(oldNode, template);
             }
         }
         //Viewport Ballon After
