@@ -575,7 +575,7 @@ var DrapoBarber = (function () {
                         el = elementJQuery != null ? elementJQuery[0] : null;
                         contextDataKey.Create(data, el, null, dataKey, dataKey, null, null);
                         this.Application.Binder.BindReader(contextDataKey.Item, el, dataFields);
-                        if ((context.Item != null) && (dataKey !== context.Item.DataKey))
+                        if ((context != null) && (context.Item != null) && (dataKey !== context.Item.DataKey))
                             this.Application.Observer.SubscribeStorage(dataKey, dataFields, context.Item.DataKey, type);
                         _b.label = 5;
                     case 5:
