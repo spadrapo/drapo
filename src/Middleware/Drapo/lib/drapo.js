@@ -4335,7 +4335,7 @@ var DrapoControlFlow = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoControlFlow.prototype.ResolveControlFlowDocument = function () {
@@ -4712,7 +4712,8 @@ var DrapoControlFlow = (function () {
                         return [4, this.ResolveControlFlowForIterationRenderClass(context, renderContext, template, sector)];
                     case 28:
                         _f.sent();
-                        this.Application.Document.ApplyNodeDifferencesRenderClass(oldNode, template);
+                        if (oldNode != null)
+                            this.Application.Document.ApplyNodeDifferencesRenderClass(oldNode, template);
                         _f.label = 29;
                     case 29:
                         j++;
