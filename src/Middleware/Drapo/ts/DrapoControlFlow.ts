@@ -66,7 +66,7 @@ class DrapoControlFlow {
         }
     }
 
-    private InitializeContext(context: DrapoContext, content: string) {
+    public InitializeContext(context: DrapoContext, content: string) {
         //Mustache Nodes
         context.CheckMustacheNodes = this.Application.Barber.HasContentMustacheNodesContext(content);
         //Model
@@ -237,12 +237,20 @@ class DrapoControlFlow {
         jQueryForReferenceTemplate.removeAttr('d-for');
         if (ifText != null)
             jQueryForReferenceTemplate.removeAttr('d-if');
+        //d-for-render
+        const dForRender: string = elementForTemplate.getAttribute('d-for-render');
+        //Html
+        const isHTML: boolean = dForRender === 'html';
+        //Hash
+        const isHash: boolean = dForRender === 'hash';
+        const hashTemplate: string = isHash ? this.GetElementHashTemplate(elementForTemplate) : null;
+        const useHash: boolean = hashTemplate !== null;
         //Data Length
         const length: number = datas.length;
         //Viewport
         const canCreateViewport: boolean = ((isContextRoot) && (isFirstChild) && (!wasWrapped) && (!hasIfText) && (range === null));
         const viewport: DrapoViewport = this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas, canCreateViewport);
-        if (viewport !== null)
+        if (dForRender != null)
             jQueryForReferenceTemplate.removeAttr('d-for-render');
         //Viewport Ballon Before
         lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
@@ -276,11 +284,20 @@ class DrapoControlFlow {
                 continue;
             }
             if (type == DrapoStorageLinkType.Render) {
-                await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents);
+                const hashValueBefore: string = ((useHash) && (oldNode != null)) ? oldNode.getAttribute('d-hash') : null;
+                const hashValueCurrent: string = hashTemplate === null ? null : await this.GetElementHashValue(sector, context, template, hashTemplate);
+                const applyHash: boolean = ((!useHash) || (hashValueCurrent !== hashValueBefore));
+                if (applyHash)
+                    await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents);
                 if ((isDifference) && (oldNode != null)) {
-                    this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template);
+                    if (applyHash)
+                        this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template, isHTML);
+                    if (hashValueCurrent !== null)
+                        oldNode.setAttribute('d-hash', hashValueCurrent);
                     lastInserted = $(oldNode);
                 } else if (canFragmentElements) {
+                    if (hashValueCurrent !== null)
+                        template.setAttribute('d-hash', hashValueCurrent);
                     fragment.appendChild(template);
                 } else {
                     lastInserted.after(templateJ);
@@ -290,7 +307,8 @@ class DrapoControlFlow {
                 }
             } else if (type == DrapoStorageLinkType.RenderClass) {
                 await this.ResolveControlFlowForIterationRenderClass(context, renderContext, template, sector);
-                this.Application.Document.ApplyNodeDifferencesRenderClass(oldNode, template);
+                if (oldNode != null)
+                    this.Application.Document.ApplyNodeDifferencesRenderClass(oldNode, template);
             }
         }
         //Viewport Ballon After
@@ -493,6 +511,23 @@ class DrapoControlFlow {
         }
         const data: string = await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, expression, elj, sector, true, null, true, elementForTemplate);
         return (this.Application.Parser.ParseIterator(data));
+    }
+
+    private GetElementHashTemplate(el: HTMLElement): string {
+        const content: string = el.outerHTML;
+        const mustaches: string[] = this.Application.Parser.ParseMustaches(content);
+        let template: string = '';
+        for (let i: number = 0; i < mustaches.length; i++) {
+            if (i > 0)
+                template = template + '_';
+            template = template + mustaches[i];
+        }
+        return (template);
+    }
+
+    private async GetElementHashValue(sector: string, context: DrapoContext, el: HTMLElement, hashTemplate: string): Promise<string> {
+        const hashValue: string = await this.Application.ModelHandler.ResolveValueExpression(context, el, sector, hashTemplate, false);
+        return (hashValue);
     }
 
     private async GetTemplateVariables(sector: string, context: DrapoContext, dataKey: string, key: string, templateJQuery: JQuery): Promise<string[][]> {

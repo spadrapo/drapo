@@ -461,7 +461,7 @@ class DrapoSolver {
         return (this.ResolveDataObjectPathObject(item.Data, dataPath));
     }
 
-    public ResolveDataObjectPathObject(dataObject: any, dataPath: string[]): any {
+    public ResolveDataObjectPathObject(dataObject: any, dataPath: string[], dataEnforce: any = null): any {
         let data: any = dataObject;
         //Path
         for (let i = 1; i < dataPath.length; i++) {
@@ -470,6 +470,10 @@ class DrapoSolver {
             if (index === null) {
                 //Property
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
+                    if ((dataEnforce !== null) && (i === dataPath.length - 1)) { // Enforce Data
+                        data[currentKey] = dataEnforce;
+                        return (dataEnforce);
+                    }
                     return ('');
                 }
                 data = data[currentKey];
@@ -566,6 +570,8 @@ class DrapoSolver {
     }
 
     public ResolveSector(mustacheParts: string[], sector: string): string {
+        if (mustacheParts.length == 0)
+            return (sector);
         const mustacheSector: string = mustacheParts[0];
         if (mustacheSector === '@')
             return (null);
@@ -875,6 +881,66 @@ class DrapoSolver {
                 return (keyValue[1]);
         }
         return (null);
+    }
+
+    public IsEqualAny(data1: any[] | any, data2: any[] | any): boolean {
+        //Null
+        const isData1Null: boolean = (data1 == null);
+        const isData2Null: boolean = (data2 == null);
+        if (isData1Null !== isData2Null)
+            return (false);
+        if (isData1Null)
+            return (true);
+        //Array
+        const isData1Array: boolean = Array.isArray(data1);
+        const isData2Array: boolean = Array.isArray(data2);
+        if (isData1Array !== isData2Array)
+            return (false);
+        if (isData1Array)
+            return (this.IsEqualObjectArray(data1, data2));
+        //Object
+        const isData1Object: boolean = (typeof data1 == 'object');
+        const isData2Object: boolean = (typeof data2 == 'object');
+        if (isData1Object !== isData2Object)
+            return (false);
+        if (isData1Object)
+            return (this.IsEqualObject(data1, data2));
+        return (false);
+    }
+
+    public IsEqualObject(value1: object, value2: object): boolean {
+        const value1Properties: [string, any][] = this.GetObjectProperties(value1);
+        const value2Properties: [string, any][] = this.GetObjectProperties(value2);
+        if (value1Properties.length !== value2Properties.length)
+            return (false);
+        for (let i: number = 0; i < value1Properties.length; i++) {
+            const value1Property: [string, any] = value1Properties[i];
+            const value2Property: [string, any] = value2Properties[i];
+            if (value1Property[0] !== value2Property[0])
+                return (false);
+            if (value1Property[1] !== value2Property[1])
+                return (false);
+        }
+        return (true);
+    }
+
+    private GetObjectProperties(value: object): [string, any][] {
+        const valueAsAny: any = value;
+        const properties: [string, any][] = [];
+        for (const propertyName in value) {
+            properties.push([propertyName, valueAsAny[propertyName]]);
+        }
+        return (properties);
+    }
+
+    public IsEqualObjectArray(value1: object[], value2: object[]): boolean {
+        if (value1.length !== value2.length)
+            return (false);
+        for (let i: number = 0; i < value1.length; i++) {
+            if (!this.IsEqualObject(value1[i], value2[i]))
+                return (false);
+        }
+        return (true);
     }
 
     public IsEqualStringArray(list1: string[], list2: string[]): boolean {

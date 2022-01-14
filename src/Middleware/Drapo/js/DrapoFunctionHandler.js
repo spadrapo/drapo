@@ -1543,7 +1543,7 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionRemoveDataItem = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var source, isSourceMustache, mustacheParts, dataKey, itemText, itemPath, item, notifyText, nofity, _a, deleted;
+            var source, isSourceMustache, mustacheParts, dataKey, itemText, itemPath, item, notifyText, notify, _a, deleted;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -1573,18 +1573,13 @@ var DrapoFunctionHandler = (function () {
                         _a = _b.sent();
                         _b.label = 4;
                     case 4:
-                        nofity = _a;
-                        return [4, this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item)];
+                        notify = _a;
+                        return [4, this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item, notify)];
                     case 5:
                         deleted = _b.sent();
                         if (!deleted)
                             return [2, (null)];
-                        if (!nofity) return [3, 7];
-                        return [4, this.Application.Observer.Notify(dataKey, null, null)];
-                    case 6:
-                        _b.sent();
-                        _b.label = 7;
-                    case 7: return [2];
+                        return [2];
                 }
             });
         });
@@ -3200,35 +3195,33 @@ var DrapoFunctionHandler = (function () {
                     case 0:
                         if (this.HasFunctionsContext(functionsValue))
                             return [2, (true)];
-                        if (!!this.Application.Parser.IsMustache(functionsValue)) return [3, 2];
-                        return [4, this.Application.Barber.HasMustacheContext(functionsValue, sector)];
-                    case 1: return [2, (_a.sent())];
-                    case 2:
+                        if (!this.Application.Parser.IsMustache(functionsValue))
+                            return [2, (this.Application.Barber.HasMustacheContext(functionsValue, sector))];
                         mustaches = this.Application.Parser.ParseMustaches(functionsValue);
                         j = 0;
-                        _a.label = 3;
-                    case 3:
-                        if (!(j < mustaches.length)) return [3, 8];
+                        _a.label = 1;
+                    case 1:
+                        if (!(j < mustaches.length)) return [3, 6];
                         mustache = mustaches[j];
                         mustacheParts = this.Application.Parser.ParseMustache(mustache);
                         dataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
                         if (!this.Application.Storage.IsDataKey(dataKey, null))
                             return [2, (true)];
                         value = this.Application.Storage.GetDataKeyField(dataKey, sector, mustacheParts);
-                        if (!(value == null)) return [3, 5];
+                        if (!(value == null)) return [3, 3];
                         return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - HasFunctionMustacheContext - Null Mustache - {0}', mustache)];
-                    case 4:
+                    case 2:
                         _a.sent();
                         return [2, (false)];
-                    case 5: return [4, this.HasFunctionMustacheContextInternal(value, sector)];
-                    case 6:
+                    case 3: return [4, this.HasFunctionMustacheContextInternal(value, sector)];
+                    case 4:
                         if (_a.sent())
                             return [2, (true)];
-                        _a.label = 7;
-                    case 7:
+                        _a.label = 5;
+                    case 5:
                         j++;
-                        return [3, 3];
-                    case 8: return [2, (false)];
+                        return [3, 1];
+                    case 6: return [2, (false)];
                 }
             });
         });

@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Notify Unchanged</title>
+</head>
+<body>
+    <div>
+        <span>Data Notify Unchanged</span>
+        <div d-dataKey="selections" d-dataType="array" d-dataValue="[1,2,4]"></div>
+        <div d-dataKey="persons" d-dataType="array" d-dataValue='[{"Code":1,"Name":"Thiago", "Visible":true},{"Code":2,"Name":"Henrique","Visible":true},{"Code":3,"Name":"Silva","Visible":false},{"Code":4,"Name":"Catarina"},{"Code":5,"Name":"Augusto"}]'></div>
+        <div d-dataKey="personsSelected" d-dataType="query" d-dataValue="SELECT S AS Selected, P.Code AS Code, P.Name as Name FROM persons AS P LEFT JOIN selections AS S ON P.Code = S WHERE P.Visible = true"></div>
+        <div>
+            <div d-for="personSelected in personsSelected">
+                <span>{{personSelected.Name}}</span>
+                <br />
+            </div>
+        </div>
+        <div>
+            <div d-for="person in persons">
+                <input type="text" d-model="{{person.Name}}" />
+                <br />
+            </div>
+        </div>
+        <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="ExecuteDataItem(UpdateItemField({{person.Name}},James),person in persons,{{person._Index}}=1)"></div>
+    </div>
+</body>
+</html>

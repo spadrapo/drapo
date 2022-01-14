@@ -32,7 +32,7 @@ declare class DrapoSolver {
     private ResolveDataPathObject;
     ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean): Promise<any>;
     ResolveItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): any;
-    ResolveDataObjectPathObject(dataObject: any, dataPath: string[]): any;
+    ResolveDataObjectPathObject(dataObject: any, dataPath: string[], dataEnforce?: any): any;
     private GetDataObjectPathObjectPropertyIndex;
     ResolveDataObjectLookupHierarchy(data: any, searchField: string, searchValue: any, searchHierarchyField?: string): any;
     UpdateDataObjectLookupHierarchy(data: any, searchField: string, searchValue: any, value: any, searchHierarchyField?: string): boolean;
@@ -65,6 +65,10 @@ declare class DrapoSolver {
     Contains(data: string[], item: string): boolean;
     Join(list1: string[], list2: string[]): string[];
     Get(dictionary: [string, string][], key: string): string;
+    IsEqualAny(data1: any[] | any, data2: any[] | any): boolean;
+    IsEqualObject(value1: object, value2: object): boolean;
+    private GetObjectProperties;
+    IsEqualObjectArray(value1: object[], value2: object[]): boolean;
     IsEqualStringArray(list1: string[], list2: string[]): boolean;
     IsEqualString(value1: any, value2: any): boolean;
     EnsureString(data: any): string;

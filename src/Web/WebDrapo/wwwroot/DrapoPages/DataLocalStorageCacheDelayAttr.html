@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data - Delay Cache - Attr</title>
+</head>
+<body>
+    <div>
+        <span>Data - Delay Cache - Attr</span>
+        <div d-dataKey="culture" d-dataLoadType="startup" d-dataDelay="true" d-dataCacheKeys="culture,datapath" d-dataUrlGet="/Data/GetCulture"></div>
+        <input type="button" d-attr-value="{{culture.User}}" />
+        <input type="button" d-attr-value="{{culture.Name}}" />
+        <input type="button" d-attr-value="{{culture.Date}}" />
+    </div>
+</body>
+</html>

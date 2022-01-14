@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function ClearData Mustache</title>
+</head>
+<body>
+    <span>Function AddDataItem Mustache</span>
+    <div d-datakey="object" d-datatype="object" d-datavalue="{&quot;Persons&quot;:[{&quot;name&quot;: &quot;John&quot;},{&quot;name&quot;: &quot;Mary&quot;},{&quot;name&quot;: &quot;Thiago&quot;}]}" d-dataonnotify="UpdateDataField(objectMick,name,Jagger)"></div>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="ClearData({{object.Persons}})"></div>
+    <br />
+    <ul>
+        <li d-for="person in object.Persons" d-model="{{person.name}}" style="display: none;"></li>
+    </ul>
+
+</body></html>

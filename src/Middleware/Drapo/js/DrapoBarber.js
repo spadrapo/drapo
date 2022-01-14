@@ -85,7 +85,7 @@ var DrapoBarber = (function () {
         if (sector === void 0) { sector = null; }
         if (stopAtSectors === void 0) { stopAtSectors = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var renderContext, i;
+            var renderContext, i, el, context;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -98,7 +98,10 @@ var DrapoBarber = (function () {
                         _a.label = 1;
                     case 1:
                         if (!(i < jQueryStart.length)) return [3, 4];
-                        return [4, this.ResolveMustachesInternal(jQueryStart[i], sector, renderContext, stopAtSectors)];
+                        el = jQueryStart[i];
+                        context = new DrapoContext();
+                        this.Application.ControlFlow.InitializeContext(context, el.outerHTML);
+                        return [4, this.ResolveMustachesInternal(el, sector, context, renderContext, stopAtSectors)];
                     case 2:
                         _a.sent();
                         _a.label = 3;
@@ -113,7 +116,7 @@ var DrapoBarber = (function () {
             });
         });
     };
-    DrapoBarber.prototype.ResolveMustachesInternal = function (el, sector, renderContext, stopAtSectors) {
+    DrapoBarber.prototype.ResolveMustachesInternal = function (el, sector, context, renderContext, stopAtSectors) {
         return __awaiter(this, void 0, void 0, function () {
             var pre, children, hasChildren, i, child, childSector, canRender;
             return __generator(this, function (_a) {
@@ -140,7 +143,7 @@ var DrapoBarber = (function () {
                     case 2:
                         canRender = _a.sent();
                         if (!canRender) return [3, 4];
-                        return [4, this.ResolveMustachesInternal(child, sector, renderContext, stopAtSectors)];
+                        return [4, this.ResolveMustachesInternal(child, sector, context, renderContext, stopAtSectors)];
                     case 3:
                         _a.sent();
                         return [3, 5];
@@ -155,32 +158,53 @@ var DrapoBarber = (function () {
                     case 8:
                         _a.sent();
                         _a.label = 9;
-                    case 9: return [4, this.Application.AttributeHandler.ResolveID(el, sector)];
+                    case 9:
+                        if (!context.CheckID) return [3, 11];
+                        return [4, this.Application.AttributeHandler.ResolveID(el, sector)];
                     case 10:
                         _a.sent();
-                        return [4, this.Application.AttributeHandler.ResolveAttr(el)];
+                        _a.label = 11;
                     case 11:
-                        _a.sent();
-                        return [4, this.ResolveModel(el)];
+                        if (!context.CheckAttribute) return [3, 13];
+                        return [4, this.Application.AttributeHandler.ResolveAttr(el)];
                     case 12:
                         _a.sent();
-                        return [4, this.Application.ClassHandler.ResolveClass(el, sector)];
+                        _a.label = 13;
                     case 13:
-                        _a.sent();
-                        return [4, this.Application.Validator.RegisterValidation(el, sector)];
+                        if (!context.CheckModel) return [3, 15];
+                        return [4, this.ResolveModel(el)];
                     case 14:
                         _a.sent();
-                        return [4, this.Application.EventHandler.Attach(el, renderContext)];
+                        _a.label = 15;
                     case 15:
-                        _a.sent();
-                        return [4, this.Application.BehaviorHandler.ResolveBehavior(el)];
+                        if (!context.CheckClass) return [3, 17];
+                        return [4, this.Application.ClassHandler.ResolveClass(el, sector)];
                     case 16:
                         _a.sent();
-                        return [4, this.ResolveMustacheElementVisibility(el)];
+                        _a.label = 17;
                     case 17:
+                        if (!context.CheckValidation) return [3, 19];
+                        return [4, this.Application.Validator.RegisterValidation(el, sector)];
+                    case 18:
+                        _a.sent();
+                        _a.label = 19;
+                    case 19:
+                        if (!context.CheckEvent) return [3, 21];
+                        return [4, this.Application.EventHandler.Attach(el, renderContext)];
+                    case 20:
+                        _a.sent();
+                        _a.label = 21;
+                    case 21:
+                        if (!context.CheckBehavior) return [3, 23];
+                        return [4, this.Application.BehaviorHandler.ResolveBehavior(el)];
+                    case 22:
+                        _a.sent();
+                        _a.label = 23;
+                    case 23: return [4, this.ResolveMustacheElementVisibility(el)];
+                    case 24:
                         _a.sent();
                         return [4, this.ResolveCloak(el)];
-                    case 18:
+                    case 25:
                         _a.sent();
                         return [2];
                 }
@@ -196,16 +220,14 @@ var DrapoBarber = (function () {
                         dRender = el.getAttribute('d-render');
                         if (dRender == null)
                             return [2, (true)];
-                        return [4, this.Application.Barber.HasMustacheContext(dRender, sector)];
-                    case 1:
-                        if (_a.sent())
+                        if (this.Application.Barber.HasMustacheContext(dRender, sector))
                             return [2, (true)];
                         context = new DrapoContext();
                         return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, dRender, null, false)];
-                    case 2:
+                    case 1:
                         expression = _a.sent();
                         return [4, this.Application.Solver.ResolveConditional(expression)];
-                    case 3:
+                    case 2:
                         result = _a.sent();
                         el.removeAttribute('d-render');
                         return [2, (result)];
@@ -343,18 +365,16 @@ var DrapoBarber = (function () {
                         if (model == null)
                             return [2];
                         sector = this.Application.Document.GetSector(el);
-                        return [4, this.Application.Barber.HasMustacheContext(model, sector)];
-                    case 1:
-                        if (_a.sent())
+                        if (this.Application.Barber.HasMustacheContext(model, sector))
                             return [2];
                         isMustacheOnly = this.Application.Parser.IsMustacheOnly(model, true);
-                        if (!!isMustacheOnly) return [3, 3];
+                        if (!!isMustacheOnly) return [3, 2];
                         context = new DrapoContext();
                         return [4, this.Application.ModelHandler.ResolveModel(context, null, el, null, sector, canBind, false)];
-                    case 2:
+                    case 1:
                         _a.sent();
                         return [2];
-                    case 3:
+                    case 2:
                         mustaches = this.Application.Parser.ParseMustaches(model);
                         if (mustaches.length != 1)
                             return [2];
@@ -370,24 +390,24 @@ var DrapoBarber = (function () {
                         if ((dataFieldFilter != null) && (dataField != dataFieldFilter))
                             return [2];
                         return [4, this.Application.Storage.EnsureDataKeyFieldReady(dataKey, sector, mustacheParts)];
-                    case 4:
-                        if (!_a.sent()) return [3, 7];
+                    case 3:
+                        if (!_a.sent()) return [3, 6];
                         context = new DrapoContext();
                         return [4, this.Application.Storage.RetrieveData(dataKey, sector)];
-                    case 5:
+                    case 4:
                         data = _a.sent();
                         context.Create(data, el, null, dataKey, dataKey, null, null);
                         elj = $(el);
                         return [4, this.Application.ModelHandler.ResolveModel(context, null, el, elj, sector, canBind, false)];
-                    case 6:
+                    case 5:
                         _a.sent();
-                        return [3, 8];
-                    case 7:
+                        return [3, 7];
+                    case 6:
                         if (canSubscribeDelay) {
                             this.Application.Observer.SubscribeDelay(el, dataKey, dataFields);
                         }
-                        _a.label = 8;
-                    case 8: return [2];
+                        _a.label = 7;
+                    case 7: return [2];
                 }
             });
         });
@@ -555,7 +575,7 @@ var DrapoBarber = (function () {
                         el = elementJQuery != null ? elementJQuery[0] : null;
                         contextDataKey.Create(data, el, null, dataKey, dataKey, null, null);
                         this.Application.Binder.BindReader(contextDataKey.Item, el, dataFields);
-                        if ((context.Item != null) && (dataKey !== context.Item.DataKey))
+                        if ((context != null) && (context.Item != null) && (dataKey !== context.Item.DataKey))
                             this.Application.Observer.SubscribeStorage(dataKey, dataFields, context.Item.DataKey, type);
                         _b.label = 5;
                     case 5:
@@ -596,14 +616,12 @@ var DrapoBarber = (function () {
                         if (elIF == null)
                             return [2];
                         sector = this.Application.Document.GetSector(el);
-                        return [4, this.Application.Barber.HasMustacheContext(elIF, sector)];
-                    case 1:
-                        if (_a.sent())
+                        if (this.Application.Barber.HasMustacheContext(elIF, sector))
                             return [2];
                         context = new DrapoContext();
                         elj = $(el);
                         return [4, this.Application.Solver.ResolveConditional(elIF, elj, sector, context)];
-                    case 2:
+                    case 1:
                         visibility = _a.sent();
                         if (visibility)
                             this.Application.Document.Show(elj);
@@ -616,32 +634,25 @@ var DrapoBarber = (function () {
     };
     DrapoBarber.prototype.HasMustacheContext = function (expression, sector, renderContext) {
         if (renderContext === void 0) { renderContext = null; }
-        return __awaiter(this, void 0, void 0, function () {
-            var mustaches, j, mustache, mustacheParts, dataKey, isDataKey;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        mustaches = this.Application.Parser.ParseMustaches(expression, true);
-                        j = 0;
-                        _a.label = 1;
-                    case 1:
-                        if (!(j < mustaches.length)) return [3, 4];
-                        mustache = mustaches[j];
-                        mustacheParts = this.Application.Parser.ParseMustache(mustache);
-                        dataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
-                        return [4, this.Application.Storage.IsDataKey(dataKey, sector, renderContext)];
-                    case 2:
-                        isDataKey = _a.sent();
-                        if (!isDataKey)
-                            return [2, (true)];
-                        _a.label = 3;
-                    case 3:
-                        j++;
-                        return [3, 1];
-                    case 4: return [2, (false)];
-                }
-            });
-        });
+        var value = this.Application.SectorContainerHandler.HasMustacheContextCache(sector, expression);
+        if (value !== null)
+            return (value);
+        var valueCache = this.HasMustacheContextInternal(expression, sector, renderContext);
+        this.Application.SectorContainerHandler.AddMustacheContextCache(sector, expression, valueCache);
+        return (valueCache);
+    };
+    DrapoBarber.prototype.HasMustacheContextInternal = function (expression, sector, renderContext) {
+        if (renderContext === void 0) { renderContext = null; }
+        var mustaches = this.Application.Parser.ParseMustaches(expression, true);
+        for (var j = 0; j < mustaches.length; j++) {
+            var mustache = mustaches[j];
+            var mustacheParts = this.Application.Parser.ParseMustache(mustache);
+            var dataKey = this.Application.Solver.ResolveDataKey(mustacheParts);
+            var isDataKey = this.Application.Storage.IsDataKey(dataKey, sector, renderContext);
+            if (!isDataKey)
+                return (true);
+        }
+        return (false);
     };
     DrapoBarber.prototype.ResolveCloak = function (el, canBind) {
         if (canBind === void 0) { canBind = true; }

@@ -657,13 +657,18 @@ var DrapoSolver = (function () {
             return (valueSystem);
         return (this.ResolveDataObjectPathObject(item.Data, dataPath));
     };
-    DrapoSolver.prototype.ResolveDataObjectPathObject = function (dataObject, dataPath) {
+    DrapoSolver.prototype.ResolveDataObjectPathObject = function (dataObject, dataPath, dataEnforce) {
+        if (dataEnforce === void 0) { dataEnforce = null; }
         var data = dataObject;
         for (var i = 1; i < dataPath.length; i++) {
             var currentKey = dataPath[i];
             var index = this.GetDataObjectPathObjectPropertyIndex(currentKey);
             if (index === null) {
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
+                    if ((dataEnforce !== null) && (i === dataPath.length - 1)) {
+                        data[currentKey] = dataEnforce;
+                        return (dataEnforce);
+                    }
                     return ('');
                 }
                 data = data[currentKey];
@@ -768,6 +773,8 @@ var DrapoSolver = (function () {
         });
     };
     DrapoSolver.prototype.ResolveSector = function (mustacheParts, sector) {
+        if (mustacheParts.length == 0)
+            return (sector);
         var mustacheSector = mustacheParts[0];
         if (mustacheSector === '@')
             return (null);
@@ -1068,6 +1075,59 @@ var DrapoSolver = (function () {
                 return (keyValue[1]);
         }
         return (null);
+    };
+    DrapoSolver.prototype.IsEqualAny = function (data1, data2) {
+        var isData1Null = (data1 == null);
+        var isData2Null = (data2 == null);
+        if (isData1Null !== isData2Null)
+            return (false);
+        if (isData1Null)
+            return (true);
+        var isData1Array = Array.isArray(data1);
+        var isData2Array = Array.isArray(data2);
+        if (isData1Array !== isData2Array)
+            return (false);
+        if (isData1Array)
+            return (this.IsEqualObjectArray(data1, data2));
+        var isData1Object = (typeof data1 == 'object');
+        var isData2Object = (typeof data2 == 'object');
+        if (isData1Object !== isData2Object)
+            return (false);
+        if (isData1Object)
+            return (this.IsEqualObject(data1, data2));
+        return (false);
+    };
+    DrapoSolver.prototype.IsEqualObject = function (value1, value2) {
+        var value1Properties = this.GetObjectProperties(value1);
+        var value2Properties = this.GetObjectProperties(value2);
+        if (value1Properties.length !== value2Properties.length)
+            return (false);
+        for (var i = 0; i < value1Properties.length; i++) {
+            var value1Property = value1Properties[i];
+            var value2Property = value2Properties[i];
+            if (value1Property[0] !== value2Property[0])
+                return (false);
+            if (value1Property[1] !== value2Property[1])
+                return (false);
+        }
+        return (true);
+    };
+    DrapoSolver.prototype.GetObjectProperties = function (value) {
+        var valueAsAny = value;
+        var properties = [];
+        for (var propertyName in value) {
+            properties.push([propertyName, valueAsAny[propertyName]]);
+        }
+        return (properties);
+    };
+    DrapoSolver.prototype.IsEqualObjectArray = function (value1, value2) {
+        if (value1.length !== value2.length)
+            return (false);
+        for (var i = 0; i < value1.length; i++) {
+            if (!this.IsEqualObject(value1[i], value2[i]))
+                return (false);
+        }
+        return (true);
     };
     DrapoSolver.prototype.IsEqualStringArray = function (list1, list2) {
         if (list1.length !== list2.length)

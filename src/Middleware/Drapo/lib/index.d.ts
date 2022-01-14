@@ -110,7 +110,8 @@ declare class DrapoBarber {
     ResolveControlFlowMustacheStringFunction(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, expression: string, elementJQuery: JQuery, canBind?: boolean, type?: DrapoStorageLinkType): Promise<string>;
     ResolveControlFlowMustacheString(context: DrapoContext, renderContext: DrapoRenderContext, expression: string, elementJQuery: JQuery, sector: string, canBind?: boolean, type?: DrapoStorageLinkType, isForIterator?: boolean, elementForTemplate?: HTMLElement): Promise<string>;
     ResolveMustacheElementVisibility(el: HTMLElement, canBind?: boolean): Promise<void>;
-    HasMustacheContext(expression: string, sector: string, renderContext?: DrapoRenderContext): Promise<boolean>;
+    HasMustacheContext(expression: string, sector: string, renderContext?: DrapoRenderContext): boolean;
+    private HasMustacheContextInternal;
     ResolveCloak(el: HTMLElement, canBind?: boolean): Promise<void>;
 }
 
@@ -201,6 +202,7 @@ declare class DrapoCacheHandler {
     Initialize(): Promise<boolean>;
     EnsureLoaded(storageItem: DrapoStorageItem, sector: string, dataKey: string, dataPath?: string[]): boolean;
     GetCachedData(cacheKeys: string[], sector: string, dataKey: string): any[];
+    GetCachedDataPath(cacheKeys: string[], sector: string, dataKey: string, dataPath: string[]): any;
     AppendCacheData(cacheKeys: string[], sector: string, dataKey: string, value: any, isDelay?: boolean): boolean;
     GetCachedView(url: string): string;
     SetCachedView(url: string, value: string): boolean;
@@ -430,7 +432,7 @@ declare class DrapoControlFlow {
     private ResolveControlFlowForParent;
     private ResolveControlFlowForRoot;
     ResolveControlFlowFor(forJQuery: JQuery, isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
-    private InitializeContext;
+    InitializeContext(context: DrapoContext, content: string): void;
     IsElementControlFlowTemplate(el: HTMLElement): boolean;
     private ResolveControlFlowForInternal;
     private ResolveControlFlowForIterationRender;
@@ -442,6 +444,8 @@ declare class DrapoControlFlow {
     private RemoveListIndex;
     private IsControlFlowDataKeyIterator;
     private GetControlFlowDataKeyIterators;
+    private GetElementHashTemplate;
+    private GetElementHashValue;
     private GetTemplateVariables;
     private GetControlFlowExpressionsDataKey;
     private GetControlFlowConditionsDataKey;
@@ -613,7 +617,7 @@ declare class DrapoDocument {
     private CreateGuidShort;
     private CreateGuidShortInternal;
     EnsureElementHasID(el: HTMLElement): string;
-    ApplyNodeDifferences(parent: HTMLElement, nodeOld: HTMLElement, nodeNew: HTMLElement): void;
+    ApplyNodeDifferences(parent: HTMLElement, nodeOld: HTMLElement, nodeNew: HTMLElement, isHTML: boolean): void;
     ApplyNodeDifferencesRenderClass(nodeOld: HTMLElement, nodeNew: HTMLElement): void;
     private IsNodeDifferentType;
     private ApplyNodeEventsDifferences;
@@ -1562,6 +1566,9 @@ declare class DrapoSectorContainerHandler {
     private _application;
     private _containers;
     private _activeSectorContainers;
+    private _sectorContexts;
+    private _sectorContextsExpressions;
+    private _sectorContextsValues;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     IsElementContainerized(element: HTMLElement): boolean;
@@ -1574,6 +1581,11 @@ declare class DrapoSectorContainerHandler {
     RemoveBySector(sector: string): boolean;
     GetStorageItem(sector: string, containerCode: string, dataKey: string): DrapoStorageItem;
     ReloadStorageItemByPipe(dataPipe: string): void;
+    HasMustacheContextCache(sector: string, expression: string): boolean;
+    private RemoveMustacheContextCache;
+    AddMustacheContextCache(sector: string, expression: string, value: boolean): void;
+    private GetMustacheContextIndex;
+    private GetMustacheContextExpressionIndex;
 }
 
 declare class DrapoSectorContainerItem {
@@ -1736,7 +1748,7 @@ declare class DrapoSolver {
     private ResolveDataPathObject;
     ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean): Promise<any>;
     ResolveItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): any;
-    ResolveDataObjectPathObject(dataObject: any, dataPath: string[]): any;
+    ResolveDataObjectPathObject(dataObject: any, dataPath: string[], dataEnforce?: any): any;
     private GetDataObjectPathObjectPropertyIndex;
     ResolveDataObjectLookupHierarchy(data: any, searchField: string, searchValue: any, searchHierarchyField?: string): any;
     UpdateDataObjectLookupHierarchy(data: any, searchField: string, searchValue: any, value: any, searchHierarchyField?: string): boolean;
@@ -1769,6 +1781,10 @@ declare class DrapoSolver {
     Contains(data: string[], item: string): boolean;
     Join(list1: string[], list2: string[]): string[];
     Get(dictionary: [string, string][], key: string): string;
+    IsEqualAny(data1: any[] | any, data2: any[] | any): boolean;
+    IsEqualObject(value1: object, value2: object): boolean;
+    private GetObjectProperties;
+    IsEqualObjectArray(value1: object[], value2: object[]): boolean;
     IsEqualStringArray(list1: string[], list2: string[]): boolean;
     IsEqualString(value1: any, value2: any): boolean;
     EnsureString(data: any): string;
@@ -1879,13 +1895,13 @@ declare class DrapoStorage {
     RemoveBySector(sector: string): void;
     DiscardCacheData(dataKey: string, sector: string, canRemoveObservers?: boolean): boolean;
     DiscardCacheDataBySector(sector: string): boolean;
-    DeleteDataItem(dataKey: string, dataPath: string[], sector: string, item: any): Promise<boolean>;
+    DeleteDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify: boolean): Promise<boolean>;
     DeleteDataItemIndex(dataItem: DrapoStorageItem, index: number): boolean;
     private GetDataItemIndex;
     PostData(dataKey: string, sector: string, dataKeyResponse: string, notify: boolean, executionContext: DrapoExecutionContext<any>): Promise<boolean>;
     PostDataItem(dataKey: string, sector: string, dataKeyResponse: string, notify: boolean, executionContext: DrapoExecutionContext<any>): Promise<boolean>;
     PostDataMapping(dataKey: string, sector: string, dataItem: DrapoStorageItem, notify: boolean, executionContext: DrapoExecutionContext<any>): Promise<boolean>;
-    ClearData(dataKey: string, sector: string, notify: boolean): Promise<boolean>;
+    ClearData(dataText: string, sector: string, notify: boolean): Promise<boolean>;
     UnloadData(dataKey: string, sector: string): Promise<boolean>;
     ClearDataToken(): Promise<void>;
     FireEventOnBeforeContainerUnload(sector: string): Promise<void>;

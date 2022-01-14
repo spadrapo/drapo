@@ -56,13 +56,17 @@ class DrapoBarber {
         if (sector === null)
             sector = this.Application.Document.GetSector(jQueryStart.get(0));
         const renderContext: DrapoRenderContext = new DrapoRenderContext();
-        for (let i = 0; i < jQueryStart.length; i++)
-            await this.ResolveMustachesInternal(jQueryStart[i], sector, renderContext, stopAtSectors);
+        for (let i = 0; i < jQueryStart.length; i++) {
+            const el: HTMLElement = jQueryStart[i];
+            const context: DrapoContext = new DrapoContext();
+            this.Application.ControlFlow.InitializeContext(context, el.outerHTML);
+            await this.ResolveMustachesInternal(el, sector, context, renderContext, stopAtSectors);
+        }
         //Notify who needs data
         await this.Application.Storage.LoadDataDelayedAndNotify();
     }
 
-    private async ResolveMustachesInternal(el: HTMLElement, sector: string, renderContext: DrapoRenderContext, stopAtSectors: boolean): Promise<void> {
+    private async ResolveMustachesInternal(el: HTMLElement, sector: string, context: DrapoContext, renderContext: DrapoRenderContext, stopAtSectors: boolean): Promise<void> {
         const pre: string = el.getAttribute != null ? el.getAttribute('d-pre') : null;
         if (pre === 'true')
             return;
@@ -81,7 +85,7 @@ class DrapoBarber {
                 const canRender: boolean = await this.CanRender(child, sector);
                 if (canRender) {
                     //Children
-                    await this.ResolveMustachesInternal(child, sector, renderContext, stopAtSectors);
+                    await this.ResolveMustachesInternal(child, sector, context, renderContext, stopAtSectors);
                 } else {
                     $(child).remove();
                 }
@@ -91,19 +95,26 @@ class DrapoBarber {
             await this.ResolveMustacheElementLeaf(el);
         }
         //ID
-        await this.Application.AttributeHandler.ResolveID(el, sector);
+        if (context.CheckID)
+            await this.Application.AttributeHandler.ResolveID(el, sector);
         //Attr
-        await this.Application.AttributeHandler.ResolveAttr(el);
+        if (context.CheckAttribute)
+            await this.Application.AttributeHandler.ResolveAttr(el);
         //Model
-        await this.ResolveModel(el);
+        if (context.CheckModel)
+            await this.ResolveModel(el);
         //Class
-        await this.Application.ClassHandler.ResolveClass(el, sector);
+        if (context.CheckClass)
+            await this.Application.ClassHandler.ResolveClass(el, sector);
         //Validation
-        await this.Application.Validator.RegisterValidation(el, sector);
+        if (context.CheckValidation)
+            await this.Application.Validator.RegisterValidation(el, sector);
         //Events
-        await this.Application.EventHandler.Attach(el, renderContext);
+        if (context.CheckEvent)
+            await this.Application.EventHandler.Attach(el, renderContext);
         //Behavior
-        await this.Application.BehaviorHandler.ResolveBehavior(el);
+        if (context.CheckBehavior)
+            await this.Application.BehaviorHandler.ResolveBehavior(el);
         //Visibility
         await this.ResolveMustacheElementVisibility(el);
         //Cloak
@@ -114,7 +125,7 @@ class DrapoBarber {
         const dRender: string = el.getAttribute('d-render');
         if (dRender == null)
             return (true);
-        if (await this.Application.Barber.HasMustacheContext(dRender, sector))
+        if (this.Application.Barber.HasMustacheContext(dRender, sector))
             return (true);
         const context: DrapoContext = new DrapoContext();
         const expression: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, dRender, null, false);
@@ -197,7 +208,7 @@ class DrapoBarber {
         if (model == null)
             return;
         const sector = this.Application.Document.GetSector(el);
-        if (await this.Application.Barber.HasMustacheContext(model, sector))
+        if (this.Application.Barber.HasMustacheContext(model, sector))
             return;
         const isMustacheOnly: boolean = this.Application.Parser.IsMustacheOnly(model, true);
         if (!isMustacheOnly)
@@ -317,7 +328,7 @@ class DrapoBarber {
                         const el: HTMLElement = elementJQuery != null ? elementJQuery[0] : null;
                         contextDataKey.Create(data, el, null, dataKey, dataKey, null, null);
                         this.Application.Binder.BindReader(contextDataKey.Item, el, dataFields);
-                        if ((context.Item != null) && (dataKey !== context.Item.DataKey))
+                        if ((context != null) && (context.Item != null) && (dataKey !== context.Item.DataKey))
                             this.Application.Observer.SubscribeStorage(dataKey, dataFields, context.Item.DataKey, type);
                     }
                 }
@@ -340,7 +351,7 @@ class DrapoBarber {
         if (elIF == null)
             return;
         const sector: string = this.Application.Document.GetSector(el);
-        if (await this.Application.Barber.HasMustacheContext(elIF, sector))
+        if (this.Application.Barber.HasMustacheContext(elIF, sector))
             return;
         const context: DrapoContext = new DrapoContext();
         const elj: JQuery = $(el);
@@ -351,13 +362,22 @@ class DrapoBarber {
             this.Application.Document.Hide(elj);
     }
 
-    public async HasMustacheContext(expression: string, sector: string, renderContext: DrapoRenderContext = null): Promise<boolean> {
+    public HasMustacheContext(expression: string, sector: string, renderContext: DrapoRenderContext = null): boolean {
+        const value: boolean = this.Application.SectorContainerHandler.HasMustacheContextCache(sector, expression);
+        if (value !== null)
+            return (value);
+        const valueCache: boolean = this.HasMustacheContextInternal(expression, sector, renderContext);
+        this.Application.SectorContainerHandler.AddMustacheContextCache(sector, expression, valueCache);
+        return (valueCache);
+    }
+
+    private HasMustacheContextInternal(expression: string, sector: string, renderContext: DrapoRenderContext = null): boolean {
         const mustaches = this.Application.Parser.ParseMustaches(expression, true);
         for (let j = 0; j < mustaches.length; j++) {
             const mustache = mustaches[j];
             const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustache);
             const dataKey: string = this.Application.Solver.ResolveDataKey(mustacheParts);
-            const isDataKey: boolean = await this.Application.Storage.IsDataKey(dataKey, sector, renderContext);
+            const isDataKey: boolean = this.Application.Storage.IsDataKey(dataKey, sector, renderContext);
             if (!isDataKey)
                 return (true);
         }

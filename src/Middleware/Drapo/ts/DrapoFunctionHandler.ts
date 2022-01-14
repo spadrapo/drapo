@@ -708,12 +708,10 @@ class DrapoFunctionHandler {
         if (item == null)
             return (null);
         const notifyText: string = functionParsed.Parameters[2];
-        const nofity: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        const deleted: boolean = await this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item);
+        const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
+        const deleted: boolean = await this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item, notify);
         if (!deleted)
             return (null);
-        if (nofity)
-            await this.Application.Observer.Notify(dataKey, null, null);
     }
 
     private async ExecuteFunctionRemoveDataItemLookup(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
@@ -1420,7 +1418,7 @@ class DrapoFunctionHandler {
         if (this.HasFunctionsContext(functionsValue))
             return (true);
         if (!this.Application.Parser.IsMustache(functionsValue))
-            return (await this.Application.Barber.HasMustacheContext(functionsValue, sector));
+            return (this.Application.Barber.HasMustacheContext(functionsValue, sector));
         const mustaches = this.Application.Parser.ParseMustaches(functionsValue);
         for (let j = 0; j < mustaches.length; j++) {
             const mustache = mustaches[j];

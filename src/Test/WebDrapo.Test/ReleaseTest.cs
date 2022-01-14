@@ -1001,6 +1001,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionAddDataItemMustache");
         }
         [TestCase]
+        public void FunctionAddDataItemPropertyCreateTest()
+        {
+            ValidatePage("FunctionAddDataItemPropertyCreate");
+        }
+        [TestCase]
         public void FunctionAddDataItemReferenceTest()
         {
             ValidatePage("FunctionAddDataItemReference");
@@ -1024,6 +1029,11 @@ namespace WebDrapo.Test
         public void FunctionCastNumberBlockTest()
         {
             ValidatePage("FunctionCastNumberBlock");
+        }
+        [TestCase]
+        public void FunctionClearDataTest()
+        {
+            ValidatePage("FunctionClearData");
         }
         [TestCase]
         public void FunctionClearValidationTest()
@@ -1065,6 +1075,11 @@ namespace WebDrapo.Test
         public void FunctionCreateReferenceObjectTest()
         {
             ValidatePage("FunctionCreateReferenceObject");
+        }
+        [TestCase]
+        public void FunctionCreateReferenceOnNotifyTest()
+        {
+            ValidatePage("FunctionCreateReferenceOnNotify");
         }
         [TestCase]
         public void FunctionCreateTimerAsyncTest()

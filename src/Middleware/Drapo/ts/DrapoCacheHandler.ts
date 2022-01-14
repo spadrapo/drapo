@@ -61,6 +61,16 @@
         return (valueCached);
     }
 
+    public GetCachedDataPath(cacheKeys: string[], sector: string, dataKey: string, dataPath: string[]): any {
+        if (!this.CanUseLocalStorage)
+            return (null);
+        const cacheKey: string = this.CreateCacheKey(this.TYPE_DATA, cacheKeys, sector, dataKey, dataPath, null);
+        if (cacheKey == null)
+            return (null);
+        const valueCached: any = this.GetClientDataCache(cacheKey);
+        return (valueCached);
+    }
+
     public AppendCacheData(cacheKeys: string[], sector: string, dataKey: string, value: any, isDelay: boolean = false): boolean {
         if (!this.CanUseLocalStorage)
             return (false);

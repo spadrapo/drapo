@@ -43,7 +43,7 @@ var DrapoControlFlow = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoControlFlow.prototype.ResolveControlFlowDocument = function () {
@@ -161,9 +161,9 @@ var DrapoControlFlow = (function () {
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, isRenderViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, length, canCreateViewport, viewport, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, j, data, templateKey, _b, templateData, _c, templateJ, template, nodeIndex, oldNode, item, _d, template;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
+            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, isRenderViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, dForRender, isHTML, isHash, hashTemplate, useHash, length, canCreateViewport, viewport, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, j, data, templateKey, _b, templateData, _c, templateJ, template, nodeIndex, oldNode, item, _d, hashValueBefore, hashValueCurrent, _e, applyHash, template;
+            return __generator(this, function (_f) {
+                switch (_f.label) {
                     case 0:
                         forText = forJQuery.attr('d-for');
                         ifText = null;
@@ -212,8 +212,8 @@ var DrapoControlFlow = (function () {
                         if (!hasForIfText) return [3, 2];
                         return [4, this.Application.Solver.ResolveConditional(forIfText, null, sector, context, renderContext)];
                     case 1:
-                        conditionalForIfResult = _e.sent();
-                        _e.label = 2;
+                        conditionalForIfResult = _f.sent();
+                        _f.label = 2;
                     case 2:
                         items = isContextRootFullExclusive ? null : this.CreateList(anchor.nextAll());
                         dataItem = null;
@@ -224,7 +224,7 @@ var DrapoControlFlow = (function () {
                         if (!this.IsControlFlowDataKeyIterator(dataKeyIterator)) return [3, 4];
                         return [4, this.GetControlFlowDataKeyIterators(context, renderContext, elementForTemplate, dataKeyIterator)];
                     case 3:
-                        datas = _e.sent();
+                        datas = _f.sent();
                         return [3, 7];
                     case 4:
                         dataKeyIteratorParts = this.Application.Parser.ParseForIterable(dataKeyIterator);
@@ -245,7 +245,7 @@ var DrapoControlFlow = (function () {
                         if (!conditionalForIfResult) return [3, 6];
                         return [4, this.Application.Storage.Retrieve(forJQuery, dataKey, sector, context, dataKeyIteratorParts)];
                     case 5:
-                        dataItem = _e.sent();
+                        dataItem = _f.sent();
                         if (dataItem == null)
                             return [2, (false)];
                         if ((isDataKey) && (dataKeyIteratorParts.length > 1)) {
@@ -257,7 +257,7 @@ var DrapoControlFlow = (function () {
                         return [3, 7];
                     case 6:
                         datas = [];
-                        _e.label = 7;
+                        _f.label = 7;
                     case 7:
                         if (datas == null)
                             return [2, (false)];
@@ -302,10 +302,15 @@ var DrapoControlFlow = (function () {
                         jQueryForReferenceTemplate.removeAttr('d-for');
                         if (ifText != null)
                             jQueryForReferenceTemplate.removeAttr('d-if');
+                        dForRender = elementForTemplate.getAttribute('d-for-render');
+                        isHTML = dForRender === 'html';
+                        isHash = dForRender === 'hash';
+                        hashTemplate = isHash ? this.GetElementHashTemplate(elementForTemplate) : null;
+                        useHash = hashTemplate !== null;
                         length = datas.length;
                         canCreateViewport = ((isContextRoot) && (isFirstChild) && (!wasWrapped) && (!hasIfText) && (range === null));
                         viewport = this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas, canCreateViewport);
-                        if (viewport !== null)
+                        if (dForRender != null)
                             jQueryForReferenceTemplate.removeAttr('d-for-render');
                         lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
                         canFragmentElements = viewport == null;
@@ -314,45 +319,45 @@ var DrapoControlFlow = (function () {
                         if (!canUseTemplate) return [3, 9];
                         return [4, this.GetTemplateVariables(sector, context, dataKey, key, jQueryForReferenceTemplate)];
                     case 8:
-                        _a = (_e.sent());
+                        _a = (_f.sent());
                         return [3, 10];
                     case 9:
                         _a = null;
-                        _e.label = 10;
+                        _f.label = 10;
                     case 10:
                         templateVariables = _a;
                         nodesRemovedCount = 0;
                         j = this.Application.ViewportHandler.GetViewportControlFlowStart(viewport, start);
-                        _e.label = 11;
+                        _f.label = 11;
                     case 11:
-                        if (!(j < this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length))) return [3, 26];
+                        if (!(j < this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length))) return [3, 30];
                         data = datas[j];
                         if (!(templateVariables !== null)) return [3, 13];
                         return [4, this.CreateTemplateKey(sector, context, dataKey, templateVariables, data, key, j)];
                     case 12:
-                        _b = _e.sent();
+                        _b = _f.sent();
                         return [3, 14];
                     case 13:
                         _b = null;
-                        _e.label = 14;
+                        _f.label = 14;
                     case 14:
                         templateKey = _b;
                         if (!(templateKey !== null)) return [3, 16];
                         return [4, this.GetTemplateFromTemplateKey(context, templateKey)];
                     case 15:
-                        _c = _e.sent();
+                        _c = _f.sent();
                         return [3, 17];
                     case 16:
                         _c = null;
-                        _e.label = 17;
+                        _f.label = 17;
                     case 17:
                         templateData = _c;
                         if (!((templateKey !== null) && (templateData === null))) return [3, 19];
                         return [4, this.CreateTemplate(sector, context, renderContext, jQueryForReferenceTemplate.clone(), dataKey, key, j, data)];
                     case 18:
-                        templateData = _e.sent();
+                        templateData = _f.sent();
                         this.AddTemplate(context, templateKey, templateData);
-                        _e.label = 19;
+                        _f.label = 19;
                     case 19:
                         templateJ = templateData !== null ? templateData.clone() : jQueryForReferenceTemplate.clone();
                         template = templateJ[0];
@@ -363,25 +368,44 @@ var DrapoControlFlow = (function () {
                         if (!_d) return [3, 21];
                         return [4, this.Application.Solver.ResolveConditional(ifText, templateJ, sector, context, renderContext, elementForTemplate)];
                     case 20:
-                        _d = (!(_e.sent()));
-                        _e.label = 21;
+                        _d = (!(_f.sent()));
+                        _f.label = 21;
                     case 21:
                         if (_d) {
                             if ((isDifference) && (oldNode !== null))
                                 this.RemoveListIndex(items, nodeIndex);
                             nodesRemovedCount++;
                             context.Pop();
-                            return [3, 25];
+                            return [3, 29];
                         }
-                        if (!(type == DrapoStorageLinkType.Render)) return [3, 23];
+                        if (!(type == DrapoStorageLinkType.Render)) return [3, 27];
+                        hashValueBefore = ((useHash) && (oldNode != null)) ? oldNode.getAttribute('d-hash') : null;
+                        if (!(hashTemplate === null)) return [3, 22];
+                        _e = null;
+                        return [3, 24];
+                    case 22: return [4, this.GetElementHashValue(sector, context, template, hashTemplate)];
+                    case 23:
+                        _e = _f.sent();
+                        _f.label = 24;
+                    case 24:
+                        hashValueCurrent = _e;
+                        applyHash = ((!useHash) || (hashValueCurrent !== hashValueBefore));
+                        if (!applyHash) return [3, 26];
                         return [4, this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents)];
-                    case 22:
-                        _e.sent();
+                    case 25:
+                        _f.sent();
+                        _f.label = 26;
+                    case 26:
                         if ((isDifference) && (oldNode != null)) {
-                            this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template);
+                            if (applyHash)
+                                this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template, isHTML);
+                            if (hashValueCurrent !== null)
+                                oldNode.setAttribute('d-hash', hashValueCurrent);
                             lastInserted = $(oldNode);
                         }
                         else if (canFragmentElements) {
+                            if (hashValueCurrent !== null)
+                                template.setAttribute('d-hash', hashValueCurrent);
                             fragment.appendChild(template);
                         }
                         else {
@@ -390,18 +414,19 @@ var DrapoControlFlow = (function () {
                             this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
                             canFragmentElements = true;
                         }
-                        return [3, 25];
-                    case 23:
-                        if (!(type == DrapoStorageLinkType.RenderClass)) return [3, 25];
+                        return [3, 29];
+                    case 27:
+                        if (!(type == DrapoStorageLinkType.RenderClass)) return [3, 29];
                         return [4, this.ResolveControlFlowForIterationRenderClass(context, renderContext, template, sector)];
-                    case 24:
-                        _e.sent();
-                        this.Application.Document.ApplyNodeDifferencesRenderClass(oldNode, template);
-                        _e.label = 25;
-                    case 25:
+                    case 28:
+                        _f.sent();
+                        if (oldNode != null)
+                            this.Application.Document.ApplyNodeDifferencesRenderClass(oldNode, template);
+                        _f.label = 29;
+                    case 29:
                         j++;
                         return [3, 11];
-                    case 26:
+                    case 30:
                         this.Application.ViewportHandler.AppendViewportControlFlowBallonAfter(viewport, fragment);
                         if ((viewport == null) && (isContextRootFullExclusive) && (!isIncremental)) {
                             this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
@@ -420,21 +445,21 @@ var DrapoControlFlow = (function () {
                         this.Application.Observer.IsEnabledNotifyIncremental = true;
                         if ((context.IsInsideRecursion) && (!context.IsElementTemplateRoot(key)))
                             jQueryForReference.remove();
-                        if (!((dataItem != null) && (dataItem.IsIncremental))) return [3, 28];
+                        if (!((dataItem != null) && (dataItem.IsIncremental))) return [3, 32];
                         return [4, this.Application.Binder.BindIncremental(forJQuery, dataKeyIterator, sector, isIncremental)];
-                    case 27:
-                        _e.sent();
-                        _e.label = 28;
-                    case 28:
-                        if (!isContextRoot) return [3, 31];
+                    case 31:
+                        _f.sent();
+                        _f.label = 32;
+                    case 32:
+                        if (!isContextRoot) return [3, 35];
                         return [4, this.Application.ComponentHandler.UnloadComponentInstancesDetached(sector)];
-                    case 29:
-                        _e.sent();
+                    case 33:
+                        _f.sent();
                         return [4, this.Application.Document.CollectSector(sector)];
-                    case 30:
-                        _e.sent();
-                        _e.label = 31;
-                    case 31: return [2];
+                    case 34:
+                        _f.sent();
+                        _f.label = 35;
+                    case 35: return [2];
                 }
             });
         });
@@ -702,6 +727,30 @@ var DrapoControlFlow = (function () {
                     case 1:
                         data = _a.sent();
                         return [2, (this.Application.Parser.ParseIterator(data))];
+                }
+            });
+        });
+    };
+    DrapoControlFlow.prototype.GetElementHashTemplate = function (el) {
+        var content = el.outerHTML;
+        var mustaches = this.Application.Parser.ParseMustaches(content);
+        var template = '';
+        for (var i = 0; i < mustaches.length; i++) {
+            if (i > 0)
+                template = template + '_';
+            template = template + mustaches[i];
+        }
+        return (template);
+    };
+    DrapoControlFlow.prototype.GetElementHashValue = function (sector, context, el, hashTemplate) {
+        return __awaiter(this, void 0, void 0, function () {
+            var hashValue;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.Application.ModelHandler.ResolveValueExpression(context, el, sector, hashTemplate, false)];
+                    case 1:
+                        hashValue = _a.sent();
+                        return [2, (hashValue)];
                 }
             });
         });

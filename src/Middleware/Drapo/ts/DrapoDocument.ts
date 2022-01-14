@@ -907,7 +907,7 @@ class DrapoDocument {
         return (id);
     }
 
-    public ApplyNodeDifferences(parent: HTMLElement, nodeOld: HTMLElement, nodeNew: HTMLElement): void {
+    public ApplyNodeDifferences(parent: HTMLElement, nodeOld: HTMLElement, nodeNew: HTMLElement, isHTML: boolean): void {
         if (!nodeOld) {
             //Inserted
             parent.appendChild(nodeNew);
@@ -918,6 +918,8 @@ class DrapoDocument {
             //Changed
             parent.replaceChild(nodeNew, nodeOld);
         } else {
+            if ((isHTML) && (nodeOld.outerHTML == nodeNew.outerHTML))
+                return;
             //Events
             this.ApplyNodeEventsDifferences(nodeOld, nodeNew);
             //Special
@@ -934,7 +936,7 @@ class DrapoDocument {
                     nodeOld.textContent = nodeNew.textContent;
             } else {
                 for (let i = 0; i < lengthNew || i < lengthOld; i++) {
-                    this.ApplyNodeDifferences(nodeOld, childrenOld[i], childrenNew[i]);
+                    this.ApplyNodeDifferences(nodeOld, childrenOld[i], childrenNew[i], isHTML);
                 }
             }
         }
