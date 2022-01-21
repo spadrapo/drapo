@@ -163,6 +163,8 @@ var DrapoComponentHandler = (function () {
                         eljNew = $(html);
                         attributes = this.Application.Document.GetElementAttributes(el);
                         content = $(el).html();
+                        if (context != null)
+                            this.Application.ControlFlow.InitializeContext(context, content);
                         sector = this.GetSectorContext(el, context);
                         this.Application.Document.ReplaceElement(el, eljNew);
                         this.Application.Document.SetElementAttributes(eljNew, attributes);
