@@ -43,7 +43,7 @@ var DrapoControlFlow = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoControlFlow.prototype.ResolveControlFlowDocument = function () {
@@ -161,7 +161,7 @@ var DrapoControlFlow = (function () {
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, isRenderViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, dForRender, isHTML, isHash, hashTemplate, useHash, length, canCreateViewport, viewport, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, j, data, templateKey, _b, templateData, _c, templateJ, template, nodeIndex, oldNode, item, _d, hashValueBefore, hashValueCurrent, _e, applyHash, template;
+            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, dForRender, dForRenders, isHTML, isViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, isHash, hashTemplate, useHash, length, canCreateViewport, viewport, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, j, data, templateKey, _b, templateData, _c, templateJ, template, nodeIndex, oldNode, item, _d, hashValueBefore, hashValueCurrent, _e, applyHash, template;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
@@ -200,8 +200,11 @@ var DrapoControlFlow = (function () {
                         content = isContextRoot ? forJQuery[0].outerHTML : null;
                         if (isContextRoot)
                             this.InitializeContext(context, content);
-                        isRenderViewport = this.Application.ViewportHandler.IsElementControlFlowRenderViewport(elementForTemplate);
-                        isDifference = ((canUseDifference) && (!isRenderViewport) && (!isIncremental) && (!hasIfText));
+                        dForRender = elementForTemplate.getAttribute('d-for-render');
+                        dForRenders = dForRender == '' ? [] : this.Application.Parser.ParseBlock(dForRender, ',');
+                        isHTML = this.Application.Solver.Contains(dForRenders, 'html');
+                        isViewport = this.Application.Solver.Contains(dForRenders, 'viewport');
+                        isDifference = ((canUseDifference) && (!isViewport) && (!isIncremental) && (!hasIfText));
                         isLastChild = this.Application.Document.IsLastChild(anchor);
                         if ((isDifference) && (isContextRoot) && (isLastChild))
                             isDifference = false;
@@ -275,7 +278,7 @@ var DrapoControlFlow = (function () {
                         }
                         if ((!isDifference) && (type == DrapoStorageLinkType.RenderClass))
                             type = DrapoStorageLinkType.Render;
-                        if ((!isIncremental) && (!isDifference) && (!isContextRootFullExclusive) && (!isRenderViewport))
+                        if ((!isIncremental) && (!isDifference) && (!isContextRootFullExclusive) && (!isViewport))
                             this.RemoveList(items);
                         if (isDifference) {
                             dataLength = datas.length;
@@ -302,14 +305,12 @@ var DrapoControlFlow = (function () {
                         jQueryForReferenceTemplate.removeAttr('d-for');
                         if (ifText != null)
                             jQueryForReferenceTemplate.removeAttr('d-if');
-                        dForRender = elementForTemplate.getAttribute('d-for-render');
-                        isHTML = dForRender === 'html';
-                        isHash = dForRender === 'hash';
+                        isHash = this.Application.Solver.Contains(dForRenders, 'hash');
                         hashTemplate = isHash ? this.GetElementHashTemplate(elementForTemplate) : null;
                         useHash = hashTemplate !== null;
                         length = datas.length;
                         canCreateViewport = ((isContextRoot) && (isFirstChild) && (!wasWrapped) && (!hasIfText) && (range === null));
-                        viewport = this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas, canCreateViewport);
+                        viewport = (canCreateViewport && isViewport) ? this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas) : null;
                         if (dForRender != null)
                             jQueryForReferenceTemplate.removeAttr('d-for-render');
                         lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);

@@ -140,10 +140,15 @@ class DrapoControlFlow {
         const content: string = isContextRoot ? forJQuery[0].outerHTML : null;
         if (isContextRoot)
             this.InitializeContext(context, content);
+        //d-for-render
+        const dForRender: string = elementForTemplate.getAttribute('d-for-render');
+        const dForRenders: string[] = dForRender == '' ? [] : this.Application.Parser.ParseBlock(dForRender, ',');
+        //Html
+        const isHTML: boolean = this.Application.Solver.Contains(dForRenders, 'html');
         //Viewport
-        const isRenderViewport: boolean = this.Application.ViewportHandler.IsElementControlFlowRenderViewport(elementForTemplate);
+        const isViewport: boolean = this.Application.Solver.Contains(dForRenders, 'viewport');
         //Difference
-        let isDifference: boolean = ((canUseDifference) && (!isRenderViewport) && (!isIncremental) && (!hasIfText));
+        let isDifference: boolean = ((canUseDifference) && (!isViewport) && (!isIncremental) && (!hasIfText));
         const isLastChild: boolean = this.Application.Document.IsLastChild(anchor);
         if ((isDifference) && (isContextRoot) && (isLastChild))
             isDifference = false;
@@ -210,7 +215,7 @@ class DrapoControlFlow {
         if ((!isDifference) && (type == DrapoStorageLinkType.RenderClass))
             type = DrapoStorageLinkType.Render;
         //Removing Data
-        if ((!isIncremental) && (!isDifference) && (!isContextRootFullExclusive) && (!isRenderViewport))
+        if ((!isIncremental) && (!isDifference) && (!isContextRootFullExclusive) && (!isViewport))
             this.RemoveList(items);
         if (isDifference) {
             const dataLength: number = datas.length;
@@ -237,19 +242,15 @@ class DrapoControlFlow {
         jQueryForReferenceTemplate.removeAttr('d-for');
         if (ifText != null)
             jQueryForReferenceTemplate.removeAttr('d-if');
-        //d-for-render
-        const dForRender: string = elementForTemplate.getAttribute('d-for-render');
-        //Html
-        const isHTML: boolean = dForRender === 'html';
         //Hash
-        const isHash: boolean = dForRender === 'hash';
+        const isHash: boolean = this.Application.Solver.Contains(dForRenders, 'hash');
         const hashTemplate: string = isHash ? this.GetElementHashTemplate(elementForTemplate) : null;
         const useHash: boolean = hashTemplate !== null;
         //Data Length
         const length: number = datas.length;
         //Viewport
         const canCreateViewport: boolean = ((isContextRoot) && (isFirstChild) && (!wasWrapped) && (!hasIfText) && (range === null));
-        const viewport: DrapoViewport = this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas, canCreateViewport);
+        const viewport: DrapoViewport = (canCreateViewport && isViewport)? this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas) : null;
         if (dForRender != null)
             jQueryForReferenceTemplate.removeAttr('d-for-render');
         //Viewport Ballon Before

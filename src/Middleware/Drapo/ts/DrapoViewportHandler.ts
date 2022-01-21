@@ -11,15 +11,7 @@
         this._application = application;
     }
 
-    public IsElementControlFlowRenderViewport(el: HTMLElement): boolean {
-        return ((el.getAttribute('d-for-render') === 'viewport'));
-    }
-
-    public CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[], canCreateViewport: boolean): DrapoViewport {
-        if (!canCreateViewport)
-            return (null);
-        if (!this.IsElementControlFlowRenderViewport(el))
-            return (null);
+    public CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[]): DrapoViewport {
         const scroll: [HTMLElement, number, number] = this.GetScrollViewport(el);
         if (scroll == null)
             return (null);

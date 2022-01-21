@@ -10,14 +10,7 @@ var DrapoViewportHandler = (function () {
         enumerable: true,
         configurable: true
     });
-    DrapoViewportHandler.prototype.IsElementControlFlowRenderViewport = function (el) {
-        return ((el.getAttribute('d-for-render') === 'viewport'));
-    };
-    DrapoViewportHandler.prototype.CreateViewportControlFlow = function (sector, el, elTemplate, dataKey, key, dataKeyIteratorRange, data, canCreateViewport) {
-        if (!canCreateViewport)
-            return (null);
-        if (!this.IsElementControlFlowRenderViewport(el))
-            return (null);
+    DrapoViewportHandler.prototype.CreateViewportControlFlow = function (sector, el, elTemplate, dataKey, key, dataKeyIteratorRange, data) {
         var scroll = this.GetScrollViewport(el);
         if (scroll == null)
             return (null);
