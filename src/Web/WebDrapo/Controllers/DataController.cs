@@ -36,6 +36,7 @@ namespace WebDrapo.Controllers
         [HttpGet]
         public IEnumerable<KeyValueVO> GetLevels(int levels, int children = 5, bool includeIndex = false, string prefix = null)
         {
+            System.Threading.Thread.Sleep(5000);
             List<KeyValueVO> dictionary = new List<KeyValueVO>();
             int index = 0;
             CreateLevels(dictionary, levels, children, includeIndex, ref index, prefix);
@@ -132,6 +133,15 @@ namespace WebDrapo.Controllers
         }
 
         [HttpGet]
+        public List<KeyValueVO> GetDropdownValues()
+        {
+            List<KeyValueVO> menuItems = new List<KeyValueVO>();
+            menuItems.Add(new KeyValueVO() { Key = "1", Value = "Applicaion 1" });
+            menuItems.Add(new KeyValueVO() { Key = "5", Value = "Applicaion 5" });
+            return (menuItems);
+        }
+
+        [HttpGet]
         public List<KeyValueVO> GetData(int start = 0, int length = 10000, int? max = null)
         {
             List<KeyValueVO> dictionary = new List<KeyValueVO>();
@@ -167,7 +177,7 @@ namespace WebDrapo.Controllers
         private Dictionary<string, string> GetCulturePT()
         {
             Dictionary<string, string> values = new Dictionary<string, string>();
-            values.Add("User", "Usuário");
+            values.Add("User", "Usuï¿½rio");
             values.Add("Name", "Nome");
             values.Add("Date", "Data");
             for (int i = 0; i < 10; i++)
