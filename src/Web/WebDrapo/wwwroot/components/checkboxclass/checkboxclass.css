@@ -1,0 +1,107 @@
+﻿.ppcCheckboxDisabled {
+    color: #dee2e6;
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.ppcCheckboxInput {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.ppcCheckboxLabel {
+    border-radius: 0.25rem;
+    color: #000;
+}
+
+    .ppcCheckboxLabel:hover {
+        cursor: pointer;
+    }
+
+    .ppcCheckboxLabel:before {
+        position: absolute;
+        top: .25rem;
+        left: 0;
+        display: block;
+        width: 1rem;
+        height: 1rem;
+        pointer-events: none;
+        content: "";
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: #dee2e6;
+        border-radius: 0.25rem;
+    }
+
+    .ppcCheckboxLabel:after {
+        position: absolute;
+        top: .25rem;
+        left: 0;
+        display: block;
+        width: 1rem;
+        height: 1rem;
+        content: "";
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 50% 50%;
+        border-radius: 0.25rem;
+    }
+
+.ppcCheckboxLabelDisabled:hover {
+    cursor: default;
+}
+
+
+
+.ppcCheckboxLayout {
+    position: relative;
+    display: block;
+    min-height: 1.5rem;
+    padding-left: 1.5rem;
+    padding-top: 0.35rem;
+}
+
+.ppcCheckboxLabelDisabled:hover {
+    cursor: default;
+}
+
+.ppcCheckboxLayout .ppcCheckboxInput:checked ~ .ppcCheckboxLabel::after {
+    content: "\00AC";
+    color: #FFFFFF;
+    /*white*/
+    font-family: 'pp';
+    font-size: 0.5rem;
+    font-weight: 100;
+    margin: 0.2rem 0 0 0.25rem;
+}
+
+.ppcCheckboxLayout .ppcCheckboxInput:checked ~ .ppcCheckboxLabel::before {
+    background-color: #993333;
+}
+
+.ppcCheckboxLayout .ppcCheckboxInput:checked ~ .ppcCheckboxLabelDisabled::after {
+    color: #fff;
+}
+
+.ppcCheckboxLayout .ppcCheckboxInput:checked ~ .ppcCheckboxLabelDisabled::before {
+    background-color: #ccc;
+}
+
+.ppcCheckboxDisabled .ppcCheckboxLabel {
+    color: #dee2e6;
+}
+
+    .ppcCheckboxDisabled .ppcCheckboxLabel::before {
+        background-color: #dee2e6;
+    }
+
+.ppcCheckboxLayout .ppcCheckboxLabel::before {
+    border-radius: .25rem;
+}
