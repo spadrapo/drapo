@@ -36,6 +36,15 @@ namespace WebDrapo.Controllers
         [HttpGet]
         public IEnumerable<KeyValueVO> GetLevels(int levels, int children = 5, bool includeIndex = false, string prefix = null)
         {
+            List<KeyValueVO> dictionary = new List<KeyValueVO>();
+            int index = 0;
+            CreateLevels(dictionary, levels, children, includeIndex, ref index, prefix);
+            return (dictionary);
+        }
+
+        [HttpGet]
+        public IEnumerable<KeyValueVO> GetLevelsSleep(int levels, int children = 5, bool includeIndex = false, string prefix = null)
+        {
             System.Threading.Thread.Sleep(5000);
             List<KeyValueVO> dictionary = new List<KeyValueVO>();
             int index = 0;
@@ -177,7 +186,7 @@ namespace WebDrapo.Controllers
         private Dictionary<string, string> GetCulturePT()
         {
             Dictionary<string, string> values = new Dictionary<string, string>();
-            values.Add("User", "Usu�rio");
+            values.Add("User", "Usuário");
             values.Add("Name", "Nome");
             values.Add("Date", "Data");
             for (int i = 0; i < 10; i++)
