@@ -15,7 +15,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/DataNotifyUnchanged.html",
+      "launchUrl": "DrapoPages/ControlFlowComponentsClass.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
