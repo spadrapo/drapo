@@ -12,7 +12,7 @@
             <div d-dataKey="dropdownSelected" d-dataType="object" d-dataProperty-key=""></div>
             <div d-dataKey="dataClone" d-dataType="array"></div>
             <div d-dataKey="querystringValue" d-dataUrlGet="/Data/GetFunctionPostDataItem"></div>
-            <div d-dataKey="data" d-dataType="object" d-dataUrlParameters="required" d-dataUrlGet="/Data/GetLevelsSleep?levels={{querystringValue.Name}}&children={{dropdownSelected.key}}" d-dataOnAfterLoad="UpdateData(dataClone,{{data}})"></div>
+            <div d-dataKey="data" d-dataType="object" d-dataUrlParameters="required" d-dataUrlGet="/Data/GetLevelsSleep?levels={{querystringValue.Name}}&children={{dropdownSelected.Key}}" d-dataOnNotify="UpdateData(dataClone,{{data}})"></div>
             <div>
                 <d-dropdowntree dc-dataKey="dropdownValues" dc-model="{{dropdownSelected.Key}}" dc-firstOrDefault="true" dc-ensureValidSelection="true"></d-dropdowntree>
             </div>
