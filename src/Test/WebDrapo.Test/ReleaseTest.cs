@@ -375,6 +375,11 @@ namespace WebDrapo.Test
             ValidatePage("ContextMappingLayout");
         }
         [TestCase]
+        public void ControlFlowComponentsClassTest()
+        {
+            ValidatePage("ControlFlowComponentsClass");
+        }
+        [TestCase]
         public void ControlFlowForArrayTest()
         {
             ValidatePage("ControlFlowForArray");

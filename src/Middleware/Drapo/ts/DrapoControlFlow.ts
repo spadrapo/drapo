@@ -68,25 +68,35 @@ class DrapoControlFlow {
 
     public InitializeContext(context: DrapoContext, content: string) {
         //Mustache Nodes
-        context.CheckMustacheNodes = this.Application.Barber.HasContentMustacheNodesContext(content);
+        if (this.Application.Barber.HasContentMustacheNodesContext(content))
+            context.CheckMustacheNodes = true;
         //Model
-        context.CheckModel = this.Application.ModelHandler.HasContentModelContext(content);
+        if (this.Application.ModelHandler.HasContentModelContext(content))
+            context.CheckModel = true;
         //Mustache Attribute
-        context.CheckMustacheAttributes = this.Application.Barber.HasContentMustacheAttributeContext(content);
+        if (this.Application.Barber.HasContentMustacheAttributeContext(content))
+            context.CheckMustacheAttributes = true;
         //ID
-        context.CheckID = this.Application.AttributeHandler.HasContentIDContext(content);
+        if (this.Application.AttributeHandler.HasContentIDContext(content))
+            context.CheckID = true;
         //Attribute
-        context.CheckAttribute = this.Application.AttributeHandler.HasContentAttributeContext(content);
+        if (this.Application.AttributeHandler.HasContentAttributeContext(content))
+            context.CheckAttribute = true;
         //Class
-        context.CheckClass = this.Application.ClassHandler.HasContentClassContext(content);
+        if (this.Application.ClassHandler.HasContentClassContext(content))
+            context.CheckClass = true;
         //Events
-        context.CheckEvent = this.Application.EventHandler.HasContentEventContext(content);
+        if (this.Application.EventHandler.HasContentEventContext(content))
+            context.CheckEvent = true;
         //Behavior
-        context.CheckBehavior = this.Application.BehaviorHandler.HasContentBehaviorContext(content);
+        if (this.Application.BehaviorHandler.HasContentBehaviorContext(content))
+        context.CheckBehavior = true;
         //Component
-        context.CheckComponent = this.Application.ComponentHandler.HasContentComponent(content);
+        if (this.Application.ComponentHandler.HasContentComponent(content))
+        context.CheckComponent = true;
         //Validation
-        context.CheckValidation = this.Application.Validator.HasContentValidation(content);
+        if (this.Application.Validator.HasContentValidation(content))
+        context.CheckValidation = true;
         //Checkpoint
         context.Checkpoint();
     }

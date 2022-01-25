@@ -1344,11 +1344,7 @@ var DrapoBarber = (function () {
     };
     DrapoBarber.prototype.HasMustacheContext = function (expression, sector, renderContext) {
         if (renderContext === void 0) { renderContext = null; }
-        var value = this.Application.SectorContainerHandler.HasMustacheContextCache(sector, expression);
-        if (value !== null)
-            return (value);
         var valueCache = this.HasMustacheContextInternal(expression, sector, renderContext);
-        this.Application.SectorContainerHandler.AddMustacheContextCache(sector, expression, valueCache);
         return (valueCache);
     };
     DrapoBarber.prototype.HasMustacheContextInternal = function (expression, sector, renderContext) {
@@ -3023,6 +3019,8 @@ var DrapoComponentHandler = (function () {
                         eljNew = $(html);
                         attributes = this.Application.Document.GetElementAttributes(el);
                         content = $(el).html();
+                        if (context != null)
+                            this.Application.ControlFlow.InitializeContext(context, content);
                         sector = this.GetSectorContext(el, context);
                         this.Application.Document.ReplaceElement(el, eljNew);
                         this.Application.Document.SetElementAttributes(eljNew, attributes);
@@ -4430,16 +4428,26 @@ var DrapoControlFlow = (function () {
         });
     };
     DrapoControlFlow.prototype.InitializeContext = function (context, content) {
-        context.CheckMustacheNodes = this.Application.Barber.HasContentMustacheNodesContext(content);
-        context.CheckModel = this.Application.ModelHandler.HasContentModelContext(content);
-        context.CheckMustacheAttributes = this.Application.Barber.HasContentMustacheAttributeContext(content);
-        context.CheckID = this.Application.AttributeHandler.HasContentIDContext(content);
-        context.CheckAttribute = this.Application.AttributeHandler.HasContentAttributeContext(content);
-        context.CheckClass = this.Application.ClassHandler.HasContentClassContext(content);
-        context.CheckEvent = this.Application.EventHandler.HasContentEventContext(content);
-        context.CheckBehavior = this.Application.BehaviorHandler.HasContentBehaviorContext(content);
-        context.CheckComponent = this.Application.ComponentHandler.HasContentComponent(content);
-        context.CheckValidation = this.Application.Validator.HasContentValidation(content);
+        if (this.Application.Barber.HasContentMustacheNodesContext(content))
+            context.CheckMustacheNodes = true;
+        if (this.Application.ModelHandler.HasContentModelContext(content))
+            context.CheckModel = true;
+        if (this.Application.Barber.HasContentMustacheAttributeContext(content))
+            context.CheckMustacheAttributes = true;
+        if (this.Application.AttributeHandler.HasContentIDContext(content))
+            context.CheckID = true;
+        if (this.Application.AttributeHandler.HasContentAttributeContext(content))
+            context.CheckAttribute = true;
+        if (this.Application.ClassHandler.HasContentClassContext(content))
+            context.CheckClass = true;
+        if (this.Application.EventHandler.HasContentEventContext(content))
+            context.CheckEvent = true;
+        if (this.Application.BehaviorHandler.HasContentBehaviorContext(content))
+            context.CheckBehavior = true;
+        if (this.Application.ComponentHandler.HasContentComponent(content))
+            context.CheckComponent = true;
+        if (this.Application.Validator.HasContentValidation(content))
+            context.CheckValidation = true;
         context.Checkpoint();
     };
     DrapoControlFlow.prototype.IsElementControlFlowTemplate = function (el) {

@@ -363,11 +363,12 @@ class DrapoBarber {
     }
 
     public HasMustacheContext(expression: string, sector: string, renderContext: DrapoRenderContext = null): boolean {
-        const value: boolean = this.Application.SectorContainerHandler.HasMustacheContextCache(sector, expression);
-        if (value !== null)
-            return (value);
+        //Disabling cache for mustache context. We have some problems that can be see at: ControlFlowComponentsClass.html
+        //const value: boolean = this.Application.SectorContainerHandler.HasMustacheContextCache(sector, expression);
+        //if (value !== null)
+        //    return (value);
         const valueCache: boolean = this.HasMustacheContextInternal(expression, sector, renderContext);
-        this.Application.SectorContainerHandler.AddMustacheContextCache(sector, expression, valueCache);
+        /*this.Application.SectorContainerHandler.AddMustacheContextCache(sector, expression, valueCache);*/
         return (valueCache);
     }
 

@@ -77,6 +77,9 @@ class DrapoComponentHandler {
         const attributes: [string, string][] = this.Application.Document.GetElementAttributes(el);
         //Extract Content
         const content: string = $(el).html();
+        //Initialize Context
+        if (context != null)
+            this.Application.ControlFlow.InitializeContext(context, content);
         //Sector
         const sector: string = this.GetSectorContext(el, context);
         //Replace

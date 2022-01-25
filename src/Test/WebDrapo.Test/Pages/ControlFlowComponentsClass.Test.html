@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For - Components Class</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <div>
+        <span>Control Flow For - Components Class</span>
+        <div>
+            <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children=4"></div>
+        </div>
+        <div>
+            <div d-for="object in objects" d-for-render="hash" style="display: none;">
+                <d-checkboxclass dc-value="{{object.Visible}}" dc-label="{{object.Key}}"></d-checkboxclass>
+            </div>
+        <div d-hash="true_L0K0">
+                <div dc-disabled="false" dc-notify="true">
+    <!--Data-->
+    <div>
+        <div d-datakey="dcProperties" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+    </div>
+    <div style="width:100%">
+        <!--Layout-->
+        <div d-class="{ppcCheckboxLayout,ppcCheckboxDisabled:{{dcProperties.disabled}}}" class="ppcCheckboxLayout">
+            <input class="ppcCheckboxInput" type="checkbox" d-model="{{objects.[0].Visible}}" />
+            <span class="ppcCheckboxLabel" d-model="{{objects.[0].Key}}" d-on-click="ToggleItemField({{objects.[0].Visible}},true)">L0K0</span>
+        </div>
+    </div>
+</div>
+            </div><div d-hash="true_L0K1">
+                <div dc-disabled="false" dc-notify="true">
+    <!--Data-->
+    <div>
+        <div d-datakey="dcProperties" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+    </div>
+    <div style="width:100%">
+        <!--Layout-->
+        <div d-class="{ppcCheckboxLayout,ppcCheckboxDisabled:{{dcProperties.disabled}}}" class="ppcCheckboxLayout">
+            <input class="ppcCheckboxInput" type="checkbox" d-model="{{objects.[1].Visible}}" />
+            <span class="ppcCheckboxLabel" d-model="{{objects.[1].Key}}" d-on-click="ToggleItemField({{objects.[1].Visible}},true)">L0K1</span>
+        </div>
+    </div>
+</div>
+            </div><div d-hash="true_L0K2">
+                <div dc-disabled="false" dc-notify="true">
+    <!--Data-->
+    <div>
+        <div d-datakey="dcProperties" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+    </div>
+    <div style="width:100%">
+        <!--Layout-->
+        <div d-class="{ppcCheckboxLayout,ppcCheckboxDisabled:{{dcProperties.disabled}}}" class="ppcCheckboxLayout">
+            <input class="ppcCheckboxInput" type="checkbox" d-model="{{objects.[2].Visible}}" />
+            <span class="ppcCheckboxLabel" d-model="{{objects.[2].Key}}" d-on-click="ToggleItemField({{objects.[2].Visible}},true)">L0K2</span>
+        </div>
+    </div>
+</div>
+            </div><div d-hash="true_L0K3">
+                <div dc-disabled="false" dc-notify="true">
+    <!--Data-->
+    <div>
+        <div d-datakey="dcProperties" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+    </div>
+    <div style="width:100%">
+        <!--Layout-->
+        <div d-class="{ppcCheckboxLayout,ppcCheckboxDisabled:{{dcProperties.disabled}}}" class="ppcCheckboxLayout">
+            <input class="ppcCheckboxInput" type="checkbox" d-model="{{objects.[3].Visible}}" />
+            <span class="ppcCheckboxLabel" d-model="{{objects.[3].Key}}" d-on-click="ToggleItemField({{objects.[3].Visible}},true)">L0K3</span>
+        </div>
+    </div>
+</div>
+            </div></div>
+    </div>
+
+</body></html>

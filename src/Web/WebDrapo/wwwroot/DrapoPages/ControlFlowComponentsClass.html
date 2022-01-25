@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For - Components Class</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow For - Components Class</span>
+        <div>
+            <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children=4"></div>
+        </div>
+        <div>
+            <div d-for="object in objects" d-for-render="hash">
+                <d-checkboxclass dc-value="{{object.Visible}}" dc-label="{{object.Key}}"></d-checkboxclass>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
