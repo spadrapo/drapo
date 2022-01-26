@@ -1,5 +1,6 @@
 ﻿class DrapoViewportHandler {
     private _application: DrapoApplication;
+    private _viewportPropertyName: string = 'viewport';
 
     //Properties
     get Application(): DrapoApplication {
@@ -11,18 +12,15 @@
         this._application = application;
     }
 
-    public IsElementControlFlowRenderViewport(el: HTMLElement): boolean {
-        return ((el.getAttribute('d-for-render') === 'viewport'));
-    }
-
-    public CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[], canCreateViewport: boolean): DrapoViewport {
-        if (!canCreateViewport)
-            return (null);
-        if (!this.IsElementControlFlowRenderViewport(el))
-            return (null);
+    public CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[]): DrapoViewport {
         const scroll: [HTMLElement, number, number] = this.GetScrollViewport(el);
         if (scroll == null)
             return (null);
+        const viewportBefore: DrapoViewport = this.GetElementViewport(el);
+        if (viewportBefore != null) {
+            viewportBefore.IsActive = true;
+            return (viewportBefore);
+        }
         const elScroll: HTMLElement = scroll[0];
         const height: number = this.GetElementHeight(elScroll);
         if (height == null)
@@ -58,6 +56,19 @@
         return (viewport);
     }
 
+    public GetElementViewport(el: HTMLElement): DrapoViewport{
+        const elAny: any = el as any;
+        const viewportBefore: DrapoViewport = elAny[this._viewportPropertyName];
+        if (viewportBefore != null) {
+            return (viewportBefore);
+        }
+        return (null);
+    }
+
+    public HasElementViewport(el: HTMLElement): boolean {
+        return (this.GetElementViewport(el) != null);
+    }
+
     public CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: JQuery) {
         if (viewport === null)
             return (lastInserted);
@@ -71,6 +82,8 @@
             lastInserted.after(elBallonBefore);
             return ($(elBallonBefore));
         } else {
+            if (viewport.IsActive)
+                return ($(elBallonBeforeInDOM));
             elBallonBeforeInDOM.style.height = viewport.HeightBallonBefore + 'px';
             viewport.ElementBallonBefore = elBallonBeforeInDOM;
             const elParent: HTMLElement = elBallonBeforeInDOM.parentElement;
@@ -104,7 +117,7 @@
     }
 
     public AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, fragment: DocumentFragment): void {
-        if (viewport === null)
+        if ((viewport === null) || (viewport.IsActive))
             return;
         const elBallonAfter: HTMLElement = document.createElement('div');
         elBallonAfter.style.width = '100%';
@@ -114,13 +127,16 @@
     }
 
     public ActivateViewportControlFlow(viewport: DrapoViewport): void {
-        if (viewport == null)
+        if ((viewport === null) || (viewport.IsActive))
             return;
         if (viewport.ScrollTop != null) {
             this.UpdateValuesBallon(viewport);
             this.UpdateElementsBallon(viewport);
             viewport.ElementScroll.scrollTop = viewport.ScrollTop;
         }
+        //Attach viewport to the element
+        const viewportElementAny: any = viewport.Element;
+        viewportElementAny[this._viewportPropertyName] = viewport;
         this.Application.Binder.BindControlFlowViewport(viewport);
     }
 

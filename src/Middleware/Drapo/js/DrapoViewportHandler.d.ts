@@ -1,9 +1,11 @@
 declare class DrapoViewportHandler {
     private _application;
+    private _viewportPropertyName;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    IsElementControlFlowRenderViewport(el: HTMLElement): boolean;
-    CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[], canCreateViewport: boolean): DrapoViewport;
+    CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[]): DrapoViewport;
+    GetElementViewport(el: HTMLElement): DrapoViewport;
+    HasElementViewport(el: HTMLElement): boolean;
     CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: JQuery): JQuery;
     private GetBallonBefore;
     private GetElementItemHeight;

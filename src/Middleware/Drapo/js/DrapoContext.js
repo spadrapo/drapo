@@ -216,6 +216,14 @@ var DrapoContext = (function () {
         this._indexRelative++;
         return (item);
     };
+    DrapoContext.prototype.Initialize = function (count) {
+        if (count <= 0)
+            return;
+        for (var i = 0; i < count; i++)
+            this._items.push(null);
+        this._index = count;
+        this._indexRelative = count;
+    };
     DrapoContext.prototype.Pop = function () {
         if (this._itemCurrent == null)
             return (null);
