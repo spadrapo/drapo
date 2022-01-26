@@ -57,6 +57,7 @@ declare class DrapoContext {
     set CanUpdateTemplate(value: boolean);
     constructor(item?: DrapoContextItem);
     Create(data: any, element: HTMLElement, elementForTemplate: HTMLElement, dataKey: string, key: string, iterator: string, index: number, elementOld?: HTMLElement): DrapoContextItem;
+    Initialize(count: number): void;
     Pop(): DrapoContextItem;
     Down(): boolean;
     Up(): boolean;

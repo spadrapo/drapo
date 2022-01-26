@@ -22,6 +22,7 @@
     private _factor: number = 2;
     private _eventScrollTimeout: number = null;
     private _scrollTop: number = null;
+    private _isActive: boolean = false;
 
     get Busy(): boolean {
         return (this._busy);
@@ -205,5 +206,13 @@
 
     set ScrollTop(value: number) {
         this._scrollTop = value;
+    }
+
+    get IsActive(): boolean {
+        return (this._isActive);
+    }
+
+    set IsActive(value: boolean) {
+        this._isActive = value;
     }
 }

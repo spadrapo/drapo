@@ -24,6 +24,7 @@ var DrapoViewport = (function () {
         this._factor = 2;
         this._eventScrollTimeout = null;
         this._scrollTop = null;
+        this._isActive = false;
     }
     Object.defineProperty(DrapoViewport.prototype, "Busy", {
         get: function () {
@@ -251,6 +252,16 @@ var DrapoViewport = (function () {
         },
         set: function (value) {
             this._scrollTop = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoViewport.prototype, "IsActive", {
+        get: function () {
+            return (this._isActive);
+        },
+        set: function (value) {
+            this._isActive = value;
         },
         enumerable: true,
         configurable: true

@@ -178,6 +178,15 @@ class DrapoContext {
         return (item);
     }
 
+    public Initialize(count: number): void {
+        if (count <= 0)
+            return;
+        for (let i: number = 0; i < count;i++)
+            this._items.push(null);
+        this._index = count;
+        this._indexRelative = count;
+    }
+
     public Pop(): DrapoContextItem {
         if (this._itemCurrent == null)
             return (null);

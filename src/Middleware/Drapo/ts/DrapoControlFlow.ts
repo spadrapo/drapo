@@ -150,15 +150,16 @@ class DrapoControlFlow {
         const content: string = isContextRoot ? forJQuery[0].outerHTML : null;
         if (isContextRoot)
             this.InitializeContext(context, content);
-        //d-for-render
+        //For render
         const dForRender: string = elementForTemplate.getAttribute('d-for-render');
         const dForRenders: string[] = dForRender == '' ? [] : this.Application.Parser.ParseBlock(dForRender, ',');
         //Html
         const isHTML: boolean = this.Application.Solver.Contains(dForRenders, 'html');
         //Viewport
         const isViewport: boolean = this.Application.Solver.Contains(dForRenders, 'viewport');
+        const hasViewPortBefore: boolean = this.Application.ViewportHandler.HasElementViewport(elementForTemplate);
         //Difference
-        let isDifference: boolean = ((canUseDifference) && (!isViewport) && (!isIncremental) && (!hasIfText));
+        let isDifference: boolean = ((canUseDifference) && ((!isViewport) || (hasViewPortBefore)) && (!isIncremental) && (!hasIfText));
         const isLastChild: boolean = this.Application.Document.IsLastChild(anchor);
         if ((isDifference) && (isContextRoot) && (isLastChild))
             isDifference = false;
@@ -260,7 +261,8 @@ class DrapoControlFlow {
         const length: number = datas.length;
         //Viewport
         const canCreateViewport: boolean = ((isContextRoot) && (isFirstChild) && (!wasWrapped) && (!hasIfText) && (range === null));
-        const viewport: DrapoViewport = (canCreateViewport && isViewport)? this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas) : null;
+        const viewport: DrapoViewport = (canCreateViewport && isViewport) ? this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas) : null;
+        const isViewportActive: boolean = ((viewport != null) && (viewport.IsActive));
         if (dForRender != null)
             jQueryForReferenceTemplate.removeAttr('d-for-render');
         //Viewport Ballon Before
@@ -273,7 +275,11 @@ class DrapoControlFlow {
         const templateVariables: string[][] = canUseTemplate ? (await this.GetTemplateVariables(sector, context, dataKey, key, jQueryForReferenceTemplate)) : null;
         //Render
         let nodesRemovedCount: number = 0;
-        for (let j = this.Application.ViewportHandler.GetViewportControlFlowStart(viewport, start); j < this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length); j++) {
+        const startViewport: number = this.Application.ViewportHandler.GetViewportControlFlowStart(viewport, start);
+        let endViewport: number = this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length);
+        if (isViewportActive)
+            context.Initialize(startViewport - 1);
+        for (let j = startViewport; j < endViewport; j++) {
             const data: any = datas[j];
             //Template
             const templateKey: string = templateVariables !== null ? await this.CreateTemplateKey(sector, context, dataKey, templateVariables, data, key, j) : null;
@@ -284,7 +290,8 @@ class DrapoControlFlow {
             }
             const templateJ: JQuery = templateData !== null ? templateData.clone() : jQueryForReferenceTemplate.clone();
             const template: HTMLElement = templateJ[0];
-            const nodeIndex: number = j - nodesRemovedCount;
+            const viewportIndexDifference: number = (isViewportActive ? (1 - startViewport) : 0);
+            const nodeIndex: number = j - nodesRemovedCount + viewportIndexDifference;
             const oldNode: HTMLElement = ((items !== null) && (nodeIndex < items.length)) ? items[nodeIndex] : null;
             const item: DrapoContextItem = context.Create(data, template, elementForTemplate, dataKey, key, dataKeyIteratorRange, j, oldNode);
             if ((hasIfText) && (!await this.Application.Solver.ResolveConditional(ifText, templateJ, sector, context, renderContext, elementForTemplate))) {
@@ -300,7 +307,7 @@ class DrapoControlFlow {
                 const applyHash: boolean = ((!useHash) || (hashValueCurrent !== hashValueBefore));
                 if (applyHash)
                     await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents);
-                if ((isDifference) && (oldNode != null)) {
+                if (((isDifference) || (isViewportActive)) && (oldNode != null)) {
                     if (applyHash)
                         this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template, isHTML);
                     if (hashValueCurrent !== null)
@@ -313,7 +320,10 @@ class DrapoControlFlow {
                 } else {
                     lastInserted.after(templateJ);
                     lastInserted = templateJ;
+                    if (hashValueCurrent !== null)
+                        template.setAttribute('d-hash', hashValueCurrent);
                     this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
+                    endViewport = this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length);
                     canFragmentElements = true;
                 }
             } else if (type == DrapoStorageLinkType.RenderClass) {
@@ -754,6 +764,12 @@ class DrapoControlFlow {
         const view: [number, number, number, number, number, number] = this.Application.ViewportHandler.GetView(viewport);
         if (view === null)
             return;
+        //Hash
+        const dForRender: string = viewport.Element.getAttribute('d-for-render');
+        const dForRenders: string[] = (dForRender == null) || (dForRender == '') ? [] : this.Application.Parser.ParseBlock(dForRender, ',');
+        const isHash: boolean = this.Application.Solver.Contains(dForRenders, 'hash');
+        const hashTemplate: string = isHash ? this.GetElementHashTemplate(viewport.Element) : null;
+        //Rows
         const rowsBeforeRemove: number = view[0];
         const rowsBeforeInsertStart: number = view[1];
         const rowsBeforeInsertEnd: number = view[2];
@@ -781,21 +797,21 @@ class DrapoControlFlow {
             }
         }
         //Before Insert
-        const fragmentBefore: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsBeforeInsertStart, rowsBeforeInsertEnd);
+        const fragmentBefore: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsBeforeInsertStart, rowsBeforeInsertEnd, hashTemplate);
         if (fragmentBefore !== null) {
             $(viewport.ElementBallonBefore).after(fragmentBefore);
         }
         //After Remove
         if (rowsAfterRemove !== null) {
             let rowRemove: Element = viewport.ElementBallonAfter.previousElementSibling;
-            for (let i: number = 0; i < rowsBeforeRemove; i++) {
+            for (let i: number = 0; i < rowsAfterRemove; i++) {
                 const rowPrevious: Element = rowRemove.previousElementSibling;
                 rowRemove.remove();
                 rowRemove = rowPrevious;
             }
         }
         //After Insert
-        const fragmentAfter: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsAfterInsertStart, rowsAfterInsertEnd);
+        const fragmentAfter: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsAfterInsertStart, rowsAfterInsertEnd, hashTemplate);
         if (fragmentAfter !== null) {
             const elementAfterPrevious: Element = viewport.ElementBallonAfter.previousElementSibling;
             $(elementAfterPrevious).after(fragmentAfter);
@@ -809,14 +825,14 @@ class DrapoControlFlow {
         await this.Application.Document.CollectSector(viewport.Sector);
     }
 
-    private async CreateControlFlowForViewportFragment(viewport: DrapoViewport, start: number, end: number): Promise<DocumentFragment> {
+    private async CreateControlFlowForViewportFragment(viewport: DrapoViewport, start: number, end: number, hashTemplate: string): Promise<DocumentFragment> {
         if ((start === null) || (end == start))
             return (null);
         const fragment: DocumentFragment = document.createDocumentFragment();
         const context: DrapoContext = new DrapoContext();
         context.Sector = viewport.Sector;
-        context.Index = start;
-        context.IndexRelative = start;
+        context.Index = start - 1;
+        context.IndexRelative = context.Index;
         const content: string = viewport.ElementTemplate.outerHTML;
         this.InitializeContext(context, content);
         const renderContext: DrapoRenderContext = new DrapoRenderContext();
@@ -826,6 +842,9 @@ class DrapoControlFlow {
             const template: HTMLElement = this.Application.Solver.CloneElement(viewport.ElementTemplate);
             const item: DrapoContextItem = context.Create(data, template, template, viewport.DataKey, viewport.Key, viewport.DataKeyIteratorRange, i, null);
             await this.ResolveControlFlowForIterationRender(viewport.Sector, context, template, renderContext, true, true);
+            const hashValueCurrent: string = hashTemplate === null ? null : await this.GetElementHashValue(viewport.Sector, context, template, hashTemplate);
+            if (hashValueCurrent !== null)
+                template.setAttribute('d-hash', hashValueCurrent);
             fragment.appendChild(template);
         }
         return (fragment);
