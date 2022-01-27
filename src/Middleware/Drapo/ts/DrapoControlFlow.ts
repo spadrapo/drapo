@@ -152,7 +152,7 @@ class DrapoControlFlow {
             this.InitializeContext(context, content);
         //For render
         const dForRender: string = elementForTemplate.getAttribute('d-for-render');
-        const dForRenders: string[] = dForRender == '' ? [] : this.Application.Parser.ParseBlock(dForRender, ',');
+        const dForRenders: string[] = ((dForRender == null) || (dForRender == '')) ? [] : this.Application.Parser.ParseBlock(dForRender, ',');
         //Html
         const isHTML: boolean = this.Application.Solver.Contains(dForRenders, 'html');
         //Viewport

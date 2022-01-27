@@ -4509,7 +4509,7 @@ var DrapoControlFlow = (function () {
                         if (isContextRoot)
                             this.InitializeContext(context, content);
                         dForRender = elementForTemplate.getAttribute('d-for-render');
-                        dForRenders = dForRender == '' ? [] : this.Application.Parser.ParseBlock(dForRender, ',');
+                        dForRenders = ((dForRender == null) || (dForRender == '')) ? [] : this.Application.Parser.ParseBlock(dForRender, ',');
                         isHTML = this.Application.Solver.Contains(dForRenders, 'html');
                         isViewport = this.Application.Solver.Contains(dForRenders, 'viewport');
                         hasViewPortBefore = this.Application.ViewportHandler.HasElementViewport(elementForTemplate);
