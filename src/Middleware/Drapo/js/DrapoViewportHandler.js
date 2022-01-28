@@ -130,6 +130,11 @@ var DrapoViewportHandler = (function () {
         viewportElementAny[this._viewportPropertyName] = viewport;
         this.Application.Binder.BindControlFlowViewport(viewport);
     };
+    DrapoViewportHandler.prototype.DestroyViewportControlFlow = function (viewport) {
+        this.Application.Binder.UnbindControlFlowViewport(viewport);
+        var viewportElementAny = viewport.Element;
+        viewportElementAny[this._viewportPropertyName] = null;
+    };
     DrapoViewportHandler.prototype.GetViewportControlFlowStart = function (viewport, start) {
         if (viewport === null)
             return (start);
