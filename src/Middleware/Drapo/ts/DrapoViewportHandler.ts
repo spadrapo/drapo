@@ -140,6 +140,13 @@
         this.Application.Binder.BindControlFlowViewport(viewport);
     }
 
+    public DestroyViewportControlFlow(viewport: DrapoViewport): void {
+        this.Application.Binder.UnbindControlFlowViewport(viewport);
+        //Detach viewport to the element
+        const viewportElementAny: any = viewport.Element;
+        viewportElementAny[this._viewportPropertyName] = null;
+    }
+
     public GetViewportControlFlowStart(viewport: DrapoViewport, start: number): number {
         if (viewport === null)
             return (start);

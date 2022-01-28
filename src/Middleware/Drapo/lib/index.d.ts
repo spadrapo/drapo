@@ -2249,6 +2249,7 @@ declare class DrapoViewportHandler {
     private GetElementItemHeight;
     AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, fragment: DocumentFragment): void;
     ActivateViewportControlFlow(viewport: DrapoViewport): void;
+    DestroyViewportControlFlow(viewport: DrapoViewport): void;
     GetViewportControlFlowStart(viewport: DrapoViewport, start: number): number;
     GetViewportControlFlowEnd(viewport: DrapoViewport, length: number): number;
     UpdateHeightItem(viewport: DrapoViewport, elItem: HTMLElement): boolean;

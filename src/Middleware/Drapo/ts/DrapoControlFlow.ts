@@ -157,7 +157,16 @@ class DrapoControlFlow {
         const isHTML: boolean = this.Application.Solver.Contains(dForRenders, 'html');
         //Viewport
         const isViewport: boolean = this.Application.Solver.Contains(dForRenders, 'viewport');
-        const hasViewPortBefore: boolean = this.Application.ViewportHandler.HasElementViewport(elementForTemplate);
+        let hasViewPortBefore: boolean = (isViewport) && (this.Application.ViewportHandler.HasElementViewport(elementForTemplate));
+        const hasViewPortbeforeRecycle: boolean = ((hasViewPortBefore) && (!canUseDifference));
+        if (hasViewPortbeforeRecycle) {
+            //Reset Viewport
+            hasViewPortBefore = false;
+            const viewportBefore: DrapoViewport = this.Application.ViewportHandler.GetElementViewport(elementForTemplate);
+            this.Application.ViewportHandler.DestroyViewportControlFlow(viewportBefore);
+            const itemsViewport: HTMLElement[] = this.CreateList(anchor.nextAll());
+            this.RemoveList(itemsViewport);
+        }
         //Difference
         let isDifference: boolean = ((canUseDifference) && ((!isViewport) || (hasViewPortBefore)) && (!isIncremental) && (!hasIfText));
         const isLastChild: boolean = this.Application.Document.IsLastChild(anchor);
