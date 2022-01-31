@@ -1211,7 +1211,7 @@ class DrapoFunctionHandler {
     private async ExecuteFunctionExecuteInstanceFunction(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const instanceSectorParameter: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const instanceSector: string = ((instanceSectorParameter == null) || (instanceSectorParameter == '')) ? sector : instanceSectorParameter;
-        const instance: any = this.Application.ComponentHandler.GetComponentInstance(sector);
+        const instance: any = this.Application.ComponentHandler.GetComponentInstance(instanceSector);
         if (instance == null)
             return ('');
         const functionName: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
