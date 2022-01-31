@@ -12264,10 +12264,10 @@ var DrapoFunctionHandler = (function () {
                     case 1:
                         instanceSectorParameter = _c.sent();
                         instanceSector = ((instanceSectorParameter == null) || (instanceSectorParameter == '')) ? sector : instanceSectorParameter;
-                        instance = this.Application.ComponentHandler.GetComponentInstance(sector);
+                        instance = this.Application.ComponentHandler.GetComponentInstance(instanceSector);
                         if (instance == null)
                             return [2, ('')];
-                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1])];
+                        return [4, this.ResolveFunctionParameter(instanceSector, contextItem, element, executionContext, functionParsed.Parameters[1])];
                     case 2:
                         functionName = _c.sent();
                         instanceFunction = instance[functionName];
@@ -12279,7 +12279,7 @@ var DrapoFunctionHandler = (function () {
                     case 3:
                         if (!(i < functionParsed.Parameters.length)) return [3, 6];
                         _b = (_a = parameters).push;
-                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[i])];
+                        return [4, this.ResolveFunctionParameter(instanceSector, contextItem, element, executionContext, functionParsed.Parameters[i])];
                     case 4:
                         _b.apply(_a, [_c.sent()]);
                         _c.label = 5;
@@ -12300,11 +12300,11 @@ var DrapoFunctionHandler = (function () {
                         if (!((mustacheReturn !== null) && (mustacheReturn !== ''))) return [3, 12];
                         dataPath = this.Application.Parser.ParseMustache(mustacheReturn);
                         if (!(dataPath.length === 1)) return [3, 10];
-                        return [4, this.Application.Storage.UpdateData(dataPath[0], sector, value, true)];
+                        return [4, this.Application.Storage.UpdateData(dataPath[0], instanceSector, value, true)];
                     case 9:
                         _c.sent();
                         return [3, 12];
-                    case 10: return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, value, true)];
+                    case 10: return [4, this.Application.Solver.UpdateItemDataPathObject(instanceSector, contextItem, dataPath, value, true)];
                     case 11:
                         _c.sent();
                         _c.label = 12;
