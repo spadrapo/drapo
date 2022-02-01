@@ -1211,16 +1211,16 @@ class DrapoFunctionHandler {
     private async ExecuteFunctionExecuteInstanceFunction(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const instanceSectorParameter: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const instanceSector: string = ((instanceSectorParameter == null) || (instanceSectorParameter == '')) ? sector : instanceSectorParameter;
-        const instance: any = this.Application.ComponentHandler.GetComponentInstance(sector);
+        const instance: any = this.Application.ComponentHandler.GetComponentInstance(instanceSector);
         if (instance == null)
             return ('');
-        const functionName: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
+        const functionName: string = await this.ResolveFunctionParameter(instanceSector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const instanceFunction = (instance as any)[functionName];
         if (instanceFunction == null)
             return ('');
         const parameters: any[] = [];
         for (let i: number = 3; i < functionParsed.Parameters.length; i++)
-            parameters.push(await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[i]));
+            parameters.push(await this.ResolveFunctionParameter(instanceSector, contextItem, element, executionContext, functionParsed.Parameters[i]));
         const result: any = instanceFunction.apply(instance, parameters);
         let value: any = result;
         if (Promise.resolve(result) == result) {
@@ -1232,9 +1232,9 @@ class DrapoFunctionHandler {
         {
             const dataPath: string[] = this.Application.Parser.ParseMustache(mustacheReturn);
             if (dataPath.length === 1)
-                await this.Application.Storage.UpdateData(dataPath[0], sector, value, true);
+                await this.Application.Storage.UpdateData(dataPath[0], instanceSector, value, true);
             else
-                await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, value, true);
+                await this.Application.Solver.UpdateItemDataPathObject(instanceSector, contextItem, dataPath, value, true);
         }
         return ('');
     }
