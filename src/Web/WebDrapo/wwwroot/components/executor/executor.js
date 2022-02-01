@@ -59,8 +59,14 @@ var Executor = (function () {
     Executor.prototype.Initalize = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                this._sector = this._app.Document.GetSector(this._el);
-                return [2];
+                switch (_a.label) {
+                    case 0:
+                        this._sector = this._app.Document.GetSector(this._el);
+                        return [4, this._app.FunctionHandler.ResolveFunctionWithoutContext(this._sector, this._el, 'UpdateDataField(definitionClipboard,ExecutorSector,' + this._sector + ')')];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
             });
         });
     };

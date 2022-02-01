@@ -19,6 +19,7 @@ class Executor {
 
     public async Initalize(): Promise<void> {
         this._sector = this._app.Document.GetSector(this._el);
+        await this._app.FunctionHandler.ResolveFunctionWithoutContext(this._sector, this._el, 'UpdateDataField(definitionClipboard,ExecutorSector,' + this._sector + ')');
     }
 
     public async Increment(value : string): Promise<string> {
