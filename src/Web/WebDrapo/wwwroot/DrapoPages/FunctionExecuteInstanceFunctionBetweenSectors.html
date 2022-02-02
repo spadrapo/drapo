@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - ExecuteInstanceFunction - Between Sectors</title>
+</head>
+<body>
+    <div d-dataKey="definitionClipboard" d-dataType="object"></div>
+    <div d-sector="content-component">
+        <d-executor dc-value="1" dc-clipboard="definitionClipboard"></d-executor>
+    </div>
+    <div d-sector="content-panel">
+        <div d-dataKey="functionValue" d-dataType="value" d-dataLoadType="startup" d-dataValue="3"></div>
+        <span d-model="{{functionValue}}"></span>
+        <button type="button" d-on-click="ExecuteInstanceFunction({{definitionClipboard.ExecutorSector}},Increment,{{functionValue}},{{functionValue}})">Call Function</button>
+    </div>    
+</body>
+</html>

@@ -58,9 +58,19 @@ var Executor = (function () {
     }
     Executor.prototype.Initalize = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var dataKeyClipboard;
             return __generator(this, function (_a) {
-                this._sector = this._app.Document.GetSector(this._el);
-                return [2];
+                switch (_a.label) {
+                    case 0:
+                        this._sector = this._app.Document.GetSector(this._el);
+                        dataKeyClipboard = this._el.getAttribute('dc-clipboard');
+                        if (!(dataKeyClipboard != null && dataKeyClipboard.length > 0)) return [3, 2];
+                        return [4, this._app.FunctionHandler.ResolveFunctionWithoutContext(this._sector, this._el, 'UpdateDataField(' + dataKeyClipboard + ',ExecutorSector,' + this._sector + ')')];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2];
+                }
             });
         });
     };

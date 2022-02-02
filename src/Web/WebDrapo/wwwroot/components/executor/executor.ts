@@ -19,6 +19,10 @@ class Executor {
 
     public async Initalize(): Promise<void> {
         this._sector = this._app.Document.GetSector(this._el);
+        const dataKeyClipboard: string = this._el.getAttribute('dc-clipboard');
+        if (dataKeyClipboard != null && dataKeyClipboard.length > 0) {
+            await this._app.FunctionHandler.ResolveFunctionWithoutContext(this._sector, this._el, 'UpdateDataField(' + dataKeyClipboard + ',ExecutorSector,' + this._sector + ')');
+        }
     }
 
     public async Increment(value : string): Promise<string> {
