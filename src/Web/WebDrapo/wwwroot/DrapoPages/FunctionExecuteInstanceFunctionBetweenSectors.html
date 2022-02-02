@@ -11,6 +11,7 @@
     </div>
     <div d-sector="content-panel">
         <div d-dataKey="functionValue" d-dataType="value" d-dataLoadType="startup" d-dataValue="3"></div>
+        <span d-model="{{functionValue}}"></span>
         <button type="button" d-on-click="ExecuteInstanceFunction({{definitionClipboard.ExecutorSector}},Increment,{{functionValue}},{{functionValue}})">Call Function</button>
     </div>    
 </body>
