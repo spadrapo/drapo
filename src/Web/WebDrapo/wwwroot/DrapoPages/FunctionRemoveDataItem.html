@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - RemoveDataItem in ExecuteDataItem</title>
+</head>
+<body>
+    <span>Function - RemoveDataItem in ExecuteDataItem</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data"></div>
+    <div d-dataKey="list" d-dataType="array"></div>
+    <div d-dataKey="execute" d-dataType="value" d-dataLoadType="startup" d-dataValue="ExecuteDataItem({{dataremove}},itemloop in data,true,true)"></div>
+    <div d-dataKey="dataremove" d-dataType="value" d-dataLoadType="startup" d-dataValue="Execute({{remove}})"></div>
+    <div d-dataKey="remove" d-dataType="value" d-dataLoadType="startup" d-dataValue="RemoveDataItem(list,{{itemloop.key}})"></div>
+    <div d-dataKey="add" d-dataType="value" d-dataValue="AddDataItem(list,{{item.key}})"></div>
+    <div>
+        <ul>
+            <li d-for="item in data">{{item.Key}} - {{item.Value}} <input type="button" value="add" d-on-click="{{add}}" d-id="__drapoUnitTest" /></li>
+            
+        </ul>
+        <br />
+        <br />
+        <br />
+        <ul>
+            <li d-model="{{list.length}}"></li>
+            
+        </ul>
+    </div>
+    <br />
+    <input type="button" value="Remove All" d-on-click="{{execute}}" d-id="__drapoUnitTest" />
+</body>
+</html>
