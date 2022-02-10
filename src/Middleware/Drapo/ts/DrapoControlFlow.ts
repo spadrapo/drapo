@@ -331,9 +331,11 @@ class DrapoControlFlow {
                     lastInserted = templateJ;
                     if (hashValueCurrent !== null)
                         template.setAttribute('d-hash', hashValueCurrent);
-                    this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
-                    endViewport = this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length);
-                    canFragmentElements = true;
+                    if (!this.Application.ViewportHandler.HasHeightChanged(viewport)) {
+                        this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
+                        endViewport = this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length);
+                        canFragmentElements = true;
+                    }
                 }
             } else if (type == DrapoStorageLinkType.RenderClass) {
                 await this.ResolveControlFlowForIterationRenderClass(context, renderContext, template, sector);
