@@ -43,7 +43,7 @@ var DrapoControlFlow = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoControlFlow.prototype.ResolveControlFlowDocument = function () {
@@ -439,9 +439,11 @@ var DrapoControlFlow = (function () {
                             lastInserted = templateJ;
                             if (hashValueCurrent !== null)
                                 template.setAttribute('d-hash', hashValueCurrent);
-                            this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
-                            endViewport = this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length);
-                            canFragmentElements = true;
+                            if (!this.Application.ViewportHandler.HasHeightChanged(viewport)) {
+                                this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
+                                endViewport = this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length);
+                                canFragmentElements = true;
+                            }
                         }
                         return [3, 29];
                     case 27:

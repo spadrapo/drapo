@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For - Viewport Hash</title>
+</head>
+<body>
+    <div>
+        <span>Control Flow For - Viewport Hash</span>
+        <div>
+            <div d-datakey="count" d-dataType="value" d-dataValue="8"></div>
+            <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children={{count}}"></div>
+        </div>
+        <span>Count:</span><input type="text" d-model="{{count}}" />
+        <div style="height:400px">
+            <div style="height:100%;overflow:auto">
+                <div d-for="object in objects" d-for-render="viewport,hash">
+                    <d-checkbox dc-value="{{object.Visible}}" dc-label="{{object.Key}}"></d-checkbox>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

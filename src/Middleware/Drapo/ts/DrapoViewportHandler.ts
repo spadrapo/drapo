@@ -174,6 +174,19 @@
         return (true);
     }
 
+    public HasHeightChanged(viewport: DrapoViewport): boolean {
+        if (viewport == null)
+            return (false);
+        const height: number = this.GetElementHeight(viewport.ElementScroll);
+        //HACK: In some cases we cant define the scroller height
+        if (height < 100)
+            return (true);
+        if (viewport.HeightScroll == height)
+            return (false);
+        viewport.HeightScroll = height;
+        return (true);
+    }
+
     private UpdateValues(viewport: DrapoViewport): void {
         const heightData: number = viewport.HeightScroll;
         if (heightData < 0)
