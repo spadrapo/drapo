@@ -11,6 +11,7 @@ declare class DrapoViewport {
     private _elBallonBefore;
     private _elBallonAfter;
     private _heightScroll;
+    private _heightScrollScroll;
     private _heightBefore;
     private _heightAfter;
     private _heightItem;
@@ -47,6 +48,8 @@ declare class DrapoViewport {
     set ElementScroll(value: HTMLElement);
     get HeightScroll(): number;
     set HeightScroll(value: number);
+    get HeightScrollScroll(): number;
+    set HeightScrollScroll(value: number);
     get HeightBefore(): number;
     set HeightBefore(value: number);
     get HeightAfter(): number;
