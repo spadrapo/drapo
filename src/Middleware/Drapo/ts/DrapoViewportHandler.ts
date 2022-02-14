@@ -178,9 +178,13 @@
         if (viewport == null)
             return (false);
         const height: number = this.GetElementHeight(viewport.ElementScroll);
-        //HACK: In some cases we cant define the scroller height
-        if (height < 100)
+        if (height < 100) {
+            const scrollHeight: number = viewport.ElementScroll.scrollHeight;
+            if (viewport.HeightScrollScroll == scrollHeight)
+                return (false);
+            viewport.HeightScrollScroll = scrollHeight;
             return (true);
+        }
         if (viewport.HeightScroll == height)
             return (false);
         viewport.HeightScroll = height;

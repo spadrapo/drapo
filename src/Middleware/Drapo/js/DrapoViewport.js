@@ -13,6 +13,7 @@ var DrapoViewport = (function () {
         this._elBallonBefore = null;
         this._elBallonAfter = null;
         this._heightScroll = null;
+        this._heightScrollScroll = null;
         this._heightBefore = null;
         this._heightAfter = null;
         this._heightItem = null;
@@ -142,6 +143,16 @@ var DrapoViewport = (function () {
         },
         set: function (value) {
             this._heightScroll = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrapoViewport.prototype, "HeightScrollScroll", {
+        get: function () {
+            return (this._heightScrollScroll);
+        },
+        set: function (value) {
+            this._heightScrollScroll = value;
         },
         enumerable: true,
         configurable: true

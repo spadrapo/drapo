@@ -43,7 +43,7 @@ var DrapoControlFlow = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoControlFlow.prototype.ResolveControlFlowDocument = function () {

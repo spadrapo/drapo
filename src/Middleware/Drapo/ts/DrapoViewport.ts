@@ -11,6 +11,7 @@
     private _elBallonBefore: HTMLElement = null;
     private _elBallonAfter: HTMLElement = null;
     private _heightScroll: number = null;
+    private _heightScrollScroll: number = null;
     private _heightBefore: number = null;
     private _heightAfter: number = null;
     private _heightItem: number = null;
@@ -118,6 +119,14 @@
 
     set HeightScroll(value: number) {
         this._heightScroll = value;
+    }
+
+    get HeightScrollScroll(): number {
+        return (this._heightScrollScroll);
+    }
+
+    set HeightScrollScroll(value: number) {
+        this._heightScrollScroll = value;
     }
 
     get HeightBefore(): number {

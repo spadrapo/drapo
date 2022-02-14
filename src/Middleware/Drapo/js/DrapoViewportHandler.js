@@ -8,7 +8,7 @@ var DrapoViewportHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoViewportHandler.prototype.CreateViewportControlFlow = function (sector, el, elTemplate, dataKey, key, dataKeyIteratorRange, data) {
@@ -163,8 +163,13 @@ var DrapoViewportHandler = (function () {
         if (viewport == null)
             return (false);
         var height = this.GetElementHeight(viewport.ElementScroll);
-        if (height < 100)
+        if (height < 100) {
+            var scrollHeight = viewport.ElementScroll.scrollHeight;
+            if (viewport.HeightScrollScroll == scrollHeight)
+                return (false);
+            viewport.HeightScrollScroll = scrollHeight;
             return (true);
+        }
         if (viewport.HeightScroll == height)
             return (false);
         viewport.HeightScroll = height;
