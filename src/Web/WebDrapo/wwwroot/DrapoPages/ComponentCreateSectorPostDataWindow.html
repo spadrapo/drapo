@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<div d-templateUrl="/DrapoPages/WindowsTemplateBase.html">
+    <div d-dataKey="panelObject" d-dataType="mapping" d-dataLoadType="reference" d-dataValue="{{panelObjectClipboard.dropdowntree}}"></div>
+    <span>Panel</span>
+    <br />
+    <input type="button" d-on-click="UpdateDataField(panelObject,Value,L5V3);PostData(panelObject);CloseWindow()" value="Close and Post Data" />
+</div>
