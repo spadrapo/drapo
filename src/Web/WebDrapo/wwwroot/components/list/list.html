@@ -1,15 +1,10 @@
-﻿<div d-sector="@" dc-selecteditems="" dc-availableitems="" dc-disableselection="false">
+﻿<div d-sector="@" dc-source="">
     
     <div d-dataKey="dcProperties" d-dataType="parent" d-dataValue="dc-"></div>
 
-    <div d-dataKey="selectedItemsList" d-dataType="pointer" d-dataValue="{{dcProperties.selecteditems}}"></div>
-    <div d-dataKey="availableItemsList" d-dataType="pointer" d-dataValue="{{dcProperties.availableitems}}"></div>
+    <div d-dataKey="sourceList" d-dataType="pointer" d-dataValue="{{dcProperties.source}}"></div>
 
-    <!-- <div d-dataKey="sourceList" d-dataType="query" d-dataValue="SELECT SI as Selected, AI.Code, AI.Value FROM availableItemsList as AI LEFT JOIN selectedItemsList as SI ON SI = AI.Code"></div> -->
-
-
-    <div d-for="item in availableItemsList">
-        <d-checkbox dc-value="{{item.Selected}}" dc-label="{{item.Value}}" dc-onclick="ToggleData({{selectedItemsList}},{{item.Code}})"></d-checkbox>
-        <!-- <d-checkbox dc-value="{{item.Selected}}" dc-label="{{item.Value}}" dc-onclick="ToggleData({{selectedItemsList}},{{item.Code}})"></d-checkbox> -->
+    <div d-for="item in sourceList">
+        <d-checkbox dc-value="{{item.Selected}}" dc-label="{{item.Value}}" dc-onclick="ToggleItemField({{item.Selected}},false)"></d-checkbox>
     </div>
 </div>

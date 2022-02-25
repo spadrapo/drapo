@@ -5,18 +5,14 @@
     <title>Notify - Sample</title>
 </head>
 <body>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <span>Notify - Sample</span>
-    <!-- <div d-dataKey="itemsFirstInstance" d-dataType="array" d-dataValue='[{"Code":"1","Value":"Planejamento"},{"Code":"2","Value":"Recursos Humanos"},{"Code":"3","Value":"Consolidação"}]'></div> -->
     <div d-dataKey="itemsFirstInstance" d-dataType="array" d-dataValue='[{"Code":"1","Value":"Planejamento","Selected":"false"},{"Code":"2","Value":"Recursos Humanos","Selected":"true"},{"Code":"3","Value":"Consolidação","Selected":"true"}]'></div>
-    <div d-dataKey="selectedsFirstInstance" d-dataType="array" d-dataValue='["2","3"]'></div>
-
-    <!-- <div d-dataKey="itemsSecondInstance" d-dataType="array" d-dataValue='[{"Code":"1","Value":"Planejamento"},{"Code":"2","Value":"Recursos humanos"},{"Code":"3","Value":"Consolidação"},{"Code":"4","Value":"Planejamento 2"},{"Code":"5","Value":"Consolidação 2"}]'></div> -->
     <div d-dataKey="itemsSecondInstance" d-dataType="array" d-dataValue='[{"Code":"1","Value":"Planejamento","Selected":"false"},{"Code":"2","Value":"Recursos humanos","Selected":"true"},{"Code":"3","Value":"Consolidação","Selected":"true"},{"Code":"4","Value":"Planejamento 2","Selected":"false"},{"Code":"5","Value":"Consolidação 2","Selected":"true"}]'></div>
-    <div d-dataKey="selectedsSecondInstance" d-dataType="array" d-dataValue='["2","3","5"]'></div>
 
     List 1:<br />
-    <d-list dc-selectedItems="{{selectedsFirstInstance}}" dc-availableItems="{{itemsFirstInstance}}" dc-disableselection="false"></d-list><br />
+    <d-list dc-source="{{itemsFirstInstance}}"></d-list><br />
     List 2:<br />
-    <d-list dc-selectedItems="{{selectedsSecondInstance}}" dc-availableItems="{{itemsSecondInstance}}" dc-disableselection="true"></d-list><br />
+    <d-list dc-source="{{itemsSecondInstance}}"></d-list><br />
 </body>
 </html>
