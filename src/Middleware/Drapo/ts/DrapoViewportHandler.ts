@@ -94,21 +94,25 @@
         }
     }
 
-    private FillBallon(elBallon: HTMLElement, height: number): void {
-        while (elBallon.childNodes.length > 0)
-            elBallon.childNodes[0].remove();
-        if (height < this.MAX_SIZE) {
+    private FillBallon(elBallon: HTMLElement, height: number, isFull: boolean = true): void {
+        if (isFull) {
             elBallon.style.height = height + 'px';
         } else {
-            elBallon.style.height = 'auto';
-            while (height > 0) {
-                const elBallonItem: HTMLElement = document.createElement('div');
-                elBallonItem.style.width = '100%';
-                elBallonItem.style.height = (height > this.MAX_SIZE ? this.MAX_SIZE : height) + 'px';
-                elBallon.appendChild(elBallonItem);
-                height = height - this.MAX_SIZE;
-                if (height <= 0)
-                    height = 0;
+            while (elBallon.childNodes.length > 0)
+                elBallon.childNodes[0].remove();
+            if (height < this.MAX_SIZE) {
+                elBallon.style.height = height + 'px';
+            } else {
+                elBallon.style.height = 'auto';
+                while (height > 0) {
+                    const elBallonItem: HTMLElement = document.createElement('div');
+                    elBallonItem.style.width = '100%';
+                    elBallonItem.style.height = (height > this.MAX_SIZE ? this.MAX_SIZE : height) + 'px';
+                    elBallon.appendChild(elBallonItem);
+                    height = height - this.MAX_SIZE;
+                    if (height <= 0)
+                        height = 0;
+                }
             }
         }
     }

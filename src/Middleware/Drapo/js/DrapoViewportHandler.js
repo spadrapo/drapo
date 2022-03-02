@@ -9,7 +9,7 @@ var DrapoViewportHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoViewportHandler.prototype.CreateViewportControlFlow = function (sector, el, elTemplate, dataKey, key, dataKeyIteratorRange, data) {
@@ -89,22 +89,28 @@ var DrapoViewportHandler = (function () {
             return ($(elBallonBeforeInDOM));
         }
     };
-    DrapoViewportHandler.prototype.FillBallon = function (elBallon, height) {
-        while (elBallon.childNodes.length > 0)
-            elBallon.childNodes[0].remove();
-        if (height < this.MAX_SIZE) {
+    DrapoViewportHandler.prototype.FillBallon = function (elBallon, height, isFull) {
+        if (isFull === void 0) { isFull = true; }
+        if (isFull) {
             elBallon.style.height = height + 'px';
         }
         else {
-            elBallon.style.height = 'auto';
-            while (height > 0) {
-                var elBallonItem = document.createElement('div');
-                elBallonItem.style.width = '100%';
-                elBallonItem.style.height = (height > this.MAX_SIZE ? this.MAX_SIZE : height) + 'px';
-                elBallon.appendChild(elBallonItem);
-                height = height - this.MAX_SIZE;
-                if (height <= 0)
-                    height = 0;
+            while (elBallon.childNodes.length > 0)
+                elBallon.childNodes[0].remove();
+            if (height < this.MAX_SIZE) {
+                elBallon.style.height = height + 'px';
+            }
+            else {
+                elBallon.style.height = 'auto';
+                while (height > 0) {
+                    var elBallonItem = document.createElement('div');
+                    elBallonItem.style.width = '100%';
+                    elBallonItem.style.height = (height > this.MAX_SIZE ? this.MAX_SIZE : height) + 'px';
+                    elBallon.appendChild(elBallonItem);
+                    height = height - this.MAX_SIZE;
+                    if (height <= 0)
+                        height = 0;
+                }
             }
         }
     };
