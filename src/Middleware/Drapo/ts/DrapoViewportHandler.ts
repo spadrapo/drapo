@@ -1,6 +1,7 @@
 ﻿class DrapoViewportHandler {
     private _application: DrapoApplication;
     private _viewportPropertyName: string = 'viewport';
+    private MAX_SIZE: number = 10000;
 
     //Properties
     get Application(): DrapoApplication {
@@ -77,19 +78,38 @@
             const elBallonBefore: HTMLElement = document.createElement('div');
             elBallonBefore.setAttribute('d-ballon', 'before');
             elBallonBefore.style.width = '100%';
-            elBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
+            this.FillBallon(elBallonBefore, viewport.HeightBallonBefore);
             viewport.ElementBallonBefore = elBallonBefore;
             lastInserted.after(elBallonBefore);
             return ($(elBallonBefore));
         } else {
             if (viewport.IsActive)
                 return ($(elBallonBeforeInDOM));
-            elBallonBeforeInDOM.style.height = viewport.HeightBallonBefore + 'px';
+            this.FillBallon(elBallonBeforeInDOM, viewport.HeightBallonBefore);
             viewport.ElementBallonBefore = elBallonBeforeInDOM;
             const elParent: HTMLElement = elBallonBeforeInDOM.parentElement;
             while (elParent.children.length > 2)
                 elParent.lastElementChild.remove();
             return ($(elBallonBeforeInDOM));
+        }
+    }
+
+    private FillBallon(elBallon: HTMLElement, height: number): void {
+        while (elBallon.childNodes.length > 0)
+            elBallon.childNodes[0].remove();
+        if (height < this.MAX_SIZE) {
+            elBallon.style.height = height + 'px';
+        } else {
+            elBallon.style.height = 'auto';
+            while (height > 0) {
+                const elBallonItem: HTMLElement = document.createElement('div');
+                elBallonItem.style.width = '100%';
+                elBallonItem.style.height = (height > this.MAX_SIZE ? this.MAX_SIZE : height) + 'px';
+                elBallon.appendChild(elBallonItem);
+                height = height - this.MAX_SIZE;
+                if (height <= 0)
+                    height = 0;
+            }
         }
     }
 
@@ -121,7 +141,7 @@
             return;
         const elBallonAfter: HTMLElement = document.createElement('div');
         elBallonAfter.style.width = '100%';
-        elBallonAfter.style.height = viewport.HeightBallonAfter + 'px';
+        this.FillBallon(elBallonAfter, viewport.HeightBallonAfter);
         viewport.ElementBallonAfter = elBallonAfter;
         fragment.appendChild(elBallonAfter);
     }
@@ -207,8 +227,8 @@
     }
 
     public UpdateElementsBallon(viewport: DrapoViewport): void {
-        viewport.ElementBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
-        viewport.ElementBallonAfter.style.height = viewport.HeightBallonAfter + 'px';
+        this.FillBallon(viewport.ElementBallonBefore, viewport.HeightBallonBefore);
+        this.FillBallon(viewport.ElementBallonAfter, viewport.HeightBallonAfter);
     }
 
     private GetElementHeightRect(el: HTMLElement): number {

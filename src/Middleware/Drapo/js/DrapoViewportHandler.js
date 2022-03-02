@@ -2,6 +2,7 @@
 var DrapoViewportHandler = (function () {
     function DrapoViewportHandler(application) {
         this._viewportPropertyName = 'viewport';
+        this.MAX_SIZE = 10000;
         this._application = application;
     }
     Object.defineProperty(DrapoViewportHandler.prototype, "Application", {
@@ -72,7 +73,7 @@ var DrapoViewportHandler = (function () {
             var elBallonBefore = document.createElement('div');
             elBallonBefore.setAttribute('d-ballon', 'before');
             elBallonBefore.style.width = '100%';
-            elBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
+            this.FillBallon(elBallonBefore, viewport.HeightBallonBefore);
             viewport.ElementBallonBefore = elBallonBefore;
             lastInserted.after(elBallonBefore);
             return ($(elBallonBefore));
@@ -80,12 +81,31 @@ var DrapoViewportHandler = (function () {
         else {
             if (viewport.IsActive)
                 return ($(elBallonBeforeInDOM));
-            elBallonBeforeInDOM.style.height = viewport.HeightBallonBefore + 'px';
+            this.FillBallon(elBallonBeforeInDOM, viewport.HeightBallonBefore);
             viewport.ElementBallonBefore = elBallonBeforeInDOM;
             var elParent = elBallonBeforeInDOM.parentElement;
             while (elParent.children.length > 2)
                 elParent.lastElementChild.remove();
             return ($(elBallonBeforeInDOM));
+        }
+    };
+    DrapoViewportHandler.prototype.FillBallon = function (elBallon, height) {
+        while (elBallon.childNodes.length > 0)
+            elBallon.childNodes[0].remove();
+        if (height < this.MAX_SIZE) {
+            elBallon.style.height = height + 'px';
+        }
+        else {
+            elBallon.style.height = 'auto';
+            while (height > 0) {
+                var elBallonItem = document.createElement('div');
+                elBallonItem.style.width = '100%';
+                elBallonItem.style.height = (height > this.MAX_SIZE ? this.MAX_SIZE : height) + 'px';
+                elBallon.appendChild(elBallonItem);
+                height = height - this.MAX_SIZE;
+                if (height <= 0)
+                    height = 0;
+            }
         }
     };
     DrapoViewportHandler.prototype.GetBallonBefore = function (eljTemplate) {
@@ -114,7 +134,7 @@ var DrapoViewportHandler = (function () {
             return;
         var elBallonAfter = document.createElement('div');
         elBallonAfter.style.width = '100%';
-        elBallonAfter.style.height = viewport.HeightBallonAfter + 'px';
+        this.FillBallon(elBallonAfter, viewport.HeightBallonAfter);
         viewport.ElementBallonAfter = elBallonAfter;
         fragment.appendChild(elBallonAfter);
     };
@@ -189,8 +209,8 @@ var DrapoViewportHandler = (function () {
         viewport.HeightBallonAfter = (viewport.DataLength - viewport.DataEnd) * viewport.HeightItem;
     };
     DrapoViewportHandler.prototype.UpdateElementsBallon = function (viewport) {
-        viewport.ElementBallonBefore.style.height = viewport.HeightBallonBefore + 'px';
-        viewport.ElementBallonAfter.style.height = viewport.HeightBallonAfter + 'px';
+        this.FillBallon(viewport.ElementBallonBefore, viewport.HeightBallonBefore);
+        this.FillBallon(viewport.ElementBallonAfter, viewport.HeightBallonAfter);
     };
     DrapoViewportHandler.prototype.GetElementHeightRect = function (el) {
         var rect = el.getBoundingClientRect();
