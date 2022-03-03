@@ -20,7 +20,7 @@
     private _dataStart: number = null;
     private _dataEnd: number = null;
     private _dataLength: number = null;
-    private _factor: number = 3;
+    private _factor: number = 4;
     private _eventScrollTimeout: number = null;
     private _scrollTop: number = null;
     private _isActive: boolean = false;
