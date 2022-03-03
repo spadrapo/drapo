@@ -9,7 +9,7 @@ var DrapoViewportHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: false,
+        enumerable: true,
         configurable: true
     });
     DrapoViewportHandler.prototype.CreateViewportControlFlow = function (sector, el, elTemplate, dataKey, key, dataKeyIteratorRange, data) {
@@ -334,17 +334,17 @@ var DrapoViewportHandler = (function () {
     };
     DrapoViewportHandler.prototype.GetViewFactorCurrent = function (viewport) {
         var viewHeight = viewport.HeightScroll;
-        var viewItems = Math.floor(viewHeight / viewport.HeightItem);
-        var scrollTop = viewport.ElementScroll.scrollTop;
+        var viewItems = viewHeight / viewport.HeightItem;
+        var scrollTop = viewport.ElementScroll.scrollTop + viewHeight;
         var scrollTopLessBefore = scrollTop - viewport.HeightBefore;
         var scrollTopLessBeforeValid = scrollTopLessBefore > 0 ? scrollTopLessBefore : 0;
-        var views = Math.round(scrollTopLessBeforeValid / viewHeight);
+        var views = scrollTopLessBeforeValid / viewHeight;
         var viewsStart = views - viewport.Factor;
         if (viewsStart < 0)
             viewsStart = 0;
         var viewsEnd = views + viewport.Factor;
-        var rowStart = viewsStart * viewItems;
-        var rowEnd = viewsEnd * viewItems;
+        var rowStart = Math.round(viewsStart * viewItems);
+        var rowEnd = Math.ceil(viewsEnd * viewItems);
         if (rowEnd > viewport.DataLength)
             rowEnd = viewport.DataLength;
         return ([rowStart, rowEnd]);

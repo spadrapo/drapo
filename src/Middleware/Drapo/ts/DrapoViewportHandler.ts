@@ -362,17 +362,17 @@
 
     private GetViewFactorCurrent(viewport: DrapoViewport): [number, number] {
         const viewHeight: number = viewport.HeightScroll;
-        const viewItems: number = Math.floor(viewHeight / viewport.HeightItem);
-        const scrollTop: number = viewport.ElementScroll.scrollTop;
+        const viewItems: number = viewHeight / viewport.HeightItem;
+        const scrollTop: number = viewport.ElementScroll.scrollTop + viewHeight;
         const scrollTopLessBefore: number = scrollTop - viewport.HeightBefore;
         const scrollTopLessBeforeValid: number = scrollTopLessBefore > 0 ? scrollTopLessBefore : 0;
-        const views: number = Math.round(scrollTopLessBeforeValid / viewHeight);
+        const views: number = scrollTopLessBeforeValid / viewHeight;
         let viewsStart: number = views - viewport.Factor;
         if (viewsStart < 0)
             viewsStart = 0;
         const viewsEnd: number = views + viewport.Factor;
-        const rowStart: number = viewsStart * viewItems;
-        let rowEnd: number = viewsEnd * viewItems;
+        const rowStart: number = Math.round(viewsStart * viewItems);
+        let rowEnd: number = Math.ceil(viewsEnd * viewItems);
         if (rowEnd > viewport.DataLength)
             rowEnd = viewport.DataLength;
         return ([rowStart, rowEnd]);
