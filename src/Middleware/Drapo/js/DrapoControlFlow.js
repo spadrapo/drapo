@@ -1063,7 +1063,7 @@ var DrapoControlFlow = (function () {
                             if (rowsBeforeRemove === -1) {
                                 rowRemove = viewport.ElementBallonBefore.nextElementSibling;
                                 elBallonAfter = viewport.ElementBallonAfter;
-                                while (rowRemove !== elBallonAfter) {
+                                while ((rowRemove != null) && (rowRemove !== elBallonAfter)) {
                                     rowNext = rowRemove.nextElementSibling;
                                     rowRemove.remove();
                                     rowRemove = rowNext;
@@ -1071,10 +1071,12 @@ var DrapoControlFlow = (function () {
                             }
                             else {
                                 rowRemove = viewport.ElementBallonBefore.nextElementSibling;
-                                for (i = 0; i < rowsBeforeRemove; i++) {
-                                    rowNext = rowRemove.nextElementSibling;
-                                    rowRemove.remove();
-                                    rowRemove = rowNext;
+                                if (rowRemove != null) {
+                                    for (i = 0; i < rowsBeforeRemove; i++) {
+                                        rowNext = rowRemove.nextElementSibling;
+                                        rowRemove.remove();
+                                        rowRemove = rowNext;
+                                    }
                                 }
                             }
                         }

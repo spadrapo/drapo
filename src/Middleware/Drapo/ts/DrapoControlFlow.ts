@@ -793,17 +793,19 @@ class DrapoControlFlow {
                 //Clear
                 let rowRemove: Element = viewport.ElementBallonBefore.nextElementSibling;
                 const elBallonAfter: HTMLElement = viewport.ElementBallonAfter;
-                while (rowRemove !== elBallonAfter) {
+                while ((rowRemove != null) && (rowRemove !== elBallonAfter)) {
                     const rowNext: Element = rowRemove.nextElementSibling;
                     rowRemove.remove();
                     rowRemove = rowNext;
                 }
             } else {
                 let rowRemove: Element = viewport.ElementBallonBefore.nextElementSibling;
-                for (let i: number = 0; i < rowsBeforeRemove; i++) {
-                    const rowNext: Element = rowRemove.nextElementSibling;
-                    rowRemove.remove();
-                    rowRemove = rowNext;
+                if (rowRemove != null) {
+                    for (let i: number = 0; i < rowsBeforeRemove; i++) {
+                        const rowNext: Element = rowRemove.nextElementSibling;
+                        rowRemove.remove();
+                        rowRemove = rowNext;
+                    }
                 }
             }
         }
