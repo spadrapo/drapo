@@ -331,6 +331,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionExecuteInstanceFunction(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'cast')
             return (await this.ExecuteFunctionCast(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'encodeurl')
+            return (await this.ExecuteFunctionEncodeUrl(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'addrequestheader')
             return (await this.ExecuteFunctionAddRequestHeader(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'getsector')
@@ -1246,6 +1248,13 @@ class DrapoFunctionHandler {
         if (type === 'number')
             return (this.Application.Parser.ParseNumberBlock(value));
         return (value);
+    }
+
+    private async ExecuteFunctionEncodeUrl(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
+        const context: DrapoContext = contextItem != null ? contextItem.Context : new DrapoContext();
+        const value: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, functionParsed.Parameters[0], null, false);
+        const valueEncoded: string = this.Application.Server.EnsureUrlComponentEncoded(value);
+        return (valueEncoded);
     }
 
     private async ExecuteFunctionAddRequestHeader(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {

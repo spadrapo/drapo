@@ -951,6 +951,11 @@ namespace WebDrapo.Test
             ValidatePage("EncodeAttributeSource");
         }
         [TestCase]
+        public void EncodeAttributeSourceUsingEncodeUrlTest()
+        {
+            ValidatePage("EncodeAttributeSourceUsingEncodeUrl");
+        }
+        [TestCase]
         public void EncodeUrlMustacheTest()
         {
             ValidatePage("EncodeUrlMustache");

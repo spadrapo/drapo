@@ -15,10 +15,11 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "DrapoPages/ControlFlowForViewportHashLargeHeight.html",
+      "launchUrl": "DrapoPages/EncodeAttributeSourceUsingEncodeUrl.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "hotReloadEnabled": false
     },
     "WebDrapo": {
       "commandName": "Project",
@@ -27,7 +28,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:9991"
+      "applicationUrl": "http://localhost:9991",
+      "hotReloadEnabled": false
     }
   }
 }
