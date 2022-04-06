@@ -212,6 +212,8 @@ var DrapoParser = (function () {
             return (true);
         if (data === ';')
             return (true);
+        if (data === '=')
+            return (true);
         return (false);
     };
     DrapoParser.prototype.ParseFunctions = function (data) {

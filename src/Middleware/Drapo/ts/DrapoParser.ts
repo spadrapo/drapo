@@ -228,6 +228,8 @@ class DrapoParser {
             return (true);
         if (data === ';')
             return (true);
+        if (data === '=')
+            return (true);
         return (false);
     }
 

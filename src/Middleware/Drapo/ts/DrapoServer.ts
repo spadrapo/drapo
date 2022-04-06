@@ -431,7 +431,12 @@ class DrapoServer {
         if (!hasPercentage)
             return (false);
         const hasPercentageEncoded: boolean = url.indexOf('%25') >= 0;
-        return (hasPercentageEncoded);
+        if (hasPercentageEncoded)
+            return (true);
+        const hasAndEncoded: boolean = url.indexOf('%26') >= 0;
+        if (hasAndEncoded)
+            return (true);
+        return (false);
     }
 
     private async SetContainerId(response: DrapoServerResponse): Promise<void> {

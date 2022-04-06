@@ -1253,7 +1253,7 @@ class DrapoFunctionHandler {
     private async ExecuteFunctionEncodeUrl(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
         const context: DrapoContext = contextItem != null ? contextItem.Context : new DrapoContext();
         const value: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, functionParsed.Parameters[0], null, false);
-        const valueEncoded: string = this.Application.Server.EnsureUrlEncoded(value);
+        const valueEncoded: string = this.Application.Server.EnsureUrlComponentEncoded(value);
         return (valueEncoded);
     }
 

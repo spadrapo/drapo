@@ -570,7 +570,12 @@ var DrapoServer = (function () {
         if (!hasPercentage)
             return (false);
         var hasPercentageEncoded = url.indexOf('%25') >= 0;
-        return (hasPercentageEncoded);
+        if (hasPercentageEncoded)
+            return (true);
+        var hasAndEncoded = url.indexOf('%26') >= 0;
+        if (hasAndEncoded)
+            return (true);
+        return (false);
     };
     DrapoServer.prototype.SetContainerId = function (response) {
         return __awaiter(this, void 0, void 0, function () {
