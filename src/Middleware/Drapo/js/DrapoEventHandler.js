@@ -368,6 +368,8 @@ var DrapoEventHandler = (function () {
         return (this.GetKeyboardMapping(e.key) == this.GetKeyboardMapping(eventFilter));
     };
     DrapoEventHandler.prototype.GetKeyboardMapping = function (key) {
+        if (key == null)
+            return (null);
         key = key.toLowerCase();
         if (key === 'esc')
             key = 'escape';

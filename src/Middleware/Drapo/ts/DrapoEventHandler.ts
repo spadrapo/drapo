@@ -263,6 +263,8 @@ class DrapoEventHandler {
     }
 
     private GetKeyboardMapping(key: string): string {
+        if (key == null)
+            return (null);
         key = key.toLowerCase();
         if (key === 'esc')
             key = 'escape';
