@@ -48,7 +48,7 @@ var DrapoStorage = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoStorage.prototype.Retrieve = function (elj, dataKey, sector, context, dataKeyParts) {
@@ -2033,6 +2033,8 @@ var DrapoStorage = (function () {
                         _a.label = 1;
                     case 1:
                         if (!(i >= 0)) return [3, 4];
+                        if (i >= this._cacheItems.length)
+                            return [3, 3];
                         cacheKey = this._cacheKeys[i];
                         if (cacheKey != dataKey)
                             return [3, 3];
@@ -2461,6 +2463,8 @@ var DrapoStorage = (function () {
                         _a.label = 1;
                     case 1:
                         if (!(i >= 0)) return [3, 4];
+                        if (i >= this._cacheItems.length)
+                            return [3, 3];
                         item = this._cacheItems[i];
                         if (item.Sector !== sector)
                             return [3, 3];
@@ -2488,6 +2492,8 @@ var DrapoStorage = (function () {
                         _a.label = 1;
                     case 1:
                         if (!(i >= 0)) return [3, 4];
+                        if (i >= this._cacheItems.length)
+                            return [3, 3];
                         item = this._cacheItems[i];
                         if (item.Sector !== sector)
                             return [3, 3];
@@ -3192,7 +3198,7 @@ var DrapoStorage = (function () {
                         continue;
                     var functionParameterValues = this.Application.Parser.ParseQueryProjectionFunctionParameterValue(functionParameterName);
                     var source = functionParameterValues[0];
-                    if ((_a = querySource.Alias, (_a !== null && _a !== void 0 ? _a : querySource.Source)) !== source)
+                    if (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== source)
                         continue;
                     var value = isObject ? sourceObject[projection.Column] : sourceObject;
                     objectInformation[functionParameterName] = value;
@@ -3209,11 +3215,11 @@ var DrapoStorage = (function () {
                 else {
                     if ((isObject) && (!sourceObject[projection.Column]))
                         continue;
-                    if ((!isObject) && ((_b = querySource.Alias, (_b !== null && _b !== void 0 ? _b : querySource.Source)) !== projection.Column))
+                    if ((!isObject) && (((_b = querySource.Alias) !== null && _b !== void 0 ? _b : querySource.Source) !== projection.Column))
                         continue;
                 }
                 var value = isObject ? sourceObject[projection.Column] : sourceObject;
-                object[_c = projection.Alias, (_c !== null && _c !== void 0 ? _c : projection.Column)] = value;
+                object[(_c = projection.Alias) !== null && _c !== void 0 ? _c : projection.Column] = value;
             }
         }
     };
@@ -3239,7 +3245,7 @@ var DrapoStorage = (function () {
         else {
             if ((isObject) && (!(column in sourceObject)))
                 return (null);
-            if ((!isObject) && ((_a = querySource.Alias, (_a !== null && _a !== void 0 ? _a : querySource.Source)) !== column))
+            if ((!isObject) && (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== column))
                 return (null);
         }
         var value = isObject ? sourceObject[column] : sourceObject;

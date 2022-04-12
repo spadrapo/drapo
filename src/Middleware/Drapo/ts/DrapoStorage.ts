@@ -1379,6 +1379,8 @@ class DrapoStorage {
 
     public async FireEventOnNotify(dataKey: string): Promise<void> {
         for (let i: number = this._cacheKeys.length - 1; i >= 0; i--) {
+            if (i >= this._cacheItems.length)
+                continue;
             const cacheKey: string = this._cacheKeys[i];
             if (cacheKey != dataKey)
                 continue;
@@ -1671,6 +1673,8 @@ class DrapoStorage {
 
     public async FireEventOnBeforeContainerUnload(sector: string): Promise<void> {
         for (let i = this._cacheItems.length - 1; i >= 0; i--) {
+            if (i >= this._cacheItems.length)
+                continue;
             const item: DrapoStorageItem = this._cacheItems[i];
             if (item.Sector !== sector)
                 continue;
@@ -1682,6 +1686,8 @@ class DrapoStorage {
 
     public async FireEventOnAfterContainerLoad(sector: string): Promise<void> {
         for (let i = this._cacheItems.length - 1; i >= 0; i--) {
+            if (i >= this._cacheItems.length)
+                continue;
             const item: DrapoStorageItem = this._cacheItems[i];
             if (item.Sector !== sector)
                 continue;
