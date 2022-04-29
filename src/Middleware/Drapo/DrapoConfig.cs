@@ -132,6 +132,7 @@ namespace Sysphera.Middleware.Drapo
                         continue;
                     component.CreateFile(fileName, type.Value, DrapoResourceType.Url, string.Format("{0}/{1}/{2}", urlBase, directoryName, fileName));
                 }
+                component.SortFiles();
                 components.Add(component);
             }
             return (components);

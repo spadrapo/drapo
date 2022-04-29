@@ -35,6 +35,16 @@ namespace Sysphera.Middleware.Drapo
         {
             return (this.Files.Find(f => f.Name == name));
         }
+
+        public void SortFiles() {
+            for (int i = this.Files.Count - 1; i >= 0; i--) {
+                DrapoComponentFile file = this.Files[i];
+                if (!file.Name.StartsWith("_"))
+                    continue;
+                this.Files.RemoveAt(i);
+                this.Files.Add(file);
+            }
+        }
         #endregion
     }
 }
