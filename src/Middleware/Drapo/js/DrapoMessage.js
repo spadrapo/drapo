@@ -14,7 +14,7 @@ var DrapoMessage = (function () {
         set: function (value) {
             this._action = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoMessage.prototype, "DataKey", {
@@ -24,7 +24,7 @@ var DrapoMessage = (function () {
         set: function (value) {
             this._dataKey = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoMessage.prototype, "Sector", {
@@ -34,7 +34,7 @@ var DrapoMessage = (function () {
         set: function (value) {
             this._sector = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoMessage.prototype, "Tag", {
@@ -44,7 +44,7 @@ var DrapoMessage = (function () {
         set: function (value) {
             this._tag = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoMessage.prototype, "Data", {
@@ -54,7 +54,7 @@ var DrapoMessage = (function () {
         set: function (value) {
             this._data = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoMessage;

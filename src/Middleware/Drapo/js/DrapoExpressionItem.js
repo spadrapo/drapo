@@ -14,7 +14,7 @@ var DrapoExpressionItem = (function () {
         set: function (value) {
             this._type = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoExpressionItem.prototype, "Value", {
@@ -29,7 +29,7 @@ var DrapoExpressionItem = (function () {
             else
                 this._value = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoExpressionItem.prototype, "Items", {
@@ -39,7 +39,7 @@ var DrapoExpressionItem = (function () {
         set: function (value) {
             this._items = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoExpressionItem.prototype.GetItemIndex = function (value) {

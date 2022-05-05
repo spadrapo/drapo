@@ -43,7 +43,7 @@ var DrapoCookieHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoCookieHandler.prototype.RetrieveData = function (name) {

@@ -358,7 +358,7 @@ class DrapoControlFlow {
                 lastInserted.after(fragment);
         }
         //Viewport Activate
-        this.Application.ViewportHandler.ActivateViewportControlFlow(viewport);
+        this.Application.ViewportHandler.ActivateViewportControlFlow(viewport, lastInserted[0]);
         //Enable Incremental Notify
         this.Application.Observer.IsEnabledNotifyIncremental = true;
         //Inside recursion we can remove template.

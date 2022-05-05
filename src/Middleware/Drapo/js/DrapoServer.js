@@ -50,7 +50,7 @@ var DrapoServer = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoServer.prototype, "HasBadRequest", {
@@ -60,7 +60,7 @@ var DrapoServer = (function () {
         set: function (value) {
             this._hasBadRequest = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoServer.prototype.InitializeServer = function () {

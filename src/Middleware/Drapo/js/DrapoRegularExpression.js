@@ -10,14 +10,14 @@ var DrapoRegularExpression = (function () {
         set: function (value) {
             this._expression = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoRegularExpression.prototype, "Items", {
         get: function () {
             return (this._items);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoRegularExpression.prototype.CreateItem = function (expression, name) {

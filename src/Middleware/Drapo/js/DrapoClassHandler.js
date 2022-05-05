@@ -43,7 +43,7 @@ var DrapoClassHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoClassHandler.prototype.HasContentClassContext = function (content) {

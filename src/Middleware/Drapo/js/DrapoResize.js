@@ -10,7 +10,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._code = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "Item", {
@@ -20,7 +20,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._contextItem = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "Element", {
@@ -30,7 +30,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._element = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "ParentJQuery", {
@@ -40,7 +40,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._parentJQuery = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "ContainerJQuery", {
@@ -50,7 +50,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._containerJQuery = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "Model", {
@@ -60,7 +60,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._model = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "Location", {
@@ -70,7 +70,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._location = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "Type", {
@@ -80,7 +80,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._type = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "Unit", {
@@ -90,7 +90,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._unit = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "Class", {
@@ -100,7 +100,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._class = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "Preview", {
@@ -110,7 +110,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._preview = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "SizeStart", {
@@ -120,7 +120,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._sizeStart = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "UnitStart", {
@@ -130,7 +130,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._unitStart = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "EventStartValue", {
@@ -140,7 +140,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._eventStartValue = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoResize.prototype, "EventCurrentValue", {
@@ -150,7 +150,7 @@ var DrapoResize = (function () {
         set: function (value) {
             this._eventCurrentValue = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoResize;

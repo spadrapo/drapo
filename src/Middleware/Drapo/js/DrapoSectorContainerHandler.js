@@ -49,7 +49,7 @@ var DrapoSectorContainerHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoSectorContainerHandler.prototype.IsElementContainerized = function (element) {

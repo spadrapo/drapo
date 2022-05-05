@@ -46,7 +46,7 @@ var DrapoRegister = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoRegister.prototype.GetRegisteredComponent = function (tagName) {

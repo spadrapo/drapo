@@ -34,7 +34,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._busy = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "Sector", {
@@ -44,7 +44,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._sector = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "DataKey", {
@@ -54,7 +54,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._dataKey = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "Key", {
@@ -64,7 +64,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._key = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "DataKeyIteratorRange", {
@@ -74,7 +74,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._dataKeyIteratorRange = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "Data", {
@@ -84,7 +84,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._data = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "Element", {
@@ -94,7 +94,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._el = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "ElementTemplate", {
@@ -104,7 +104,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._elTemplate = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "ElementBallonBefore", {
@@ -114,7 +114,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._elBallonBefore = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "ElementBallonAfter", {
@@ -124,7 +124,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._elBallonAfter = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "ElementScroll", {
@@ -134,7 +134,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._elScroll = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "HeightScroll", {
@@ -144,7 +144,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._heightScroll = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "HeightScrollScroll", {
@@ -154,7 +154,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._heightScrollScroll = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "HeightBefore", {
@@ -164,7 +164,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._heightBefore = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "HeightAfter", {
@@ -174,7 +174,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._heightAfter = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "HeightItem", {
@@ -184,7 +184,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._heightItem = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "HeightBallonBefore", {
@@ -194,7 +194,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._heightBallonBefore = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "HeightBallonAfter", {
@@ -204,7 +204,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._heightBallonAfter = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "DataStart", {
@@ -214,7 +214,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._dataStart = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "DataEnd", {
@@ -224,7 +224,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._dataEnd = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "DataLength", {
@@ -234,7 +234,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._dataLength = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "Factor", {
@@ -244,7 +244,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._factor = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "EventScrollTimeout", {
@@ -254,7 +254,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._eventScrollTimeout = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "ScrollTop", {
@@ -264,7 +264,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._scrollTop = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoViewport.prototype, "IsActive", {
@@ -274,7 +274,7 @@ var DrapoViewport = (function () {
         set: function (value) {
             this._isActive = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoViewport;

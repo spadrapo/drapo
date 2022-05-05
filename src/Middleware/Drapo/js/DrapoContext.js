@@ -38,14 +38,14 @@ var DrapoContext = (function () {
         set: function (value) {
             this._sector = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "Item", {
         get: function () {
             return (this._itemCurrent);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "Index", {
@@ -55,14 +55,14 @@ var DrapoContext = (function () {
         set: function (value) {
             this._index = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "IsEmpty", {
         get: function () {
             return (this._index === -1);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "IndexRelative", {
@@ -72,21 +72,21 @@ var DrapoContext = (function () {
         set: function (value) {
             this._indexRelative = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "Level", {
         get: function () {
             return (this._level);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "IsInsideRecursion", {
         get: function () {
             return (this._level > 0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckMustacheNodes", {
@@ -96,7 +96,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkMustacheNodes = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckMustacheAttributes", {
@@ -106,7 +106,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkMustacheAttributes = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckModel", {
@@ -116,7 +116,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkModel = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckID", {
@@ -126,7 +126,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkID = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckAttribute", {
@@ -136,7 +136,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkAttribute = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckClass", {
@@ -146,7 +146,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkClass = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckEvent", {
@@ -156,7 +156,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkEvent = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckBehavior", {
@@ -166,7 +166,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkBehavior = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckComponent", {
@@ -176,7 +176,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkComponent = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CheckValidation", {
@@ -186,7 +186,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._checkValidation = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContext.prototype, "CanUpdateTemplate", {
@@ -196,7 +196,7 @@ var DrapoContext = (function () {
         set: function (value) {
             this._canUpdateTemplate = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoContext.prototype.Create = function (data, element, elementForTemplate, dataKey, key, iterator, index, elementOld) {

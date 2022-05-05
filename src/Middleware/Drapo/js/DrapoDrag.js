@@ -11,7 +11,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._code = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "Action", {
@@ -21,7 +21,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._action = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "Item", {
@@ -31,7 +31,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._contextItem = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "Tags", {
@@ -41,7 +41,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._tags = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "Notify", {
@@ -51,7 +51,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._notify = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "OnBefore", {
@@ -61,7 +61,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._onBefore = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "OnAfter", {
@@ -71,7 +71,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._onAfter = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "DataKey", {
@@ -81,7 +81,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._dataKey = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "Sector", {
@@ -91,7 +91,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._sector = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoDrag.prototype, "Custom", {
@@ -101,7 +101,7 @@ var DrapoDrag = (function () {
         set: function (value) {
             this._custom = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoDrag.prototype.IsMatch = function (tags) {

@@ -28,77 +28,77 @@ var DrapoSectorContainerItem = (function () {
         get: function () {
             return (this._sector);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoSectorContainerItem.prototype, "ContainerCode", {
         get: function () {
             return (this._containerCode);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoSectorContainerItem.prototype, "StorageItems", {
         get: function () {
             return (this._storageItems);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoSectorContainerItem.prototype, "SectorHierarchys", {
         get: function () {
             return this._sectorHierarchys;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoSectorContainerItem.prototype, "SectorFriends", {
         get: function () {
             return this._sectorFriends;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoSectorContainerItem.prototype, "ComponentSectors", {
         get: function () {
             return (this._componentSectors);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoSectorContainerItem.prototype, "ComponentTags", {
         get: function () {
             return (this._componentTags);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoSectorContainerItem.prototype, "ComponentElements", {
         get: function () {
             return (this._componentElements);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoSectorContainerItem.prototype, "ComponentInstances", {
         get: function () {
             return (this._componentInstances);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoSectorContainerItem.prototype, "Element", {
         get: function () {
             return this._element;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoSectorContainerItem.prototype, "CanDetachElement", {
         get: function () {
             return this._canDetachElement;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoSectorContainerItem;

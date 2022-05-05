@@ -9,7 +9,7 @@ var DrapoViewportHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoViewportHandler.prototype.CreateViewportControlFlow = function (sector, el, elTemplate, dataKey, key, dataKeyIteratorRange, data) {
@@ -144,7 +144,7 @@ var DrapoViewportHandler = (function () {
         viewport.ElementBallonAfter = elBallonAfter;
         fragment.appendChild(elBallonAfter);
     };
-    DrapoViewportHandler.prototype.ActivateViewportControlFlow = function (viewport) {
+    DrapoViewportHandler.prototype.ActivateViewportControlFlow = function (viewport, elItem) {
         if ((viewport === null) || (viewport.IsActive))
             return;
         if (viewport.ScrollTop != null) {
@@ -152,6 +152,7 @@ var DrapoViewportHandler = (function () {
             this.UpdateElementsBallon(viewport);
             viewport.ElementScroll.scrollTop = viewport.ScrollTop;
         }
+        this.UpdateHeightItem(viewport, elItem, false);
         var viewportElementAny = viewport.Element;
         viewportElementAny[this._viewportPropertyName] = viewport;
         this.Application.Binder.BindControlFlowViewport(viewport);
@@ -171,7 +172,8 @@ var DrapoViewportHandler = (function () {
             return (length);
         return (viewport.DataEnd);
     };
-    DrapoViewportHandler.prototype.UpdateHeightItem = function (viewport, elItem) {
+    DrapoViewportHandler.prototype.UpdateHeightItem = function (viewport, elItem, updateValues) {
+        if (updateValues === void 0) { updateValues = true; }
         if (viewport === null)
             return (false);
         if (viewport.HeightItem !== null)
@@ -182,7 +184,8 @@ var DrapoViewportHandler = (function () {
         if (height === null)
             return (false);
         viewport.HeightItem = height;
-        this.UpdateValues(viewport);
+        if (updateValues)
+            this.UpdateValues(viewport);
         return (true);
     };
     DrapoViewportHandler.prototype.HasHeightChanged = function (viewport) {

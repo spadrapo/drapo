@@ -17,7 +17,7 @@ var DrapoQueryCondition = (function () {
         set: function (value) {
             this._sourceLeft = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoQueryCondition.prototype, "ColumnLeft", {
@@ -27,7 +27,7 @@ var DrapoQueryCondition = (function () {
         set: function (value) {
             this._columnLeft = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoQueryCondition.prototype, "ValueLeft", {
@@ -37,7 +37,7 @@ var DrapoQueryCondition = (function () {
         set: function (value) {
             this._valueLeft = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoQueryCondition.prototype, "Comparator", {
@@ -47,7 +47,7 @@ var DrapoQueryCondition = (function () {
         set: function (value) {
             this._comparator = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoQueryCondition.prototype, "SourceRight", {
@@ -57,7 +57,7 @@ var DrapoQueryCondition = (function () {
         set: function (value) {
             this._sourceRight = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoQueryCondition.prototype, "ColumnRight", {
@@ -67,7 +67,7 @@ var DrapoQueryCondition = (function () {
         set: function (value) {
             this._columnRight = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoQueryCondition.prototype, "ValueRight", {
@@ -77,7 +77,7 @@ var DrapoQueryCondition = (function () {
         set: function (value) {
             this._valueRight = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoQueryCondition.prototype, "IsNullRight", {
@@ -87,7 +87,7 @@ var DrapoQueryCondition = (function () {
         set: function (value) {
             this._isNullRight = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoQueryCondition.prototype.Clone = function () {

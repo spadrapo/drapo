@@ -43,7 +43,7 @@ var DrapoAttributeHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoAttributeHandler.prototype.HasContentIDContext = function (content) {

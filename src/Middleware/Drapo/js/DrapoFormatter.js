@@ -7,7 +7,7 @@ var DrapoFormatter = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoFormatter.prototype.Format = function (value, format, culture) {

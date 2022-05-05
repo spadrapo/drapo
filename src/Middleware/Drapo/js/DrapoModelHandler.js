@@ -43,7 +43,7 @@ var DrapoModelHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoModelHandler.prototype.HasContentModelContext = function (content) {

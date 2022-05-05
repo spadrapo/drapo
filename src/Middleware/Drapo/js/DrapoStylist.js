@@ -43,7 +43,7 @@ var DrapoStylist = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoStylist.prototype.Create = function (values, name) {

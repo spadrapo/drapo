@@ -20,21 +20,21 @@ var DrapoContextItem = (function () {
         get: function () {
             return (this._context);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Parent", {
         get: function () {
             return (this._parent);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Children", {
         get: function () {
             return (this._children);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Data", {
@@ -44,7 +44,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._data = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "DataKey", {
@@ -54,7 +54,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._dataKey = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Key", {
@@ -64,7 +64,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._key = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Iterator", {
@@ -74,7 +74,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._iterator = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Index", {
@@ -84,7 +84,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._index = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "Element", {
@@ -94,7 +94,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._element = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "ElementForTemplate", {
@@ -104,7 +104,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._elementForTemplate = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "ElementOld", {
@@ -114,7 +114,7 @@ var DrapoContextItem = (function () {
         set: function (value) {
             this._elementOld = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "RootItem", {
@@ -123,14 +123,14 @@ var DrapoContextItem = (function () {
                 return (this.Parent.RootItem);
             return (this);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoContextItem.prototype, "RootElement", {
         get: function () {
             return (this.RootItem.Element);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoContextItem;

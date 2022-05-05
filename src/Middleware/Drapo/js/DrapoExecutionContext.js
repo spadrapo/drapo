@@ -55,7 +55,7 @@ var DrapoExecutionContext = (function () {
         set: function (value) {
             this._hasError = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoExecutionContext.prototype, "CanReset", {
@@ -65,7 +65,7 @@ var DrapoExecutionContext = (function () {
         set: function (value) {
             this._canReset = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoExecutionContext.prototype, "HasBreakpoint", {
@@ -75,7 +75,7 @@ var DrapoExecutionContext = (function () {
         set: function (value) {
             this._hasBreakpoint = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoExecutionContext.prototype, "Sector", {
@@ -85,7 +85,7 @@ var DrapoExecutionContext = (function () {
         set: function (value) {
             this._sector = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoExecutionContext.prototype, "DataKey", {
@@ -95,7 +95,7 @@ var DrapoExecutionContext = (function () {
         set: function (value) {
             this._dataKey = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoExecutionContext.prototype, "Data", {
@@ -105,7 +105,7 @@ var DrapoExecutionContext = (function () {
         set: function (value) {
             this._data = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoExecutionContext.prototype.Continue = function () {

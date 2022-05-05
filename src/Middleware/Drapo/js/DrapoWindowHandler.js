@@ -44,7 +44,7 @@ var DrapoWindowHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoWindowHandler.prototype.CreateAndShowWindowDefinition = function (name, parameters) {
