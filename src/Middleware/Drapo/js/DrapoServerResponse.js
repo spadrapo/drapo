@@ -15,7 +15,7 @@ var DrapoServerResponse = (function () {
         set: function (value) {
             this._status = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoServerResponse.prototype, "Headers", {
@@ -25,7 +25,7 @@ var DrapoServerResponse = (function () {
         set: function (value) {
             this._headers = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoServerResponse.prototype, "Body", {
@@ -35,7 +35,7 @@ var DrapoServerResponse = (function () {
         set: function (value) {
             this._body = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoServerResponse.prototype.IsCacheAllowed = function () {

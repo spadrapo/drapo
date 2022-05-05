@@ -22,7 +22,7 @@ var DrapoParser = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoParser.prototype.Tokenize = function (data, splitter) {

@@ -76,238 +76,238 @@ var DrapoApplication = (function () {
         get: function () {
             return (this._isLoaded);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Log", {
         get: function () {
             return (this._logger);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Router", {
         get: function () {
             return (this._router);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Server", {
         get: function () {
             return (this._server);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Observer", {
         get: function () {
             return (this._observer);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Document", {
         get: function () {
             return (this._document);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ControlFlow", {
         get: function () {
             return (this._controlFlow);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Parser", {
         get: function () {
             return (this._parser);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Storage", {
         get: function () {
             return (this._storage);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Solver", {
         get: function () {
             return (this._solver);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Binder", {
         get: function () {
             return (this._binder);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Config", {
         get: function () {
             return (this._config);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Register", {
         get: function () {
             return (this._register);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Serializer", {
         get: function () {
             return (this._serializer);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Barber", {
         get: function () {
             return (this._barber);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ModelHandler", {
         get: function () {
             return (this._modelHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "AttributeHandler", {
         get: function () {
             return (this._attributeHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ClassHandler", {
         get: function () {
             return (this._classHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "EventHandler", {
         get: function () {
             return (this._eventHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "FunctionHandler", {
         get: function () {
             return (this._functionHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ComponentHandler", {
         get: function () {
             return (this._componentHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "CookieHandler", {
         get: function () {
             return (this._cookieHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "SectorContainerHandler", {
         get: function () {
             return (this._sectorContainerHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "WindowHandler", {
         get: function () {
             return (this._windowHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "BehaviorHandler", {
         get: function () {
             return (this._behaviorHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Plumber", {
         get: function () {
             return (this._plumber);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Formatter", {
         get: function () {
             return (this._formatter);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Validator", {
         get: function () {
             return (this._validator);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ExceptionHandler", {
         get: function () {
             return (this._exceptionHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Globalization", {
         get: function () {
             return (this._globalization);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Stylist", {
         get: function () {
             return (this._stylist);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "ViewportHandler", {
         get: function () {
             return (this._viewportHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "CacheHandler", {
         get: function () {
             return (this._cacheHandler);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoApplication.prototype, "Debugger", {
         get: function () {
             return (this._debugger);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoApplication.prototype.OnLoad = function () {

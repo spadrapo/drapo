@@ -78,7 +78,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._type = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "Access", {
@@ -88,7 +88,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._access = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "Element", {
@@ -98,7 +98,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._element = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "Data", {
@@ -110,7 +110,7 @@ var DrapoStorageItem = (function () {
             this._isFull = false;
             this._isGrowing = false;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "DataInserted", {
@@ -120,7 +120,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._dataInserted = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "DataUpdated", {
@@ -130,7 +130,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._dataUpdated = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "DataDeleted", {
@@ -140,7 +140,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._dataDeleted = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "UrlGet", {
@@ -150,7 +150,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._urlGet = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "UrlSet", {
@@ -160,21 +160,21 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._urlSet = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "UrlParameters", {
         get: function () {
             return (this._urlParameters);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsUrlParametersRequired", {
         get: function () {
             return (this._urlParameters === 'required');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "PostGet", {
@@ -184,7 +184,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._postGet = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "Start", {
@@ -194,7 +194,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._start = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "Increment", {
@@ -204,7 +204,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._increment = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsIncremental", {
@@ -214,7 +214,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._isIncremental = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsFull", {
@@ -224,7 +224,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._isFull = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsGrowing", {
@@ -234,7 +234,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._isGrowing = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsUnitOfWork", {
@@ -244,7 +244,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._isUnitOfWork = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsDelay", {
@@ -254,7 +254,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._isDelay = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "CookieName", {
@@ -264,7 +264,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._cookieName = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsCookieChange", {
@@ -274,7 +274,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._isCookieChange = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "UserConfig", {
@@ -284,56 +284,56 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._userConfig = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsTypeValue", {
         get: function () {
             return (this._type === 'value');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsTypeObject", {
         get: function () {
             return (this._type === 'object');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsTypeParent", {
         get: function () {
             return (this._type === 'parent');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsTypeArray", {
         get: function () {
             return ((this._type === 'array') || (Array.isArray(this.Data)));
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsTypeFunction", {
         get: function () {
             return (this._type === 'function');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsAccessPublic", {
         get: function () {
             return (this._access === 'public');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsAccessPrivate", {
         get: function () {
             return (this._access === 'private');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "IsToken", {
@@ -343,7 +343,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._isToken = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "Sector", {
@@ -353,7 +353,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._sector = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "Pipes", {
@@ -363,7 +363,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._pipes = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "Channels", {
@@ -373,7 +373,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._channels = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "CanCache", {
@@ -383,7 +383,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._canCache = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "CacheKeys", {
@@ -393,7 +393,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._cacheKeys = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "OnLoad", {
@@ -403,7 +403,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._onLoad = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "OnAfterLoad", {
@@ -413,7 +413,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._onAfterLoad = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "OnAfterContainerLoad", {
@@ -423,7 +423,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._onAfterContainerLoad = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "OnBeforeContainerUnload", {
@@ -433,7 +433,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._onBeforeContainerUnload = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "OnAfterCached", {
@@ -443,7 +443,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._onAfterCached = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "OnNotify", {
@@ -453,7 +453,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._onNotify = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "HeadersGet", {
@@ -463,7 +463,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._headersGet = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "HeadersSet", {
@@ -473,7 +473,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._headersSet = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoStorageItem.prototype, "HasChanges", {
@@ -483,7 +483,7 @@ var DrapoStorageItem = (function () {
         set: function (value) {
             this._hasChanges = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoStorageItem.prototype.Initialize = function () {

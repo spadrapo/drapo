@@ -14,7 +14,7 @@ var DrapoWindow = (function () {
         set: function (value) {
             this._did = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoWindow.prototype, "Uri", {
@@ -24,7 +24,7 @@ var DrapoWindow = (function () {
         set: function (value) {
             this._uri = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoWindow.prototype, "Element", {
@@ -34,7 +34,7 @@ var DrapoWindow = (function () {
         set: function (value) {
             this._element = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoWindow.prototype, "Visible", {
@@ -44,7 +44,7 @@ var DrapoWindow = (function () {
         set: function (value) {
             this._visible = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoWindow.prototype, "Code", {
@@ -54,7 +54,7 @@ var DrapoWindow = (function () {
         set: function (value) {
             this._code = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoWindow;

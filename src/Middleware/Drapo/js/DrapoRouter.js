@@ -45,7 +45,7 @@ var DrapoRouter = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoRouter.prototype.Create = function (url, sector, title, state) {

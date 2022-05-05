@@ -49,7 +49,7 @@ var DrapoDocument = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoDocument.prototype, "Message", {
@@ -59,7 +59,7 @@ var DrapoDocument = (function () {
         set: function (value) {
             this._message = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoDocument.prototype.ResetPendingAuthorizations = function (count) {

@@ -43,7 +43,7 @@ var DrapoBarber = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoBarber.prototype.HasContentMustacheNodesContext = function (content) {

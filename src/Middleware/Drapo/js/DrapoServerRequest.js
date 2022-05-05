@@ -22,7 +22,7 @@ var DrapoServerRequest = (function () {
         set: function (value) {
             this._verb = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoServerRequest.prototype, "Url", {
@@ -32,7 +32,7 @@ var DrapoServerRequest = (function () {
         set: function (value) {
             this._url = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoServerRequest.prototype, "Headers", {
@@ -42,7 +42,7 @@ var DrapoServerRequest = (function () {
         set: function (value) {
             this._headers = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoServerRequest.prototype, "Body", {
@@ -52,7 +52,7 @@ var DrapoServerRequest = (function () {
         set: function (value) {
             this._body = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoServerRequest.prototype, "ExtractHeaders", {
@@ -62,7 +62,7 @@ var DrapoServerRequest = (function () {
         set: function (value) {
             this._extractHeaders = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoServerRequest.prototype, "Binary", {
@@ -72,7 +72,7 @@ var DrapoServerRequest = (function () {
         set: function (value) {
             this._binary = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoServerRequest;

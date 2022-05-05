@@ -43,7 +43,7 @@ var DrapoBehaviorHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoBehaviorHandler.prototype.HasContentBehaviorContext = function (content) {

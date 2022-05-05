@@ -12,7 +12,7 @@ var DrapoView = (function () {
         set: function (value) {
             this._name = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoView.prototype, "Tag", {
@@ -22,7 +22,7 @@ var DrapoView = (function () {
         set: function (value) {
             this._tag = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoView.prototype, "Condition", {
@@ -32,7 +32,7 @@ var DrapoView = (function () {
         set: function (value) {
             this._condition = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoView;

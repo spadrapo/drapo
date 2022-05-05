@@ -13,7 +13,7 @@ var DrapoRouteItem = (function () {
         set: function (value) {
             this._url = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoRouteItem.prototype, "Sector", {
@@ -23,7 +23,7 @@ var DrapoRouteItem = (function () {
         set: function (value) {
             this._sector = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoRouteItem.prototype, "Title", {
@@ -33,7 +33,7 @@ var DrapoRouteItem = (function () {
         set: function (value) {
             this._title = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoRouteItem.prototype, "State", {
@@ -43,7 +43,7 @@ var DrapoRouteItem = (function () {
         set: function (value) {
             this._state = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoRouteItem;

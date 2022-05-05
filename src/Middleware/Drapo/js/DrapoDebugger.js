@@ -47,21 +47,21 @@ var DrapoDebugger = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoDebugger.prototype, "Visible", {
         get: function () {
             return (this._visible);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoDebugger.prototype, "Active", {
         get: function () {
             return (this._active);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoDebugger.prototype.ConnectDebugger = function () {

@@ -68,7 +68,7 @@ var DrapoObserver = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoObserver.prototype, "IsEnabledNotifyIncremental", {
@@ -78,7 +78,7 @@ var DrapoObserver = (function () {
         set: function (value) {
             this._IsEnabledNotifyIncremental = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoObserver.prototype.GetBarberDataKeyIndex = function (dataKey) {

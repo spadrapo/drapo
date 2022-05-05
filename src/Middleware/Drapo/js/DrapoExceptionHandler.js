@@ -43,7 +43,7 @@ var DrapoExceptionHandler = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoExceptionHandler.prototype.Handle = function (e, context) {

@@ -46,21 +46,21 @@ var DrapoLogger = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoLogger.prototype, "ShowHtml", {
         set: function (value) {
             this._showHtml = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoLogger.prototype, "ShowHTML", {
         get: function () {
             return (this._showHtml);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoLogger.prototype, "AllowVerbose", {
@@ -70,7 +70,7 @@ var DrapoLogger = (function () {
         set: function (value) {
             this._allowVerbose = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoLogger.prototype, "AllowError", {
@@ -80,7 +80,7 @@ var DrapoLogger = (function () {
         set: function (value) {
             this._allowError = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoLogger.prototype.WriteVerbose = function (message) {

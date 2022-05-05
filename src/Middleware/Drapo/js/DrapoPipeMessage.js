@@ -11,7 +11,7 @@ var DrapoPipeMessage = (function () {
         set: function (value) {
             this._type = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoPipeMessage.prototype, "Data", {
@@ -21,7 +21,7 @@ var DrapoPipeMessage = (function () {
         set: function (value) {
             this._data = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoPipeMessage;

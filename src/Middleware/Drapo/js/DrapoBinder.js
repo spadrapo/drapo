@@ -43,7 +43,7 @@ var DrapoBinder = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoBinder.prototype.BindReaderWriter = function (contextItem, el, dataFields, eventTypes, eventTypesCancel) {

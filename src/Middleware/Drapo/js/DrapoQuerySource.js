@@ -13,7 +13,7 @@ var DrapoQuerySource = (function () {
         set: function (value) {
             this._joinType = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoQuerySource.prototype, "Source", {
@@ -23,7 +23,7 @@ var DrapoQuerySource = (function () {
         set: function (value) {
             this._source = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoQuerySource.prototype, "Alias", {
@@ -33,7 +33,7 @@ var DrapoQuerySource = (function () {
         set: function (value) {
             this._alias = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoQuerySource.prototype, "JoinConditions", {
@@ -43,7 +43,7 @@ var DrapoQuerySource = (function () {
         set: function (value) {
             this._joinConditions = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoQuerySource;

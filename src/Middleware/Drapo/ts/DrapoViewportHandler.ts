@@ -150,7 +150,7 @@
         fragment.appendChild(elBallonAfter);
     }
 
-    public ActivateViewportControlFlow(viewport: DrapoViewport): void {
+    public ActivateViewportControlFlow(viewport: DrapoViewport, elItem: HTMLElement): void {
         if ((viewport === null) || (viewport.IsActive))
             return;
         if (viewport.ScrollTop != null) {
@@ -158,6 +158,7 @@
             this.UpdateElementsBallon(viewport);
             viewport.ElementScroll.scrollTop = viewport.ScrollTop;
         }
+        this.UpdateHeightItem(viewport, elItem, false);
         //Attach viewport to the element
         const viewportElementAny: any = viewport.Element;
         viewportElementAny[this._viewportPropertyName] = viewport;
@@ -183,7 +184,7 @@
         return (viewport.DataEnd);
     }
 
-    public UpdateHeightItem(viewport: DrapoViewport, elItem: HTMLElement): boolean {
+    public UpdateHeightItem(viewport: DrapoViewport, elItem: HTMLElement, updateValues: boolean = true): boolean {
         if (viewport === null)
             return (false);
         if (viewport.HeightItem !== null)
@@ -194,7 +195,8 @@
         if (height === null)
             return (false);
         viewport.HeightItem = height;
-        this.UpdateValues(viewport);
+        if (updateValues)
+            this.UpdateValues(viewport);
         return (true);
     }
 

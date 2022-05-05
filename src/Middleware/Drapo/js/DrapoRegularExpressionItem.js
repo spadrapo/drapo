@@ -9,7 +9,7 @@ var DrapoRegularExpressionItem = (function () {
         set: function (value) {
             this._expression = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoRegularExpressionItem.prototype, "Name", {
@@ -19,7 +19,7 @@ var DrapoRegularExpressionItem = (function () {
         set: function (value) {
             this._name = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoRegularExpressionItem.prototype, "Value", {
@@ -29,7 +29,7 @@ var DrapoRegularExpressionItem = (function () {
         set: function (value) {
             this._value = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoRegularExpressionItem;

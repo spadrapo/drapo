@@ -11,7 +11,7 @@ var DrapoFunction = (function () {
         set: function (value) {
             this._name = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoFunction.prototype, "Parameters", {
@@ -21,7 +21,7 @@ var DrapoFunction = (function () {
         set: function (value) {
             this._parameters = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoFunction;

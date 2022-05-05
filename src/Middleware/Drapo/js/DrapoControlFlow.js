@@ -43,7 +43,7 @@ var DrapoControlFlow = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoControlFlow.prototype.ResolveControlFlowDocument = function () {
@@ -472,7 +472,7 @@ var DrapoControlFlow = (function () {
                             if (fragment.childNodes.length > 0)
                                 lastInserted.after(fragment);
                         }
-                        this.Application.ViewportHandler.ActivateViewportControlFlow(viewport);
+                        this.Application.ViewportHandler.ActivateViewportControlFlow(viewport, lastInserted[0]);
                         this.Application.Observer.IsEnabledNotifyIncremental = true;
                         if ((context.IsInsideRecursion) && (!context.IsElementTemplateRoot(key)))
                             jQueryForReference.remove();

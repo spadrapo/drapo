@@ -15,7 +15,7 @@ var DrapoRange = (function () {
         set: function (value) {
             this._start = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(DrapoRange.prototype, "End", {
@@ -25,7 +25,7 @@ var DrapoRange = (function () {
         set: function (value) {
             this._end = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return DrapoRange;

@@ -55,7 +55,7 @@ var DrapoValidator = (function () {
         get: function () {
             return (this._application);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DrapoValidator.prototype.HasContentValidation = function (content) {
