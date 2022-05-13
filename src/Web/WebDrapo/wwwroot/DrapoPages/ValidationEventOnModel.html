@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Validation Event blur, keyup-enter in InputText</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="sector"></div>
+    <br />
+    <span>Validation Event InputText</span>
+    <div class="cloak" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-dataKey="data" d-dataType="object" d-dataProperty-text=""></div>
+            <div d-dataKey="click" d-datatype="value" d-dataloadtype="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowLoading.html,Windows,false)"></div>
+        </div>
+        <div>
+            <!--Validation-->
+            <div d-validation-id="agree" d-dataloadtype="startup" d-validation-type="conditional" d-validation-value="{{data.text}}"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <span>Text: </span>
+            <input type="text" d-model="{{data.text}}" d-model-event="blur,keyup-enter" d-validation-on-model="agree" d-on-model-change="Execute({{click}})" />
+            <div d-validation="agree">
+                <span>You must fill the value</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
