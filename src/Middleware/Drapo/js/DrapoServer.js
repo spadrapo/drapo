@@ -554,7 +554,13 @@ var DrapoServer = (function () {
             return (url);
         if (this.IsUrlEncoded(url))
             return (url);
-        return (encodeURI(url));
+        var urlEncoded = encodeURI(url);
+        urlEncoded = urlEncoded.replace('+', '%2B');
+        urlEncoded = urlEncoded.replace('$', '%24');
+        urlEncoded = urlEncoded.replace('#', '%23');
+        urlEncoded = urlEncoded.replace(',', '%2C');
+        urlEncoded = urlEncoded.replace(';', '%3B');
+        return (urlEncoded);
     };
     DrapoServer.prototype.EnsureUrlComponentEncoded = function (url) {
         if ((url == null) || (url == ''))
