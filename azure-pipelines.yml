@@ -29,11 +29,6 @@ stages:
       inputs:
         workingDir: src/Web/WebDrapo
         verbose: false
-    - task: gulp@0
-      displayName: 'gulp buildDrapoLib:tslint'
-      inputs:
-        gulpFile: src/Web/WebDrapo/gulpfile.js
-        targets: 'buildDrapoLib:tslint'
     - task: DotNetCoreCLI@2
       displayName: Build
       inputs:
