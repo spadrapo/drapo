@@ -442,6 +442,12 @@ class DrapoServer {
         const hasAndEncoded: boolean = url.indexOf('%26') >= 0;
         if (hasAndEncoded)
             return (true);
+        const hasSpacedEncoded: boolean = url.indexOf('%20') >= 0;
+        if (hasSpacedEncoded)
+            return (true);
+        const hasPlusEncoded: boolean = url.indexOf('%2B') >= 0;
+        if (hasPlusEncoded)
+            return (true);
         return (false);
     }
 

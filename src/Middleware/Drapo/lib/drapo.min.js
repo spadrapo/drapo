@@ -18862,6 +18862,12 @@ var DrapoServer = (function () {
         var hasAndEncoded = url.indexOf('%26') >= 0;
         if (hasAndEncoded)
             return (true);
+        var hasSpacedEncoded = url.indexOf('%20') >= 0;
+        if (hasSpacedEncoded)
+            return (true);
+        var hasPlusEncoded = url.indexOf('%2B') >= 0;
+        if (hasPlusEncoded)
+            return (true);
         return (false);
     };
     DrapoServer.prototype.SetContainerId = function (response) {
