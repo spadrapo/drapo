@@ -2125,7 +2125,9 @@ var DrapoStorage = (function () {
                         if (dataItem.IsUnitOfWork)
                             dataItem.DataDeleted.push(item);
                         data.splice(index, 1);
-                        this.NotifyChanges(dataItem, notify, dataKey, index, dataPath);
+                        return [4, this.NotifyChanges(dataItem, notify, dataKey, index, dataPath)];
+                    case 2:
+                        _a.sent();
                         return [2, (true)];
                 }
             });

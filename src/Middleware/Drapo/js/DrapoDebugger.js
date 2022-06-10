@@ -85,13 +85,18 @@ var DrapoDebugger = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var debuggerPropertiesText, debuggerProperties;
             return __generator(this, function (_a) {
-                debuggerPropertiesText = window.sessionStorage.getItem(this.SESSION_STORAGE_KEY);
-                if (debuggerPropertiesText == null)
-                    return [2];
-                debuggerProperties = this.Application.Serializer.Deserialize(debuggerPropertiesText);
-                this.Application.Storage.UpdateData('__debuggerProperties', null, debuggerProperties);
-                this._active = true;
-                return [2];
+                switch (_a.label) {
+                    case 0:
+                        debuggerPropertiesText = window.sessionStorage.getItem(this.SESSION_STORAGE_KEY);
+                        if (debuggerPropertiesText == null)
+                            return [2];
+                        debuggerProperties = this.Application.Serializer.Deserialize(debuggerPropertiesText);
+                        return [4, this.Application.Storage.UpdateData('__debuggerProperties', null, debuggerProperties)];
+                    case 1:
+                        _a.sent();
+                        this._active = true;
+                        return [2];
+                }
             });
         });
     };
@@ -474,11 +479,22 @@ var DrapoDebugger = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var sectors, i;
             return __generator(this, function (_a) {
-                sectors = this.Application.Document.GetSectorChildren(sector);
-                for (i = 0; i < sectors.length; i++) {
-                    this.CreateObjectSector(objectsExpanded, objects, sectors[i]);
+                switch (_a.label) {
+                    case 0:
+                        sectors = this.Application.Document.GetSectorChildren(sector);
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < sectors.length)) return [3, 4];
+                        return [4, this.CreateObjectSector(objectsExpanded, objects, sectors[i])];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        i++;
+                        return [3, 1];
+                    case 4: return [2];
                 }
-                return [2];
             });
         });
     };
@@ -598,16 +614,31 @@ var DrapoDebugger = (function () {
     };
     DrapoDebugger.prototype.InsertObjectDataObject = function (sector, objects, mustache, name, data) {
         return __awaiter(this, void 0, void 0, function () {
-            var object, property, propertyName, propertyData;
-            return __generator(this, function (_a) {
-                object = this.CreateObjectData(sector, name, '', mustache);
-                objects.push(object);
-                for (property in data) {
-                    propertyName = property;
-                    propertyData = data[property];
-                    this.InsertObjectData(sector, object.__objectdata, mustache, propertyName, propertyData);
+            var object, _a, _b, _i, property, propertyName, propertyData;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        object = this.CreateObjectData(sector, name, '', mustache);
+                        objects.push(object);
+                        _a = [];
+                        for (_b in data)
+                            _a.push(_b);
+                        _i = 0;
+                        _c.label = 1;
+                    case 1:
+                        if (!(_i < _a.length)) return [3, 4];
+                        property = _a[_i];
+                        propertyName = property;
+                        propertyData = data[property];
+                        return [4, this.InsertObjectData(sector, object.__objectdata, mustache, propertyName, propertyData)];
+                    case 2:
+                        _c.sent();
+                        _c.label = 3;
+                    case 3:
+                        _i++;
+                        return [3, 1];
+                    case 4: return [2];
                 }
-                return [2];
             });
         });
     };
@@ -615,12 +646,26 @@ var DrapoDebugger = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var object, i;
             return __generator(this, function (_a) {
-                object = this.CreateObjectData(sector, name, '', mustache);
-                objects.push(object);
-                this.InsertObjectDataString(sector, object.__objectdata, mustache + '.length', 'length', data.length.toString());
-                for (i = 0; i < data.length; i++)
-                    this.InsertObjectData(sector, object.__objectdata, mustache, '[' + i + ']', data[i]);
-                return [2];
+                switch (_a.label) {
+                    case 0:
+                        object = this.CreateObjectData(sector, name, '', mustache);
+                        objects.push(object);
+                        return [4, this.InsertObjectDataString(sector, object.__objectdata, mustache + '.length', 'length', data.length.toString())];
+                    case 1:
+                        _a.sent();
+                        i = 0;
+                        _a.label = 2;
+                    case 2:
+                        if (!(i < data.length)) return [3, 5];
+                        return [4, this.InsertObjectData(sector, object.__objectdata, mustache, '[' + i + ']', data[i])];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4:
+                        i++;
+                        return [3, 2];
+                    case 5: return [2];
+                }
             });
         });
     };
