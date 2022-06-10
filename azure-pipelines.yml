@@ -9,7 +9,7 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
   BuildConfiguration: 'Release'
-  isCD: false
+  isCD: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
 
 stages:
 - stage: Build
@@ -91,9 +91,9 @@ stages:
         command: 'build'
         dockerFile: '**/published/**/*Dockerfile'
         tags: latest
-    - task: PowerShell@2
-      displayName: 'docker push drapo/demo'
-      condition: eq(variables['isCD'], 'true')
-      inputs:
-        targetType: 'inline'
-        script: 'docker push drapo/demo'
+    # - task: PowerShell@2
+    #   displayName: 'docker push drapo/demo'
+    #   condition: eq(variables['isCD'], 'true')
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: 'docker push drapo/demo'
