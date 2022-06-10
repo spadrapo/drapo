@@ -555,11 +555,11 @@ var DrapoServer = (function () {
         if (this.IsUrlEncoded(url))
             return (url);
         var urlEncoded = encodeURI(url);
-        urlEncoded = urlEncoded.replace('+', '%2B');
-        urlEncoded = urlEncoded.replace('$', '%24');
-        urlEncoded = urlEncoded.replace('#', '%23');
-        urlEncoded = urlEncoded.replace(',', '%2C');
-        urlEncoded = urlEncoded.replace(';', '%3B');
+        urlEncoded = urlEncoded.replace(/+/g, '%2B');
+        urlEncoded = urlEncoded.replace(/$/g, '%24');
+        urlEncoded = urlEncoded.replace(/#/g, '%23');
+        urlEncoded = urlEncoded.replace(/,/g, '%2C');
+        urlEncoded = urlEncoded.replace(/;/g, '%3B');
         return (urlEncoded);
     };
     DrapoServer.prototype.EnsureUrlComponentEncoded = function (url) {
