@@ -171,7 +171,7 @@ class DrapoFunctionHandler {
         return (await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, valueReplaceMustache));
     }
 
-    public async ResolveFunctions(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, value: string): Promise<any> {
+    public async ResolveFunctions(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, value: string, checkInvalidFunction : boolean = true): Promise<any> {
         //Functions
         const functionsParsed: string[] = this.Application.Parser.ParseFunctionsPartial(value);
         for (let i: number = 0; i < functionsParsed.length; i++) {
@@ -179,9 +179,11 @@ class DrapoFunctionHandler {
             const functionParsed: DrapoFunction = this.Application.Parser.ParseFunction(functionText);
             if (functionParsed === null)
                 continue;
-            const valueFunction: any = await this.ExecuteFunctionContextSwitch(sector, contextItem, element, null, functionParsed, executionContext);
+            const valueFunction: any = await this.ExecuteFunctionContextSwitch(sector, contextItem, element, null, functionParsed, executionContext, checkInvalidFunction);
+            if ((valueFunction === null) && (!checkInvalidFunction))
+                continue;
             const valueReplaceFunction: string = value.replace(functionText, valueFunction);
-            return (await this.ResolveFunctions(sector, contextItem, element, executionContext, valueReplaceFunction));
+            return (await this.ResolveFunctions(sector, contextItem, element, executionContext, valueReplaceFunction, checkInvalidFunction));
         }
         //Mustache
         if (!this.Application.Parser.HasMustache(value))
@@ -193,7 +195,7 @@ class DrapoFunctionHandler {
         const mustacheValue: any = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, mustache, true);
         const valueReplaceMustache: string = value.replace(mustaches[0], mustacheValue);
         //Recursive
-        return (await this.ResolveFunctions(sector, contextItem, element, executionContext, valueReplaceMustache));
+        return (await this.ResolveFunctions(sector, contextItem, element, executionContext, valueReplaceMustache, checkInvalidFunction));
     }
 
     private async ResolveFunctionParameterDataFields(sector: string, contextItem: DrapoContextItem, element: Element, parameter: string, executionContext: DrapoExecutionContext<any>): Promise<string[]> {
@@ -205,8 +207,8 @@ class DrapoFunctionHandler {
         return (dataFields);
     }
 
-    private async ExecuteFunctionContextSwitch(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
-        this.Application.Debugger.AddFunction(functionParsed);
+    private async ExecuteFunctionContextSwitch(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>, checkInvalidFunction: boolean = true): Promise<any> {
+        await this.Application.Debugger.AddFunction(functionParsed);
         if (functionParsed.Name === 'external')
             return (this.ExecuteFunctionExternal(contextItem, element, event, functionParsed));
         if (functionParsed.Name === 'toggleitemfield')
@@ -361,6 +363,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionGetConfig(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'debugger')
             return (await this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext));
+        if (!checkInvalidFunction)
+            return (null);
         await this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name);
         return ('');
     }

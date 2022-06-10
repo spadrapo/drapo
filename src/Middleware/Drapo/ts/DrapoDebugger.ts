@@ -43,7 +43,7 @@ class DrapoDebugger {
         if (debuggerPropertiesText == null)
             return;
         const debuggerProperties: any = this.Application.Serializer.Deserialize(debuggerPropertiesText);
-        this.Application.Storage.UpdateData('__debuggerProperties', null, debuggerProperties);
+        await this.Application.Storage.UpdateData('__debuggerProperties', null, debuggerProperties);
         this._active = true;
     }
 
@@ -244,7 +244,7 @@ class DrapoDebugger {
     private async InsertObjectSectorChildrenSectors(objectsExpanded: any[], objects: any[], sector: string): Promise<void> {
         const sectors: string[] = this.Application.Document.GetSectorChildren(sector);
         for (let i: number = 0; i < sectors.length; i++) {
-            this.CreateObjectSector(objectsExpanded, objects, sectors[i]);
+            await this.CreateObjectSector(objectsExpanded, objects, sectors[i]);
         }
     }
 
@@ -311,16 +311,16 @@ class DrapoDebugger {
         for (const property in data) {
             const propertyName: string = property;
             const propertyData: any = data[property];
-            this.InsertObjectData(sector, object.__objectdata, mustache, propertyName, propertyData);
+            await this.InsertObjectData(sector, object.__objectdata, mustache, propertyName, propertyData);
         }
     }
 
     private async InsertObjectDataArray(sector: string, objects: any[], mustache: string, name: string, data: any[]): Promise<void> {
         const object: any = this.CreateObjectData(sector, name, '', mustache);
         objects.push(object);
-        this.InsertObjectDataString(sector, object.__objectdata, mustache + '.length', 'length', data.length.toString());
+        await this.InsertObjectDataString(sector, object.__objectdata, mustache + '.length', 'length', data.length.toString());
         for (let i: number = 0; i < data.length; i++)
-            this.InsertObjectData(sector, object.__objectdata, mustache, '[' + i + ']', data[i]);
+            await this.InsertObjectData(sector, object.__objectdata, mustache, '[' + i + ']', data[i]);
     }
 
     private async InsertObjectDataString(sector: string, objects: any[], mustache: string, name: string, data: string): Promise<void> {

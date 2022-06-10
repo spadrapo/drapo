@@ -227,7 +227,7 @@ var DrapoModelHandler = (function () {
                         return [3, 1];
                     case 4:
                         executionContext = new DrapoExecutionContext(this.Application);
-                        return [4, this.Application.FunctionHandler.ResolveFunctions(sector, context.Item, el, executionContext, model)];
+                        return [4, this.Application.FunctionHandler.ResolveFunctions(sector, context.Item, el, executionContext, model, false)];
                     case 5:
                         value = _c.sent();
                         valueString = this.Application.Solver.EnsureString(value);

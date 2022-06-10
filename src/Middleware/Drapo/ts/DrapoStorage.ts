@@ -1461,7 +1461,7 @@ class DrapoStorage {
         if (dataItem.IsUnitOfWork)
             dataItem.DataDeleted.push(item);
         data.splice(index, 1);
-        this.NotifyChanges(dataItem, notify, dataKey, index, dataPath);
+        await this.NotifyChanges(dataItem, notify, dataKey, index, dataPath);
         return (true);
     }
 

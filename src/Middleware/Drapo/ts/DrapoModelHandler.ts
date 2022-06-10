@@ -101,7 +101,7 @@ class DrapoModelHandler {
             }
         }
         const executionContext: DrapoExecutionContext<any> = new DrapoExecutionContext<any>(this.Application);
-        const value: any = await this.Application.FunctionHandler.ResolveFunctions(sector, context.Item, el, executionContext, model);
+        const value: any = await this.Application.FunctionHandler.ResolveFunctions(sector, context.Item, el, executionContext, model, false);
         const valueString: string = this.Application.Solver.EnsureString(value);
         if (valueString != model)
             return (await this.ResolveValueExpression(context, el, sector, valueString, canBind));

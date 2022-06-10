@@ -117,7 +117,7 @@ class DrapoServer {
                 await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, 'RedirectPage(' + location + ')', this.Application.FunctionHandler.CreateExecutionContext(false));
         }
         if (response.Status == 200) {
-            this.Application.CookieHandler.HandleCookieValuesChanges(cookieValues);
+            await this.Application.CookieHandler.HandleCookieValuesChanges(cookieValues);
             if (response.Body == '')
                 return (null);
             if (headersResponse !== null) {
@@ -281,7 +281,7 @@ class DrapoServer {
     private async Request(request: DrapoServerRequest): Promise<DrapoServerResponse> {
         const requestDebbuger: any = await this.Application.Debugger.CreateRequest(request.Url);
         const response: DrapoServerResponse = await this.RequestInternal(request);
-        this.SetContainerId(response);
+        await this.SetContainerId(response);
         await this.Application.Debugger.FinishRequest(requestDebbuger);
         return (response);
     }
