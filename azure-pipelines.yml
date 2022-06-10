@@ -9,7 +9,7 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
   BuildConfiguration: 'Release'
-  isCD: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
+  isCD: false
 
 stages:
 - stage: Build
