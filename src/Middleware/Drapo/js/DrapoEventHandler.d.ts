@@ -3,6 +3,7 @@ declare class DrapoEventHandler {
     private readonly _debounceDefault;
     private readonly _debounceDefaultClick;
     private readonly _debounce;
+    private readonly _detach;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     HasContentEventContext(content: string): boolean;
@@ -17,6 +18,7 @@ declare class DrapoEventHandler {
     private IsEventTypeValid;
     private IsEventDelay;
     GetEventDebounce(el: HTMLElement, eventType: string): number;
+    GetEventDetach(el: HTMLElement, eventType: string): string[];
     private HasEventDoubleClickInParent;
     private IsEventTypeKeyboard;
     IsValidEventFilter(e: Event, eventFilter: string): boolean;
