@@ -77,7 +77,9 @@ var DrapoSectorContainerHandler = (function () {
             var containerCodePrevious, i, activeSectorContainer, containerPrevious, el, loaded, i, container;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
+                    case 0: return [4, this.Application.Storage.AdquireLock()];
+                    case 1:
+                        _a.sent();
                         containerCodePrevious = null;
                         for (i = 0; i < this._activeSectorContainers.length; i++) {
                             activeSectorContainer = this._activeSectorContainers[i];
@@ -93,34 +95,37 @@ var DrapoSectorContainerHandler = (function () {
                             this._containers.push(containerPrevious);
                         }
                         return [4, this.UnloadSector(sector)];
-                    case 1:
+                    case 2:
                         _a.sent();
                         if (containerCode === this.CONTAINER_EQUAL) {
                             el = this.Application.Document.GetSectorElementInner(sector);
                             if ((el !== null) && (el.parentElement !== null))
                                 el.parentElement.removeChild(el);
                         }
-                        if ((containerCode === null) || (containerCode === this.CONTAINER_EQUAL))
+                        if ((containerCode === null) || (containerCode === this.CONTAINER_EQUAL)) {
+                            this.Application.Storage.ReleaseLock();
                             return [2, (false)];
+                        }
                         loaded = false;
                         i = 0;
-                        _a.label = 2;
-                    case 2:
-                        if (!(i < this._containers.length)) return [3, 5];
+                        _a.label = 3;
+                    case 3:
+                        if (!(i < this._containers.length)) return [3, 6];
                         container = this._containers[i];
                         if ((container.Sector !== sector) || (container.ContainerCode !== containerCode))
-                            return [3, 4];
+                            return [3, 5];
                         this._containers.splice(i, 1);
                         return [4, this.LoadContainer(container)];
-                    case 3:
+                    case 4:
                         _a.sent();
                         loaded = true;
-                        return [3, 5];
-                    case 4:
-                        i++;
-                        return [3, 2];
+                        return [3, 6];
                     case 5:
+                        i++;
+                        return [3, 3];
+                    case 6:
                         this._activeSectorContainers.push([sector, containerCode]);
+                        this.Application.Storage.ReleaseLock();
                         return [2, (loaded)];
                 }
             });

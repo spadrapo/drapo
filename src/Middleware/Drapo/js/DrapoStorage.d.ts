@@ -6,8 +6,11 @@ declare class DrapoStorage {
     private _isDelayTriggered;
     private _cacheLocalDataKeyArray;
     private readonly CONTENT_TYPE_JSON;
+    private _lock;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
+    AdquireLock(): Promise<void>;
+    ReleaseLock(): void;
     Retrieve(elj: JQuery, dataKey: string, sector: string, context: DrapoContext, dataKeyParts?: string[]): Promise<DrapoStorageItem>;
     RetrieveDataItemContext(dataKey: string, sector: string, executionContext?: DrapoExecutionContext<any>): Promise<DrapoStorageItem>;
     RetrieveData(dataKey: string, sector: string, executionContext?: DrapoExecutionContext<any>): Promise<any[]>;

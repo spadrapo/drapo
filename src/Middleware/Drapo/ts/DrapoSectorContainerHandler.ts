@@ -39,6 +39,7 @@ class DrapoSectorContainerHandler {
     }
 
     public async Switch(sector: string, containerCode: string = null): Promise<boolean> {
+        await this.Application.Storage.AdquireLock();
         //Previous Active
         let containerCodePrevious: string = null;
         for (let i: number = 0; i < this._activeSectorContainers.length; i++) {
@@ -64,8 +65,10 @@ class DrapoSectorContainerHandler {
                 el.parentElement.removeChild(el);
         }
         //Empty Container
-        if ((containerCode === null) || (containerCode === this.CONTAINER_EQUAL))
+        if ((containerCode === null) || (containerCode === this.CONTAINER_EQUAL)) {
+            this.Application.Storage.ReleaseLock();
             return (false);
+        }
         //Load Container
         let loaded: boolean = false;
         for (let i: number = 0; i < this._containers.length; i++) {
@@ -79,6 +82,7 @@ class DrapoSectorContainerHandler {
         }
         //Activate
         this._activeSectorContainers.push([sector, containerCode]);
+        this.Application.Storage.ReleaseLock();
         return (loaded);
     }
 

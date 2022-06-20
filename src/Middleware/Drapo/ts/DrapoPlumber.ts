@@ -91,6 +91,7 @@ class DrapoPlumber {
         const dataPipes: string[] = this.Application.Parser.ParsePipes(message.Data);
         if (dataPipes == null)
             return;
+        await this.Application.Storage.AdquireLock();
         for (let i: number = 0; i < dataPipes.length; i++)
         {
             const dataPipe: string = dataPipes[i];
@@ -101,6 +102,7 @@ class DrapoPlumber {
             //Reload Containers
             this.Application.SectorContainerHandler.ReloadStorageItemByPipe(dataPipe);
         }
+        this.Application.Storage.ReleaseLock();
     }
 
     private async NofityPipeRegister(message: DrapoPipeMessage) : Promise<void>
