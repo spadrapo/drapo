@@ -8,6 +8,7 @@ class DrapoStorage {
     private _isDelayTriggered: boolean = false;
     private _cacheLocalDataKeyArray: [string, string, boolean][] = [];
     private readonly CONTENT_TYPE_JSON: string = 'application/json; charset=utf-8';
+    private _lock: boolean = false;
     //Properties
     get Application(): DrapoApplication {
         return (this._application);
@@ -16,6 +17,17 @@ class DrapoStorage {
     //Constructors
     constructor(application: DrapoApplication) {
         this._application = application;
+    }
+
+    public async AdquireLock(): Promise<void>{
+        while (this._lock) {
+            await this.Application.Document.Sleep(50);
+        }
+        this._lock = true;
+    }
+
+    public ReleaseLock(): void {
+        this._lock = false;
     }
 
     public async Retrieve(elj: JQuery, dataKey: string, sector: string, context: DrapoContext, dataKeyParts: string[] = null): Promise<DrapoStorageItem> {

@@ -16630,23 +16630,28 @@ var DrapoPlumber = (function () {
                         dataPipes = this.Application.Parser.ParsePipes(message.Data);
                         if (dataPipes == null)
                             return [2];
-                        i = 0;
-                        _a.label = 1;
+                        return [4, this.Application.Storage.AdquireLock()];
                     case 1:
-                        if (!(i < dataPipes.length)) return [3, 5];
+                        _a.sent();
+                        i = 0;
+                        _a.label = 2;
+                    case 2:
+                        if (!(i < dataPipes.length)) return [3, 6];
                         dataPipe = dataPipes[i];
                         return [4, this.Application.Debugger.AddPipe(dataPipe)];
-                    case 2:
-                        _a.sent();
-                        return [4, this.Application.Storage.ReloadPipe(dataPipe)];
                     case 3:
                         _a.sent();
-                        this.Application.SectorContainerHandler.ReloadStorageItemByPipe(dataPipe);
-                        _a.label = 4;
+                        return [4, this.Application.Storage.ReloadPipe(dataPipe)];
                     case 4:
+                        _a.sent();
+                        this.Application.SectorContainerHandler.ReloadStorageItemByPipe(dataPipe);
+                        _a.label = 5;
+                    case 5:
                         i++;
-                        return [3, 1];
-                    case 5: return [2];
+                        return [3, 2];
+                    case 6:
+                        this.Application.Storage.ReleaseLock();
+                        return [2];
                 }
             });
         });
@@ -17899,7 +17904,9 @@ var DrapoSectorContainerHandler = (function () {
             var containerCodePrevious, i, activeSectorContainer, containerPrevious, el, loaded, i, container;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
+                    case 0: return [4, this.Application.Storage.AdquireLock()];
+                    case 1:
+                        _a.sent();
                         containerCodePrevious = null;
                         for (i = 0; i < this._activeSectorContainers.length; i++) {
                             activeSectorContainer = this._activeSectorContainers[i];
@@ -17915,34 +17922,37 @@ var DrapoSectorContainerHandler = (function () {
                             this._containers.push(containerPrevious);
                         }
                         return [4, this.UnloadSector(sector)];
-                    case 1:
+                    case 2:
                         _a.sent();
                         if (containerCode === this.CONTAINER_EQUAL) {
                             el = this.Application.Document.GetSectorElementInner(sector);
                             if ((el !== null) && (el.parentElement !== null))
                                 el.parentElement.removeChild(el);
                         }
-                        if ((containerCode === null) || (containerCode === this.CONTAINER_EQUAL))
+                        if ((containerCode === null) || (containerCode === this.CONTAINER_EQUAL)) {
+                            this.Application.Storage.ReleaseLock();
                             return [2, (false)];
+                        }
                         loaded = false;
                         i = 0;
-                        _a.label = 2;
-                    case 2:
-                        if (!(i < this._containers.length)) return [3, 5];
+                        _a.label = 3;
+                    case 3:
+                        if (!(i < this._containers.length)) return [3, 6];
                         container = this._containers[i];
                         if ((container.Sector !== sector) || (container.ContainerCode !== containerCode))
-                            return [3, 4];
+                            return [3, 5];
                         this._containers.splice(i, 1);
                         return [4, this.LoadContainer(container)];
-                    case 3:
+                    case 4:
                         _a.sent();
                         loaded = true;
-                        return [3, 5];
-                    case 4:
-                        i++;
-                        return [3, 2];
+                        return [3, 6];
                     case 5:
+                        i++;
+                        return [3, 3];
+                    case 6:
                         this._activeSectorContainers.push([sector, containerCode]);
+                        this.Application.Storage.ReleaseLock();
                         return [2, (loaded)];
                 }
             });
@@ -20357,6 +20367,7 @@ var DrapoStorage = (function () {
         this._isDelayTriggered = false;
         this._cacheLocalDataKeyArray = [];
         this.CONTENT_TYPE_JSON = 'application/json; charset=utf-8';
+        this._lock = false;
         this._application = application;
     }
     Object.defineProperty(DrapoStorage.prototype, "Application", {
@@ -20366,6 +20377,26 @@ var DrapoStorage = (function () {
         enumerable: false,
         configurable: true
     });
+    DrapoStorage.prototype.AdquireLock = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this._lock) return [3, 2];
+                        return [4, this.Application.Document.Sleep(50)];
+                    case 1:
+                        _a.sent();
+                        return [3, 0];
+                    case 2:
+                        this._lock = true;
+                        return [2];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.ReleaseLock = function () {
+        this._lock = false;
+    };
     DrapoStorage.prototype.Retrieve = function (elj, dataKey, sector, context, dataKeyParts) {
         if (dataKeyParts === void 0) { dataKeyParts = null; }
         return __awaiter(this, void 0, void 0, function () {

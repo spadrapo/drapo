@@ -42,6 +42,7 @@ var DrapoStorage = (function () {
         this._isDelayTriggered = false;
         this._cacheLocalDataKeyArray = [];
         this.CONTENT_TYPE_JSON = 'application/json; charset=utf-8';
+        this._lock = false;
         this._application = application;
     }
     Object.defineProperty(DrapoStorage.prototype, "Application", {
@@ -51,6 +52,26 @@ var DrapoStorage = (function () {
         enumerable: false,
         configurable: true
     });
+    DrapoStorage.prototype.AdquireLock = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this._lock) return [3, 2];
+                        return [4, this.Application.Document.Sleep(50)];
+                    case 1:
+                        _a.sent();
+                        return [3, 0];
+                    case 2:
+                        this._lock = true;
+                        return [2];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.ReleaseLock = function () {
+        this._lock = false;
+    };
     DrapoStorage.prototype.Retrieve = function (elj, dataKey, sector, context, dataKeyParts) {
         if (dataKeyParts === void 0) { dataKeyParts = null; }
         return __awaiter(this, void 0, void 0, function () {
