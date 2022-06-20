@@ -4,6 +4,7 @@ class DrapoEventHandler {
     private readonly _debounceDefault: number = 500;
     private readonly _debounceDefaultClick: number = 200;
     private readonly _debounce: string = 'debounce';
+    private readonly _detach: string = 'detach';
 
     //Properties
     get Application(): DrapoApplication {
@@ -91,6 +92,8 @@ class DrapoEventHandler {
                 debounceTimeout = elDebounceTimeout;
             }
             let delayTimeout: number = null;
+            //Detach
+            const eventsDetach: string[] = this.GetEventDetach(el, eventType);
             const eventAttribute: string = event[0];
             binder.unbind(eventNamespace);
             binder.bind(eventNamespace, (e) => {
@@ -100,6 +103,13 @@ class DrapoEventHandler {
                 }
                 if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
                     return (true);
+                if (eventsDetach != null) {
+                    for (let i: number = 0; i < eventsDetach.length; i++) {
+                        const eventDetach: string = eventsDetach[i];
+                        const eventDetachNamespace: string = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
+                        binder.unbind(eventDetachNamespace);
+                    }
+                }
                 const functionsValueCurrent: string = el.getAttribute(eventAttribute);
                 if (!isDelay) {
                     // tslint:disable-next-line:no-floating-promises
@@ -234,6 +244,15 @@ class DrapoEventHandler {
         if (elEventTypeDebounce === 'true')
             return (this._debounceDefault);
         return (this.Application.Parser.ParseNumber(elEventTypeDebounce, this._debounceDefault));
+    }
+
+    public GetEventDetach(el: HTMLElement, eventType: string): string[] {
+        const elEventTypeDetach: string = el.getAttribute('d-on-' + eventType + '-' + this._detach);
+        if ((elEventTypeDetach == null) || (elEventTypeDetach == ''))
+            return (null);
+        if (elEventTypeDetach === 'true')
+            return ([eventType]);
+        return (this.Application.Parser.ParsePipes(elEventTypeDetach));
     }
 
     private HasEventDoubleClickInParent(el: HTMLElement) : boolean

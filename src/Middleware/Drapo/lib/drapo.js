@@ -8613,6 +8613,7 @@ var DrapoEventHandler = (function () {
         this._debounceDefault = 500;
         this._debounceDefaultClick = 200;
         this._debounce = 'debounce';
+        this._detach = 'detach';
         this._application = application;
     }
     Object.defineProperty(DrapoEventHandler.prototype, "Application", {
@@ -8663,6 +8664,7 @@ var DrapoEventHandler = (function () {
     DrapoEventHandler.prototype.Attach = function (el, renderContext) {
         return __awaiter(this, void 0, void 0, function () {
             var events, application, elj, sector, isSectorDynamic, _loop_1, this_1, i;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8678,7 +8680,7 @@ var DrapoEventHandler = (function () {
                     case 2:
                         isSectorDynamic = _a.sent();
                         _loop_1 = function (i) {
-                            var event_1, eventType, functionsValue, _b, eventFilter, location_1, isLocationBody, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout, eventAttribute;
+                            var event_1, eventType, functionsValue, _b, eventFilter, location_1, isLocationBody, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout, eventsDetach, eventAttribute;
                             return __generator(this, function (_c) {
                                 switch (_c.label) {
                                     case 0:
@@ -8712,6 +8714,7 @@ var DrapoEventHandler = (function () {
                                             debounceTimeout = elDebounceTimeout;
                                         }
                                         delayTimeout = null;
+                                        eventsDetach = this_1.GetEventDetach(el, eventType);
                                         eventAttribute = event_1[0];
                                         binder.unbind(eventNamespace);
                                         binder.bind(eventNamespace, function (e) {
@@ -8721,6 +8724,13 @@ var DrapoEventHandler = (function () {
                                             }
                                             if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
                                                 return (true);
+                                            if (eventsDetach != null) {
+                                                for (var i_1 = 0; i_1 < eventsDetach.length; i_1++) {
+                                                    var eventDetach = eventsDetach[i_1];
+                                                    var eventDetachNamespace = _this.CreateEventNamespace(el, null, eventDetach, 'noContext');
+                                                    binder.unbind(eventDetachNamespace);
+                                                }
+                                            }
                                             var functionsValueCurrent = el.getAttribute(eventAttribute);
                                             if (!isDelay) {
                                                 application.EventHandler.ExecuteEvent(sector, null, el, e, eventType, location_1, functionsValueCurrent, isSectorDynamic);
@@ -8918,6 +8928,14 @@ var DrapoEventHandler = (function () {
         if (elEventTypeDebounce === 'true')
             return (this._debounceDefault);
         return (this.Application.Parser.ParseNumber(elEventTypeDebounce, this._debounceDefault));
+    };
+    DrapoEventHandler.prototype.GetEventDetach = function (el, eventType) {
+        var elEventTypeDetach = el.getAttribute('d-on-' + eventType + '-' + this._detach);
+        if ((elEventTypeDetach == null) || (elEventTypeDetach == ''))
+            return (null);
+        if (elEventTypeDetach === 'true')
+            return ([eventType]);
+        return (this.Application.Parser.ParsePipes(elEventTypeDetach));
     };
     DrapoEventHandler.prototype.HasEventDoubleClickInParent = function (el) {
         if (el == null)
