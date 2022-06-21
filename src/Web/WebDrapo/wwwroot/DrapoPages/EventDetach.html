@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Event Detach</title>
+</head>
+<body>
+    <span>Event Detach</span>
+    <div>
+        <div d-dataKey="itemObject" d-dataType="object" d-dataProperty-key-name="Key" d-dataProperty-key-value="OneKey"></div>
+        <div d-dataKey="items" d-dataType="array"></div>
+        <input type="button" d-on-click="AddDataItem(items,{{itemObject}})" d-on-click-detach="true" value="Add" />
+        <ul>
+            <li d-for="item in items" d-model="{{item.Key}}"></li>
+        </ul>
+    </div>
+</body>
+</html>

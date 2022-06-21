@@ -8680,7 +8680,7 @@ var DrapoEventHandler = (function () {
                     case 2:
                         isSectorDynamic = _a.sent();
                         _loop_1 = function (i) {
-                            var event_1, eventType, functionsValue, _b, eventFilter, location_1, isLocationBody, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout, eventsDetach, eventAttribute;
+                            var event_1, eventType, functionsValue, _b, eventFilter, location_1, isLocationBody, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout, eventsDetach, eventsDetachActivated, eventAttribute;
                             return __generator(this, function (_c) {
                                 switch (_c.label) {
                                     case 0:
@@ -8715,6 +8715,7 @@ var DrapoEventHandler = (function () {
                                         }
                                         delayTimeout = null;
                                         eventsDetach = this_1.GetEventDetach(el, eventType);
+                                        eventsDetachActivated = false;
                                         eventAttribute = event_1[0];
                                         binder.unbind(eventNamespace);
                                         binder.bind(eventNamespace, function (e) {
@@ -8724,11 +8725,15 @@ var DrapoEventHandler = (function () {
                                             }
                                             if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
                                                 return (true);
+                                            if (eventsDetachActivated)
+                                                return (true);
                                             if (eventsDetach != null) {
                                                 for (var i_1 = 0; i_1 < eventsDetach.length; i_1++) {
                                                     var eventDetach = eventsDetach[i_1];
                                                     var eventDetachNamespace = _this.CreateEventNamespace(el, null, eventDetach, 'noContext');
                                                     binder.unbind(eventDetachNamespace);
+                                                    if (eventDetach === eventType)
+                                                        eventsDetachActivated = true;
                                                 }
                                             }
                                             var functionsValueCurrent = el.getAttribute(eventAttribute);
@@ -8770,6 +8775,7 @@ var DrapoEventHandler = (function () {
     DrapoEventHandler.prototype.AttachContext = function (context, el, elj, sector, renderContext) {
         return __awaiter(this, void 0, void 0, function () {
             var events, application, contextItem, _loop_2, this_2, i;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8779,7 +8785,7 @@ var DrapoEventHandler = (function () {
                         application = this.Application;
                         contextItem = context.Item;
                         _loop_2 = function (i) {
-                            var event_2, eventType, functionsValueOriginal, eventFilter, location_2, isLocationBody, functionsValue, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout;
+                            var event_2, eventType, functionsValueOriginal, eventFilter, location_2, isLocationBody, functionsValue, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout, eventsDetach, eventsDetachActivated;
                             return __generator(this, function (_b) {
                                 switch (_b.label) {
                                     case 0:
@@ -8809,6 +8815,8 @@ var DrapoEventHandler = (function () {
                                             debounceTimeout = elDebounceTimeout;
                                         }
                                         delayTimeout = null;
+                                        eventsDetach = this_2.GetEventDetach(el, eventType);
+                                        eventsDetachActivated = false;
                                         binder.unbind(eventNamespace);
                                         binder.bind(eventNamespace, function (e) {
                                             if ((isLocationBody) && (!application.Document.Contains(elj))) {
@@ -8817,6 +8825,17 @@ var DrapoEventHandler = (function () {
                                             }
                                             if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
                                                 return (true);
+                                            if (eventsDetachActivated)
+                                                return (true);
+                                            if (eventsDetach != null) {
+                                                for (var i_2 = 0; i_2 < eventsDetach.length; i_2++) {
+                                                    var eventDetach = eventsDetach[i_2];
+                                                    var eventDetachNamespace = _this.CreateEventNamespace(el, null, eventDetach, 'noContext');
+                                                    binder.unbind(eventDetachNamespace);
+                                                    if (eventDetach === eventType)
+                                                        eventsDetachActivated = true;
+                                                }
+                                            }
                                             var sectorLocal = application.Document.GetSector(e.target);
                                             if (!isDelay) {
                                                 application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, eventType, location_2, functionsValue);
@@ -8973,7 +8992,7 @@ var DrapoEventHandler = (function () {
         for (var i = 0; i < el.attributes.length; i++) {
             var attribute = el.attributes[i];
             var event_3 = this.Application.Parser.ParseEventProperty(attribute.nodeName, attribute.nodeValue);
-            if ((event_3 != null) && (event_3[4] !== this._debounce))
+            if ((event_3 != null) && (event_3[4] !== this._debounce) && (event_3[4] !== this._detach))
                 events.push(event_3);
         }
         return (events);
