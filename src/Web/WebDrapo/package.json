@@ -3,20 +3,11 @@
   "name": "asp.net",
   "private": true,
   "devDependencies": {
-    "natives": "^1.1.6",
     "@types/jquery": "3.3.31",
     "bootstrap": "3.3.7",
-    "es6-promise": "4.2.4",
-    "gulp": "3.9.1",
-    "gulp-concat": "2.6.1",
-    "gulp-rename": "1.2.2",
-    "gulp-tslint": "^8.1.3",
-    "gulp-uglify": "2.1.2",
-    "gulp-watch": "4.3.11",
-    "tslint": "^5.12.0"
+    "es6-promise": "4.2.4"
   },
   "dependencies": {
-    "gulp-typescript": "^5.0.0",
     "typescript": "^3.2.2"
   }
 }
