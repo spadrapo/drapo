@@ -57,7 +57,6 @@
     <Copy SourceFiles="%(Content.Identity)" DestinationFiles="%(Content.Link)" SkipUnchangedFiles="false" OverwriteReadOnlyFiles="true" Condition="'%(Content.Link)' != ''" />
   </Target>
   <ItemGroup>
-    <Content Remove=".eslintrc.json" />
     <Content Remove="wwwroot\components\composite\composite.ts" />
     <Content Remove="wwwroot\components\dataValue\dataValue.ts" />
     <Content Remove="wwwroot\components\increment\increment.ts" />
@@ -71,9 +70,6 @@
     <Folder Include="wwwroot\components\labelinputinstance\" />
     <Folder Include="wwwroot\components\code\" />
     <Folder Include="wwwroot\js\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".eslintrc.json" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="wwwroot\components\composite\composite.ts" />

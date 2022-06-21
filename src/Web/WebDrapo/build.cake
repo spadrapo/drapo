@@ -40,7 +40,7 @@ Task("Type")
 
 Task("Lint")
 .Does(() => {
-    StartProcess("powershell", new ProcessSettings{ Arguments = "npm run lint" });
+    StartProcess("powershell", new ProcessSettings{ Arguments = "cd ../../Middleware/Drapo/; npm run lint" });
 });
 
 Task("BootstrapCSS")
