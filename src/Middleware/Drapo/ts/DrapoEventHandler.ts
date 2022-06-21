@@ -94,6 +94,7 @@ class DrapoEventHandler {
             let delayTimeout: number = null;
             //Detach
             const eventsDetach: string[] = this.GetEventDetach(el, eventType);
+            let eventsDetachActivated: boolean = false;
             const eventAttribute: string = event[0];
             binder.unbind(eventNamespace);
             binder.bind(eventNamespace, (e) => {
@@ -103,11 +104,15 @@ class DrapoEventHandler {
                 }
                 if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
                     return (true);
+                if (eventsDetachActivated)
+                    return (true);
                 if (eventsDetach != null) {
                     for (let i: number = 0; i < eventsDetach.length; i++) {
                         const eventDetach: string = eventsDetach[i];
                         const eventDetachNamespace: string = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
                         binder.unbind(eventDetachNamespace);
+                        if (eventDetach === eventType)
+                            eventsDetachActivated = true;
                     }
                 }
                 const functionsValueCurrent: string = el.getAttribute(eventAttribute);
@@ -161,6 +166,9 @@ class DrapoEventHandler {
                 debounceTimeout = elDebounceTimeout;
             }
             let delayTimeout: number = null;
+            //Detach
+            const eventsDetach: string[] = this.GetEventDetach(el, eventType);
+            let eventsDetachActivated: boolean = false;
             binder.unbind(eventNamespace);
             binder.bind(eventNamespace, (e) => {
                 if ((isLocationBody) && (!application.Document.Contains(elj))) {
@@ -169,6 +177,17 @@ class DrapoEventHandler {
                 }
                 if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
                     return (true);
+                if (eventsDetachActivated)
+                    return (true);
+                if (eventsDetach != null) {
+                    for (let i: number = 0; i < eventsDetach.length; i++) {
+                        const eventDetach: string = eventsDetach[i];
+                        const eventDetachNamespace: string = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
+                        binder.unbind(eventDetachNamespace);
+                        if (eventDetach === eventType)
+                            eventsDetachActivated = true;
+                    }
+                }
                 const sectorLocal: string = application.Document.GetSector(e.target as HTMLElement);
                 if (!isDelay) {
                     // tslint:disable-next-line:no-floating-promises
@@ -298,7 +317,7 @@ class DrapoEventHandler {
         {
             const attribute: Attr = el.attributes[i];
             const event: [string, string, string, string, string] = this.Application.Parser.ParseEventProperty(attribute.nodeName, attribute.nodeValue);
-            if ((event != null) && (event[4] !== this._debounce))
+            if ((event != null) && (event[4] !== this._debounce) && (event[4] !== this._detach))
                 events.push(event);
         }
         return (events);
