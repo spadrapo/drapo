@@ -9,9 +9,5 @@
   },
   "dependencies": {
     "typescript": "^3.2.2"
-  },
-  "scripts": {
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --fix --ext .ts"
   }
 }
