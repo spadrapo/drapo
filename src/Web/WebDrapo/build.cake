@@ -41,7 +41,7 @@ Task("Type")
 Task("Lint")
     .Does(() =>
 {
-    //TODO: We need to check for ts lint here
+    StartProcess("powershell", new ProcessSettings{ Arguments = "tslint --config ../../Middleware/Drapo/tslint.json --project ../../Middleware/Drapo/tsconfig.json" });
 });
 
 Task("BootstrapCSS")
