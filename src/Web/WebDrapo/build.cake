@@ -41,7 +41,7 @@ Task("Type")
 Task("Lint")
     .Does(() =>
 {
-    StartProcess("powershell", new ProcessSettings{ Arguments = "tslint --config tslint.json --project ../../Middleware/Drapo/tsconfig.json" });
+    StartProcess("powershell", new ProcessSettings{ Arguments = "tslint --config ../../Middleware/Drapo/tslint.json --project ../../Middleware/Drapo/tsconfig.json" });
 });
 
 Task("BootstrapCSS")
