@@ -19,10 +19,11 @@
       "es6"
     ]
   },
-  "exclude": [
-    "js/**/*"
-  ],
   "include": [
-    "ts/**/*"
+    "../../Middleware/**/*.ts"
+  ],
+  "exclude": [
+    "js/**/*",
+    "*.d.ts"
   ]
 }
