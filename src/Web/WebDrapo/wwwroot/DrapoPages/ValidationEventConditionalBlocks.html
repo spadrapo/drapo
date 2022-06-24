@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Validation Event Conditional</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="sector" d-on-body-keyup-escape="CloseWindow()"></div>
+    <br />
+    <span>Validation Event Conditional</span>
+    <div class="cloak" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-datakey="types" d-datatype="array" d-datavalue="[{&quot;Type&quot;: &quot;5&quot;},{&quot;Type&quot;: &quot;6&quot;}]"></div>
+            <div d-dataKey="data" d-dataType="object" d-dataProperty-enable="false" d-dataProperty-enabletype="6" d-dataProperty-agree="false"></div>
+            <div d-dataKey="click" d-datatype="value" d-dataloadtype="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowLoading.html,Windows,false)"></div>
+            <div d-dataKey="validation" d-datatype="value" d-dataValue="{agree:({{data.enable}})&&({{data.enabletype}}=6)}"></div>
+        </div>
+        <div>
+            <!--Validation-->
+            <div d-validation-id="agree" d-validation-type="conditional" d-validation-value="{{data.agree}}"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <input type="checkbox" d-model="{{data.enable}}" /><span>Enable</span>
+            <br />
+            <input type="checkbox" d-model="{{data.agree}}" /><span>Agree</span>
+            <div d-validation="agree">
+                <span>You must check the agree checkbox</span>
+            </div>
+            <br />
+            <br />
+            <input type="button" value="Validate" d-on-click="{{click}}" d-validation-on-click="{{validation}}" d-id="__drapoUnitTest" />
+            <br />
+            <input d-for="type in types" type="button" d-attr-value="{{type.Type}}" d-on-click-detach="true" d-validation-on-click="{agree:({{type.Type}}=6)&&({{data.enable}})}" d-on-click="Execute({{click}})" />
+        </div>
+    </div>
+</body>
+</html>
