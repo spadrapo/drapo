@@ -16222,6 +16222,12 @@ var DrapoParser = (function () {
         }
         query.Sources = sources;
         query.Filter = this.ParseQueryFilter(value);
+        var sorts = this.ParseQueryOrderBy(value);
+        if (sorts === null) {
+            query.Error = "Can't parse the order by.";
+            return (query);
+        }
+        query.Sorts = sorts;
         return (query);
     };
     DrapoParser.prototype.ParseQueryProjections = function (value) {
@@ -16402,11 +16408,30 @@ var DrapoParser = (function () {
         return (header);
     };
     DrapoParser.prototype.ParseQueryFilter = function (value) {
-        var whereToken = this.ParseSubstring(value, 'WHERE', null, true);
+        var whereToken = this.ParseSubstring(value, 'WHERE', 'ORDER BY', true);
         if (whereToken === null)
             return (null);
         var filter = this.ParseQueryConditional(whereToken);
         return (filter);
+    };
+    DrapoParser.prototype.ParseQueryOrderBy = function (value) {
+        var sorts = [];
+        var token = this.ParseSubstring(value, 'ORDER BY ', null, true);
+        if (token === null)
+            return (sorts);
+        var blocks = this.ParseBlock(token, ',');
+        for (var i = 0; i < blocks.length; i++) {
+            var block = blocks[i];
+            var parts = this.ParseBlock(block, ' ');
+            if (parts.length > 2)
+                return (null);
+            var sort = new DrapoQuerySort();
+            sort.Column = parts[0];
+            if (parts.length > 1)
+                sort.Type = parts[1];
+            sorts.push(sort);
+        }
+        return (sorts);
     };
     return DrapoParser;
 }());
@@ -16729,6 +16754,7 @@ var DrapoQuery = (function () {
         this._projections = [];
         this._sources = [];
         this._filter = null;
+        this._sorts = null;
         this._outputArray = null;
     }
     Object.defineProperty(DrapoQuery.prototype, "Error", {
@@ -16767,6 +16793,16 @@ var DrapoQuery = (function () {
         },
         set: function (value) {
             this._filter = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQuery.prototype, "Sorts", {
+        get: function () {
+            return (this._sorts);
+        },
+        set: function (value) {
+            this._sorts = value;
         },
         enumerable: false,
         configurable: true
@@ -16951,6 +16987,35 @@ var DrapoQueryProjection = (function () {
         configurable: true
     });
     return DrapoQueryProjection;
+}());
+
+"use strict";
+var DrapoQuerySort = (function () {
+    function DrapoQuerySort() {
+        this._column = null;
+        this._type = null;
+    }
+    Object.defineProperty(DrapoQuerySort.prototype, "Column", {
+        get: function () {
+            return (this._column);
+        },
+        set: function (value) {
+            this._column = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQuerySort.prototype, "Type", {
+        get: function () {
+            return (this._type);
+        },
+        set: function (value) {
+            this._type = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return DrapoQuerySort;
 }());
 
 "use strict";
@@ -23520,8 +23585,10 @@ var DrapoStorage = (function () {
                                 object = objects[i];
                                 outputArray.push(object[query.OutputArray]);
                             }
-                            return [2, (outputArray)];
+                            objects = outputArray;
                         }
+                        if (query.Sorts != null)
+                            objects = this.ResolveQueryOrderBy(query, objects);
                         return [2, (objects)];
                 }
             });
@@ -23699,7 +23766,13 @@ var DrapoStorage = (function () {
                     case 7:
                         i++;
                         return [3, 3];
-                    case 8: return [2];
+                    case 8:
+                        if (!(query.Sorts != null)) return [3, 10];
+                        return [4, this.ResolveQuerySortsMustaches(sector, dataKey, query.Sorts)];
+                    case 9:
+                        _a.sent();
+                        _a.label = 10;
+                    case 10: return [2];
                 }
             });
         });
@@ -23755,6 +23828,76 @@ var DrapoStorage = (function () {
         if ((filter.Comparator === 'IS NOT') && (filter.IsNullRight) && (filter.ValueLeft != null))
             return (true);
         return (false);
+    };
+    DrapoStorage.prototype.ResolveQuerySortsMustaches = function (sector, dataKey, sorts) {
+        return __awaiter(this, void 0, void 0, function () {
+            var i, sort, column, type;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < sorts.length)) return [3, 5];
+                        sort = sorts[i];
+                        return [4, this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, sort.Column)];
+                    case 2:
+                        column = _a.sent();
+                        if (column !== undefined)
+                            sort.Column = column;
+                        return [4, this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, sort.Type)];
+                    case 3:
+                        type = _a.sent();
+                        if (column !== undefined)
+                            sort.Type = type;
+                        _a.label = 4;
+                    case 4:
+                        i++;
+                        return [3, 1];
+                    case 5: return [2];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.ResolveQueryOrderBy = function (query, objects) {
+        if ((query.Sorts == null) || (query.Sorts.length == 0))
+            return (objects);
+        var sorts = query.Sorts;
+        var sorted = true;
+        while (sorted) {
+            sorted = false;
+            for (var i = 0; i < (objects.length - 1); i++) {
+                var objectCurrent = objects[i];
+                var objectNext = objects[i + 1];
+                if (!this.IsSwapQueryOrderBy(sorts, objectCurrent, objectNext))
+                    continue;
+                sorted = true;
+                objects[i] = objectNext;
+                objects[i + 1] = objectCurrent;
+            }
+        }
+        return (objects);
+    };
+    DrapoStorage.prototype.IsSwapQueryOrderBy = function (sorts, objectCurrent, objectNext) {
+        for (var i = 0; i < sorts.length; i++) {
+            var sort = sorts[i];
+            var value = this.GetSwapQueryOrderBy(sort, objectCurrent, objectNext);
+            if (value == 0)
+                continue;
+            if (value < 0)
+                return (true);
+        }
+        return (false);
+    };
+    DrapoStorage.prototype.GetSwapQueryOrderBy = function (sort, objectCurrent, objectNext) {
+        var propertyCurrent = objectCurrent[sort.Column];
+        var propertyNext = objectNext[sort.Column];
+        if (propertyCurrent == propertyNext)
+            return (0);
+        var value = propertyNext > propertyCurrent ? 1 : -1;
+        if (sort.Type == 'DESC')
+            value = 0 - value;
+        return (value);
     };
     return DrapoStorage;
 }());
