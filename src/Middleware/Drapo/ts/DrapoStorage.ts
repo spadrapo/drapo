@@ -2050,7 +2050,7 @@ class DrapoStorage {
     }
 
     private async ExecuteQuery(sector: string, dataKey: string, query: DrapoQuery): Promise<any[]> {
-        const objects: any[] = [];
+        let objects: any[] = [];
         const objectsId: string[][] = [];
         const objectsInformation: any[] = [];
         const filters: DrapoQueryCondition[] = [];
@@ -2137,8 +2137,11 @@ class DrapoStorage {
                 const object: any = objects[i];
                 outputArray.push(object[query.OutputArray]);
             }
-            return (outputArray);
+            objects = outputArray;
         }
+        //Order By
+        if (query.Sorts != null)
+            objects = this.ResolveQueryOrderBy(query, objects);
         return (objects);
     }
 
@@ -2302,6 +2305,9 @@ class DrapoStorage {
                 await this.ResolveQueryConditionMustachesFilter(sector, dataKey, filter);
             }
         }
+        //Sorts
+        if (query.Sorts != null)
+            await this.ResolveQuerySortsMustaches(sector, dataKey, query.Sorts);
     }
 
     private async ResolveQueryConditionMustachesFilter(sector: string, dataKey: string, filter: DrapoQueryCondition): Promise<void> {
@@ -2338,5 +2344,61 @@ class DrapoStorage {
         if ((filter.Comparator === 'IS NOT') && (filter.IsNullRight) && (filter.ValueLeft != null))
             return (true);
         return (false);
+    }
+
+    private async ResolveQuerySortsMustaches(sector: string, dataKey: string, sorts: DrapoQuerySort[]): Promise<void> {
+        for (let i: number = 0; i < sorts.length; i++) {
+            let sort: DrapoQuerySort = sorts[i];
+            const column: string = await this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, sort.Column);
+            if (column !== undefined)
+                sort.Column = column;
+            const type: string = await this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, sort.Type);
+            if (type !== undefined)
+                sort.Type = type;
+        }
+    }
+
+    private ResolveQueryOrderBy(query: DrapoQuery, objects: any[]): any[] {
+        if ((query.Sorts == null) || (query.Sorts.length == 0))
+            return (objects);
+        const sorts: DrapoQuerySort[] = query.Sorts;
+        let sorted: boolean = true;
+        while (sorted) {
+            sorted = false;
+            for (let i: number = 0; i < (objects.length - 1); i++) {
+                const objectCurrent = objects[i]; 
+                const objectNext = objects[i + 1];
+                if (!this.IsSwapQueryOrderBy(sorts, objectCurrent, objectNext))
+                    continue;
+                sorted = true;
+                objects[i] = objectNext;
+                objects[i + 1] = objectCurrent;
+            }
+        }
+        return (objects);
+    }
+
+    private IsSwapQueryOrderBy(sorts: DrapoQuerySort[], objectCurrent: any, objectNext: any): boolean{
+        for (let i: number = 0; i < sorts.length; i++) {
+            const sort: DrapoQuerySort = sorts[i];
+            const value: number = this.GetSwapQueryOrderBy(sort, objectCurrent, objectNext);
+            if (value == 0)
+                continue;
+            if (value < 0)
+                return (true);
+            return (false);
+        }
+        return (false);
+    }
+
+    private GetSwapQueryOrderBy(sort: DrapoQuerySort, objectCurrent: any, objectNext: any): number {
+        const propertyCurrent = objectCurrent[sort.Column];
+        const propertyNext = objectNext[sort.Column];
+        if (propertyCurrent == propertyNext)
+            return (0);
+        let value: number = propertyNext > propertyCurrent ? 1 : -1;
+        if (sort.Type == 'DESC')
+            value = 0 - value;
+        return (value);
     }
 }

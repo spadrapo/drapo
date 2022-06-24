@@ -128,4 +128,5 @@ declare class DrapoParser {
     private ParseQuerySourceHead;
     private ParseQuerySourceHeadValue;
     private ParseQueryFilter;
+    private ParseQueryOrderBy;
 }

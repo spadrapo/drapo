@@ -159,4 +159,8 @@ declare class DrapoStorage {
     private ResolveQueryConditionMustachesFilter;
     private ResolveQueryConditionMustachesFilterValue;
     private IsValidQueryCondition;
+    private ResolveQuerySortsMustaches;
+    private ResolveQueryOrderBy;
+    private IsSwapQueryOrderBy;
+    private GetSwapQueryOrderBy;
 }

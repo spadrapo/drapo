@@ -1087,6 +1087,12 @@ var DrapoParser = (function () {
         }
         query.Sources = sources;
         query.Filter = this.ParseQueryFilter(value);
+        var sorts = this.ParseQueryOrderBy(value);
+        if (sorts === null) {
+            query.Error = "Can't parse the order by.";
+            return (query);
+        }
+        query.Sorts = sorts;
         return (query);
     };
     DrapoParser.prototype.ParseQueryProjections = function (value) {
@@ -1267,11 +1273,30 @@ var DrapoParser = (function () {
         return (header);
     };
     DrapoParser.prototype.ParseQueryFilter = function (value) {
-        var whereToken = this.ParseSubstring(value, 'WHERE', null, true);
+        var whereToken = this.ParseSubstring(value, 'WHERE', 'ORDER BY', true);
         if (whereToken === null)
             return (null);
         var filter = this.ParseQueryConditional(whereToken);
         return (filter);
+    };
+    DrapoParser.prototype.ParseQueryOrderBy = function (value) {
+        var sorts = [];
+        var token = this.ParseSubstring(value, 'ORDER BY ', null, true);
+        if (token === null)
+            return (sorts);
+        var blocks = this.ParseBlock(token, ',');
+        for (var i = 0; i < blocks.length; i++) {
+            var block = blocks[i];
+            var parts = this.ParseBlock(block, ' ');
+            if (parts.length > 2)
+                return (null);
+            var sort = new DrapoQuerySort();
+            sort.Column = parts[0];
+            if (parts.length > 1)
+                sort.Type = parts[1];
+            sorts.push(sort);
+        }
+        return (sorts);
     };
     return DrapoParser;
 }());
