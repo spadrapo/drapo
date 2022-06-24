@@ -2353,7 +2353,7 @@ class DrapoStorage {
             if (column !== undefined)
                 sort.Column = column;
             const type: string = await this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, sort.Type);
-            if (column !== undefined)
+            if (type !== undefined)
                 sort.Type = type;
         }
     }

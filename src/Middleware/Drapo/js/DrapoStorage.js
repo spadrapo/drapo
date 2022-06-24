@@ -3421,7 +3421,7 @@ var DrapoStorage = (function () {
                         return [4, this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, sort.Type)];
                     case 3:
                         type = _a.sent();
-                        if (column !== undefined)
+                        if (type !== undefined)
                             sort.Type = type;
                         _a.label = 4;
                     case 4:
