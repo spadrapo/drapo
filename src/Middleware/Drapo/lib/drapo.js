@@ -23886,6 +23886,7 @@ var DrapoStorage = (function () {
                 continue;
             if (value < 0)
                 return (true);
+            return (false);
         }
         return (false);
     };
