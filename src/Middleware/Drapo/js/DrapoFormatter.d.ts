@@ -2,7 +2,7 @@ declare class DrapoFormatter {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    Format(value: string, format: string, culture?: string): string;
+    Format(value: string, format: string, culture?: string, applyTimezone?: boolean): string;
     private FormatDate;
     private ConvertDateFormat;
     private GetDateFormattedTokens;
