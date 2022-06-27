@@ -1171,6 +1171,13 @@ class DrapoParser {
         query.Sources = sources;
         //Filters
         query.Filter = this.ParseQueryFilter(value);
+        //Order By
+        const sorts: DrapoQuerySort[] = this.ParseQueryOrderBy(value);
+        if (sorts === null) {
+            query.Error = "Can't parse the order by.";
+            return (query);
+        }
+        query.Sorts = sorts;
         return (query);
     }
 
@@ -1371,10 +1378,30 @@ class DrapoParser {
     }
 
     private ParseQueryFilter(value: string): DrapoQueryCondition {
-        const whereToken: string = this.ParseSubstring(value, 'WHERE', null, true);
+        const whereToken: string = this.ParseSubstring(value, 'WHERE', 'ORDER BY', true);
         if (whereToken === null)
             return (null);
         const filter: DrapoQueryCondition = this.ParseQueryConditional(whereToken);
         return (filter);
+    }
+
+    private ParseQueryOrderBy(value: string): DrapoQuerySort[] {
+        const sorts: DrapoQuerySort[] = [];
+        const token: string = this.ParseSubstring(value, 'ORDER BY ', null, true);
+        if (token === null)
+            return (sorts);
+        const blocks: string[] = this.ParseBlock(token, ',');
+        for (let i: number = 0; i < blocks.length; i++) {
+            const block: string = blocks[i];
+            const parts: string[] = this.ParseBlock(block, ' ');
+            if (parts.length > 2)
+                return (null);
+            const sort: DrapoQuerySort = new DrapoQuerySort();
+            sort.Column = parts[0];
+            if (parts.length > 1)
+                sort.Type = parts[1];
+            sorts.push(sort);
+        }
+        return (sorts);
     }
 }
