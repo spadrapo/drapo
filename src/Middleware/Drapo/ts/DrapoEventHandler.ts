@@ -97,13 +97,18 @@ class DrapoEventHandler {
             let eventsDetachActivated: boolean = false;
             const eventAttribute: string = event[0];
             binder.unbind(eventNamespace);
-            binder.bind(eventNamespace, (e) => {
+            binder.bind(eventNamespace, async (e) => {
                 if ((isLocationBody) && (!application.Document.Contains(elj))) {
                     binder.unbind(eventNamespace);
                     return (true);
                 }
                 if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
                     return (true);
+                //Sector
+                const sectorEvent: string = isSectorDynamic ? await this.Application.Document.GetSectorResolved(el) : sector;
+                //Validation
+                if (!(await this.Application.Validator.IsValidationEventValid(el, sectorEvent, eventType, location, e)))
+                    return(true);
                 if (eventsDetachActivated)
                     return (true);
                 if (eventsDetach != null) {
@@ -118,7 +123,7 @@ class DrapoEventHandler {
                 const functionsValueCurrent: string = el.getAttribute(eventAttribute);
                 if (!isDelay) {
                     // tslint:disable-next-line:no-floating-promises
-                    application.EventHandler.ExecuteEvent(sector, null, el, e, eventType, location, functionsValueCurrent, isSectorDynamic);
+                    application.EventHandler.ExecuteEvent(sector, null, el, e, functionsValueCurrent, isSectorDynamic);
                 } else {
                     if (delayTimeout != null)
                         clearTimeout(delayTimeout);
@@ -126,7 +131,7 @@ class DrapoEventHandler {
                         clearTimeout(delayTimeout);
                         delayTimeout = null;
                         // tslint:disable-next-line:no-floating-promises
-                        application.EventHandler.ExecuteEvent(sector, null, el, e, eventType, location, functionsValueCurrent, isSectorDynamic);
+                        application.EventHandler.ExecuteEvent(sector, null, el, e, functionsValueCurrent, isSectorDynamic);
                     }, debounceTimeout);
                 }
                 return (propagation);
@@ -170,12 +175,17 @@ class DrapoEventHandler {
             const eventsDetach: string[] = this.GetEventDetach(el, eventType);
             let eventsDetachActivated: boolean = false;
             binder.unbind(eventNamespace);
-            binder.bind(eventNamespace, (e) => {
+            binder.bind(eventNamespace, async (e) => {
                 if ((isLocationBody) && (!application.Document.Contains(elj))) {
                     binder.unbind(eventNamespace);
                     return (true);
                 }
                 if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
+                    return (true);
+                //Sector
+                const sectorLocal: string = application.Document.GetSector(e.target as HTMLElement);
+                //Validation
+                if (!(await this.Application.Validator.IsValidationEventValid(el, sectorLocal, eventType, location, e)))
                     return (true);
                 if (eventsDetachActivated)
                     return (true);
@@ -188,10 +198,9 @@ class DrapoEventHandler {
                             eventsDetachActivated = true;
                     }
                 }
-                const sectorLocal: string = application.Document.GetSector(e.target as HTMLElement);
                 if (!isDelay) {
                     // tslint:disable-next-line:no-floating-promises
-                    application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, eventType, location, functionsValue);
+                    application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, functionsValue);
                 } else {
                     if (delayTimeout != null)
                         clearTimeout(delayTimeout);
@@ -199,7 +208,7 @@ class DrapoEventHandler {
                         clearTimeout(delayTimeout);
                         delayTimeout = null;
                         // tslint:disable-next-line:no-floating-promises
-                        application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, eventType, location, functionsValue);
+                        application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, functionsValue);
                     }, debounceTimeout);
                 }
                 return (propagation);
@@ -207,13 +216,10 @@ class DrapoEventHandler {
         }
     }
 
-    private async ExecuteEvent(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, eventType: string, location : string, functionsValue: string, isSectorDynamic : boolean = false): Promise<void> {
+    private async ExecuteEvent(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionsValue: string, isSectorDynamic : boolean = false): Promise<void> {
         try {
             //Sector
             const sectorEvent: string = isSectorDynamic ? await this.Application.Document.GetSectorResolved(element) : sector;
-            //Validation
-            if (!(await this.Application.Validator.IsValidationEventValid(element, sectorEvent, eventType, location, event)))
-                return;
             //Event
             await this.Application.FunctionHandler.ResolveFunction(sectorEvent, contextItem, element, event, functionsValue);
         } catch (e) {

@@ -8718,39 +8718,59 @@ var DrapoEventHandler = (function () {
                                         eventsDetachActivated = false;
                                         eventAttribute = event_1[0];
                                         binder.unbind(eventNamespace);
-                                        binder.bind(eventNamespace, function (e) {
-                                            if ((isLocationBody) && (!application.Document.Contains(elj))) {
-                                                binder.unbind(eventNamespace);
-                                                return (true);
-                                            }
-                                            if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
-                                                return (true);
-                                            if (eventsDetachActivated)
-                                                return (true);
-                                            if (eventsDetach != null) {
-                                                for (var i_1 = 0; i_1 < eventsDetach.length; i_1++) {
-                                                    var eventDetach = eventsDetach[i_1];
-                                                    var eventDetachNamespace = _this.CreateEventNamespace(el, null, eventDetach, 'noContext');
-                                                    binder.unbind(eventDetachNamespace);
-                                                    if (eventDetach === eventType)
-                                                        eventsDetachActivated = true;
+                                        binder.bind(eventNamespace, function (e) { return __awaiter(_this, void 0, void 0, function () {
+                                            var sectorEvent, _a, i_1, eventDetach, eventDetachNamespace, functionsValueCurrent;
+                                            return __generator(this, function (_b) {
+                                                switch (_b.label) {
+                                                    case 0:
+                                                        if ((isLocationBody) && (!application.Document.Contains(elj))) {
+                                                            binder.unbind(eventNamespace);
+                                                            return [2, (true)];
+                                                        }
+                                                        if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
+                                                            return [2, (true)];
+                                                        if (!isSectorDynamic) return [3, 2];
+                                                        return [4, this.Application.Document.GetSectorResolved(el)];
+                                                    case 1:
+                                                        _a = _b.sent();
+                                                        return [3, 3];
+                                                    case 2:
+                                                        _a = sector;
+                                                        _b.label = 3;
+                                                    case 3:
+                                                        sectorEvent = _a;
+                                                        return [4, this.Application.Validator.IsValidationEventValid(el, sectorEvent, eventType, location_1, e)];
+                                                    case 4:
+                                                        if (!(_b.sent()))
+                                                            return [2, (true)];
+                                                        if (eventsDetachActivated)
+                                                            return [2, (true)];
+                                                        if (eventsDetach != null) {
+                                                            for (i_1 = 0; i_1 < eventsDetach.length; i_1++) {
+                                                                eventDetach = eventsDetach[i_1];
+                                                                eventDetachNamespace = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
+                                                                binder.unbind(eventDetachNamespace);
+                                                                if (eventDetach === eventType)
+                                                                    eventsDetachActivated = true;
+                                                            }
+                                                        }
+                                                        functionsValueCurrent = el.getAttribute(eventAttribute);
+                                                        if (!isDelay) {
+                                                            application.EventHandler.ExecuteEvent(sector, null, el, e, functionsValueCurrent, isSectorDynamic);
+                                                        }
+                                                        else {
+                                                            if (delayTimeout != null)
+                                                                clearTimeout(delayTimeout);
+                                                            delayTimeout = setTimeout(function () {
+                                                                clearTimeout(delayTimeout);
+                                                                delayTimeout = null;
+                                                                application.EventHandler.ExecuteEvent(sector, null, el, e, functionsValueCurrent, isSectorDynamic);
+                                                            }, debounceTimeout);
+                                                        }
+                                                        return [2, (propagation)];
                                                 }
-                                            }
-                                            var functionsValueCurrent = el.getAttribute(eventAttribute);
-                                            if (!isDelay) {
-                                                application.EventHandler.ExecuteEvent(sector, null, el, e, eventType, location_1, functionsValueCurrent, isSectorDynamic);
-                                            }
-                                            else {
-                                                if (delayTimeout != null)
-                                                    clearTimeout(delayTimeout);
-                                                delayTimeout = setTimeout(function () {
-                                                    clearTimeout(delayTimeout);
-                                                    delayTimeout = null;
-                                                    application.EventHandler.ExecuteEvent(sector, null, el, e, eventType, location_1, functionsValueCurrent, isSectorDynamic);
-                                                }, debounceTimeout);
-                                            }
-                                            return (propagation);
-                                        });
+                                            });
+                                        }); });
                                         return [2];
                                 }
                             });
@@ -8818,39 +8838,49 @@ var DrapoEventHandler = (function () {
                                         eventsDetach = this_2.GetEventDetach(el, eventType);
                                         eventsDetachActivated = false;
                                         binder.unbind(eventNamespace);
-                                        binder.bind(eventNamespace, function (e) {
-                                            if ((isLocationBody) && (!application.Document.Contains(elj))) {
-                                                binder.unbind(eventNamespace);
-                                                return (true);
-                                            }
-                                            if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
-                                                return (true);
-                                            if (eventsDetachActivated)
-                                                return (true);
-                                            if (eventsDetach != null) {
-                                                for (var i_2 = 0; i_2 < eventsDetach.length; i_2++) {
-                                                    var eventDetach = eventsDetach[i_2];
-                                                    var eventDetachNamespace = _this.CreateEventNamespace(el, null, eventDetach, 'noContext');
-                                                    binder.unbind(eventDetachNamespace);
-                                                    if (eventDetach === eventType)
-                                                        eventsDetachActivated = true;
+                                        binder.bind(eventNamespace, function (e) { return __awaiter(_this, void 0, void 0, function () {
+                                            var sectorLocal, i_2, eventDetach, eventDetachNamespace;
+                                            return __generator(this, function (_a) {
+                                                switch (_a.label) {
+                                                    case 0:
+                                                        if ((isLocationBody) && (!application.Document.Contains(elj))) {
+                                                            binder.unbind(eventNamespace);
+                                                            return [2, (true)];
+                                                        }
+                                                        if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
+                                                            return [2, (true)];
+                                                        sectorLocal = application.Document.GetSector(e.target);
+                                                        return [4, this.Application.Validator.IsValidationEventValid(el, sectorLocal, eventType, location_2, e)];
+                                                    case 1:
+                                                        if (!(_a.sent()))
+                                                            return [2, (true)];
+                                                        if (eventsDetachActivated)
+                                                            return [2, (true)];
+                                                        if (eventsDetach != null) {
+                                                            for (i_2 = 0; i_2 < eventsDetach.length; i_2++) {
+                                                                eventDetach = eventsDetach[i_2];
+                                                                eventDetachNamespace = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
+                                                                binder.unbind(eventDetachNamespace);
+                                                                if (eventDetach === eventType)
+                                                                    eventsDetachActivated = true;
+                                                            }
+                                                        }
+                                                        if (!isDelay) {
+                                                            application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, functionsValue);
+                                                        }
+                                                        else {
+                                                            if (delayTimeout != null)
+                                                                clearTimeout(delayTimeout);
+                                                            delayTimeout = setTimeout(function () {
+                                                                clearTimeout(delayTimeout);
+                                                                delayTimeout = null;
+                                                                application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, functionsValue);
+                                                            }, debounceTimeout);
+                                                        }
+                                                        return [2, (propagation)];
                                                 }
-                                            }
-                                            var sectorLocal = application.Document.GetSector(e.target);
-                                            if (!isDelay) {
-                                                application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, eventType, location_2, functionsValue);
-                                            }
-                                            else {
-                                                if (delayTimeout != null)
-                                                    clearTimeout(delayTimeout);
-                                                delayTimeout = setTimeout(function () {
-                                                    clearTimeout(delayTimeout);
-                                                    delayTimeout = null;
-                                                    application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, eventType, location_2, functionsValue);
-                                                }, debounceTimeout);
-                                            }
-                                            return (propagation);
-                                        });
+                                            });
+                                        }); });
                                         return [2];
                                 }
                             });
@@ -8872,14 +8902,14 @@ var DrapoEventHandler = (function () {
             });
         });
     };
-    DrapoEventHandler.prototype.ExecuteEvent = function (sector, contextItem, element, event, eventType, location, functionsValue, isSectorDynamic) {
+    DrapoEventHandler.prototype.ExecuteEvent = function (sector, contextItem, element, event, functionsValue, isSectorDynamic) {
         if (isSectorDynamic === void 0) { isSectorDynamic = false; }
         return __awaiter(this, void 0, void 0, function () {
             var sectorEvent, _a, e_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 6, , 8]);
+                        _b.trys.push([0, 5, , 7]);
                         if (!isSectorDynamic) return [3, 2];
                         return [4, this.Application.Document.GetSectorResolved(element)];
                     case 1:
@@ -8890,21 +8920,17 @@ var DrapoEventHandler = (function () {
                         _b.label = 3;
                     case 3:
                         sectorEvent = _a;
-                        return [4, this.Application.Validator.IsValidationEventValid(element, sectorEvent, eventType, location, event)];
-                    case 4:
-                        if (!(_b.sent()))
-                            return [2];
                         return [4, this.Application.FunctionHandler.ResolveFunction(sectorEvent, contextItem, element, event, functionsValue)];
-                    case 5:
+                    case 4:
                         _b.sent();
-                        return [3, 8];
-                    case 6:
+                        return [3, 7];
+                    case 5:
                         e_1 = _b.sent();
                         return [4, this.Application.ExceptionHandler.Handle(e_1, 'DrapoEventHandler - ExecuteEvent')];
-                    case 7:
+                    case 6:
                         _b.sent();
-                        return [3, 8];
-                    case 8: return [2];
+                        return [3, 7];
+                    case 7: return [2];
                 }
             });
         });
