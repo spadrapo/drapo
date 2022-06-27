@@ -713,6 +713,7 @@ declare class DrapoEventHandler {
     private readonly _debounceDefault;
     private readonly _debounceDefaultClick;
     private readonly _debounce;
+    private readonly _detach;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     HasContentEventContext(content: string): boolean;
@@ -727,6 +728,7 @@ declare class DrapoEventHandler {
     private IsEventTypeValid;
     private IsEventDelay;
     GetEventDebounce(el: HTMLElement, eventType: string): number;
+    GetEventDetach(el: HTMLElement, eventType: string): string[];
     private HasEventDoubleClickInParent;
     private IsEventTypeKeyboard;
     IsValidEventFilter(e: Event, eventFilter: string): boolean;
@@ -803,7 +805,7 @@ declare class DrapoFormatter {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    Format(value: string, format: string, culture?: string): string;
+    Format(value: string, format: string, culture?: string, applyTimezone?: boolean): string;
     private FormatDate;
     private ConvertDateFormat;
     private GetDateFormattedTokens;
@@ -842,7 +844,7 @@ declare class DrapoFunctionHandler {
     ResolveFunction(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionsValue: string, executionContext?: DrapoExecutionContext<any>, forceFinalizeExecutionContext?: boolean): Promise<string>;
     private ResolveFunctionContext;
     ResolveFunctionParameter(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, parameter: string, canForceLoadDataDelay?: boolean, canUseReturnFunction?: boolean, isRecursive?: boolean): Promise<any>;
-    ResolveFunctions(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, value: string): Promise<any>;
+    ResolveFunctions(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, value: string, checkInvalidFunction?: boolean): Promise<any>;
     private ResolveFunctionParameterDataFields;
     private ExecuteFunctionContextSwitch;
     private ExecuteFunctionExternal;
@@ -1301,6 +1303,7 @@ declare class DrapoParser {
     private ParseQuerySourceHead;
     private ParseQuerySourceHeadValue;
     private ParseQueryFilter;
+    private ParseQueryOrderBy;
 }
 
 declare class DrapoPipeMessage {
@@ -1338,6 +1341,7 @@ declare class DrapoQuery {
     private _projections;
     private _sources;
     private _filter;
+    private _sorts;
     private _outputArray;
     get Error(): string;
     set Error(value: string);
@@ -1347,6 +1351,8 @@ declare class DrapoQuery {
     set Sources(value: DrapoQuerySource[]);
     get Filter(): DrapoQueryCondition;
     set Filter(value: DrapoQueryCondition);
+    get Sorts(): DrapoQuerySort[];
+    set Sorts(value: DrapoQuerySort[]);
     get OutputArray(): string;
     set OutputArray(value: string);
 }
@@ -1395,6 +1401,15 @@ declare class DrapoQueryProjection {
     set FunctionName(value: string);
     get FunctionParameters(): string[];
     set FunctionParameters(value: string[]);
+}
+
+declare class DrapoQuerySort {
+    private _column;
+    private _type;
+    get Column(): string;
+    set Column(value: string);
+    get Type(): string;
+    set Type(value: string);
 }
 
 declare class DrapoQuerySource {
@@ -1802,8 +1817,11 @@ declare class DrapoStorage {
     private _isDelayTriggered;
     private _cacheLocalDataKeyArray;
     private readonly CONTENT_TYPE_JSON;
+    private _lock;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
+    AdquireLock(): Promise<void>;
+    ReleaseLock(): void;
     Retrieve(elj: JQuery, dataKey: string, sector: string, context: DrapoContext, dataKeyParts?: string[]): Promise<DrapoStorageItem>;
     RetrieveDataItemContext(dataKey: string, sector: string, executionContext?: DrapoExecutionContext<any>): Promise<DrapoStorageItem>;
     RetrieveData(dataKey: string, sector: string, executionContext?: DrapoExecutionContext<any>): Promise<any[]>;
@@ -1952,6 +1970,10 @@ declare class DrapoStorage {
     private ResolveQueryConditionMustachesFilter;
     private ResolveQueryConditionMustachesFilterValue;
     private IsValidQueryCondition;
+    private ResolveQuerySortsMustaches;
+    private ResolveQueryOrderBy;
+    private IsSwapQueryOrderBy;
+    private GetSwapQueryOrderBy;
 }
 
 declare class DrapoStorageItem {
