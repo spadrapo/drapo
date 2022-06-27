@@ -36,6 +36,14 @@ Task("Release")
 Task("Type")
     .Does(() =>
 {
+     var fileContent = "";
+     IEnumerable<FilePath> files = GetFiles("../../Middleware/Drapo/js/*.d.ts");
+     foreach(FilePath file in files){
+        if (!string.IsNullOrEmpty(fileContent))
+            fileContent = fileContent + "\n";
+        fileContent = fileContent + FileReadText(file);
+     }
+      FileWriteText("../../Middleware/Drapo/lib/index.d.ts", fileContent);
 });
 
 Task("Lint")
