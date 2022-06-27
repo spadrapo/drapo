@@ -12,23 +12,25 @@ class DrapoFormatter {
         this._application = application;
     }
 
-    public Format(value: string, format: string, culture: string = null): string {
+    public Format(value: string, format: string, culture: string = null, applyTimezone: boolean = null): string {
         if ((value == null) || (value === ''))
             return ('');
         if (this.Application.Parser.IsBoolean(value))
             return (value);
         if (this.Application.Parser.IsNumber(value))
             return (this.FormatNumber(this.Application.Parser.ParseNumber(value), format, culture));
-        return (this.FormatDate(value, format, culture));
+        return (this.FormatDate(value, format, culture, applyTimezone == null ? true : applyTimezone));
     }
 
-    private FormatDate(value: string, format: string, culture: string): string {
+    private FormatDate(value: string, format: string, culture: string, applyTimezone: boolean): string {
         const date: Date = this.Application.Parser.ParseDate(value);
         if (date === null)
             return (value);
-        const timeZone: number = this.Application.Config.GetTimezone();
-        if (timeZone != null)
-            date.setHours(date.getHours() + timeZone);
+        if (applyTimezone) {
+            const timeZone: number = this.Application.Config.GetTimezone();
+            if (timeZone != null)
+                date.setHours(date.getHours() + timeZone);
+        }
         const formatConverted: string = this.ConvertDateFormat(format, culture);
         const formatTokens: string[] = this.Application.Parser.ParseFormat(formatConverted);
         const dateFormatted: string = this.GetDateFormattedTokens(date, formatTokens, culture);

@@ -9313,23 +9313,26 @@ var DrapoFormatter = (function () {
         enumerable: false,
         configurable: true
     });
-    DrapoFormatter.prototype.Format = function (value, format, culture) {
+    DrapoFormatter.prototype.Format = function (value, format, culture, applyTimezone) {
         if (culture === void 0) { culture = null; }
+        if (applyTimezone === void 0) { applyTimezone = null; }
         if ((value == null) || (value === ''))
             return ('');
         if (this.Application.Parser.IsBoolean(value))
             return (value);
         if (this.Application.Parser.IsNumber(value))
             return (this.FormatNumber(this.Application.Parser.ParseNumber(value), format, culture));
-        return (this.FormatDate(value, format, culture));
+        return (this.FormatDate(value, format, culture, applyTimezone == null ? true : applyTimezone));
     };
-    DrapoFormatter.prototype.FormatDate = function (value, format, culture) {
+    DrapoFormatter.prototype.FormatDate = function (value, format, culture, applyTimezone) {
         var date = this.Application.Parser.ParseDate(value);
         if (date === null)
             return (value);
-        var timeZone = this.Application.Config.GetTimezone();
-        if (timeZone != null)
-            date.setHours(date.getHours() + timeZone);
+        if (applyTimezone) {
+            var timeZone = this.Application.Config.GetTimezone();
+            if (timeZone != null)
+                date.setHours(date.getHours() + timeZone);
+        }
         var formatConverted = this.ConvertDateFormat(format, culture);
         var formatTokens = this.Application.Parser.ParseFormat(formatConverted);
         var dateFormatted = this.GetDateFormattedTokens(date, formatTokens, culture);
