@@ -3174,7 +3174,7 @@ var DrapoFunctionHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         validation = functionParsed.Parameters[0];
-                        return [4, this.Application.Validator.IsValidationExpressionValid(element, sector, validation)];
+                        return [4, this.Application.Validator.IsValidationExpressionValid(element, sector, validation, contextItem)];
                     case 1:
                         isValid = _a.sent();
                         return [2, (isValid ? 'true' : 'false')];
@@ -3189,7 +3189,7 @@ var DrapoFunctionHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         validation = functionParsed.Parameters[0];
-                        return [4, this.Application.Validator.UncheckValidationExpression(element, sector, validation)];
+                        return [4, this.Application.Validator.UncheckValidationExpression(element, sector, validation, contextItem)];
                     case 1:
                         _a.sent();
                         return [2, ('')];

@@ -14,6 +14,7 @@ declare class DrapoEventHandler {
     GetElementParent(element: Element, levels?: number): JQuery;
     Attach(el: HTMLElement, renderContext: DrapoRenderContext): Promise<void>;
     AttachContext(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, renderContext: DrapoRenderContext): Promise<void>;
+    private HasEventContext;
     private ExecuteEvent;
     private IsEventTypeValid;
     private IsEventDelay;

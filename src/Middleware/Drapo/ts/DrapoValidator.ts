@@ -112,22 +112,22 @@ class DrapoValidator {
         return (null);
     }
 
-    public async IsValidationEventValid(el: HTMLElement, sector: string, eventType: string, location: string, event: JQueryEventObject): Promise<boolean> {
+    public async IsValidationEventValid(el: HTMLElement, sector: string, eventType: string, location: string, event: JQueryEventObject, contextItem: DrapoContextItem): Promise<boolean> {
         if (el.getAttribute == null)
             return (true);
         const attribute: string = location == null ? 'd-validation-on-' + eventType : 'd-validation-on-' + location + '-' + eventType;
         const validation: string = el.getAttribute(attribute);
         if (validation == null)
             return (true);
-        const isValid: boolean = await this.IsValidationExpressionValid(el, sector, validation, event);
+        const isValid: boolean = await this.IsValidationExpressionValid(el, sector, validation, contextItem, event);
         return (isValid);
     }
 
-    public async IsValidationExpressionValid(el: HTMLElement, sector: string, validation: string, event: JQueryEventObject = null): Promise<boolean> {
+    public async IsValidationExpressionValid(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem, event: JQueryEventObject = null): Promise<boolean> {
         const uncheckedClass: string = await this.Application.Config.GetValidatorUncheckedClass();
         const validClass: string = await this.Application.Config.GetValidatorValidClass();
         const invalidClass: string = await this.Application.Config.GetValidatorInvalidClass();
-        const validations: string[] = await this.ResolveValidations(sector, validation);
+        const validations: string[] = await this.ResolveValidations(sector, validation, contextItem);
         let isValid: boolean = true;
         for (let i: number = 0; i < validations.length; i++)
             if (!await this.IsValidationValid(sector, validations[i], el, event, isValid, uncheckedClass, validClass, invalidClass))
@@ -135,11 +135,11 @@ class DrapoValidator {
         return (isValid);
     }
 
-    public async UncheckValidationExpression(el: HTMLElement, sector: string, validation: string): Promise<void> {
+    public async UncheckValidationExpression(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem): Promise<void> {
         const uncheckedClass: string = await this.Application.Config.GetValidatorUncheckedClass();
         const validClass: string = await this.Application.Config.GetValidatorValidClass();
         const invalidClass: string = await this.Application.Config.GetValidatorInvalidClass();
-        const validations: string[] = await this.ResolveValidations(sector, validation);
+        const validations: string[] = await this.ResolveValidations(sector, validation, contextItem);
         for (let i: number = 0; i < validations.length; i++)
             this.UncheckValidation(sector, validations[i], uncheckedClass, validClass, invalidClass);
     }
@@ -270,11 +270,11 @@ class DrapoValidator {
         return (parse[2]);
     }
 
-    private async ResolveValidations(sector: string, validation: string): Promise<string[]> {
+    private async ResolveValidations(sector: string, validation: string, contextItem: DrapoContextItem): Promise<string[]> {
         //Mustache
         let validationResolved: string = null;
         if (this.Application.Parser.IsMustacheOnly(validation)) {
-            validationResolved = await this.Application.Barber.ResolveControlFlowMustacheString(null, null, validation, null, sector, false);
+            validationResolved = await this.Application.Barber.ResolveControlFlowMustacheString(contextItem == null ? null : contextItem.Context, null, validation, null, sector, false);
         } else {
             validationResolved = validation;
         }
@@ -285,7 +285,7 @@ class DrapoValidator {
             for (let i: number = 0; i < validatorsArray.length; i++) {
                 const validator: [string, string] = validatorsArray[i];
                 const validatorConditional: string = validator[1];
-                if ((validatorConditional != null) && (!await this.IsValidConditional(sector, validatorConditional, null)))
+                if ((validatorConditional != null) && (!await this.IsValidConditional(sector, validatorConditional, contextItem)))
                     continue;
                 validations.push(validator[0]);
             }

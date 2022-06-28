@@ -1408,13 +1408,13 @@ class DrapoFunctionHandler {
 
     private async ExecuteFunctionExecuteValidation(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const validation: string = functionParsed.Parameters[0];
-        const isValid : boolean = await this.Application.Validator.IsValidationExpressionValid(element as HTMLElement, sector, validation);
+        const isValid : boolean = await this.Application.Validator.IsValidationExpressionValid(element as HTMLElement, sector, validation, contextItem);
         return (isValid ? 'true' : 'false');
     }
 
     private async ExecuteFunctionClearValidation(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const validation: string = functionParsed.Parameters[0];
-        await this.Application.Validator.UncheckValidationExpression(element as HTMLElement, sector, validation);
+        await this.Application.Validator.UncheckValidationExpression(element as HTMLElement, sector, validation, contextItem);
         return ('');
     }
 

@@ -65,7 +65,7 @@ declare class DrapoParser {
     private ParseConditionalLogicalOrComparatorSeparator;
     GetStringAsNumber(text: string): number;
     ParseEvents(data: string): string[];
-    ParseEventProperty(event: string, value: string): [string, string, string, string, string];
+    ParseEventProperty(el: HTMLElement, event: string, value: string): [string, string, string, string, string, string];
     private ParseEventLocation;
     ParseEvent(event: string): [string, string];
     IsUri(data: string): boolean;

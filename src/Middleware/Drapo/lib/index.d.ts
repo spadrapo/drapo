@@ -724,6 +724,7 @@ declare class DrapoEventHandler {
     GetElementParent(element: Element, levels?: number): JQuery;
     Attach(el: HTMLElement, renderContext: DrapoRenderContext): Promise<void>;
     AttachContext(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, renderContext: DrapoRenderContext): Promise<void>;
+    private HasEventContext;
     private ExecuteEvent;
     private IsEventTypeValid;
     private IsEventDelay;
@@ -1240,7 +1241,7 @@ declare class DrapoParser {
     private ParseConditionalLogicalOrComparatorSeparator;
     GetStringAsNumber(text: string): number;
     ParseEvents(data: string): string[];
-    ParseEventProperty(event: string, value: string): [string, string, string, string, string];
+    ParseEventProperty(el: HTMLElement, event: string, value: string): [string, string, string, string, string, string];
     private ParseEventLocation;
     ParseEvent(event: string): [string, string];
     IsUri(data: string): boolean;
@@ -2138,9 +2139,9 @@ declare class DrapoValidator {
     RegisterValidation(el: HTMLElement, sector: string, context?: DrapoContext): Promise<void>;
     private ResolveValidationID;
     private GetValidationTag;
-    IsValidationEventValid(el: HTMLElement, sector: string, eventType: string, location: string, event: JQueryEventObject): Promise<boolean>;
-    IsValidationExpressionValid(el: HTMLElement, sector: string, validation: string, event?: JQueryEventObject): Promise<boolean>;
-    UncheckValidationExpression(el: HTMLElement, sector: string, validation: string): Promise<void>;
+    IsValidationEventValid(el: HTMLElement, sector: string, eventType: string, location: string, event: JQueryEventObject, contextItem: DrapoContextItem): Promise<boolean>;
+    IsValidationExpressionValid(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem, event?: JQueryEventObject): Promise<boolean>;
+    UncheckValidationExpression(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem): Promise<void>;
     private GetSectorIndex;
     private GetIndex;
     private GetElement;

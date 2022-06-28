@@ -588,7 +588,7 @@ class DrapoParser {
         return (parse);
     }
 
-    public ParseEventProperty(event: string, value: string): [string, string, string, string, string] {
+    public ParseEventProperty(el: HTMLElement, event: string, value: string): [string, string, string, string, string, string] {
         const parse: string[] = this.ParseProperty(event);
         if (parse.length < 3)
             return (null);
@@ -600,7 +600,8 @@ class DrapoParser {
         let index: number = location === null ? 2 : 3;
         const trigger: string = parse[index++];
         const eventFilter: string = parse.length > index ? parse[index] : null;
-        return ([event, location, trigger, value, eventFilter]);
+        const validation: string = el.getAttribute('d-validation-on-' + trigger); 
+        return ([event, location, trigger, value, eventFilter, validation]);
     }
 
     private ParseEventLocation(value: string): string {
