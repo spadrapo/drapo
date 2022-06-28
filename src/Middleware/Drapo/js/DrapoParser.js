@@ -549,7 +549,7 @@ var DrapoParser = (function () {
         var parse = this.Tokenize(data, ',');
         return (parse);
     };
-    DrapoParser.prototype.ParseEventProperty = function (event, value) {
+    DrapoParser.prototype.ParseEventProperty = function (el, event, value) {
         var parse = this.ParseProperty(event);
         if (parse.length < 3)
             return (null);
@@ -561,7 +561,8 @@ var DrapoParser = (function () {
         var index = location === null ? 2 : 3;
         var trigger = parse[index++];
         var eventFilter = parse.length > index ? parse[index] : null;
-        return ([event, location, trigger, value, eventFilter]);
+        var validation = el.getAttribute('d-validation-on-' + trigger);
+        return ([event, location, trigger, value, eventFilter, validation]);
     };
     DrapoParser.prototype.ParseEventLocation = function (value) {
         if (value === 'body')

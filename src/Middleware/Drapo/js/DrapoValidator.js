@@ -156,7 +156,7 @@ var DrapoValidator = (function () {
             return (this.Application.Solver.Get(validations, 'sector'));
         return (null);
     };
-    DrapoValidator.prototype.IsValidationEventValid = function (el, sector, eventType, location, event) {
+    DrapoValidator.prototype.IsValidationEventValid = function (el, sector, eventType, location, event, contextItem) {
         return __awaiter(this, void 0, void 0, function () {
             var attribute, validation, isValid;
             return __generator(this, function (_a) {
@@ -168,7 +168,7 @@ var DrapoValidator = (function () {
                         validation = el.getAttribute(attribute);
                         if (validation == null)
                             return [2, (true)];
-                        return [4, this.IsValidationExpressionValid(el, sector, validation, event)];
+                        return [4, this.IsValidationExpressionValid(el, sector, validation, contextItem, event)];
                     case 1:
                         isValid = _a.sent();
                         return [2, (isValid)];
@@ -176,7 +176,7 @@ var DrapoValidator = (function () {
             });
         });
     };
-    DrapoValidator.prototype.IsValidationExpressionValid = function (el, sector, validation, event) {
+    DrapoValidator.prototype.IsValidationExpressionValid = function (el, sector, validation, contextItem, event) {
         if (event === void 0) { event = null; }
         return __awaiter(this, void 0, void 0, function () {
             var uncheckedClass, validClass, invalidClass, validations, isValid, i;
@@ -191,7 +191,7 @@ var DrapoValidator = (function () {
                         return [4, this.Application.Config.GetValidatorInvalidClass()];
                     case 3:
                         invalidClass = _a.sent();
-                        return [4, this.ResolveValidations(sector, validation)];
+                        return [4, this.ResolveValidations(sector, validation, contextItem)];
                     case 4:
                         validations = _a.sent();
                         isValid = true;
@@ -212,7 +212,7 @@ var DrapoValidator = (function () {
             });
         });
     };
-    DrapoValidator.prototype.UncheckValidationExpression = function (el, sector, validation) {
+    DrapoValidator.prototype.UncheckValidationExpression = function (el, sector, validation, contextItem) {
         return __awaiter(this, void 0, void 0, function () {
             var uncheckedClass, validClass, invalidClass, validations, i;
             return __generator(this, function (_a) {
@@ -226,7 +226,7 @@ var DrapoValidator = (function () {
                         return [4, this.Application.Config.GetValidatorInvalidClass()];
                     case 3:
                         invalidClass = _a.sent();
-                        return [4, this.ResolveValidations(sector, validation)];
+                        return [4, this.ResolveValidations(sector, validation, contextItem)];
                     case 4:
                         validations = _a.sent();
                         for (i = 0; i < validations.length; i++)
@@ -354,7 +354,7 @@ var DrapoValidator = (function () {
             return ('');
         return (parse[2]);
     };
-    DrapoValidator.prototype.ResolveValidations = function (sector, validation) {
+    DrapoValidator.prototype.ResolveValidations = function (sector, validation, contextItem) {
         return __awaiter(this, void 0, void 0, function () {
             var validationResolved, validations, validatorsArray, i, validator, validatorConditional, _a;
             return __generator(this, function (_b) {
@@ -362,7 +362,7 @@ var DrapoValidator = (function () {
                     case 0:
                         validationResolved = null;
                         if (!this.Application.Parser.IsMustacheOnly(validation)) return [3, 2];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(null, null, validation, null, sector, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(contextItem == null ? null : contextItem.Context, null, validation, null, sector, false)];
                     case 1:
                         validationResolved = _b.sent();
                         return [3, 3];
@@ -381,7 +381,7 @@ var DrapoValidator = (function () {
                         validatorConditional = validator[1];
                         _a = (validatorConditional != null);
                         if (!_a) return [3, 6];
-                        return [4, this.IsValidConditional(sector, validatorConditional, null)];
+                        return [4, this.IsValidConditional(sector, validatorConditional, contextItem)];
                     case 5:
                         _a = (!(_b.sent()));
                         _b.label = 6;

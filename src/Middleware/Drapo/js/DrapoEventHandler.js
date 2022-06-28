@@ -118,7 +118,7 @@ var DrapoEventHandler = (function () {
                                         functionsValue = event_1[3];
                                         _b = (!isSectorDynamic);
                                         if (!_b) return [3, 2];
-                                        return [4, this_1.Application.FunctionHandler.HasFunctionMustacheContext(functionsValue, sector, renderContext)];
+                                        return [4, this_1.HasEventContext(sector, renderContext, functionsValue, event_1[5])];
                                     case 1:
                                         _b = (_c.sent());
                                         _c.label = 2;
@@ -166,7 +166,7 @@ var DrapoEventHandler = (function () {
                                                         _b.label = 3;
                                                     case 3:
                                                         sectorEvent = _a;
-                                                        return [4, this.Application.Validator.IsValidationEventValid(el, sectorEvent, eventType, location_1, e)];
+                                                        return [4, this.Application.Validator.IsValidationEventValid(el, sectorEvent, eventType, location_1, e, null)];
                                                     case 4:
                                                         if (!(_b.sent()))
                                                             return [2, (true)];
@@ -241,7 +241,7 @@ var DrapoEventHandler = (function () {
                                         if (!this_2.IsEventTypeValid(eventType))
                                             return [2, "continue"];
                                         functionsValueOriginal = event_2[3];
-                                        return [4, this_2.Application.FunctionHandler.HasFunctionMustacheContext(functionsValueOriginal, sector, renderContext)];
+                                        return [4, this_2.HasEventContext(sector, renderContext, functionsValueOriginal, event_2[5])];
                                     case 1:
                                         if (!(_b.sent()))
                                             return [2, "continue"];
@@ -277,7 +277,7 @@ var DrapoEventHandler = (function () {
                                                         if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
                                                             return [2, (true)];
                                                         sectorLocal = application.Document.GetSector(e.target);
-                                                        return [4, this.Application.Validator.IsValidationEventValid(el, sectorLocal, eventType, location_2, e)];
+                                                        return [4, this.Application.Validator.IsValidationEventValid(el, sectorLocal, eventType, location_2, e, contextItem)];
                                                     case 1:
                                                         if (!(_a.sent()))
                                                             return [2, (true)];
@@ -325,6 +325,29 @@ var DrapoEventHandler = (function () {
                         i++;
                         return [3, 1];
                     case 4: return [2];
+                }
+            });
+        });
+    };
+    DrapoEventHandler.prototype.HasEventContext = function (sector, renderContext, functionsValue, validation) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4, this.Application.FunctionHandler.HasFunctionMustacheContext(functionsValue, sector, renderContext)];
+                    case 1:
+                        if (_b.sent())
+                            return [2, (true)];
+                        _a = (validation != null);
+                        if (!_a) return [3, 3];
+                        return [4, this.Application.FunctionHandler.HasFunctionMustacheContext(validation, sector, renderContext)];
+                    case 2:
+                        _a = (_b.sent());
+                        _b.label = 3;
+                    case 3:
+                        if (_a)
+                            return [2, (true)];
+                        return [2, (false)];
                 }
             });
         });
@@ -444,7 +467,7 @@ var DrapoEventHandler = (function () {
         var events = [];
         for (var i = 0; i < el.attributes.length; i++) {
             var attribute = el.attributes[i];
-            var event_3 = this.Application.Parser.ParseEventProperty(attribute.nodeName, attribute.nodeValue);
+            var event_3 = this.Application.Parser.ParseEventProperty(el, attribute.nodeName, attribute.nodeValue);
             if ((event_3 != null) && (event_3[4] !== this._debounce) && (event_3[4] !== this._detach))
                 events.push(event_3);
         }

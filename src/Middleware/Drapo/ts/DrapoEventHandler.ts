@@ -61,7 +61,7 @@ class DrapoEventHandler {
 
     public async Attach(el: HTMLElement, renderContext: DrapoRenderContext): Promise<void> {
         //Events
-        const events: [string, string, string, string, string][] = this.RetrieveElementEvents(el);
+        const events: [string, string, string, string, string, string][] = this.RetrieveElementEvents(el);
         if (events.length == 0)
             return;
         const application: DrapoApplication = this.Application;
@@ -69,12 +69,12 @@ class DrapoEventHandler {
         const sector: string = await this.Application.Document.GetSectorResolved(el);
         const isSectorDynamic: boolean = await this.Application.Document.IsSectorDynamic(el);
         for (let i = 0; i < events.length; i++) {
-            const event: [string, string, string, string, string] = events[i];
+            const event: [string, string, string, string, string, string] = events[i];
             const eventType: string = event[2];
             if (!this.IsEventTypeValid(eventType))
                 continue;
             const functionsValue: string = event[3];
-            if ((!isSectorDynamic) && (await this.Application.FunctionHandler.HasFunctionMustacheContext(functionsValue, sector, renderContext)))
+            if ((!isSectorDynamic) && (await this.HasEventContext(sector, renderContext, functionsValue, event[5])))
                 continue;
             const eventFilter: string = event[4];
             const location: string = event[1];
@@ -107,7 +107,7 @@ class DrapoEventHandler {
                 //Sector
                 const sectorEvent: string = isSectorDynamic ? await this.Application.Document.GetSectorResolved(el) : sector;
                 //Validation
-                if (!(await this.Application.Validator.IsValidationEventValid(el, sectorEvent, eventType, location, e)))
+                if (!(await this.Application.Validator.IsValidationEventValid(el, sectorEvent, eventType, location, e, null)))
                     return(true);
                 if (eventsDetachActivated)
                     return (true);
@@ -141,18 +141,18 @@ class DrapoEventHandler {
 
     public async AttachContext(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, renderContext: DrapoRenderContext): Promise<void> {
         //Events
-        const events: [string, string, string, string, string][] = this.RetrieveElementEvents(el);
+        const events: [string, string, string, string, string, string][] = this.RetrieveElementEvents(el);
         if (events.length == 0)
             return;
         const application: DrapoApplication = this.Application;
         const contextItem: DrapoContextItem = context.Item;
         for (let i = 0; i < events.length; i++) {
-            const event: [string, string, string, string, string] = events[i];
+            const event: [string, string, string, string, string, string] = events[i];
             const eventType: string = event[2];
             if (!this.IsEventTypeValid(eventType))
                 continue;
             const functionsValueOriginal: string = event[3];
-            if (!(await this.Application.FunctionHandler.HasFunctionMustacheContext(functionsValueOriginal, sector, renderContext)))
+            if (!(await this.HasEventContext(sector, renderContext, functionsValueOriginal, event[5])))
                 continue;
             const eventFilter: string = event[4];
             const location: string = event[1];
@@ -185,7 +185,7 @@ class DrapoEventHandler {
                 //Sector
                 const sectorLocal: string = application.Document.GetSector(e.target as HTMLElement);
                 //Validation
-                if (!(await this.Application.Validator.IsValidationEventValid(el, sectorLocal, eventType, location, e)))
+                if (!(await this.Application.Validator.IsValidationEventValid(el, sectorLocal, eventType, location, e, contextItem)))
                     return (true);
                 if (eventsDetachActivated)
                     return (true);
@@ -214,6 +214,14 @@ class DrapoEventHandler {
                 return (propagation);
             });
         }
+    }
+
+    private async HasEventContext(sector: string, renderContext: DrapoRenderContext, functionsValue: string, validation: string): Promise<boolean>{
+        if (await this.Application.FunctionHandler.HasFunctionMustacheContext(functionsValue, sector, renderContext))
+            return (true);
+        if ((validation != null) && (await this.Application.FunctionHandler.HasFunctionMustacheContext(validation, sector, renderContext)))
+            return (true);
+        return (false);
     }
 
     private async ExecuteEvent(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionsValue: string, isSectorDynamic : boolean = false): Promise<void> {
@@ -317,12 +325,12 @@ class DrapoEventHandler {
         return (key);
     }
 
-    private RetrieveElementEvents(el : HTMLElement): [string, string, string, string, string][] {
-        const events: [string, string, string, string, string][] = [];
+    private RetrieveElementEvents(el : HTMLElement): [string, string, string, string, string,string][] {
+        const events: [string, string, string, string, string, string][] = [];
         for (let i: number = 0; i < el.attributes.length; i++)
         {
             const attribute: Attr = el.attributes[i];
-            const event: [string, string, string, string, string] = this.Application.Parser.ParseEventProperty(attribute.nodeName, attribute.nodeValue);
+            const event: [string, string, string, string, string, string] = this.Application.Parser.ParseEventProperty(el, attribute.nodeName, attribute.nodeValue);
             if ((event != null) && (event[4] !== this._debounce) && (event[4] !== this._detach))
                 events.push(event);
         }
