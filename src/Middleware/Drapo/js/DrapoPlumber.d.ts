@@ -1,6 +1,8 @@
 declare var signalR: any;
 declare class DrapoPlumber {
     private _application;
+    private _lock;
+    private _messages;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     private CanUsePipes;
@@ -11,4 +13,7 @@ declare class DrapoPlumber {
     NotifyPipeStorage(message: DrapoPipeMessage): Promise<void>;
     private NofityPipeRegister;
     private NofityPipeExecute;
+    Lock(): boolean;
+    Unlock(): Promise<boolean>;
+    Clear(): void;
 }

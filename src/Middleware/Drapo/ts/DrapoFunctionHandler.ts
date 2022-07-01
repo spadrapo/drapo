@@ -361,6 +361,12 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionSetConfig(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'getconfig')
             return (await this.ExecuteFunctionGetConfig(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'lockplumber')
+            return (await this.ExecuteFunctionLockPlumber(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'unlockplumber')
+            return (await this.ExecuteFunctionUnlockPlumber(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'clearplumber')
+            return (await this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'debugger')
             return (await this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext));
         if (!checkInvalidFunction)
@@ -1382,6 +1388,21 @@ class DrapoFunctionHandler {
             if (timeZone != null)
                 return (timeZone.toString());
         }
+        return ('');
+    }
+
+    private async ExecuteFunctionLockPlumber(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        this.Application.Plumber.Lock();
+        return ('');
+    }
+
+    private async ExecuteFunctionUnlockPlumber(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        await this.Application.Plumber.Unlock();
+        return ('');
+    }
+
+    private async ExecuteFunctionClearPlumber(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        await this.Application.Plumber.Clear();
         return ('');
     }
 

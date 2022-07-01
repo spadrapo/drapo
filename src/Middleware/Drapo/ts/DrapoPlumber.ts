@@ -2,6 +2,8 @@ declare var signalR: any;
 class DrapoPlumber {
     //Field
     private _application: DrapoApplication;
+    private _lock: boolean = false;
+    private _messages: DrapoPipeMessage[] = [];
 
     //Properties
     get Application(): DrapoApplication {
@@ -76,6 +78,10 @@ class DrapoPlumber {
 
     public async NotifyPipe(message: DrapoPipeMessage): Promise<void> {
         try {
+            if (this._lock) {
+                this._messages.push(message);
+                return;
+            }
             if (message.Type == DrapoPipeMessageType.Storage)
                 await this.NotifyPipeStorage(message);
             else if (message.Type == DrapoPipeMessageType.Register)
@@ -114,5 +120,28 @@ class DrapoPlumber {
     private async NofityPipeExecute(message: DrapoPipeMessage): Promise<void>
     {
         await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, message.Data);
+    }
+
+    public Lock(): boolean {
+        if (this._lock)
+            return (false);
+        this._lock = true;
+        return (true);
+    }
+
+    public async Unlock(): Promise<boolean> {
+        if (!this._lock)
+            return (false);
+        this._lock = false;
+        for (let i = this._messages.length - 1; i >= 0; i--) {
+            const message: DrapoPipeMessage = this._messages[i];
+            this.NotifyPipe(message);
+        }
+        this._messages.length = 0;
+        return (true);
+    }
+
+    public Clear(): void {
+        this._messages.length = 0;
     }
 }

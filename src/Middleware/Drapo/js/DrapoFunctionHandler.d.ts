@@ -88,6 +88,9 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionDetectView;
     private ExecuteFunctionSetConfig;
     private ExecuteFunctionGetConfig;
+    private ExecuteFunctionLockPlumber;
+    private ExecuteFunctionUnlockPlumber;
+    private ExecuteFunctionClearPlumber;
     private ExecuteFunctionDebugger;
     private ExecuteFunctionGetSector;
     private ExecuteFunctionGetClipboard;

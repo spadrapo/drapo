@@ -922,6 +922,9 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionDetectView;
     private ExecuteFunctionSetConfig;
     private ExecuteFunctionGetConfig;
+    private ExecuteFunctionLockPlumber;
+    private ExecuteFunctionUnlockPlumber;
+    private ExecuteFunctionClearPlumber;
     private ExecuteFunctionDebugger;
     private ExecuteFunctionGetSector;
     private ExecuteFunctionGetClipboard;
@@ -1325,6 +1328,8 @@ declare enum DrapoPipeMessageType {
 declare var signalR: any;
 declare class DrapoPlumber {
     private _application;
+    private _lock;
+    private _messages;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     private CanUsePipes;
@@ -1335,6 +1340,9 @@ declare class DrapoPlumber {
     NotifyPipeStorage(message: DrapoPipeMessage): Promise<void>;
     private NofityPipeRegister;
     private NofityPipeExecute;
+    Lock(): boolean;
+    Unlock(): Promise<boolean>;
+    Clear(): void;
 }
 
 declare class DrapoQuery {
