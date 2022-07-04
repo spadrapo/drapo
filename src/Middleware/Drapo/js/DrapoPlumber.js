@@ -37,6 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var DrapoPlumber = (function () {
     function DrapoPlumber(application) {
+        this._lock = false;
+        this._messages = [];
         this._application = application;
     }
     Object.defineProperty(DrapoPlumber.prototype, "Application", {
@@ -179,6 +181,10 @@ var DrapoPlumber = (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 7, , 9]);
+                        if (this._lock) {
+                            this._messages.push(message);
+                            return [2];
+                        }
                         if (!(message.Type == DrapoPipeMessageType.Storage)) return [3, 2];
                         return [4, this.NotifyPipeStorage(message)];
                     case 1:
@@ -268,6 +274,31 @@ var DrapoPlumber = (function () {
                 }
             });
         });
+    };
+    DrapoPlumber.prototype.Lock = function () {
+        if (this._lock)
+            return (false);
+        this._lock = true;
+        return (true);
+    };
+    DrapoPlumber.prototype.Unlock = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var i, message;
+            return __generator(this, function (_a) {
+                if (!this._lock)
+                    return [2, (false)];
+                this._lock = false;
+                for (i = this._messages.length - 1; i >= 0; i--) {
+                    message = this._messages[i];
+                    this.NotifyPipe(message);
+                }
+                this._messages.length = 0;
+                return [2, (true)];
+            });
+        });
+    };
+    DrapoPlumber.prototype.Clear = function () {
+        this._messages.length = 0;
     };
     return DrapoPlumber;
 }());

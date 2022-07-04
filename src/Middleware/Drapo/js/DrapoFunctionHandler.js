@@ -674,14 +674,26 @@ var DrapoFunctionHandler = (function () {
                         return [4, this.ExecuteFunctionGetConfig(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 148: return [2, (_a.sent())];
                     case 149:
-                        if (!(functionParsed.Name === 'debugger')) return [3, 151];
-                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'lockplumber')) return [3, 151];
+                        return [4, this.ExecuteFunctionLockPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 150: return [2, (_a.sent())];
                     case 151:
+                        if (!(functionParsed.Name === 'unlockplumber')) return [3, 153];
+                        return [4, this.ExecuteFunctionUnlockPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 152: return [2, (_a.sent())];
+                    case 153:
+                        if (!(functionParsed.Name === 'clearplumber')) return [3, 155];
+                        return [4, this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 154: return [2, (_a.sent())];
+                    case 155:
+                        if (!(functionParsed.Name === 'debugger')) return [3, 157];
+                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 156: return [2, (_a.sent())];
+                    case 157:
                         if (!checkInvalidFunction)
                             return [2, (null)];
                         return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name)];
-                    case 152:
+                    case 158:
                         _a.sent();
                         return [2, ('')];
                 }
@@ -3100,6 +3112,38 @@ var DrapoFunctionHandler = (function () {
                             if (timeZone != null)
                                 return [2, (timeZone.toString())];
                         }
+                        return [2, ('')];
+                }
+            });
+        });
+    };
+    DrapoFunctionHandler.prototype.ExecuteFunctionLockPlumber = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.Application.Plumber.Lock();
+                return [2, ('')];
+            });
+        });
+    };
+    DrapoFunctionHandler.prototype.ExecuteFunctionUnlockPlumber = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.Application.Plumber.Unlock()];
+                    case 1:
+                        _a.sent();
+                        return [2, ('')];
+                }
+            });
+        });
+    };
+    DrapoFunctionHandler.prototype.ExecuteFunctionClearPlumber = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.Application.Plumber.Clear()];
+                    case 1:
+                        _a.sent();
                         return [2, ('')];
                 }
             });
