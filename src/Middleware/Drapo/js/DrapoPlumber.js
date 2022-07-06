@@ -285,15 +285,27 @@ var DrapoPlumber = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var i, message;
             return __generator(this, function (_a) {
-                if (!this._lock)
-                    return [2, (false)];
-                this._lock = false;
-                for (i = this._messages.length - 1; i >= 0; i--) {
-                    message = this._messages[i];
-                    this.NotifyPipe(message);
+                switch (_a.label) {
+                    case 0:
+                        if (!this._lock)
+                            return [2, (false)];
+                        this._lock = false;
+                        i = this._messages.length - 1;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i >= 0)) return [3, 4];
+                        message = this._messages[i];
+                        return [4, this.NotifyPipe(message)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        i--;
+                        return [3, 1];
+                    case 4:
+                        this._messages.length = 0;
+                        return [2, (true)];
                 }
-                this._messages.length = 0;
-                return [2, (true)];
             });
         });
     };

@@ -112,8 +112,8 @@ class DrapoEventHandler {
                 if (eventsDetachActivated)
                     return (true);
                 if (eventsDetach != null) {
-                    for (let i: number = 0; i < eventsDetach.length; i++) {
-                        const eventDetach: string = eventsDetach[i];
+                    for (let j: number = 0; j < eventsDetach.length; j++) {
+                        const eventDetach: string = eventsDetach[j];
                         const eventDetachNamespace: string = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
                         binder.unbind(eventDetachNamespace);
                         if (eventDetach === eventType)
@@ -190,8 +190,8 @@ class DrapoEventHandler {
                 if (eventsDetachActivated)
                     return (true);
                 if (eventsDetach != null) {
-                    for (let i: number = 0; i < eventsDetach.length; i++) {
-                        const eventDetach: string = eventsDetach[i];
+                    for (let j: number = 0; j < eventsDetach.length; j++) {
+                        const eventDetach: string = eventsDetach[j];
                         const eventDetachNamespace: string = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
                         binder.unbind(eventDetachNamespace);
                         if (eventDetach === eventType)

@@ -397,7 +397,7 @@ var DrapoParser = (function () {
             return (false);
         if (data.length < 2)
             return (false);
-        return ((data.substr(0, 1) == this.ITERATOR_START) && (data.substr(data.length - 1, 1) == this.ITERATOR_END));
+        return ((data.substr != null) && (data.substr(0, 1) == this.ITERATOR_START) && (data.substr(data.length - 1, 1) == this.ITERATOR_END));
     };
     DrapoParser.prototype.ParseIterator = function (data) {
         if (this.Application.Serializer.IsJson(data))

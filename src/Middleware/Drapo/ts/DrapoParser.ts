@@ -413,7 +413,7 @@ class DrapoParser {
             return (false);
         if (data.length < 2)
             return (false);
-        return ((data.substr(0, 1) == this.ITERATOR_START) && (data.substr(data.length - 1, 1) == this.ITERATOR_END));
+        return ((data.substr != null) && (data.substr(0, 1) == this.ITERATOR_START) && (data.substr(data.length - 1, 1) == this.ITERATOR_END));
     }
 
     public ParseIterator(data: string): any[] {
@@ -600,7 +600,7 @@ class DrapoParser {
         let index: number = location === null ? 2 : 3;
         const trigger: string = parse[index++];
         const eventFilter: string = parse.length > index ? parse[index] : null;
-        const validation: string = el.getAttribute('d-validation-on-' + trigger); 
+        const validation: string = el.getAttribute('d-validation-on-' + trigger);
         return ([event, location, trigger, value, eventFilter, validation]);
     }
 
