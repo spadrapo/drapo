@@ -135,7 +135,7 @@ class DrapoPlumber {
         this._lock = false;
         for (let i = this._messages.length - 1; i >= 0; i--) {
             const message: DrapoPipeMessage = this._messages[i];
-            this.NotifyPipe(message);
+            await this.NotifyPipe(message);
         }
         this._messages.length = 0;
         return (true);

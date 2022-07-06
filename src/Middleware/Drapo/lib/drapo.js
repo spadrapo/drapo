@@ -8719,7 +8719,7 @@ var DrapoEventHandler = (function () {
                                         eventAttribute = event_1[0];
                                         binder.unbind(eventNamespace);
                                         binder.bind(eventNamespace, function (e) { return __awaiter(_this, void 0, void 0, function () {
-                                            var sectorEvent, _a, i_1, eventDetach, eventDetachNamespace, functionsValueCurrent;
+                                            var sectorEvent, _a, j, eventDetach, eventDetachNamespace, functionsValueCurrent;
                                             return __generator(this, function (_b) {
                                                 switch (_b.label) {
                                                     case 0:
@@ -8746,8 +8746,8 @@ var DrapoEventHandler = (function () {
                                                         if (eventsDetachActivated)
                                                             return [2, (true)];
                                                         if (eventsDetach != null) {
-                                                            for (i_1 = 0; i_1 < eventsDetach.length; i_1++) {
-                                                                eventDetach = eventsDetach[i_1];
+                                                            for (j = 0; j < eventsDetach.length; j++) {
+                                                                eventDetach = eventsDetach[j];
                                                                 eventDetachNamespace = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
                                                                 binder.unbind(eventDetachNamespace);
                                                                 if (eventDetach === eventType)
@@ -8839,7 +8839,7 @@ var DrapoEventHandler = (function () {
                                         eventsDetachActivated = false;
                                         binder.unbind(eventNamespace);
                                         binder.bind(eventNamespace, function (e) { return __awaiter(_this, void 0, void 0, function () {
-                                            var sectorLocal, i_2, eventDetach, eventDetachNamespace;
+                                            var sectorLocal, j, eventDetach, eventDetachNamespace;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
                                                     case 0:
@@ -8857,8 +8857,8 @@ var DrapoEventHandler = (function () {
                                                         if (eventsDetachActivated)
                                                             return [2, (true)];
                                                         if (eventsDetach != null) {
-                                                            for (i_2 = 0; i_2 < eventsDetach.length; i_2++) {
-                                                                eventDetach = eventsDetach[i_2];
+                                                            for (j = 0; j < eventsDetach.length; j++) {
+                                                                eventDetach = eventsDetach[j];
                                                                 eventDetachNamespace = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
                                                                 binder.unbind(eventDetachNamespace);
                                                                 if (eventDetach === eventType)
@@ -15628,7 +15628,7 @@ var DrapoParser = (function () {
             return (false);
         if (data.length < 2)
             return (false);
-        return ((data.substr(0, 1) == this.ITERATOR_START) && (data.substr(data.length - 1, 1) == this.ITERATOR_END));
+        return ((data.substr != null) && (data.substr(0, 1) == this.ITERATOR_START) && (data.substr(data.length - 1, 1) == this.ITERATOR_END));
     };
     DrapoParser.prototype.ParseIterator = function (data) {
         if (this.Application.Serializer.IsJson(data))
@@ -16857,15 +16857,27 @@ var DrapoPlumber = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var i, message;
             return __generator(this, function (_a) {
-                if (!this._lock)
-                    return [2, (false)];
-                this._lock = false;
-                for (i = this._messages.length - 1; i >= 0; i--) {
-                    message = this._messages[i];
-                    this.NotifyPipe(message);
+                switch (_a.label) {
+                    case 0:
+                        if (!this._lock)
+                            return [2, (false)];
+                        this._lock = false;
+                        i = this._messages.length - 1;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i >= 0)) return [3, 4];
+                        message = this._messages[i];
+                        return [4, this.NotifyPipe(message)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        i--;
+                        return [3, 1];
+                    case 4:
+                        this._messages.length = 0;
+                        return [2, (true)];
                 }
-                this._messages.length = 0;
-                return [2, (true)];
             });
         });
     };
@@ -18509,14 +18521,14 @@ var DrapoSerializer = (function () {
             return (false);
         if (data.length < 2)
             return (false);
-        return ((data.substr(0, 1) == this.JSON_START) && (data.substr(data.length - 1, 1) == this.JSON_END));
+        return ((data.substr != null) && (data.substr(0, 1) == this.JSON_START) && (data.substr(data.length - 1, 1) == this.JSON_END));
     };
     DrapoSerializer.prototype.IsJsonArray = function (data) {
         if (data === null)
             return (false);
         if (data.length < 2)
             return (false);
-        return ((data.substr(0, 1) == this.JSON_ARRAY_START) && (data.substr(data.length - 1, 1) == this.JSON_ARRAY_END));
+        return ((data.substr != null) && (data.substr(0, 1) == this.JSON_ARRAY_START) && (data.substr(data.length - 1, 1) == this.JSON_ARRAY_END));
     };
     DrapoSerializer.prototype.Deserialize = function (data) {
         if (!this.IsJson(data))

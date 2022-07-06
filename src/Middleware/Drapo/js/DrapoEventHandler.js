@@ -146,7 +146,7 @@ var DrapoEventHandler = (function () {
                                         eventAttribute = event_1[0];
                                         binder.unbind(eventNamespace);
                                         binder.bind(eventNamespace, function (e) { return __awaiter(_this, void 0, void 0, function () {
-                                            var sectorEvent, _a, i_1, eventDetach, eventDetachNamespace, functionsValueCurrent;
+                                            var sectorEvent, _a, j, eventDetach, eventDetachNamespace, functionsValueCurrent;
                                             return __generator(this, function (_b) {
                                                 switch (_b.label) {
                                                     case 0:
@@ -173,8 +173,8 @@ var DrapoEventHandler = (function () {
                                                         if (eventsDetachActivated)
                                                             return [2, (true)];
                                                         if (eventsDetach != null) {
-                                                            for (i_1 = 0; i_1 < eventsDetach.length; i_1++) {
-                                                                eventDetach = eventsDetach[i_1];
+                                                            for (j = 0; j < eventsDetach.length; j++) {
+                                                                eventDetach = eventsDetach[j];
                                                                 eventDetachNamespace = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
                                                                 binder.unbind(eventDetachNamespace);
                                                                 if (eventDetach === eventType)
@@ -266,7 +266,7 @@ var DrapoEventHandler = (function () {
                                         eventsDetachActivated = false;
                                         binder.unbind(eventNamespace);
                                         binder.bind(eventNamespace, function (e) { return __awaiter(_this, void 0, void 0, function () {
-                                            var sectorLocal, i_2, eventDetach, eventDetachNamespace;
+                                            var sectorLocal, j, eventDetach, eventDetachNamespace;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
                                                     case 0:
@@ -284,8 +284,8 @@ var DrapoEventHandler = (function () {
                                                         if (eventsDetachActivated)
                                                             return [2, (true)];
                                                         if (eventsDetach != null) {
-                                                            for (i_2 = 0; i_2 < eventsDetach.length; i_2++) {
-                                                                eventDetach = eventsDetach[i_2];
+                                                            for (j = 0; j < eventsDetach.length; j++) {
+                                                                eventDetach = eventsDetach[j];
                                                                 eventDetachNamespace = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
                                                                 binder.unbind(eventDetachNamespace);
                                                                 if (eventDetach === eventType)

@@ -2348,7 +2348,7 @@ class DrapoStorage {
 
     private async ResolveQuerySortsMustaches(sector: string, dataKey: string, sorts: DrapoQuerySort[]): Promise<void> {
         for (let i: number = 0; i < sorts.length; i++) {
-            let sort: DrapoQuerySort = sorts[i];
+            const sort: DrapoQuerySort = sorts[i];
             const column: string = await this.ResolveQueryConditionMustachesFilterValue(sector, dataKey, sort.Column);
             if (column !== undefined)
                 sort.Column = column;
@@ -2366,7 +2366,7 @@ class DrapoStorage {
         while (sorted) {
             sorted = false;
             for (let i: number = 0; i < (objects.length - 1); i++) {
-                const objectCurrent = objects[i]; 
+                const objectCurrent = objects[i];
                 const objectNext = objects[i + 1];
                 if (!this.IsSwapQueryOrderBy(sorts, objectCurrent, objectNext))
                     continue;

@@ -22,14 +22,14 @@ var DrapoSerializer = (function () {
             return (false);
         if (data.length < 2)
             return (false);
-        return ((data.substr(0, 1) == this.JSON_START) && (data.substr(data.length - 1, 1) == this.JSON_END));
+        return ((data.substr != null) && (data.substr(0, 1) == this.JSON_START) && (data.substr(data.length - 1, 1) == this.JSON_END));
     };
     DrapoSerializer.prototype.IsJsonArray = function (data) {
         if (data === null)
             return (false);
         if (data.length < 2)
             return (false);
-        return ((data.substr(0, 1) == this.JSON_ARRAY_START) && (data.substr(data.length - 1, 1) == this.JSON_ARRAY_END));
+        return ((data.substr != null) && (data.substr(0, 1) == this.JSON_ARRAY_START) && (data.substr(data.length - 1, 1) == this.JSON_ARRAY_END));
     };
     DrapoSerializer.prototype.Deserialize = function (data) {
         if (!this.IsJson(data))
