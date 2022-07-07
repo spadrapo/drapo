@@ -158,7 +158,7 @@ class DrapoControlFlow {
         //Viewport
         const isViewport: boolean = this.Application.Solver.Contains(dForRenders, 'viewport');
         let hasViewPortBefore: boolean = (isViewport) && (this.Application.ViewportHandler.HasElementViewport(elementForTemplate));
-        const hasViewPortbeforeRecycle: boolean = ((hasViewPortBefore) && (!canUseDifference));
+        const hasViewPortbeforeRecycle: boolean = ((hasViewPortBefore) && ((!canUseDifference) || (isViewport)));
         if (hasViewPortbeforeRecycle) {
             //Reset Viewport
             hasViewPortBefore = false;
