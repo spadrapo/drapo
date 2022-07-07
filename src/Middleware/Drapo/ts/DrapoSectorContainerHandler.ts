@@ -117,8 +117,7 @@ class DrapoSectorContainerHandler {
             //Sector Friends
             this.Application.Document.AppendSectorFriendsBySector(sectorFriends, sectorCurrent);
             //Components
-            if (!canDetachElement)
-                this.Application.ComponentHandler.AppendInstances(sectorCurrent, componentSectors, componentTags, componentElements, componentInstances);
+            this.Application.ComponentHandler.AppendInstances(sectorCurrent, componentSectors, componentTags, componentElements, componentInstances);
         }
         return (new DrapoSectorContainerItem(sector, containerCode, storageItems, sectorHierarchys, sectorFriends, componentSectors, componentTags, componentElements, componentInstances, el, canDetachElement));
     }
