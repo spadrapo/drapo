@@ -215,7 +215,7 @@ var DrapoControlFlow = (function () {
                         isHTML = this.Application.Solver.Contains(dForRenders, 'html');
                         isViewport = this.Application.Solver.Contains(dForRenders, 'viewport');
                         hasViewPortBefore = (isViewport) && (this.Application.ViewportHandler.HasElementViewport(elementForTemplate));
-                        hasViewPortbeforeRecycle = ((hasViewPortBefore) && (!canUseDifference));
+                        hasViewPortbeforeRecycle = ((hasViewPortBefore) && ((!canUseDifference) || (isViewport)));
                         if (hasViewPortbeforeRecycle) {
                             hasViewPortBefore = false;
                             viewportBefore = this.Application.ViewportHandler.GetElementViewport(elementForTemplate);
