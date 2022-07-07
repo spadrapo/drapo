@@ -18216,8 +18216,7 @@ var DrapoSectorContainerHandler = (function () {
             this.Application.Storage.AppendCacheDataItemBySector(storageItems, sectorCurrent);
             this.Application.Document.AppendSectorHierarchyBySector(sectorHierarchys, sectorCurrent);
             this.Application.Document.AppendSectorFriendsBySector(sectorFriends, sectorCurrent);
-            if (!canDetachElement)
-                this.Application.ComponentHandler.AppendInstances(sectorCurrent, componentSectors, componentTags, componentElements, componentInstances);
+            this.Application.ComponentHandler.AppendInstances(sectorCurrent, componentSectors, componentTags, componentElements, componentInstances);
         }
         return (new DrapoSectorContainerItem(sector, containerCode, storageItems, sectorHierarchys, sectorFriends, componentSectors, componentTags, componentElements, componentInstances, el, canDetachElement));
     };
