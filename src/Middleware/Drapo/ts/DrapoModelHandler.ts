@@ -231,7 +231,11 @@ class DrapoModelHandler {
                 while (this.Application.Parser.HasMustache(cultureResolved))
                     cultureResolved = await this.Application.Barber.ResolveControlFlowMustacheString(context, null, cultureResolved, elj, sector, false);
             }
-            valueFormatted = this.Application.Formatter.Format(value, formatResolved, cultureResolved);
+            const formatTimezone: string = el.getAttribute("d-format-timezone");
+            if ((canClean) && (formatTimezone != null))
+                el.removeAttribute('d-format-timezone');
+            const applyTimezone: boolean = (formatTimezone != 'false');
+            valueFormatted = this.Application.Formatter.Format(value, formatResolved, cultureResolved, applyTimezone);
         }
         //Selected
         const elementSpan: HTMLSpanElement = el as HTMLSpanElement;
