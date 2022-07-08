@@ -14243,7 +14243,7 @@ var DrapoModelHandler = (function () {
     };
     DrapoModelHandler.prototype.ResolveModelSpan = function (context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind, canClean) {
         return __awaiter(this, void 0, void 0, function () {
-            var updated, format, value, _a, valueFormatted, formatResolved, culture, cultureResolved, elementSpan;
+            var updated, format, value, _a, valueFormatted, formatResolved, culture, cultureResolved, formatTimezone, applyTimezone, elementSpan;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -14293,7 +14293,11 @@ var DrapoModelHandler = (function () {
                         cultureResolved = _b.sent();
                         return [3, 7];
                     case 9:
-                        valueFormatted = this.Application.Formatter.Format(value, formatResolved, cultureResolved);
+                        formatTimezone = el.getAttribute("d-format-timezone");
+                        if ((canClean) && (formatTimezone != null))
+                            el.removeAttribute('d-format-timezone');
+                        applyTimezone = (formatTimezone != 'false');
+                        valueFormatted = this.Application.Formatter.Format(value, formatResolved, cultureResolved, applyTimezone);
                         _b.label = 10;
                     case 10:
                         elementSpan = el;
