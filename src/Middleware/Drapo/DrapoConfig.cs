@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -53,6 +54,8 @@ namespace Sysphera.Middleware.Drapo
         public List<DrapoDynamicHandler> Dynamics { get => _dynamics; set => _dynamics = value; }
         [IgnoreDataMember]
         public Func<DrapoDynamic, Task<DrapoDynamic>> HandlerCustom { get => _handlerCustom; set => _handlerCustom = value; }
+        [IgnoreDataMember]
+        public Func<HttpContext, string, Task<DrapoDynamic>> HandlerCustomTheme { set; get;}
         public bool UsePipes { get => _usePipes; set => _usePipes = value; }
         public bool UseRouter { get => _useRouter; set => _useRouter = value; }
         public bool UseCacheStatic { get => (_useCacheStatic) && (!string.IsNullOrEmpty(this._applicationBuild)); set => _useCacheStatic = value; }
