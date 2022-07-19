@@ -411,8 +411,15 @@ namespace Sysphera.Middleware.Drapo
             if (string.IsNullOrEmpty(contentType))
                 return (null);
             //Themes
-            if ((contentType == "text/css") && ((this._options.Config.HandlerCustom != null) || (this._options.Config.Themes.Count > 0)))
-                return (await IsRequestCustomType(context, path, theme, extension, contentType));
+            if (contentType == "text/css") {
+                if (this._options.Config.HandlerCustomTheme != null) {
+                    DrapoDynamic customTheme = await this._options.Config.HandlerCustomTheme(context, theme);
+                    if (customTheme != null)
+                        return (customTheme);
+                }
+                if ((this._options.Config.HandlerCustom != null) || (this._options.Config.Themes.Count > 0))
+                    return (await IsRequestCustomType(context, path, theme, extension, contentType));
+            }
             //Views
             if ((contentType == CONTENT_TYPE_HTML) && ((this._options.Config.HandlerCustom != null) || (!string.IsNullOrEmpty(view))))
                 return (await IsRequestCustomType(context, path, view, extension, contentType));
