@@ -5,6 +5,7 @@ class DrapoEventHandler {
     private readonly _debounceDefaultClick: number = 200;
     private readonly _debounce: string = 'debounce';
     private readonly _detach: string = 'detach';
+    private _eventsRunning: HTMLElement[] = [];
 
     //Properties
     get Application(): DrapoApplication {
@@ -108,7 +109,7 @@ class DrapoEventHandler {
                 const sectorEvent: string = isSectorDynamic ? await this.Application.Document.GetSectorResolved(el) : sector;
                 //Validation
                 if (!(await this.Application.Validator.IsValidationEventValid(el, sectorEvent, eventType, location, e, null)))
-                    return(true);
+                    return (true);
                 if (eventsDetachActivated)
                     return (true);
                 if (eventsDetach != null) {
@@ -216,7 +217,7 @@ class DrapoEventHandler {
         }
     }
 
-    private async HasEventContext(sector: string, renderContext: DrapoRenderContext, functionsValue: string, validation: string): Promise<boolean>{
+    private async HasEventContext(sector: string, renderContext: DrapoRenderContext, functionsValue: string, validation: string): Promise<boolean> {
         if (await this.Application.FunctionHandler.HasFunctionMustacheContext(functionsValue, sector, renderContext))
             return (true);
         if ((validation != null) && (await this.Application.FunctionHandler.HasFunctionMustacheContext(validation, sector, renderContext)))
@@ -224,14 +225,44 @@ class DrapoEventHandler {
         return (false);
     }
 
-    private async ExecuteEvent(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionsValue: string, isSectorDynamic : boolean = false): Promise<void> {
+    private async ExecuteEvent(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionsValue: string, isSectorDynamic: boolean = false): Promise<void> {
         try {
+            //Single
+            const isEventSingle: boolean = element.getAttribute('d-event-single') === 'true';
+            if ((isEventSingle) && (this.IsEventRunning(element)))
+                return;
+            if (isEventSingle)
+                this.AddEventRunning(element);
             //Sector
             const sectorEvent: string = isSectorDynamic ? await this.Application.Document.GetSectorResolved(element) : sector;
             //Event
             await this.Application.FunctionHandler.ResolveFunction(sectorEvent, contextItem, element, event, functionsValue);
+            //Remove Event Running
+            if (isEventSingle)
+                this.RemoveEventRunning(element);
         } catch (e) {
             await this.Application.ExceptionHandler.Handle(e, 'DrapoEventHandler - ExecuteEvent');
+        }
+    }
+
+    private IsEventRunning(element: HTMLElement): boolean {
+        for (let i: number = this._eventsRunning.length - 1; i >= 0; i--) {
+            const elementCurrent: HTMLElement = this._eventsRunning[i];
+            if (elementCurrent === element)
+                return (true);
+        }
+        return (false);
+    }
+
+    private AddEventRunning(element: HTMLElement): void {
+        this._eventsRunning.push(element);
+    }
+
+    private RemoveEventRunning(element: HTMLElement): void {
+        for (let i: number = this._eventsRunning.length - 1; i >= 0; i--) {
+            const elementCurrent: HTMLElement = this._eventsRunning[i];
+            if (elementCurrent === element)
+                this._eventsRunning.splice(i, 1);
         }
     }
 
@@ -263,8 +294,7 @@ class DrapoEventHandler {
         return (false);
     }
 
-    private IsEventDelay(el: HTMLElement, eventType : string) : boolean
-    {
+    private IsEventDelay(el: HTMLElement, eventType: string): boolean {
         if (eventType !== 'click')
             return (false);
         return (this.HasEventDoubleClickInParent(el));
@@ -288,8 +318,7 @@ class DrapoEventHandler {
         return (this.Application.Parser.ParsePipes(elEventTypeDetach));
     }
 
-    private HasEventDoubleClickInParent(el: HTMLElement) : boolean
-    {
+    private HasEventDoubleClickInParent(el: HTMLElement): boolean {
         if (el == null)
             return (false);
         const doubleClickEvent: string = el.getAttribute('d-on-dblclick');
@@ -325,10 +354,9 @@ class DrapoEventHandler {
         return (key);
     }
 
-    private RetrieveElementEvents(el : HTMLElement): [string, string, string, string, string,string][] {
+    private RetrieveElementEvents(el: HTMLElement): [string, string, string, string, string, string][] {
         const events: [string, string, string, string, string, string][] = [];
-        for (let i: number = 0; i < el.attributes.length; i++)
-        {
+        for (let i: number = 0; i < el.attributes.length; i++) {
             const attribute: Attr = el.attributes[i];
             const event: [string, string, string, string, string, string] = this.Application.Parser.ParseEventProperty(el, attribute.nodeName, attribute.nodeValue);
             if ((event != null) && (event[4] !== this._debounce) && (event[4] !== this._detach))

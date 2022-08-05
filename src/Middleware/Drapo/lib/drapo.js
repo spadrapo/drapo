@@ -8614,6 +8614,7 @@ var DrapoEventHandler = (function () {
         this._debounceDefaultClick = 200;
         this._debounce = 'debounce';
         this._detach = 'detach';
+        this._eventsRunning = [];
         this._application = application;
     }
     Object.defineProperty(DrapoEventHandler.prototype, "Application", {
@@ -8928,11 +8929,16 @@ var DrapoEventHandler = (function () {
     DrapoEventHandler.prototype.ExecuteEvent = function (sector, contextItem, element, event, functionsValue, isSectorDynamic) {
         if (isSectorDynamic === void 0) { isSectorDynamic = false; }
         return __awaiter(this, void 0, void 0, function () {
-            var sectorEvent, _a, e_1;
+            var isEventSingle, sectorEvent, _a, e_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 5, , 7]);
+                        isEventSingle = element.getAttribute('d-event-single') === 'true';
+                        if ((isEventSingle) && (this.IsEventRunning(element)))
+                            return [2];
+                        if (isEventSingle)
+                            this.AddEventRunning(element);
                         if (!isSectorDynamic) return [3, 2];
                         return [4, this.Application.Document.GetSectorResolved(element)];
                     case 1:
@@ -8946,6 +8952,8 @@ var DrapoEventHandler = (function () {
                         return [4, this.Application.FunctionHandler.ResolveFunction(sectorEvent, contextItem, element, event, functionsValue)];
                     case 4:
                         _b.sent();
+                        if (isEventSingle)
+                            this.RemoveEventRunning(element);
                         return [3, 7];
                     case 5:
                         e_1 = _b.sent();
@@ -8957,6 +8965,24 @@ var DrapoEventHandler = (function () {
                 }
             });
         });
+    };
+    DrapoEventHandler.prototype.IsEventRunning = function (element) {
+        for (var i = this._eventsRunning.length - 1; i >= 0; i--) {
+            var elementCurrent = this._eventsRunning[i];
+            if (elementCurrent === element)
+                return (true);
+        }
+        return (false);
+    };
+    DrapoEventHandler.prototype.AddEventRunning = function (element) {
+        this._eventsRunning.push(element);
+    };
+    DrapoEventHandler.prototype.RemoveEventRunning = function (element) {
+        for (var i = this._eventsRunning.length - 1; i >= 0; i--) {
+            var elementCurrent = this._eventsRunning[i];
+            if (elementCurrent === element)
+                this._eventsRunning.splice(i, 1);
+        }
     };
     DrapoEventHandler.prototype.IsEventTypeValid = function (eventType) {
         if (eventType == 'click')

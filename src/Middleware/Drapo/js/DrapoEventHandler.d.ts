@@ -4,6 +4,7 @@ declare class DrapoEventHandler {
     private readonly _debounceDefaultClick;
     private readonly _debounce;
     private readonly _detach;
+    private _eventsRunning;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     HasContentEventContext(content: string): boolean;
@@ -16,6 +17,9 @@ declare class DrapoEventHandler {
     AttachContext(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, renderContext: DrapoRenderContext): Promise<void>;
     private HasEventContext;
     private ExecuteEvent;
+    private IsEventRunning;
+    private AddEventRunning;
+    private RemoveEventRunning;
     private IsEventTypeValid;
     private IsEventDelay;
     GetEventDebounce(el: HTMLElement, eventType: string): number;
