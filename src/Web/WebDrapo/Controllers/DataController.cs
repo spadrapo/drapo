@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Sysphera.Middleware.Drapo;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.StaticFiles;
+using System.Threading;
 
 namespace WebDrapo.Controllers
 {
@@ -46,6 +47,13 @@ namespace WebDrapo.Controllers
         public KeyValueVO GetNull()
         {
             return (null);
+        }
+
+        [HttpGet]
+        public string GetDateDelay()
+        {
+            Thread.Sleep(5000);
+            return (DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff tt"));
         }
 
         [HttpGet]

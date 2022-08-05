@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Event Single</title>
+</head>
+<body>
+    <span>Event Single</span>
+    <div d-dataKey="items" d-dataType="array"></div>
+    <div d-dataKey="itemAdd" d-dataType="value" d-dataUrlGet="/Data/GetDateDelay"></div>
+    <div d-dataKey="add" d-dataType="value" d-dataLoadType="startup" d-dataValue="UnloadData(itemAdd);AddDataItem(items,{{itemAdd}})"></div>
+    <input type="button" value="Add" d-event-single="true" d-on-click="{{add}}" />
+    <div>
+        <div d-for="item in items">
+            <span d-model="{{item}}"></span>
+        </div>
+    </div>
+</body>
+</html>
