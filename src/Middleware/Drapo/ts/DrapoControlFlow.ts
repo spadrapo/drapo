@@ -113,6 +113,7 @@ class DrapoControlFlow {
         let ifText: string = null;
         let forIfText: string = null;
         let wasWrapped: boolean = false;
+        let viewportBeforeScrollPosition: number = 0;
         if (forText == null) {
             //Wrapped d-for
             const wrapper: HTMLElement = this.Application.Document.GetWrapper(forJQuery);
@@ -163,6 +164,8 @@ class DrapoControlFlow {
             //Reset Viewport
             hasViewPortBefore = false;
             const viewportBefore: DrapoViewport = this.Application.ViewportHandler.GetElementViewport(elementForTemplate);
+            //Backup scrollPosition
+            viewportBeforeScrollPosition = viewportBefore.ElementScroll.scrollTop;
             this.Application.ViewportHandler.DestroyViewportControlFlow(viewportBefore);
             const itemsViewport: HTMLElement[] = this.CreateList(anchor.nextAll());
             this.RemoveList(itemsViewport);
@@ -373,6 +376,11 @@ class DrapoControlFlow {
             await this.Application.ComponentHandler.UnloadComponentInstancesDetached(sector);
             //Collect Sectors
             await this.Application.Document.CollectSector(sector);
+        }
+        //Restore scroll position
+        if (hasViewPortbeforeRecycle) {
+            viewport.ElementScroll.scrollTop = viewportBeforeScrollPosition;
+            await this.ResolveControlFlowForViewportScroll(viewport);
         }
     }
 
