@@ -171,7 +171,7 @@ var DrapoControlFlow = (function () {
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var forText, ifText, forIfText, wasWrapped, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, dForRender, dForRenders, isHTML, isViewport, hasViewPortBefore, hasViewPortbeforeRecycle, viewportBefore, itemsViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, isHash, hashTemplate, useHash, length, canCreateViewport, viewport, isViewportActive, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, startViewport, endViewport, j, data, templateKey, _b, templateData, _c, templateJ, template, viewportIndexDifference, nodeIndex, oldNode, item, _d, hashValueBefore, hashValueCurrent, _e, applyHash, template;
+            var forText, ifText, forIfText, wasWrapped, viewportBeforeScrollPosition, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, dForRender, dForRenders, isHTML, isViewport, hasViewPortBefore, hasViewPortbeforeRecycle, viewportBefore, itemsViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, isHash, hashTemplate, useHash, length, canCreateViewport, viewport, isViewportActive, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, startViewport, endViewport, j, data, templateKey, _b, templateData, _c, templateJ, template, viewportIndexDifference, nodeIndex, oldNode, item, _d, hashValueBefore, hashValueCurrent, _e, applyHash, template;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
@@ -179,6 +179,7 @@ var DrapoControlFlow = (function () {
                         ifText = null;
                         forIfText = null;
                         wasWrapped = false;
+                        viewportBeforeScrollPosition = 0;
                         if (forText == null) {
                             wrapper = this.Application.Document.GetWrapper(forJQuery);
                             forText = wrapper != null ? wrapper.getAttribute('d-for') : null;
@@ -219,6 +220,7 @@ var DrapoControlFlow = (function () {
                         if (hasViewPortbeforeRecycle) {
                             hasViewPortBefore = false;
                             viewportBefore = this.Application.ViewportHandler.GetElementViewport(elementForTemplate);
+                            viewportBeforeScrollPosition = viewportBefore.ElementScroll.scrollTop;
                             this.Application.ViewportHandler.DestroyViewportControlFlow(viewportBefore);
                             itemsViewport = this.CreateList(anchor.nextAll());
                             this.RemoveList(itemsViewport);
@@ -490,7 +492,14 @@ var DrapoControlFlow = (function () {
                     case 34:
                         _f.sent();
                         _f.label = 35;
-                    case 35: return [2];
+                    case 35:
+                        if (!hasViewPortbeforeRecycle) return [3, 37];
+                        viewport.ElementScroll.scrollTop = viewportBeforeScrollPosition;
+                        return [4, this.ResolveControlFlowForViewportScroll(viewport)];
+                    case 36:
+                        _f.sent();
+                        _f.label = 37;
+                    case 37: return [2];
                 }
             });
         });
