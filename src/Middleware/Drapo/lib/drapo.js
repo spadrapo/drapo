@@ -8938,7 +8938,7 @@ var DrapoEventHandler = (function () {
     DrapoEventHandler.prototype.ExecuteEvent = function (sector, contextItem, element, event, functionsValue, isSectorDynamic) {
         if (isSectorDynamic === void 0) { isSectorDynamic = false; }
         return __awaiter(this, void 0, void 0, function () {
-            var isEventSingle, sectorEvent, _a, e_1;
+            var isEventSingle, eventSingleClass, sectorEvent, _a, e_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -8946,8 +8946,13 @@ var DrapoEventHandler = (function () {
                         isEventSingle = element.getAttribute('d-event-single') === 'true';
                         if ((isEventSingle) && (this.IsEventRunning(element)))
                             return [2];
-                        if (isEventSingle)
+                        eventSingleClass = null;
+                        if (isEventSingle) {
                             this.AddEventRunning(element);
+                            eventSingleClass = element.getAttribute('d-event-single-class');
+                            if (eventSingleClass != null)
+                                $(element).addClass(eventSingleClass);
+                        }
                         if (!isSectorDynamic) return [3, 2];
                         return [4, this.Application.Document.GetSectorResolved(element)];
                     case 1:
@@ -8961,8 +8966,11 @@ var DrapoEventHandler = (function () {
                         return [4, this.Application.FunctionHandler.ResolveFunction(sectorEvent, contextItem, element, event, functionsValue)];
                     case 4:
                         _b.sent();
-                        if (isEventSingle)
+                        if (isEventSingle) {
                             this.RemoveEventRunning(element);
+                            if (eventSingleClass != null)
+                                $(element).removeClass(eventSingleClass);
+                        }
                         return [3, 7];
                     case 5:
                         e_1 = _b.sent();

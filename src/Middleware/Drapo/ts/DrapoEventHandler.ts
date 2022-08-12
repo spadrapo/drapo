@@ -231,15 +231,23 @@ class DrapoEventHandler {
             const isEventSingle: boolean = element.getAttribute('d-event-single') === 'true';
             if ((isEventSingle) && (this.IsEventRunning(element)))
                 return;
-            if (isEventSingle)
+            let eventSingleClass: string = null;
+            if (isEventSingle) {
                 this.AddEventRunning(element);
+                eventSingleClass = element.getAttribute('d-event-single-class');
+                if (eventSingleClass != null)
+                    $(element).addClass(eventSingleClass);
+            }
             //Sector
             const sectorEvent: string = isSectorDynamic ? await this.Application.Document.GetSectorResolved(element) : sector;
             //Event
             await this.Application.FunctionHandler.ResolveFunction(sectorEvent, contextItem, element, event, functionsValue);
             //Remove Event Running
-            if (isEventSingle)
+            if (isEventSingle) {
                 this.RemoveEventRunning(element);
+                if (eventSingleClass != null)
+                    $(element).removeClass(eventSingleClass);
+            }
         } catch (e) {
             await this.Application.ExceptionHandler.Handle(e, 'DrapoEventHandler - ExecuteEvent');
         }
