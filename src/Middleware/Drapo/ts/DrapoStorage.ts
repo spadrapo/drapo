@@ -1381,8 +1381,11 @@ class DrapoStorage {
     }
 
     private async AddCacheData(dataKey: string, sector: string, dataItem: DrapoStorageItem, canFireEventOnAfterCached: boolean = true): Promise<number> {
+        let index: number = this.GetCacheKeyIndex(dataKey, sector);
+        if (index)
+            return index;
         this._cacheKeys.push(dataKey);
-        const index: number = this._cacheItems.push(dataItem) - 1;
+        index = this._cacheItems.push(dataItem) - 1;
         //After Cached
         if ((canFireEventOnAfterCached) && (dataItem.OnAfterCached != null))
             await this.Application.FunctionHandler.ResolveFunctionWithoutContext(sector, dataItem.Element, dataItem.OnAfterCached);
