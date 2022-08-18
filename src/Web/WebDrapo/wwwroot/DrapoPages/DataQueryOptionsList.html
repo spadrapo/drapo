@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Options List</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Options List</span>
+        <div d-dataKey="objects" d-dataUrlGet="~/Data/GetLevels?levels=3&children=3&prefix=O1"></div>
+        <div d-dataKey="objectsQuery" d-dataType="query" d-dataValue="SELECT Key, Value FROM objects ORDER BY Key DESC" d-data-query-options="list=Children"></div>
+        <div>
+            <div d-for="object in objectsQuery">
+                <span>{{object.Key}}</span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

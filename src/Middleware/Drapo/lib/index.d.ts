@@ -1295,7 +1295,7 @@ declare class DrapoParser {
     ParseFormat(format: string): string[];
     private IsFormatCharacterCompatible;
     ParsePixels(value: string): number;
-    ParseQuery(value: string): DrapoQuery;
+    ParseQuery(value: string, options: string): DrapoQuery;
     ParseQueryProjections(value: string): DrapoQueryProjection[];
     private ParseQueryProjection;
     private ParseQueryProjectionFunctionName;
@@ -1312,6 +1312,7 @@ declare class DrapoParser {
     private ParseQuerySourceHeadValue;
     private ParseQueryFilter;
     private ParseQueryOrderBy;
+    private ParseQueryOptions;
 }
 
 declare class DrapoPipeMessage {
@@ -1356,6 +1357,7 @@ declare class DrapoQuery {
     private _filter;
     private _sorts;
     private _outputArray;
+    private _options;
     get Error(): string;
     set Error(value: string);
     get Projections(): DrapoQueryProjection[];
@@ -1368,6 +1370,8 @@ declare class DrapoQuery {
     set Sorts(value: DrapoQuerySort[]);
     get OutputArray(): string;
     set OutputArray(value: string);
+    get Options(): DrapoQueryOptions;
+    set Options(value: DrapoQueryOptions);
 }
 
 declare class DrapoQueryCondition {
@@ -1396,6 +1400,12 @@ declare class DrapoQueryCondition {
     get IsNullRight(): boolean;
     set IsNullRight(value: boolean);
     Clone(): DrapoQueryCondition;
+}
+
+declare class DrapoQueryOptions {
+    private _list;
+    get List(): string;
+    set List(value: string);
 }
 
 declare class DrapoQueryProjection {
@@ -1971,6 +1981,8 @@ declare class DrapoStorage {
     private RetrieveDataItemInternalSystemBrowser;
     private RetrieveDataItemInternalSystemDebuggerProperties;
     private ExecuteQuery;
+    private GetQuerySourceObjects;
+    private GetQuerySourceObjectsList;
     private EnsureQueryObject;
     private InjectQueryObjectProjections;
     private ResolveQueryConditionSource;

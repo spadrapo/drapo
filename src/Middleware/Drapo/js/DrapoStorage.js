@@ -1664,7 +1664,7 @@ var DrapoStorage = (function () {
                         _a.sent();
                         return [2, ([])];
                     case 2:
-                        query = this.Application.Parser.ParseQuery(dataValue);
+                        query = this.Application.Parser.ParseQuery(dataValue, el.getAttribute('d-data-query-options'));
                         if (!(query === null)) return [3, 4];
                         return [4, this.Application.ExceptionHandler.HandleError('There is an error in query d-datavalue in: {0}', dataKey)];
                     case 3:
@@ -3101,7 +3101,7 @@ var DrapoStorage = (function () {
                         return [4, this.RetrieveDataValue(sector, sourceMustache)];
                     case 3:
                         querySourceData = _a.sent();
-                        querySourceObjects = Array.isArray(querySourceData) ? querySourceData : [querySourceData];
+                        querySourceObjects = this.GetQuerySourceObjects(query, querySourceData);
                         for (j = 0; j < querySourceObjects.length; j++) {
                             querySourceObject = querySourceObjects[j];
                             objectIndexes = this.EnsureQueryObject(query, querySource, i, objects, objectsId, objectsInformation, querySourceObject);
@@ -3166,6 +3166,24 @@ var DrapoStorage = (function () {
                 }
             });
         });
+    };
+    DrapoStorage.prototype.GetQuerySourceObjects = function (query, querySourceData) {
+        var querySourceObjects = Array.isArray(querySourceData) ? querySourceData : [querySourceData];
+        if (query.Options.List != null)
+            return (this.GetQuerySourceObjectsList(query, querySourceObjects));
+        return (querySourceObjects);
+    };
+    DrapoStorage.prototype.GetQuerySourceObjectsList = function (query, querySourceObjects) {
+        for (var i = 0; i < querySourceObjects.length; i++) {
+            var querySourceObject = querySourceObjects[i];
+            var querySourceObjectIterator = querySourceObject[query.Options.List];
+            if (querySourceObjectIterator == null)
+                continue;
+            var querySourceObjectIteratorObjects = Array.isArray(querySourceObjectIterator) ? querySourceObjectIterator : [querySourceObjectIterator];
+            for (var j = 0; j < querySourceObjectIteratorObjects.length; j++)
+                querySourceObjects.push(querySourceObjectIteratorObjects[j]);
+        }
+        return (querySourceObjects);
     };
     DrapoStorage.prototype.EnsureQueryObject = function (query, querySource, indexSource, objects, objectsIds, objectsInformation, querySourceObject) {
         var object = null;

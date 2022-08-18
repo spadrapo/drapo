@@ -1071,7 +1071,7 @@ var DrapoParser = (function () {
         var valueNumber = this.ParseNumber(value.substr(0, value.length - 2));
         return (valueNumber);
     };
-    DrapoParser.prototype.ParseQuery = function (value) {
+    DrapoParser.prototype.ParseQuery = function (value, options) {
         if ((value == null) || (value === ''))
             return (null);
         var query = new DrapoQuery();
@@ -1094,6 +1094,7 @@ var DrapoParser = (function () {
             return (query);
         }
         query.Sorts = sorts;
+        query.Options = this.ParseQueryOptions(options);
         return (query);
     };
     DrapoParser.prototype.ParseQueryProjections = function (value) {
@@ -1298,6 +1299,18 @@ var DrapoParser = (function () {
             sorts.push(sort);
         }
         return (sorts);
+    };
+    DrapoParser.prototype.ParseQueryOptions = function (value) {
+        var options = new DrapoQueryOptions();
+        if (value == null)
+            return (options);
+        var optionsValues = this.ParseBlock(value, ';');
+        for (var i = 0; i < optionsValues.length; i++) {
+            var optionsValue = this.ParseBlock(optionsValues[i], '=');
+            if (optionsValue[0] === 'list')
+                options.List = optionsValue[1];
+        }
+        return (options);
     };
     return DrapoParser;
 }());

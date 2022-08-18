@@ -147,6 +147,8 @@ declare class DrapoStorage {
     private RetrieveDataItemInternalSystemBrowser;
     private RetrieveDataItemInternalSystemDebuggerProperties;
     private ExecuteQuery;
+    private GetQuerySourceObjects;
+    private GetQuerySourceObjectsList;
     private EnsureQueryObject;
     private InjectQueryObjectProjections;
     private ResolveQueryConditionSource;

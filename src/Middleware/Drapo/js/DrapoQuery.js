@@ -7,6 +7,7 @@ var DrapoQuery = (function () {
         this._filter = null;
         this._sorts = null;
         this._outputArray = null;
+        this._options = null;
     }
     Object.defineProperty(DrapoQuery.prototype, "Error", {
         get: function () {
@@ -64,6 +65,16 @@ var DrapoQuery = (function () {
         },
         set: function (value) {
             this._outputArray = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQuery.prototype, "Options", {
+        get: function () {
+            return (this._options);
+        },
+        set: function (value) {
+            this._options = value;
         },
         enumerable: false,
         configurable: true
