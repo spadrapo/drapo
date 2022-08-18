@@ -1152,7 +1152,7 @@ class DrapoParser {
         return (valueNumber);
     }
 
-    public ParseQuery(value: string): DrapoQuery {
+    public ParseQuery(value: string, options: string): DrapoQuery {
         if ((value == null) || (value === ''))
             return (null);
         const query: DrapoQuery = new DrapoQuery();
@@ -1179,6 +1179,8 @@ class DrapoParser {
             return (query);
         }
         query.Sorts = sorts;
+        //Options
+        query.Options = this.ParseQueryOptions(options);
         return (query);
     }
 
@@ -1404,5 +1406,18 @@ class DrapoParser {
             sorts.push(sort);
         }
         return (sorts);
+    }
+
+    private ParseQueryOptions(value: string): DrapoQueryOptions {
+        const options: DrapoQueryOptions = new DrapoQueryOptions();
+        if (value == null)
+            return (options);
+        const optionsValues: string[] = this.ParseBlock(value, ';');
+        for (let i: number = 0; i < optionsValues.length; i++) {
+            const optionsValue: string[] = this.ParseBlock(optionsValues[i], '=');
+            if (optionsValue[0] === 'list')
+                options.List = optionsValue[1];
+        }
+        return (options);
     }
 }

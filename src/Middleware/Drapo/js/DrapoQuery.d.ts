@@ -5,6 +5,7 @@ declare class DrapoQuery {
     private _filter;
     private _sorts;
     private _outputArray;
+    private _options;
     get Error(): string;
     set Error(value: string);
     get Projections(): DrapoQueryProjection[];
@@ -17,4 +18,6 @@ declare class DrapoQuery {
     set Sorts(value: DrapoQuerySort[]);
     get OutputArray(): string;
     set OutputArray(value: string);
+    get Options(): DrapoQueryOptions;
+    set Options(value: DrapoQueryOptions);
 }

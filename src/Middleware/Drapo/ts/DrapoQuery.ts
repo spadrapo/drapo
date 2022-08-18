@@ -5,6 +5,7 @@
     private _filter: DrapoQueryCondition = null;
     private _sorts: DrapoQuerySort[] = null;
     private _outputArray: string = null;
+    private _options: DrapoQueryOptions = null;
 
     get Error(): string {
         return (this._error);
@@ -47,5 +48,13 @@
 
     set OutputArray(value: string) {
         this._outputArray = value;
+    }
+
+    get Options(): DrapoQueryOptions {
+        return (this._options);
+    }
+
+    set Options(value: DrapoQueryOptions) {
+        this._options = value;
     }
 }

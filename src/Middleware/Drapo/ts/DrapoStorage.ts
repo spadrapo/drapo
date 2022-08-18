@@ -1114,7 +1114,7 @@ class DrapoStorage {
             await this.Application.ExceptionHandler.HandleError('There is no d-datavalue in: {0}', dataKey);
             return ([]);
         }
-        const query: DrapoQuery = this.Application.Parser.ParseQuery(dataValue);
+        const query: DrapoQuery = this.Application.Parser.ParseQuery(dataValue, el.getAttribute('d-data-query-options'));
         if (query === null) {
             await this.Application.ExceptionHandler.HandleError('There is an error in query d-datavalue in: {0}', dataKey);
             return ([]);
@@ -2075,7 +2075,7 @@ class DrapoStorage {
             this.Application.Observer.SubscribeStorage(sourceDataKey, null, dataKey);
             //Data
             const querySourceData = await this.RetrieveDataValue(sector, sourceMustache);
-            const querySourceObjects: any[] = Array.isArray(querySourceData) ? querySourceData : [querySourceData];
+            const querySourceObjects: any[] = this.GetQuerySourceObjects(query, querySourceData);
             for (let j: number = 0; j < querySourceObjects.length; j++) {
                 const querySourceObject: any = querySourceObjects[j];
                 //Search
@@ -2143,6 +2143,26 @@ class DrapoStorage {
         if (query.Sorts != null)
             objects = this.ResolveQueryOrderBy(query, objects);
         return (objects);
+    }
+
+    private GetQuerySourceObjects(query: DrapoQuery, querySourceData: any): any[]{
+        const querySourceObjects: any[] = Array.isArray(querySourceData) ? querySourceData : [querySourceData];
+        if (query.Options.List != null)
+            return (this.GetQuerySourceObjectsList(query, querySourceObjects));
+        return (querySourceObjects);
+    }
+
+    private GetQuerySourceObjectsList(query: DrapoQuery, querySourceObjects: any[]): any[] {
+        for (let i: number = 0; i < querySourceObjects.length; i++) {
+            const querySourceObject: any = querySourceObjects[i];
+            const querySourceObjectIterator: any = querySourceObject[query.Options.List];
+            if (querySourceObjectIterator == null)
+                continue;
+            const querySourceObjectIteratorObjects: any[] = Array.isArray(querySourceObjectIterator) ? querySourceObjectIterator : [querySourceObjectIterator];
+            for (let j: number = 0; j < querySourceObjectIteratorObjects.length;j++)
+                querySourceObjects.push(querySourceObjectIteratorObjects[j]);
+        }
+        return (querySourceObjects);
     }
 
     private EnsureQueryObject(query: DrapoQuery, querySource: DrapoQuerySource, indexSource: number, objects: any[], objectsIds: string[][], objectsInformation: any[], querySourceObject: any): number[] {
