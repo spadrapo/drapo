@@ -1312,5 +1312,15 @@ var DrapoParser = (function () {
         }
         return (options);
     };
+    DrapoParser.prototype.ParseSwitch = function (value) {
+        var items = [];
+        var switchItems = this.ParseBlock(value, ',');
+        for (var i = 0; i < switchItems.length; i++) {
+            var switchItem = this.ParseBlock(switchItems[i], ':');
+            var item = [switchItem[0], switchItem.length > 1 ? switchItem[1] : null];
+            items.push(item);
+        }
+        return (items);
+    };
     return DrapoParser;
 }());

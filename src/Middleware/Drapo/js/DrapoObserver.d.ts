@@ -39,7 +39,7 @@ declare class DrapoObserver {
     private UnsubscribeBarber;
     SubscribeFor(elementForTemplate: HTMLElement, dataKey: string): void;
     SubscribeStorage(dataKey: string, dataFields: string[], dataReferenceKey: string, type?: DrapoStorageLinkType): void;
-    private UnsubscribeStorage;
+    UnsubscribeStorage(dataKey: string): void;
     private UnsubscribeStorageReferenceKey;
     UnsubscribeFor(dataKey: string, elementForTemplate?: HTMLElement): void;
     Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean, canNotifyStorage?: boolean, notifyStorageDataKey?: string): Promise<void>;
