@@ -1441,6 +1441,8 @@ var DrapoStorage = (function () {
                             return [2, (this.RetrieveDataKeyInitializeQueryString(el, sector, dataKey))];
                         if (type == 'query')
                             return [2, (this.RetrieveDataKeyInitializeQuery(el, sector, dataKey))];
+                        if (type == 'switch')
+                            return [2, (this.RetrieveDataKeyInitializeSwitch(el, sector, dataKey))];
                         if (type == 'parent')
                             return [2, (this.RetrieveDataKeyInitializeParent(el, sector))];
                         return [2, (null)];
@@ -1688,6 +1690,55 @@ var DrapoStorage = (function () {
                             query.OutputArray = dataQueryArray;
                         return [4, this.ExecuteQuery(sector, dataKey, query)];
                     case 9: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
+    DrapoStorage.prototype.RetrieveDataKeyInitializeSwitch = function (el, sector, dataKey) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dataValue, switchItems, i, switchItem, conditional, mustaches, j, mustache, mustacheParts, dataKeyConditional, conditionalResolved, dataKeySwitch, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dataValue = el.getAttribute('d-dataValue');
+                        if (!(dataValue == null)) return [3, 2];
+                        return [4, this.Application.ExceptionHandler.HandleError('There is no d-datavalue in: {0}', dataKey)];
+                    case 1:
+                        _a.sent();
+                        return [2, ([])];
+                    case 2:
+                        switchItems = this.Application.Parser.ParseSwitch(dataValue);
+                        this.Application.Observer.UnsubscribeStorage(dataKey);
+                        i = 0;
+                        _a.label = 3;
+                    case 3:
+                        if (!(i < switchItems.length)) return [3, 8];
+                        switchItem = switchItems[i];
+                        conditional = switchItem[1];
+                        if (!(conditional != null)) return [3, 5];
+                        mustaches = this.Application.Parser.ParseMustaches(conditional);
+                        for (j = 0; j < mustaches.length; j++) {
+                            mustache = mustaches[j];
+                            mustacheParts = this.Application.Parser.ParseMustache(mustache);
+                            dataKeyConditional = this.Application.Solver.ResolveDataKey(mustacheParts);
+                            this.Application.Observer.SubscribeStorage(dataKeyConditional, null, dataKey);
+                        }
+                        return [4, this.Application.Solver.ResolveConditional(conditional, null, sector)];
+                    case 4:
+                        conditionalResolved = _a.sent();
+                        if (!conditionalResolved)
+                            return [3, 7];
+                        _a.label = 5;
+                    case 5:
+                        dataKeySwitch = switchItem[0];
+                        return [4, this.RetrieveData(dataKeySwitch, sector)];
+                    case 6:
+                        data = _a.sent();
+                        return [2, (data)];
+                    case 7:
+                        i++;
+                        return [3, 3];
+                    case 8: return [2, ([])];
                 }
             });
         });
@@ -3174,16 +3225,19 @@ var DrapoStorage = (function () {
         return (querySourceObjects);
     };
     DrapoStorage.prototype.GetQuerySourceObjectsList = function (query, querySourceObjects) {
-        for (var i = 0; i < querySourceObjects.length; i++) {
-            var querySourceObject = querySourceObjects[i];
+        var items = [];
+        for (var i = 0; i < querySourceObjects.length; i++)
+            items.push(querySourceObjects[i]);
+        for (var i = 0; i < items.length; i++) {
+            var querySourceObject = items[i];
             var querySourceObjectIterator = querySourceObject[query.Options.List];
             if (querySourceObjectIterator == null)
                 continue;
             var querySourceObjectIteratorObjects = Array.isArray(querySourceObjectIterator) ? querySourceObjectIterator : [querySourceObjectIterator];
             for (var j = 0; j < querySourceObjectIteratorObjects.length; j++)
-                querySourceObjects.push(querySourceObjectIteratorObjects[j]);
+                items.push(querySourceObjectIteratorObjects[j]);
         }
-        return (querySourceObjects);
+        return (items);
     };
     DrapoStorage.prototype.EnsureQueryObject = function (query, querySource, indexSource, objects, objectsIds, objectsInformation, querySourceObject) {
         var object = null;

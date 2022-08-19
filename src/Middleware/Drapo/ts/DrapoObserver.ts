@@ -138,7 +138,7 @@ class DrapoObserver {
         dataTypes.push(type);
     }
 
-    private UnsubscribeStorage(dataKey: string): void {
+    public UnsubscribeStorage(dataKey: string): void {
         this.UnsubscribeStorageReferenceKey(dataKey);
         const dataKeyIndex: number = this.GetStorageKeyIndex(dataKey);
         if (dataKeyIndex === null)

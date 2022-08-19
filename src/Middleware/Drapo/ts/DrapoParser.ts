@@ -1420,4 +1420,15 @@ class DrapoParser {
         }
         return (options);
     }
+
+    public ParseSwitch(value: string): [string, string][] {
+        const items: [string, string][] = [];
+        const switchItems: string[] = this.ParseBlock(value, ',');
+        for (let i: number = 0; i < switchItems.length; i++) {
+            const switchItem: string[] = this.ParseBlock(switchItems[i], ':');
+            const item: [string, string] = [switchItem[0], switchItem.length > 1 ? switchItem[1] : null];
+            items.push(item);
+        }
+        return (items);
+    }
 }

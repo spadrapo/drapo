@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Switch</title>
+</head>
+<body>
+    <div>
+        <span>Data Switch</span>
+        <div d-datakey="options" d-datatype="object" d-dataproperty-flat="false"></div>
+        <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?levels=3&amp;children=3&amp;prefix=O1"></div>
+        <div d-datakey="objectsQuery" d-datatype="query" d-datavalue="SELECT Key, Value FROM objects ORDER BY Key DESC" d-data-query-options="list=Children"></div>
+        <div d-datakey="objectsSwitch" d-datatype="switch" d-datavalue="objectsQuery:{{options.flat}},objects"></div>
+        <input type="button" value="Switch" d-on-click="ToggleItemField({{options.flat}})" />
+        <div>
+            <div d-for="object in objectsSwitch" style="display: none;">
+                <span>{{object.Key}}</span>
+                <br />
+            </div>
+        <div>
+                <span>O1L3K0</span>
+                <br />
+            </div><div>
+                <span>O1L3K1</span>
+                <br />
+            </div><div>
+                <span>O1L3K2</span>
+                <br />
+            </div></div>
+    </div>
+
+</body></html>

@@ -963,6 +963,8 @@ class DrapoStorage {
             return (this.RetrieveDataKeyInitializeQueryString(el, sector, dataKey));
         if (type == 'query')
             return (this.RetrieveDataKeyInitializeQuery(el, sector, dataKey));
+        if (type == 'switch')
+            return (this.RetrieveDataKeyInitializeSwitch(el, sector, dataKey));
         if (type == 'parent')
             return (this.RetrieveDataKeyInitializeParent(el, sector));
         return (null);
@@ -1132,6 +1134,40 @@ class DrapoStorage {
         if (dataQueryArray != null)
             query.OutputArray = dataQueryArray;
         return (await this.ExecuteQuery(sector, dataKey, query));
+    }
+
+    private async RetrieveDataKeyInitializeSwitch(el: HTMLElement, sector: string, dataKey: string): Promise<any[]> {
+        const dataValue: string = el.getAttribute('d-dataValue');
+        if (dataValue == null) {
+            await this.Application.ExceptionHandler.HandleError('There is no d-datavalue in: {0}', dataKey);
+            return ([]);
+        }
+        //Parse
+        const switchItems: [string, string][] = this.Application.Parser.ParseSwitch(dataValue);
+        //Clear Notifications
+        this.Application.Observer.UnsubscribeStorage(dataKey);
+        //Check
+        for (let i: number = 0; i < switchItems.length; i++) {
+            const switchItem: [string, string] = switchItems[i];
+            const conditional: string = switchItem[1];
+            if (conditional != null) {
+                //Register Notifications
+                const mustaches: string[] = this.Application.Parser.ParseMustaches(conditional);
+                for (let j: number = 0; j < mustaches.length; j++) {
+                    const mustache: string = mustaches[j];
+                    const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustache);
+                    const dataKeyConditional: string = this.Application.Solver.ResolveDataKey(mustacheParts);
+                    this.Application.Observer.SubscribeStorage(dataKeyConditional, null, dataKey);
+                }
+                const conditionalResolved: boolean = await this.Application.Solver.ResolveConditional(conditional, null, sector);
+                if (!conditionalResolved)
+                    continue;
+            }
+            const dataKeySwitch: string = switchItem[0];
+            const data: any[] = await this.RetrieveData(dataKeySwitch, sector);
+            return (data);
+        }
+        return ([]);
     }
 
     private RetrieveDataKeyInitializeParent(el: HTMLElement, sector: string): any {
@@ -2153,16 +2189,19 @@ class DrapoStorage {
     }
 
     private GetQuerySourceObjectsList(query: DrapoQuery, querySourceObjects: any[]): any[] {
-        for (let i: number = 0; i < querySourceObjects.length; i++) {
-            const querySourceObject: any = querySourceObjects[i];
+        const items: any[] = [];
+        for (let i: number = 0; i < querySourceObjects.length;i++)
+            items.push(querySourceObjects[i]);
+        for (let i: number = 0; i < items.length; i++) {
+            const querySourceObject: any = items[i];
             const querySourceObjectIterator: any = querySourceObject[query.Options.List];
             if (querySourceObjectIterator == null)
                 continue;
             const querySourceObjectIteratorObjects: any[] = Array.isArray(querySourceObjectIterator) ? querySourceObjectIterator : [querySourceObjectIterator];
             for (let j: number = 0; j < querySourceObjectIteratorObjects.length;j++)
-                querySourceObjects.push(querySourceObjectIteratorObjects[j]);
+                items.push(querySourceObjectIteratorObjects[j]);
         }
-        return (querySourceObjects);
+        return (items);
     }
 
     private EnsureQueryObject(query: DrapoQuery, querySource: DrapoQuerySource, indexSource: number, objects: any[], objectsIds: string[][], objectsInformation: any[], querySourceObject: any): number[] {

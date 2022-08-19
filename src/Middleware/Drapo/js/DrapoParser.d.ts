@@ -130,4 +130,5 @@ declare class DrapoParser {
     private ParseQueryFilter;
     private ParseQueryOrderBy;
     private ParseQueryOptions;
+    ParseSwitch(value: string): [string, string][];
 }

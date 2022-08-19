@@ -926,6 +926,11 @@ namespace WebDrapo.Test
             ValidatePage("DataStartupFunctionNoCacheInsideSector");
         }
         [TestCase]
+        public void DataSwitchTest()
+        {
+            ValidatePage("DataSwitch");
+        }
+        [TestCase]
         public void DataUrlArrayEmptyTest()
         {
             ValidatePage("DataUrlArrayEmpty");
