@@ -291,7 +291,7 @@ class DrapoSolver {
         return (mustache + '}}');
     }
 
-    public CreateMustacheContext(context: DrapoContext, mustacheParts: string[]): string {
+    public CreateMustacheContext(context: DrapoContext, mustacheParts: string[], canResolveKey: boolean = true): string {
         const mustacheContext: string[] = [];
         let updated: boolean = false;
         for (let i: number = 0; i < mustacheParts.length; i++)
@@ -302,7 +302,7 @@ class DrapoSolver {
             if (mustacheSystem !== null) {
                 return (mustacheSystem);
             } else {
-                const mustacheRelative: string[] = context.GetContextRelativeArray(mustachePart);
+                const mustacheRelative: string[] = this.CreateContextAbsoluteArray(context, mustachePart, canResolveKey);
                 if (mustacheRelative === null) {
                     mustacheContext.push(mustachePart);
                 } else {
@@ -316,10 +316,42 @@ class DrapoSolver {
             return (null);
         const mustacheRecursive: string = this.CreateMustache(mustacheContext);
         const mustacheRecursiveParts: string[] = this.Application.Parser.ParseMustache(mustacheRecursive);
-        const mustacheRecursiveContext: string = this.CreateMustacheContext(context, mustacheRecursiveParts);
+        const mustacheRecursiveContext: string = this.CreateMustacheContext(context, mustacheRecursiveParts, false);
         if (mustacheRecursiveContext !== null)
             return (mustacheRecursiveContext);
         return (mustacheRecursive);
+    }
+
+    private CreateContextAbsoluteArray(context: DrapoContext, mustachePart: string, canResolveKey: boolean): string[] {
+        if ((canResolveKey) && (context.Item.Key === mustachePart)) {
+            const contextKey: string[] = [];
+            for (let i: number = 0; i < context.IndexRelatives.length; i++)
+                this.AppendContextAbsoluteArray(context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0);
+            this.AppendContextAbsoluteArray(context.Item, context.IndexRelative, contextKey, context.IndexRelatives.length === 0);
+            return (contextKey);
+        }
+        for (let i: number = 0; i < context.ItemsCurrentStack.length; i++) {
+            const itemCurrent: DrapoContextItem = context.ItemsCurrentStack[i];
+            if (itemCurrent.Key !== mustachePart)
+                continue;
+            return ([itemCurrent.Iterator, '[' + context.IndexRelatives[i] + ']']);
+        }
+        return (null);
+    }
+
+    private AppendContextAbsoluteArray(item: DrapoContextItem, index: number, context: string[], checkIndex: boolean): void{
+        const iterators: string[] = this.Application.Parser.ParseForIterable(item.Iterator);
+        if (iterators.length == 1)
+            context.push(item.Iterator);
+        else
+            this.AppendContextAbsoluteIterators(item, context, iterators, checkIndex);
+        context.push('[' + index + ']');
+    }
+
+    private AppendContextAbsoluteIterators(item: DrapoContextItem, context: string[], iterators: string[], checkIndex: boolean): void {
+        const start: number = ((checkIndex) && (item.DataKey === iterators[0])) ? 0 : 1;
+        for (let i: number = start; i < iterators.length; i++)
+            context.push(iterators[i]);
     }
 
     public async CreateMustacheReference(sector: string, contextItem: DrapoContextItem, mustache: string): Promise<string> {

@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Component</title>
+</head>
+<body>
+    <span>Control Flow - For - Component</span>
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetLevels?Levels=3&Children=1"></div>
+    <div d-for="user in users">
+        <br>
+        <span>Key: {{user.Key}}</span><br>
+        <d-checkbox dc-value="{{user.Selected}}" dc-label="{{user.Key}}"></d-checkbox>
+        <span>Children</span>
+        <br>
+        <div d-for="user in user.Children"></div>
+    </div>
+</body>
+</html>

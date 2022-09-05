@@ -410,7 +410,8 @@ var DrapoSolver = (function () {
         }
         return (mustache + '}}');
     };
-    DrapoSolver.prototype.CreateMustacheContext = function (context, mustacheParts) {
+    DrapoSolver.prototype.CreateMustacheContext = function (context, mustacheParts, canResolveKey) {
+        if (canResolveKey === void 0) { canResolveKey = true; }
         var mustacheContext = [];
         var updated = false;
         for (var i = 0; i < mustacheParts.length; i++) {
@@ -421,7 +422,7 @@ var DrapoSolver = (function () {
                 return (mustacheSystem);
             }
             else {
-                var mustacheRelative = context.GetContextRelativeArray(mustachePart);
+                var mustacheRelative = this.CreateContextAbsoluteArray(context, mustachePart, canResolveKey);
                 if (mustacheRelative === null) {
                     mustacheContext.push(mustachePart);
                 }
@@ -436,10 +437,39 @@ var DrapoSolver = (function () {
             return (null);
         var mustacheRecursive = this.CreateMustache(mustacheContext);
         var mustacheRecursiveParts = this.Application.Parser.ParseMustache(mustacheRecursive);
-        var mustacheRecursiveContext = this.CreateMustacheContext(context, mustacheRecursiveParts);
+        var mustacheRecursiveContext = this.CreateMustacheContext(context, mustacheRecursiveParts, false);
         if (mustacheRecursiveContext !== null)
             return (mustacheRecursiveContext);
         return (mustacheRecursive);
+    };
+    DrapoSolver.prototype.CreateContextAbsoluteArray = function (context, mustachePart, canResolveKey) {
+        if ((canResolveKey) && (context.Item.Key === mustachePart)) {
+            var contextKey = [];
+            for (var i = 0; i < context.IndexRelatives.length; i++)
+                this.AppendContextAbsoluteArray(context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0);
+            this.AppendContextAbsoluteArray(context.Item, context.IndexRelative, contextKey, context.IndexRelatives.length === 0);
+            return (contextKey);
+        }
+        for (var i = 0; i < context.ItemsCurrentStack.length; i++) {
+            var itemCurrent = context.ItemsCurrentStack[i];
+            if (itemCurrent.Key !== mustachePart)
+                continue;
+            return ([itemCurrent.Iterator, '[' + context.IndexRelatives[i] + ']']);
+        }
+        return (null);
+    };
+    DrapoSolver.prototype.AppendContextAbsoluteArray = function (item, index, context, checkIndex) {
+        var iterators = this.Application.Parser.ParseForIterable(item.Iterator);
+        if (iterators.length == 1)
+            context.push(item.Iterator);
+        else
+            this.AppendContextAbsoluteIterators(item, context, iterators, checkIndex);
+        context.push('[' + index + ']');
+    };
+    DrapoSolver.prototype.AppendContextAbsoluteIterators = function (item, context, iterators, checkIndex) {
+        var start = ((checkIndex) && (item.DataKey === iterators[0])) ? 0 : 1;
+        for (var i = start; i < iterators.length; i++)
+            context.push(iterators[i]);
     };
     DrapoSolver.prototype.CreateMustacheReference = function (sector, contextItem, mustache) {
         return __awaiter(this, void 0, void 0, function () {

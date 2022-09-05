@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Component</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <span>Control Flow - For - Component</span>
+    <div d-datakey="users" d-dataurlget="/Data/GetLevels?Levels=3&amp;Children=1"></div>
+    <div d-for="user in users" style="display: none;">
+        <br />
+        <span>Key: {{user.Key}}</span><br />
+        <d-checkbox dc-value="{{user.Selected}}" dc-label="{{user.Key}}"></d-checkbox>
+        <span>Children</span>
+        <br />
+        <div d-for="user in user.Children"></div>
+    </div><div>
+        <br />
+        <span>Key: L3K0</span><br />
+        <div d-sector="@">
+    <div style="width:100%">
+        <!--Layout-->
+        <div class="ppcCheckboxLayout">
+            <input class="ppcCheckboxInput" type="checkbox" d-model="{{users.[0].Selected}}" />
+            <span class="ppcCheckboxLabel" d-model="{{users.[0].Key}}" d-on-click="ToggleItemField({{users.[0].Selected}})">L3K0</span>
+        </div>
+    </div>
+</div>
+        <span>Children</span>
+        <br />
+        <div>
+        <br />
+        <span>Key: L2K0</span><br />
+        <div d-sector="@">
+    <div style="width:100%">
+        <!--Layout-->
+        <div class="ppcCheckboxLayout">
+            <input class="ppcCheckboxInput" type="checkbox" d-model="{{users.[0].Children.[0].Selected}}" />
+            <span class="ppcCheckboxLabel" d-model="{{users.[0].Children.[0].Key}}" d-on-click="ToggleItemField({{users.[0].Children.[0].Selected}})">L2K0</span>
+        </div>
+    </div>
+</div>
+        <span>Children</span>
+        <br />
+        <div>
+        <br />
+        <span>Key: L1K0</span><br />
+        <div d-sector="@">
+    <div style="width:100%">
+        <!--Layout-->
+        <div class="ppcCheckboxLayout">
+            <input class="ppcCheckboxInput" type="checkbox" d-model="{{users.[0].Children.[0].Children.[0].Selected}}" />
+            <span class="ppcCheckboxLabel" d-model="{{users.[0].Children.[0].Children.[0].Key}}" d-on-click="ToggleItemField({{users.[0].Children.[0].Children.[0].Selected}})">L1K0</span>
+        </div>
+    </div>
+</div>
+        <span>Children</span>
+        <br />
+        <div>
+        <br />
+        <span>Key: L0K0</span><br />
+        <div d-sector="@">
+    <div style="width:100%">
+        <!--Layout-->
+        <div class="ppcCheckboxLayout">
+            <input class="ppcCheckboxInput" type="checkbox" d-model="{{users.[0].Children.[0].Children.[0].Children.[0].Selected}}" />
+            <span class="ppcCheckboxLabel" d-model="{{users.[0].Children.[0].Children.[0].Children.[0].Key}}" d-on-click="ToggleItemField({{users.[0].Children.[0].Children.[0].Children.[0].Selected}})">L0K0</span>
+        </div>
+    </div>
+</div>
+        <span>Children</span>
+        <br />
+        
+    </div>
+    </div>
+    </div>
+    </div>
+
+</body></html>
