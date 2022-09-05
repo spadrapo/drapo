@@ -37,6 +37,10 @@ class DrapoContext {
         return (this._itemCurrent);
     }
 
+    get ItemsCurrentStack(): DrapoContextItem[] {
+        return (this._itemCurrentStack);
+    }
+
     set Index(value: number) {
         this._index = value;
     }
@@ -55,6 +59,10 @@ class DrapoContext {
 
     get IndexRelative(): number {
         return (this._indexRelative);
+    }
+
+    get IndexRelatives(): number[] {
+        return (this._indexRelatives);
     }
 
     get Level(): number {
@@ -294,18 +302,6 @@ class DrapoContext {
 
     public HasContextItemBefore(): boolean {
         return ((this.Item != null) && (this.Item.ElementOld != null));
-    }
-
-    public GetContextRelativeArray(mustachePart: string): string[] {
-        if (this.Item.Key === mustachePart)
-            return ([this.Item.Iterator, '[' + this.IndexRelative + ']']);
-        for (let i: number = 0; i < this._itemCurrentStack.length; i++) {
-            const itemCurrent: DrapoContextItem = this._itemCurrentStack[i];
-            if (itemCurrent.Key !== mustachePart)
-                continue;
-            return ([itemCurrent.Iterator, '[' + this._indexRelatives[i] + ']']);
-        }
-        return (null);
     }
 
     public GetIndex(key: string) : number {

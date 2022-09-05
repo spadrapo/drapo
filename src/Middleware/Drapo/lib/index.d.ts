@@ -337,11 +337,13 @@ declare class DrapoContext {
     set Sector(value: string);
     get Sector(): string;
     get Item(): DrapoContextItem;
+    get ItemsCurrentStack(): DrapoContextItem[];
     set Index(value: number);
     get Index(): number;
     get IsEmpty(): boolean;
     set IndexRelative(value: number);
     get IndexRelative(): number;
+    get IndexRelatives(): number[];
     get Level(): number;
     get IsInsideRecursion(): boolean;
     set CheckMustacheNodes(value: boolean);
@@ -382,7 +384,6 @@ declare class DrapoContext {
     AddTemplate(templateKey: string, templateData: JQuery): void;
     CanResolve(key: string): boolean;
     HasContextItemBefore(): boolean;
-    GetContextRelativeArray(mustachePart: string): string[];
     GetIndex(key: string): number;
     GetIndexRelative(key: string): number;
 }
@@ -1779,7 +1780,10 @@ declare class DrapoSolver {
     private ResolveOperationArithmeticDivision;
     CreateContextItemFromPath(sector: string, dataPath: string[]): Promise<DrapoContextItem>;
     CreateMustache(dataPath: string[]): string;
-    CreateMustacheContext(context: DrapoContext, mustacheParts: string[]): string;
+    CreateMustacheContext(context: DrapoContext, mustacheParts: string[], canResolveKey?: boolean): string;
+    private CreateContextAbsoluteArray;
+    private AppendContextAbsoluteArray;
+    private AppendContextAbsoluteIterators;
     CreateMustacheReference(sector: string, contextItem: DrapoContextItem, mustache: string): Promise<string>;
     private GetContextItemAbsolute;
     ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string>;

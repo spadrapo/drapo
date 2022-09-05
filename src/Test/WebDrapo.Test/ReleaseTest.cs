@@ -505,6 +505,11 @@ namespace WebDrapo.Test
             ValidatePage("ControlFlowForRecursive");
         }
         [TestCase]
+        public void ControlFlowForRecursiveComponentTest()
+        {
+            ValidatePage("ControlFlowForRecursiveComponent");
+        }
+        [TestCase]
         public void ControlFlowForRecursiveIFTest()
         {
             ValidatePage("ControlFlowForRecursiveIF");

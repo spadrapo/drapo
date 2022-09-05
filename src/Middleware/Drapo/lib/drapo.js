@@ -3851,6 +3851,13 @@ var DrapoContext = (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(DrapoContext.prototype, "ItemsCurrentStack", {
+        get: function () {
+            return (this._itemCurrentStack);
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(DrapoContext.prototype, "Index", {
         get: function () {
             return (this._index);
@@ -3874,6 +3881,13 @@ var DrapoContext = (function () {
         },
         set: function (value) {
             this._indexRelative = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoContext.prototype, "IndexRelatives", {
+        get: function () {
+            return (this._indexRelatives);
         },
         enumerable: false,
         configurable: true
@@ -4123,17 +4137,6 @@ var DrapoContext = (function () {
     };
     DrapoContext.prototype.HasContextItemBefore = function () {
         return ((this.Item != null) && (this.Item.ElementOld != null));
-    };
-    DrapoContext.prototype.GetContextRelativeArray = function (mustachePart) {
-        if (this.Item.Key === mustachePart)
-            return ([this.Item.Iterator, '[' + this.IndexRelative + ']']);
-        for (var i = 0; i < this._itemCurrentStack.length; i++) {
-            var itemCurrent = this._itemCurrentStack[i];
-            if (itemCurrent.Key !== mustachePart)
-                continue;
-            return ([itemCurrent.Iterator, '[' + this._indexRelatives[i] + ']']);
-        }
-        return (null);
     };
     DrapoContext.prototype.GetIndex = function (key) {
         if (this.Item.Key === key)
@@ -8690,23 +8693,23 @@ var DrapoEventHandler = (function () {
                     case 2:
                         isSectorDynamic = _a.sent();
                         _loop_1 = function (i) {
-                            var event_1, eventType, functionsValue, _b, eventFilter, location_1, isLocationBody, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout, eventsDetach, eventsDetachActivated, eventAttribute;
-                            return __generator(this, function (_c) {
-                                switch (_c.label) {
+                            var event_1, eventType, functionsValue, _a, eventFilter, location_1, isLocationBody, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout, eventsDetach, eventsDetachActivated, eventAttribute;
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
                                     case 0:
                                         event_1 = events[i];
                                         eventType = event_1[2];
                                         if (!this_1.IsEventTypeValid(eventType))
                                             return [2, "continue"];
                                         functionsValue = event_1[3];
-                                        _b = (!isSectorDynamic);
-                                        if (!_b) return [3, 2];
+                                        _a = (!isSectorDynamic);
+                                        if (!_a) return [3, 2];
                                         return [4, this_1.HasEventContext(sector, renderContext, functionsValue, event_1[5])];
                                     case 1:
-                                        _b = (_c.sent());
-                                        _c.label = 2;
+                                        _a = (_b.sent());
+                                        _b.label = 2;
                                     case 2:
-                                        if (_b)
+                                        if (_a)
                                             return [2, "continue"];
                                         eventFilter = event_1[4];
                                         location_1 = event_1[1];
@@ -8816,8 +8819,8 @@ var DrapoEventHandler = (function () {
                         contextItem = context.Item;
                         _loop_2 = function (i) {
                             var event_2, eventType, functionsValueOriginal, eventFilter, location_2, isLocationBody, functionsValue, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout, eventsDetach, eventsDetachActivated;
-                            return __generator(this, function (_b) {
-                                switch (_b.label) {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
                                     case 0:
                                         event_2 = events[i];
                                         eventType = event_2[2];
@@ -8826,7 +8829,7 @@ var DrapoEventHandler = (function () {
                                         functionsValueOriginal = event_2[3];
                                         return [4, this_2.HasEventContext(sector, renderContext, functionsValueOriginal, event_2[5])];
                                     case 1:
-                                        if (!(_b.sent()))
+                                        if (!(_a.sent()))
                                             return [2, "continue"];
                                         eventFilter = event_2[4];
                                         location_2 = event_2[1];
@@ -19858,7 +19861,8 @@ var DrapoSolver = (function () {
         }
         return (mustache + '}}');
     };
-    DrapoSolver.prototype.CreateMustacheContext = function (context, mustacheParts) {
+    DrapoSolver.prototype.CreateMustacheContext = function (context, mustacheParts, canResolveKey) {
+        if (canResolveKey === void 0) { canResolveKey = true; }
         var mustacheContext = [];
         var updated = false;
         for (var i = 0; i < mustacheParts.length; i++) {
@@ -19869,7 +19873,7 @@ var DrapoSolver = (function () {
                 return (mustacheSystem);
             }
             else {
-                var mustacheRelative = context.GetContextRelativeArray(mustachePart);
+                var mustacheRelative = this.CreateContextAbsoluteArray(context, mustachePart, canResolveKey);
                 if (mustacheRelative === null) {
                     mustacheContext.push(mustachePart);
                 }
@@ -19884,10 +19888,39 @@ var DrapoSolver = (function () {
             return (null);
         var mustacheRecursive = this.CreateMustache(mustacheContext);
         var mustacheRecursiveParts = this.Application.Parser.ParseMustache(mustacheRecursive);
-        var mustacheRecursiveContext = this.CreateMustacheContext(context, mustacheRecursiveParts);
+        var mustacheRecursiveContext = this.CreateMustacheContext(context, mustacheRecursiveParts, false);
         if (mustacheRecursiveContext !== null)
             return (mustacheRecursiveContext);
         return (mustacheRecursive);
+    };
+    DrapoSolver.prototype.CreateContextAbsoluteArray = function (context, mustachePart, canResolveKey) {
+        if ((canResolveKey) && (context.Item.Key === mustachePart)) {
+            var contextKey = [];
+            for (var i = 0; i < context.IndexRelatives.length; i++)
+                this.AppendContextAbsoluteArray(context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0);
+            this.AppendContextAbsoluteArray(context.Item, context.IndexRelative, contextKey, context.IndexRelatives.length === 0);
+            return (contextKey);
+        }
+        for (var i = 0; i < context.ItemsCurrentStack.length; i++) {
+            var itemCurrent = context.ItemsCurrentStack[i];
+            if (itemCurrent.Key !== mustachePart)
+                continue;
+            return ([itemCurrent.Iterator, '[' + context.IndexRelatives[i] + ']']);
+        }
+        return (null);
+    };
+    DrapoSolver.prototype.AppendContextAbsoluteArray = function (item, index, context, checkIndex) {
+        var iterators = this.Application.Parser.ParseForIterable(item.Iterator);
+        if (iterators.length == 1)
+            context.push(item.Iterator);
+        else
+            this.AppendContextAbsoluteIterators(item, context, iterators, checkIndex);
+        context.push('[' + index + ']');
+    };
+    DrapoSolver.prototype.AppendContextAbsoluteIterators = function (item, context, iterators, checkIndex) {
+        var start = ((checkIndex) && (item.DataKey === iterators[0])) ? 0 : 1;
+        for (var i = start; i < iterators.length; i++)
+            context.push(iterators[i]);
     };
     DrapoSolver.prototype.CreateMustacheReference = function (sector, contextItem, mustache) {
         return __awaiter(this, void 0, void 0, function () {

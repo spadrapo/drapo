@@ -108,23 +108,23 @@ var DrapoEventHandler = (function () {
                     case 2:
                         isSectorDynamic = _a.sent();
                         _loop_1 = function (i) {
-                            var event_1, eventType, functionsValue, _b, eventFilter, location_1, isLocationBody, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout, eventsDetach, eventsDetachActivated, eventAttribute;
-                            return __generator(this, function (_c) {
-                                switch (_c.label) {
+                            var event_1, eventType, functionsValue, _a, eventFilter, location_1, isLocationBody, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout, eventsDetach, eventsDetachActivated, eventAttribute;
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
                                     case 0:
                                         event_1 = events[i];
                                         eventType = event_1[2];
                                         if (!this_1.IsEventTypeValid(eventType))
                                             return [2, "continue"];
                                         functionsValue = event_1[3];
-                                        _b = (!isSectorDynamic);
-                                        if (!_b) return [3, 2];
+                                        _a = (!isSectorDynamic);
+                                        if (!_a) return [3, 2];
                                         return [4, this_1.HasEventContext(sector, renderContext, functionsValue, event_1[5])];
                                     case 1:
-                                        _b = (_c.sent());
-                                        _c.label = 2;
+                                        _a = (_b.sent());
+                                        _b.label = 2;
                                     case 2:
-                                        if (_b)
+                                        if (_a)
                                             return [2, "continue"];
                                         eventFilter = event_1[4];
                                         location_1 = event_1[1];
@@ -234,8 +234,8 @@ var DrapoEventHandler = (function () {
                         contextItem = context.Item;
                         _loop_2 = function (i) {
                             var event_2, eventType, functionsValueOriginal, eventFilter, location_2, isLocationBody, functionsValue, eventNamespace, binder, propagation, isDelay, debounceTimeout, elDebounceTimeout, delayTimeout, eventsDetach, eventsDetachActivated;
-                            return __generator(this, function (_b) {
-                                switch (_b.label) {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
                                     case 0:
                                         event_2 = events[i];
                                         eventType = event_2[2];
@@ -244,7 +244,7 @@ var DrapoEventHandler = (function () {
                                         functionsValueOriginal = event_2[3];
                                         return [4, this_2.HasEventContext(sector, renderContext, functionsValueOriginal, event_2[5])];
                                     case 1:
-                                        if (!(_b.sent()))
+                                        if (!(_a.sent()))
                                             return [2, "continue"];
                                         eventFilter = event_2[4];
                                         location_2 = event_2[1];

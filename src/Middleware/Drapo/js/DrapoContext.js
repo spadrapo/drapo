@@ -48,6 +48,13 @@ var DrapoContext = (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(DrapoContext.prototype, "ItemsCurrentStack", {
+        get: function () {
+            return (this._itemCurrentStack);
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(DrapoContext.prototype, "Index", {
         get: function () {
             return (this._index);
@@ -71,6 +78,13 @@ var DrapoContext = (function () {
         },
         set: function (value) {
             this._indexRelative = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoContext.prototype, "IndexRelatives", {
+        get: function () {
+            return (this._indexRelatives);
         },
         enumerable: false,
         configurable: true
@@ -320,17 +334,6 @@ var DrapoContext = (function () {
     };
     DrapoContext.prototype.HasContextItemBefore = function () {
         return ((this.Item != null) && (this.Item.ElementOld != null));
-    };
-    DrapoContext.prototype.GetContextRelativeArray = function (mustachePart) {
-        if (this.Item.Key === mustachePart)
-            return ([this.Item.Iterator, '[' + this.IndexRelative + ']']);
-        for (var i = 0; i < this._itemCurrentStack.length; i++) {
-            var itemCurrent = this._itemCurrentStack[i];
-            if (itemCurrent.Key !== mustachePart)
-                continue;
-            return ([itemCurrent.Iterator, '[' + this._indexRelatives[i] + ']']);
-        }
-        return (null);
     };
     DrapoContext.prototype.GetIndex = function (key) {
         if (this.Item.Key === key)

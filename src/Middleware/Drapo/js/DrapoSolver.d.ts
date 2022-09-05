@@ -22,7 +22,10 @@ declare class DrapoSolver {
     private ResolveOperationArithmeticDivision;
     CreateContextItemFromPath(sector: string, dataPath: string[]): Promise<DrapoContextItem>;
     CreateMustache(dataPath: string[]): string;
-    CreateMustacheContext(context: DrapoContext, mustacheParts: string[]): string;
+    CreateMustacheContext(context: DrapoContext, mustacheParts: string[], canResolveKey?: boolean): string;
+    private CreateContextAbsoluteArray;
+    private AppendContextAbsoluteArray;
+    private AppendContextAbsoluteIterators;
     CreateMustacheReference(sector: string, contextItem: DrapoContextItem, mustache: string): Promise<string>;
     private GetContextItemAbsolute;
     ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string>;
