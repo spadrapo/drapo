@@ -199,7 +199,7 @@ class DrapoObserver {
         //Link
         await this.NotifyLink(dataKey, dataFields);
         //Components
-        await this.NotifyComponent(dataKey);
+        await this.NotifyComponent(dataKey, dataFields);
         //Storage Event OnNotify
         await this.Application.Storage.FireEventOnNotify(dataKey);
     }
@@ -621,7 +621,7 @@ class DrapoObserver {
         }
     }
 
-    private async NotifyComponent(dataKey: string): Promise<void> {
+    private async NotifyComponent(dataKey: string, dataFields: string[]): Promise<void> {
         const dataKeyIndex: number = this.GetComponentDataKeyIndex(dataKey);
         if (dataKeyIndex == null)
             return;
@@ -631,7 +631,7 @@ class DrapoObserver {
             const dataComponentElement: HTMLElement = dataComponentElements[i];
             if ((this.Application.Document.IsElementAttached(dataComponentElement)) && (!this.Application.Document.IsElementDetached(dataComponentElement))) {
                 const dataComponentFunction: Function = dataComponentFunctions[i];
-                const result: any = await dataComponentFunction.apply(null, [dataComponentElement, this.Application]);
+                const result: any = await dataComponentFunction.apply(null, [dataComponentElement, this.Application, dataFields]);
                 if ((result == null) || (result == true))
                     await this.Application.Document.ResolveComponentUpdate(dataComponentElement, null);
             } else if (!this.Application.SectorContainerHandler.IsElementContainerized(dataComponentElement)) {

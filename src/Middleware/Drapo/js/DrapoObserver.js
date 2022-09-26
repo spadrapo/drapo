@@ -236,7 +236,7 @@ var DrapoObserver = (function () {
                         return [4, this.NotifyLink(dataKey, dataFields)];
                     case 6:
                         _a.sent();
-                        return [4, this.NotifyComponent(dataKey)];
+                        return [4, this.NotifyComponent(dataKey, dataFields)];
                     case 7:
                         _a.sent();
                         return [4, this.Application.Storage.FireEventOnNotify(dataKey)];
@@ -775,7 +775,7 @@ var DrapoObserver = (function () {
             this._dataComponentElementsFocus.splice(i, 1);
         }
     };
-    DrapoObserver.prototype.NotifyComponent = function (dataKey) {
+    DrapoObserver.prototype.NotifyComponent = function (dataKey, dataFields) {
         return __awaiter(this, void 0, void 0, function () {
             var dataKeyIndex, dataComponentElements, dataComponentFunctions, i, dataComponentElement, dataComponentFunction, result;
             return __generator(this, function (_a) {
@@ -793,7 +793,7 @@ var DrapoObserver = (function () {
                         dataComponentElement = dataComponentElements[i];
                         if (!((this.Application.Document.IsElementAttached(dataComponentElement)) && (!this.Application.Document.IsElementDetached(dataComponentElement)))) return [3, 5];
                         dataComponentFunction = dataComponentFunctions[i];
-                        return [4, dataComponentFunction.apply(null, [dataComponentElement, this.Application])];
+                        return [4, dataComponentFunction.apply(null, [dataComponentElement, this.Application, dataFields])];
                     case 2:
                         result = _a.sent();
                         if (!((result == null) || (result == true))) return [3, 4];
