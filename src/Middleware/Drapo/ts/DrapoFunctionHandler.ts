@@ -323,6 +323,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionGetExternalFrameMessage(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'createguid')
             return (await this.ExecuteFunctionCreateGuid(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'createtick')
+            return (await this.ExecuteFunctionCreateTick(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'execute')
             return (await this.ExecuteFunctionExecute(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'executedataitem')
@@ -1151,6 +1153,21 @@ class DrapoFunctionHandler {
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         await this.Application.Storage.SetDataKeyField(dataKey, sector, [dataField], value, notify);
         return ('');
+    }
+
+    private async ExecuteFunctionCreateTick(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const ticks: number = new Date().getTime();
+        const value: string = ticks.toString();
+        if (functionParsed.Parameters.length == 0)
+            return (value);
+        const mustacheText: string = functionParsed.Parameters[0];
+        const mustache: string[] = this.Application.Parser.ParseMustache(mustacheText);
+        const dataKey: string = this.Application.Solver.ResolveDataKey(mustache);
+        const dataFields: string[] = this.Application.Solver.ResolveDataFields(mustache);
+        const notifyText: string = functionParsed.Parameters.length > 1 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]) : null;
+        const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
+        await this.Application.Storage.SetDataKeyField(dataKey, sector, dataFields, value, notify);
+        return (value);
     }
 
     private async ExecuteFunctionExecute(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {

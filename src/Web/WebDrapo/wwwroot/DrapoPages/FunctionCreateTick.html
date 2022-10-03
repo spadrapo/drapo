@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - CreateTick</title>
+</head>
+<body>
+    <br>
+    <span>CreateTick</span>
+    <div d-dataKey="datas" d-dataType="array"></div>
+    <div d-dataKey="data" d-dataType="object" d-dataProperty-value=""></div>
+    <div>
+        <input type="text" d-model="{{data.value}}">
+        <input type="button" value="Add Non Empty" d-on-click="CreateTick({{data.value}});AddDataItem(datas,{{data}})">
+        <ul>
+            <li d-for="inserted in datas">{{inserted.value}}</li>
+        </ul>
+    </div>
+</body>
+</html>
