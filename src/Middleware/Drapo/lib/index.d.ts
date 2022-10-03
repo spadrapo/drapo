@@ -1995,6 +1995,8 @@ declare class DrapoStorage {
     private ResolveQueryConditionSource;
     private ResolveQueryConditionSourceColumn;
     private ResolveQueryFunctionParameterName;
+    private ResolveQueryAggregations;
+    private ResolveQueryAggregationsMax;
     private ResolveQueryFunctions;
     private ResolveQueryFunction;
     private ResolveQueryFunctionCoalesce;

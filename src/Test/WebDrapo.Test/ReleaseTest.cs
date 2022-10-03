@@ -831,6 +831,11 @@ namespace WebDrapo.Test
             ValidatePage("DataQueryAggregationFunction");
         }
         [TestCase]
+        public void DataQueryAggregationFunctionMaxTest()
+        {
+            ValidatePage("DataQueryAggregationFunctionMax");
+        }
+        [TestCase]
         public void DataQueryArrayTest()
         {
             ValidatePage("DataQueryArray");

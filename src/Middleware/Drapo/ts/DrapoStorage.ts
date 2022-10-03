@@ -2158,12 +2158,9 @@ class DrapoStorage {
             }
         }
         //Aggregations
-        if (query.Projections[0].FunctionName === 'COUNT') {
-            //We only support count right now
-            const objectAggregation: any = {};
-            objectAggregation[query.Projections[0].Alias] = objects.length;
-            return (objectAggregation);
-        }
+        const objectsAggregations: any = this.ResolveQueryAggregations(query, objects, objectsInformation);
+        if (objectsAggregations !== null)
+            return (objectsAggregations);
         //Functions
         this.ResolveQueryFunctions(query, objects, objectsInformation);
         //Output Array
@@ -2262,9 +2259,9 @@ class DrapoStorage {
                         continue;
                     const functionParameterValues: string[] = this.Application.Parser.ParseQueryProjectionFunctionParameterValue(functionParameterName);
                     const source: string = functionParameterValues[0];
-                    if ((querySource.Alias ?? querySource.Source) !== source)
+                    if ((query.Sources.length > 1) && ((querySource.Alias ?? querySource.Source) !== source))
                         continue;
-                    const value: any = isObject ? sourceObject[projection.Column] : sourceObject;
+                    const value: any = isObject ? sourceObject[projection.Column ?? functionParameterName] : sourceObject;
                     objectInformation[functionParameterName] = value;
                 }
             } else {
@@ -2319,6 +2316,33 @@ class DrapoStorage {
 
     private ResolveQueryFunctionParameterName(value: string): string {
         value = value.replace('.', '_');
+        return (value);
+    }
+
+    private ResolveQueryAggregations(query: DrapoQuery, objects: any[], objectsInformation: any[]): any {
+        if (query.Projections[0].FunctionName === 'COUNT') {
+            const objectAggregation: any = {};
+            objectAggregation[query.Projections[0].Alias] = objects.length;
+            return (objectAggregation);
+        }
+        if (query.Projections[0].FunctionName === 'MAX') {
+            const objectAggregation: any = {};
+            objectAggregation[query.Projections[0].Alias] = this.ResolveQueryAggregationsMax(query, query.Projections[0], objects, objectsInformation);
+            return (objectAggregation);
+        }
+        return (null);
+    }
+
+    private ResolveQueryAggregationsMax(query: DrapoQuery, projection: DrapoQueryProjection, objects: any[], objectsInformation: any[]): string {
+        let value: string = null;
+        const functionParameter: string = projection.FunctionParameters[0];
+        const functionParameterName: string = this.ResolveQueryFunctionParameterName(functionParameter);
+        for (let i: number = 0; i < objectsInformation.length; i++) {
+            const objectInformation: any = objectsInformation[i];
+            const valueCurrent = objectInformation[functionParameterName];
+            if ((value == null) || (value < valueCurrent))
+                value = valueCurrent;
+        }
         return (value);
     }
 
