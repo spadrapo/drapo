@@ -3119,7 +3119,7 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.ExecuteQuery = function (sector, dataKey, query) {
         return __awaiter(this, void 0, void 0, function () {
-            var objects, objectsId, objectsInformation, filters, hasFilters, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, objectIndexes, k, objectIndex, object, objectInformation, isAdd, filter, count, i, i, filter, objectAggregation, outputArray, i, object;
+            var objects, objectsId, objectsInformation, filters, hasFilters, i, querySource, querySourcePath, isQuerySourceMustache, sourceDataKey, sourceMustache, mustacheParts, mustacheDataKey, querySourceData, querySourceObjects, j, querySourceObject, objectIndexes, k, objectIndex, object, objectInformation, isAdd, filter, count, i, i, filter, objectsAggregations, outputArray, i, object;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -3197,11 +3197,9 @@ var DrapoStorage = (function () {
                                 objectsInformation.splice(i, 1);
                             }
                         }
-                        if (query.Projections[0].FunctionName === 'COUNT') {
-                            objectAggregation = {};
-                            objectAggregation[query.Projections[0].Alias] = objects.length;
-                            return [2, (objectAggregation)];
-                        }
+                        objectsAggregations = this.ResolveQueryAggregations(query, objects, objectsInformation);
+                        if (objectsAggregations !== null)
+                            return [2, (objectsAggregations)];
                         this.ResolveQueryFunctions(query, objects, objectsInformation);
                         if (query.OutputArray != null) {
                             outputArray = [];
@@ -3283,7 +3281,7 @@ var DrapoStorage = (function () {
         return (indexes);
     };
     DrapoStorage.prototype.InjectQueryObjectProjections = function (query, querySource, object, objectInformation, sourceObject) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         var isObject = typeof sourceObject === 'object';
         for (var i = 0; i < query.Projections.length; i++) {
             var projection = query.Projections[i];
@@ -3295,9 +3293,9 @@ var DrapoStorage = (function () {
                         continue;
                     var functionParameterValues = this.Application.Parser.ParseQueryProjectionFunctionParameterValue(functionParameterName);
                     var source = functionParameterValues[0];
-                    if (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== source)
+                    if ((query.Sources.length > 1) && (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== source))
                         continue;
-                    var value = isObject ? sourceObject[projection.Column] : sourceObject;
+                    var value = isObject ? sourceObject[(_b = projection.Column) !== null && _b !== void 0 ? _b : functionParameterName] : sourceObject;
                     objectInformation[functionParameterName] = value;
                 }
             }
@@ -3312,11 +3310,11 @@ var DrapoStorage = (function () {
                 else {
                     if ((isObject) && (!sourceObject[projection.Column]))
                         continue;
-                    if ((!isObject) && (((_b = querySource.Alias) !== null && _b !== void 0 ? _b : querySource.Source) !== projection.Column))
+                    if ((!isObject) && (((_c = querySource.Alias) !== null && _c !== void 0 ? _c : querySource.Source) !== projection.Column))
                         continue;
                 }
                 var value = isObject ? sourceObject[projection.Column] : sourceObject;
-                object[(_c = projection.Alias) !== null && _c !== void 0 ? _c : projection.Column] = value;
+                object[(_d = projection.Alias) !== null && _d !== void 0 ? _d : projection.Column] = value;
             }
         }
     };
@@ -3350,6 +3348,31 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.ResolveQueryFunctionParameterName = function (value) {
         value = value.replace('.', '_');
+        return (value);
+    };
+    DrapoStorage.prototype.ResolveQueryAggregations = function (query, objects, objectsInformation) {
+        if (query.Projections[0].FunctionName === 'COUNT') {
+            var objectAggregation = {};
+            objectAggregation[query.Projections[0].Alias] = objects.length;
+            return (objectAggregation);
+        }
+        if (query.Projections[0].FunctionName === 'MAX') {
+            var objectAggregation = {};
+            objectAggregation[query.Projections[0].Alias] = this.ResolveQueryAggregationsMax(query, query.Projections[0], objects, objectsInformation);
+            return (objectAggregation);
+        }
+        return (null);
+    };
+    DrapoStorage.prototype.ResolveQueryAggregationsMax = function (query, projection, objects, objectsInformation) {
+        var value = null;
+        var functionParameter = projection.FunctionParameters[0];
+        var functionParameterName = this.ResolveQueryFunctionParameterName(functionParameter);
+        for (var i = 0; i < objectsInformation.length; i++) {
+            var objectInformation = objectsInformation[i];
+            var valueCurrent = objectInformation[functionParameterName];
+            if ((value == null) || (value < valueCurrent))
+                value = valueCurrent;
+        }
         return (value);
     };
     DrapoStorage.prototype.ResolveQueryFunctions = function (query, objects, objectsInformation) {
