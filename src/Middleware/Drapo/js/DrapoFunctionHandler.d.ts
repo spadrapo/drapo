@@ -71,6 +71,7 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionHideWindow;
     private ExecuteFunctionGetWindow;
     private ExecuteFunctionCreateGuid;
+    private ExecuteFunctionCreateTick;
     private ExecuteFunctionExecute;
     private ExecuteFunctionExecuteDataItem;
     private ExecuteFunctionExecuteComponentFunction;
