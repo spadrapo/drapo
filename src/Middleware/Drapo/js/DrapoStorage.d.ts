@@ -157,6 +157,7 @@ declare class DrapoStorage {
     private ResolveQueryFunctionParameterName;
     private ResolveQueryAggregations;
     private ResolveQueryAggregationsMax;
+    private ResolveQueryAggregationsMin;
     private ResolveQueryFunctions;
     private ResolveQueryFunction;
     private ResolveQueryFunctionCoalesce;
