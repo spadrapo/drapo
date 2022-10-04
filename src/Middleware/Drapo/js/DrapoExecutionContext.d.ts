@@ -8,6 +8,7 @@ declare class DrapoExecutionContext<T> {
     private _data;
     private _sectorContainer;
     private _windowsAutoClose;
+    private _stack;
     get HasError(): boolean;
     set HasError(value: boolean);
     get CanReset(): boolean;
@@ -20,6 +21,7 @@ declare class DrapoExecutionContext<T> {
     set DataKey(value: string);
     get Data(): T;
     set Data(value: T);
+    get Stack(): DrapoStack;
     constructor(application: DrapoApplication);
     Continue(): Promise<boolean>;
     AddSectorContainer(sector: string, containerCode: string): void;

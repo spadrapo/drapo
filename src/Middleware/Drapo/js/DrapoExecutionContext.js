@@ -46,6 +46,7 @@ var DrapoExecutionContext = (function () {
         this._data = null;
         this._sectorContainer = [];
         this._windowsAutoClose = [];
+        this._stack = new DrapoStack();
         this._application = application;
     }
     Object.defineProperty(DrapoExecutionContext.prototype, "HasError", {
@@ -104,6 +105,13 @@ var DrapoExecutionContext = (function () {
         },
         set: function (value) {
             this._data = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoExecutionContext.prototype, "Stack", {
+        get: function () {
+            return (this._stack);
         },
         enumerable: false,
         configurable: true

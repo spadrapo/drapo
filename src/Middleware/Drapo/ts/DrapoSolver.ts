@@ -472,11 +472,15 @@ class DrapoSolver {
         return (await this.ResolveItemDataPathObject(sector, context.Item, dataPath));
     }
 
-    public async ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay: boolean = false): Promise<any> {
+    public async ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay: boolean = false, executionContext: DrapoExecutionContext<any> = null): Promise<any> {
         //System. Like _Index or _Level
         const valueSystem = contextItem !== null ? this.GetSystemContextPathValue(sector, contextItem.Context, dataPath) : null;
         if (valueSystem !== null)
             return (valueSystem);
+        //Execution Context
+        const valueExecutionContext: any = executionContext === null ? null : this.GetExecutionContextPathValue(sector, executionContext, dataPath);
+        if (valueExecutionContext !== null)
+            return (valueExecutionContext);
         //Item
         const dataKey: string = dataPath[0];
         const item: DrapoContextItem = await this.ResolveDataPathObjectItem(contextItem, dataKey, sector, canForceLoadDataDelay, dataPath);
@@ -811,6 +815,24 @@ class DrapoSolver {
             return (this.GetSystemContextPathValueLevel(context));
         if (propertyLower === '_haschanges')
             return (this.GetSystemContextPathValueHasChanges(sector, context.Item.DataKey));
+        return (null);
+    }
+
+    public GetExecutionContextPathValue(sector: string, executionContext: DrapoExecutionContext<any>, dataPath: string[]): any {
+        if (dataPath.length != 2)
+            return (null);
+        const obj: string = dataPath[0];
+        if (obj.toLowerCase() === '_stack')
+            return (this.GetExecutionContextPathValueStack(sector, executionContext, dataPath));
+        return (null);
+    }
+
+    private GetExecutionContextPathValueStack(sector: string, executionContext: DrapoExecutionContext<any>, dataPath: string[]): any {
+        const property: string = dataPath[1].toLowerCase();
+        if (property === 'peek')
+            return (executionContext.Stack.Peek());
+        if (property === 'pop')
+            return (executionContext.Stack.Pop());
         return (null);
     }
 

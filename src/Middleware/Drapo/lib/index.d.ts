@@ -761,6 +761,7 @@ declare class DrapoExecutionContext<T> {
     private _data;
     private _sectorContainer;
     private _windowsAutoClose;
+    private _stack;
     get HasError(): boolean;
     set HasError(value: boolean);
     get CanReset(): boolean;
@@ -773,6 +774,7 @@ declare class DrapoExecutionContext<T> {
     set DataKey(value: string);
     get Data(): T;
     set Data(value: T);
+    get Stack(): DrapoStack;
     constructor(application: DrapoApplication);
     Continue(): Promise<boolean>;
     AddSectorContainer(sector: string, containerCode: string): void;
@@ -850,6 +852,7 @@ declare class DrapoFunctionHandler {
     ResolveFunction(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionsValue: string, executionContext?: DrapoExecutionContext<any>, forceFinalizeExecutionContext?: boolean): Promise<string>;
     private ResolveFunctionContext;
     ResolveFunctionParameter(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, parameter: string, canForceLoadDataDelay?: boolean, canUseReturnFunction?: boolean, isRecursive?: boolean): Promise<any>;
+    ResolveExecutionContextMustache(sector: string, executionContext: DrapoExecutionContext<any>, value: string): string;
     ResolveFunctions(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, value: string, checkInvalidFunction?: boolean): Promise<any>;
     private ResolveFunctionParameterDataFields;
     private ExecuteFunctionContextSwitch;
@@ -911,6 +914,9 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionGetWindow;
     private ExecuteFunctionCreateGuid;
     private ExecuteFunctionCreateTick;
+    private ExecuteFunctionPushStack;
+    private ExecuteFunctionPopStack;
+    private ExecuteFunctionPeekStack;
     private ExecuteFunctionExecute;
     private ExecuteFunctionExecuteDataItem;
     private ExecuteFunctionExecuteComponentFunction;
@@ -1792,7 +1798,7 @@ declare class DrapoSolver {
     private ExistDataPathObject;
     ResolveDataPath(context: DrapoContext, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader?: boolean, canBindWriter?: boolean, modelEvents?: string[], modelEventsCancel?: string[]): Promise<string>;
     private ResolveDataPathObject;
-    ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean): Promise<any>;
+    ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean, executionContext?: DrapoExecutionContext<any>): Promise<any>;
     ResolveItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): any;
     ResolveDataObjectPathObject(dataObject: any, dataPath: string[], dataEnforce?: any): any;
     private GetDataObjectPathObjectPropertyIndex;
@@ -1816,6 +1822,8 @@ declare class DrapoSolver {
     CloneArrayAny(list: any[]): any[];
     CloneElement(el: HTMLElement): HTMLElement;
     private GetSystemContextPathValue;
+    GetExecutionContextPathValue(sector: string, executionContext: DrapoExecutionContext<any>, dataPath: string[]): any;
+    private GetExecutionContextPathValueStack;
     private GetSystemPathValue;
     private GetSystemContextPathValueIndex;
     private GetSystemContextPathValueIndexRelative;
@@ -1836,6 +1844,13 @@ declare class DrapoSolver {
     EnsureString(data: any): string;
     Replace(data: string, from: string, to: string): string;
     ResolveMathematicalExpression(data: string): string;
+}
+
+declare class DrapoStack {
+    private _data;
+    Peek(): any;
+    Push(item: any): void;
+    Pop(): any;
 }
 
 /// <reference path="../typings/index.d.ts" />

@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Stack</title>
+    <style>
+        .selected {
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <br>
+    <span>Stack</span>
+    <div d-dataKey="tabAdd" d-dataType="object" d-dataProperty-tick="" d-dataProperty-selected="true"></div>
+    <div d-dataKey="tabs" d-dataType="array"></div>
+    <div d-datakey="tabMaxTick" d-datatype="query" d-datavalue="SELECT Max(tick) AS Tick FROM tabs"></div>
+    <div d-dataKey="functionSelect" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateItemField({{tabCurrent.selected}},true)"></div>
+    <div d-dataKey="functionUnselect" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateItemField({{tabCurrent.selected}},false)"></div>
+    <div d-dataKey="functionUnselectAll" d-dataType="value" d-dataLoadType="startup" d-dataValue="ExecuteDataItem({{functionUnselect}},tabCurrent in tabs)"></div>
+    <div d-dataKey="functionSelectStack" d-dataType="value" d-dataLoadType="startup" d-dataValue="Execute({{functionUnselectAll}});ExecuteDataItem({{functionSelect}},tabCurrent in tabs,{{tabCurrent.tick}}={{_stack.peek}})"></div>
+    <div d-dataKey="functionAdd" d-dataType="value" d-dataLoadType="startup" d-dataValue="Execute({{functionUnselectAll}});UpdateItemField({{tabAdd.tick}},CreateTick());AddDataItem({{tabs}},{{tabAdd}})"></div>
+    <div>
+        <input type="button" value="Add" d-on-click="{{functionAdd}}">
+        <div>
+            <div d-for="tab in tabs" d-class="{selected:{{tab.selected}}}">
+                <span d-model="{{tab.tick}}" d-on-click="UpdateItemField({{tab.tick}},CreateTick());PushStack({{tab.tick}});Execute({{functionSelectStack}})"></span>
+                <br />
+                <span d-on-click="RemoveDataItem(tabs,{{tab}});PushStack({{tabMaxTick.Tick}});Execute({{functionSelectStack}})">x</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

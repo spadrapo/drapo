@@ -163,12 +163,28 @@ class DrapoFunctionHandler {
         if (mustaches.length == 0)
             return (parameter);
         const mustache: string[] = this.Application.Parser.ParseMustache(mustaches[0]);
-        const value: any = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, mustache, canForceLoadDataDelay);
+        const value: any = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, mustache, canForceLoadDataDelay, executionContext);
         if ((!isRecursive) && (parameter === mustaches[0]))
             return (value);
         const valueReplaceMustache: string = parameter.replace(mustaches[0], value);
         //Recursive
         return (await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, valueReplaceMustache));
+    }
+
+    public ResolveExecutionContextMustache(sector: string, executionContext: DrapoExecutionContext<any>, value: string): string {
+        if (executionContext == null)
+            return (value);
+        if (!this.Application.Parser.HasMustache(value))
+            return (value);
+        const mustaches: string[] = this.Application.Parser.ParseMustaches(value);
+        for (let i: number = 0; i < mustaches.length; i++) {
+            const mustache: string = mustaches[i];
+            const dataPath: string[] = this.Application.Parser.ParseMustache(mustache);
+            const mustacheResolved: string = this.Application.Solver.GetExecutionContextPathValue(sector, executionContext, dataPath);
+            if (mustacheResolved !== null)
+                value = value.replace(mustache, mustacheResolved);
+        }
+        return (value);
     }
 
     public async ResolveFunctions(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, value: string, checkInvalidFunction : boolean = true): Promise<any> {
@@ -325,6 +341,12 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionCreateGuid(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'createtick')
             return (await this.ExecuteFunctionCreateTick(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'pushstack')
+            return (await this.ExecuteFunctionPushStack(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'popstack')
+            return (await this.ExecuteFunctionPopStack(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'peekstack')
+            return (await this.ExecuteFunctionPeekStack(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'execute')
             return (await this.ExecuteFunctionExecute(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'executedataitem')
@@ -1170,6 +1192,40 @@ class DrapoFunctionHandler {
         return (value);
     }
 
+    private async ExecuteFunctionPushStack(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const value: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        executionContext.Stack.Push(value);
+        return ('');
+    }
+
+    private async ExecuteFunctionPopStack(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const value: any = executionContext.Stack.Pop();
+        if (functionParsed.Parameters.length == 0)
+            return (value);
+        const mustacheText: string = functionParsed.Parameters[0];
+        const mustache: string[] = this.Application.Parser.ParseMustache(mustacheText);
+        const dataKey: string = this.Application.Solver.ResolveDataKey(mustache);
+        const dataFields: string[] = this.Application.Solver.ResolveDataFields(mustache);
+        const notifyText: string = functionParsed.Parameters.length > 1 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]) : null;
+        const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
+        await this.Application.Storage.SetDataKeyField(dataKey, sector, dataFields, value, notify);
+        return (value);
+    }
+
+    private async ExecuteFunctionPeekStack(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const value: any = executionContext.Stack.Peek();
+        if (functionParsed.Parameters.length == 0)
+            return (value);
+        const mustacheText: string = functionParsed.Parameters[0];
+        const mustache: string[] = this.Application.Parser.ParseMustache(mustacheText);
+        const dataKey: string = this.Application.Solver.ResolveDataKey(mustache);
+        const dataFields: string[] = this.Application.Solver.ResolveDataFields(mustache);
+        const notifyText: string = functionParsed.Parameters.length > 1 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]) : null;
+        const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
+        await this.Application.Storage.SetDataKeyField(dataKey, sector, dataFields, value, notify);
+        return (value);
+    }
+
     private async ExecuteFunctionExecute(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const sectorFunction = functionParsed.Parameters.length > 1 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]) : sector;
         const valueFunction = await this.ResolveFunctionParameter(sectorFunction, contextItem, element, executionContext, functionParsed.Parameters[0]);
@@ -1210,7 +1266,8 @@ class DrapoFunctionHandler {
             datas = this.Application.ControlFlow.ApplyRange(datas, range);
         if ((datas.length !== null) && (datas.length === 0))
             return ('');
-        await this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, dataKeyIterator, forHierarchyText, ifText, all, datas, dataKey, key);
+        const ifTextResolved: string = this.ResolveExecutionContextMustache(sector, executionContext, ifText);
+        await this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, dataKeyIterator, forHierarchyText, ifTextResolved, all, datas, dataKey, key);
         return ('');
     }
 
