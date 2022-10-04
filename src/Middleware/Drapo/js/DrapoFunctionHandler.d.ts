@@ -11,6 +11,7 @@ declare class DrapoFunctionHandler {
     ResolveFunction(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionsValue: string, executionContext?: DrapoExecutionContext<any>, forceFinalizeExecutionContext?: boolean): Promise<string>;
     private ResolveFunctionContext;
     ResolveFunctionParameter(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, parameter: string, canForceLoadDataDelay?: boolean, canUseReturnFunction?: boolean, isRecursive?: boolean): Promise<any>;
+    ResolveExecutionContextMustache(sector: string, executionContext: DrapoExecutionContext<any>, value: string): string;
     ResolveFunctions(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, value: string, checkInvalidFunction?: boolean): Promise<any>;
     private ResolveFunctionParameterDataFields;
     private ExecuteFunctionContextSwitch;
@@ -72,6 +73,9 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionGetWindow;
     private ExecuteFunctionCreateGuid;
     private ExecuteFunctionCreateTick;
+    private ExecuteFunctionPushStack;
+    private ExecuteFunctionPopStack;
+    private ExecuteFunctionPeekStack;
     private ExecuteFunctionExecute;
     private ExecuteFunctionExecuteDataItem;
     private ExecuteFunctionExecuteComponentFunction;

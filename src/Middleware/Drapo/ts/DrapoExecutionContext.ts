@@ -10,6 +10,7 @@ class DrapoExecutionContext<T>
     private _data: T = null;
     private _sectorContainer: [string, string][] = [];
     private _windowsAutoClose: DrapoWindow[] = [];
+    private _stack: DrapoStack = new DrapoStack();
     //Properties
     get HasError(): boolean {
         return (this._hasError);
@@ -51,6 +52,10 @@ class DrapoExecutionContext<T>
     }
     set Data(value: T) {
         this._data = value;
+    }
+
+    get Stack() {
+        return (this._stack);
     }
 
     //Constructor

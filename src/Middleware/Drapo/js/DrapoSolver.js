@@ -660,16 +660,20 @@ var DrapoSolver = (function () {
             });
         });
     };
-    DrapoSolver.prototype.ResolveItemDataPathObject = function (sector, contextItem, dataPath, canForceLoadDataDelay) {
+    DrapoSolver.prototype.ResolveItemDataPathObject = function (sector, contextItem, dataPath, canForceLoadDataDelay, executionContext) {
         if (canForceLoadDataDelay === void 0) { canForceLoadDataDelay = false; }
+        if (executionContext === void 0) { executionContext = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var valueSystem, dataKey, item;
+            var valueSystem, valueExecutionContext, dataKey, item;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         valueSystem = contextItem !== null ? this.GetSystemContextPathValue(sector, contextItem.Context, dataPath) : null;
                         if (valueSystem !== null)
                             return [2, (valueSystem)];
+                        valueExecutionContext = executionContext === null ? null : this.GetExecutionContextPathValue(sector, executionContext, dataPath);
+                        if (valueExecutionContext !== null)
+                            return [2, (valueExecutionContext)];
                         dataKey = dataPath[0];
                         return [4, this.ResolveDataPathObjectItem(contextItem, dataKey, sector, canForceLoadDataDelay, dataPath)];
                     case 1:
@@ -1014,6 +1018,22 @@ var DrapoSolver = (function () {
             return (this.GetSystemContextPathValueLevel(context));
         if (propertyLower === '_haschanges')
             return (this.GetSystemContextPathValueHasChanges(sector, context.Item.DataKey));
+        return (null);
+    };
+    DrapoSolver.prototype.GetExecutionContextPathValue = function (sector, executionContext, dataPath) {
+        if (dataPath.length != 2)
+            return (null);
+        var obj = dataPath[0];
+        if (obj.toLowerCase() === '_stack')
+            return (this.GetExecutionContextPathValueStack(sector, executionContext, dataPath));
+        return (null);
+    };
+    DrapoSolver.prototype.GetExecutionContextPathValueStack = function (sector, executionContext, dataPath) {
+        var property = dataPath[1].toLowerCase();
+        if (property === 'peek')
+            return (executionContext.Stack.Peek());
+        if (property === 'pop')
+            return (executionContext.Stack.Pop());
         return (null);
     };
     DrapoSolver.prototype.GetSystemPathValue = function (item, dataPath) {

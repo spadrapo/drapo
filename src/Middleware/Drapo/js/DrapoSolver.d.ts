@@ -33,7 +33,7 @@ declare class DrapoSolver {
     private ExistDataPathObject;
     ResolveDataPath(context: DrapoContext, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader?: boolean, canBindWriter?: boolean, modelEvents?: string[], modelEventsCancel?: string[]): Promise<string>;
     private ResolveDataPathObject;
-    ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean): Promise<any>;
+    ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean, executionContext?: DrapoExecutionContext<any>): Promise<any>;
     ResolveItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): any;
     ResolveDataObjectPathObject(dataObject: any, dataPath: string[], dataEnforce?: any): any;
     private GetDataObjectPathObjectPropertyIndex;
@@ -57,6 +57,8 @@ declare class DrapoSolver {
     CloneArrayAny(list: any[]): any[];
     CloneElement(el: HTMLElement): HTMLElement;
     private GetSystemContextPathValue;
+    GetExecutionContextPathValue(sector: string, executionContext: DrapoExecutionContext<any>, dataPath: string[]): any;
+    private GetExecutionContextPathValueStack;
     private GetSystemPathValue;
     private GetSystemContextPathValueIndex;
     private GetSystemContextPathValueIndexRelative;
