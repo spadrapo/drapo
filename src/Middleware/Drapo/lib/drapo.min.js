@@ -24104,6 +24104,11 @@ var DrapoStorage = (function () {
             objectAggregation[query.Projections[0].Alias] = this.ResolveQueryAggregationsMax(query, query.Projections[0], objects, objectsInformation);
             return (objectAggregation);
         }
+        if (query.Projections[0].FunctionName === 'MIN') {
+            var objectAggregation = {};
+            objectAggregation[query.Projections[0].Alias] = this.ResolveQueryAggregationsMin(query, query.Projections[0], objects, objectsInformation);
+            return (objectAggregation);
+        }
         return (null);
     };
     DrapoStorage.prototype.ResolveQueryAggregationsMax = function (query, projection, objects, objectsInformation) {
@@ -24114,6 +24119,18 @@ var DrapoStorage = (function () {
             var objectInformation = objectsInformation[i];
             var valueCurrent = objectInformation[functionParameterName];
             if ((value == null) || (value < valueCurrent))
+                value = valueCurrent;
+        }
+        return (value);
+    };
+    DrapoStorage.prototype.ResolveQueryAggregationsMin = function (query, projection, objects, objectsInformation) {
+        var value = null;
+        var functionParameter = projection.FunctionParameters[0];
+        var functionParameterName = this.ResolveQueryFunctionParameterName(functionParameter);
+        for (var i = 0; i < objectsInformation.length; i++) {
+            var objectInformation = objectsInformation[i];
+            var valueCurrent = objectInformation[functionParameterName];
+            if ((value == null) || (value > valueCurrent))
                 value = valueCurrent;
         }
         return (value);

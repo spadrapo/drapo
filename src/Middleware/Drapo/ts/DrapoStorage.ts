@@ -2330,6 +2330,11 @@ class DrapoStorage {
             objectAggregation[query.Projections[0].Alias] = this.ResolveQueryAggregationsMax(query, query.Projections[0], objects, objectsInformation);
             return (objectAggregation);
         }
+        if (query.Projections[0].FunctionName === 'MIN') {
+            const objectAggregation: any = {};
+            objectAggregation[query.Projections[0].Alias] = this.ResolveQueryAggregationsMin(query, query.Projections[0], objects, objectsInformation);
+            return (objectAggregation);
+        }
         return (null);
     }
 
@@ -2341,6 +2346,19 @@ class DrapoStorage {
             const objectInformation: any = objectsInformation[i];
             const valueCurrent = objectInformation[functionParameterName];
             if ((value == null) || (value < valueCurrent))
+                value = valueCurrent;
+        }
+        return (value);
+    }
+
+    private ResolveQueryAggregationsMin(query: DrapoQuery, projection: DrapoQueryProjection, objects: any[], objectsInformation: any[]): string {
+        let value: string = null;
+        const functionParameter: string = projection.FunctionParameters[0];
+        const functionParameterName: string = this.ResolveQueryFunctionParameterName(functionParameter);
+        for (let i: number = 0; i < objectsInformation.length; i++) {
+            const objectInformation: any = objectsInformation[i];
+            const valueCurrent = objectInformation[functionParameterName];
+            if ((value == null) || (value > valueCurrent))
                 value = valueCurrent;
         }
         return (value);

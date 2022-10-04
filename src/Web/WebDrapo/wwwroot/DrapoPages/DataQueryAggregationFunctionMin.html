@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Aggregation Function Min</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Aggregation Function Min</span>
+        <div d-dataKey="objects" d-dataType="array" d-dataValue="[{&quot;name&quot;: &quot;1664822877519&quot;},{&quot;name&quot;: &quot;1664822878255&quot;},{&quot;name&quot;: &quot;1664822873458&quot;}]"></div>
+        <div d-dataKey="objectsQuery" d-dataType="query" d-dataValue="SELECT MIN(name) AS Min FROM objects"></div>
+        <div>
+            <span>{{objectsQuery.Min}}</span>
+        </div>
+    </div>
+</body>
+</html>
