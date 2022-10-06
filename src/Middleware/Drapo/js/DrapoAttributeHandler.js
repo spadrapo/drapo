@@ -58,9 +58,9 @@ var DrapoAttributeHandler = (function () {
         if (dataKeyFilter === void 0) { dataKeyFilter = null; }
         if (dataFieldFilter === void 0) { dataFieldFilter = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var attributes, sector, context, i, attribute, attributeName, attributeValue, attributeType, attributeValueOriginal, isValid;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var attributes, sector, context, i, attribute, attributeName, attributeValue, attributeType, format, formatResolved, _a, attributeValueOriginal, isValid;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         attributes = this.ExtractAttr(el);
                         if (attributes.length == 0)
@@ -68,93 +68,113 @@ var DrapoAttributeHandler = (function () {
                         sector = this.Application.Document.GetSector(el);
                         context = new DrapoContext();
                         i = 0;
-                        _a.label = 1;
+                        _b.label = 1;
                     case 1:
-                        if (!(i < attributes.length)) return [3, 6];
+                        if (!(i < attributes.length)) return [3, 9];
                         attribute = attributes[i];
                         attributeName = attribute[0];
                         attributeValue = attribute[1];
                         if (this.Application.Barber.HasMustacheContext(attributeValue, sector))
-                            return [3, 5];
+                            return [3, 8];
                         attributeType = attribute[2];
+                        format = attribute[3];
+                        if (!(format == null)) return [3, 2];
+                        _a = null;
+                        return [3, 4];
+                    case 2: return [4, this.Application.ModelHandler.ResolveValueExpression(context, el, sector, format, false)];
+                    case 3:
+                        _a = _b.sent();
+                        _b.label = 4;
+                    case 4:
+                        formatResolved = _a;
                         attributeValueOriginal = attributeValue;
                         return [4, this.Application.ModelHandler.ResolveValueExpression(context, el, sector, attributeValue, canBind)];
-                    case 2:
-                        attributeValue = _a.sent();
-                        attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue);
+                    case 5:
+                        attributeValue = _b.sent();
+                        attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue, formatResolved);
                         if (attributeValue === attributeValueOriginal)
-                            return [3, 5];
-                        if (!(attributeType == null)) return [3, 3];
+                            return [3, 8];
+                        if (!(attributeType == null)) return [3, 6];
                         el.setAttribute(attributeName, attributeValue);
-                        return [3, 5];
-                    case 3:
-                        if (!(attributeType === 'min')) return [3, 5];
+                        return [3, 8];
+                    case 6:
+                        if (!(attributeType === 'min')) return [3, 8];
                         return [4, this.Application.Solver.ResolveConditional(attributeValue)];
-                    case 4:
-                        isValid = _a.sent();
+                    case 7:
+                        isValid = _b.sent();
                         if (isValid)
                             el.setAttribute(attributeName, '');
                         else
                             el.removeAttribute(attributeName);
-                        _a.label = 5;
-                    case 5:
+                        _b.label = 8;
+                    case 8:
                         i++;
                         return [3, 1];
-                    case 6: return [2];
+                    case 9: return [2];
                 }
             });
         });
     };
     DrapoAttributeHandler.prototype.ResolveAttrContext = function (context, el, elj, canBind) {
         return __awaiter(this, void 0, void 0, function () {
-            var attributes, sector, i, attribute, attributeName, attributeValue, attributeType, attributeValueOriginal, attributeNameFull, isValid;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var attributes, sector, i, attribute, attributeName, attributeValue, attributeType, format, formatResolved, _a, attributeValueOriginal, attributeNameFull, isValid;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         attributes = this.ExtractAttr(el);
                         if (attributes.length == 0)
                             return [2];
                         sector = this.Application.Document.GetSector(el);
                         i = 0;
-                        _a.label = 1;
+                        _b.label = 1;
                     case 1:
-                        if (!(i < attributes.length)) return [3, 6];
+                        if (!(i < attributes.length)) return [3, 9];
                         attribute = attributes[i];
                         attributeName = attribute[0];
                         attributeValue = attribute[1];
                         attributeType = attribute[2];
+                        format = attribute[3];
+                        if (!(format == null)) return [3, 2];
+                        _a = null;
+                        return [3, 4];
+                    case 2: return [4, this.Application.ModelHandler.ResolveValueExpression(context, el, sector, format, false)];
+                    case 3:
+                        _a = _b.sent();
+                        _b.label = 4;
+                    case 4:
+                        formatResolved = _a;
                         attributeValueOriginal = attributeValue;
                         return [4, this.Application.ModelHandler.ResolveValueExpression(context, el, sector, attributeValue, canBind)];
-                    case 2:
-                        attributeValue = _a.sent();
-                        attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue);
+                    case 5:
+                        attributeValue = _b.sent();
+                        attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue, formatResolved);
                         if (context.CanUpdateTemplate) {
                             attributeNameFull = 'd-attr-' + attributeName + (attributeType != null ? ('-' + attributeType) : '');
                             if (this.Application.Parser.HasMustache(attributeValue)) {
                                 el.setAttribute(attributeNameFull, attributeValue);
-                                return [3, 5];
+                                return [3, 8];
                             }
                             elj.removeAttr(attributeNameFull);
                         }
                         if (attributeValue === attributeValueOriginal)
-                            return [3, 5];
-                        if (!(attributeType == null)) return [3, 3];
+                            return [3, 8];
+                        if (!(attributeType == null)) return [3, 6];
                         el.setAttribute(attributeName, attributeValue);
-                        return [3, 5];
-                    case 3:
-                        if (!(attributeType === 'min')) return [3, 5];
+                        return [3, 8];
+                    case 6:
+                        if (!(attributeType === 'min')) return [3, 8];
                         return [4, this.Application.Solver.ResolveConditional(attributeValue)];
-                    case 4:
-                        isValid = _a.sent();
+                    case 7:
+                        isValid = _b.sent();
                         if (isValid)
                             el.setAttribute(attributeName, '');
                         else
                             el.removeAttribute(attributeName);
-                        _a.label = 5;
-                    case 5:
+                        _b.label = 8;
+                    case 8:
                         i++;
                         return [3, 1];
-                    case 6: return [2];
+                    case 9: return [2];
                 }
             });
         });
@@ -230,8 +250,10 @@ var DrapoAttributeHandler = (function () {
         for (var i = 0; i < el.attributes.length; i++) {
             var attribute = el.attributes[i];
             var attributeProperty = this.Application.AttributeHandler.ExtractAttrProperty(attribute.nodeName);
-            if (attributeProperty != null)
-                attributes.push([attributeProperty[0], attribute.nodeValue, attributeProperty[1]]);
+            if (attributeProperty == null)
+                continue;
+            var format = el.getAttribute('d-attr-' + attributeProperty[0] + "-format");
+            attributes.push([attributeProperty[0], attribute.nodeValue, attributeProperty[1], format]);
         }
         return (attributes);
     };
@@ -245,6 +267,8 @@ var DrapoAttributeHandler = (function () {
             return (null);
         var name = parse[2];
         var type = parse.length > 3 ? parse[3] : null;
+        if (type === 'format')
+            return (null);
         return ([name, type]);
     };
     DrapoAttributeHandler.prototype.ResolveID = function (el, sector, canBind, canSubscribeDelay, dataKeyFilter, dataFieldFilter) {
@@ -293,9 +317,11 @@ var DrapoAttributeHandler = (function () {
             });
         });
     };
-    DrapoAttributeHandler.prototype.ResolveConversionAttributeValue = function (name, value) {
+    DrapoAttributeHandler.prototype.ResolveConversionAttributeValue = function (name, value, format) {
         if (name === 'src')
             return (this.ResolveConversionAttributeSourceValue(value));
+        if (format != null)
+            value = this.Application.Formatter.Format(value, format);
         return (value);
     };
     DrapoAttributeHandler.prototype.ResolveConversionAttributeSourceValue = function (value) {

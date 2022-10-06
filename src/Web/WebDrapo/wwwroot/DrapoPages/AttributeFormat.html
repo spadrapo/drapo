@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Attribute Format</title>
+</head>
+<body>
+    <br>
+    <span>Attribute Format</span>
+    <div d-dataKey="objects" d-dataType="array" d-dataUrlGet="~/Culture/GetObjects"></div>
+    <div>
+        <input d-attr-placeholder="{{objects.[7].Value}}" d-attr-placeholder-format="{{objects.[7].Format}}" type="text">
+        <br />
+        <input d-attr-placeholder="{{objects.[10].Value}}" d-attr-placeholder-format="{{objects.[10].Format}}" type="text">
+        <br />
+        <input d-attr-placeholder="{{objects.[12].Value}}" d-attr-placeholder-format="{{objects.[12].Format}}" type="text">
+    </div>
+    <div>
+        <div d-for="object in objects">
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text">
+            <br />
+        </div>
+    </div>
+</body>
+</html>

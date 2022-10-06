@@ -140,6 +140,11 @@ namespace WebDrapo.Test
             ValidatePage("Attribute");
         }
         [TestCase]
+        public void AttributeFormatTest()
+        {
+            ValidatePage("AttributeFormat");
+        }
+        [TestCase]
         public void AttributeForMustacheTest()
         {
             ValidatePage("AttributeForMustache");

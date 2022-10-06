@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Attribute Format</title>
+</head>
+<body>
+    <br />
+    <span>Attribute Format</span>
+    <div d-datakey="objects" d-datatype="array" d-dataurlget="~/Culture/GetObjects"></div>
+    <div>
+        <input d-attr-placeholder="{{objects.[7].Value}}" d-attr-placeholder-format="{{objects.[7].Format}}" type="text" placeholder="Tuesday, 03 June 1980" />
+        <br />
+        <input d-attr-placeholder="{{objects.[10].Value}}" d-attr-placeholder-format="{{objects.[10].Format}}" type="text" placeholder="06/03/1980 13:04:56" />
+        <br />
+        <input d-attr-placeholder="{{objects.[12].Value}}" d-attr-placeholder-format="{{objects.[12].Format}}" type="text" placeholder="Tuesday, 03 Jun 1980" />
+    </div>
+    <div>
+        <div d-for="object in objects" style="display: none;">
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" />
+            <br />
+        </div>
+    <div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="06/03/1980" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="Thiago" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="true" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="1980" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="1980" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="06/03/1980" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="Tuesday, 03 June 1980" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="13:04" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="13:04:56" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="06/03/1980 13:04:56" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="06/03/1980 13:04" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="Tuesday, 03 Jun 1980" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="10.00" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="0.10" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="0.60" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="10.00 %" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="10.00 %" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="10.00 %" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="100.00 %" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="0.00 %" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="0.00 %" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="12.35 %" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="-100.00" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="1,234,567.89" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="10.00" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="12,345" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="00,012,345" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="-12,345" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="-00,012,345" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="Thiago" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="-" />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="." />
+            <br />
+        </div><div>
+            <input d-attr-placeholder="{{object.Value}}" d-attr-placeholder-format="{{object.Format}}" type="text" placeholder="0" />
+            <br />
+        </div></div>
+
+</body></html>

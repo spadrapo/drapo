@@ -21,21 +21,23 @@ class DrapoAttributeHandler {
     }
 
     public async ResolveAttr(el: HTMLElement, canBind: boolean = true, canSubscribeDelay: boolean = true, dataKeyFilter: string = null, dataFieldFilter: string = null): Promise<void> {
-        const attributes: [string, string, string][] = this.ExtractAttr(el);
+        const attributes: [string, string, string, string][] = this.ExtractAttr(el);
         if (attributes.length == 0)
             return;
         const sector: string = this.Application.Document.GetSector(el);
         const context: DrapoContext = new DrapoContext();
         for (let i = 0; i < attributes.length; i++) {
-            const attribute: [string, string, string] = attributes[i];
+            const attribute: [string, string, string, string] = attributes[i];
             const attributeName: string = attribute[0];
             let attributeValue: string = attribute[1];
             if (this.Application.Barber.HasMustacheContext(attributeValue, sector))
                 continue;
             const attributeType: string = attribute[2];
+            const format: string = attribute[3];
+            const formatResolved: string = format == null ? null : await this.Application.ModelHandler.ResolveValueExpression(context, el, sector, format, false);
             const attributeValueOriginal: string = attributeValue;
             attributeValue = await this.Application.ModelHandler.ResolveValueExpression(context, el, sector, attributeValue, canBind);
-            attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue);
+            attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue, formatResolved);
             if (attributeValue === attributeValueOriginal)
                 continue;
             if (attributeType == null) {
@@ -53,18 +55,20 @@ class DrapoAttributeHandler {
     }
 
     public async ResolveAttrContext(context: DrapoContext, el: HTMLElement, elj: JQuery, canBind: boolean): Promise<void> {
-        const attributes: [string, string, string][] = this.ExtractAttr(el);
+        const attributes: [string, string, string, string][] = this.ExtractAttr(el);
         if (attributes.length == 0)
             return;
         const sector: string = this.Application.Document.GetSector(el);
         for (let i: number = 0; i < attributes.length; i++) {
-            const attribute: [string, string, string] = attributes[i];
+            const attribute: [string, string, string, string] = attributes[i];
             const attributeName: string = attribute[0];
             let attributeValue: string = attribute[1];
             const attributeType: string = attribute[2];
+            const format: string = attribute[3];
+            const formatResolved: string = format == null ? null : await this.Application.ModelHandler.ResolveValueExpression(context, el, sector, format, false);
             const attributeValueOriginal: string = attributeValue;
             attributeValue = await this.Application.ModelHandler.ResolveValueExpression(context, el, sector, attributeValue, canBind);
-            attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue);
+            attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue, formatResolved);
             if (context.CanUpdateTemplate) {
                 const attributeNameFull: string = 'd-attr-' + attributeName + (attributeType != null ? ('-' + attributeType) : '');
                 if (this.Application.Parser.HasMustache(attributeValue)) {
@@ -124,13 +128,15 @@ class DrapoAttributeHandler {
         return (value);
     }
 
-    private ExtractAttr(el: HTMLElement): [string, string, string][] {
-        const attributes: [string, string, string][] = [];
+    private ExtractAttr(el: HTMLElement): [string, string, string, string][] {
+        const attributes: [string, string, string, string][] = [];
         for (let i: number = 0; i < el.attributes.length; i++) {
             const attribute: Attr = el.attributes[i];
             const attributeProperty : [string,string] = this.Application.AttributeHandler.ExtractAttrProperty(attribute.nodeName);
-            if (attributeProperty != null)
-                attributes.push([attributeProperty[0], attribute.nodeValue, attributeProperty[1]]);
+            if (attributeProperty == null)
+                continue;
+            const format: string = el.getAttribute('d-attr-' + attributeProperty[0] + "-format");
+            attributes.push([attributeProperty[0], attribute.nodeValue, attributeProperty[1], format]);
         }
         return (attributes);
     }
@@ -145,6 +151,8 @@ class DrapoAttributeHandler {
             return (null);
         const name: string = parse[2];
         const type: string = parse.length > 3 ? parse[3] : null;
+        if (type === 'format')
+            return (null);
         return ([name, type]);
     }
 
@@ -170,10 +178,12 @@ class DrapoAttributeHandler {
             el.setAttribute('d-id', expressionCurrent);
     }
 
-    private ResolveConversionAttributeValue(name : string, value: string) : string
+    private ResolveConversionAttributeValue(name : string, value: string, format: string) : string
     {
         if (name === 'src')
             return (this.ResolveConversionAttributeSourceValue(value));
+        if (format != null)
+            value = this.Application.Formatter.Format(value, format);
         return (value);
     }
 
