@@ -1,10 +1,8 @@
 /// <reference path="../typings/index.d.ts" />
 declare class DrapoStorage {
     private _application;
-    private _cacheKeys;
     private _cacheItems;
     private _isDelayTriggered;
-    private _cacheLocalDataKeyArray;
     private readonly CONTENT_TYPE_JSON;
     private _lock;
     get Application(): DrapoApplication;
@@ -29,9 +27,6 @@ declare class DrapoStorage {
     IsDataKeyDelay(dataKey: string, sector: string): boolean;
     private IsDataKeyElement;
     private IsDataKeyElementInternal;
-    ClearCacheLocal(): void;
-    IsDataKeyArray(dataKey: string, sector: string): Promise<boolean>;
-    private IsDataKeyArrayInternal;
     EnsureDataKeyReady(dataKey: string, sector: string): Promise<number>;
     EnsureDataKeyFieldReady(dataKey: string, sector: string, dataPath: string[]): Promise<boolean>;
     GetData(sector: string, dataPath: string[]): string;
@@ -91,7 +86,6 @@ declare class DrapoStorage {
     NotifyChanges(dataItem: DrapoStorageItem, notify: boolean, dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean): Promise<void>;
     NotifyNoChanges(dataItem: DrapoStorageItem, notify: boolean, dataKey: string): Promise<void>;
     FlagAsUpdated(dataItem: DrapoStorageItem, index: number): boolean;
-    GetCacheKeys(): string[];
     private GetCacheKeyIndex;
     IsDataReady(sector: string, dataKey: string): boolean;
     private GetCacheStorageItem;
@@ -100,8 +94,8 @@ declare class DrapoStorage {
     private AddCacheData;
     FireEventOnNotify(dataKey: string): Promise<void>;
     private RemoveCacheData;
-    AppendCacheDataItemBySector(storageItems: [string, DrapoStorageItem][], sector: string): void;
-    AddCacheDataItems(storageItems: [string, DrapoStorageItem][]): void;
+    AppendCacheDataItemBySector(storageItems: DrapoStorageItem[], sector: string): void;
+    AddCacheDataItems(storageItems: DrapoStorageItem[]): void;
     RemoveBySector(sector: string): void;
     DiscardCacheData(dataKey: string, sector: string, canRemoveObservers?: boolean): boolean;
     DiscardCacheDataBySector(sector: string): boolean;

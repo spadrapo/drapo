@@ -1651,7 +1651,7 @@ declare class DrapoSectorContainerItem {
     private _canDetachElement;
     get Sector(): string;
     get ContainerCode(): string;
-    get StorageItems(): [string, DrapoStorageItem][];
+    get StorageItems(): DrapoStorageItem[];
     get SectorHierarchys(): [string, string][];
     get SectorFriends(): [string, string[]][];
     get ComponentSectors(): string[];
@@ -1660,7 +1660,7 @@ declare class DrapoSectorContainerItem {
     get ComponentInstances(): any[][];
     get Element(): HTMLElement;
     get CanDetachElement(): boolean;
-    constructor(sector: string, containerCode: string, storageItems: [string, DrapoStorageItem][], sectorHierarchys: [string, string][], sectorFriends: [string, string[]][], componentSectors: string[], componentTags: string[][], componentElements: HTMLElement[][], componentInstances: any[][], element: HTMLElement, canDetachElement: boolean);
+    constructor(sector: string, containerCode: string, storageItems: DrapoStorageItem[], sectorHierarchys: [string, string][], sectorFriends: [string, string[]][], componentSectors: string[], componentTags: string[][], componentElements: HTMLElement[][], componentInstances: any[][], element: HTMLElement, canDetachElement: boolean);
 }
 
 declare class DrapoSerializer {
@@ -1856,10 +1856,8 @@ declare class DrapoStack {
 /// <reference path="../typings/index.d.ts" />
 declare class DrapoStorage {
     private _application;
-    private _cacheKeys;
     private _cacheItems;
     private _isDelayTriggered;
-    private _cacheLocalDataKeyArray;
     private readonly CONTENT_TYPE_JSON;
     private _lock;
     get Application(): DrapoApplication;
@@ -1884,9 +1882,6 @@ declare class DrapoStorage {
     IsDataKeyDelay(dataKey: string, sector: string): boolean;
     private IsDataKeyElement;
     private IsDataKeyElementInternal;
-    ClearCacheLocal(): void;
-    IsDataKeyArray(dataKey: string, sector: string): Promise<boolean>;
-    private IsDataKeyArrayInternal;
     EnsureDataKeyReady(dataKey: string, sector: string): Promise<number>;
     EnsureDataKeyFieldReady(dataKey: string, sector: string, dataPath: string[]): Promise<boolean>;
     GetData(sector: string, dataPath: string[]): string;
@@ -1946,7 +1941,6 @@ declare class DrapoStorage {
     NotifyChanges(dataItem: DrapoStorageItem, notify: boolean, dataKey: string, dataIndex: number, dataFields: string[], canUseDifference?: boolean): Promise<void>;
     NotifyNoChanges(dataItem: DrapoStorageItem, notify: boolean, dataKey: string): Promise<void>;
     FlagAsUpdated(dataItem: DrapoStorageItem, index: number): boolean;
-    GetCacheKeys(): string[];
     private GetCacheKeyIndex;
     IsDataReady(sector: string, dataKey: string): boolean;
     private GetCacheStorageItem;
@@ -1955,8 +1949,8 @@ declare class DrapoStorage {
     private AddCacheData;
     FireEventOnNotify(dataKey: string): Promise<void>;
     private RemoveCacheData;
-    AppendCacheDataItemBySector(storageItems: [string, DrapoStorageItem][], sector: string): void;
-    AddCacheDataItems(storageItems: [string, DrapoStorageItem][]): void;
+    AppendCacheDataItemBySector(storageItems: DrapoStorageItem[], sector: string): void;
+    AddCacheDataItems(storageItems: DrapoStorageItem[]): void;
     RemoveBySector(sector: string): void;
     DiscardCacheData(dataKey: string, sector: string, canRemoveObservers?: boolean): boolean;
     DiscardCacheDataBySector(sector: string): boolean;
@@ -2027,6 +2021,7 @@ declare class DrapoStorage {
 }
 
 declare class DrapoStorageItem {
+    private _dataKey;
     private _type;
     private _access;
     private _element;
@@ -2064,6 +2059,7 @@ declare class DrapoStorageItem {
     private _headersGet;
     private _headersSet;
     private _hasChanges;
+    get DataKey(): string;
     get Type(): string;
     set Type(value: string);
     get Access(): string;
@@ -2143,7 +2139,7 @@ declare class DrapoStorageItem {
     set HeadersSet(value: [string, string][]);
     get HasChanges(): boolean;
     set HasChanges(value: boolean);
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
+    constructor(dataKey: string, type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
     private Initialize;
     ContainsGroup(group: string): boolean;
 }

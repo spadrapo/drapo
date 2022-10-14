@@ -1,6 +1,7 @@
 "use strict";
 var DrapoStorageItem = (function () {
-    function DrapoStorageItem(type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet) {
+    function DrapoStorageItem(dataKey, type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet) {
+        this._dataKey = null;
         this._type = null;
         this._access = null;
         this._data = [];
@@ -37,6 +38,7 @@ var DrapoStorageItem = (function () {
         this._headersGet = [];
         this._headersSet = [];
         this._hasChanges = false;
+        this._dataKey = dataKey;
         this._type = type;
         this._access = access;
         this._element = element;
@@ -71,6 +73,13 @@ var DrapoStorageItem = (function () {
         this._headersSet = headersSet;
         this.Initialize();
     }
+    Object.defineProperty(DrapoStorageItem.prototype, "DataKey", {
+        get: function () {
+            return (this._dataKey);
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(DrapoStorageItem.prototype, "Type", {
         get: function () {
             return (this._type);

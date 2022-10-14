@@ -1,4 +1,5 @@
 declare class DrapoStorageItem {
+    private _dataKey;
     private _type;
     private _access;
     private _element;
@@ -36,6 +37,7 @@ declare class DrapoStorageItem {
     private _headersGet;
     private _headersSet;
     private _hasChanges;
+    get DataKey(): string;
     get Type(): string;
     set Type(value: string);
     get Access(): string;
@@ -115,7 +117,7 @@ declare class DrapoStorageItem {
     set HeadersSet(value: [string, string][]);
     get HasChanges(): boolean;
     set HasChanges(value: boolean);
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
+    constructor(dataKey: string, type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
     private Initialize;
     ContainsGroup(group: string): boolean;
 }

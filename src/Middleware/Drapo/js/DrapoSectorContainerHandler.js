@@ -206,7 +206,6 @@ var DrapoSectorContainerHandler = (function () {
                         i++;
                         return [3, 1];
                     case 4:
-                        this.Application.Storage.ClearCacheLocal();
                         this.Application.Document.CleanSectorMetadata(sector);
                         this.Application.Document.SetSectorElementInner(sector, null, null);
                         return [2];
@@ -264,10 +263,9 @@ var DrapoSectorContainerHandler = (function () {
             if ((container.Sector !== sector) || (container.ContainerCode !== containerCode))
                 continue;
             for (var j = 0; j < container.StorageItems.length; j++) {
-                var containerItem = container.StorageItems[j];
-                if (containerItem[0] !== dataKey)
+                var storageItem = container.StorageItems[j];
+                if (storageItem.DataKey !== dataKey)
                     continue;
-                var storageItem = containerItem[1];
                 if (storageItem.Sector !== sector)
                     continue;
                 return (storageItem);

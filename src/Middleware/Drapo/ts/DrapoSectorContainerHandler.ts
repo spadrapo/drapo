@@ -94,7 +94,7 @@ class DrapoSectorContainerHandler {
         //Sector and Children
         const sectorChildren: string[] = this.Application.Document.GetSectorAndChildren(sector);
         //Storage Items
-        const storageItems: [string, DrapoStorageItem][] = [];
+        const storageItems: DrapoStorageItem[] = [];
         //Sector Hierarchys
         const sectorHierarchys: [string, string][] = [];
         //Sector Friends
@@ -158,8 +158,6 @@ class DrapoSectorContainerHandler {
             //Unload Context Cache
             this.RemoveMustacheContextCache(sectorCurrent);
         }
-        //Unload Storage Local Cache
-        this.Application.Storage.ClearCacheLocal();
         //Clean Sector Metadata
         this.Application.Document.CleanSectorMetadata(sector);
         //Remove Sector Element
@@ -223,10 +221,9 @@ class DrapoSectorContainerHandler {
             if ((container.Sector !== sector) || (container.ContainerCode !== containerCode))
                 continue;
             for (let j: number = 0; j < container.StorageItems.length; j++) {
-                const containerItem: [string, DrapoStorageItem] = container.StorageItems[j];
-                if (containerItem[0] !== dataKey)
+                const storageItem: DrapoStorageItem = container.StorageItems[j];
+                if (storageItem.DataKey !== dataKey)
                     continue;
-                const storageItem: DrapoStorageItem = containerItem[1];
                 if (storageItem.Sector !== sector)
                     continue;
                 return (storageItem);
