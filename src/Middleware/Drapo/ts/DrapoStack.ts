@@ -12,7 +12,7 @@
     }
 
     public Pop(): any {
-        const item: any = this._data.pop(); 
+        const item: any = this._data.pop();
         return (item ?? null);
-    } 
+    }
 }

@@ -361,31 +361,31 @@ class DrapoDocument {
 
     public async RemoveElement(el: HTMLElement): Promise<void> {
         $(el).remove();
-        this.RemoveElementIteration(el);
+        await this.RemoveElementIteration(el);
     }
 
-    private RemoveElementIteration(el: HTMLElement): void {
+    private async RemoveElementIteration(el: HTMLElement): Promise<void> {
         //Sector
         const sector: string = el.getAttribute('d-sector');
         if (sector != null) {
-            this.RemoveSectorData(sector);
+            await this.RemoveSectorData(sector);
         } else {
             //Recursive
             const children: Array<HTMLElement> = [].slice.call(el.children);
             for (let i: number = 0; i < children.length; i++)
-                this.RemoveElementIteration(children[i]);
+                await this.RemoveElementIteration(children[i]);
         }
     }
 
-    private RemoveSectorData(sector: string): void {
+    private async RemoveSectorData(sector: string): Promise<void> {
         //Children
         const sectors: string[] = this.GetSectorChildren(sector);
         for (let i: number = 0; i < sectors.length; i++)
-            this.RemoveSectorData(sectors[i]);
+            await this.RemoveSectorData(sectors[i]);
         //Metadata
         this.CleanSectorMetadataInternal(sector);
         //Storage
-        this.Application.Storage.RemoveBySector(sector);
+        await this.Application.Storage.RemoveBySector(sector);
         //Container
         this.Application.SectorContainerHandler.RemoveBySector(sector);
         //Components

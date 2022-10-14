@@ -206,6 +206,7 @@
                 return (null);
         } catch (e) {
             this._useLocalStorage = false;
+            // tslint:disable-next-line:no-floating-promises
             this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - GetClientDataCache :' + cacheKey);
         }
         try {
@@ -221,6 +222,7 @@
             window.localStorage.setItem(cacheKey, valueSerialized);
         } catch (e) {
             this._useLocalStorage = false;
+            // tslint:disable-next-line:no-floating-promises
             this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - SetClientDataCache');
         }
     }

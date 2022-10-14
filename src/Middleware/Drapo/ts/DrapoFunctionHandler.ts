@@ -677,7 +677,7 @@ class DrapoFunctionHandler {
         if (dataUrl === dataUrlCurrent)
             return ('');
         jqueryDataKeys.attr('d-dataUrlGet', dataUrl);
-        this.Application.Storage.DiscardCacheData(dataKey, sector);
+        await this.Application.Storage.DiscardCacheData(dataKey, sector);
         await this.Application.Observer.Notify(dataKey, null, null);
         return ('');
     }
@@ -692,7 +692,7 @@ class DrapoFunctionHandler {
         if (dataUrl === dataUrlCurrent)
             return ('');
         jqueryDataKeys.attr('d-dataUrlSet', dataUrl);
-        this.Application.Storage.DiscardCacheData(dataKey, sector);
+        await this.Application.Storage.DiscardCacheData(dataKey, sector);
         return ('');
     }
 

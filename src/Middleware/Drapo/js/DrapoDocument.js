@@ -569,31 +569,76 @@ var DrapoDocument = (function () {
     DrapoDocument.prototype.RemoveElement = function (el) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                $(el).remove();
-                this.RemoveElementIteration(el);
-                return [2];
+                switch (_a.label) {
+                    case 0:
+                        $(el).remove();
+                        return [4, this.RemoveElementIteration(el)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
             });
         });
     };
     DrapoDocument.prototype.RemoveElementIteration = function (el) {
-        var sector = el.getAttribute('d-sector');
-        if (sector != null) {
-            this.RemoveSectorData(sector);
-        }
-        else {
-            var children = [].slice.call(el.children);
-            for (var i = 0; i < children.length; i++)
-                this.RemoveElementIteration(children[i]);
-        }
+        return __awaiter(this, void 0, void 0, function () {
+            var sector, children, i;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sector = el.getAttribute('d-sector');
+                        if (!(sector != null)) return [3, 2];
+                        return [4, this.RemoveSectorData(sector)];
+                    case 1:
+                        _a.sent();
+                        return [3, 6];
+                    case 2:
+                        children = [].slice.call(el.children);
+                        i = 0;
+                        _a.label = 3;
+                    case 3:
+                        if (!(i < children.length)) return [3, 6];
+                        return [4, this.RemoveElementIteration(children[i])];
+                    case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5:
+                        i++;
+                        return [3, 3];
+                    case 6: return [2];
+                }
+            });
+        });
     };
     DrapoDocument.prototype.RemoveSectorData = function (sector) {
-        var sectors = this.GetSectorChildren(sector);
-        for (var i = 0; i < sectors.length; i++)
-            this.RemoveSectorData(sectors[i]);
-        this.CleanSectorMetadataInternal(sector);
-        this.Application.Storage.RemoveBySector(sector);
-        this.Application.SectorContainerHandler.RemoveBySector(sector);
-        this.Application.ComponentHandler.UnloadComponentInstances(sector);
+        return __awaiter(this, void 0, void 0, function () {
+            var sectors, i;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sectors = this.GetSectorChildren(sector);
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < sectors.length)) return [3, 4];
+                        return [4, this.RemoveSectorData(sectors[i])];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        i++;
+                        return [3, 1];
+                    case 4:
+                        this.CleanSectorMetadataInternal(sector);
+                        return [4, this.Application.Storage.RemoveBySector(sector)];
+                    case 5:
+                        _a.sent();
+                        this.Application.SectorContainerHandler.RemoveBySector(sector);
+                        this.Application.ComponentHandler.UnloadComponentInstances(sector);
+                        return [2];
+                }
+            });
+        });
     };
     DrapoDocument.prototype.LoadChildSector = function (sectorName, url, title, canRoute, canLoadDefaultSectors, container) {
         if (title === void 0) { title = null; }

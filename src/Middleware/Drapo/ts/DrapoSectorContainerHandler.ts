@@ -39,7 +39,6 @@ class DrapoSectorContainerHandler {
     }
 
     public async Switch(sector: string, containerCode: string = null): Promise<boolean> {
-        await this.Application.Storage.AdquireLock();
         //Previous Active
         let containerCodePrevious: string = null;
         for (let i: number = 0; i < this._activeSectorContainers.length; i++) {
@@ -66,7 +65,6 @@ class DrapoSectorContainerHandler {
         }
         //Empty Container
         if ((containerCode === null) || (containerCode === this.CONTAINER_EQUAL)) {
-            this.Application.Storage.ReleaseLock();
             return (false);
         }
         //Load Container
@@ -82,7 +80,6 @@ class DrapoSectorContainerHandler {
         }
         //Activate
         this._activeSectorContainers.push([sector, containerCode]);
-        this.Application.Storage.ReleaseLock();
         return (loaded);
     }
 
@@ -126,7 +123,7 @@ class DrapoSectorContainerHandler {
         //Element
         this.Application.Document.SetSectorElementInner(container.Sector, container.Element, container.CanDetachElement);
         //Storage Items
-        this.Application.Storage.AddCacheDataItems(container.StorageItems);
+        await this.Application.Storage.AddCacheDataItems(container.StorageItems);
         //Sector Hierarchy
         this.Application.Document.AddSectorHierarchys(container.SectorHierarchys);
         //Sector Friends
@@ -154,7 +151,7 @@ class DrapoSectorContainerHandler {
             //Unload Component Instances
             this.Application.ComponentHandler.UnloadComponentInstances(sectorCurrent);
             //Unload Storage Items
-            this.Application.Storage.RemoveBySector(sectorCurrent);
+            await this.Application.Storage.RemoveBySector(sectorCurrent);
             //Unload Context Cache
             this.RemoveMustacheContextCache(sectorCurrent);
         }

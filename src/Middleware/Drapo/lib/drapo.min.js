@@ -5243,8 +5243,9 @@ var DrapoControlFlow = (function () {
         if (rangeString === null)
             return (null);
         var range = this.GetIteratorRangeInternal(rangeString);
-        if (!this.IsValidRange(range))
+        if (!this.IsValidRange(range)) {
             this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - GetIteratorRange - Invalid Iterator Range - {0}', iterator);
+        }
         return (range);
     };
     DrapoControlFlow.prototype.GetIteratorRangeInternal = function (rangeString) {
@@ -7210,31 +7211,76 @@ var DrapoDocument = (function () {
     DrapoDocument.prototype.RemoveElement = function (el) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                $(el).remove();
-                this.RemoveElementIteration(el);
-                return [2];
+                switch (_a.label) {
+                    case 0:
+                        $(el).remove();
+                        return [4, this.RemoveElementIteration(el)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
             });
         });
     };
     DrapoDocument.prototype.RemoveElementIteration = function (el) {
-        var sector = el.getAttribute('d-sector');
-        if (sector != null) {
-            this.RemoveSectorData(sector);
-        }
-        else {
-            var children = [].slice.call(el.children);
-            for (var i = 0; i < children.length; i++)
-                this.RemoveElementIteration(children[i]);
-        }
+        return __awaiter(this, void 0, void 0, function () {
+            var sector, children, i;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sector = el.getAttribute('d-sector');
+                        if (!(sector != null)) return [3, 2];
+                        return [4, this.RemoveSectorData(sector)];
+                    case 1:
+                        _a.sent();
+                        return [3, 6];
+                    case 2:
+                        children = [].slice.call(el.children);
+                        i = 0;
+                        _a.label = 3;
+                    case 3:
+                        if (!(i < children.length)) return [3, 6];
+                        return [4, this.RemoveElementIteration(children[i])];
+                    case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5:
+                        i++;
+                        return [3, 3];
+                    case 6: return [2];
+                }
+            });
+        });
     };
     DrapoDocument.prototype.RemoveSectorData = function (sector) {
-        var sectors = this.GetSectorChildren(sector);
-        for (var i = 0; i < sectors.length; i++)
-            this.RemoveSectorData(sectors[i]);
-        this.CleanSectorMetadataInternal(sector);
-        this.Application.Storage.RemoveBySector(sector);
-        this.Application.SectorContainerHandler.RemoveBySector(sector);
-        this.Application.ComponentHandler.UnloadComponentInstances(sector);
+        return __awaiter(this, void 0, void 0, function () {
+            var sectors, i;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        sectors = this.GetSectorChildren(sector);
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < sectors.length)) return [3, 4];
+                        return [4, this.RemoveSectorData(sectors[i])];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        i++;
+                        return [3, 1];
+                    case 4:
+                        this.CleanSectorMetadataInternal(sector);
+                        return [4, this.Application.Storage.RemoveBySector(sector)];
+                    case 5:
+                        _a.sent();
+                        this.Application.SectorContainerHandler.RemoveBySector(sector);
+                        this.Application.ComponentHandler.UnloadComponentInstances(sector);
+                        return [2];
+                }
+            });
+        });
     };
     DrapoDocument.prototype.LoadChildSector = function (sectorName, url, title, canRoute, canLoadDefaultSectors, container) {
         if (title === void 0) { title = null; }
@@ -11200,9 +11246,11 @@ var DrapoFunctionHandler = (function () {
                         if (dataUrl === dataUrlCurrent)
                             return [2, ('')];
                         jqueryDataKeys.attr('d-dataUrlGet', dataUrl);
-                        this.Application.Storage.DiscardCacheData(dataKey, sector);
-                        return [4, this.Application.Observer.Notify(dataKey, null, null)];
+                        return [4, this.Application.Storage.DiscardCacheData(dataKey, sector)];
                     case 1:
+                        _a.sent();
+                        return [4, this.Application.Observer.Notify(dataKey, null, null)];
+                    case 2:
                         _a.sent();
                         return [2, ('')];
                 }
@@ -11226,7 +11274,9 @@ var DrapoFunctionHandler = (function () {
                         if (dataUrl === dataUrlCurrent)
                             return [2, ('')];
                         jqueryDataKeys.attr('d-dataUrlSet', dataUrl);
-                        this.Application.Storage.DiscardCacheData(dataKey, sector);
+                        return [4, this.Application.Storage.DiscardCacheData(dataKey, sector)];
+                    case 2:
+                        _a.sent();
                         return [2, ('')];
                 }
             });
@@ -18449,9 +18499,7 @@ var DrapoSectorContainerHandler = (function () {
             var containerCodePrevious, i, activeSectorContainer, containerPrevious, el, loaded, i, container;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.Application.Storage.AdquireLock()];
-                    case 1:
-                        _a.sent();
+                    case 0:
                         containerCodePrevious = null;
                         for (i = 0; i < this._activeSectorContainers.length; i++) {
                             activeSectorContainer = this._activeSectorContainers[i];
@@ -18467,7 +18515,7 @@ var DrapoSectorContainerHandler = (function () {
                             this._containers.push(containerPrevious);
                         }
                         return [4, this.UnloadSector(sector)];
-                    case 2:
+                    case 1:
                         _a.sent();
                         if (containerCode === this.CONTAINER_EQUAL) {
                             el = this.Application.Document.GetSectorElementInner(sector);
@@ -18475,29 +18523,27 @@ var DrapoSectorContainerHandler = (function () {
                                 el.parentElement.removeChild(el);
                         }
                         if ((containerCode === null) || (containerCode === this.CONTAINER_EQUAL)) {
-                            this.Application.Storage.ReleaseLock();
                             return [2, (false)];
                         }
                         loaded = false;
                         i = 0;
-                        _a.label = 3;
-                    case 3:
-                        if (!(i < this._containers.length)) return [3, 6];
+                        _a.label = 2;
+                    case 2:
+                        if (!(i < this._containers.length)) return [3, 5];
                         container = this._containers[i];
                         if ((container.Sector !== sector) || (container.ContainerCode !== containerCode))
-                            return [3, 5];
+                            return [3, 4];
                         this._containers.splice(i, 1);
                         return [4, this.LoadContainer(container)];
-                    case 4:
+                    case 3:
                         _a.sent();
                         loaded = true;
-                        return [3, 6];
-                    case 5:
+                        return [3, 5];
+                    case 4:
                         i++;
-                        return [3, 3];
-                    case 6:
+                        return [3, 2];
+                    case 5:
                         this._activeSectorContainers.push([sector, containerCode]);
-                        this.Application.Storage.ReleaseLock();
                         return [2, (loaded)];
                 }
             });
@@ -18530,26 +18576,28 @@ var DrapoSectorContainerHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         this.Application.Document.SetSectorElementInner(container.Sector, container.Element, container.CanDetachElement);
-                        this.Application.Storage.AddCacheDataItems(container.StorageItems);
+                        return [4, this.Application.Storage.AddCacheDataItems(container.StorageItems)];
+                    case 1:
+                        _a.sent();
                         this.Application.Document.AddSectorHierarchys(container.SectorHierarchys);
                         this.Application.Document.AddSectorFriendsRange(container.SectorFriends);
                         return [4, this.Application.ComponentHandler.AddInstances(container)];
-                    case 1:
+                    case 2:
                         _a.sent();
                         sectorChildren = this.Application.Document.GetSectorAndChildren(container.Sector);
                         i = 0;
-                        _a.label = 2;
-                    case 2:
-                        if (!(i < sectorChildren.length)) return [3, 5];
+                        _a.label = 3;
+                    case 3:
+                        if (!(i < sectorChildren.length)) return [3, 6];
                         sectorCurrent = sectorChildren[i];
                         return [4, this.Application.Storage.FireEventOnAfterContainerLoad(sectorCurrent)];
-                    case 3:
-                        _a.sent();
-                        _a.label = 4;
                     case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5:
                         i++;
-                        return [3, 2];
-                    case 5: return [2];
+                        return [3, 3];
+                    case 6: return [2];
                 }
             });
         });
@@ -18564,20 +18612,22 @@ var DrapoSectorContainerHandler = (function () {
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < sectorChildren.length)) return [3, 4];
+                        if (!(i < sectorChildren.length)) return [3, 5];
                         sectorCurrent = sectorChildren[i];
                         return [4, this.Application.Storage.FireEventOnBeforeContainerUnload(sectorCurrent)];
                     case 2:
                         _a.sent();
                         this.Application.Validator.UnloadSector(sectorCurrent);
                         this.Application.ComponentHandler.UnloadComponentInstances(sectorCurrent);
-                        this.Application.Storage.RemoveBySector(sectorCurrent);
-                        this.RemoveMustacheContextCache(sectorCurrent);
-                        _a.label = 3;
+                        return [4, this.Application.Storage.RemoveBySector(sectorCurrent)];
                     case 3:
+                        _a.sent();
+                        this.RemoveMustacheContextCache(sectorCurrent);
+                        _a.label = 4;
+                    case 4:
                         i++;
                         return [3, 1];
-                    case 4:
+                    case 5:
                         this.Application.Document.CleanSectorMetadata(sector);
                         this.Application.Document.SetSectorElementInner(sector, null, null);
                         return [2];
@@ -21257,35 +21307,45 @@ var DrapoStorage = (function () {
                         if (dataKeyIndex == null)
                             return [2, (true)];
                         storageItem = this._cacheItems[dataKeyIndex];
-                        if (!(storageItem.UrlGet !== null)) return [3, 2];
+                        if (!(storageItem.UrlGet !== null)) return [3, 4];
                         return [4, this.RetrieveDataItemInternal(dataKey, sector)];
                     case 1:
                         storageItemLoaded = _a.sent();
-                        if (storageItemLoaded !== null)
-                            this._cacheItems[dataKeyIndex] = storageItemLoaded;
-                        return [3, 5];
+                        if (!(storageItemLoaded !== null)) return [3, 3];
+                        return [4, this.AdquireLock()];
                     case 2:
-                        if (!(storageItem.Type === 'query')) return [3, 4];
-                        return [4, this.RetrieveDataItemInternal(dataKey, sector)];
-                    case 3:
-                        storageItemLoaded = _a.sent();
-                        if (storageItemLoaded !== null) {
-                            isEqual = this.Application.Solver.IsEqualAny(storageItem.Data, storageItemLoaded.Data);
-                            if (isEqual)
-                                return [2, (false)];
-                            this._cacheItems[dataKeyIndex] = storageItemLoaded;
-                        }
-                        return [3, 5];
+                        _a.sent();
+                        this._cacheItems[dataKeyIndex] = storageItemLoaded;
+                        this.ReleaseLock();
+                        _a.label = 3;
+                    case 3: return [3, 10];
                     case 4:
-                        this.RemoveCacheData(dataKeyIndex, false);
-                        _a.label = 5;
+                        if (!(storageItem.Type === 'query')) return [3, 8];
+                        return [4, this.RetrieveDataItemInternal(dataKey, sector)];
                     case 5:
-                        if (!notify) return [3, 7];
-                        return [4, this.Application.Observer.Notify(dataKey, null, null, canUseDifference)];
+                        storageItemLoaded = _a.sent();
+                        if (!(storageItemLoaded !== null)) return [3, 7];
+                        isEqual = this.Application.Solver.IsEqualAny(storageItem.Data, storageItemLoaded.Data);
+                        if (isEqual)
+                            return [2, (false)];
+                        return [4, this.AdquireLock()];
                     case 6:
                         _a.sent();
+                        this._cacheItems[dataKeyIndex] = storageItemLoaded;
+                        this.ReleaseLock();
                         _a.label = 7;
-                    case 7: return [2, (true)];
+                    case 7: return [3, 10];
+                    case 8: return [4, this.RemoveCacheData(dataKeyIndex, false)];
+                    case 9:
+                        _a.sent();
+                        _a.label = 10;
+                    case 10:
+                        if (!notify) return [3, 12];
+                        return [4, this.Application.Observer.Notify(dataKey, null, null, canUseDifference)];
+                    case 11:
+                        _a.sent();
+                        _a.label = 12;
+                    case 12: return [2, (true)];
                 }
             });
         });
@@ -22947,6 +23007,8 @@ var DrapoStorage = (function () {
         var sectors = this.Application.Document.GetSectorsAllowed(sector);
         for (var i = 0; i < this._cacheItems.length; i++) {
             var storageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             var isAccessPublic = storageItem.IsAccessPublic;
             if ((storageItem.DataKey == dataKey) && ((this.Application.Document.IsSystemKey(dataKey)) || (storageItem.Sector === sector) || ((isAccessPublic) && (this.Application.Document.IsSectorAllowed(storageItem.Sector, sectors)))))
                 return (i);
@@ -22965,9 +23027,6 @@ var DrapoStorage = (function () {
             return (null);
         return (this.GetCacheDataItem(index));
     };
-    DrapoStorage.prototype.GetCacheData = function (dataIndex) {
-        return (this._cacheItems[dataIndex].Data);
-    };
     DrapoStorage.prototype.GetCacheDataItem = function (dataIndex) {
         return (this._cacheItems[dataIndex]);
     };
@@ -22977,14 +23036,17 @@ var DrapoStorage = (function () {
             var index;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        index = this._cacheItems.push(dataItem) - 1;
-                        if (!((canFireEventOnAfterCached) && (dataItem.OnAfterCached != null))) return [3, 2];
-                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(sector, dataItem.Element, dataItem.OnAfterCached)];
+                    case 0: return [4, this.AdquireLock()];
                     case 1:
                         _a.sent();
-                        _a.label = 2;
-                    case 2: return [2, (index)];
+                        index = this._cacheItems.push(dataItem) - 1;
+                        this.ReleaseLock();
+                        if (!((canFireEventOnAfterCached) && (dataItem.OnAfterCached != null))) return [3, 3];
+                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(sector, dataItem.Element, dataItem.OnAfterCached)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [2, (index)];
                 }
             });
         });
@@ -23002,6 +23064,8 @@ var DrapoStorage = (function () {
                         if (i >= this._cacheItems.length)
                             return [3, 3];
                         storageItem = this._cacheItems[i];
+                        if (storageItem == null)
+                            return [3, 3];
                         if (storageItem.DataKey != dataKey)
                             return [3, 3];
                         if (storageItem.OnNotify == null)
@@ -23020,9 +23084,21 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.RemoveCacheData = function (index, canRemoveObservers) {
         if (canRemoveObservers === void 0) { canRemoveObservers = true; }
-        if (canRemoveObservers)
-            this.Application.Observer.Unsubscribe(this._cacheItems[index].DataKey);
-        this._cacheItems.splice(index, 1);
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (canRemoveObservers)
+                            this.Application.Observer.Unsubscribe(this._cacheItems[index].DataKey);
+                        return [4, this.AdquireLock()];
+                    case 1:
+                        _a.sent();
+                        this._cacheItems.splice(index, 1);
+                        this.ReleaseLock();
+                        return [2];
+                }
+            });
+        });
     };
     DrapoStorage.prototype.AppendCacheDataItemBySector = function (storageItems, sector) {
         for (var i = this._cacheItems.length - 1; i >= 0; i--) {
@@ -23033,38 +23109,88 @@ var DrapoStorage = (function () {
         }
     };
     DrapoStorage.prototype.AddCacheDataItems = function (storageItems) {
-        for (var i = storageItems.length - 1; i >= 0; i--) {
-            var storageItem = storageItems[i];
-            this._cacheItems.push(storageItem);
-        }
+        return __awaiter(this, void 0, void 0, function () {
+            var i, storageItem;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.AdquireLock()];
+                    case 1:
+                        _a.sent();
+                        for (i = storageItems.length - 1; i >= 0; i--) {
+                            storageItem = storageItems[i];
+                            this._cacheItems.push(storageItem);
+                        }
+                        this.ReleaseLock();
+                        return [2];
+                }
+            });
+        });
     };
     DrapoStorage.prototype.RemoveBySector = function (sector) {
-        for (var i = this._cacheItems.length - 1; i >= 0; i--) {
-            var storageItem = this._cacheItems[i];
-            if (storageItem.Sector !== sector)
-                continue;
-            this._cacheItems.splice(i, 1);
-        }
+        return __awaiter(this, void 0, void 0, function () {
+            var i, storageItem;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.AdquireLock()];
+                    case 1:
+                        _a.sent();
+                        for (i = this._cacheItems.length - 1; i >= 0; i--) {
+                            storageItem = this._cacheItems[i];
+                            if (storageItem.Sector !== sector)
+                                continue;
+                            this._cacheItems.splice(i, 1);
+                        }
+                        this.ReleaseLock();
+                        return [2];
+                }
+            });
+        });
     };
     DrapoStorage.prototype.DiscardCacheData = function (dataKey, sector, canRemoveObservers) {
         if (canRemoveObservers === void 0) { canRemoveObservers = false; }
-        var dataKeyIndex = this.GetCacheKeyIndex(dataKey, sector);
-        if (dataKeyIndex == null)
-            return (false);
-        this.RemoveCacheData(dataKeyIndex, canRemoveObservers);
-        return (true);
+        return __awaiter(this, void 0, void 0, function () {
+            var dataKeyIndex;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dataKeyIndex = this.GetCacheKeyIndex(dataKey, sector);
+                        if (dataKeyIndex == null)
+                            return [2, (false)];
+                        return [4, this.RemoveCacheData(dataKeyIndex, canRemoveObservers)];
+                    case 1:
+                        _a.sent();
+                        return [2, (true)];
+                }
+            });
+        });
     };
     DrapoStorage.prototype.DiscardCacheDataBySector = function (sector) {
-        var removed = false;
-        for (var i = this._cacheItems.length - 1; i >= 0; i--) {
-            var item = this._cacheItems[i];
-            if (item.Sector !== sector)
-                continue;
-            var dataKey = item.DataKey;
-            if (this.DiscardCacheData(dataKey, item.Sector))
-                removed = true;
-        }
-        return (removed);
+        return __awaiter(this, void 0, void 0, function () {
+            var removed, i, item, dataKey;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        removed = false;
+                        i = this._cacheItems.length - 1;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i >= 0)) return [3, 4];
+                        item = this._cacheItems[i];
+                        if (item.Sector !== sector)
+                            return [3, 3];
+                        dataKey = item.DataKey;
+                        return [4, this.DiscardCacheData(dataKey, item.Sector)];
+                    case 2:
+                        if (_a.sent())
+                            removed = true;
+                        _a.label = 3;
+                    case 3:
+                        i--;
+                        return [3, 1];
+                    case 4: return [2, (removed)];
+                }
+            });
+        });
     };
     DrapoStorage.prototype.DeleteDataItem = function (dataKey, dataPath, sector, item, notify) {
         return __awaiter(this, void 0, void 0, function () {
@@ -23382,7 +23508,10 @@ var DrapoStorage = (function () {
     DrapoStorage.prototype.UnloadData = function (dataKey, sector) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2, (this.DiscardCacheData(dataKey, sector, true))];
+                switch (_a.label) {
+                    case 0: return [4, this.DiscardCacheData(dataKey, sector, true)];
+                    case 1: return [2, (_a.sent())];
+                }
             });
         });
     };
