@@ -1,7 +1,7 @@
 class DrapoSectorContainerItem {
     private _sector: string = null;
     private _containerCode: string = null;
-    private _storageItems: [string, DrapoStorageItem][] = [];
+    private _storageItems: DrapoStorageItem[] = [];
     private _sectorHierarchys: [string, string][] = [];
     private _sectorFriends: [string, string[]][] = [];
     private _componentSectors: string[] = [];
@@ -17,7 +17,7 @@ class DrapoSectorContainerItem {
     get ContainerCode(): string {
         return (this._containerCode);
     }
-    get StorageItems(): [string, DrapoStorageItem][] {
+    get StorageItems(): DrapoStorageItem[] {
         return (this._storageItems);
     }
     get SectorHierarchys(): [string, string][] {
@@ -44,7 +44,7 @@ class DrapoSectorContainerItem {
     get CanDetachElement(): boolean {
         return this._canDetachElement;
     }
-    constructor(sector: string, containerCode: string, storageItems: [string, DrapoStorageItem][], sectorHierarchys: [string, string][], sectorFriends: [string, string[]][], componentSectors: string[], componentTags: string[][], componentElements: HTMLElement[][], componentInstances: any[][], element: HTMLElement, canDetachElement : boolean) {
+    constructor(sector: string, containerCode: string, storageItems: DrapoStorageItem[], sectorHierarchys: [string, string][], sectorFriends: [string, string[]][], componentSectors: string[], componentTags: string[][], componentElements: HTMLElement[][], componentInstances: any[][], element: HTMLElement, canDetachElement : boolean) {
         this._sector = sector;
         this._containerCode = containerCode;
         this._storageItems = storageItems;

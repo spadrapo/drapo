@@ -1,5 +1,6 @@
 ﻿class DrapoStorageItem {
     //Fields
+    private _dataKey: string = null;
     private _type: string = null;
     private _access: string = null;
     private _element: Element;
@@ -39,6 +40,9 @@
     private _hasChanges: boolean = false;
 
     //Properties
+    get DataKey(): string {
+        return (this._dataKey);
+    }
     get Type(): string {
         return (this._type);
     }
@@ -323,7 +327,8 @@
     }
 
     //Constructor
-    constructor(type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]) {
+    constructor(dataKey:string, type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]) {
+        this._dataKey = dataKey;
         this._type = type;
         this._access = access;
         this._element = element;

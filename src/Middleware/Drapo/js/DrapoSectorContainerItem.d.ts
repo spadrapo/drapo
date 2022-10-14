@@ -12,7 +12,7 @@ declare class DrapoSectorContainerItem {
     private _canDetachElement;
     get Sector(): string;
     get ContainerCode(): string;
-    get StorageItems(): [string, DrapoStorageItem][];
+    get StorageItems(): DrapoStorageItem[];
     get SectorHierarchys(): [string, string][];
     get SectorFriends(): [string, string[]][];
     get ComponentSectors(): string[];
@@ -21,5 +21,5 @@ declare class DrapoSectorContainerItem {
     get ComponentInstances(): any[][];
     get Element(): HTMLElement;
     get CanDetachElement(): boolean;
-    constructor(sector: string, containerCode: string, storageItems: [string, DrapoStorageItem][], sectorHierarchys: [string, string][], sectorFriends: [string, string[]][], componentSectors: string[], componentTags: string[][], componentElements: HTMLElement[][], componentInstances: any[][], element: HTMLElement, canDetachElement: boolean);
+    constructor(sector: string, containerCode: string, storageItems: DrapoStorageItem[], sectorHierarchys: [string, string][], sectorFriends: [string, string[]][], componentSectors: string[], componentTags: string[][], componentElements: HTMLElement[][], componentInstances: any[][], element: HTMLElement, canDetachElement: boolean);
 }
