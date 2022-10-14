@@ -70,6 +70,8 @@ class DrapoStorage {
         const list: DrapoStorageItem[] = [];
         for (let i: number = 0; i < this._cacheItems.length; i++) {
             const item: DrapoStorageItem = this._cacheItems[i];
+            if (item == null)
+                continue;
             //Sector
             if ((!isAllSectors) && (item.Sector !== sector))
                 continue;
@@ -206,6 +208,8 @@ class DrapoStorage {
         const sectors: string[] = [];
         for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
             const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             if (storageItem.DataKey === dataKey)
                 sectors.push(storageItem.Sector);
         }
@@ -216,6 +220,8 @@ class DrapoStorage {
         const dataKeys: string[] = [];
         for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
             const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             if (storageItem.Sector === sector)
                 dataKeys.push(storageItem.DataKey);
         }
@@ -230,6 +236,8 @@ class DrapoStorage {
             if (i >= this._cacheItems.length)
                 continue;
             const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             if (storageItem.Pipes == null)
                 continue;
             if (!this.Application.Solver.Contains(storageItem.Pipes, dataPipe))
@@ -748,6 +756,8 @@ class DrapoStorage {
     private RetrieveDataChannel(channel: string): any[] {
         for (let i: number = 0; i < this._cacheItems.length; i++) {
             const dataItem: DrapoStorageItem = this._cacheItems[i];
+            if (dataItem == null)
+                continue;
             if (this.ContainsDataChannel(dataItem, channel))
                 return (this.Application.Solver.Clone(dataItem.Data, true));
         }
@@ -761,6 +771,8 @@ class DrapoStorage {
             const channel: string = dataItem.Channels[i];
             for (let j: number = 0; j < this._cacheItems.length; j++) {
                 const dataItemCurrent: DrapoStorageItem = this._cacheItems[j];
+                if (dataItemCurrent == null)
+                    continue;
                 if (!this.ContainsDataChannel(dataItemCurrent, channel))
                     continue;
                 //We only suppport primitive types right now
@@ -1425,6 +1437,8 @@ class DrapoStorage {
     public AppendCacheDataItemBySector(storageItems: DrapoStorageItem[], sector: string): void {
         for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
             const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             if (storageItem.Sector !== sector)
                 continue;
             storageItems.push(this._cacheItems[i]);
@@ -1444,6 +1458,8 @@ class DrapoStorage {
         await this.AdquireLock();
         for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
             const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             if (storageItem.Sector !== sector)
                 continue;
             this._cacheItems.splice(i, 1);
@@ -1463,6 +1479,8 @@ class DrapoStorage {
         let removed: boolean = false;
         for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
             const item: DrapoStorageItem = this._cacheItems[i];
+            if (item == null)
+                continue;
             if (item.Sector !== sector)
                 continue;
             const dataKey: string = item.DataKey;
@@ -1685,6 +1703,8 @@ class DrapoStorage {
     public async ClearDataToken(): Promise<void> {
         for (let i: number = 0; i < this._cacheItems.length; i++) {
             const item: DrapoStorageItem = this._cacheItems[i];
+            if (item == null)
+                continue;
             if (!item.IsToken)
                 continue;
             item.Data = [];
@@ -1702,6 +1722,8 @@ class DrapoStorage {
             if (i >= this._cacheItems.length)
                 continue;
             const item: DrapoStorageItem = this._cacheItems[i];
+            if (item == null)
+                continue;
             if (item.Sector !== sector)
                 continue;
             if (item.OnBeforeContainerUnload === null)
@@ -1715,6 +1737,8 @@ class DrapoStorage {
             if (i >= this._cacheItems.length)
                 continue;
             const item: DrapoStorageItem = this._cacheItems[i];
+            if (item == null)
+                continue;
             if (item.Sector !== sector)
                 continue;
             if (item.OnAfterContainerLoad === null)
@@ -1915,6 +1939,8 @@ class DrapoStorage {
         data.push('');
         for (let i: number = 0; i < this._cacheItems.length; i++) {
             const itemCache: DrapoStorageItem = this._cacheItems[i];
+            if (itemCache == null)
+                continue;
             if (!this.Application.Document.IsEqualSector(itemCache.Sector, sector))
                 continue;
             const itemDataKey: string = itemCache.DataKey;

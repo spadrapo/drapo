@@ -150,6 +150,8 @@ var DrapoStorage = (function () {
         var list = [];
         for (var i = 0; i < this._cacheItems.length; i++) {
             var item = this._cacheItems[i];
+            if (item == null)
+                continue;
             if ((!isAllSectors) && (item.Sector !== sector))
                 continue;
             var dataKey = item.DataKey;
@@ -367,6 +369,8 @@ var DrapoStorage = (function () {
         var sectors = [];
         for (var i = this._cacheItems.length - 1; i >= 0; i--) {
             var storageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             if (storageItem.DataKey === dataKey)
                 sectors.push(storageItem.Sector);
         }
@@ -376,6 +380,8 @@ var DrapoStorage = (function () {
         var dataKeys = [];
         for (var i = this._cacheItems.length - 1; i >= 0; i--) {
             var storageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             if (storageItem.Sector === sector)
                 dataKeys.push(storageItem.DataKey);
         }
@@ -395,6 +401,8 @@ var DrapoStorage = (function () {
                         if (i >= this._cacheItems.length)
                             return [3, 3];
                         storageItem = this._cacheItems[i];
+                        if (storageItem == null)
+                            return [3, 3];
                         if (storageItem.Pipes == null)
                             return [3, 3];
                         if (!this.Application.Solver.Contains(storageItem.Pipes, dataPipe))
@@ -1122,6 +1130,8 @@ var DrapoStorage = (function () {
     DrapoStorage.prototype.RetrieveDataChannel = function (channel) {
         for (var i = 0; i < this._cacheItems.length; i++) {
             var dataItem = this._cacheItems[i];
+            if (dataItem == null)
+                continue;
             if (this.ContainsDataChannel(dataItem, channel))
                 return (this.Application.Solver.Clone(dataItem.Data, true));
         }
@@ -1145,6 +1155,8 @@ var DrapoStorage = (function () {
                     case 2:
                         if (!(j < this._cacheItems.length)) return [3, 5];
                         dataItemCurrent = this._cacheItems[j];
+                        if (dataItemCurrent == null)
+                            return [3, 4];
                         if (!this.ContainsDataChannel(dataItemCurrent, channel))
                             return [3, 4];
                         if (dataItem.Data === dataItemCurrent.Data)
@@ -2116,6 +2128,8 @@ var DrapoStorage = (function () {
     DrapoStorage.prototype.AppendCacheDataItemBySector = function (storageItems, sector) {
         for (var i = this._cacheItems.length - 1; i >= 0; i--) {
             var storageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             if (storageItem.Sector !== sector)
                 continue;
             storageItems.push(this._cacheItems[i]);
@@ -2149,6 +2163,8 @@ var DrapoStorage = (function () {
                         _a.sent();
                         for (i = this._cacheItems.length - 1; i >= 0; i--) {
                             storageItem = this._cacheItems[i];
+                            if (storageItem == null)
+                                continue;
                             if (storageItem.Sector !== sector)
                                 continue;
                             this._cacheItems.splice(i, 1);
@@ -2189,6 +2205,8 @@ var DrapoStorage = (function () {
                     case 1:
                         if (!(i >= 0)) return [3, 4];
                         item = this._cacheItems[i];
+                        if (item == null)
+                            return [3, 3];
                         if (item.Sector !== sector)
                             return [3, 3];
                         dataKey = item.DataKey;
@@ -2539,6 +2557,8 @@ var DrapoStorage = (function () {
                     case 1:
                         if (!(i < this._cacheItems.length)) return [3, 4];
                         item = this._cacheItems[i];
+                        if (item == null)
+                            return [3, 3];
                         if (!item.IsToken)
                             return [3, 3];
                         item.Data = [];
@@ -2572,6 +2592,8 @@ var DrapoStorage = (function () {
                         if (i >= this._cacheItems.length)
                             return [3, 3];
                         item = this._cacheItems[i];
+                        if (item == null)
+                            return [3, 3];
                         if (item.Sector !== sector)
                             return [3, 3];
                         if (item.OnBeforeContainerUnload === null)
@@ -2601,6 +2623,8 @@ var DrapoStorage = (function () {
                         if (i >= this._cacheItems.length)
                             return [3, 3];
                         item = this._cacheItems[i];
+                        if (item == null)
+                            return [3, 3];
                         if (item.Sector !== sector)
                             return [3, 3];
                         if (item.OnAfterContainerLoad === null)
@@ -2910,6 +2934,8 @@ var DrapoStorage = (function () {
                         data.push('');
                         for (i = 0; i < this._cacheItems.length; i++) {
                             itemCache = this._cacheItems[i];
+                            if (itemCache == null)
+                                continue;
                             if (!this.Application.Document.IsEqualSector(itemCache.Sector, sector))
                                 continue;
                             itemDataKey = itemCache.DataKey;
