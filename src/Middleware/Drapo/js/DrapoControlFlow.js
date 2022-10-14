@@ -916,8 +916,9 @@ var DrapoControlFlow = (function () {
         if (rangeString === null)
             return (null);
         var range = this.GetIteratorRangeInternal(rangeString);
-        if (!this.IsValidRange(range))
+        if (!this.IsValidRange(range)) {
             this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - GetIteratorRange - Invalid Iterator Range - {0}', iterator);
+        }
         return (range);
     };
     DrapoControlFlow.prototype.GetIteratorRangeInternal = function (rangeString) {

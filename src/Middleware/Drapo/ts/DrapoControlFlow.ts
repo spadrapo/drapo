@@ -659,8 +659,10 @@ class DrapoControlFlow {
         if (rangeString === null)
             return (null);
         const range: DrapoRange = this.GetIteratorRangeInternal(rangeString);
-        if (!this.IsValidRange(range))
+        if (!this.IsValidRange(range)) {
+            // tslint:disable-next-line:no-floating-promises
             this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - GetIteratorRange - Invalid Iterator Range - {0}', iterator);
+        }
         return (range);
     }
 

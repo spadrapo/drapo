@@ -17,14 +17,14 @@ class DrapoStorage {
         this._application = application;
     }
 
-    public async AdquireLock(): Promise<void>{
+    private async AdquireLock(): Promise<void>{
         while (this._lock) {
             await this.Application.Document.Sleep(50);
         }
         this._lock = true;
     }
 
-    public ReleaseLock(): void {
+    private ReleaseLock(): void {
         this._lock = false;
     }
 
@@ -179,18 +179,23 @@ class DrapoStorage {
         const storageItem: DrapoStorageItem = this._cacheItems[dataKeyIndex];
         if (storageItem.UrlGet !== null) {
             const storageItemLoaded: DrapoStorageItem = await this.RetrieveDataItemInternal(dataKey, sector);
-            if (storageItemLoaded !== null)
+            if (storageItemLoaded !== null) {
+                await this.AdquireLock();
                 this._cacheItems[dataKeyIndex] = storageItemLoaded;
+                this.ReleaseLock();
+            }
         } else if (storageItem.Type === 'query') {
             const storageItemLoaded: DrapoStorageItem = await this.RetrieveDataItemInternal(dataKey, sector);
             if (storageItemLoaded !== null) {
                 const isEqual: boolean = this.Application.Solver.IsEqualAny(storageItem.Data, storageItemLoaded.Data);
                 if (isEqual)
                     return (false);
+                await this.AdquireLock();
                 this._cacheItems[dataKeyIndex] = storageItemLoaded;
+                this.ReleaseLock();
             }
         } else {
-            this.RemoveCacheData(dataKeyIndex, false);
+            await this.RemoveCacheData(dataKeyIndex, false);
         }
         if (notify)
             await this.Application.Observer.Notify(dataKey, null, null, canUseDifference);
@@ -1357,6 +1362,8 @@ class DrapoStorage {
         const sectors: string[] = this.Application.Document.GetSectorsAllowed(sector);
         for (let i = 0; i < this._cacheItems.length; i++) {
             const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             const isAccessPublic: boolean = storageItem.IsAccessPublic;
             if ((storageItem.DataKey == dataKey) && ((this.Application.Document.IsSystemKey(dataKey)) || (storageItem.Sector === sector) || ((isAccessPublic) && (this.Application.Document.IsSectorAllowed(storageItem.Sector, sectors)))))
                 return (i);
@@ -1378,16 +1385,14 @@ class DrapoStorage {
         return (this.GetCacheDataItem(index));
     }
 
-    private GetCacheData(dataIndex: number): any[] {
-        return (this._cacheItems[dataIndex].Data);
-    }
-
     private GetCacheDataItem(dataIndex: number): DrapoStorageItem {
         return (this._cacheItems[dataIndex]);
     }
 
     private async AddCacheData(dataKey: string, sector: string, dataItem: DrapoStorageItem, canFireEventOnAfterCached: boolean = true): Promise<number> {
+        await this.AdquireLock();
         const index: number = this._cacheItems.push(dataItem) - 1;
+        this.ReleaseLock();
         //After Cached
         if ((canFireEventOnAfterCached) && (dataItem.OnAfterCached != null))
             await this.Application.FunctionHandler.ResolveFunctionWithoutContext(sector, dataItem.Element, dataItem.OnAfterCached);
@@ -1399,6 +1404,8 @@ class DrapoStorage {
             if (i >= this._cacheItems.length)
                 continue;
             const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             if (storageItem.DataKey != dataKey)
                 continue;
             if (storageItem.OnNotify == null)
@@ -1407,10 +1414,12 @@ class DrapoStorage {
         }
     }
 
-    private RemoveCacheData(index: number, canRemoveObservers = true): void {
+    private async RemoveCacheData(index: number, canRemoveObservers = true): Promise<void> {
         if (canRemoveObservers)
             this.Application.Observer.Unsubscribe(this._cacheItems[index].DataKey);
+        await this.AdquireLock();
         this._cacheItems.splice(index, 1);
+        this.ReleaseLock();
     }
 
     public AppendCacheDataItemBySector(storageItems: DrapoStorageItem[], sector: string): void {
@@ -1422,38 +1431,42 @@ class DrapoStorage {
         }
     }
 
-    public AddCacheDataItems(storageItems: DrapoStorageItem[]): void {
+    public async AddCacheDataItems(storageItems: DrapoStorageItem[]): Promise<void> {
+        await this.AdquireLock();
         for (let i: number = storageItems.length - 1; i >= 0; i--) {
             const storageItem: DrapoStorageItem = storageItems[i];
             this._cacheItems.push(storageItem);
         }
+        this.ReleaseLock();
     }
 
-    public RemoveBySector(sector: string): void {
+    public async RemoveBySector(sector: string): Promise<void> {
+        await this.AdquireLock();
         for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
             const storageItem: DrapoStorageItem = this._cacheItems[i];
             if (storageItem.Sector !== sector)
                 continue;
             this._cacheItems.splice(i, 1);
         }
+        this.ReleaseLock();
     }
 
-    public DiscardCacheData(dataKey: string, sector: string, canRemoveObservers: boolean = false): boolean {
+    public async DiscardCacheData(dataKey: string, sector: string, canRemoveObservers: boolean = false): Promise<boolean> {
         const dataKeyIndex: number = this.GetCacheKeyIndex(dataKey, sector);
         if (dataKeyIndex == null)
             return (false);
-        this.RemoveCacheData(dataKeyIndex, canRemoveObservers);
+        await this.RemoveCacheData(dataKeyIndex, canRemoveObservers);
         return (true);
     }
 
-    public DiscardCacheDataBySector(sector: string): boolean {
+    public async DiscardCacheDataBySector(sector: string): Promise<boolean> {
         let removed: boolean = false;
         for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
             const item: DrapoStorageItem = this._cacheItems[i];
             if (item.Sector !== sector)
                 continue;
             const dataKey: string = item.DataKey;
-            if (this.DiscardCacheData(dataKey, item.Sector))
+            if (await this.DiscardCacheData(dataKey, item.Sector))
                 removed = true;
         }
         return (removed);
@@ -1666,7 +1679,7 @@ class DrapoStorage {
     }
 
     public async UnloadData(dataKey: string, sector: string): Promise<boolean> {
-        return (this.DiscardCacheData(dataKey, sector, true));
+        return (await this.DiscardCacheData(dataKey, sector, true));
     }
 
     public async ClearDataToken(): Promise<void> {

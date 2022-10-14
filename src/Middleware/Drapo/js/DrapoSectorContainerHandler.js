@@ -77,9 +77,7 @@ var DrapoSectorContainerHandler = (function () {
             var containerCodePrevious, i, activeSectorContainer, containerPrevious, el, loaded, i, container;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.Application.Storage.AdquireLock()];
-                    case 1:
-                        _a.sent();
+                    case 0:
                         containerCodePrevious = null;
                         for (i = 0; i < this._activeSectorContainers.length; i++) {
                             activeSectorContainer = this._activeSectorContainers[i];
@@ -95,7 +93,7 @@ var DrapoSectorContainerHandler = (function () {
                             this._containers.push(containerPrevious);
                         }
                         return [4, this.UnloadSector(sector)];
-                    case 2:
+                    case 1:
                         _a.sent();
                         if (containerCode === this.CONTAINER_EQUAL) {
                             el = this.Application.Document.GetSectorElementInner(sector);
@@ -103,29 +101,27 @@ var DrapoSectorContainerHandler = (function () {
                                 el.parentElement.removeChild(el);
                         }
                         if ((containerCode === null) || (containerCode === this.CONTAINER_EQUAL)) {
-                            this.Application.Storage.ReleaseLock();
                             return [2, (false)];
                         }
                         loaded = false;
                         i = 0;
-                        _a.label = 3;
-                    case 3:
-                        if (!(i < this._containers.length)) return [3, 6];
+                        _a.label = 2;
+                    case 2:
+                        if (!(i < this._containers.length)) return [3, 5];
                         container = this._containers[i];
                         if ((container.Sector !== sector) || (container.ContainerCode !== containerCode))
-                            return [3, 5];
+                            return [3, 4];
                         this._containers.splice(i, 1);
                         return [4, this.LoadContainer(container)];
-                    case 4:
+                    case 3:
                         _a.sent();
                         loaded = true;
-                        return [3, 6];
-                    case 5:
+                        return [3, 5];
+                    case 4:
                         i++;
-                        return [3, 3];
-                    case 6:
+                        return [3, 2];
+                    case 5:
                         this._activeSectorContainers.push([sector, containerCode]);
-                        this.Application.Storage.ReleaseLock();
                         return [2, (loaded)];
                 }
             });
@@ -158,26 +154,28 @@ var DrapoSectorContainerHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         this.Application.Document.SetSectorElementInner(container.Sector, container.Element, container.CanDetachElement);
-                        this.Application.Storage.AddCacheDataItems(container.StorageItems);
+                        return [4, this.Application.Storage.AddCacheDataItems(container.StorageItems)];
+                    case 1:
+                        _a.sent();
                         this.Application.Document.AddSectorHierarchys(container.SectorHierarchys);
                         this.Application.Document.AddSectorFriendsRange(container.SectorFriends);
                         return [4, this.Application.ComponentHandler.AddInstances(container)];
-                    case 1:
+                    case 2:
                         _a.sent();
                         sectorChildren = this.Application.Document.GetSectorAndChildren(container.Sector);
                         i = 0;
-                        _a.label = 2;
-                    case 2:
-                        if (!(i < sectorChildren.length)) return [3, 5];
+                        _a.label = 3;
+                    case 3:
+                        if (!(i < sectorChildren.length)) return [3, 6];
                         sectorCurrent = sectorChildren[i];
                         return [4, this.Application.Storage.FireEventOnAfterContainerLoad(sectorCurrent)];
-                    case 3:
-                        _a.sent();
-                        _a.label = 4;
                     case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5:
                         i++;
-                        return [3, 2];
-                    case 5: return [2];
+                        return [3, 3];
+                    case 6: return [2];
                 }
             });
         });
@@ -192,20 +190,22 @@ var DrapoSectorContainerHandler = (function () {
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < sectorChildren.length)) return [3, 4];
+                        if (!(i < sectorChildren.length)) return [3, 5];
                         sectorCurrent = sectorChildren[i];
                         return [4, this.Application.Storage.FireEventOnBeforeContainerUnload(sectorCurrent)];
                     case 2:
                         _a.sent();
                         this.Application.Validator.UnloadSector(sectorCurrent);
                         this.Application.ComponentHandler.UnloadComponentInstances(sectorCurrent);
-                        this.Application.Storage.RemoveBySector(sectorCurrent);
-                        this.RemoveMustacheContextCache(sectorCurrent);
-                        _a.label = 3;
+                        return [4, this.Application.Storage.RemoveBySector(sectorCurrent)];
                     case 3:
+                        _a.sent();
+                        this.RemoveMustacheContextCache(sectorCurrent);
+                        _a.label = 4;
+                    case 4:
                         i++;
                         return [3, 1];
-                    case 4:
+                    case 5:
                         this.Application.Document.CleanSectorMetadata(sector);
                         this.Application.Document.SetSectorElementInner(sector, null, null);
                         return [2];

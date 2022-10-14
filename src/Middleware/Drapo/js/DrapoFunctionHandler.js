@@ -1496,9 +1496,11 @@ var DrapoFunctionHandler = (function () {
                         if (dataUrl === dataUrlCurrent)
                             return [2, ('')];
                         jqueryDataKeys.attr('d-dataUrlGet', dataUrl);
-                        this.Application.Storage.DiscardCacheData(dataKey, sector);
-                        return [4, this.Application.Observer.Notify(dataKey, null, null)];
+                        return [4, this.Application.Storage.DiscardCacheData(dataKey, sector)];
                     case 1:
+                        _a.sent();
+                        return [4, this.Application.Observer.Notify(dataKey, null, null)];
+                    case 2:
                         _a.sent();
                         return [2, ('')];
                 }
@@ -1522,7 +1524,9 @@ var DrapoFunctionHandler = (function () {
                         if (dataUrl === dataUrlCurrent)
                             return [2, ('')];
                         jqueryDataKeys.attr('d-dataUrlSet', dataUrl);
-                        this.Application.Storage.DiscardCacheData(dataKey, sector);
+                        return [4, this.Application.Storage.DiscardCacheData(dataKey, sector)];
+                    case 2:
+                        _a.sent();
                         return [2, ('')];
                 }
             });
