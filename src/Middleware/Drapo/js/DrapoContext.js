@@ -287,6 +287,14 @@ var DrapoContext = (function () {
         }
         return (false);
     };
+    DrapoContext.prototype.IsTemplateInternalDataKey = function (key) {
+        for (var i = 0; i < this._templateInternalDataKeys.length; i++) {
+            var templateInternalKey = this._templateInternalDataKeys[i];
+            if (key === '{{' + templateInternalKey + '}}' || key.startsWith('{{' + templateInternalKey + '.'))
+                return true;
+        }
+        return false;
+    };
     DrapoContext.prototype.IsKey = function (key) {
         var item = this.Item;
         while (item != null) {

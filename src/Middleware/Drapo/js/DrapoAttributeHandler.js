@@ -117,7 +117,7 @@ var DrapoAttributeHandler = (function () {
     };
     DrapoAttributeHandler.prototype.ResolveAttrContext = function (context, el, elj, canBind) {
         return __awaiter(this, void 0, void 0, function () {
-            var attributes, sector, templateInternalDataKeys, i, attribute, attributeName, attributeValue, attributeType, format, formatResolved, _a, attributeValueOriginal, attributeNameFull, isValid;
+            var attributes, sector, i, attribute, attributeName, attributeValue, attributeType, format, formatResolved, _a, attributeValueOriginal, attributeNameFull, isValid;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -125,7 +125,6 @@ var DrapoAttributeHandler = (function () {
                         if (attributes.length == 0)
                             return [2];
                         sector = this.Application.Document.GetSector(el);
-                        templateInternalDataKeys = context.GetTemplateInternalDataKeys();
                         i = 0;
                         _b.label = 1;
                     case 1:
@@ -149,7 +148,7 @@ var DrapoAttributeHandler = (function () {
                     case 5:
                         attributeValue = _b.sent();
                         attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue, formatResolved);
-                        if (context.CanUpdateTemplate && !this.IsTemplateInternalDataKey(templateInternalDataKeys, attributeValueOriginal)) {
+                        if (context.CanUpdateTemplate && !context.IsTemplateInternalDataKey(attributeValueOriginal)) {
                             attributeNameFull = 'd-attr-' + attributeName + (attributeType != null ? ('-' + attributeType) : '');
                             if (this.Application.Parser.HasMustache(attributeValue)) {
                                 el.setAttribute(attributeNameFull, attributeValue);
@@ -179,14 +178,6 @@ var DrapoAttributeHandler = (function () {
                 }
             });
         });
-    };
-    DrapoAttributeHandler.prototype.IsTemplateInternalDataKey = function (templateInternalDataKeys, attributeValue) {
-        for (var i = 0; i < templateInternalDataKeys.length; i++) {
-            var key = templateInternalDataKeys[i];
-            if (attributeValue === '{{' + key + '}}' || attributeValue.startsWith('{{' + key + '.'))
-                return true;
-        }
-        return false;
     };
     DrapoAttributeHandler.prototype.ResolveContextValue = function (context, el, elj, sector, isContext, value, canBind, canSubscribeDelay, dataKeyFilter, dataFieldFilter) {
         if (canSubscribeDelay === void 0) { canSubscribeDelay = false; }

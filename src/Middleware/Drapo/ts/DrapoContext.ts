@@ -249,6 +249,15 @@ class DrapoContext {
         return (false);
     }
 
+    public IsTemplateInternalDataKey(key: string): boolean {
+        for (let i = 0; i < this._templateInternalDataKeys.length; i++) {
+            const templateInternalKey: string = this._templateInternalDataKeys[i];
+            if (key === '{{' + templateInternalKey + '}}' || key.startsWith('{{' + templateInternalKey + '.'))
+                return true;
+        }
+        return false;
+    }
+
     public IsKey(key: string): boolean {
         let item: DrapoContextItem = this.Item;
         while (item != null) {

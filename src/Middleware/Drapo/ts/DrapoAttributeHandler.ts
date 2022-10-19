@@ -59,7 +59,6 @@ class DrapoAttributeHandler {
         if (attributes.length == 0)
             return;
         const sector: string = this.Application.Document.GetSector(el);
-        const templateInternalDataKeys: string[] = context.GetTemplateInternalDataKeys();
         for (let i: number = 0; i < attributes.length; i++) {
             const attribute: [string, string, string, string] = attributes[i];
             const attributeName: string = attribute[0];
@@ -70,7 +69,7 @@ class DrapoAttributeHandler {
             const attributeValueOriginal: string = attributeValue;
             attributeValue = await this.Application.ModelHandler.ResolveValueExpression(context, el, sector, attributeValue, canBind);
             attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue, formatResolved);
-            if (context.CanUpdateTemplate && !this.IsTemplateInternalDataKey(templateInternalDataKeys, attributeValueOriginal)) {
+            if (context.CanUpdateTemplate && !context.IsTemplateInternalDataKey(attributeValueOriginal)) {
                 const attributeNameFull: string = 'd-attr-' + attributeName + (attributeType != null ? ('-' + attributeType) : '');
                 if (this.Application.Parser.HasMustache(attributeValue)) {
                     el.setAttribute(attributeNameFull, attributeValue);
@@ -92,15 +91,6 @@ class DrapoAttributeHandler {
                     el.removeAttribute(attributeName);
             }
         }
-    }
-
-    private IsTemplateInternalDataKey(templateInternalDataKeys: string[], attributeValue: string): boolean {
-        for (let i = 0; i < templateInternalDataKeys.length; i++) {
-            const key: string = templateInternalDataKeys[i];
-            if (attributeValue === '{{' + key + '}}' || attributeValue.startsWith('{{' + key + '.'))
-                return true;
-        }
-        return false;
     }
 
     private async ResolveContextValue(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, isContext: boolean, value: string, canBind: boolean, canSubscribeDelay: boolean = false, dataKeyFilter: string = null, dataFieldFilter: string = null): Promise<string> {

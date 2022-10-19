@@ -6,7 +6,6 @@ declare class DrapoAttributeHandler {
     HasContentAttributeContext(content: string): boolean;
     ResolveAttr(el: HTMLElement, canBind?: boolean, canSubscribeDelay?: boolean, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
     ResolveAttrContext(context: DrapoContext, el: HTMLElement, elj: JQuery, canBind: boolean): Promise<void>;
-    private IsTemplateInternalDataKey;
     private ResolveContextValue;
     private ExtractAttr;
     private ExtractAttrProperty;

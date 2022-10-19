@@ -66,6 +66,7 @@ declare class DrapoContext {
     Up(): boolean;
     GetElementTemplate(key: string): HTMLElement;
     IsElementTemplateRoot(key: string): boolean;
+    IsTemplateInternalDataKey(key: string): boolean;
     IsKey(key: string): boolean;
     GetDataKeyRoot(): string;
     Checkpoint(): void;
