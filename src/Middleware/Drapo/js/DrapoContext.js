@@ -26,6 +26,7 @@ var DrapoContext = (function () {
         this._canUpdateTemplate = false;
         this._templateKeys = [];
         this._templateDatas = [];
+        this._templateInternalDataKeys = [];
         if (item != null) {
             this._items.push(item);
             this._itemCurrent = item;
@@ -228,6 +229,8 @@ var DrapoContext = (function () {
         this._itemCurrent = item;
         this._index++;
         this._indexRelative++;
+        if (this._templateInternalDataKeys.indexOf(key) === -1)
+            this._templateInternalDataKeys.push(key);
         return (item);
     };
     DrapoContext.prototype.Initialize = function (count) {
@@ -326,6 +329,9 @@ var DrapoContext = (function () {
         else {
             this._templateDatas[index] = templateData;
         }
+    };
+    DrapoContext.prototype.GetTemplateInternalDataKeys = function () {
+        return this._templateInternalDataKeys;
     };
     DrapoContext.prototype.CanResolve = function (key) {
         if (!this._canUpdateTemplate)

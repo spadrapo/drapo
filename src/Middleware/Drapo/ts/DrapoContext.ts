@@ -24,6 +24,7 @@ class DrapoContext {
     private _canUpdateTemplate: boolean = false;
     private _templateKeys: string[] = [];
     private _templateDatas: JQuery[] = [];
+    private _templateInternalDataKeys: string[] = [];
     //Properties
     set Sector(value: string) {
         this._sector = value;
@@ -183,6 +184,8 @@ class DrapoContext {
         this._itemCurrent = item;
         this._index++;
         this._indexRelative++;
+        if (this._templateInternalDataKeys.indexOf(key) === -1)
+            this._templateInternalDataKeys.push(key);
         return (item);
     }
 
@@ -292,6 +295,10 @@ class DrapoContext {
         } else {
             this._templateDatas[index] = templateData;
         }
+    }
+
+    public GetTemplateInternalDataKeys() {
+        return this._templateInternalDataKeys;
     }
 
     public CanResolve(key: string): boolean {

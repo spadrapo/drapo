@@ -223,28 +223,23 @@ var DrapoPlumber = (function () {
                         dataPipes = this.Application.Parser.ParsePipes(message.Data);
                         if (dataPipes == null)
                             return [2];
-                        return [4, this.Application.Storage.AdquireLock()];
-                    case 1:
-                        _a.sent();
                         i = 0;
-                        _a.label = 2;
-                    case 2:
-                        if (!(i < dataPipes.length)) return [3, 6];
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < dataPipes.length)) return [3, 5];
                         dataPipe = dataPipes[i];
                         return [4, this.Application.Debugger.AddPipe(dataPipe)];
-                    case 3:
+                    case 2:
                         _a.sent();
                         return [4, this.Application.Storage.ReloadPipe(dataPipe)];
-                    case 4:
+                    case 3:
                         _a.sent();
                         this.Application.SectorContainerHandler.ReloadStorageItemByPipe(dataPipe);
-                        _a.label = 5;
-                    case 5:
+                        _a.label = 4;
+                    case 4:
                         i++;
-                        return [3, 2];
-                    case 6:
-                        this.Application.Storage.ReleaseLock();
-                        return [2];
+                        return [3, 1];
+                    case 5: return [2];
                 }
             });
         });
