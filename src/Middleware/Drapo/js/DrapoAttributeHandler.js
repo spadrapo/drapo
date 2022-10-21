@@ -117,7 +117,7 @@ var DrapoAttributeHandler = (function () {
     };
     DrapoAttributeHandler.prototype.ResolveAttrContext = function (context, el, elj, canBind) {
         return __awaiter(this, void 0, void 0, function () {
-            var attributes, sector, i, attribute, attributeName, attributeValue, attributeType, format, formatResolved, _a, attributeValueOriginal, attributeNameFull, isValid;
+            var attributes, sector, i, attribute, attributeName, attributeValue, attributeType, format, formatResolved, _a, attributeValueOriginal, attributeNameFull, attributeKey, isValid;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -148,13 +148,17 @@ var DrapoAttributeHandler = (function () {
                     case 5:
                         attributeValue = _b.sent();
                         attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue, formatResolved);
-                        if (context.CanUpdateTemplate && !context.IsTemplateInternalDataKey(attributeValueOriginal)) {
+                        if (context.CanUpdateTemplate) {
                             attributeNameFull = 'd-attr-' + attributeName + (attributeType != null ? ('-' + attributeType) : '');
                             if (this.Application.Parser.HasMustache(attributeValue)) {
                                 el.setAttribute(attributeNameFull, attributeValue);
                                 return [3, 8];
                             }
-                            elj.removeAttr(attributeNameFull);
+                            attributeKey = null;
+                            if (this.Application.Parser.IsMustache(attributeValueOriginal))
+                                attributeKey = this.Application.Parser.ParseMustache(attributeValueOriginal)[0];
+                            if (!context.IsParentKey(attributeKey))
+                                elj.removeAttr(attributeNameFull);
                         }
                         if (attributeValue === attributeValueOriginal)
                             return [3, 8];

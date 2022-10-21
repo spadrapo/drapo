@@ -23,7 +23,6 @@ declare class DrapoContext {
     private _canUpdateTemplate;
     private _templateKeys;
     private _templateDatas;
-    private _templateInternalDataKeys;
     set Sector(value: string);
     get Sector(): string;
     get Item(): DrapoContextItem;
@@ -66,14 +65,14 @@ declare class DrapoContext {
     Up(): boolean;
     GetElementTemplate(key: string): HTMLElement;
     IsElementTemplateRoot(key: string): boolean;
-    IsTemplateInternalDataKey(key: string): boolean;
     IsKey(key: string): boolean;
+    IsParentKey(key: string): boolean;
+    private IsKeyInternal;
     GetDataKeyRoot(): string;
     Checkpoint(): void;
     private GetTemplateIndex;
     GetTemplate(templateKey: string): JQuery;
     AddTemplate(templateKey: string, templateData: JQuery): void;
-    GetTemplateInternalDataKeys(): string[];
     CanResolve(key: string): boolean;
     HasContextItemBefore(): boolean;
     GetIndex(key: string): number;

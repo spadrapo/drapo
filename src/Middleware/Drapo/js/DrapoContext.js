@@ -26,7 +26,6 @@ var DrapoContext = (function () {
         this._canUpdateTemplate = false;
         this._templateKeys = [];
         this._templateDatas = [];
-        this._templateInternalDataKeys = [];
         if (item != null) {
             this._items.push(item);
             this._itemCurrent = item;
@@ -229,8 +228,6 @@ var DrapoContext = (function () {
         this._itemCurrent = item;
         this._index++;
         this._indexRelative++;
-        if (this._templateInternalDataKeys.indexOf(key) === -1)
-            this._templateInternalDataKeys.push(key);
         return (item);
     };
     DrapoContext.prototype.Initialize = function (count) {
@@ -287,17 +284,14 @@ var DrapoContext = (function () {
         }
         return (false);
     };
-    DrapoContext.prototype.IsTemplateInternalDataKey = function (key) {
-        for (var i = 0; i < this._templateInternalDataKeys.length; i++) {
-            var templateInternalKey = this._templateInternalDataKeys[i];
-            if (key === '{{' + templateInternalKey + '}}' || key.startsWith('{{' + templateInternalKey + '.'))
-                return true;
-        }
-        return false;
-    };
     DrapoContext.prototype.IsKey = function (key) {
-        var item = this.Item;
-        while (item != null) {
+        return this.IsKeyInternal(this.Item, key);
+    };
+    DrapoContext.prototype.IsParentKey = function (key) {
+        return this.IsKeyInternal(this.Item.Parent, key);
+    };
+    DrapoContext.prototype.IsKeyInternal = function (item, key) {
+        while (item !== null) {
             if (item.Key === key)
                 return (true);
             item = item.Parent;
@@ -337,9 +331,6 @@ var DrapoContext = (function () {
         else {
             this._templateDatas[index] = templateData;
         }
-    };
-    DrapoContext.prototype.GetTemplateInternalDataKeys = function () {
-        return this._templateInternalDataKeys;
     };
     DrapoContext.prototype.CanResolve = function (key) {
         if (!this._canUpdateTemplate)
