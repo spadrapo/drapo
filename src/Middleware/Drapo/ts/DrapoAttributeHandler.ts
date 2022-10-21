@@ -75,10 +75,12 @@ class DrapoAttributeHandler {
                     el.setAttribute(attributeNameFull, attributeValue);
                     continue;
                 }
-                let attributeKey: string = null;
-                if (this.Application.Parser.IsMustache(attributeValueOriginal))
-                    attributeKey = this.Application.Parser.ParseMustache(attributeValueOriginal)[0];
-                if (!context.IsParentKey(attributeKey))
+                if (this.Application.Parser.IsMustache(attributeValueOriginal)) {
+                    const key = this.Application.Parser.ParseMustache(attributeValueOriginal)[0];
+                    if (!context.IsParentKey(key))
+                        elj.removeAttr(attributeNameFull);
+                }
+                else
                     elj.removeAttr(attributeNameFull);
             }
             if (attributeValue === attributeValueOriginal)
