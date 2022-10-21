@@ -69,13 +69,17 @@ class DrapoAttributeHandler {
             const attributeValueOriginal: string = attributeValue;
             attributeValue = await this.Application.ModelHandler.ResolveValueExpression(context, el, sector, attributeValue, canBind);
             attributeValue = this.ResolveConversionAttributeValue(attributeName, attributeValue, formatResolved);
-            if (context.CanUpdateTemplate && !context.IsTemplateInternalDataKey(attributeValueOriginal)) {
+            if (context.CanUpdateTemplate) {
                 const attributeNameFull: string = 'd-attr-' + attributeName + (attributeType != null ? ('-' + attributeType) : '');
                 if (this.Application.Parser.HasMustache(attributeValue)) {
                     el.setAttribute(attributeNameFull, attributeValue);
                     continue;
                 }
-                elj.removeAttr(attributeNameFull);
+                let attributeKey: string = null;
+                if (this.Application.Parser.IsMustache(attributeValueOriginal))
+                    attributeKey = this.Application.Parser.ParseMustache(attributeValueOriginal)[0];
+                if (!context.IsParentKey(attributeKey))
+                    elj.removeAttr(attributeNameFull);
             }
             if (attributeValue === attributeValueOriginal)
                 continue;

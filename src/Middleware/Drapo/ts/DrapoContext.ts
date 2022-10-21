@@ -24,7 +24,6 @@ class DrapoContext {
     private _canUpdateTemplate: boolean = false;
     private _templateKeys: string[] = [];
     private _templateDatas: JQuery[] = [];
-    private _templateInternalDataKeys: string[] = [];
     //Properties
     set Sector(value: string) {
         this._sector = value;
@@ -184,8 +183,6 @@ class DrapoContext {
         this._itemCurrent = item;
         this._index++;
         this._indexRelative++;
-        if (this._templateInternalDataKeys.indexOf(key) === -1)
-            this._templateInternalDataKeys.push(key);
         return (item);
     }
 
@@ -249,18 +246,16 @@ class DrapoContext {
         return (false);
     }
 
-    public IsTemplateInternalDataKey(key: string): boolean {
-        for (let i = 0; i < this._templateInternalDataKeys.length; i++) {
-            const templateInternalKey: string = this._templateInternalDataKeys[i];
-            if (key === '{{' + templateInternalKey + '}}' || key.startsWith('{{' + templateInternalKey + '.'))
-                return true;
-        }
-        return false;
+    public IsKey(key: string): boolean {
+        return this.IsKeyInternal(this.Item, key);
     }
 
-    public IsKey(key: string): boolean {
-        let item: DrapoContextItem = this.Item;
-        while (item != null) {
+    public IsParentKey(key: string): boolean {
+        return this.IsKeyInternal(this.Item.Parent, key);
+    }
+
+    private IsKeyInternal(item: DrapoContextItem, key: string) {
+        while (item !== null) {
             if (item.Key === key)
                 return (true);
             item = item.Parent;
@@ -304,10 +299,6 @@ class DrapoContext {
         } else {
             this._templateDatas[index] = templateData;
         }
-    }
-
-    public GetTemplateInternalDataKeys() {
-        return this._templateInternalDataKeys;
     }
 
     public CanResolve(key: string): boolean {
