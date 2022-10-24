@@ -555,6 +555,11 @@ namespace WebDrapo.Test
             ValidatePage("ControlFlowForTemplateIfInternalAttribute");
         }
         [TestCase]
+        public void ControlFlowForTemplateUsingParentKeyAttributeTest()
+        {
+            ValidatePage("ControlFlowForTemplateUsingParentKeyAttribute");
+        }
+        [TestCase]
         public void ControlFlowForTemplateIfInternalComplexTest()
         {
             ValidatePage("ControlFlowForTemplateIfInternalComplex");
