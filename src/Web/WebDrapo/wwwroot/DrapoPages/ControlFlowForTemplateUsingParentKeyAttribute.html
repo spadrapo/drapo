@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Template - Parents key in atttribute</title>
+</head>
+<body>
+    <div>
+        <div d-datakey="dataRows" d-dataurlget="/Data/GetArray?start=0&length=8&prefix=row"></div>
+        <div d-datakey="dataColumns" d-dataurlget="/Data/GetArray?start=0&length=4&prefix=column"></div>
+    </div>
+    <div>
+        <div d-for="row in dataRows">
+            <div d-for="column in dataColumns">
+                <span d-model="{{row}}" d-attr-title="{{row}}"></span>
+                <span d-model="{{column}}" d-attr-title="{{row}}"></span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

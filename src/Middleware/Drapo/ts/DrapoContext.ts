@@ -247,8 +247,15 @@ class DrapoContext {
     }
 
     public IsKey(key: string): boolean {
-        let item: DrapoContextItem = this.Item;
-        while (item != null) {
+        return this.IsKeyInternal(this.Item, key);
+    }
+
+    public IsParentKey(key: string): boolean {
+        return this.IsKeyInternal(this.Item.Parent, key);
+    }
+
+    private IsKeyInternal(item: DrapoContextItem, key: string) {
+        while (item !== null) {
             if (item.Key === key)
                 return (true);
             item = item.Parent;

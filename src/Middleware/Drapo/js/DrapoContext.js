@@ -285,8 +285,13 @@ var DrapoContext = (function () {
         return (false);
     };
     DrapoContext.prototype.IsKey = function (key) {
-        var item = this.Item;
-        while (item != null) {
+        return this.IsKeyInternal(this.Item, key);
+    };
+    DrapoContext.prototype.IsParentKey = function (key) {
+        return this.IsKeyInternal(this.Item.Parent, key);
+    };
+    DrapoContext.prototype.IsKeyInternal = function (item, key) {
+        while (item !== null) {
             if (item.Key === key)
                 return (true);
             item = item.Parent;
