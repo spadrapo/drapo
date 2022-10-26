@@ -62,6 +62,7 @@ var DrapoObserver = (function () {
         this._dataComponentElements = [];
         this._dataComponentFunction = [];
         this._dataComponentElementsFocus = [];
+        this._lockedData = [];
         this._application = application;
     }
     Object.defineProperty(DrapoObserver.prototype, "Application", {
@@ -219,7 +220,10 @@ var DrapoObserver = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.Application.Debugger.AddNotify(dataKey)];
+                    case 0:
+                        if (this.IsLocked(dataKey))
+                            return [2];
+                        return [4, this.Application.Debugger.AddNotify(dataKey)];
                     case 1:
                         _a.sent();
                         if (!canNotifyStorage) return [3, 3];
@@ -893,6 +897,53 @@ var DrapoObserver = (function () {
             if (dataFields1[i] != dataFields2[i])
                 return (false);
         return (true);
+    };
+    DrapoObserver.prototype.Lock = function (dataKey) {
+        for (var i = 0; i < this._lockedData.length; i++) {
+            var locked = this._lockedData[i];
+            if (locked[0] == dataKey)
+                return (false);
+        }
+        this._lockedData.push([dataKey, false]);
+        return (true);
+    };
+    DrapoObserver.prototype.Unlock = function (dataKey) {
+        return __awaiter(this, void 0, void 0, function () {
+            var i, locked;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < this._lockedData.length)) return [3, 5];
+                        locked = this._lockedData[i];
+                        if (locked[0] !== dataKey)
+                            return [3, 4];
+                        this._lockedData.splice(i, 1);
+                        if (!locked[1]) return [3, 3];
+                        return [4, this.Notify(dataKey, null, null)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [2, (true)];
+                    case 4:
+                        i++;
+                        return [3, 1];
+                    case 5: return [2, (false)];
+                }
+            });
+        });
+    };
+    DrapoObserver.prototype.IsLocked = function (dataKey) {
+        for (var i = 0; i < this._lockedData.length; i++) {
+            var locked = this._lockedData[i];
+            if (locked[0] !== dataKey)
+                continue;
+            locked[1] = true;
+            return (true);
+        }
+        return (false);
     };
     return DrapoObserver;
 }());

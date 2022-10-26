@@ -938,6 +938,8 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionGetConfig;
     private ExecuteFunctionLockPlumber;
     private ExecuteFunctionUnlockPlumber;
+    private ExecuteFunctionLockData;
+    private ExecuteFunctionUnlockData;
     private ExecuteFunctionClearPlumber;
     private ExecuteFunctionDebugger;
     private ExecuteFunctionGetSector;
@@ -1132,6 +1134,7 @@ declare class DrapoObserver {
     private _dataComponentElements;
     private _dataComponentFunction;
     private _dataComponentElementsFocus;
+    private _lockedData;
     get Application(): DrapoApplication;
     get IsEnabledNotifyIncremental(): boolean;
     set IsEnabledNotifyIncremental(value: boolean);
@@ -1189,6 +1192,9 @@ declare class DrapoObserver {
     private GetElementByModelBarber;
     private IsCompatibleDataFields;
     private IsEqualDataFields;
+    Lock(dataKey: string): boolean;
+    Unlock(dataKey: string): Promise<boolean>;
+    private IsLocked;
 }
 
 /// <reference path="../typings/index.d.ts" />

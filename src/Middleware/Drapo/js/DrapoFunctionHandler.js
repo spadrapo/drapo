@@ -713,18 +713,26 @@ var DrapoFunctionHandler = (function () {
                         return [4, this.ExecuteFunctionUnlockPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 160: return [2, (_a.sent())];
                     case 161:
-                        if (!(functionParsed.Name === 'clearplumber')) return [3, 163];
-                        return [4, this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'lockdata')) return [3, 163];
+                        return [4, this.ExecuteFunctionLockData(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 162: return [2, (_a.sent())];
                     case 163:
-                        if (!(functionParsed.Name === 'debugger')) return [3, 165];
-                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'unlockdata')) return [3, 165];
+                        return [4, this.ExecuteFunctionUnlockData(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 164: return [2, (_a.sent())];
                     case 165:
+                        if (!(functionParsed.Name === 'clearplumber')) return [3, 167];
+                        return [4, this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 166: return [2, (_a.sent())];
+                    case 167:
+                        if (!(functionParsed.Name === 'debugger')) return [3, 169];
+                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 168: return [2, (_a.sent())];
+                    case 169:
                         if (!checkInvalidFunction)
                             return [2, (null)];
                         return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name)];
-                    case 166:
+                    case 170:
                         _a.sent();
                         return [2, ('')];
                 }
@@ -3302,6 +3310,36 @@ var DrapoFunctionHandler = (function () {
                 switch (_a.label) {
                     case 0: return [4, this.Application.Plumber.Unlock()];
                     case 1:
+                        _a.sent();
+                        return [2, ('')];
+                }
+            });
+        });
+    };
+    DrapoFunctionHandler.prototype.ExecuteFunctionLockData = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dataKey;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
+                    case 1:
+                        dataKey = _a.sent();
+                        this.Application.Observer.Lock(dataKey);
+                        return [2, ('')];
+                }
+            });
+        });
+    };
+    DrapoFunctionHandler.prototype.ExecuteFunctionUnlockData = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dataKey;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
+                    case 1:
+                        dataKey = _a.sent();
+                        return [4, this.Application.Observer.Unlock(dataKey)];
+                    case 2:
                         _a.sent();
                         return [2, ('')];
                 }
