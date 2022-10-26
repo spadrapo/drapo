@@ -25,6 +25,7 @@ declare class DrapoObserver {
     private _dataComponentElements;
     private _dataComponentFunction;
     private _dataComponentElementsFocus;
+    private _lockedData;
     get Application(): DrapoApplication;
     get IsEnabledNotifyIncremental(): boolean;
     set IsEnabledNotifyIncremental(value: boolean);
@@ -82,4 +83,7 @@ declare class DrapoObserver {
     private GetElementByModelBarber;
     private IsCompatibleDataFields;
     private IsEqualDataFields;
+    Lock(dataKey: string): boolean;
+    Unlock(dataKey: string): Promise<boolean>;
+    private IsLocked;
 }

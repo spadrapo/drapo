@@ -26,6 +26,7 @@ class DrapoObserver {
     private _dataComponentElements: HTMLElement[][] = [];
     private _dataComponentFunction: Function[][] = [];
     private _dataComponentElementsFocus: HTMLElement[][] = [];
+    private _lockedData: [string, boolean][] = [];
 
     //Properties
     get Application(): DrapoApplication {
@@ -186,7 +187,10 @@ class DrapoObserver {
         }
     }
 
-    public async Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference: boolean = true, canNotifyStorage : boolean = true, notifyStorageDataKey: string = null): Promise<void> {
+    public async Notify(dataKey: string, dataIndex: number, dataFields: string[], canUseDifference: boolean = true, canNotifyStorage: boolean = true, notifyStorageDataKey: string = null): Promise<void> {
+        //Is Locked
+        if (this.IsLocked(dataKey))
+            return;
         //Debugger
         await this.Application.Debugger.AddNotify(dataKey);
         //Storage
@@ -724,5 +728,39 @@ class DrapoObserver {
             if (dataFields1[i] != dataFields2[i])
                 return (false);
         return (true);
+    }
+
+    public Lock(dataKey: string): boolean {
+        for (let i: number = 0; i < this._lockedData.length; i++) {
+            const locked: [string, boolean] = this._lockedData[i];
+            if (locked[0] == dataKey)
+                return(false);
+        }
+        this._lockedData.push([dataKey, false]);
+        return (true);
+    }
+
+    public async Unlock(dataKey: string): Promise<boolean> {
+        for (let i: number = 0; i < this._lockedData.length; i++) {
+            const locked: [string, boolean] = this._lockedData[i];
+            if (locked[0] !== dataKey)
+                continue;
+            this._lockedData.splice(i, 1);
+            if (locked[1])
+                await this.Notify(dataKey, null, null);
+            return (true);
+        }
+        return (false);
+    }
+
+    private IsLocked(dataKey: string): boolean {
+        for (let i: number = 0; i < this._lockedData.length; i++) {
+            const locked: [string, boolean] = this._lockedData[i];
+            if (locked[0] !== dataKey)
+                continue;
+            locked[1] = true;
+            return (true);
+        }
+        return (false);
     }
 }

@@ -95,6 +95,8 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionGetConfig;
     private ExecuteFunctionLockPlumber;
     private ExecuteFunctionUnlockPlumber;
+    private ExecuteFunctionLockData;
+    private ExecuteFunctionUnlockData;
     private ExecuteFunctionClearPlumber;
     private ExecuteFunctionDebugger;
     private ExecuteFunctionGetSector;

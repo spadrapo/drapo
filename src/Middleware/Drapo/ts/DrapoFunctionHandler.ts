@@ -389,6 +389,10 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionLockPlumber(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'unlockplumber')
             return (await this.ExecuteFunctionUnlockPlumber(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'lockdata')
+            return (await this.ExecuteFunctionLockData(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'unlockdata')
+            return (await this.ExecuteFunctionUnlockData(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'clearplumber')
             return (await this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'debugger')
@@ -1472,6 +1476,18 @@ class DrapoFunctionHandler {
 
     private async ExecuteFunctionUnlockPlumber(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         await this.Application.Plumber.Unlock();
+        return ('');
+    }
+
+    private async ExecuteFunctionLockData(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        this.Application.Observer.Lock(dataKey);
+        return ('');
+    }
+
+    private async ExecuteFunctionUnlockData(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        await this.Application.Observer.Unlock(dataKey);
         return ('');
     }
 

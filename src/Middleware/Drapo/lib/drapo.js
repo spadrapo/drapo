@@ -10474,18 +10474,26 @@ var DrapoFunctionHandler = (function () {
                         return [4, this.ExecuteFunctionUnlockPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 160: return [2, (_a.sent())];
                     case 161:
-                        if (!(functionParsed.Name === 'clearplumber')) return [3, 163];
-                        return [4, this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'lockdata')) return [3, 163];
+                        return [4, this.ExecuteFunctionLockData(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 162: return [2, (_a.sent())];
                     case 163:
-                        if (!(functionParsed.Name === 'debugger')) return [3, 165];
-                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'unlockdata')) return [3, 165];
+                        return [4, this.ExecuteFunctionUnlockData(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 164: return [2, (_a.sent())];
                     case 165:
+                        if (!(functionParsed.Name === 'clearplumber')) return [3, 167];
+                        return [4, this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 166: return [2, (_a.sent())];
+                    case 167:
+                        if (!(functionParsed.Name === 'debugger')) return [3, 169];
+                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 168: return [2, (_a.sent())];
+                    case 169:
                         if (!checkInvalidFunction)
                             return [2, (null)];
                         return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name)];
-                    case 166:
+                    case 170:
                         _a.sent();
                         return [2, ('')];
                 }
@@ -13069,6 +13077,36 @@ var DrapoFunctionHandler = (function () {
             });
         });
     };
+    DrapoFunctionHandler.prototype.ExecuteFunctionLockData = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dataKey;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
+                    case 1:
+                        dataKey = _a.sent();
+                        this.Application.Observer.Lock(dataKey);
+                        return [2, ('')];
+                }
+            });
+        });
+    };
+    DrapoFunctionHandler.prototype.ExecuteFunctionUnlockData = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dataKey;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
+                    case 1:
+                        dataKey = _a.sent();
+                        return [4, this.Application.Observer.Unlock(dataKey)];
+                    case 2:
+                        _a.sent();
+                        return [2, ('')];
+                }
+            });
+        });
+    };
     DrapoFunctionHandler.prototype.ExecuteFunctionClearPlumber = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -14706,6 +14744,7 @@ var DrapoObserver = (function () {
         this._dataComponentElements = [];
         this._dataComponentFunction = [];
         this._dataComponentElementsFocus = [];
+        this._lockedData = [];
         this._application = application;
     }
     Object.defineProperty(DrapoObserver.prototype, "Application", {
@@ -14863,7 +14902,10 @@ var DrapoObserver = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.Application.Debugger.AddNotify(dataKey)];
+                    case 0:
+                        if (this.IsLocked(dataKey))
+                            return [2];
+                        return [4, this.Application.Debugger.AddNotify(dataKey)];
                     case 1:
                         _a.sent();
                         if (!canNotifyStorage) return [3, 3];
@@ -15537,6 +15579,53 @@ var DrapoObserver = (function () {
             if (dataFields1[i] != dataFields2[i])
                 return (false);
         return (true);
+    };
+    DrapoObserver.prototype.Lock = function (dataKey) {
+        for (var i = 0; i < this._lockedData.length; i++) {
+            var locked = this._lockedData[i];
+            if (locked[0] == dataKey)
+                return (false);
+        }
+        this._lockedData.push([dataKey, false]);
+        return (true);
+    };
+    DrapoObserver.prototype.Unlock = function (dataKey) {
+        return __awaiter(this, void 0, void 0, function () {
+            var i, locked;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < this._lockedData.length)) return [3, 5];
+                        locked = this._lockedData[i];
+                        if (locked[0] !== dataKey)
+                            return [3, 4];
+                        this._lockedData.splice(i, 1);
+                        if (!locked[1]) return [3, 3];
+                        return [4, this.Notify(dataKey, null, null)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [2, (true)];
+                    case 4:
+                        i++;
+                        return [3, 1];
+                    case 5: return [2, (false)];
+                }
+            });
+        });
+    };
+    DrapoObserver.prototype.IsLocked = function (dataKey) {
+        for (var i = 0; i < this._lockedData.length; i++) {
+            var locked = this._lockedData[i];
+            if (locked[0] !== dataKey)
+                continue;
+            locked[1] = true;
+            return (true);
+        }
+        return (false);
     };
     return DrapoObserver;
 }());
