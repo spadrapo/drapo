@@ -3,6 +3,7 @@
     private _status: number = null;
     private _headers: [string, string][] = [];
     private _body: any = null;
+    private _cookies: [string, string][] = null;
 
     //Properties
     get Status(): number {
@@ -45,5 +46,36 @@
                 return (false);
         }
         return (true);
+    }
+
+    public GetCookieValue(name: string): string {
+        const cookies: [string, string][] = this.GetCookies();
+        for (let i: number = 0; i < cookies.length; i++)
+            if (cookies[i][0] === name)
+                return (cookies[i][1]);
+        return (null);
+    }
+
+    private GetCookies(): [string, string][]{
+        if (this._cookies == null)
+            this._cookies = this.GetCookiesInternal();
+        return (this._cookies);
+    }
+
+    private GetCookiesInternal(): [string, string][] {
+        const cookies: [string, string][] = [];
+        for (let i: number = 0; i < this._headers.length; i++) {
+            const header: [string, string] = this._headers[i];
+            if (header[0].toLowerCase() !== 'set-cookie')
+                continue;
+            const headerCookies: string = header[1];
+            const cookiesList: string[] = headerCookies.split(';');
+            for (let j: number = 0; j < cookiesList.length; j++) {
+                const cookie: string = cookiesList[j];
+                const cookieParts: string[] = cookie.split('=');
+                cookies.push([cookieParts[0],cookieParts[1]]);
+            }
+        }
+        return (cookies);
     }
 }

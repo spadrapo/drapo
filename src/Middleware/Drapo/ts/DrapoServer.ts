@@ -3,6 +3,7 @@ class DrapoServer {
     private _application: DrapoApplication;
     private _url: string;
     private _token: string = null;
+    private _tokenAntiforgery: string = null;
     private _requestHeaders: [string, string][] = [];
     private _requestHeadersNext: [string, string][] = [];
     private _hasBadRequest: boolean = false;
@@ -105,6 +106,9 @@ class DrapoServer {
         this.InsertHeader(requestHeaders, 'Cache-Control', 'no-cache, no-store, must-revalidate');
         if (this._headerContainerIdValue !== null)
             requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
+        //CSRF
+        if ((this._tokenAntiforgery != null))
+            this.InsertHeader(requestHeaders, await this.Application.Config.GetHeaderCSRF(), this._tokenAntiforgery);
         const urlResolved: string = this.ResolveUrl(url);
         const urlResolvedTimestamp: string = this.AppendUrlQueryStringTimestamp(urlResolved);
         const cookieValues: [string, string][] = this.Application.CookieHandler.GetCookieValues();
@@ -367,6 +371,17 @@ class DrapoServer {
 
     public HasToken(): boolean {
         return (this._token != null);
+    }
+
+    public async SetTokenAntiforgery(token: string): Promise<boolean> {
+
+        if (this._tokenAntiforgery === token)
+            return (false);
+        const headerCSRF: string = await this.Application.Config.GetHeaderCSRF();
+        if ((headerCSRF == null) || (headerCSRF == ''))
+            return;
+        this._tokenAntiforgery = token;
+        return (true);
     }
 
     private GetRequestHeaders(): [string, string][] {

@@ -4,6 +4,7 @@ var DrapoServerResponse = (function () {
         this._status = null;
         this._headers = [];
         this._body = null;
+        this._cookies = null;
         this._status = status;
         this._headers = headers;
         this._body = body;
@@ -53,6 +54,34 @@ var DrapoServerResponse = (function () {
                 return (false);
         }
         return (true);
+    };
+    DrapoServerResponse.prototype.GetCookieValue = function (name) {
+        var cookies = this.GetCookies();
+        for (var i = 0; i < cookies.length; i++)
+            if (cookies[i][0] === name)
+                return (cookies[i][1]);
+        return (null);
+    };
+    DrapoServerResponse.prototype.GetCookies = function () {
+        if (this._cookies == null)
+            this._cookies = this.GetCookiesInternal();
+        return (this._cookies);
+    };
+    DrapoServerResponse.prototype.GetCookiesInternal = function () {
+        var cookies = [];
+        for (var i = 0; i < this._headers.length; i++) {
+            var header = this._headers[i];
+            if (header[0].toLowerCase() !== 'set-cookie')
+                continue;
+            var headerCookies = header[1];
+            var cookiesList = headerCookies.split(';');
+            for (var j = 0; j < cookiesList.length; j++) {
+                var cookie = cookiesList[j];
+                var cookieParts = cookie.split('=');
+                cookies.push([cookieParts[0], cookieParts[1]]);
+            }
+        }
+        return (cookies);
     };
     return DrapoServerResponse;
 }());

@@ -37,6 +37,7 @@ declare class DrapoConfig {
     GetValidatorInvalidClass(): Promise<string>;
     GetApplicationBuild(): Promise<string>;
     GetHeaderContainerId(): Promise<string>;
+    GetHeaderCSRF(): Promise<string>;
     GetViews(): Promise<DrapoView[]>;
     GetTimezone(): number;
     SetTimezone(value: number): void;

@@ -2,6 +2,7 @@ declare class DrapoServer {
     private _application;
     private _url;
     private _token;
+    private _tokenAntiforgery;
     private _requestHeaders;
     private _requestHeadersNext;
     private _hasBadRequest;
@@ -30,6 +31,7 @@ declare class DrapoServer {
     private GetHeaderValue;
     SetToken(token: string): Promise<boolean>;
     HasToken(): boolean;
+    SetTokenAntiforgery(token: string): Promise<boolean>;
     private GetRequestHeaders;
     private AddHeader;
     AddRequestHeader(key: string, value: string): void;

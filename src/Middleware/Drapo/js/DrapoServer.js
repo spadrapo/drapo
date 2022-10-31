@@ -38,6 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var DrapoServer = (function () {
     function DrapoServer(application) {
         this._token = null;
+        this._tokenAntiforgery = null;
         this._requestHeaders = [];
         this._requestHeadersNext = [];
         this._hasBadRequest = false;
@@ -167,9 +168,9 @@ var DrapoServer = (function () {
         if (headers === void 0) { headers = null; }
         if (headersResponse === void 0) { headersResponse = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var requestHeaders, urlResolved, urlResolvedTimestamp, cookieValues, request, response, location_1, dataResponse, onBadRequest, storageBadRequest, dataResponse, onError, storageErrors, error;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var requestHeaders, _a, _b, urlResolved, urlResolvedTimestamp, cookieValues, request, response, location_1, dataResponse, onBadRequest, storageBadRequest, dataResponse, onError, storageErrors, error;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         requestHeaders = [];
                         this.InsertHeaders(requestHeaders, this.GetRequestHeaders());
@@ -180,25 +181,33 @@ var DrapoServer = (function () {
                         this.InsertHeader(requestHeaders, 'Cache-Control', 'no-cache, no-store, must-revalidate');
                         if (this._headerContainerIdValue !== null)
                             requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
+                        if (!(this._tokenAntiforgery != null)) return [3, 2];
+                        _a = this.InsertHeader;
+                        _b = [requestHeaders];
+                        return [4, this.Application.Config.GetHeaderCSRF()];
+                    case 1:
+                        _a.apply(this, _b.concat([_c.sent(), this._tokenAntiforgery]));
+                        _c.label = 2;
+                    case 2:
                         urlResolved = this.ResolveUrl(url);
                         urlResolvedTimestamp = this.AppendUrlQueryStringTimestamp(urlResolved);
                         cookieValues = this.Application.CookieHandler.GetCookieValues();
                         request = new DrapoServerRequest(verb, urlResolvedTimestamp, requestHeaders, data, true);
                         return [4, this.Request(request)];
-                    case 1:
-                        response = _a.sent();
-                        if (!((200 <= response.Status) && (response.Status < 400))) return [3, 3];
-                        location_1 = this.GetHeaderValue(response.Headers, 'Location');
-                        if (!(location_1 !== null)) return [3, 3];
-                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, 'RedirectPage(' + location_1 + ')', this.Application.FunctionHandler.CreateExecutionContext(false))];
-                    case 2:
-                        _a.sent();
-                        _a.label = 3;
                     case 3:
-                        if (!(response.Status == 200)) return [3, 5];
-                        return [4, this.Application.CookieHandler.HandleCookieValuesChanges(cookieValues)];
+                        response = _c.sent();
+                        if (!((200 <= response.Status) && (response.Status < 400))) return [3, 5];
+                        location_1 = this.GetHeaderValue(response.Headers, 'Location');
+                        if (!(location_1 !== null)) return [3, 5];
+                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, 'RedirectPage(' + location_1 + ')', this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 4:
-                        _a.sent();
+                        _c.sent();
+                        _c.label = 5;
+                    case 5:
+                        if (!(response.Status == 200)) return [3, 7];
+                        return [4, this.Application.CookieHandler.HandleCookieValuesChanges(cookieValues)];
+                    case 6:
+                        _c.sent();
                         if (response.Body == '')
                             return [2, (null)];
                         if (headersResponse !== null) {
@@ -208,60 +217,60 @@ var DrapoServer = (function () {
                         dataResponse = void 0;
                         dataResponse = this.Application.Serializer.Deserialize(response.Body);
                         return [2, (dataResponse)];
-                    case 5:
-                        if (!(response.Status == 204)) return [3, 6];
+                    case 7:
+                        if (!(response.Status == 204)) return [3, 8];
                         return [2, (null)];
-                    case 6:
-                        if (!(response.Status == 400)) return [3, 13];
+                    case 8:
+                        if (!(response.Status == 400)) return [3, 15];
                         this.HasBadRequest = true;
                         return [4, this.Application.Config.GetOnBadRequest()];
-                    case 7:
-                        onBadRequest = _a.sent();
-                        if (!(onBadRequest !== null)) return [3, 12];
+                    case 9:
+                        onBadRequest = _c.sent();
+                        if (!(onBadRequest !== null)) return [3, 14];
                         return [4, this.Application.Config.GetStorageBadRequest()];
-                    case 8:
-                        storageBadRequest = _a.sent();
-                        if (!(storageBadRequest !== null)) return [3, 10];
+                    case 10:
+                        storageBadRequest = _c.sent();
+                        if (!(storageBadRequest !== null)) return [3, 12];
                         dataResponse = this.Application.Serializer.Deserialize(response.Body);
                         return [4, this.Application.Storage.UpdateData(storageBadRequest, null, dataResponse)];
-                    case 9:
-                        _a.sent();
-                        _a.label = 10;
-                    case 10: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onBadRequest, this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 11:
-                        _a.sent();
-                        return [2, ([])];
-                    case 12: return [2, ([])];
+                        _c.sent();
+                        _c.label = 12;
+                    case 12: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onBadRequest, this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 13:
-                        if (!(response.Status == 401)) return [3, 16];
-                        if (!(dataKey !== null)) return [3, 15];
+                        _c.sent();
+                        return [2, ([])];
+                    case 14: return [2, ([])];
+                    case 15:
+                        if (!(response.Status == 401)) return [3, 18];
+                        if (!(dataKey !== null)) return [3, 17];
                         return [4, this.Application.Document.RequestAuthorization(dataKey, 'notify')];
-                    case 14:
-                        _a.sent();
-                        _a.label = 15;
-                    case 15: return [3, 23];
                     case 16:
-                        if (!(response.Status == 500)) return [3, 23];
+                        _c.sent();
+                        _c.label = 17;
+                    case 17: return [3, 25];
+                    case 18:
+                        if (!(response.Status == 500)) return [3, 25];
                         this.HasBadRequest = true;
                         return [4, this.Application.Config.GetOnError()];
-                    case 17:
-                        onError = _a.sent();
-                        if (!(onError !== null)) return [3, 22];
+                    case 19:
+                        onError = _c.sent();
+                        if (!(onError !== null)) return [3, 24];
                         return [4, this.Application.Config.GetStorageErrors()];
-                    case 18:
-                        storageErrors = _a.sent();
-                        if (!(storageErrors !== null)) return [3, 20];
+                    case 20:
+                        storageErrors = _c.sent();
+                        if (!(storageErrors !== null)) return [3, 22];
                         error = this.Application.Serializer.IsJson(response.Body) ? this.Application.Serializer.Deserialize(response.Body) : response.Body;
                         return [4, this.Application.Storage.AddDataItem(storageErrors, null, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error))];
-                    case 19:
-                        _a.sent();
-                        _a.label = 20;
-                    case 20: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onError, this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 21:
-                        _a.sent();
+                        _c.sent();
+                        _c.label = 22;
+                    case 22: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onError, this.Application.FunctionHandler.CreateExecutionContext(false))];
+                    case 23:
+                        _c.sent();
                         return [2, ([])];
-                    case 22: return [2, ([])];
-                    case 23: return [2, ([])];
+                    case 24: return [2, ([])];
+                    case 25: return [2, ([])];
                 }
             });
         });
@@ -518,6 +527,25 @@ var DrapoServer = (function () {
     };
     DrapoServer.prototype.HasToken = function () {
         return (this._token != null);
+    };
+    DrapoServer.prototype.SetTokenAntiforgery = function (token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var headerCSRF;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (this._tokenAntiforgery === token)
+                            return [2, (false)];
+                        return [4, this.Application.Config.GetHeaderCSRF()];
+                    case 1:
+                        headerCSRF = _a.sent();
+                        if ((headerCSRF == null) || (headerCSRF == ''))
+                            return [2];
+                        this._tokenAntiforgery = token;
+                        return [2, (true)];
+                }
+            });
+        });
     };
     DrapoServer.prototype.GetRequestHeaders = function () {
         if (this._requestHeadersNext.length === 0)

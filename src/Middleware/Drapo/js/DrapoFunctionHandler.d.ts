@@ -62,6 +62,7 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionUpdateToken;
     private ExecuteFunctionClearToken;
     private ExecuteFunctionHasToken;
+    private ExecuteFunctionUpdateTokenAntiforgery;
     private ExecuteFunctionDestroyContainer;
     private ExecuteFunctionIf;
     private ExecuteFunctionAsync;
