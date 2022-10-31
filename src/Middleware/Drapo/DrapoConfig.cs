@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -45,6 +46,7 @@ namespace Sysphera.Middleware.Drapo
         private string _domainRegex = null;
         private string _domainGroup = "domain";
         private string _headerContainerId = null;
+        private string _headerCSRF = null;
         #endregion
         #region Properties
         public Dictionary<string, string> Properties { get => _properties; set => _properties = value; }
@@ -83,6 +85,7 @@ namespace Sysphera.Middleware.Drapo
         public string DomainRegex { get => _domainRegex; set => _domainRegex = value; }
         public string DomainGroup { get => _domainGroup; set => _domainGroup = value; }
         public string HeaderContainerId { get => _headerContainerId; set => _headerContainerId = value; }
+        public string HeaderCSRF { get => _headerCSRF; set => _headerCSRF = value; }
         #endregion
 
         #region Constructors

@@ -3814,6 +3814,16 @@ var DrapoConfig = (function () {
             });
         });
     };
+    DrapoConfig.prototype.GetHeaderCSRF = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.GetProperty('HeaderCSRF')];
+                    case 1: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
     DrapoConfig.prototype.GetViews = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -10310,190 +10320,194 @@ var DrapoFunctionHandler = (function () {
                     case 79:
                         if (functionParsed.Name === 'hastoken')
                             return [2, (this.ExecuteFunctionHasToken(sector, contextItem, element, event, functionParsed, executionContext))];
-                        if (!(functionParsed.Name === 'destroycontainer')) return [3, 81];
-                        return [4, this.ExecuteFunctionDestroyContainer(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'updatetokenantiforgery')) return [3, 81];
+                        return [4, this.ExecuteFunctionUpdateTokenAntiforgery(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 80: return [2, (_a.sent())];
                     case 81:
-                        if (!(functionParsed.Name === 'if')) return [3, 83];
-                        return [4, this.ExecuteFunctionIf(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'destroycontainer')) return [3, 83];
+                        return [4, this.ExecuteFunctionDestroyContainer(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 82: return [2, (_a.sent())];
                     case 83:
-                        if (!(functionParsed.Name === 'async')) return [3, 85];
-                        return [4, this.ExecuteFunctionAsync(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'if')) return [3, 85];
+                        return [4, this.ExecuteFunctionIf(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 84: return [2, (_a.sent())];
                     case 85:
-                        if (!(functionParsed.Name === 'notify')) return [3, 87];
-                        return [4, this.ExecuteFunctionNotify(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'async')) return [3, 87];
+                        return [4, this.ExecuteFunctionAsync(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 86: return [2, (_a.sent())];
                     case 87:
-                        if (!(functionParsed.Name === 'focus')) return [3, 89];
-                        return [4, this.ExecuteFunctionFocus(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'notify')) return [3, 89];
+                        return [4, this.ExecuteFunctionNotify(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 88: return [2, (_a.sent())];
                     case 89:
-                        if (!(functionParsed.Name === 'showwindow')) return [3, 91];
-                        return [4, this.ExecuteFunctionShowWindow(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'focus')) return [3, 91];
+                        return [4, this.ExecuteFunctionFocus(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 90: return [2, (_a.sent())];
                     case 91:
-                        if (!(functionParsed.Name === 'closewindow')) return [3, 93];
-                        return [4, this.ExecuteFunctionCloseWindow(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'showwindow')) return [3, 93];
+                        return [4, this.ExecuteFunctionShowWindow(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 92: return [2, (_a.sent())];
                     case 93:
-                        if (!(functionParsed.Name === 'hidewindow')) return [3, 95];
-                        return [4, this.ExecuteFunctionHideWindow(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'closewindow')) return [3, 95];
+                        return [4, this.ExecuteFunctionCloseWindow(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 94: return [2, (_a.sent())];
                     case 95:
-                        if (!(functionParsed.Name === 'getwindow')) return [3, 97];
-                        return [4, this.ExecuteFunctionGetWindow(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'hidewindow')) return [3, 97];
+                        return [4, this.ExecuteFunctionHideWindow(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 96: return [2, (_a.sent())];
                     case 97:
-                        if (!(functionParsed.Name === 'setexternal')) return [3, 99];
-                        return [4, this.ExecuteFunctionSetExternal(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'getwindow')) return [3, 99];
+                        return [4, this.ExecuteFunctionGetWindow(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 98: return [2, (_a.sent())];
                     case 99:
-                        if (!(functionParsed.Name === 'getexternal')) return [3, 101];
-                        return [4, this.ExecuteFunctionGetExternal(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'setexternal')) return [3, 101];
+                        return [4, this.ExecuteFunctionSetExternal(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 100: return [2, (_a.sent())];
                     case 101:
-                        if (!(functionParsed.Name === 'setexternalframe')) return [3, 103];
-                        return [4, this.ExecuteFunctionSetExternalFrame(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'getexternal')) return [3, 103];
+                        return [4, this.ExecuteFunctionGetExternal(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 102: return [2, (_a.sent())];
                     case 103:
-                        if (!(functionParsed.Name === 'getexternalframe')) return [3, 105];
-                        return [4, this.ExecuteFunctionGetExternalFrame(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'setexternalframe')) return [3, 105];
+                        return [4, this.ExecuteFunctionSetExternalFrame(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 104: return [2, (_a.sent())];
                     case 105:
-                        if (!(functionParsed.Name === 'setexternalframemessage')) return [3, 107];
-                        return [4, this.ExecuteFunctionSetExternalFrameMessage(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'getexternalframe')) return [3, 107];
+                        return [4, this.ExecuteFunctionGetExternalFrame(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 106: return [2, (_a.sent())];
                     case 107:
-                        if (!(functionParsed.Name === 'getexternalframemessage')) return [3, 109];
-                        return [4, this.ExecuteFunctionGetExternalFrameMessage(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'setexternalframemessage')) return [3, 109];
+                        return [4, this.ExecuteFunctionSetExternalFrameMessage(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 108: return [2, (_a.sent())];
                     case 109:
-                        if (!(functionParsed.Name === 'createguid')) return [3, 111];
-                        return [4, this.ExecuteFunctionCreateGuid(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'getexternalframemessage')) return [3, 111];
+                        return [4, this.ExecuteFunctionGetExternalFrameMessage(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 110: return [2, (_a.sent())];
                     case 111:
-                        if (!(functionParsed.Name === 'createtick')) return [3, 113];
-                        return [4, this.ExecuteFunctionCreateTick(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'createguid')) return [3, 113];
+                        return [4, this.ExecuteFunctionCreateGuid(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 112: return [2, (_a.sent())];
                     case 113:
-                        if (!(functionParsed.Name === 'pushstack')) return [3, 115];
-                        return [4, this.ExecuteFunctionPushStack(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'createtick')) return [3, 115];
+                        return [4, this.ExecuteFunctionCreateTick(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 114: return [2, (_a.sent())];
                     case 115:
-                        if (!(functionParsed.Name === 'popstack')) return [3, 117];
-                        return [4, this.ExecuteFunctionPopStack(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'pushstack')) return [3, 117];
+                        return [4, this.ExecuteFunctionPushStack(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 116: return [2, (_a.sent())];
                     case 117:
-                        if (!(functionParsed.Name === 'peekstack')) return [3, 119];
-                        return [4, this.ExecuteFunctionPeekStack(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'popstack')) return [3, 119];
+                        return [4, this.ExecuteFunctionPopStack(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 118: return [2, (_a.sent())];
                     case 119:
-                        if (!(functionParsed.Name === 'execute')) return [3, 121];
-                        return [4, this.ExecuteFunctionExecute(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'peekstack')) return [3, 121];
+                        return [4, this.ExecuteFunctionPeekStack(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 120: return [2, (_a.sent())];
                     case 121:
-                        if (!(functionParsed.Name === 'executedataitem')) return [3, 123];
-                        return [4, this.ExecuteFunctionExecuteDataItem(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'execute')) return [3, 123];
+                        return [4, this.ExecuteFunctionExecute(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 122: return [2, (_a.sent())];
                     case 123:
-                        if (!(functionParsed.Name === 'executecomponentfunction')) return [3, 125];
-                        return [4, this.ExecuteFunctionExecuteComponentFunction(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'executedataitem')) return [3, 125];
+                        return [4, this.ExecuteFunctionExecuteDataItem(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 124: return [2, (_a.sent())];
                     case 125:
-                        if (!(functionParsed.Name === 'executeinstancefunction')) return [3, 127];
-                        return [4, this.ExecuteFunctionExecuteInstanceFunction(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'executecomponentfunction')) return [3, 127];
+                        return [4, this.ExecuteFunctionExecuteComponentFunction(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 126: return [2, (_a.sent())];
                     case 127:
-                        if (!(functionParsed.Name === 'cast')) return [3, 129];
-                        return [4, this.ExecuteFunctionCast(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'executeinstancefunction')) return [3, 129];
+                        return [4, this.ExecuteFunctionExecuteInstanceFunction(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 128: return [2, (_a.sent())];
                     case 129:
-                        if (!(functionParsed.Name === 'encodeurl')) return [3, 131];
-                        return [4, this.ExecuteFunctionEncodeUrl(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'cast')) return [3, 131];
+                        return [4, this.ExecuteFunctionCast(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 130: return [2, (_a.sent())];
                     case 131:
-                        if (!(functionParsed.Name === 'addrequestheader')) return [3, 133];
-                        return [4, this.ExecuteFunctionAddRequestHeader(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'encodeurl')) return [3, 133];
+                        return [4, this.ExecuteFunctionEncodeUrl(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 132: return [2, (_a.sent())];
                     case 133:
-                        if (!(functionParsed.Name === 'getsector')) return [3, 135];
-                        return [4, this.ExecuteFunctionGetSector(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'addrequestheader')) return [3, 135];
+                        return [4, this.ExecuteFunctionAddRequestHeader(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 134: return [2, (_a.sent())];
                     case 135:
-                        if (!(functionParsed.Name === 'getclipboard')) return [3, 137];
-                        return [4, this.ExecuteFunctionGetClipboard(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'getsector')) return [3, 137];
+                        return [4, this.ExecuteFunctionGetSector(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 136: return [2, (_a.sent())];
                     case 137:
-                        if (!(functionParsed.Name === 'setclipboard')) return [3, 139];
-                        return [4, this.ExecuteFunctionSetClipboard(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'getclipboard')) return [3, 139];
+                        return [4, this.ExecuteFunctionGetClipboard(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 138: return [2, (_a.sent())];
                     case 139:
-                        if (!(functionParsed.Name === 'createtimer')) return [3, 141];
-                        return [4, this.ExecuteFunctionCreateTimer(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'setclipboard')) return [3, 141];
+                        return [4, this.ExecuteFunctionSetClipboard(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 140: return [2, (_a.sent())];
                     case 141:
-                        if (!(functionParsed.Name === 'createreference')) return [3, 143];
-                        return [4, this.ExecuteFunctionCreateReference(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'createtimer')) return [3, 143];
+                        return [4, this.ExecuteFunctionCreateTimer(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 142: return [2, (_a.sent())];
                     case 143:
-                        if (!(functionParsed.Name === 'wait')) return [3, 145];
-                        return [4, this.ExecuteFunctionWait(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'createreference')) return [3, 145];
+                        return [4, this.ExecuteFunctionCreateReference(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 144: return [2, (_a.sent())];
                     case 145:
-                        if (!(functionParsed.Name === 'executevalidation')) return [3, 147];
-                        return [4, this.ExecuteFunctionExecuteValidation(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'wait')) return [3, 147];
+                        return [4, this.ExecuteFunctionWait(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 146: return [2, (_a.sent())];
                     case 147:
-                        if (!(functionParsed.Name === 'clearvalidation')) return [3, 149];
-                        return [4, this.ExecuteFunctionClearValidation(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'executevalidation')) return [3, 149];
+                        return [4, this.ExecuteFunctionExecuteValidation(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 148: return [2, (_a.sent())];
                     case 149:
-                        if (!(functionParsed.Name === 'downloaddata')) return [3, 151];
-                        return [4, this.ExecuteFunctionDownloadData(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'clearvalidation')) return [3, 151];
+                        return [4, this.ExecuteFunctionClearValidation(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 150: return [2, (_a.sent())];
                     case 151:
-                        if (!(functionParsed.Name === 'detectview')) return [3, 153];
-                        return [4, this.ExecuteFunctionDetectView(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'downloaddata')) return [3, 153];
+                        return [4, this.ExecuteFunctionDownloadData(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 152: return [2, (_a.sent())];
                     case 153:
-                        if (!(functionParsed.Name === 'setconfig')) return [3, 155];
-                        return [4, this.ExecuteFunctionSetConfig(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'detectview')) return [3, 155];
+                        return [4, this.ExecuteFunctionDetectView(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 154: return [2, (_a.sent())];
                     case 155:
-                        if (!(functionParsed.Name === 'getconfig')) return [3, 157];
-                        return [4, this.ExecuteFunctionGetConfig(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'setconfig')) return [3, 157];
+                        return [4, this.ExecuteFunctionSetConfig(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 156: return [2, (_a.sent())];
                     case 157:
-                        if (!(functionParsed.Name === 'lockplumber')) return [3, 159];
-                        return [4, this.ExecuteFunctionLockPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'getconfig')) return [3, 159];
+                        return [4, this.ExecuteFunctionGetConfig(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 158: return [2, (_a.sent())];
                     case 159:
-                        if (!(functionParsed.Name === 'unlockplumber')) return [3, 161];
-                        return [4, this.ExecuteFunctionUnlockPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'lockplumber')) return [3, 161];
+                        return [4, this.ExecuteFunctionLockPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 160: return [2, (_a.sent())];
                     case 161:
-                        if (!(functionParsed.Name === 'lockdata')) return [3, 163];
-                        return [4, this.ExecuteFunctionLockData(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'unlockplumber')) return [3, 163];
+                        return [4, this.ExecuteFunctionUnlockPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 162: return [2, (_a.sent())];
                     case 163:
-                        if (!(functionParsed.Name === 'unlockdata')) return [3, 165];
-                        return [4, this.ExecuteFunctionUnlockData(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'lockdata')) return [3, 165];
+                        return [4, this.ExecuteFunctionLockData(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 164: return [2, (_a.sent())];
                     case 165:
-                        if (!(functionParsed.Name === 'clearplumber')) return [3, 167];
-                        return [4, this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'unlockdata')) return [3, 167];
+                        return [4, this.ExecuteFunctionUnlockData(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 166: return [2, (_a.sent())];
                     case 167:
-                        if (!(functionParsed.Name === 'debugger')) return [3, 169];
-                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'clearplumber')) return [3, 169];
+                        return [4, this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 168: return [2, (_a.sent())];
                     case 169:
+                        if (!(functionParsed.Name === 'debugger')) return [3, 171];
+                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 170: return [2, (_a.sent())];
+                    case 171:
                         if (!checkInvalidFunction)
                             return [2, (null)];
                         return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name)];
-                    case 170:
+                    case 172:
                         _a.sent();
                         return [2, ('')];
                 }
@@ -12134,6 +12148,22 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionHasToken = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return (this.Application.Server.HasToken().toString());
+    };
+    DrapoFunctionHandler.prototype.ExecuteFunctionUpdateTokenAntiforgery = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var token;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
+                    case 1:
+                        token = _a.sent();
+                        return [4, this.Application.Server.SetTokenAntiforgery(token)];
+                    case 2:
+                        _a.sent();
+                        return [2, ('')];
+                }
+            });
+        });
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionDestroyContainer = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
@@ -19069,6 +19099,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var DrapoServer = (function () {
     function DrapoServer(application) {
         this._token = null;
+        this._tokenAntiforgery = null;
         this._requestHeaders = [];
         this._requestHeadersNext = [];
         this._hasBadRequest = false;
@@ -19198,9 +19229,9 @@ var DrapoServer = (function () {
         if (headers === void 0) { headers = null; }
         if (headersResponse === void 0) { headersResponse = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var requestHeaders, urlResolved, urlResolvedTimestamp, cookieValues, request, response, location_1, dataResponse, onBadRequest, storageBadRequest, dataResponse, onError, storageErrors, error;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var requestHeaders, _a, _b, urlResolved, urlResolvedTimestamp, cookieValues, request, response, location_1, dataResponse, onBadRequest, storageBadRequest, dataResponse, onError, storageErrors, error;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         requestHeaders = [];
                         this.InsertHeaders(requestHeaders, this.GetRequestHeaders());
@@ -19211,25 +19242,33 @@ var DrapoServer = (function () {
                         this.InsertHeader(requestHeaders, 'Cache-Control', 'no-cache, no-store, must-revalidate');
                         if (this._headerContainerIdValue !== null)
                             requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
+                        if (!(this._tokenAntiforgery != null)) return [3, 2];
+                        _a = this.InsertHeader;
+                        _b = [requestHeaders];
+                        return [4, this.Application.Config.GetHeaderCSRF()];
+                    case 1:
+                        _a.apply(this, _b.concat([_c.sent(), this._tokenAntiforgery]));
+                        _c.label = 2;
+                    case 2:
                         urlResolved = this.ResolveUrl(url);
                         urlResolvedTimestamp = this.AppendUrlQueryStringTimestamp(urlResolved);
                         cookieValues = this.Application.CookieHandler.GetCookieValues();
                         request = new DrapoServerRequest(verb, urlResolvedTimestamp, requestHeaders, data, true);
                         return [4, this.Request(request)];
-                    case 1:
-                        response = _a.sent();
-                        if (!((200 <= response.Status) && (response.Status < 400))) return [3, 3];
-                        location_1 = this.GetHeaderValue(response.Headers, 'Location');
-                        if (!(location_1 !== null)) return [3, 3];
-                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, 'RedirectPage(' + location_1 + ')', this.Application.FunctionHandler.CreateExecutionContext(false))];
-                    case 2:
-                        _a.sent();
-                        _a.label = 3;
                     case 3:
-                        if (!(response.Status == 200)) return [3, 5];
-                        return [4, this.Application.CookieHandler.HandleCookieValuesChanges(cookieValues)];
+                        response = _c.sent();
+                        if (!((200 <= response.Status) && (response.Status < 400))) return [3, 5];
+                        location_1 = this.GetHeaderValue(response.Headers, 'Location');
+                        if (!(location_1 !== null)) return [3, 5];
+                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, 'RedirectPage(' + location_1 + ')', this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 4:
-                        _a.sent();
+                        _c.sent();
+                        _c.label = 5;
+                    case 5:
+                        if (!(response.Status == 200)) return [3, 7];
+                        return [4, this.Application.CookieHandler.HandleCookieValuesChanges(cookieValues)];
+                    case 6:
+                        _c.sent();
                         if (response.Body == '')
                             return [2, (null)];
                         if (headersResponse !== null) {
@@ -19239,60 +19278,60 @@ var DrapoServer = (function () {
                         dataResponse = void 0;
                         dataResponse = this.Application.Serializer.Deserialize(response.Body);
                         return [2, (dataResponse)];
-                    case 5:
-                        if (!(response.Status == 204)) return [3, 6];
+                    case 7:
+                        if (!(response.Status == 204)) return [3, 8];
                         return [2, (null)];
-                    case 6:
-                        if (!(response.Status == 400)) return [3, 13];
+                    case 8:
+                        if (!(response.Status == 400)) return [3, 15];
                         this.HasBadRequest = true;
                         return [4, this.Application.Config.GetOnBadRequest()];
-                    case 7:
-                        onBadRequest = _a.sent();
-                        if (!(onBadRequest !== null)) return [3, 12];
+                    case 9:
+                        onBadRequest = _c.sent();
+                        if (!(onBadRequest !== null)) return [3, 14];
                         return [4, this.Application.Config.GetStorageBadRequest()];
-                    case 8:
-                        storageBadRequest = _a.sent();
-                        if (!(storageBadRequest !== null)) return [3, 10];
+                    case 10:
+                        storageBadRequest = _c.sent();
+                        if (!(storageBadRequest !== null)) return [3, 12];
                         dataResponse = this.Application.Serializer.Deserialize(response.Body);
                         return [4, this.Application.Storage.UpdateData(storageBadRequest, null, dataResponse)];
-                    case 9:
-                        _a.sent();
-                        _a.label = 10;
-                    case 10: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onBadRequest, this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 11:
-                        _a.sent();
-                        return [2, ([])];
-                    case 12: return [2, ([])];
+                        _c.sent();
+                        _c.label = 12;
+                    case 12: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onBadRequest, this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 13:
-                        if (!(response.Status == 401)) return [3, 16];
-                        if (!(dataKey !== null)) return [3, 15];
+                        _c.sent();
+                        return [2, ([])];
+                    case 14: return [2, ([])];
+                    case 15:
+                        if (!(response.Status == 401)) return [3, 18];
+                        if (!(dataKey !== null)) return [3, 17];
                         return [4, this.Application.Document.RequestAuthorization(dataKey, 'notify')];
-                    case 14:
-                        _a.sent();
-                        _a.label = 15;
-                    case 15: return [3, 23];
                     case 16:
-                        if (!(response.Status == 500)) return [3, 23];
+                        _c.sent();
+                        _c.label = 17;
+                    case 17: return [3, 25];
+                    case 18:
+                        if (!(response.Status == 500)) return [3, 25];
                         this.HasBadRequest = true;
                         return [4, this.Application.Config.GetOnError()];
-                    case 17:
-                        onError = _a.sent();
-                        if (!(onError !== null)) return [3, 22];
+                    case 19:
+                        onError = _c.sent();
+                        if (!(onError !== null)) return [3, 24];
                         return [4, this.Application.Config.GetStorageErrors()];
-                    case 18:
-                        storageErrors = _a.sent();
-                        if (!(storageErrors !== null)) return [3, 20];
+                    case 20:
+                        storageErrors = _c.sent();
+                        if (!(storageErrors !== null)) return [3, 22];
                         error = this.Application.Serializer.IsJson(response.Body) ? this.Application.Serializer.Deserialize(response.Body) : response.Body;
                         return [4, this.Application.Storage.AddDataItem(storageErrors, null, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error))];
-                    case 19:
-                        _a.sent();
-                        _a.label = 20;
-                    case 20: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onError, this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 21:
-                        _a.sent();
+                        _c.sent();
+                        _c.label = 22;
+                    case 22: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onError, this.Application.FunctionHandler.CreateExecutionContext(false))];
+                    case 23:
+                        _c.sent();
                         return [2, ([])];
-                    case 22: return [2, ([])];
-                    case 23: return [2, ([])];
+                    case 24: return [2, ([])];
+                    case 25: return [2, ([])];
                 }
             });
         });
@@ -19550,6 +19589,25 @@ var DrapoServer = (function () {
     DrapoServer.prototype.HasToken = function () {
         return (this._token != null);
     };
+    DrapoServer.prototype.SetTokenAntiforgery = function (token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var headerCSRF;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (this._tokenAntiforgery === token)
+                            return [2, (false)];
+                        return [4, this.Application.Config.GetHeaderCSRF()];
+                    case 1:
+                        headerCSRF = _a.sent();
+                        if ((headerCSRF == null) || (headerCSRF == ''))
+                            return [2];
+                        this._tokenAntiforgery = token;
+                        return [2, (true)];
+                }
+            });
+        });
+    };
     DrapoServer.prototype.GetRequestHeaders = function () {
         if (this._requestHeadersNext.length === 0)
             return (this._requestHeaders);
@@ -19740,6 +19798,7 @@ var DrapoServerResponse = (function () {
         this._status = null;
         this._headers = [];
         this._body = null;
+        this._cookies = null;
         this._status = status;
         this._headers = headers;
         this._body = body;
@@ -19789,6 +19848,34 @@ var DrapoServerResponse = (function () {
                 return (false);
         }
         return (true);
+    };
+    DrapoServerResponse.prototype.GetCookieValue = function (name) {
+        var cookies = this.GetCookies();
+        for (var i = 0; i < cookies.length; i++)
+            if (cookies[i][0] === name)
+                return (cookies[i][1]);
+        return (null);
+    };
+    DrapoServerResponse.prototype.GetCookies = function () {
+        if (this._cookies == null)
+            this._cookies = this.GetCookiesInternal();
+        return (this._cookies);
+    };
+    DrapoServerResponse.prototype.GetCookiesInternal = function () {
+        var cookies = [];
+        for (var i = 0; i < this._headers.length; i++) {
+            var header = this._headers[i];
+            if (header[0].toLowerCase() !== 'set-cookie')
+                continue;
+            var headerCookies = header[1];
+            var cookiesList = headerCookies.split(';');
+            for (var j = 0; j < cookiesList.length; j++) {
+                var cookie = cookiesList[j];
+                var cookieParts = cookie.split('=');
+                cookies.push([cookieParts[0], cookieParts[1]]);
+            }
+        }
+        return (cookies);
     };
     return DrapoServerResponse;
 }());

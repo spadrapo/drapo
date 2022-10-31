@@ -168,6 +168,10 @@ class DrapoConfig {
         return (await this.GetProperty('HeaderContainerId'));
     }
 
+    public async GetHeaderCSRF(): Promise<string> {
+        return (await this.GetProperty('HeaderCSRF'));
+    }
+
     public async GetViews(): Promise<DrapoView[]> {
         return (await this.GetPropertyArray('Views'));
     }

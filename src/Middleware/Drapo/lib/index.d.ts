@@ -304,6 +304,7 @@ declare class DrapoConfig {
     GetValidatorInvalidClass(): Promise<string>;
     GetApplicationBuild(): Promise<string>;
     GetHeaderContainerId(): Promise<string>;
+    GetHeaderCSRF(): Promise<string>;
     GetViews(): Promise<DrapoView[]>;
     GetTimezone(): number;
     SetTimezone(value: number): void;
@@ -905,6 +906,7 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionUpdateToken;
     private ExecuteFunctionClearToken;
     private ExecuteFunctionHasToken;
+    private ExecuteFunctionUpdateTokenAntiforgery;
     private ExecuteFunctionDestroyContainer;
     private ExecuteFunctionIf;
     private ExecuteFunctionAsync;
@@ -1696,6 +1698,7 @@ declare class DrapoServer {
     private _application;
     private _url;
     private _token;
+    private _tokenAntiforgery;
     private _requestHeaders;
     private _requestHeadersNext;
     private _hasBadRequest;
@@ -1724,6 +1727,7 @@ declare class DrapoServer {
     private GetHeaderValue;
     SetToken(token: string): Promise<boolean>;
     HasToken(): boolean;
+    SetTokenAntiforgery(token: string): Promise<boolean>;
     private GetRequestHeaders;
     private AddHeader;
     AddRequestHeader(key: string, value: string): void;
@@ -1761,6 +1765,7 @@ declare class DrapoServerResponse {
     private _status;
     private _headers;
     private _body;
+    private _cookies;
     get Status(): number;
     set Status(value: number);
     get Headers(): [string, string][];
@@ -1769,6 +1774,9 @@ declare class DrapoServerResponse {
     set Body(value: any);
     constructor(status: number, headers: [string, string][], body: any);
     IsCacheAllowed(): boolean;
+    GetCookieValue(name: string): string;
+    private GetCookies;
+    private GetCookiesInternal;
 }
 
 declare class DrapoSolver {

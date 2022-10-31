@@ -307,6 +307,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionClearToken(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'hastoken')
             return (this.ExecuteFunctionHasToken(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'updatetokenantiforgery')
+            return (await this.ExecuteFunctionUpdateTokenAntiforgery(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'destroycontainer')
             return (await this.ExecuteFunctionDestroyContainer(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'if')
@@ -1052,6 +1054,12 @@ class DrapoFunctionHandler {
 
     private ExecuteFunctionHasToken(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): string {
         return (this.Application.Server.HasToken().toString());
+    }
+
+    private async ExecuteFunctionUpdateTokenAntiforgery(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const token: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        await this.Application.Server.SetTokenAntiforgery(token);
+        return ('');
     }
 
     private async ExecuteFunctionDestroyContainer(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
