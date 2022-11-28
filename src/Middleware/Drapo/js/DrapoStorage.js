@@ -3570,7 +3570,35 @@ var DrapoStorage = (function () {
             return (true);
         if ((filter.Comparator === 'IS NOT') && (filter.IsNullRight) && (filter.ValueLeft != null))
             return (true);
+        if ((filter.Comparator === 'LIKE') && (this.IsValidQueryConditionLike(filter.ValueLeft, filter.ValueRight)))
+            return (true);
         return (false);
+    };
+    DrapoStorage.prototype.IsValidQueryConditionLike = function (valueLeft, valueRight) {
+        var valueLeftClean = this.CleanSingleQuote(valueLeft).toLowerCase();
+        var valueRightClean = this.CleanSingleQuote(valueRight).toLowerCase();
+        if (valueRightClean.length === 0)
+            return (false);
+        var isRightWildcardStart = valueRightClean[0] === '%';
+        var isRightWildcardEnd = valueRightClean[valueRightClean.length - 1] === '%';
+        var valueRightCleanWithoutWildcard = valueRightClean.substr(isRightWildcardStart ? 1 : 0, valueRightClean.length - (isRightWildcardEnd ? 1 : 0));
+        var isEqual = valueLeftClean === valueRightCleanWithoutWildcard;
+        if (isEqual)
+            return (true);
+        if ((isRightWildcardStart) && (isRightWildcardEnd) && (valueLeftClean.indexOf(valueRightCleanWithoutWildcard) >= 0))
+            return (true);
+        if ((isRightWildcardStart) && (valueLeftClean.endsWith(valueRightCleanWithoutWildcard)))
+            return (true);
+        if ((isRightWildcardEnd) && (valueLeftClean.startsWith(valueRightCleanWithoutWildcard)))
+            return (true);
+        return (false);
+    };
+    DrapoStorage.prototype.CleanSingleQuote = function (value) {
+        if (value.length < 2)
+            return (value);
+        if ((value[0] !== "'") && ((value[value.length - 1] !== "'")))
+            return (value);
+        return (value.substr(1, value.length - 2));
     };
     DrapoStorage.prototype.ResolveQuerySortsMustaches = function (sector, dataKey, sorts) {
         return __awaiter(this, void 0, void 0, function () {

@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Inner Join - Mustache Where Like</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Inner Join</span>
+        <div d-datakey="objectValue1" d-datatype="value" d-dataloadtype="startup" d-datavalue="L0V1"></div>
+        <div d-datakey="objects1" d-dataurlget="~/Data/GetLevels?children=15"></div>
+        <div d-datakey="objects2" d-dataurlget="~/Data/GetLevels?children=15"></div>
+        <div d-datakey="objectsQuery1" d-datatype="query" d-datavalue="SELECT O1.Key AS Key1, O2.Key as Key2, O1.Value FROM objects1 AS O1 INNER JOIN objects2 AS O2 ON O1.Value = O2.Value WHERE O2.Value LIKE 'L0V1%'"></div>
+        <span>Value: </span><input type="text" d-model="{{objectValue1}}" /><br />
+        <div>
+            <div d-for="object in objectsQuery1" style="display: none;">
+                <span>{{object.Key1}}</span>
+                <span>{{object.Key2}}</span>
+                <span>{{object.Value}}</span>
+                <br />
+            </div>
+        <div>
+                <span>L0K1</span>
+                <span>L0K1</span>
+                <span>L0V1</span>
+                <br />
+            </div><div>
+                <span>L0K10</span>
+                <span>L0K10</span>
+                <span>L0V10</span>
+                <br />
+            </div><div>
+                <span>L0K11</span>
+                <span>L0K11</span>
+                <span>L0V11</span>
+                <br />
+            </div><div>
+                <span>L0K12</span>
+                <span>L0K12</span>
+                <span>L0V12</span>
+                <br />
+            </div><div>
+                <span>L0K13</span>
+                <span>L0K13</span>
+                <span>L0V13</span>
+                <br />
+            </div><div>
+                <span>L0K14</span>
+                <span>L0K14</span>
+                <span>L0V14</span>
+                <br />
+            </div></div>
+    </div>
+
+</body></html>

@@ -17,7 +17,7 @@ class DrapoStorage {
         this._application = application;
     }
 
-    private async AdquireLock(): Promise<void>{
+    private async AdquireLock(): Promise<void> {
         while (this._lock) {
             await this.Application.Document.Sleep(50);
         }
@@ -2182,7 +2182,7 @@ class DrapoStorage {
         return (objects);
     }
 
-    private GetQuerySourceObjects(query: DrapoQuery, querySourceData: any): any[]{
+    private GetQuerySourceObjects(query: DrapoQuery, querySourceData: any): any[] {
         const querySourceObjects: any[] = Array.isArray(querySourceData) ? querySourceData : [querySourceData];
         if (query.Options.List != null)
             return (this.GetQuerySourceObjectsList(query, querySourceObjects));
@@ -2191,7 +2191,7 @@ class DrapoStorage {
 
     private GetQuerySourceObjectsList(query: DrapoQuery, querySourceObjects: any[]): any[] {
         const items: any[] = [];
-        for (let i: number = 0; i < querySourceObjects.length;i++)
+        for (let i: number = 0; i < querySourceObjects.length; i++)
             items.push(querySourceObjects[i]);
         for (let i: number = 0; i < items.length; i++) {
             const querySourceObject: any = items[i];
@@ -2199,7 +2199,7 @@ class DrapoStorage {
             if (querySourceObjectIterator == null)
                 continue;
             const querySourceObjectIteratorObjects: any[] = Array.isArray(querySourceObjectIterator) ? querySourceObjectIterator : [querySourceObjectIterator];
-            for (let j: number = 0; j < querySourceObjectIteratorObjects.length;j++)
+            for (let j: number = 0; j < querySourceObjectIteratorObjects.length; j++)
                 items.push(querySourceObjectIteratorObjects[j]);
         }
         return (items);
@@ -2448,7 +2448,38 @@ class DrapoStorage {
             return (true);
         if ((filter.Comparator === 'IS NOT') && (filter.IsNullRight) && (filter.ValueLeft != null))
             return (true);
+        if ((filter.Comparator === 'LIKE') && (this.IsValidQueryConditionLike(filter.ValueLeft, filter.ValueRight)))
+            return (true);
         return (false);
+    }
+
+    private IsValidQueryConditionLike(valueLeft: string, valueRight: string): boolean {
+        const valueLeftClean: string = this.CleanSingleQuote(valueLeft).toLowerCase(); 
+        const valueRightClean: string = this.CleanSingleQuote(valueRight).toLowerCase();
+        if (valueRightClean.length === 0)
+            return (false);
+        const isRightWildcardStart: boolean = valueRightClean[0] === '%';
+        const isRightWildcardEnd: boolean = valueRightClean[valueRightClean.length - 1] === '%';
+        const valueRightCleanWithoutWildcard: string = valueRightClean.substr(isRightWildcardStart ? 1 : 0, valueRightClean.length - (isRightWildcardEnd ? 1 : 0));
+        const isEqual: boolean = valueLeftClean === valueRightCleanWithoutWildcard;
+        if (isEqual)
+            return (true);
+        //Any Place
+        if ((isRightWildcardStart) && (isRightWildcardEnd) && (valueLeftClean.indexOf(valueRightCleanWithoutWildcard) >= 0))
+            return (true)
+        if ((isRightWildcardStart) && (valueLeftClean.endsWith(valueRightCleanWithoutWildcard)))
+            return (true);
+        if ((isRightWildcardEnd) && (valueLeftClean.startsWith(valueRightCleanWithoutWildcard)))
+            return (true);
+        return (false);
+    }
+
+    private CleanSingleQuote(value: string): string {
+        if (value.length < 2)
+            return (value);
+        if ((value[0] !== "'") && ((value[value.length - 1] !== "'")))
+            return (value);
+        return (value.substr(1, value.length - 2));
     }
 
     private async ResolveQuerySortsMustaches(sector: string, dataKey: string, sorts: DrapoQuerySort[]): Promise<void> {
@@ -2483,7 +2514,7 @@ class DrapoStorage {
         return (objects);
     }
 
-    private IsSwapQueryOrderBy(sorts: DrapoQuerySort[], objectCurrent: any, objectNext: any): boolean{
+    private IsSwapQueryOrderBy(sorts: DrapoQuerySort[], objectCurrent: any, objectNext: any): boolean {
         for (let i: number = 0; i < sorts.length; i++) {
             const sort: DrapoQuerySort = sorts[i];
             const value: number = this.GetSwapQueryOrderBy(sort, objectCurrent, objectNext);
