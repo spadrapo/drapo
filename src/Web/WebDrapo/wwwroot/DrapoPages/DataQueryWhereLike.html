@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Inner Join - Mustache Where Like</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Inner Join</span>
+        <div d-dataKey="objectValue1" d-dataType="value" d-dataLoadType="startup" d-dataValue="L0V1"></div>
+        <div d-dataKey="objects1" d-dataUrlGet="~/Data/GetLevels?children=15"></div>
+        <div d-dataKey="objects2" d-dataUrlGet="~/Data/GetLevels?children=15"></div>
+        <div d-dataKey="objectsQuery1" d-dataType="query" d-dataValue="SELECT O1.Key AS Key1, O2.Key as Key2, O1.Value FROM objects1 AS O1 INNER JOIN objects2 AS O2 ON O1.Value = O2.Value WHERE O2.Value LIKE 'L0V1%'"></div>
+        <span>Value: </span><input type="text" d-model="{{objectValue1}}" /><br />
+        <div>
+            <div d-for="object in objectsQuery1">
+                <span>{{object.Key1}}</span>
+                <span>{{object.Key2}}</span>
+                <span>{{object.Value}}</span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>
