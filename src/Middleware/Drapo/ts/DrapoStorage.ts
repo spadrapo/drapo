@@ -2448,28 +2448,30 @@ class DrapoStorage {
             return (true);
         if ((filter.Comparator === 'IS NOT') && (filter.IsNullRight) && (filter.ValueLeft != null))
             return (true);
-        if ((filter.Comparator === 'LIKE') && (this.IsValidQueryConditionLike(filter.ValueLeft, filter.ValueRight)))
+        if ((filter.Comparator === 'LIKE') && (this.IsValidQueryConditionLike(filter.ValueLeft, filter.ValueRight, filter.IsSearchStartRight, filter.IsSearchEndRight)))
             return (true);
         return (false);
     }
 
-    private IsValidQueryConditionLike(valueLeft: string, valueRight: string): boolean {
+    private IsValidQueryConditionLike(valueLeft: string, valueRight: string, isSearchStartRight: boolean, isSearchEndRight: boolean): boolean {
         const valueLeftClean: string = this.CleanSingleQuote(valueLeft).toLowerCase(); 
         const valueRightClean: string = this.CleanSingleQuote(valueRight).toLowerCase();
         if (valueRightClean.length === 0)
             return (false);
-        const isRightWildcardStart: boolean = valueRightClean[0] === '%';
-        const isRightWildcardEnd: boolean = valueRightClean[valueRightClean.length - 1] === '%';
+        const isRightWildcardStart: boolean = (valueRightClean[0] === '%');
+        const isRightWildcardEnd: boolean = (valueRightClean[valueRightClean.length - 1] === '%');
         const valueRightCleanWithoutWildcard: string = valueRightClean.substr(isRightWildcardStart ? 1 : 0, valueRightClean.length - (isRightWildcardEnd ? 1 : 0));
         const isEqual: boolean = valueLeftClean === valueRightCleanWithoutWildcard;
         if (isEqual)
             return (true);
+        const isCheckStart: boolean = ((isSearchStartRight) || (isRightWildcardStart))
+        const isCheckEnd: boolean = ((isSearchEndRight) || (isRightWildcardEnd))
         //Any Place
-        if ((isRightWildcardStart) && (isRightWildcardEnd) && (valueLeftClean.indexOf(valueRightCleanWithoutWildcard) >= 0))
+        if ((isCheckStart) && (isCheckEnd) && (valueLeftClean.indexOf(valueRightCleanWithoutWildcard) >= 0))
             return (true)
-        if ((isRightWildcardStart) && (valueLeftClean.endsWith(valueRightCleanWithoutWildcard)))
+        if ((isCheckStart) && (valueLeftClean.endsWith(valueRightCleanWithoutWildcard)))
             return (true);
-        if ((isRightWildcardEnd) && (valueLeftClean.startsWith(valueRightCleanWithoutWildcard)))
+        if ((isCheckEnd) && (valueLeftClean.startsWith(valueRightCleanWithoutWildcard)))
             return (true);
         return (false);
     }

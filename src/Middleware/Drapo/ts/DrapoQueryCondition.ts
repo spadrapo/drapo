@@ -7,6 +7,8 @@
     private _columnRight: string = null;
     private _valueRight: string = null;
     private _isNullRight: boolean = false;
+    private _isSearchStartRight: boolean = false;
+    private _isSearchEndRight: boolean = false;
 
     get SourceLeft(): string {
         return (this._sourceLeft);
@@ -57,6 +59,20 @@
         this._isNullRight = value;
     }
 
+    get IsSearchStartRight(): boolean {
+        return (this._isSearchStartRight);
+    }
+    set IsSearchStartRight(value: boolean) {
+        this._isSearchStartRight = value;
+    }
+
+    get IsSearchEndRight(): boolean {
+        return (this._isSearchEndRight);
+    }
+    set IsSearchEndRight(value: boolean) {
+        this._isSearchEndRight = value;
+    }
+
     public Clone(): DrapoQueryCondition {
         const clone: DrapoQueryCondition = new DrapoQueryCondition();
         clone.SourceLeft = this.SourceLeft;
@@ -67,6 +83,8 @@
         clone.ColumnRight = this.ColumnRight;
         clone.ValueRight = this.ValueRight;
         clone.IsNullRight = this.IsNullRight;
+        clone.IsSearchStartRight = this.IsSearchStartRight;
+        clone.IsSearchEndRight = this.IsSearchEndRight;
         return (clone);
     }
 }

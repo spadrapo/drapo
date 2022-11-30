@@ -1211,6 +1211,14 @@ var DrapoParser = (function () {
             conditional.Comparator = 'IS NOT';
             index++;
         }
+        if ((item.Items.length > 3) && (conditional.Comparator === 'LIKE')) {
+            if (item.Items[2].Value === '%') {
+                index++;
+                conditional.IsSearchStartRight = true;
+            }
+            if (item.Items[item.Items.length - 1].Value === '%')
+                conditional.IsSearchEndRight = true;
+        }
         var valueRight = item.Items[index].Value;
         if (valueRight.toUpperCase() === 'NULL') {
             conditional.IsNullRight = true;

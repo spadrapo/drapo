@@ -16873,6 +16873,14 @@ var DrapoParser = (function () {
             conditional.Comparator = 'IS NOT';
             index++;
         }
+        if ((item.Items.length > 3) && (conditional.Comparator === 'LIKE')) {
+            if (item.Items[2].Value === '%') {
+                index++;
+                conditional.IsSearchStartRight = true;
+            }
+            if (item.Items[item.Items.length - 1].Value === '%')
+                conditional.IsSearchEndRight = true;
+        }
         var valueRight = item.Items[index].Value;
         if (valueRight.toUpperCase() === 'NULL') {
             conditional.IsNullRight = true;
@@ -17431,6 +17439,8 @@ var DrapoQueryCondition = (function () {
         this._columnRight = null;
         this._valueRight = null;
         this._isNullRight = false;
+        this._isSearchStartRight = false;
+        this._isSearchEndRight = false;
     }
     Object.defineProperty(DrapoQueryCondition.prototype, "SourceLeft", {
         get: function () {
@@ -17512,6 +17522,26 @@ var DrapoQueryCondition = (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(DrapoQueryCondition.prototype, "IsSearchStartRight", {
+        get: function () {
+            return (this._isSearchStartRight);
+        },
+        set: function (value) {
+            this._isSearchStartRight = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQueryCondition.prototype, "IsSearchEndRight", {
+        get: function () {
+            return (this._isSearchEndRight);
+        },
+        set: function (value) {
+            this._isSearchEndRight = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
     DrapoQueryCondition.prototype.Clone = function () {
         var clone = new DrapoQueryCondition();
         clone.SourceLeft = this.SourceLeft;
@@ -17522,6 +17552,8 @@ var DrapoQueryCondition = (function () {
         clone.ColumnRight = this.ColumnRight;
         clone.ValueRight = this.ValueRight;
         clone.IsNullRight = this.IsNullRight;
+        clone.IsSearchStartRight = this.IsSearchStartRight;
+        clone.IsSearchEndRight = this.IsSearchEndRight;
         return (clone);
     };
     return DrapoQueryCondition;
@@ -24739,26 +24771,28 @@ var DrapoStorage = (function () {
             return (true);
         if ((filter.Comparator === 'IS NOT') && (filter.IsNullRight) && (filter.ValueLeft != null))
             return (true);
-        if ((filter.Comparator === 'LIKE') && (this.IsValidQueryConditionLike(filter.ValueLeft, filter.ValueRight)))
+        if ((filter.Comparator === 'LIKE') && (this.IsValidQueryConditionLike(filter.ValueLeft, filter.ValueRight, filter.IsSearchStartRight, filter.IsSearchEndRight)))
             return (true);
         return (false);
     };
-    DrapoStorage.prototype.IsValidQueryConditionLike = function (valueLeft, valueRight) {
+    DrapoStorage.prototype.IsValidQueryConditionLike = function (valueLeft, valueRight, isSearchStartRight, isSearchEndRight) {
         var valueLeftClean = this.CleanSingleQuote(valueLeft).toLowerCase();
         var valueRightClean = this.CleanSingleQuote(valueRight).toLowerCase();
         if (valueRightClean.length === 0)
             return (false);
-        var isRightWildcardStart = valueRightClean[0] === '%';
-        var isRightWildcardEnd = valueRightClean[valueRightClean.length - 1] === '%';
+        var isRightWildcardStart = (valueRightClean[0] === '%');
+        var isRightWildcardEnd = (valueRightClean[valueRightClean.length - 1] === '%');
         var valueRightCleanWithoutWildcard = valueRightClean.substr(isRightWildcardStart ? 1 : 0, valueRightClean.length - (isRightWildcardEnd ? 1 : 0));
         var isEqual = valueLeftClean === valueRightCleanWithoutWildcard;
         if (isEqual)
             return (true);
-        if ((isRightWildcardStart) && (isRightWildcardEnd) && (valueLeftClean.indexOf(valueRightCleanWithoutWildcard) >= 0))
+        var isCheckStart = ((isSearchStartRight) || (isRightWildcardStart));
+        var isCheckEnd = ((isSearchEndRight) || (isRightWildcardEnd));
+        if ((isCheckStart) && (isCheckEnd) && (valueLeftClean.indexOf(valueRightCleanWithoutWildcard) >= 0))
             return (true);
-        if ((isRightWildcardStart) && (valueLeftClean.endsWith(valueRightCleanWithoutWildcard)))
+        if ((isCheckStart) && (valueLeftClean.endsWith(valueRightCleanWithoutWildcard)))
             return (true);
-        if ((isRightWildcardEnd) && (valueLeftClean.startsWith(valueRightCleanWithoutWildcard)))
+        if ((isCheckEnd) && (valueLeftClean.startsWith(valueRightCleanWithoutWildcard)))
             return (true);
         return (false);
     };
