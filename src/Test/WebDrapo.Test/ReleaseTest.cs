@@ -926,6 +926,11 @@ namespace WebDrapo.Test
             ValidatePage("DataQueryWhereLike");
         }
         [TestCase]
+        public void DataQueryWhereLikeMustacheTest()
+        {
+            ValidatePage("DataQueryWhereLikeMustache");
+        }
+        [TestCase]
         public void DataQueryWhereMustacheTest()
         {
             ValidatePage("DataQueryWhereMustache");

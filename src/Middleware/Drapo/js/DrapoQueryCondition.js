@@ -9,6 +9,8 @@ var DrapoQueryCondition = (function () {
         this._columnRight = null;
         this._valueRight = null;
         this._isNullRight = false;
+        this._isSearchStartRight = false;
+        this._isSearchEndRight = false;
     }
     Object.defineProperty(DrapoQueryCondition.prototype, "SourceLeft", {
         get: function () {
@@ -90,6 +92,26 @@ var DrapoQueryCondition = (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(DrapoQueryCondition.prototype, "IsSearchStartRight", {
+        get: function () {
+            return (this._isSearchStartRight);
+        },
+        set: function (value) {
+            this._isSearchStartRight = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoQueryCondition.prototype, "IsSearchEndRight", {
+        get: function () {
+            return (this._isSearchEndRight);
+        },
+        set: function (value) {
+            this._isSearchEndRight = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
     DrapoQueryCondition.prototype.Clone = function () {
         var clone = new DrapoQueryCondition();
         clone.SourceLeft = this.SourceLeft;
@@ -100,6 +122,8 @@ var DrapoQueryCondition = (function () {
         clone.ColumnRight = this.ColumnRight;
         clone.ValueRight = this.ValueRight;
         clone.IsNullRight = this.IsNullRight;
+        clone.IsSearchStartRight = this.IsSearchStartRight;
+        clone.IsSearchEndRight = this.IsSearchEndRight;
         return (clone);
     };
     return DrapoQueryCondition;

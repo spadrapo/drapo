@@ -1402,6 +1402,8 @@ declare class DrapoQueryCondition {
     private _columnRight;
     private _valueRight;
     private _isNullRight;
+    private _isSearchStartRight;
+    private _isSearchEndRight;
     get SourceLeft(): string;
     set SourceLeft(value: string);
     get ColumnLeft(): string;
@@ -1418,6 +1420,10 @@ declare class DrapoQueryCondition {
     set ValueRight(value: string);
     get IsNullRight(): boolean;
     set IsNullRight(value: boolean);
+    get IsSearchStartRight(): boolean;
+    set IsSearchStartRight(value: boolean);
+    get IsSearchEndRight(): boolean;
+    set IsSearchEndRight(value: boolean);
     Clone(): DrapoQueryCondition;
 }
 
