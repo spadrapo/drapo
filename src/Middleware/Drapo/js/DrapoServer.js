@@ -396,15 +396,25 @@ var DrapoServer = (function () {
                 if (index < 0)
                     continue;
                 var contentDispositionValueCleanKey = contentDispositionValueClean.substring(0, index);
-                if (contentDispositionValueCleanKey !== 'filename')
-                    continue;
-                var contentDispositionKeyValue = contentDispositionValueClean.substring(index + 1);
-                if ((contentDispositionKeyValue.length > 2) && (contentDispositionKeyValue[0] === '"') && (contentDispositionKeyValue[contentDispositionKeyValue.length - 1] === '"'))
-                    contentDispositionKeyValue = contentDispositionKeyValue.substring(1, contentDispositionKeyValue.length - 1);
-                if ((contentDispositionKeyValue.length > 2) && (contentDispositionKeyValue[0] === "'") && (contentDispositionKeyValue[contentDispositionKeyValue.length - 1] === "'"))
-                    contentDispositionKeyValue = contentDispositionKeyValue.substring(1, contentDispositionKeyValue.length - 1);
-                object.filename = contentDispositionKeyValue;
-                break;
+                if (contentDispositionValueCleanKey === 'filename') {
+                    var contentDispositionKeyValue = contentDispositionValueClean.substring(index + 1);
+                    if ((contentDispositionKeyValue.length > 2) && (contentDispositionKeyValue[0] === '"') && (contentDispositionKeyValue[contentDispositionKeyValue.length - 1] === '"'))
+                        contentDispositionKeyValue = contentDispositionKeyValue.substring(1, contentDispositionKeyValue.length - 1);
+                    if ((contentDispositionKeyValue.length > 2) && (contentDispositionKeyValue[0] === "'") && (contentDispositionKeyValue[contentDispositionKeyValue.length - 1] === "'"))
+                        contentDispositionKeyValue = contentDispositionKeyValue.substring(1, contentDispositionKeyValue.length - 1);
+                    object.filename = contentDispositionKeyValue;
+                }
+                if (contentDispositionValueCleanKey === 'filename*') {
+                    var contentDispositionKeyValue = contentDispositionValueClean.substring(index + 1);
+                    if (contentDispositionKeyValue.indexOf('UTF-8\'\'') === 0)
+                        contentDispositionKeyValue = contentDispositionKeyValue.substring('UTF-8\'\''.length, contentDispositionKeyValue.length);
+                    if ((contentDispositionKeyValue.length > 2) && (contentDispositionKeyValue[0] === '"') && (contentDispositionKeyValue[contentDispositionKeyValue.length - 1] === '"'))
+                        contentDispositionKeyValue = contentDispositionKeyValue.substring(1, contentDispositionKeyValue.length - 1);
+                    if ((contentDispositionKeyValue.length > 2) && (contentDispositionKeyValue[0] === "'") && (contentDispositionKeyValue[contentDispositionKeyValue.length - 1] === "'"))
+                        contentDispositionKeyValue = contentDispositionKeyValue.substring(1, contentDispositionKeyValue.length - 1);
+                    object.filename = decodeURI(contentDispositionKeyValue);
+                    break;
+                }
             }
         }
         return (object);

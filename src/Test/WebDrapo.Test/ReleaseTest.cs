@@ -706,6 +706,11 @@ namespace WebDrapo.Test
             ValidatePage("DataFile");
         }
         [TestCase]
+        public void DataFileUnicodeTest()
+        {
+            ValidatePage("DataFileUnicode");
+        }
+        [TestCase]
         public void DataFullLoadTest()
         {
             ValidatePage("DataFullLoad");
