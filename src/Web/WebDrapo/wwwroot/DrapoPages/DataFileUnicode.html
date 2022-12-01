@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data File Unicode</title>
+</head>
+<body>
+    <span>Data File </span>
+    <div>
+        <div>
+            <div d-datakey="file" d-datatype="object" d-dataproperty-url="/DrapoPages/DataFile.html" d-dataproperty-name="Coração.html"></div>
+            <div d-datakey="dataFile" d-datatype="file" d-dataurlget="~/Data/GetFile?path={{file.url}}&amp;fileName={{file.name}}"></div>
+        </div>
+        <div>
+            <span d-model="{{dataFile.filename}}"></span>
+            <br />
+            <span d-model="{{dataFile.length}}"></span>
+            <br />
+            <input type="button" value="Download" d-on-click="DownloadData(dataFile)" />
+        </div>
+    </div>
+
+</body>
+</html>
