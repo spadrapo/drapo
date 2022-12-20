@@ -1414,8 +1414,9 @@ class DrapoFunctionHandler {
 
     private DownloadData(name: string, data: any, contentType: string): void {
         const blob = this.CreateBlob(data, contentType);
-        if (window.navigator.msSaveOrOpenBlob) {
-            window.navigator.msSaveBlob(blob, name);
+        const navigator: any = window.navigator as any;
+        if (navigator.msSaveOrOpenBlob) {
+            navigator.msSaveBlob(blob, name);
         } else {
             const elDownloader = document.createElement('a');
             elDownloader.href = window.URL.createObjectURL(blob);

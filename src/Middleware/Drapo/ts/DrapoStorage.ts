@@ -2454,7 +2454,7 @@ class DrapoStorage {
     }
 
     private IsValidQueryConditionLike(valueLeft: string, valueRight: string, isSearchStartRight: boolean, isSearchEndRight: boolean): boolean {
-        const valueLeftClean: string = this.CleanSingleQuote(valueLeft).toLowerCase(); 
+        const valueLeftClean: string = this.CleanSingleQuote(valueLeft).toLowerCase();
         const valueRightClean: string = this.CleanSingleQuote(valueRight).toLowerCase();
         if (valueRightClean.length === 0)
             return (false);
@@ -2464,11 +2464,11 @@ class DrapoStorage {
         const isEqual: boolean = valueLeftClean === valueRightCleanWithoutWildcard;
         if (isEqual)
             return (true);
-        const isCheckStart: boolean = ((isSearchStartRight) || (isRightWildcardStart))
-        const isCheckEnd: boolean = ((isSearchEndRight) || (isRightWildcardEnd))
+        const isCheckStart: boolean = ((isSearchStartRight) || (isRightWildcardStart));
+        const isCheckEnd: boolean = ((isSearchEndRight) || (isRightWildcardEnd));
         //Any Place
         if ((isCheckStart) && (isCheckEnd) && (valueLeftClean.indexOf(valueRightCleanWithoutWildcard) >= 0))
-            return (true)
+            return (true);
         if ((isCheckStart) && (valueLeftClean.endsWith(valueRightCleanWithoutWildcard)))
             return (true);
         if ((isCheckEnd) && (valueLeftClean.startsWith(valueRightCleanWithoutWildcard)))
