@@ -1,28 +1,48 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netcoreapp6.0</TargetFrameworks>
-    <AssemblyName>Sysphera.Middleware.Drapo</AssemblyName>
-    <RootNamespace>Sysphera.Middleware.Drapo</RootNamespace>
-    <TypeScriptToolsVersion>3.7</TypeScriptToolsVersion>
-    <TSLintConfig>tslint.json</TSLintConfig>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Remove="lib\*.js" />
-    <None Remove="js\*.*" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="lib\*.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="components\**\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="components\**\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-    <PackageReference Include="TSLint.MSBuild" Version="1.4.2" />
-    <PackageReference Include="StackExchange.Redis" Version="2.2.50" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp3.1;netcoreapp6.0</TargetFrameworks>
+		<AssemblyName>Sysphera.Middleware.Drapo</AssemblyName>
+		<RootNamespace>Sysphera.Middleware.Drapo</RootNamespace>
+	</PropertyGroup>
+	<PropertyGroup>
+		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+		<TypeScriptAlwaysStrict>true</TypeScriptAlwaysStrict>
+		<TypeScriptNoImplicitAny>true</TypeScriptNoImplicitAny>
+		<TypeScriptNoImplicitThis>true</TypeScriptNoImplicitThis>
+		<TypeScriptStrictFunctionTypes>true</TypeScriptStrictFunctionTypes>
+		<TypeScriptStrictNullChecks>false</TypeScriptStrictNullChecks>
+		<TypeScriptNoEmitOnError>true</TypeScriptNoEmitOnError>
+		<TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+		<TypeScriptSourceMap>false</TypeScriptSourceMap>
+		<TypeScriptTarget>es5</TypeScriptTarget>
+		<TypeScriptOutDir>./js/</TypeScriptOutDir>
+		<TypeScriptDeclarationDir>true</TypeScriptDeclarationDir>
+		<TypeScriptLib>dom,es5,es2015.promise,es6</TypeScriptLib>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.9.4">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<TypeScriptCompile Include="ts/**/*" />
+		<TypeScriptCompile Remove="**/*.d.ts" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="lib\*.js" />
+		<None Remove="js\*.*" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="lib\*.js" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="components\**\*" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="components\**\*" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+		<PackageReference Include="StackExchange.Redis" Version="2.2.50" />
+	</ItemGroup>
 </Project>
