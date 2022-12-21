@@ -27,6 +27,9 @@
 		<TypeScriptCompile Include="ts/**/*" />
 		<TypeScriptCompile Remove="**/*.d.ts" />
 	</ItemGroup>
+	<Target Name="CopyLib" AfterTargets="Build">
+		<Copy SourceFiles="lib\index.d.ts" DestinationFolder="$(ProjectDir)..\..\Web\WebDrapo\node_modules\@types\drapo\" />
+	</Target>
 	<ItemGroup>
 		<None Remove="lib\*.js" />
 		<None Remove="js\*.*" />
