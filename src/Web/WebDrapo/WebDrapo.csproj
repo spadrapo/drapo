@@ -47,15 +47,6 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
-	<ItemGroup>
-		<Content Include="..\..\Middleware\Drapo\lib\index.d.ts">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<TargetPath>node_modules\@types\drapo\index.d.ts</TargetPath>
-			<DestinationSubDirectory>node_modules\@types\drapo\</DestinationSubDirectory>
-			<Private>True</Private>
-			<Link>node_modules\@types\drapo\index.d.ts</Link>
-		</Content>
-	</ItemGroup>
 	<Target Name="CopyLinkedContentFiles" BeforeTargets="Build">
 		<Copy SourceFiles="%(Content.Identity)" DestinationFiles="%(Content.Link)" SkipUnchangedFiles="false" OverwriteReadOnlyFiles="true" Condition="'%(Content.Link)' != ''" />
 	</Target>
