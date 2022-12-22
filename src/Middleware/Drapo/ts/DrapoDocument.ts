@@ -1504,6 +1504,6 @@ class DrapoDocument {
         const unitTest: JQuery = $("[d-id='__drapoUnitTest']");
         if ((unitTest === null) || (unitTest.length === 0))
             return;
-        unitTest.trigger('click');
+        await this.Application.EventHandler.TriggerClick(unitTest[0]);
     }
 }

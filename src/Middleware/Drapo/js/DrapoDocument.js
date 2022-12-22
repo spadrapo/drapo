@@ -1883,11 +1883,16 @@ var DrapoDocument = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var unitTest;
             return __generator(this, function (_a) {
-                unitTest = $("[d-id='__drapoUnitTest']");
-                if ((unitTest === null) || (unitTest.length === 0))
-                    return [2];
-                unitTest.trigger('click');
-                return [2];
+                switch (_a.label) {
+                    case 0:
+                        unitTest = $("[d-id='__drapoUnitTest']");
+                        if ((unitTest === null) || (unitTest.length === 0))
+                            return [2];
+                        return [4, this.Application.EventHandler.TriggerClick(unitTest[0])];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
             });
         });
     };

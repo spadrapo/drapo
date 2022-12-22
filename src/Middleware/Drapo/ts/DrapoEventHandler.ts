@@ -372,4 +372,17 @@ class DrapoEventHandler {
         }
         return (events);
     }
+
+    public async TriggerClick(el: HTMLElement): Promise<boolean> {
+        return (await this.Trigger(el, 'click'));
+    }
+
+    public async Trigger(el: HTMLElement, type: string): Promise<boolean> {
+        const event: Event = new Event(type);
+        return(await this.TriggerEvent(el, event));
+    }
+
+    public async TriggerEvent(el: HTMLElement, event: Event): Promise<boolean> {
+        return(el.dispatchEvent(event));
+    }
 }
