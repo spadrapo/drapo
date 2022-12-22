@@ -14,6 +14,7 @@ declare class DrapoApplication {
     private _register;
     private _serializer;
     private _barber;
+    private _searcher;
     private _modelHandler;
     private _attributeHandler;
     private _classHandler;
@@ -48,6 +49,7 @@ declare class DrapoApplication {
     get Register(): DrapoRegister;
     get Serializer(): DrapoSerializer;
     get Barber(): DrapoBarber;
+    get Searcher(): DrapoSearcher;
     get ModelHandler(): DrapoModelHandler;
     get AttributeHandler(): DrapoAttributeHandler;
     get ClassHandler(): DrapoClassHandler;
@@ -1627,6 +1629,12 @@ declare class DrapoRouter {
     OnPopState(e: Event): void;
     private UpdateTitle;
     UpdateURL(url: string): Promise<void>;
+}
+
+declare class DrapoSearcher {
+    private _application;
+    get Application(): DrapoApplication;
+    constructor(application: DrapoApplication);
 }
 
 declare class DrapoSectorContainerHandler {

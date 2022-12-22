@@ -15,6 +15,7 @@
     private _register: DrapoRegister;
     private _serializer: DrapoSerializer;
     private _barber: DrapoBarber;
+    private _searcher: DrapoSearcher;
     private _modelHandler: DrapoModelHandler;
     private _attributeHandler: DrapoAttributeHandler;
     private _classHandler: DrapoClassHandler;
@@ -94,6 +95,10 @@
 
     get Barber(): DrapoBarber {
         return (this._barber);
+    }
+
+    get Searcher(): DrapoSearcher {
+        return (this._searcher);
     }
 
     get ModelHandler(): DrapoModelHandler {
@@ -189,6 +194,7 @@
         this._register = new DrapoRegister(this);
         this._serializer = new DrapoSerializer(this);
         this._barber = new DrapoBarber(this);
+        this._searcher = new DrapoSearcher(this);
         this._modelHandler = new DrapoModelHandler(this);
         this._attributeHandler = new DrapoAttributeHandler(this);
         this._classHandler = new DrapoClassHandler(this);
