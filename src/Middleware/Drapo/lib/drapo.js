@@ -8549,11 +8549,16 @@ var DrapoDocument = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var unitTest;
             return __generator(this, function (_a) {
-                unitTest = $("[d-id='__drapoUnitTest']");
-                if ((unitTest === null) || (unitTest.length === 0))
-                    return [2];
-                unitTest.trigger('click');
-                return [2];
+                switch (_a.label) {
+                    case 0:
+                        unitTest = $("[d-id='__drapoUnitTest']");
+                        if ((unitTest === null) || (unitTest.length === 0))
+                            return [2];
+                        return [4, this.Application.EventHandler.TriggerClick(unitTest[0])];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
             });
         });
     };
@@ -9187,6 +9192,36 @@ var DrapoEventHandler = (function () {
                 events.push(event_3);
         }
         return (events);
+    };
+    DrapoEventHandler.prototype.TriggerClick = function (el) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.Trigger(el, 'click')];
+                    case 1: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
+    DrapoEventHandler.prototype.Trigger = function (el, type) {
+        return __awaiter(this, void 0, void 0, function () {
+            var event;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        event = new Event(type);
+                        return [4, this.TriggerEvent(el, event)];
+                    case 1: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
+    DrapoEventHandler.prototype.TriggerEvent = function (el, event) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2, (el.dispatchEvent(event))];
+            });
+        });
     };
     return DrapoEventHandler;
 }());

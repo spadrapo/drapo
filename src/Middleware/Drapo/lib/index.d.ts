@@ -744,6 +744,9 @@ declare class DrapoEventHandler {
     private IsValidEventFilterKeyboard;
     private GetKeyboardMapping;
     private RetrieveElementEvents;
+    TriggerClick(el: HTMLElement): Promise<boolean>;
+    Trigger(el: HTMLElement, type: string): Promise<boolean>;
+    TriggerEvent(el: HTMLElement, event: Event): Promise<boolean>;
 }
 
 declare class DrapoExceptionHandler {
