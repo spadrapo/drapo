@@ -366,9 +366,10 @@ class DrapoDocument {
         await this.Application.Barber.ResolveMustaches(elj, null, false);
     }
 
-    public async RemoveElement(el: HTMLElement): Promise<void> {
+    public async RemoveElement(el: HTMLElement, includeIteration: boolean = true): Promise<void> {
         $(el).remove();
-        await this.RemoveElementIteration(el);
+        if (includeIteration)
+            await this.RemoveElementIteration(el);
     }
 
     private async RemoveElementIteration(el: HTMLElement): Promise<void> {

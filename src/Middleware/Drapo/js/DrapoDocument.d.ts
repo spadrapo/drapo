@@ -27,7 +27,7 @@ declare class DrapoDocument {
     ResolveWindow(window: JQuery): Promise<void>;
     ResolveComponentDynamicSector(el: HTMLElement): Promise<void>;
     ResolveComponentUpdate(el: HTMLElement, context: DrapoContext): Promise<void>;
-    RemoveElement(el: HTMLElement): Promise<void>;
+    RemoveElement(el: HTMLElement, includeIteration?: boolean): Promise<void>;
     private RemoveElementIteration;
     private RemoveSectorData;
     LoadChildSector(sectorName: string, url: string, title?: string, canRoute?: boolean, canLoadDefaultSectors?: boolean, container?: string): Promise<boolean>;

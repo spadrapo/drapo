@@ -877,16 +877,16 @@ var DrapoBarber = (function () {
                             return [2];
                         children = [].slice.call(el.children);
                         hasChildren = children.length > 0;
-                        if (!hasChildren) return [3, 7];
+                        if (!hasChildren) return [3, 8];
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < children.length)) return [3, 6];
+                        if (!(i < children.length)) return [3, 7];
                         child = children[i];
                         childSector = child.getAttribute('d-sector');
                         if (childSector != null) {
                             if (stopAtSectors)
-                                return [3, 5];
+                                return [3, 6];
                             sector = childSector;
                         }
                         return [4, this.CanRender(child, sector)];
@@ -896,65 +896,66 @@ var DrapoBarber = (function () {
                         return [4, this.ResolveMustachesInternal(child, sector, context, renderContext, stopAtSectors)];
                     case 3:
                         _a.sent();
-                        return [3, 5];
-                    case 4:
-                        $(child).remove();
-                        _a.label = 5;
+                        return [3, 6];
+                    case 4: return [4, this.Application.Document.RemoveElement(child, false)];
                     case 5:
+                        _a.sent();
+                        _a.label = 6;
+                    case 6:
                         i++;
                         return [3, 1];
-                    case 6: return [3, 9];
-                    case 7: return [4, this.ResolveMustacheElementLeaf(el)];
-                    case 8:
-                        _a.sent();
-                        _a.label = 9;
+                    case 7: return [3, 10];
+                    case 8: return [4, this.ResolveMustacheElementLeaf(el)];
                     case 9:
-                        if (!context.CheckID) return [3, 11];
-                        return [4, this.Application.AttributeHandler.ResolveID(el, sector)];
+                        _a.sent();
+                        _a.label = 10;
                     case 10:
-                        _a.sent();
-                        _a.label = 11;
+                        if (!context.CheckID) return [3, 12];
+                        return [4, this.Application.AttributeHandler.ResolveID(el, sector)];
                     case 11:
-                        if (!context.CheckAttribute) return [3, 13];
-                        return [4, this.Application.AttributeHandler.ResolveAttr(el)];
+                        _a.sent();
+                        _a.label = 12;
                     case 12:
-                        _a.sent();
-                        _a.label = 13;
+                        if (!context.CheckAttribute) return [3, 14];
+                        return [4, this.Application.AttributeHandler.ResolveAttr(el)];
                     case 13:
-                        if (!context.CheckModel) return [3, 15];
-                        return [4, this.ResolveModel(el)];
+                        _a.sent();
+                        _a.label = 14;
                     case 14:
-                        _a.sent();
-                        _a.label = 15;
+                        if (!context.CheckModel) return [3, 16];
+                        return [4, this.ResolveModel(el)];
                     case 15:
-                        if (!context.CheckClass) return [3, 17];
-                        return [4, this.Application.ClassHandler.ResolveClass(el, sector)];
+                        _a.sent();
+                        _a.label = 16;
                     case 16:
-                        _a.sent();
-                        _a.label = 17;
+                        if (!context.CheckClass) return [3, 18];
+                        return [4, this.Application.ClassHandler.ResolveClass(el, sector)];
                     case 17:
-                        if (!context.CheckValidation) return [3, 19];
-                        return [4, this.Application.Validator.RegisterValidation(el, sector)];
+                        _a.sent();
+                        _a.label = 18;
                     case 18:
-                        _a.sent();
-                        _a.label = 19;
+                        if (!context.CheckValidation) return [3, 20];
+                        return [4, this.Application.Validator.RegisterValidation(el, sector)];
                     case 19:
-                        if (!context.CheckEvent) return [3, 21];
-                        return [4, this.Application.EventHandler.Attach(el, renderContext)];
+                        _a.sent();
+                        _a.label = 20;
                     case 20:
-                        _a.sent();
-                        _a.label = 21;
+                        if (!context.CheckEvent) return [3, 22];
+                        return [4, this.Application.EventHandler.Attach(el, renderContext)];
                     case 21:
-                        if (!context.CheckBehavior) return [3, 23];
-                        return [4, this.Application.BehaviorHandler.ResolveBehavior(el)];
-                    case 22:
                         _a.sent();
-                        _a.label = 23;
-                    case 23: return [4, this.ResolveMustacheElementVisibility(el)];
-                    case 24:
+                        _a.label = 22;
+                    case 22:
+                        if (!context.CheckBehavior) return [3, 24];
+                        return [4, this.Application.BehaviorHandler.ResolveBehavior(el)];
+                    case 23:
+                        _a.sent();
+                        _a.label = 24;
+                    case 24: return [4, this.ResolveMustacheElementVisibility(el)];
+                    case 25:
                         _a.sent();
                         return [4, this.ResolveCloak(el)];
-                    case 25:
+                    case 26:
                         _a.sent();
                         return [2];
                 }
@@ -7245,16 +7246,19 @@ var DrapoDocument = (function () {
             });
         });
     };
-    DrapoDocument.prototype.RemoveElement = function (el) {
+    DrapoDocument.prototype.RemoveElement = function (el, includeIteration) {
+        if (includeIteration === void 0) { includeIteration = true; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         $(el).remove();
+                        if (!includeIteration) return [3, 2];
                         return [4, this.RemoveElementIteration(el)];
                     case 1:
                         _a.sent();
-                        return [2];
+                        _a.label = 2;
+                    case 2: return [2];
                 }
             });
         });

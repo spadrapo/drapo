@@ -87,7 +87,7 @@ class DrapoBarber {
                     //Children
                     await this.ResolveMustachesInternal(child, sector, context, renderContext, stopAtSectors);
                 } else {
-                    $(child).remove();
+                    await this.Application.Document.RemoveElement(child, false);
                 }
             }
         } else {
