@@ -570,6 +570,8 @@ declare class DrapoDocument {
     private ResolveChildren;
     private LoadChildSectorInternal;
     private ReplaceSectorData;
+    private ReplaceHTML;
+    private ExtractHTML;
     ResolveWindow(window: JQuery): Promise<void>;
     ResolveComponentDynamicSector(el: HTMLElement): Promise<void>;
     ResolveComponentUpdate(el: HTMLElement, context: DrapoContext): Promise<void>;
@@ -588,11 +590,10 @@ declare class DrapoDocument {
     private Wrap;
     GetElementAttributes(el: Element): [string, string][];
     GetElementAttributesFilteredPrefix(el: Element, prefix: string): [string, string][];
-    SetElementAttributes(elj: JQuery, attributes: [string, string][]): void;
+    SetElementAttributes(el: HTMLElement, attributes: [string, string][]): void;
     private ExtractHeadInnerHtml;
     private RemoveFramework;
     private ExtractBodyInnerHtml;
-    private GetOuterHtml;
     IsElementInserted(list: HTMLElement[], itemInsert: HTMLElement): boolean;
     IsElementAttached(el: HTMLElement): boolean;
     IsElementInsideControlFlow(el: HTMLElement): boolean;
@@ -1635,6 +1636,12 @@ declare class DrapoSearcher {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
+    FindType(type: string): HTMLElement;
+    FindAllTypeWithAttribute(type: string, attributeName: string, parent?: HTMLElement): HTMLElement[];
+    FindAllTypeWithAttributeValue(type: string, attributeName: string, attributeValue: string, parent?: HTMLElement): HTMLElement[];
+    FindTypeWithAttribute(type: string, attributeName: string, parent?: HTMLElement): HTMLElement;
+    FindTypeWithAttributeValue(type: string, attributeName: string, attributeValue: string): HTMLElement;
+    FindAttributeValue(attributeName: string, attributeValue: string): HTMLElement;
 }
 
 declare class DrapoSectorContainerHandler {

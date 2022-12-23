@@ -3063,7 +3063,7 @@ var DrapoComponentHandler = (function () {
                             this.Application.ControlFlow.InitializeContext(context, content);
                         sector = this.GetSectorContext(el, context);
                         this.Application.Document.ReplaceElement(el, eljNew);
-                        this.Application.Document.SetElementAttributes(eljNew, attributes);
+                        this.Application.Document.SetElementAttributes(eljNew[0], attributes);
                         elNew = eljNew[0];
                         elContent = ((content != null) && (content != '')) ? this.GetElementContent(elNew) : null;
                         if (elContent !== null)
@@ -6804,17 +6804,16 @@ var DrapoDocument = (function () {
     };
     DrapoDocument.prototype.ResolveParent = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var div, divElement, parent, parentSector, sectors, html;
+            var divElement, parent, parentSector, sectors, html;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.Application.Log.WriteVerbose('Document - ResolveParent - Started');
-                        div = $('div').first();
-                        if ((div == null) || (div.length === 0)) {
+                        divElement = this.Application.Searcher.FindType('div');
+                        if (divElement == null) {
                             this.Application.Log.WriteVerbose('Document - ResolveParent - Finished - NoDiv');
                             return [2, (false)];
                         }
-                        divElement = div.get(0);
                         parent = divElement.getAttribute('d-sector-parent-url');
                         if (parent == null) {
                             this.Application.Log.WriteVerbose('Document - ResolveParent - Finished - NoParent');
@@ -6850,17 +6849,17 @@ var DrapoDocument = (function () {
                             this.Application.Log.WriteVerbose('Document - ResolveParentResponse - data - {0}', data);
                         this.ReplaceDocument(data);
                         this.Application.Log.WriteVerbose('Document - ResolveParentResponse - parent = {0}, parentSector = {1}', parent, parentSector);
-                        divChildSector = $("div[d-sector='" + parentSector + "']");
+                        divChildSector = this.Application.Searcher.FindTypeWithAttributeValue('div', 'd-sector', parentSector);
                         if (divChildSector == null) {
                             this.Application.Log.WriteVerbose('Document - ResolveParentResponse - Finished - divChildSector == null');
                             return [2];
                         }
                         if (this.Application.Log.ShowHTML)
                             this.Application.Log.WriteVerbose('Document - ResolveParentResponse - childHtml - {0}', childHtml);
-                        return [4, this.AddSectorFriends(parentSector, divChildSector.attr('d-sector-friend'))];
+                        return [4, this.AddSectorFriends(parentSector, divChildSector.getAttribute('d-sector-friend'))];
                     case 1:
                         _a.sent();
-                        divChildSector.html(childHtml);
+                        this.ReplaceHTML(divChildSector, childHtml);
                         i = 0;
                         _a.label = 2;
                     case 2:
@@ -6916,10 +6915,10 @@ var DrapoDocument = (function () {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        divChildrenSector = divStart == null ? $('div[d-sector]') : divStart.find('div[d-sector]');
-                        if ((divChildrenSector == null) || (divChildrenSector.length === 0))
+                        divChildrenSector = this.Application.Searcher.FindAllTypeWithAttribute('div', 'd-sector', divStart);
+                        if (divChildrenSector.length == 0)
                             return [2];
-                        sector = this.GetSector(divStart != null ? divStart.get(0) : null);
+                        sector = this.GetSector(divStart);
                         sectorChildren = [];
                         for (i = 0; i < divChildrenSector.length; i++) {
                             sectorChild = divChildrenSector[i];
@@ -7027,7 +7026,7 @@ var DrapoDocument = (function () {
                         return [3, 4];
                     case 2:
                         if (!(data != null)) return [3, 4];
-                        return [4, this.ReplaceSectorData($(elSector), data)];
+                        return [4, this.ReplaceSectorData(elSector, data)];
                     case 3:
                         _a.sent();
                         _a.label = 4;
@@ -7093,7 +7092,7 @@ var DrapoDocument = (function () {
                         return [4, this.Application.Barber.ResolveMustaches(eljSectorContent)];
                     case 19:
                         _a.sent();
-                        return [4, this.ResolveChildren(eljSectorContent)];
+                        return [4, this.ResolveChildren(elSectorContent)];
                     case 20:
                         _a.sent();
                         return [4, this.Application.Storage.LoadDataDelayedAndNotify()];
@@ -7120,19 +7119,19 @@ var DrapoDocument = (function () {
     };
     DrapoDocument.prototype.ReplaceSectorData = function (divChildSector, data) {
         return __awaiter(this, void 0, void 0, function () {
-            var content, attributes, templateUrl, template, templateUrlContent, templateContent, sectorTemplateJQuery;
+            var content, attributes, templateUrl, template, templateUrlContent, templateContent, sectorTemplate;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (data === null) {
-                            divChildSector.html('');
+                            this.ReplaceHTML(divChildSector, '');
                             return [2, (false)];
                         }
                         content = this.Application.Parser.ParseDocumentContent(data);
                         attributes = this.Application.Parser.ParseElementAttributes(content);
                         templateUrl = this.Application.Solver.Get(attributes, 'd-templateurl');
                         if (templateUrl === null) {
-                            divChildSector.html(content);
+                            this.ReplaceHTML(divChildSector, content);
                             return [2, (true)];
                         }
                         template = this.Application.Solver.Get(attributes, 'd-template');
@@ -7142,16 +7141,22 @@ var DrapoDocument = (function () {
                     case 1:
                         templateUrlContent = _a.sent();
                         templateContent = this.Application.Parser.ParseDocumentContent(templateUrlContent);
-                        divChildSector.html(templateContent);
-                        sectorTemplateJQuery = divChildSector.find("div[d-template='" + template + "']");
-                        if (sectorTemplateJQuery.length === 0)
-                            divChildSector.html(content);
+                        this.ReplaceHTML(divChildSector, templateContent);
+                        sectorTemplate = this.Application.Searcher.FindTypeWithAttributeValue('div', 'd-template', template);
+                        if (sectorTemplate === null)
+                            this.ReplaceHTML(divChildSector, content);
                         else
-                            sectorTemplateJQuery.html(content);
+                            this.ReplaceHTML(sectorTemplate, content);
                         return [2, (true)];
                 }
             });
         });
+    };
+    DrapoDocument.prototype.ReplaceHTML = function (el, html) {
+        $(el).html(html);
+    };
+    DrapoDocument.prototype.ExtractHTML = function (el) {
+        return ($(el).html());
     };
     DrapoDocument.prototype.ResolveWindow = function (window) {
         return __awaiter(this, void 0, void 0, function () {
@@ -7327,7 +7332,7 @@ var DrapoDocument = (function () {
                         if (this.IsSectorAlreadyLoaded(sectorName))
                             return [2, (false)];
                         this.MarkSectorAsLoaded(sectorName);
-                        sectorJQuery = $("div[d-sector='" + sectorName + "']");
+                        sectorJQuery = this.Application.Searcher.FindAllTypeWithAttributeValue('div', 'd-sector', sectorName);
                         elSector = null;
                         for (i = sectorJQuery.length - 1; i >= 0; i--) {
                             el = sectorJQuery[i];
@@ -7368,19 +7373,19 @@ var DrapoDocument = (function () {
     };
     DrapoDocument.prototype.LoadChildSectorContent = function (sectorName, content) {
         return __awaiter(this, void 0, void 0, function () {
-            var sectorJQuery;
+            var elSector;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (this.IsSectorAlreadyLoaded(sectorName))
                             return [2, (false)];
                         this.MarkSectorAsLoaded(sectorName);
-                        sectorJQuery = $("div[d-sector='" + sectorName + "']");
-                        if (sectorJQuery.length == 0) {
+                        elSector = this.Application.Searcher.FindTypeWithAttributeValue('div', 'd-sector', sectorName);
+                        if (elSector === null) {
                             this.Application.Log.WriteVerbose('Document - LoadChildSectorContent - Missing Sector - {0}', sectorName);
                             return [2, (false)];
                         }
-                        return [4, this.LoadChildSectorInternal(null, content, sectorName, sectorJQuery[0], null, false, false, null)];
+                        return [4, this.LoadChildSectorInternal(null, content, sectorName, elSector, null, false, false, null)];
                     case 1:
                         _a.sent();
                         return [2, (true)];
@@ -7390,21 +7395,21 @@ var DrapoDocument = (function () {
     };
     DrapoDocument.prototype.LoadChildSectorDefault = function (sectorName) {
         return __awaiter(this, void 0, void 0, function () {
-            var sectorJQuery, url, urlSector, urlResolved;
+            var elSector, url, urlSector, urlResolved;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        sectorJQuery = $("div[d-sector='" + sectorName + "']");
-                        if (sectorJQuery.length == 0) {
+                        elSector = this.Application.Searcher.FindTypeWithAttributeValue('div', 'd-sector', sectorName);
+                        if (elSector == null) {
                             this.Application.Log.WriteVerbose('Document - LoadChildSectorDefault - Missing Sector - {0}', sectorName);
                             return [2, (false)];
                         }
-                        if (sectorJQuery.children.length == 0)
+                        if (elSector.children.length == 0)
                             return [2, (false)];
-                        url = sectorJQuery.attr('d-sector-url');
+                        url = elSector.getAttribute('d-sector-url');
                         if ((url === null))
                             url = '';
-                        urlSector = this.GetSectorParent(sectorJQuery[0]);
+                        urlSector = this.GetSectorParent(elSector);
                         return [4, this.Application.Storage.ResolveDataUrlMustaches(null, urlSector, url, null)];
                     case 1:
                         urlResolved = _a.sent();
@@ -7415,15 +7420,15 @@ var DrapoDocument = (function () {
         });
     };
     DrapoDocument.prototype.ReplaceDocument = function (data) {
-        this.Application.Log.WriteVerbose('Document - ReplaceDocument - Before - {0}', $('html').html());
+        this.Application.Log.WriteVerbose('Document - ReplaceDocument - Before - {0}', this.ExtractHTML(this.Application.Searcher.FindType('html')));
         this.Application.Log.WriteVerbose('Document - ReplaceDocument - Data - {0}', data);
         var head = this.ExtractHeadInnerHtml(data);
         if (head != null)
-            $('head').html(head);
+            this.ReplaceHTML(this.Application.Searcher.FindType('head'), head);
         var body = this.ExtractBodyInnerHtml(data);
         if (body != null)
-            $('body').html(body);
-        this.Application.Log.WriteVerbose('Document - ReplaceDocument - After - {0}', $('html').html());
+            this.ReplaceHTML(this.Application.Searcher.FindType('body'), body);
+        this.Application.Log.WriteVerbose('Document - ReplaceDocument - After - {0}', this.ExtractHTML(this.Application.Searcher.FindType('html')));
     };
     DrapoDocument.prototype.ReplaceElement = function (el, elNew) {
         $(el).replaceWith(elNew);
@@ -7499,10 +7504,10 @@ var DrapoDocument = (function () {
         }
         return (attributes);
     };
-    DrapoDocument.prototype.SetElementAttributes = function (elj, attributes) {
+    DrapoDocument.prototype.SetElementAttributes = function (el, attributes) {
         for (var i = 0; i < attributes.length; i++) {
             var attribute = attributes[i];
-            elj.attr(attribute[0], attribute[1]);
+            el.setAttribute(attribute[0], attribute[1]);
         }
     };
     DrapoDocument.prototype.ExtractHeadInnerHtml = function (data) {
@@ -7538,9 +7543,6 @@ var DrapoDocument = (function () {
             return (data.substr(index));
         }
         return (null);
-    };
-    DrapoDocument.prototype.GetOuterHtml = function (el) {
-        return ($('<div>').append($(el).clone()).html());
     };
     DrapoDocument.prototype.IsElementInserted = function (list, itemInsert) {
         for (var i = 0; i < list.length; i++) {
@@ -7671,10 +7673,7 @@ var DrapoDocument = (function () {
         return (this.GetSector(el.parentElement));
     };
     DrapoDocument.prototype.GetElementByAttribute = function (name, value) {
-        var elj = $("[" + name + "='" + value + "']");
-        if ((elj == null) || (elj.length == 0))
-            return (null);
-        return (elj[0]);
+        return (this.Application.Searcher.FindAttributeValue(name, value));
     };
     DrapoDocument.prototype.GetSectorElement = function (sector) {
         return (this.GetElementByAttribute('d-sector', sector));
@@ -8559,10 +8558,10 @@ var DrapoDocument = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        unitTest = $("[d-id='__drapoUnitTest']");
-                        if ((unitTest === null) || (unitTest.length === 0))
+                        unitTest = this.Application.Searcher.FindAttributeValue('d-id', '__drapoUnitTest');
+                        if (unitTest === null)
                             return [2];
-                        return [4, this.Application.EventHandler.TriggerClick(unitTest[0])];
+                        return [4, this.Application.EventHandler.TriggerClick(unitTest)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -18636,6 +18635,47 @@ var DrapoSearcher = (function () {
         enumerable: false,
         configurable: true
     });
+    DrapoSearcher.prototype.FindType = function (type) {
+        var first = $(type).first();
+        if ((first == null) || (first.length === 0))
+            return (null);
+        return (first[0]);
+    };
+    DrapoSearcher.prototype.FindAllTypeWithAttribute = function (type, attributeName, parent) {
+        if (parent === void 0) { parent = null; }
+        var elj = parent == null ? $(type + '[' + attributeName + ']') : $(parent).find(type + '[' + attributeName + ']');
+        var els = [];
+        for (var i = 0; i < elj.length; i++)
+            els.push(elj[i]);
+        return (els);
+    };
+    DrapoSearcher.prototype.FindAllTypeWithAttributeValue = function (type, attributeName, attributeValue, parent) {
+        if (parent === void 0) { parent = null; }
+        var elj = parent == null ? $(type + "[" + attributeName + "='" + attributeValue + "']") : $(parent).find(type + "[" + attributeName + "='" + attributeValue + "']");
+        var els = [];
+        for (var i = 0; i < elj.length; i++)
+            els.push(elj[i]);
+        return (els);
+    };
+    DrapoSearcher.prototype.FindTypeWithAttribute = function (type, attributeName, parent) {
+        if (parent === void 0) { parent = null; }
+        var elj = parent == null ? $(type + '[' + attributeName + ']') : $(parent).find(type + '[' + attributeName + ']');
+        if ((elj == null) || (elj.length === 0))
+            return (null);
+        return (elj[0]);
+    };
+    DrapoSearcher.prototype.FindTypeWithAttributeValue = function (type, attributeName, attributeValue) {
+        var elj = $(type + "[" + attributeName + "='" + attributeValue + "']");
+        if ((elj == null) || (elj.length === 0))
+            return (null);
+        return (elj[0]);
+    };
+    DrapoSearcher.prototype.FindAttributeValue = function (attributeName, attributeValue) {
+        var elj = $("[" + attributeName + "='" + attributeValue + "']");
+        if ((elj == null) || (elj.length === 0))
+            return (null);
+        return (elj[0]);
+    };
     return DrapoSearcher;
 }());
 

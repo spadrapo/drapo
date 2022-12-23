@@ -85,7 +85,7 @@ class DrapoComponentHandler {
         //Replace
         this.Application.Document.ReplaceElement(el, eljNew);
         //Deploy Attributes
-        this.Application.Document.SetElementAttributes(eljNew, attributes);
+        this.Application.Document.SetElementAttributes(eljNew[0], attributes);
         const elNew: HTMLElement = eljNew[0];
         //Deploy Content
         const elContent: HTMLElement = ((content != null) && (content != '')) ? this.GetElementContent(elNew) : null;
