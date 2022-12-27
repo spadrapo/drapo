@@ -473,6 +473,30 @@ class DrapoServer {
         const hasPlusEncoded: boolean = url.indexOf('%2B') >= 0;
         if (hasPlusEncoded)
             return (true);
+        const hasCedilhaLCase: boolean = url.indexOf('%C3%A7') >= 0;
+        if (hasCedilhaLCase)
+            return (true);
+        const hasCedilhaUCase: boolean = url.indexOf('%C3%87') >= 0;
+        if (hasCedilhaUCase)
+            return (true);
+        const hasATilLCase: boolean = (url.indexOf('%C3%A3') >= 0 || url.indexOf('%C3%B5') >= 0 || url.indexOf('%C3%B1') >= 0);
+        if (hasATilLCase)
+            return (true);
+        const hasATilUCase: boolean = (url.indexOf('%C3%83') >= 0 || url.indexOf('%C3%95') >= 0 || url.indexOf('%C3%91') >= 0);
+        if (hasATilUCase)
+            return (true);
+        const hasAcuteAccentUCase: boolean = (url.indexOf('%C3%81') >= 0 || url.indexOf('%C3%89') >= 0 || url.indexOf('%C3%8D') >= 0 || url.indexOf('%C3%93') >= 0 || url.indexOf('%C3%9A') >= 0);
+        if (hasAcuteAccentUCase)
+            return (true);
+        const hasAcuteAccentLCase: boolean = (url.indexOf('%C3%A1') >= 0 || url.indexOf('%C3%A9') >= 0 || url.indexOf('%C3%AD') >= 0 || url.indexOf('%C3%B3') >= 0 || url.indexOf('%C3%BA') >= 0);
+        if (hasAcuteAccentLCase)
+            return (true);
+        const hasCircumflexAccentUCase: boolean = (url.indexOf('%C3%82') >= 0 || url.indexOf('%C3%8A') >= 0 || url.indexOf('%C3%94') >= 0);
+        if (hasCircumflexAccentUCase)
+            return (true);
+        const hasCircumflexAccentLCase: boolean = (url.indexOf('%C3%A2') >= 0 || url.indexOf('%C3%AA') >= 0 || url.indexOf('%C3%B4') >= 0);
+        if (hasCircumflexAccentLCase)
+            return (true);
         return (false);
     }
 
