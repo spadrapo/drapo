@@ -689,12 +689,24 @@ class DrapoParser {
     public ParseDateCulture(data: string, culture: string = null): Date {
         if (data === null)
             return (null);
+        const dateISO: Date = this.GetDateISO(data);
+        if (dateISO !== null)
+            return (dateISO);
         if (culture === null)
             culture = this.Application.Globalization.GetCulture();
         //Regex macthing groups is not supported in IE11
         if (this._canUseRegexGroups)
             return (this.ParseDateCultureRegex(data, culture));
         return (this.ParseDateCultureRegularExpression(data, culture));
+    }
+
+    private GetDateISO(data: string): Date {
+        if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(data))
+            return (null);
+        const date: Date = new Date(data);
+        if ((date === null) || (!(date instanceof Date)) || (date.toString() == 'Invalid Date') || (date.toISOString() !== data))
+            return (null);
+        return (date);
     }
 
     private ParseDateCultureRegex(data: string, culture: string): Date {
