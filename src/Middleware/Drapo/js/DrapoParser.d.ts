@@ -78,6 +78,7 @@ declare class DrapoParser {
     private ParseAttribute;
     ParseDate(data: string): Date;
     ParseDateCulture(data: string, culture?: string): Date;
+    private GetDateISO;
     private ParseDateCultureRegex;
     private ParseDateCultureRegularExpression;
     private IsDate;
