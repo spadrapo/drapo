@@ -19828,6 +19828,30 @@ var DrapoServer = (function () {
         var hasPlusEncoded = url.indexOf('%2B') >= 0;
         if (hasPlusEncoded)
             return (true);
+        var hasCedilhaLCase = url.indexOf('%C3%A7') >= 0;
+        if (hasCedilhaLCase)
+            return (true);
+        var hasCedilhaUCase = url.indexOf('%C3%87') >= 0;
+        if (hasCedilhaUCase)
+            return (true);
+        var hasATilLCase = (url.indexOf('%C3%A3') >= 0 || url.indexOf('%C3%B5') >= 0 || url.indexOf('%C3%B1') >= 0);
+        if (hasATilLCase)
+            return (true);
+        var hasATilUCase = (url.indexOf('%C3%83') >= 0 || url.indexOf('%C3%95') >= 0 || url.indexOf('%C3%91') >= 0);
+        if (hasATilUCase)
+            return (true);
+        var hasAcuteAccentUCase = (url.indexOf('%C3%81') >= 0 || url.indexOf('%C3%89') >= 0 || url.indexOf('%C3%8D') >= 0 || url.indexOf('%C3%93') >= 0 || url.indexOf('%C3%9A') >= 0);
+        if (hasAcuteAccentUCase)
+            return (true);
+        var hasAcuteAccentLCase = (url.indexOf('%C3%A1') >= 0 || url.indexOf('%C3%A9') >= 0 || url.indexOf('%C3%AD') >= 0 || url.indexOf('%C3%B3') >= 0 || url.indexOf('%C3%BA') >= 0);
+        if (hasAcuteAccentLCase)
+            return (true);
+        var hasCircumflexAccentUCase = (url.indexOf('%C3%82') >= 0 || url.indexOf('%C3%8A') >= 0 || url.indexOf('%C3%94') >= 0);
+        if (hasCircumflexAccentUCase)
+            return (true);
+        var hasCircumflexAccentLCase = (url.indexOf('%C3%A2') >= 0 || url.indexOf('%C3%AA') >= 0 || url.indexOf('%C3%B4') >= 0);
+        if (hasCircumflexAccentLCase)
+            return (true);
         return (false);
     };
     DrapoServer.prototype.SetContainerId = function (response) {
