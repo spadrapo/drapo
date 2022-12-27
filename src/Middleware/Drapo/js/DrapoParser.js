@@ -639,11 +639,22 @@ var DrapoParser = (function () {
         if (culture === void 0) { culture = null; }
         if (data === null)
             return (null);
+        var dateISO = this.GetDateISO(data);
+        if (dateISO !== null)
+            return (dateISO);
         if (culture === null)
             culture = this.Application.Globalization.GetCulture();
         if (this._canUseRegexGroups)
             return (this.ParseDateCultureRegex(data, culture));
         return (this.ParseDateCultureRegularExpression(data, culture));
+    };
+    DrapoParser.prototype.GetDateISO = function (data) {
+        if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(data))
+            return (null);
+        var date = new Date(data);
+        if ((date === null) || (!(date instanceof Date)) || (date.toString() == 'Invalid Date') || (date.toISOString() !== data))
+            return (null);
+        return (date);
     };
     DrapoParser.prototype.ParseDateCultureRegex = function (data, culture) {
         var dateFormatRegex = this.Application.Globalization.GetDateFormatsRegex(culture);
