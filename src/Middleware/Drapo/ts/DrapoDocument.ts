@@ -609,9 +609,11 @@ class DrapoDocument {
 
     public IsElementAttached(el: HTMLElement): boolean {
         let elc: HTMLElement = el;
-        while ((elc = elc.parentElement) !== null)
+        while (elc != null) {
             if (elc.tagName === 'BODY')
                 return (true);
+            elc = elc.parentElement;
+        }
         return (false);
     }
 

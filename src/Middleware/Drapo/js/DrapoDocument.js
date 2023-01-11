@@ -883,9 +883,11 @@ var DrapoDocument = (function () {
     };
     DrapoDocument.prototype.IsElementAttached = function (el) {
         var elc = el;
-        while ((elc = elc.parentElement) !== null)
+        while (elc != null) {
             if (elc.tagName === 'BODY')
                 return (true);
+            elc = elc.parentElement;
+        }
         return (false);
     };
     DrapoDocument.prototype.IsElementInsideControlFlow = function (el) {
