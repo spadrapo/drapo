@@ -165,10 +165,10 @@ declare class DrapoBinder {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    BindReaderWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel?: string[]): void;
+    BindReaderWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel: string[], canNotify: boolean): void;
     BindReader(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[]): void;
-    BindWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel: string[]): void;
-    BindWriterEvent(e: JQueryEventObject, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number): Promise<boolean>;
+    BindWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel: string[], canNotify: boolean): void;
+    BindWriterEvent(e: JQueryEventObject, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number, canNotify: boolean): Promise<boolean>;
     BindIncremental(elj: JQuery, dataKey: string, sector: string, isIncremental: boolean): Promise<void>;
     BindIncrementalScroll(binder: JQuery, eventNamespace: string, eljParent: JQuery, dataKey: string, sector: string): Promise<boolean>;
     private GetEventValue;
@@ -1099,15 +1099,15 @@ declare class DrapoModelHandler {
     ResolveOnModelComplete(contextItem: DrapoContextItem, el: HTMLElement): Promise<void>;
     ResolveModel(context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, elj: JQuery, sector: string, canBind: boolean, isContext?: boolean): Promise<boolean>;
     ResolveValueExpression(context: DrapoContext, el: HTMLElement, sector: string, model: string, canBind: boolean): Promise<string>;
-    ResolveModelInput(context: DrapoContext, el: HTMLElement, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[]): Promise<boolean>;
-    ResolveModelInputCheckbox(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[]): Promise<boolean>;
-    ResolveModelTextArea(context: DrapoContext, el: Element, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[]): Promise<boolean>;
-    ResolveModelInputText(context: DrapoContext, element: Element, elj: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[]): Promise<boolean>;
-    ResolveModelInputNumber(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[]): Promise<boolean>;
-    ResolveModelInputPassword(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[]): Promise<boolean>;
-    ResolveModelInputHidden(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[]): Promise<boolean>;
-    ResolveModelInputRange(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[]): Promise<boolean>;
-    ResolveModelSelect(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[]): Promise<boolean>;
+    ResolveModelInput(context: DrapoContext, el: HTMLElement, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInputCheckbox(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelTextArea(context: DrapoContext, el: Element, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInputText(context: DrapoContext, element: Element, elj: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInputNumber(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInputPassword(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInputHidden(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInputRange(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelSelect(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean>;
     private ResolveModelSpan;
     ResolveModelLI(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean): Promise<boolean>;
 }
@@ -1822,7 +1822,7 @@ declare class DrapoSolver {
     ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string>;
     ExistDataPath(context: DrapoContext, sector: string, path: string[]): Promise<boolean>;
     private ExistDataPathObject;
-    ResolveDataPath(context: DrapoContext, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader?: boolean, canBindWriter?: boolean, modelEvents?: string[], modelEventsCancel?: string[]): Promise<string>;
+    ResolveDataPath(context: DrapoContext, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader?: boolean, canBindWriter?: boolean, modelEvents?: string[], modelEventsCancel?: string[], canNotify?: boolean): Promise<string>;
     private ResolveDataPathObject;
     ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean, executionContext?: DrapoExecutionContext<any>): Promise<any>;
     ResolveItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): any;

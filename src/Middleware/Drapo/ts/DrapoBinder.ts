@@ -14,13 +14,13 @@ class DrapoBinder {
         this._application = application;
     }
 
-    public BindReaderWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel: string[] = null): void {
+    public BindReaderWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel: string[] = null, canNotify: boolean): void {
         if (contextItem === null)
             return;
         if (el === null)
             return;
         this.BindReader(contextItem, el, dataFields);
-        this.BindWriter(contextItem, el, dataFields, eventTypes, eventTypesCancel);
+        this.BindWriter(contextItem, el, dataFields, eventTypes, eventTypesCancel, canNotify);
     }
 
     public BindReader(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[]): void {
@@ -31,7 +31,7 @@ class DrapoBinder {
         this.Application.Observer.SubscribeBarber(el, contextItem.DataKey, dataFields);
     }
 
-    public BindWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel: string[]): void {
+    public BindWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel: string[], canNotify: boolean): void {
         const application: DrapoApplication = this.Application;
         const contextItemLocal: DrapoContextItem = contextItem;
         const data: any = contextItem.Data;
@@ -45,11 +45,12 @@ class DrapoBinder {
             const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, eventType, 'model');
             const debounceTimeout: number = this.Application.EventHandler.GetEventDebounce(el, eventType);
             let delayTimeout: number = null;
+            const canNotifyLocal: boolean = canNotify;
             $(el).unbind(eventNamespace);
             $(el).bind(eventNamespace, (e) => {
                 if (debounceTimeout == null) {
                     // tslint:disable-next-line:no-floating-promises
-                    application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index);
+                    application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index, canNotify);
                 } else {
                     if (delayTimeout != null)
                         clearTimeout(delayTimeout);
@@ -57,7 +58,7 @@ class DrapoBinder {
                         clearTimeout(delayTimeout);
                         delayTimeout = null;
                         // tslint:disable-next-line:no-floating-promises
-                        application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index);
+                        application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index, canNotify);
                     }, debounceTimeout);
                 }
             });
@@ -86,7 +87,7 @@ class DrapoBinder {
         }
     }
 
-    public async BindWriterEvent(e: JQueryEventObject, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number): Promise<boolean> {
+    public async BindWriterEvent(e: JQueryEventObject, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number, canNotify: boolean): Promise<boolean> {
         if (!this.Application.EventHandler.IsValidEventFilter(e, eventFilter))
             return (true);
         const value: any = this.Application.Binder.GetEventValue(eventType, e);
@@ -104,7 +105,8 @@ class DrapoBinder {
             //On Model Change
             await this.Application.ModelHandler.ResolveOnModelChange(contextItem, el);
             //Notify
-            await this.Application.Observer.Notify(dataKey, index, dataFields);
+            if (canNotify)
+                await this.Application.Observer.Notify(dataKey, index, dataFields);
         }
         //On Model Complete
         await this.Application.ModelHandler.ResolveOnModelComplete(contextItem, el);

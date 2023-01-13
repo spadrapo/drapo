@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - Model - Text - Notify</title>
+</head>
+<body>
+    <span>Control Flow - Model - Text - Notify</span>
+    <div d-dataKey="users" d-dataUrlGet="/Data/GetModelSample"></div>
+    <input type="button" value="Click here to update" d-on-click="Notify(users)" />
+    <br />
+    <div>
+        <div d-for="user in users">
+            <span>Key:</span>
+            <input type="text" d-model="{{user.Key}}" d-modelNotify="false">
+            <span>{{user.Key}}</span>
+            <br />
+            <br />
+        </div>
+    </div>
+</body>
+</html>
