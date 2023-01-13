@@ -31,7 +31,7 @@ declare class DrapoSolver {
     ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string>;
     ExistDataPath(context: DrapoContext, sector: string, path: string[]): Promise<boolean>;
     private ExistDataPathObject;
-    ResolveDataPath(context: DrapoContext, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader?: boolean, canBindWriter?: boolean, modelEvents?: string[], modelEventsCancel?: string[]): Promise<string>;
+    ResolveDataPath(context: DrapoContext, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader?: boolean, canBindWriter?: boolean, modelEvents?: string[], modelEventsCancel?: string[], canNotify?: boolean): Promise<string>;
     private ResolveDataPathObject;
     ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean, executionContext?: DrapoExecutionContext<any>): Promise<any>;
     ResolveItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): any;

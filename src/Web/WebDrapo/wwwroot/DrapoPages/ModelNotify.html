@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Model Notify</title>
+</head>
+<body>
+    <span>Model Notify</span>
+    <div d-dataKey="object" d-dataType="object" d-dataProperty-name="Name"></div>
+    <label>Text:</label>
+    <input type="text" d-model="{{object.name}}" d-modelNotify="false" />
+    <br />
+    <label>Reply:</label>
+    <label d-model="{{object.name}}"></label>
+    <input type="button" value="Click here to update" d-on-click="Notify(object)" />
+</body>
+</html>
