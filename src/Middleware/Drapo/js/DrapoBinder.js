@@ -46,14 +46,14 @@ var DrapoBinder = (function () {
         enumerable: false,
         configurable: true
     });
-    DrapoBinder.prototype.BindReaderWriter = function (contextItem, el, dataFields, eventTypes, eventTypesCancel) {
+    DrapoBinder.prototype.BindReaderWriter = function (contextItem, el, dataFields, eventTypes, eventTypesCancel, canNotify) {
         if (eventTypesCancel === void 0) { eventTypesCancel = null; }
         if (contextItem === null)
             return;
         if (el === null)
             return;
         this.BindReader(contextItem, el, dataFields);
-        this.BindWriter(contextItem, el, dataFields, eventTypes, eventTypesCancel);
+        this.BindWriter(contextItem, el, dataFields, eventTypes, eventTypesCancel, canNotify);
     };
     DrapoBinder.prototype.BindReader = function (contextItem, el, dataFields) {
         if ((contextItem === null) || (contextItem.ElementForTemplate !== null))
@@ -62,7 +62,7 @@ var DrapoBinder = (function () {
             return;
         this.Application.Observer.SubscribeBarber(el, contextItem.DataKey, dataFields);
     };
-    DrapoBinder.prototype.BindWriter = function (contextItem, el, dataFields, eventTypes, eventTypesCancel) {
+    DrapoBinder.prototype.BindWriter = function (contextItem, el, dataFields, eventTypes, eventTypesCancel, canNotify) {
         var _this = this;
         var application = this.Application;
         var contextItemLocal = contextItem;
@@ -76,10 +76,11 @@ var DrapoBinder = (function () {
             var eventNamespace = this_1.Application.EventHandler.CreateEventNamespace(null, null, eventType, 'model');
             var debounceTimeout = this_1.Application.EventHandler.GetEventDebounce(el, eventType);
             var delayTimeout = null;
+            var canNotifyLocal = canNotify;
             $(el).unbind(eventNamespace);
             $(el).bind(eventNamespace, function (e) {
                 if (debounceTimeout == null) {
-                    application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index);
+                    application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index, canNotify);
                 }
                 else {
                     if (delayTimeout != null)
@@ -87,7 +88,7 @@ var DrapoBinder = (function () {
                     delayTimeout = setTimeout(function () {
                         clearTimeout(delayTimeout);
                         delayTimeout = null;
-                        application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index);
+                        application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index, canNotify);
                     }, debounceTimeout);
                 }
             });
@@ -122,7 +123,7 @@ var DrapoBinder = (function () {
             }
         }
     };
-    DrapoBinder.prototype.BindWriterEvent = function (e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index) {
+    DrapoBinder.prototype.BindWriterEvent = function (e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index, canNotify) {
         return __awaiter(this, void 0, void 0, function () {
             var value, dataPath, valueCurrent, sector;
             return __generator(this, function (_a) {
@@ -149,6 +150,7 @@ var DrapoBinder = (function () {
                         return [4, this.Application.ModelHandler.ResolveOnModelChange(contextItem, el)];
                     case 5:
                         _a.sent();
+                        if (!canNotify) return [3, 7];
                         return [4, this.Application.Observer.Notify(dataKey, index, dataFields)];
                     case 6:
                         _a.sent();

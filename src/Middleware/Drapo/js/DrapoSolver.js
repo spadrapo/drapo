@@ -582,11 +582,12 @@ var DrapoSolver = (function () {
             return (false);
         return (true);
     };
-    DrapoSolver.prototype.ResolveDataPath = function (context, elementJQuery, sector, path, canBindReader, canBindWriter, modelEvents, modelEventsCancel) {
+    DrapoSolver.prototype.ResolveDataPath = function (context, elementJQuery, sector, path, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify) {
         if (canBindReader === void 0) { canBindReader = false; }
         if (canBindWriter === void 0) { canBindWriter = false; }
         if (modelEvents === void 0) { modelEvents = null; }
         if (modelEventsCancel === void 0) { modelEventsCancel = null; }
+        if (canNotify === void 0) { canNotify = true; }
         return __awaiter(this, void 0, void 0, function () {
             var dataPath, i, mustache, isMustacheIndexer, mustacheIndexer, mustacheParts, mustacheValue, mustacheValueIndexer, dataKey, dataFields, _a, data, _b, _c, _d, _e;
             return __generator(this, function (_f) {
@@ -603,7 +604,7 @@ var DrapoSolver = (function () {
                         if (!this.Application.Parser.IsMustache(mustacheIndexer))
                             return [3, 3];
                         mustacheParts = this.Application.Parser.ParseMustache(mustacheIndexer);
-                        return [4, this.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBindReader, canBindWriter, modelEvents)];
+                        return [4, this.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify)];
                     case 2:
                         mustacheValue = _f.sent();
                         mustacheValueIndexer = isMustacheIndexer ? this.Application.Parser.CreateMustacheIndexer(mustacheValue) : mustacheValue;
@@ -636,7 +637,7 @@ var DrapoSolver = (function () {
                         _c = (_b = this.Application.Binder).BindReaderWriter;
                         return [4, this.ResolveDataPathObjectItem(context.Item, dataKey, sector)];
                     case 8:
-                        _c.apply(_b, [_f.sent(), elementJQuery != null ? elementJQuery[0] : null, dataFields, modelEvents, modelEventsCancel]);
+                        _c.apply(_b, [_f.sent(), elementJQuery != null ? elementJQuery[0] : null, dataFields, modelEvents, modelEventsCancel, canNotify]);
                         return [3, 11];
                     case 9:
                         if (!canBindReader) return [3, 11];

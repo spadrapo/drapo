@@ -434,7 +434,7 @@ class DrapoSolver {
         return (true);
     }
 
-    public async ResolveDataPath(context: DrapoContext, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader: boolean = false, canBindWriter: boolean = false, modelEvents: string[] = null, modelEventsCancel: string[] = null): Promise<string> {
+    public async ResolveDataPath(context: DrapoContext, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader: boolean = false, canBindWriter: boolean = false, modelEvents: string[] = null, modelEventsCancel: string[] = null, canNotify: boolean = true): Promise<string> {
         //Path
         const dataPath: string[] = (typeof path === 'string') ? [path] : path;
         //Mustache
@@ -445,7 +445,7 @@ class DrapoSolver {
             if (!this.Application.Parser.IsMustache(mustacheIndexer))
                 continue;
             const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustacheIndexer);
-            const mustacheValue = await this.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBindReader, canBindWriter, modelEvents);
+            const mustacheValue = await this.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify);
             const mustacheValueIndexer = isMustacheIndexer ? this.Application.Parser.CreateMustacheIndexer(mustacheValue) : mustacheValue;
             dataPath[i] = mustacheValueIndexer;
         }
@@ -462,7 +462,7 @@ class DrapoSolver {
         const data: string = await this.ResolveDataPathObject(sector, context, dataPath);
         //Bind
         if (canBindWriter)
-            this.Application.Binder.BindReaderWriter(await this.ResolveDataPathObjectItem(context.Item, dataKey, sector), elementJQuery != null ? elementJQuery[0] : null, dataFields, modelEvents, modelEventsCancel);
+            this.Application.Binder.BindReaderWriter(await this.ResolveDataPathObjectItem(context.Item, dataKey, sector), elementJQuery != null ? elementJQuery[0] : null, dataFields, modelEvents, modelEventsCancel, canNotify);
         else if (canBindReader)
             this.Application.Binder.BindReader(await this.ResolveDataPathObjectItem(context.Item, dataKey, sector), elementJQuery != null ? elementJQuery[0] : null, dataFields);
         return (data);

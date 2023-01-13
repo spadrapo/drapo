@@ -50,6 +50,14 @@ class DrapoModelHandler {
             if((!isContext) || (!context.CanUpdateTemplate))
                 el.removeAttribute('d-on-model-initialize');
         }
+        //Notify
+        let canNotify: boolean = true;
+        const modelNotify: string = el.getAttribute('d-modelNotify');
+        if (modelNotify != null) {
+            canNotify = modelNotify === 'true';
+            if ((isContext) && (context.CanUpdateTemplate))
+                el.removeAttribute('d-modelNotify');
+        }
         const modelEvents: string[] = this.Application.Parser.ParseEvents(el.getAttribute('d-model-event'));
         if (modelEvents.length === 0)
             modelEvents.push('change');
@@ -62,11 +70,11 @@ class DrapoModelHandler {
         let updated: boolean = false;
         const tag: string = el.tagName.toLowerCase();
         if (tag === 'input')
-            updated = await this.ResolveModelInput(context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, this.Application.Parser.ParseEvents(el.getAttribute('d-model-event-cancel')));
+            updated = await this.ResolveModelInput(context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, this.Application.Parser.ParseEvents(el.getAttribute('d-model-event-cancel')), canNotify);
         else if (tag === 'select')
-            updated = await this.ResolveModelSelect(context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents);
+            updated = await this.ResolveModelSelect(context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify);
         else if (tag === 'textarea')
-            updated = await this.ResolveModelTextArea(context, el, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, modelEvents, this.Application.Parser.ParseEvents(el.getAttribute('d-model-event-cancel')));
+            updated = await this.ResolveModelTextArea(context, el, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, modelEvents, this.Application.Parser.ParseEvents(el.getAttribute('d-model-event-cancel')), canNotify);
         else if (tag === 'span')
             updated = await this.ResolveModelSpan(context, el, elj, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, ((isContext) && (!context.CanUpdateTemplate)));
         else if (tag === 'li')
@@ -108,44 +116,44 @@ class DrapoModelHandler {
         return (valueString);
     }
 
-    public async ResolveModelInput(context: DrapoContext, el: HTMLElement, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[]): Promise<boolean> {
+    public async ResolveModelInput(context: DrapoContext, el: HTMLElement, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean> {
         const type: string = el.getAttribute('type');
         if (type == 'checkbox')
-            return (this.ResolveModelInputCheckbox(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents));
+            return (this.ResolveModelInputCheckbox(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify));
         if (type == 'text')
-            return (this.ResolveModelInputText(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel));
+            return (this.ResolveModelInputText(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify));
         if (type == 'number')
-            return (this.ResolveModelInputNumber(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel));
+            return (this.ResolveModelInputNumber(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify));
         if (type == 'password')
-            return (this.ResolveModelInputPassword(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel));
+            return (this.ResolveModelInputPassword(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify));
         if (type == 'hidden')
-            return (this.ResolveModelInputHidden(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents));
+            return (this.ResolveModelInputHidden(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify));
         if (type == 'range')
-            return (this.ResolveModelInputRange(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents));
+            return (this.ResolveModelInputRange(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify));
         await this.Application.ExceptionHandler.HandleError('DrapoModelHandler - ResolveModelInput - model not supported in input type: {0}', type);
         return (false);
     }
 
-    public async ResolveModelInputCheckbox(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[]): Promise<boolean> {
+    public async ResolveModelInputCheckbox(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean> {
         //Value
-        const value: boolean = await this.Application.Solver.ResolveConditional(await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents));
+        const value: boolean = await this.Application.Solver.ResolveConditional(await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, null, canNotify));
         //Checked
         elementJQuery.prop('checked', value);
         return (true);
     }
 
-    public async ResolveModelTextArea(context: DrapoContext, el: Element, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[]): Promise<boolean> {
+    public async ResolveModelTextArea(context: DrapoContext, el: Element, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean> {
         const elj: JQuery = $(el);
         //Value
-        const value: string = mustacheParts != null ? await this.Application.Solver.ResolveDataPath(context, elj, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel) : model;
+        const value: string = mustacheParts != null ? await this.Application.Solver.ResolveDataPath(context, elj, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify) : model;
         //Text
         elj.val(value);
         return (true);
     }
 
-    public async ResolveModelInputText(context: DrapoContext, element: Element, elj: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[]): Promise<boolean> {
+    public async ResolveModelInputText(context: DrapoContext, element: Element, elj: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean> {
         //Value
-        const value: string = mustacheParts != null ? await this.Application.Solver.ResolveDataPath(context, elj, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel) : model;
+        const value: string = mustacheParts != null ? await this.Application.Solver.ResolveDataPath(context, elj, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify) : model;
         //Text
         const elementInput: HTMLInputElement = element as HTMLInputElement;
         if (elementInput.value !== value)
@@ -153,9 +161,9 @@ class DrapoModelHandler {
         return (true);
     }
 
-    public async ResolveModelInputNumber(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[]): Promise<boolean> {
+    public async ResolveModelInputNumber(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean> {
         //Value
-        const value: string = await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel);
+        const value: string = await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify);
         //Text
         const elementInput: HTMLInputElement = element as HTMLInputElement;
         if (elementInput.value !== value)
@@ -163,18 +171,18 @@ class DrapoModelHandler {
         return (true);
     }
 
-    public async ResolveModelInputPassword(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[]): Promise<boolean> {
+    public async ResolveModelInputPassword(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean> {
         //Value
-        const value: string = await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel);
+        const value: string = await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify);
         //Text
         const elementInput: HTMLInputElement = element as HTMLInputElement;
         elementInput.value = value;
         return (true);
     }
 
-    public async ResolveModelInputHidden(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[]): Promise<boolean> {
+    public async ResolveModelInputHidden(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean> {
         //Value
-        const value: string = await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents);
+        const value: string = await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, null, canNotify);
         //Text
         const elementInput: HTMLInputElement = element as HTMLInputElement;
         if (elementInput.value !== value)
@@ -182,9 +190,9 @@ class DrapoModelHandler {
         return (true);
     }
 
-    public async ResolveModelInputRange(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[]): Promise<boolean> {
+    public async ResolveModelInputRange(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean> {
         //Value
-        const value: string = await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents);
+        const value: string = await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, null, canNotify);
         //Text
         const elementInput: HTMLInputElement = element as HTMLInputElement;
         if (elementInput.value !== value)
@@ -192,9 +200,9 @@ class DrapoModelHandler {
         return (true);
     }
 
-    public async ResolveModelSelect(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[]): Promise<boolean> {
+    public async ResolveModelSelect(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean> {
         //Value
-        const value: string = await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents);
+        const value: string = await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, null, canNotify);
         //Selected
         const elementSelect: HTMLSelectElement = element as HTMLSelectElement;
         if (elementSelect.value !== value)
