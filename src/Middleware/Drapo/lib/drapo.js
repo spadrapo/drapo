@@ -14171,8 +14171,6 @@ var DrapoLogger = (function () {
                         return [4, this.Application.Debugger.AddError(error)];
                     case 1:
                         _a.sent();
-                        if (this.AllowError)
-                            console.log(error);
                         return [2];
                 }
             });
