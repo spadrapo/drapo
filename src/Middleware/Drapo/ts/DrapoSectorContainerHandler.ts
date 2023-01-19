@@ -30,6 +30,8 @@ class DrapoSectorContainerHandler {
     }
 
     private GetElementRoot(el: HTMLElement): HTMLElement {
+        if (el == null)
+            return (null);
         while (el.parentElement !== null) {
             el = el.parentElement;
             if (el.tagName === 'BODY')

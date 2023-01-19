@@ -64,6 +64,8 @@ var DrapoSectorContainerHandler = (function () {
         return (false);
     };
     DrapoSectorContainerHandler.prototype.GetElementRoot = function (el) {
+        if (el == null)
+            return (null);
         while (el.parentElement !== null) {
             el = el.parentElement;
             if (el.tagName === 'BODY')
