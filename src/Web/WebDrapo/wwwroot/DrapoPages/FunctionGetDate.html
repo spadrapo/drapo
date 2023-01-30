@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - GetDate</title>
+</head>
+<body>
+    <br>
+    <span>GetDate</span>
+    <div d-dataKey="data" d-dataType="object" d-dataProperty-value=""></div>
+    <div>
+        <span d-model="{{data.value}}"></span>
+        <br />
+        <input type="button" value="Date" d-on-click="UpdateItemField({{data.value}},GetDate())">
+        <br />
+        <input type="button" value="Date ISO" d-on-click="UpdateItemField({{data.value}},GetDate(ISO))">
+    </div>
+</body>
+</html>
