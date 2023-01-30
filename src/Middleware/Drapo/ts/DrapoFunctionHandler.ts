@@ -343,6 +343,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionCreateGuid(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'createtick')
             return (await this.ExecuteFunctionCreateTick(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'getdate')
+            return (await this.ExecuteFunctionGetDate(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'pushstack')
             return (await this.ExecuteFunctionPushStack(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'popstack')
@@ -1202,6 +1204,15 @@ class DrapoFunctionHandler {
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         await this.Application.Storage.SetDataKeyField(dataKey, sector, dataFields, value, notify);
         return (value);
+    }
+
+    private async ExecuteFunctionGetDate(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        let date: Date = new Date();
+        //Return Type
+        const returnType: string = functionParsed.Parameters.length > 0 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]) : 'date';
+        if (returnType.toUpperCase() == 'ISO')
+            return (date.toISOString());
+        return (date as any);
     }
 
     private async ExecuteFunctionPushStack(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
