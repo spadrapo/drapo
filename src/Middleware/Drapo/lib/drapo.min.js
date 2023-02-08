@@ -19465,9 +19465,9 @@ var DrapoServer = (function () {
         if (headers === void 0) { headers = null; }
         if (headersResponse === void 0) { headersResponse = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var requestHeaders, urlResolved, urlResolvedTimestamp, request, response, location_2, dataResponse, onBadRequest, storageBadRequest, dataResponse, onError, storageErrors, error;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var requestHeaders, _a, _b, urlResolved, urlResolvedTimestamp, request, response, location_2, dataResponse, onBadRequest, storageBadRequest, dataResponse, onError, storageErrors, error;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         requestHeaders = [];
                         this.InsertHeaders(requestHeaders, this.GetRequestHeaders());
@@ -19478,21 +19478,29 @@ var DrapoServer = (function () {
                             requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
                         if (contentType != null)
                             this.InsertHeader(requestHeaders, 'Content-Type', contentType);
+                        if (!(this._tokenAntiforgery != null)) return [3, 2];
+                        _a = this.InsertHeader;
+                        _b = [requestHeaders];
+                        return [4, this.Application.Config.GetHeaderCSRF()];
+                    case 1:
+                        _a.apply(this, _b.concat([_c.sent(), this._tokenAntiforgery]));
+                        _c.label = 2;
+                    case 2:
                         urlResolved = this.ResolveUrl(url);
                         urlResolvedTimestamp = this.AppendUrlQueryStringTimestamp(urlResolved);
                         request = new DrapoServerRequest(verb, urlResolvedTimestamp, requestHeaders, data, true, true);
                         return [4, this.Request(request)];
-                    case 1:
-                        response = _a.sent();
-                        if (!((200 <= response.Status) && (response.Status < 400))) return [3, 3];
-                        location_2 = this.GetHeaderValue(response.Headers, 'Location');
-                        if (!(location_2 !== null)) return [3, 3];
-                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, 'RedirectPage(' + location_2 + ')', this.Application.FunctionHandler.CreateExecutionContext(false))];
-                    case 2:
-                        _a.sent();
-                        _a.label = 3;
                     case 3:
-                        if (!(response.Status == 200)) return [3, 4];
+                        response = _c.sent();
+                        if (!((200 <= response.Status) && (response.Status < 400))) return [3, 5];
+                        location_2 = this.GetHeaderValue(response.Headers, 'Location');
+                        if (!(location_2 !== null)) return [3, 5];
+                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, 'RedirectPage(' + location_2 + ')', this.Application.FunctionHandler.CreateExecutionContext(false))];
+                    case 4:
+                        _c.sent();
+                        _c.label = 5;
+                    case 5:
+                        if (!(response.Status == 200)) return [3, 6];
                         if (response.Body == '')
                             return [2, (null)];
                         if (headersResponse !== null) {
@@ -19502,60 +19510,60 @@ var DrapoServer = (function () {
                         dataResponse = void 0;
                         dataResponse = this.Application.Serializer.Deserialize(response.Body);
                         return [2, (dataResponse)];
-                    case 4:
-                        if (!(response.Status == 204)) return [3, 5];
+                    case 6:
+                        if (!(response.Status == 204)) return [3, 7];
                         return [2, (null)];
-                    case 5:
-                        if (!(response.Status == 400)) return [3, 12];
+                    case 7:
+                        if (!(response.Status == 400)) return [3, 14];
                         this.HasBadRequest = true;
                         return [4, this.Application.Config.GetOnBadRequest()];
-                    case 6:
-                        onBadRequest = _a.sent();
-                        if (!(onBadRequest !== null)) return [3, 11];
+                    case 8:
+                        onBadRequest = _c.sent();
+                        if (!(onBadRequest !== null)) return [3, 13];
                         return [4, this.Application.Config.GetStorageBadRequest()];
-                    case 7:
-                        storageBadRequest = _a.sent();
-                        if (!(storageBadRequest !== null)) return [3, 9];
+                    case 9:
+                        storageBadRequest = _c.sent();
+                        if (!(storageBadRequest !== null)) return [3, 11];
                         dataResponse = this.Application.Serializer.Deserialize(response.Body);
                         return [4, this.Application.Storage.UpdateData(storageBadRequest, null, dataResponse)];
-                    case 8:
-                        _a.sent();
-                        _a.label = 9;
-                    case 9: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onBadRequest, this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 10:
-                        _a.sent();
-                        return [2, ([])];
-                    case 11: return [2, ([])];
+                        _c.sent();
+                        _c.label = 11;
+                    case 11: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onBadRequest, this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 12:
-                        if (!(response.Status == 401)) return [3, 15];
-                        if (!(dataKey !== null)) return [3, 14];
+                        _c.sent();
+                        return [2, ([])];
+                    case 13: return [2, ([])];
+                    case 14:
+                        if (!(response.Status == 401)) return [3, 17];
+                        if (!(dataKey !== null)) return [3, 16];
                         return [4, this.Application.Document.RequestAuthorization(dataKey, 'notify')];
-                    case 13:
-                        _a.sent();
-                        _a.label = 14;
-                    case 14: return [3, 22];
                     case 15:
-                        if (!(response.Status == 500)) return [3, 22];
+                        _c.sent();
+                        _c.label = 16;
+                    case 16: return [3, 24];
+                    case 17:
+                        if (!(response.Status == 500)) return [3, 24];
                         this.HasBadRequest = true;
                         return [4, this.Application.Config.GetOnError()];
-                    case 16:
-                        onError = _a.sent();
-                        if (!(onError !== null)) return [3, 21];
+                    case 18:
+                        onError = _c.sent();
+                        if (!(onError !== null)) return [3, 23];
                         return [4, this.Application.Config.GetStorageErrors()];
-                    case 17:
-                        storageErrors = _a.sent();
-                        if (!(storageErrors !== null)) return [3, 19];
+                    case 19:
+                        storageErrors = _c.sent();
+                        if (!(storageErrors !== null)) return [3, 21];
                         error = this.Application.Serializer.IsJson(response.Body) ? this.Application.Serializer.Deserialize(response.Body) : response.Body;
                         return [4, this.Application.Storage.AddDataItem(storageErrors, null, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error))];
-                    case 18:
-                        _a.sent();
-                        _a.label = 19;
-                    case 19: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onError, this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 20:
-                        _a.sent();
+                        _c.sent();
+                        _c.label = 21;
+                    case 21: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onError, this.Application.FunctionHandler.CreateExecutionContext(false))];
+                    case 22:
+                        _c.sent();
                         return [2, ([])];
-                    case 21: return [2, ([])];
-                    case 22: return [2, ([])];
+                    case 23: return [2, ([])];
+                    case 24: return [2, ([])];
                 }
             });
         });

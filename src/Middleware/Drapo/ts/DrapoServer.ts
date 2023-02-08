@@ -180,6 +180,9 @@ class DrapoServer {
             requestHeaders.push([this._headerContainerIdKey, this._headerContainerIdValue]);
         if (contentType != null)
             this.InsertHeader(requestHeaders, 'Content-Type', contentType);
+        //CSRF
+        if ((this._tokenAntiforgery != null))
+            this.InsertHeader(requestHeaders, await this.Application.Config.GetHeaderCSRF(), this._tokenAntiforgery);
         const urlResolved: string = this.ResolveUrl(url);
         const urlResolvedTimestamp: string = this.AppendUrlQueryStringTimestamp(urlResolved);
         const request: DrapoServerRequest = new DrapoServerRequest(verb, urlResolvedTimestamp, requestHeaders, data, true, true);
