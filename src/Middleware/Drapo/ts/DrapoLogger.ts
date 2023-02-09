@@ -43,8 +43,6 @@ class DrapoLogger {
     public async WriteError(message: string, parameters: string[]): Promise<void> {
         const error: string = this.CreateMessage(message, parameters);
         await this.Application.Debugger.AddError(error);
-        if (this.AllowError)// tslint:disable-next-line:no-console
-            console.log(error);
     }
 
     private CreateMessage(message: string, parameters: string[]) : string
