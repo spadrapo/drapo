@@ -172,6 +172,10 @@ class DrapoConfig {
         return (await this.GetProperty('HeaderCSRF'));
     }
 
+    public async GetTimestamp(): Promise<string> {
+        return (await this.GetProperty('Timestamp'));
+    }
+
     public async GetViews(): Promise<DrapoView[]> {
         return (await this.GetPropertyArray('Views'));
     }

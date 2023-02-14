@@ -305,6 +305,7 @@ declare class DrapoConfig {
     GetApplicationBuild(): Promise<string>;
     GetHeaderContainerId(): Promise<string>;
     GetHeaderCSRF(): Promise<string>;
+    GetTimestamp(): Promise<string>;
     GetViews(): Promise<DrapoView[]>;
     GetTimezone(): number;
     SetTimezone(value: number): void;
@@ -1715,6 +1716,7 @@ declare class DrapoServer {
     private _hasBadRequest;
     private _headerContainerIdKey;
     private _headerContainerIdValue;
+    private _isInsideTimestamp;
     get Application(): DrapoApplication;
     get HasBadRequest(): boolean;
     set HasBadRequest(value: boolean);
