@@ -47,6 +47,7 @@ namespace Sysphera.Middleware.Drapo
         private string _domainGroup = "domain";
         private string _headerContainerId = null;
         private string _headerCSRF = null;
+        private string _timestamp = null;
         #endregion
         #region Properties
         public Dictionary<string, string> Properties { get => _properties; set => _properties = value; }
@@ -86,6 +87,7 @@ namespace Sysphera.Middleware.Drapo
         public string DomainGroup { get => _domainGroup; set => _domainGroup = value; }
         public string HeaderContainerId { get => _headerContainerId; set => _headerContainerId = value; }
         public string HeaderCSRF { get => _headerCSRF; set => _headerCSRF = value; }
+        public string Timestamp { get => _timestamp; set => _timestamp = value; }
         #endregion
 
         #region Constructors

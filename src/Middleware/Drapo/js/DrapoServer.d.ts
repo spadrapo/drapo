@@ -8,6 +8,7 @@ declare class DrapoServer {
     private _hasBadRequest;
     private _headerContainerIdKey;
     private _headerContainerIdValue;
+    private _isInsideTimestamp;
     get Application(): DrapoApplication;
     get HasBadRequest(): boolean;
     set HasBadRequest(value: boolean);

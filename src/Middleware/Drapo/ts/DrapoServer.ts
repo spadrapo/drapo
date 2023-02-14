@@ -8,7 +8,8 @@ class DrapoServer {
     private _requestHeadersNext: [string, string][] = [];
     private _hasBadRequest: boolean = false;
     private _headerContainerIdKey: string = null;
-    private _headerContainerIdValue : string = null;
+    private _headerContainerIdValue: string = null;
+    private _isInsideTimestamp: boolean = false;
 
     //Properties
     get Application(): DrapoApplication {
@@ -60,9 +61,15 @@ class DrapoServer {
         return ((url.indexOf('?') >= 0 ? '&' : '?') + 'ab=' + applicationBuild);
     }
 
-    private AppendUrlQueryStringTimestamp(url: string): string {
+    private async AppendUrlQueryStringTimestamp(url: string): Promise<string> {
         const timestamp: number = new Date().getTime();
-        return (url + (url.indexOf('?') >= 0 ? '&' : '?') + 'ts=' + timestamp);
+        const timestampConfig: string = await this.Application.Config.GetTimestamp();
+        const timestampMustache: string = ((timestampConfig == null) || (timestampConfig == '') || (this._isInsideTimestamp)) ? '{{ts}}' : timestampConfig;
+        const timestampMustacheTimestamp: string = timestampMustache.replace('{{ts}}', timestamp.toString());
+        this._isInsideTimestamp = true;
+        const timestampResolved: string = await this.Application.Storage.ResolveMustachesRecursive(null, timestampMustacheTimestamp);
+        this._isInsideTimestamp = false;
+        return (url + (url.indexOf('?') >= 0 ? '&' : '?') + 'ts=' + timestampResolved);
     }
 
     public async GetViewHTML(url: string): Promise<string> {
@@ -110,7 +117,7 @@ class DrapoServer {
         if ((this._tokenAntiforgery != null))
             this.InsertHeader(requestHeaders, await this.Application.Config.GetHeaderCSRF(), this._tokenAntiforgery);
         const urlResolved: string = this.ResolveUrl(url);
-        const urlResolvedTimestamp: string = this.AppendUrlQueryStringTimestamp(urlResolved);
+        const urlResolvedTimestamp: string = await this.AppendUrlQueryStringTimestamp(urlResolved);
         const cookieValues: [string, string][] = this.Application.CookieHandler.GetCookieValues();
         const request: DrapoServerRequest = new DrapoServerRequest(verb, urlResolvedTimestamp, requestHeaders, data, true);
         const response: DrapoServerResponse = await this.Request(request);
@@ -184,7 +191,7 @@ class DrapoServer {
         if ((this._tokenAntiforgery != null))
             this.InsertHeader(requestHeaders, await this.Application.Config.GetHeaderCSRF(), this._tokenAntiforgery);
         const urlResolved: string = this.ResolveUrl(url);
-        const urlResolvedTimestamp: string = this.AppendUrlQueryStringTimestamp(urlResolved);
+        const urlResolvedTimestamp: string = await this.AppendUrlQueryStringTimestamp(urlResolved);
         const request: DrapoServerRequest = new DrapoServerRequest(verb, urlResolvedTimestamp, requestHeaders, data, true, true);
         const response: DrapoServerResponse = await this.Request(request);
         //Redirect
