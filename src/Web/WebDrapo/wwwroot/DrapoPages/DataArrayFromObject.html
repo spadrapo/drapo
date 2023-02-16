@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Array from Object</title>
+</head>
+<body>
+    <span>Data Array from Object</span>
+    <div d-dataKey="objectSource" d-dataType="object" d-dataProperty-key="Key"></div>
+    <div d-dataKey="objects" d-dataType="array" d-dataValue="{{objectSource}}"></div>
+    <div>
+        <span d-for="object in objects" d-model="{{object.key}}"></span>
+    </div>
+    <input type="text" d-model="{{objectSource.key}}" />
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="UpdateItemField({{objectSource.key}},Value)"></div>
+</body>
+</html>

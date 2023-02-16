@@ -1407,22 +1407,24 @@ var DrapoStorage = (function () {
                     case 0:
                         if (type == 'object')
                             return [2, (this.RetrieveDataKeyInitializeObject(el))];
-                        if (type == 'array')
-                            return [2, (this.RetrieveDataKeyInitializeArray(el))];
-                        if (type == 'value')
-                            return [2, (this.RetrieveDataKeyInitializeValue(el))];
-                        if (!(type == 'mapping')) return [3, 2];
-                        return [4, this.RetrieveDataKeyInitializeMapping(el, sector, dataKey)];
+                        if (!(type == 'array')) return [3, 2];
+                        return [4, this.RetrieveDataKeyInitializeArray(el, sector, dataKey)];
                     case 1: return [2, (_a.sent())];
                     case 2:
-                        if (!(type == 'pointer')) return [3, 4];
-                        return [4, this.RetrieveDataKeyInitializePointer(el, sector, dataKey)];
+                        if (type == 'value')
+                            return [2, (this.RetrieveDataKeyInitializeValue(el))];
+                        if (!(type == 'mapping')) return [3, 4];
+                        return [4, this.RetrieveDataKeyInitializeMapping(el, sector, dataKey)];
                     case 3: return [2, (_a.sent())];
                     case 4:
-                        if (!(type == 'function')) return [3, 6];
-                        return [4, this.RetrieveDataKeyInitializeFunction(dataKey, el)];
+                        if (!(type == 'pointer')) return [3, 6];
+                        return [4, this.RetrieveDataKeyInitializePointer(el, sector, dataKey)];
                     case 5: return [2, (_a.sent())];
                     case 6:
+                        if (!(type == 'function')) return [3, 8];
+                        return [4, this.RetrieveDataKeyInitializeFunction(dataKey, el)];
+                    case 7: return [2, (_a.sent())];
+                    case 8:
                         if (type == 'querystring')
                             return [2, (this.RetrieveDataKeyInitializeQueryString(el, sector, dataKey))];
                         if (type == 'query')
@@ -1442,14 +1444,34 @@ var DrapoStorage = (function () {
             return (dataValue);
         return ('');
     };
-    DrapoStorage.prototype.RetrieveDataKeyInitializeArray = function (el) {
-        var dataValue = el.getAttribute('d-dataValue');
-        if (dataValue == null)
-            return ([]);
-        var data = this.Application.Parser.ParseIterator(dataValue);
-        if (data.length)
-            return (data);
-        return ([data]);
+    DrapoStorage.prototype.RetrieveDataKeyInitializeArray = function (el, sector, dataKey) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dataValue, mustacheParts, dataKeyReference, dataValueObject, dataArray, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dataValue = el.getAttribute('d-dataValue');
+                        if (dataValue == null)
+                            return [2, ([])];
+                        if (!this.Application.Parser.IsMustache(dataValue)) return [3, 2];
+                        mustacheParts = this.Application.Parser.ParseMustache(dataValue);
+                        dataKeyReference = this.Application.Solver.ResolveDataKey(mustacheParts);
+                        this.Application.Observer.SubscribeStorage(dataKeyReference, null, dataKey, DrapoStorageLinkType.Pointer);
+                        this.Application.Observer.SubscribeStorage(dataKey, null, dataKeyReference, DrapoStorageLinkType.Pointer);
+                        return [4, this.RetrieveDataValue(sector, dataValue)];
+                    case 1:
+                        dataValueObject = _a.sent();
+                        dataArray = [];
+                        dataArray.push(dataValueObject);
+                        return [2, (dataArray)];
+                    case 2:
+                        data = this.Application.Parser.ParseIterator(dataValue);
+                        if (data.length)
+                            return [2, (data)];
+                        return [2, ([data])];
+                }
+            });
+        });
     };
     DrapoStorage.prototype.RetrieveDataKeyInitializeMapping = function (el, sector, dataKey) {
         return __awaiter(this, void 0, void 0, function () {

@@ -941,7 +941,7 @@ class DrapoStorage {
         if (type == 'object')
             return (this.RetrieveDataKeyInitializeObject(el));
         if (type == 'array')
-            return (this.RetrieveDataKeyInitializeArray(el));
+            return (await this.RetrieveDataKeyInitializeArray(el, sector, dataKey));
         if (type == 'value')
             return (this.RetrieveDataKeyInitializeValue(el));
         if (type == 'mapping')
@@ -968,10 +968,22 @@ class DrapoStorage {
         return ('');
     }
 
-    private RetrieveDataKeyInitializeArray(el: HTMLElement): any[] {
+    private async RetrieveDataKeyInitializeArray(el: HTMLElement, sector: string, dataKey: string): Promise<any[]> {
         const dataValue: string = el.getAttribute('d-dataValue');
         if (dataValue == null)
             return ([]);
+        if (this.Application.Parser.IsMustache(dataValue)) {
+            //Subscribe
+            const mustacheParts: string[] = this.Application.Parser.ParseMustache(dataValue);
+            const dataKeyReference: string = this.Application.Solver.ResolveDataKey(mustacheParts);
+            this.Application.Observer.SubscribeStorage(dataKeyReference, null, dataKey, DrapoStorageLinkType.Pointer);
+            this.Application.Observer.SubscribeStorage(dataKey, null, dataKeyReference, DrapoStorageLinkType.Pointer);
+            //Value
+            const dataValueObject: any = await this.RetrieveDataValue(sector, dataValue);
+            const dataArray: any[] = [];
+            dataArray.push(dataValueObject);
+            return (dataArray);
+        }
         const data: any[] = this.Application.Parser.ParseIterator(dataValue);
         if (data.length)
             return (data);
