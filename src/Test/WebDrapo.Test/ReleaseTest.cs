@@ -676,6 +676,11 @@ namespace WebDrapo.Test
             ValidatePage("DataAccess");
         }
         [TestCase]
+        public void DataArrayFromObjectTest()
+        {
+            ValidatePage("DataArrayFromObject");
+        }
+        [TestCase]
         public void DataBadRequestTest()
         {
             ValidatePage("DataBadRequest");
