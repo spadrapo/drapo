@@ -52,6 +52,7 @@ var DrapoApplication = (function () {
         this._register = new DrapoRegister(this);
         this._serializer = new DrapoSerializer(this);
         this._barber = new DrapoBarber(this);
+        this._searcher = new DrapoSearcher(this);
         this._modelHandler = new DrapoModelHandler(this);
         this._attributeHandler = new DrapoAttributeHandler(this);
         this._classHandler = new DrapoClassHandler(this);
@@ -173,6 +174,13 @@ var DrapoApplication = (function () {
     Object.defineProperty(DrapoApplication.prototype, "Barber", {
         get: function () {
             return (this._barber);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoApplication.prototype, "Searcher", {
+        get: function () {
+            return (this._searcher);
         },
         enumerable: false,
         configurable: true

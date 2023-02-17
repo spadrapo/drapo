@@ -267,7 +267,7 @@ var DrapoControlFlow = (function () {
                                 this.Application.Observer.SubscribeLinkMustache(forIfText, dataKey);
                         }
                         if (!conditionalForIfResult) return [3, 6];
-                        return [4, this.Application.Storage.Retrieve(forJQuery, dataKey, sector, context, dataKeyIteratorParts)];
+                        return [4, this.Application.Storage.Retrieve(dataKey, sector, context, dataKeyIteratorParts)];
                     case 5:
                         dataItem = _f.sent();
                         if (dataItem == null)
