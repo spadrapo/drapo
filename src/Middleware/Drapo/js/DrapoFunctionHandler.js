@@ -2138,7 +2138,7 @@ var DrapoFunctionHandler = (function () {
                         dataKeyIterator = range == null ? dataKeyIteratorRange : this.Application.ControlFlow.CleanIteratorRange(dataKeyIteratorRange);
                         dataKey = dataKeyIterator;
                         dataKeyIteratorParts = this.Application.Parser.ParseForIterable(dataKeyIterator);
-                        return [4, this.Application.Storage.Retrieve(null, dataKey, sector, context, dataKeyIteratorParts)];
+                        return [4, this.Application.Storage.Retrieve(dataKey, sector, context, dataKeyIteratorParts)];
                     case 6:
                         dataItem = _b.sent();
                         if (dataItem == null)
@@ -2954,7 +2954,7 @@ var DrapoFunctionHandler = (function () {
                         dataKeyIterator = range == null ? dataKeyIteratorRange : this.Application.ControlFlow.CleanIteratorRange(dataKeyIteratorRange);
                         dataKeyIteratorParts = this.Application.Parser.ParseForIterable(dataKeyIterator);
                         dataKey = dataKeyIteratorParts[0];
-                        return [4, this.Application.Storage.Retrieve(null, dataKey, sector, context, dataKeyIteratorParts)];
+                        return [4, this.Application.Storage.Retrieve(dataKey, sector, context, dataKeyIteratorParts)];
                     case 9:
                         dataItem = _c.sent();
                         if (dataItem == null)

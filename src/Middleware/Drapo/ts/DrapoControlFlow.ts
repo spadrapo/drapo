@@ -208,7 +208,7 @@ class DrapoControlFlow {
             }
             //Storage
             if (conditionalForIfResult) {
-                dataItem = await this.Application.Storage.Retrieve(forJQuery, dataKey, sector, context, dataKeyIteratorParts);
+                dataItem = await this.Application.Storage.Retrieve(dataKey, sector, context, dataKeyIteratorParts);
                 if (dataItem == null)
                     return (false);
                 if ((isDataKey) && (dataKeyIteratorParts.length > 1)) {

@@ -940,7 +940,7 @@ class DrapoFunctionHandler {
         const dataKeyIterator: string = range == null ? dataKeyIteratorRange : this.Application.ControlFlow.CleanIteratorRange(dataKeyIteratorRange);
         const dataKey: string = dataKeyIterator;
         const dataKeyIteratorParts: string[] = this.Application.Parser.ParseForIterable(dataKeyIterator);
-        const dataItem: DrapoStorageItem = await this.Application.Storage.Retrieve(null, dataKey, sector, context, dataKeyIteratorParts);
+        const dataItem: DrapoStorageItem = await this.Application.Storage.Retrieve(dataKey, sector, context, dataKeyIteratorParts);
         if (dataItem == null)
             return ('');
         const datasFiltered: any[] = [];
@@ -1276,7 +1276,7 @@ class DrapoFunctionHandler {
         const dataKeyIterator: string = range == null ? dataKeyIteratorRange : this.Application.ControlFlow.CleanIteratorRange(dataKeyIteratorRange);
         const dataKeyIteratorParts: string[] = this.Application.Parser.ParseForIterable(dataKeyIterator);
         const dataKey: string = dataKeyIteratorParts[0];
-        const dataItem: DrapoStorageItem = await this.Application.Storage.Retrieve(null, dataKey, sector, context, dataKeyIteratorParts);
+        const dataItem: DrapoStorageItem = await this.Application.Storage.Retrieve(dataKey, sector, context, dataKeyIteratorParts);
         if (dataItem == null)
             return ('');
         let datas: any[] = (dataKeyIteratorParts.length > 1) ? this.Application.Solver.ResolveDataObjectPathObject(dataItem.Data, dataKeyIteratorParts) : dataItem.Data;

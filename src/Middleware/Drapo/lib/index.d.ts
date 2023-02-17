@@ -14,6 +14,7 @@ declare class DrapoApplication {
     private _register;
     private _serializer;
     private _barber;
+    private _searcher;
     private _modelHandler;
     private _attributeHandler;
     private _classHandler;
@@ -48,6 +49,7 @@ declare class DrapoApplication {
     get Register(): DrapoRegister;
     get Serializer(): DrapoSerializer;
     get Barber(): DrapoBarber;
+    get Searcher(): DrapoSearcher;
     get ModelHandler(): DrapoModelHandler;
     get AttributeHandler(): DrapoAttributeHandler;
     get ClassHandler(): DrapoClassHandler;
@@ -1632,6 +1634,15 @@ declare class DrapoRouter {
     UpdateURL(url: string): Promise<void>;
 }
 
+declare class DrapoSearcher {
+    private _application;
+    get Application(): DrapoApplication;
+    constructor(application: DrapoApplication);
+    FindDataKey(dataKey: string, sector: string): HTMLElement;
+    HasDataKeyElement(dataKey: string): boolean;
+    private Filter;
+}
+
 declare class DrapoSectorContainerHandler {
     private readonly CONTAINER_EQUAL;
     private _application;
@@ -1893,7 +1904,7 @@ declare class DrapoStorage {
     constructor(application: DrapoApplication);
     private AdquireLock;
     private ReleaseLock;
-    Retrieve(elj: JQuery, dataKey: string, sector: string, context: DrapoContext, dataKeyParts?: string[]): Promise<DrapoStorageItem>;
+    Retrieve(dataKey: string, sector: string, context: DrapoContext, dataKeyParts?: string[]): Promise<DrapoStorageItem>;
     RetrieveDataItemContext(dataKey: string, sector: string, executionContext?: DrapoExecutionContext<any>): Promise<DrapoStorageItem>;
     RetrieveData(dataKey: string, sector: string, executionContext?: DrapoExecutionContext<any>): Promise<any[]>;
     RetrieveStorageItemsCached(sector: string, dataKeyOrDataGroup: string): DrapoStorageItem[];
@@ -1910,7 +1921,6 @@ declare class DrapoStorage {
     IsDataKey(dataKey: string, sector: string, renderContext?: DrapoRenderContext): boolean;
     IsDataKeyDelay(dataKey: string, sector: string): boolean;
     private IsDataKeyElement;
-    private IsDataKeyElementInternal;
     EnsureDataKeyReady(dataKey: string, sector: string): Promise<number>;
     EnsureDataKeyFieldReady(dataKey: string, sector: string, dataPath: string[]): Promise<boolean>;
     GetData(sector: string, dataPath: string[]): string;
@@ -1924,8 +1934,6 @@ declare class DrapoStorage {
     private CreateDataPath;
     LoadDataDelayedAndNotify(): Promise<void>;
     RetrieveDataItem(dataKey: string, sector: string, canLoadDelay?: boolean, dataDelayFields?: string[]): Promise<DrapoStorageItem>;
-    private Filter;
-    private GetDataKeyElement;
     private RetrieveDataItemInternal;
     private RetrieveDataKey;
     private RetrieveDataKeyUrl;

@@ -70,7 +70,7 @@ var DrapoStorage = (function () {
     DrapoStorage.prototype.ReleaseLock = function () {
         this._lock = false;
     };
-    DrapoStorage.prototype.Retrieve = function (elj, dataKey, sector, context, dataKeyParts) {
+    DrapoStorage.prototype.Retrieve = function (dataKey, sector, context, dataKeyParts) {
         if (dataKeyParts === void 0) { dataKeyParts = null; }
         return __awaiter(this, void 0, void 0, function () {
             var item;
@@ -454,17 +454,13 @@ var DrapoStorage = (function () {
     };
     DrapoStorage.prototype.IsDataKeyElement = function (dataKey, renderContext) {
         if (renderContext === null)
-            return (this.IsDataKeyElementInternal(dataKey));
+            return (this.Application.Searcher.HasDataKeyElement(dataKey));
         var hasDataKeyElement = renderContext.HasDataKeyElement(dataKey);
         if (hasDataKeyElement !== null)
             return (hasDataKeyElement);
-        var isDataKeyElement = this.IsDataKeyElementInternal(dataKey);
+        var isDataKeyElement = this.Application.Searcher.HasDataKeyElement(dataKey);
         renderContext.AddDataKeyElement(dataKey, isDataKeyElement);
         return (isDataKeyElement);
-    };
-    DrapoStorage.prototype.IsDataKeyElementInternal = function (dataKey) {
-        var jqueryDataKeys = $("[d-dataKey='" + dataKey + "']");
-        return ((jqueryDataKeys != null) && (jqueryDataKeys.length > 0));
     };
     DrapoStorage.prototype.EnsureDataKeyReady = function (dataKey, sector) {
         return __awaiter(this, void 0, void 0, function () {
@@ -870,29 +866,6 @@ var DrapoStorage = (function () {
             });
         });
     };
-    DrapoStorage.prototype.Filter = function (sector, jqueryDataKeys) {
-        var sectors = this.Application.Document.GetSectorsAllowed(sector);
-        for (var i = 0; i < jqueryDataKeys.length; i++) {
-            var el = jqueryDataKeys[i];
-            var elSector = this.Application.Document.GetSector(el);
-            if (elSector !== sector) {
-                var elAccess = el.getAttribute('d-dataAccess');
-                if (elAccess == 'private')
-                    continue;
-                var elType = el.getAttribute('d-dataType');
-                if ((elAccess == null) && (elType === 'parent'))
-                    continue;
-            }
-            if ((this.Application.Document.IsSectorAllowed(elSector, sectors)) && (!this.Application.Document.IsElementDetached(el)))
-                return (el);
-        }
-        return (null);
-    };
-    DrapoStorage.prototype.GetDataKeyElement = function (dataKey, sector) {
-        var jqueryDataKeys = $("[d-dataKey='" + dataKey + "']");
-        var el = this.Filter(sector, jqueryDataKeys);
-        return (el);
-    };
     DrapoStorage.prototype.RetrieveDataItemInternal = function (dataKey, sector, canLoadDelay, dataDelayFields) {
         if (canLoadDelay === void 0) { canLoadDelay = false; }
         if (dataDelayFields === void 0) { dataDelayFields = null; }
@@ -905,7 +878,7 @@ var DrapoStorage = (function () {
                         itemSystem = _a.sent();
                         if (itemSystem !== null)
                             return [2, (itemSystem)];
-                        el = this.GetDataKeyElement(dataKey, sector);
+                        el = this.Application.Searcher.FindDataKey(dataKey, sector);
                         if (!(el == null)) return [3, 3];
                         return [4, this.Application.ExceptionHandler.HandleError('Storage - RetrieveDataItemInternal - Invalid DataKey: {0}', dataKey)];
                     case 2:
@@ -2431,7 +2404,7 @@ var DrapoStorage = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        el = this.GetDataKeyElement(dataKey, sector);
+                        el = this.Application.Searcher.FindDataKey(dataKey, sector);
                         if (el === null)
                             return [2, (false)];
                         dataValue = el.getAttribute('d-dataValue');
