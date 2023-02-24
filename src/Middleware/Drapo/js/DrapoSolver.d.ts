@@ -25,6 +25,7 @@ declare class DrapoSolver {
     CreateMustacheContext(context: DrapoContext, mustacheParts: string[], canResolveKey?: boolean): string;
     private CreateContextAbsoluteArray;
     private AppendContextAbsoluteArray;
+    private IsContextItemSameDataKey;
     private AppendContextAbsoluteIterators;
     CreateMustacheReference(sector: string, contextItem: DrapoContextItem, mustache: string): Promise<string>;
     private GetContextItemAbsolute;

@@ -405,6 +405,11 @@ namespace WebDrapo.Test
             ValidatePage("ControlFlowForAttributeExpression");
         }
         [TestCase]
+        public void ControlFlowForComponentMultipleSourcesTest()
+        {
+            ValidatePage("ControlFlowForComponentMultipleSources");
+        }
+        [TestCase]
         public void ControlFlowForDataFieldTest()
         {
             ValidatePage("ControlFlowForDataField");
