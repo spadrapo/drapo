@@ -20576,8 +20576,8 @@ var DrapoSolver = (function () {
         if ((canResolveKey) && (context.Item.Key === mustachePart)) {
             var contextKey = [];
             for (var i = 0; i < context.IndexRelatives.length; i++)
-                this.AppendContextAbsoluteArray(context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0);
-            this.AppendContextAbsoluteArray(context.Item, context.IndexRelative, contextKey, context.IndexRelatives.length === 0);
+                this.AppendContextAbsoluteArray(context.Item, context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0);
+            this.AppendContextAbsoluteArray(context.Item, context.Item, context.IndexRelative, contextKey, context.IndexRelatives.length === 0);
             return (contextKey);
         }
         for (var i = 0; i < context.ItemsCurrentStack.length; i++) {
@@ -20588,13 +20588,22 @@ var DrapoSolver = (function () {
         }
         return (null);
     };
-    DrapoSolver.prototype.AppendContextAbsoluteArray = function (item, index, context, checkIndex) {
+    DrapoSolver.prototype.AppendContextAbsoluteArray = function (itemCurrent, item, index, context, checkIndex) {
+        if (!this.IsContextItemSameDataKey(itemCurrent, item))
+            return;
         var iterators = this.Application.Parser.ParseForIterable(item.Iterator);
         if (iterators.length == 1)
             context.push(item.Iterator);
         else
             this.AppendContextAbsoluteIterators(item, context, iterators, checkIndex);
         context.push('[' + index + ']');
+    };
+    DrapoSolver.prototype.IsContextItemSameDataKey = function (itemCurrent, item) {
+        if (item.DataKey == itemCurrent.DataKey)
+            return (true);
+        if (item.Key == itemCurrent.DataKey)
+            return (true);
+        return (false);
     };
     DrapoSolver.prototype.AppendContextAbsoluteIterators = function (item, context, iterators, checkIndex) {
         var start = ((checkIndex) && (item.DataKey === iterators[0])) ? 0 : 1;

@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Component Multiple Sources</title>
+</head>
+<body>
+    <span>Control Flow - For - Component Multiple Sources</span>
+    <div d-dataKey="objectSizes" d-dataType="array" d-dataUrlGet="~/Data/GetObjectSizes"></div>
+    <div d-datakey="options" d-dataurlget="/Data/GetModelSample"></div>
+    <div>
+        <div d-for="size in objectSizes.Sizes">
+            <br />
+            <span d-model="{{size.Value}}"></span>
+            <div>
+                <div d-for="option in options">
+                    <d-switch dc-model="{{option.Visible}}" dc-titleTurnOn="On" dc-titleTurnOff="Off" dc-on-click="ToggleItemField({{option.Visible}})"></d-switch>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

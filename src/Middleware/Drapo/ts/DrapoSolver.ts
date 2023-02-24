@@ -294,8 +294,7 @@ class DrapoSolver {
     public CreateMustacheContext(context: DrapoContext, mustacheParts: string[], canResolveKey: boolean = true): string {
         const mustacheContext: string[] = [];
         let updated: boolean = false;
-        for (let i: number = 0; i < mustacheParts.length; i++)
-        {
+        for (let i: number = 0; i < mustacheParts.length; i++) {
             const mustachePart: string = mustacheParts[i];
             const mustachePartNext: string = i < (mustacheParts.length - 1) ? mustacheParts[i + 1] : null;
             const mustacheSystem: string = mustachePartNext != null ? this.GetSystemContextPathValue(null, context, [mustachePart, mustachePartNext]) : null;
@@ -326,8 +325,8 @@ class DrapoSolver {
         if ((canResolveKey) && (context.Item.Key === mustachePart)) {
             const contextKey: string[] = [];
             for (let i: number = 0; i < context.IndexRelatives.length; i++)
-                this.AppendContextAbsoluteArray(context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0);
-            this.AppendContextAbsoluteArray(context.Item, context.IndexRelative, contextKey, context.IndexRelatives.length === 0);
+                this.AppendContextAbsoluteArray(context.Item, context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0);
+            this.AppendContextAbsoluteArray(context.Item, context.Item, context.IndexRelative, contextKey, context.IndexRelatives.length === 0);
             return (contextKey);
         }
         for (let i: number = 0; i < context.ItemsCurrentStack.length; i++) {
@@ -339,13 +338,23 @@ class DrapoSolver {
         return (null);
     }
 
-    private AppendContextAbsoluteArray(item: DrapoContextItem, index: number, context: string[], checkIndex: boolean): void{
+    private AppendContextAbsoluteArray(itemCurrent: DrapoContextItem, item: DrapoContextItem, index: number, context: string[], checkIndex: boolean): void {
+        if (!this.IsContextItemSameDataKey(itemCurrent, item))
+            return;
         const iterators: string[] = this.Application.Parser.ParseForIterable(item.Iterator);
         if (iterators.length == 1)
             context.push(item.Iterator);
         else
             this.AppendContextAbsoluteIterators(item, context, iterators, checkIndex);
         context.push('[' + index + ']');
+    }
+
+    private IsContextItemSameDataKey(itemCurrent: DrapoContextItem, item: DrapoContextItem): boolean {
+        if (item.DataKey == itemCurrent.DataKey)
+            return (true);
+        if (item.Key == itemCurrent.DataKey)
+            return (true);
+        return (false);
     }
 
     private AppendContextAbsoluteIterators(item: DrapoContextItem, context: string[], iterators: string[], checkIndex: boolean): void {
@@ -857,7 +866,7 @@ class DrapoSolver {
         return (index.toString());
     }
 
-    private GetSystemContextPathValueIndexRelative(context: DrapoContext, key : string): string {
+    private GetSystemContextPathValueIndexRelative(context: DrapoContext, key: string): string {
         const indexRelative: number = context.GetIndexRelative(key);
         if (indexRelative === null)
             return (null);
