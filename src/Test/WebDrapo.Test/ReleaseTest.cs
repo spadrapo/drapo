@@ -410,6 +410,11 @@ namespace WebDrapo.Test
             ValidatePage("ControlFlowForComponentMultipleSources");
         }
         [TestCase]
+        public void ControlFlowForComponentMultipleSourcesCompositeTest()
+        {
+            ValidatePage("ControlFlowForComponentMultipleSourcesComposite");
+        }
+        [TestCase]
         public void ControlFlowForComponentMultipleSourcesRangeTest()
         {
             ValidatePage("ControlFlowForComponentMultipleSourcesRange");
