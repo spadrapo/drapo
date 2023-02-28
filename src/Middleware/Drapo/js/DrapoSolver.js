@@ -445,9 +445,11 @@ var DrapoSolver = (function () {
     DrapoSolver.prototype.CreateContextAbsoluteArray = function (context, mustachePart, canResolveKey) {
         if ((canResolveKey) && (context.Item.Key === mustachePart)) {
             var contextKey = [];
+            var hasInsertedContext = false;
             for (var i = 0; i < context.IndexRelatives.length; i++)
-                this.AppendContextAbsoluteArray(context.Item, context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0);
-            this.AppendContextAbsoluteArray(context.Item, context.Item, context.IndexRelative, contextKey, context.IndexRelatives.length === 0);
+                if (this.AppendContextAbsoluteArray(context.Item, context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0))
+                    hasInsertedContext = true;
+            this.AppendContextAbsoluteArray(context.Item, context.Item, context.IndexRelative, contextKey, !hasInsertedContext);
             return (contextKey);
         }
         for (var i = 0; i < context.ItemsCurrentStack.length; i++) {
@@ -460,13 +462,14 @@ var DrapoSolver = (function () {
     };
     DrapoSolver.prototype.AppendContextAbsoluteArray = function (itemCurrent, item, index, context, checkIndex) {
         if (!this.IsContextItemSameDataKey(itemCurrent, item))
-            return;
+            return (false);
         var iterators = this.Application.Parser.ParseForIterable(item.Iterator);
         if (iterators.length == 1)
             context.push(item.Iterator);
         else
             this.AppendContextAbsoluteIterators(item, context, iterators, checkIndex);
         context.push('[' + index + ']');
+        return (true);
     };
     DrapoSolver.prototype.IsContextItemSameDataKey = function (itemCurrent, item) {
         if (item.DataKey == itemCurrent.DataKey)

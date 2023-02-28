@@ -324,9 +324,11 @@ class DrapoSolver {
     private CreateContextAbsoluteArray(context: DrapoContext, mustachePart: string, canResolveKey: boolean): string[] {
         if ((canResolveKey) && (context.Item.Key === mustachePart)) {
             const contextKey: string[] = [];
+            let hasInsertedContext: boolean = false;
             for (let i: number = 0; i < context.IndexRelatives.length; i++)
-                this.AppendContextAbsoluteArray(context.Item, context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0);
-            this.AppendContextAbsoluteArray(context.Item, context.Item, context.IndexRelative, contextKey, context.IndexRelatives.length === 0);
+                if (this.AppendContextAbsoluteArray(context.Item, context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0))
+                    hasInsertedContext = true;
+            this.AppendContextAbsoluteArray(context.Item, context.Item, context.IndexRelative, contextKey, !hasInsertedContext);
             return (contextKey);
         }
         for (let i: number = 0; i < context.ItemsCurrentStack.length; i++) {
@@ -338,15 +340,16 @@ class DrapoSolver {
         return (null);
     }
 
-    private AppendContextAbsoluteArray(itemCurrent: DrapoContextItem, item: DrapoContextItem, index: number, context: string[], checkIndex: boolean): void {
+    private AppendContextAbsoluteArray(itemCurrent: DrapoContextItem, item: DrapoContextItem, index: number, context: string[], checkIndex: boolean): boolean {
         if (!this.IsContextItemSameDataKey(itemCurrent, item))
-            return;
+            return(false);
         const iterators: string[] = this.Application.Parser.ParseForIterable(item.Iterator);
         if (iterators.length == 1)
             context.push(item.Iterator);
         else
             this.AppendContextAbsoluteIterators(item, context, iterators, checkIndex);
         context.push('[' + index + ']');
+        return (true);
     }
 
     private IsContextItemSameDataKey(itemCurrent: DrapoContextItem, item: DrapoContextItem): boolean {

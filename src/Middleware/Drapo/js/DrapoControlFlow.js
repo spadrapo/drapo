@@ -391,7 +391,7 @@ var DrapoControlFlow = (function () {
                         viewportIndexDifference = (isViewportActive ? (1 - startViewport) : 0);
                         nodeIndex = j - nodesRemovedCount + viewportIndexDifference;
                         oldNode = ((items !== null) && (nodeIndex < items.length)) ? items[nodeIndex] : null;
-                        item = context.Create(data, template, elementForTemplate, dataKey, key, dataKeyIteratorRange, j, oldNode);
+                        item = context.Create(data, template, elementForTemplate, dataKey, key, dataKeyIterator, j, oldNode);
                         _d = (hasIfText);
                         if (!_d) return [3, 21];
                         return [4, this.Application.Solver.ResolveConditional(ifText, templateJ, sector, context, renderContext, elementForTemplate)];

@@ -270,6 +270,11 @@ namespace WebDrapo.Test
             ValidatePage("ComponentLabelContextIndex");
         }
         [TestCase]
+        public void ComponentLabelContextIndexIFTest()
+        {
+            ValidatePage("ComponentLabelContextIndexIF");
+        }
+        [TestCase]
         public void ComponentLabelContextInlineForTest()
         {
             ValidatePage("ComponentLabelContextInlineFor");
@@ -408,6 +413,21 @@ namespace WebDrapo.Test
         public void ControlFlowForComponentMultipleSourcesTest()
         {
             ValidatePage("ControlFlowForComponentMultipleSources");
+        }
+        [TestCase]
+        public void ControlFlowForComponentMultipleSourcesCompositeTest()
+        {
+            ValidatePage("ControlFlowForComponentMultipleSourcesComposite");
+        }
+        [TestCase]
+        public void ControlFlowForComponentMultipleSourcesCompositeRangeTest()
+        {
+            ValidatePage("ControlFlowForComponentMultipleSourcesCompositeRange");
+        }
+        [TestCase]
+        public void ControlFlowForComponentMultipleSourcesRangeTest()
+        {
+            ValidatePage("ControlFlowForComponentMultipleSourcesRange");
         }
         [TestCase]
         public void ControlFlowForDataFieldTest()
