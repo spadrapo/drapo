@@ -270,6 +270,11 @@ namespace WebDrapo.Test
             ValidatePage("ComponentLabelContextIndex");
         }
         [TestCase]
+        public void ComponentLabelContextIndexIFTest()
+        {
+            ValidatePage("ComponentLabelContextIndexIF");
+        }
+        [TestCase]
         public void ComponentLabelContextInlineForTest()
         {
             ValidatePage("ComponentLabelContextInlineFor");
