@@ -639,6 +639,8 @@ var DrapoParser = (function () {
         if (culture === void 0) { culture = null; }
         if (data === null)
             return (null);
+        if (typeof data.getMonth === 'function')
+            return data;
         var dateISO = this.GetDateISO(data);
         if (dateISO !== null)
             return (dateISO);

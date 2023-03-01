@@ -689,6 +689,8 @@ class DrapoParser {
     public ParseDateCulture(data: string, culture: string = null): Date {
         if (data === null)
             return (null);
+        if (typeof (<any>data).getMonth === 'function')
+            return (<Date><any>data);
         const dateISO: Date = this.GetDateISO(data);
         if (dateISO !== null)
             return (dateISO);
