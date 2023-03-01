@@ -1096,6 +1096,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionAddDataItemReference");
         }
         [TestCase]
+        public void FunctionAddDateTest()
+        {
+            ValidatePage("FunctionAddDate");
+        }
+        [TestCase]
         public void FunctionAddRequestHeaderTest()
         {
             ValidatePage("FunctionAddRequestHeader");

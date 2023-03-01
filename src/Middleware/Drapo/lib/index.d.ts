@@ -925,6 +925,7 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionCreateGuid;
     private ExecuteFunctionCreateTick;
     private ExecuteFunctionGetDate;
+    private ExecuteFunctionAddDate;
     private ExecuteFunctionPushStack;
     private ExecuteFunctionPopStack;
     private ExecuteFunctionPeekStack;

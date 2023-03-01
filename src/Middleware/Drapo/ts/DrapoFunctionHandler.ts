@@ -345,6 +345,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionCreateTick(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'getdate')
             return (await this.ExecuteFunctionGetDate(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'adddate')
+            return (await this.ExecuteFunctionAddDate(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'pushstack')
             return (await this.ExecuteFunctionPushStack(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'popstack')
@@ -1210,6 +1212,30 @@ class DrapoFunctionHandler {
         let date: Date = new Date();
         //Return Type
         const returnType: string = functionParsed.Parameters.length > 0 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]) : 'date';
+        if (returnType.toUpperCase() == 'ISO')
+            return (date.toISOString());
+        return (date as any);
+    }
+
+    private async ExecuteFunctionAddDate(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        //Date
+        const dateParameter: any = functionParsed.Parameters.length > 0 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]) : null;
+        const dateParameterParsed: Date = this.Application.Parser.ParseDateCulture(dateParameter);
+        const date: Date = (dateParameterParsed != null) ? dateParameterParsed : new Date();
+        //Type
+        const typeParameter: string = functionParsed.Parameters.length > 1 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]) : 'day';
+        const type: string = typeParameter != null ? typeParameter : 'day';
+        //Increment
+        const incrementParameter: string = functionParsed.Parameters.length > 2 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]) : '1';
+        const increment: number = this.Application.Parser.ParseNumber(incrementParameter, 1);
+        if (type === 'day')
+            date.setDate(date.getDate() + increment);
+        else if (type === 'month')
+            date.setMonth(date.getMonth() + increment);
+        if (type === 'year')
+            date.setFullYear(date.getFullYear() + increment);
+        //Return Type
+        const returnType: string = functionParsed.Parameters.length > 3 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3]) : 'date';
         if (returnType.toUpperCase() == 'ISO')
             return (date.toISOString());
         return (date as any);
