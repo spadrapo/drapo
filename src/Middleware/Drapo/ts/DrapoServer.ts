@@ -128,6 +128,7 @@ class DrapoServer {
                 await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, 'RedirectPage(' + location + ')', this.Application.FunctionHandler.CreateExecutionContext(false));
         }
         if (response.Status == 200) {
+            await this.CleanBadRequestStorage();
             await this.Application.CookieHandler.HandleCookieValuesChanges(cookieValues);
             if (response.Body == '')
                 return (null);
@@ -137,7 +138,6 @@ class DrapoServer {
             }
             let dataResponse: any[];
             dataResponse = this.Application.Serializer.Deserialize(response.Body);
-            await this.CleanBadRequestStorage();
             return (dataResponse);
         } else if (response.Status == 204) {
             await this.CleanBadRequestStorage();

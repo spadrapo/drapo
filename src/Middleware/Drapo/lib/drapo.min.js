@@ -19539,8 +19539,11 @@ var DrapoServer = (function () {
                         _c.label = 6;
                     case 6:
                         if (!(response.Status == 200)) return [3, 9];
-                        return [4, this.Application.CookieHandler.HandleCookieValuesChanges(cookieValues)];
+                        return [4, this.CleanBadRequestStorage()];
                     case 7:
+                        _c.sent();
+                        return [4, this.Application.CookieHandler.HandleCookieValuesChanges(cookieValues)];
+                    case 8:
                         _c.sent();
                         if (response.Body == '')
                             return [2, (null)];
@@ -19550,9 +19553,6 @@ var DrapoServer = (function () {
                         }
                         dataResponse = void 0;
                         dataResponse = this.Application.Serializer.Deserialize(response.Body);
-                        return [4, this.CleanBadRequestStorage()];
-                    case 8:
-                        _c.sent();
                         return [2, (dataResponse)];
                     case 9:
                         if (!(response.Status == 204)) return [3, 11];
