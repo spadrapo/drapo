@@ -225,7 +225,7 @@ var DrapoServer = (function () {
                         _c.sent();
                         _c.label = 6;
                     case 6:
-                        if (!(response.Status == 200)) return [3, 8];
+                        if (!(response.Status == 200)) return [3, 9];
                         return [4, this.Application.CookieHandler.HandleCookieValuesChanges(cookieValues)];
                     case 7:
                         _c.sent();
@@ -237,61 +237,70 @@ var DrapoServer = (function () {
                         }
                         dataResponse = void 0;
                         dataResponse = this.Application.Serializer.Deserialize(response.Body);
-                        return [2, (dataResponse)];
+                        return [4, this.CleanBadRequestStorage()];
                     case 8:
-                        if (!(response.Status == 204)) return [3, 9];
-                        return [2, (null)];
+                        _c.sent();
+                        return [2, (dataResponse)];
                     case 9:
-                        if (!(response.Status == 400)) return [3, 16];
+                        if (!(response.Status == 204)) return [3, 11];
+                        return [4, this.CleanBadRequestStorage()];
+                    case 10:
+                        _c.sent();
+                        return [2, (null)];
+                    case 11:
+                        if (!(response.Status == 400)) return [3, 18];
                         this.HasBadRequest = true;
                         return [4, this.Application.Config.GetOnBadRequest()];
-                    case 10:
+                    case 12:
                         onBadRequest = _c.sent();
-                        if (!(onBadRequest !== null)) return [3, 15];
+                        if (!(onBadRequest !== null)) return [3, 17];
                         return [4, this.Application.Config.GetStorageBadRequest()];
-                    case 11:
+                    case 13:
                         storageBadRequest = _c.sent();
-                        if (!(storageBadRequest !== null)) return [3, 13];
+                        if (!(storageBadRequest !== null)) return [3, 15];
                         dataResponse = this.Application.Serializer.Deserialize(response.Body);
                         return [4, this.Application.Storage.UpdateData(storageBadRequest, null, dataResponse)];
-                    case 12:
-                        _c.sent();
-                        _c.label = 13;
-                    case 13: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onBadRequest, this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 14:
                         _c.sent();
-                        return [2, ([])];
-                    case 15: return [2, ([])];
+                        _c.label = 15;
+                    case 15: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onBadRequest, this.Application.FunctionHandler.CreateExecutionContext(false))];
                     case 16:
-                        if (!(response.Status == 401)) return [3, 19];
-                        if (!(dataKey !== null)) return [3, 18];
-                        return [4, this.Application.Document.RequestAuthorization(dataKey, 'notify')];
-                    case 17:
                         _c.sent();
-                        _c.label = 18;
-                    case 18: return [3, 26];
+                        return [2, ([])];
+                    case 17: return [2, ([])];
+                    case 18:
+                        if (!(response.Status == 401)) return [3, 21];
+                        if (!(dataKey !== null)) return [3, 20];
+                        return [4, this.Application.Document.RequestAuthorization(dataKey, 'notify')];
                     case 19:
-                        if (!(response.Status == 500)) return [3, 26];
-                        this.HasBadRequest = true;
-                        return [4, this.Application.Config.GetOnError()];
-                    case 20:
-                        onError = _c.sent();
-                        if (!(onError !== null)) return [3, 25];
-                        return [4, this.Application.Config.GetStorageErrors()];
+                        _c.sent();
+                        _c.label = 20;
+                    case 20: return [3, 29];
                     case 21:
-                        storageErrors = _c.sent();
-                        if (!(storageErrors !== null)) return [3, 23];
-                        error = this.Application.Serializer.IsJson(response.Body) ? this.Application.Serializer.Deserialize(response.Body) : response.Body;
-                        return [4, this.Application.Storage.AddDataItem(storageErrors, null, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error))];
+                        if (!(response.Status == 500)) return [3, 29];
+                        return [4, this.CleanBadRequestStorage()];
                     case 22:
                         _c.sent();
-                        _c.label = 23;
-                    case 23: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onError, this.Application.FunctionHandler.CreateExecutionContext(false))];
+                        this.HasBadRequest = true;
+                        return [4, this.Application.Config.GetOnError()];
+                    case 23:
+                        onError = _c.sent();
+                        if (!(onError !== null)) return [3, 28];
+                        return [4, this.Application.Config.GetStorageErrors()];
                     case 24:
+                        storageErrors = _c.sent();
+                        if (!(storageErrors !== null)) return [3, 26];
+                        error = this.Application.Serializer.IsJson(response.Body) ? this.Application.Serializer.Deserialize(response.Body) : response.Body;
+                        return [4, this.Application.Storage.AddDataItem(storageErrors, null, null, this.Application.Storage.CreateErrorForStorage('DataRequest', 'Error requesting data for :' + url, error))];
+                    case 25:
+                        _c.sent();
+                        _c.label = 26;
+                    case 26: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onError, this.Application.FunctionHandler.CreateExecutionContext(false))];
+                    case 27:
                         _c.sent();
                         return [2, ([])];
-                    case 25: return [2, ([])];
-                    case 26: return [2, ([])];
+                    case 28: return [2, ([])];
+                    case 29: return [2, ([])];
                 }
             });
         });
@@ -403,6 +412,25 @@ var DrapoServer = (function () {
                         return [2, ([])];
                     case 24: return [2, ([])];
                     case 25: return [2, ([])];
+                }
+            });
+        });
+    };
+    DrapoServer.prototype.CleanBadRequestStorage = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var storageBadRequest, object;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.Application.Config.GetStorageBadRequest()];
+                    case 1:
+                        storageBadRequest = _a.sent();
+                        if (!(storageBadRequest !== null)) return [3, 3];
+                        object = {};
+                        return [4, this.Application.Storage.UpdateData(storageBadRequest, null, object)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [2];
                 }
             });
         });

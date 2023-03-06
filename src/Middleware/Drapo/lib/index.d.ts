@@ -1741,6 +1741,7 @@ declare class DrapoServer {
     GetHTML(url: string): Promise<[string, boolean]>;
     GetJSON(url: string, verb?: string, data?: string, contentType?: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
     GetFile(url: string, verb: string, data: string, contentType?: string, dataKey?: string, headers?: [string, string][], headersResponse?: [string, string][]): Promise<any[]>;
+    private CleanBadRequestStorage;
     private CreateFileObject;
     private ConvertFileBody;
     private Request;
