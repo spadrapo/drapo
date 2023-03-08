@@ -342,7 +342,7 @@ class DrapoSolver {
 
     private AppendContextAbsoluteArray(itemCurrent: DrapoContextItem, item: DrapoContextItem, index: number, context: string[], checkIndex: boolean): boolean {
         if (!this.IsContextItemSameDataKey(itemCurrent, item))
-            return(false);
+            return (false);
         const iterators: string[] = this.Application.Parser.ParseForIterable(item.Iterator);
         if (iterators.length == 1)
             context.push(item.Iterator);
@@ -427,7 +427,7 @@ class DrapoSolver {
         //Path
         for (let i = 1; i < dataPath.length; i++) {
             const currentKey: string = dataPath[i];
-            const index: number = this.GetDataObjectPathObjectPropertyIndex(currentKey);
+            const index: number = this.GetDataObjectPathObjectPropertyIndex(data, currentKey);
             if (index === null) {
                 //Property
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
@@ -514,7 +514,7 @@ class DrapoSolver {
         //Path
         for (let i = 1; i < dataPath.length; i++) {
             const currentKey: string = dataPath[i];
-            const index: number = this.GetDataObjectPathObjectPropertyIndex(currentKey);
+            const index: number = this.GetDataObjectPathObjectPropertyIndex(data, currentKey);
             if (index === null) {
                 //Property
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
@@ -537,14 +537,16 @@ class DrapoSolver {
         return (data);
     }
 
-    private GetDataObjectPathObjectPropertyIndex(property: string): number {
+    private GetDataObjectPathObjectPropertyIndex(data: any, property: string): number {
         if (property.length < 3)
             return (null);
         if (property[0] !== '[')
             return (null);
         if (property[property.length - 1] !== ']')
             return (null);
-        return (this.Application.Parser.ParseNumber(property.substring(1, property.length - 1)));
+        const isHat: boolean = (property[1] === '^');
+        const index: number = this.Application.Parser.ParseNumber(property.substring(isHat ? 2 : 1, property.length - 1)) 
+        return (((isHat) && (data.length)) ? (data.length - index) : index);
     }
 
     public ResolveDataObjectLookupHierarchy(data: any, searchField: string, searchValue: any, searchHierarchyField: string = null): any {
@@ -722,7 +724,7 @@ class DrapoSolver {
         //Path
         for (let i = 1; i < dataPath.length - 1; i++) {
             const currentKey: string = dataPath[i];
-            const index: number = this.GetDataObjectPathObjectPropertyIndex(currentKey);
+            const index: number = this.GetDataObjectPathObjectPropertyIndex(data, currentKey);
             if (index === null) {
                 //Property
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
@@ -740,7 +742,7 @@ class DrapoSolver {
             return (false);
         const dataField: string = dataPath[dataPath.length - 1];
         //Mustache is ending in indexer
-        const indexDataField: number = this.GetDataObjectPathObjectPropertyIndex(dataField);
+        const indexDataField: number = this.GetDataObjectPathObjectPropertyIndex(data, dataField);
         if (indexDataField === null) {
             if (data[dataField] === value)
                 return (false);
