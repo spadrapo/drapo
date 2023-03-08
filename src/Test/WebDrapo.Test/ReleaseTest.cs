@@ -1452,6 +1452,11 @@ namespace WebDrapo.Test
             ValidatePage("ModelTextAreaMultipleMustaches");
         }
         [TestCase]
+        public void MustacheHatTest()
+        {
+            ValidatePage("MustacheHat");
+        }
+        [TestCase]
         public void MustacheNullTest()
         {
             ValidatePage("MustacheNull");

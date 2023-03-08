@@ -20776,7 +20776,7 @@ var DrapoSolver = (function () {
         var data = dataObject;
         for (var i = 1; i < dataPath.length; i++) {
             var currentKey = dataPath[i];
-            var index = this.GetDataObjectPathObjectPropertyIndex(currentKey);
+            var index = this.GetDataObjectPathObjectPropertyIndex(data, currentKey);
             if (index === null) {
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
                     return (false);
@@ -20908,7 +20908,7 @@ var DrapoSolver = (function () {
         var data = dataObject;
         for (var i = 1; i < dataPath.length; i++) {
             var currentKey = dataPath[i];
-            var index = this.GetDataObjectPathObjectPropertyIndex(currentKey);
+            var index = this.GetDataObjectPathObjectPropertyIndex(data, currentKey);
             if (index === null) {
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
                     if ((dataEnforce !== null) && (i === dataPath.length - 1)) {
@@ -20929,14 +20929,16 @@ var DrapoSolver = (function () {
             return ('');
         return (data);
     };
-    DrapoSolver.prototype.GetDataObjectPathObjectPropertyIndex = function (property) {
+    DrapoSolver.prototype.GetDataObjectPathObjectPropertyIndex = function (data, property) {
         if (property.length < 3)
             return (null);
         if (property[0] !== '[')
             return (null);
         if (property[property.length - 1] !== ']')
             return (null);
-        return (this.Application.Parser.ParseNumber(property.substring(1, property.length - 1)));
+        var isHat = (property[1] === '^');
+        var index = this.Application.Parser.ParseNumber(property.substring(isHat ? 2 : 1, property.length - 1));
+        return (((isHat) && (data.length)) ? (data.length - index) : index);
     };
     DrapoSolver.prototype.ResolveDataObjectLookupHierarchy = function (data, searchField, searchValue, searchHierarchyField) {
         if (searchHierarchyField === void 0) { searchHierarchyField = null; }
@@ -21132,7 +21134,7 @@ var DrapoSolver = (function () {
     DrapoSolver.prototype.UpdateDataPathObject = function (data, dataPath, value) {
         for (var i = 1; i < dataPath.length - 1; i++) {
             var currentKey = dataPath[i];
-            var index = this.GetDataObjectPathObjectPropertyIndex(currentKey);
+            var index = this.GetDataObjectPathObjectPropertyIndex(data, currentKey);
             if (index === null) {
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
                     return (false);
@@ -21148,7 +21150,7 @@ var DrapoSolver = (function () {
         if (data == null)
             return (false);
         var dataField = dataPath[dataPath.length - 1];
-        var indexDataField = this.GetDataObjectPathObjectPropertyIndex(dataField);
+        var indexDataField = this.GetDataObjectPathObjectPropertyIndex(data, dataField);
         if (indexDataField === null) {
             if (data[dataField] === value)
                 return (false);
