@@ -585,6 +585,14 @@ class DrapoFunctionHandler {
 
     private async ExecuteFunctionUpdateItemField(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataPath: string[] = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
+        for (let i: number = 0; i < dataPath.length; i++) {
+            const dataPathValue: string = dataPath[i];
+            if (!this.Application.Parser.HasMustache(dataPathValue))
+                continue;
+            const dataPathValueResolved: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, dataPathValue);
+            if (dataPathValue !== dataPathValueResolved)
+                dataPath[i] = dataPathValueResolved;
+        }
         const recursiveText: string = functionParsed.Parameters.length > 3 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3]) : null;
         const recursive: boolean = ((recursiveText == null) || (recursiveText == '')) ? false : await this.Application.Solver.ResolveConditional(recursiveText);
         const resolveText: string = functionParsed.Parameters.length > 4 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4]) : null;

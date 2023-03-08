@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>FunctionUpdateItemFieldMustacheIndex</title>
+</head>
+<body>
+    <span>FunctionUpdateItemFieldMustacheIndex</span>
+    <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children=5&amp;levels=1&amp;prefix=D"></div>
+    <div d-datakey="index" d-datatype="value" d-datavalue="3"></div>
+    <span>Index:</span><input type="text" d-model="{{index}}" />
+    <br />
+    <div>
+        <div d-for="object in objects" style="display: none;">
+            <span d-model="{{object.Key}}"></span>
+            <br />
+        </div>
+    <div>
+            <span>DL1K0</span>
+            <br />
+        </div><div>
+            <span>DL1K1</span>
+            <br />
+        </div><div>
+            <span>DL1K2</span>
+            <br />
+        </div><div>
+            <span>Thiago</span>
+            <br />
+        </div><div>
+            <span>DL1K4</span>
+            <br />
+        </div></div>
+    <input type="button" value="update" d-id="__drapoUnitTest" d-on-click="UpdateItemField({{objects.[{{index}}].Key}},Thiago)" />
+
+</body></html>
