@@ -1357,6 +1357,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionUpdateDataResolve");
         }
         [TestCase]
+        public void FunctionUpdateItemFieldMustacheIndexTest()
+        {
+            ValidatePage("FunctionUpdateItemFieldMustacheIndex");
+        }
+        [TestCase]
         public void FunctionUpdateItemFieldResolveTest()
         {
             ValidatePage("FunctionUpdateItemFieldResolve");
