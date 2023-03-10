@@ -1036,7 +1036,7 @@ var DrapoFunctionHandler = (function () {
                         stateAny = _b.sent();
                         state = this.Application.Solver.ResolveConditionalBoolean(((stateAny == null) || ((typeof stateAny) === 'string')) ? stateAny : stateAny.toString());
                         stateUpdated = !state;
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, stateUpdated, notify)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, stateUpdated, notify)];
                     case 5:
                         _b.sent();
                         return [2, ('')];
@@ -1109,7 +1109,7 @@ var DrapoFunctionHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         dataPath = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, false)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, false)];
                     case 1:
                         _a.sent();
                         return [2, ('')];
@@ -1134,7 +1134,7 @@ var DrapoFunctionHandler = (function () {
                         _b.label = 3;
                     case 3:
                         notify = _a;
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, null, notify)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, null, notify)];
                     case 4:
                         _b.sent();
                         return [2, ('')];
@@ -1224,7 +1224,7 @@ var DrapoFunctionHandler = (function () {
                         _g.label = 22;
                     case 22:
                         notify = _f;
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, item, notify)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, item, notify)];
                     case 23:
                         _g.sent();
                         return [2, ('')];
@@ -1475,7 +1475,7 @@ var DrapoFunctionHandler = (function () {
                         _b.label = 3;
                     case 3:
                         nofity = _a;
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, true, nofity)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, true, nofity)];
                     case 4:
                         _b.sent();
                         return [2, ('')];
@@ -1815,7 +1815,7 @@ var DrapoFunctionHandler = (function () {
                         item = _c.sent();
                         if (!((item === null) || (item === ''))) return [3, 11];
                         item = this.Application.Document.CreateGuid();
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, item)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, item)];
                     case 10:
                         _c.sent();
                         _c.label = 11;
@@ -2450,7 +2450,7 @@ var DrapoFunctionHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         conditional = functionParsed.Parameters[0];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, new DrapoContext(contextItem), null, conditional, $(element), false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, new DrapoContext(contextItem), null, executionContext, conditional, $(element), false)];
                     case 1:
                         conditionalEvaluated = _a.sent();
                         return [4, this.Application.Solver.ResolveConditional(conditionalEvaluated)];
@@ -3053,7 +3053,7 @@ var DrapoFunctionHandler = (function () {
                         if ((datas.length !== null) && (datas.length === 0))
                             return [2, ('')];
                         ifTextResolved = this.ResolveExecutionContextMustache(sector, executionContext, ifText);
-                        return [4, this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, dataKeyIterator, forHierarchyText, ifTextResolved, all, datas, dataKey, key)];
+                        return [4, this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, dataKeyIterator, forHierarchyText, ifTextResolved, all, datas, dataKey, key, executionContext)];
                     case 10:
                         _c.sent();
                         return [2, ('')];
@@ -3155,7 +3155,7 @@ var DrapoFunctionHandler = (function () {
                     case 9:
                         _c.sent();
                         return [3, 12];
-                    case 10: return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, value, true)];
+                    case 10: return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, value, true)];
                     case 11:
                         _c.sent();
                         _c.label = 12;
@@ -3171,7 +3171,7 @@ var DrapoFunctionHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         context = contextItem != null ? contextItem.Context : new DrapoContext();
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, functionParsed.Parameters[0], null, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, functionParsed.Parameters[0], null, false)];
                     case 1:
                         value = _a.sent();
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1])];
@@ -3191,7 +3191,7 @@ var DrapoFunctionHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         context = contextItem != null ? contextItem.Context : new DrapoContext();
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, functionParsed.Parameters[0], null, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, functionParsed.Parameters[0], null, false)];
                     case 1:
                         value = _a.sent();
                         valueEncoded = this.Application.Server.EnsureUrlComponentEncoded(value);
@@ -3545,7 +3545,7 @@ var DrapoFunctionHandler = (function () {
                         return [4, this.Application.Document.GetClipboard()];
                     case 4:
                         value = _b.sent();
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, value, notify)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, value, notify)];
                     case 5:
                         _b.sent();
                         return [2, ('')];

@@ -29,10 +29,10 @@ declare class DrapoSolver {
     private AppendContextAbsoluteIterators;
     CreateMustacheReference(sector: string, contextItem: DrapoContextItem, mustache: string): Promise<string>;
     private GetContextItemAbsolute;
-    ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string>;
+    ResolveDataPathMustache(context: DrapoContext, executionContext: DrapoExecutionContext<any>, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string>;
     ExistDataPath(context: DrapoContext, sector: string, path: string[]): Promise<boolean>;
     private ExistDataPathObject;
-    ResolveDataPath(context: DrapoContext, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader?: boolean, canBindWriter?: boolean, modelEvents?: string[], modelEventsCancel?: string[], canNotify?: boolean): Promise<string>;
+    ResolveDataPath(context: DrapoContext, executionContext: DrapoExecutionContext<any>, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader?: boolean, canBindWriter?: boolean, modelEvents?: string[], modelEventsCancel?: string[], canNotify?: boolean): Promise<string>;
     private ResolveDataPathObject;
     ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean, executionContext?: DrapoExecutionContext<any>): Promise<any>;
     ResolveItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): any;
@@ -49,7 +49,7 @@ declare class DrapoSolver {
     CreateDataPath(dataKey: string, dataFields: string[]): string[];
     CombineDataPath(dataPath1: string[], dataPath2: string[]): string[];
     GetDataPathParent(dataPath: string[]): string[];
-    UpdateItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], value: any, canNotify?: boolean): Promise<boolean>;
+    UpdateItemDataPathObject(sector: string, contextItem: DrapoContextItem, executionContext: DrapoExecutionContext<any>, dataPath: string[], value: any, canNotify?: boolean): Promise<boolean>;
     UpdateDataPathObject(data: any, dataPath: string[], value: any): boolean;
     Clone(object: any, deepCopy?: boolean): any;
     private CloneArray;
@@ -58,6 +58,7 @@ declare class DrapoSolver {
     CloneArrayAny(list: any[]): any[];
     CloneElement(el: HTMLElement): HTMLElement;
     private GetSystemContextPathValue;
+    private GetExecutionContextPathValueSolved;
     GetExecutionContextPathValue(sector: string, executionContext: DrapoExecutionContext<any>, dataPath: string[]): any;
     private GetExecutionContextPathValueStack;
     private GetSystemPathValue;

@@ -523,7 +523,7 @@ var DrapoBehaviorHandler = (function () {
                         if (resizer.Model === null)
                             return [2];
                         dataPath = this.Application.Parser.ParseMustache(resizer.Model);
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(this.Application.Document.GetSector(resizer.Element), resizer.Item, dataPath, sizeNew, true)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(this.Application.Document.GetSector(resizer.Element), resizer.Item, null, dataPath, sizeNew, true)];
                     case 1:
                         _a.sent();
                         return [2];

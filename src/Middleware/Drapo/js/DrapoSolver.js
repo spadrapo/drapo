@@ -189,7 +189,7 @@ var DrapoSolver = (function () {
                         _f = i;
                         _g = DrapoExpressionItem.bind;
                         _h = [void 0, DrapoExpressionItemType.Text];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, item.Value, elj, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, item.Value, elj, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)];
                     case 4:
                         _e[_f] = new (_g.apply(DrapoExpressionItem, _h.concat([(_j.sent())])))();
                         _j.label = 5;
@@ -245,7 +245,7 @@ var DrapoSolver = (function () {
                         _k = index;
                         _l = DrapoExpressionItem.bind;
                         _m = [void 0, DrapoExpressionItemType.Text];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, item.Value, elj, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, item.Value, elj, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)];
                     case 5:
                         _j[_k] = new (_l.apply(DrapoExpressionItem, _m.concat([(_o.sent())])))();
                         _o.label = 6;
@@ -417,7 +417,7 @@ var DrapoSolver = (function () {
         for (var i = 0; i < mustacheParts.length; i++) {
             var mustachePart = mustacheParts[i];
             var mustachePartNext = i < (mustacheParts.length - 1) ? mustacheParts[i + 1] : null;
-            var mustacheSystem = mustachePartNext != null ? this.GetSystemContextPathValue(null, context, [mustachePart, mustachePartNext]) : null;
+            var mustacheSystem = mustachePartNext != null ? this.GetSystemContextPathValue(null, context, null, [mustachePart, mustachePartNext]) : null;
             if (mustacheSystem !== null) {
                 return (mustacheSystem);
             }
@@ -523,7 +523,7 @@ var DrapoSolver = (function () {
         var mustachePartsAbsolute = iteratorParts.concat('[' + contextItem.Index + ']');
         return (mustachePartsAbsolute);
     };
-    DrapoSolver.prototype.ResolveDataPathMustache = function (context, elementJQuery, sector, mustacheParts) {
+    DrapoSolver.prototype.ResolveDataPathMustache = function (context, executionContext, elementJQuery, sector, mustacheParts) {
         return __awaiter(this, void 0, void 0, function () {
             var updated, i, mustachePart, mustachePartParts, dataValue;
             return __generator(this, function (_a) {
@@ -538,7 +538,7 @@ var DrapoSolver = (function () {
                         if (!this.Application.Parser.IsMustache(mustachePart))
                             return [3, 3];
                         mustachePartParts = this.Application.Parser.ParseMustache(mustachePart);
-                        return [4, this.ResolveDataPath(context, elementJQuery, sector, mustachePartParts)];
+                        return [4, this.ResolveDataPath(context, executionContext, elementJQuery, sector, mustachePartParts)];
                     case 2:
                         dataValue = _a.sent();
                         mustacheParts[i] = dataValue;
@@ -594,7 +594,7 @@ var DrapoSolver = (function () {
             return (false);
         return (true);
     };
-    DrapoSolver.prototype.ResolveDataPath = function (context, elementJQuery, sector, path, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify) {
+    DrapoSolver.prototype.ResolveDataPath = function (context, executionContext, elementJQuery, sector, path, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify) {
         if (canBindReader === void 0) { canBindReader = false; }
         if (canBindWriter === void 0) { canBindWriter = false; }
         if (modelEvents === void 0) { modelEvents = null; }
@@ -616,7 +616,7 @@ var DrapoSolver = (function () {
                         if (!this.Application.Parser.IsMustache(mustacheIndexer))
                             return [3, 3];
                         mustacheParts = this.Application.Parser.ParseMustache(mustacheIndexer);
-                        return [4, this.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify)];
+                        return [4, this.ResolveDataPath(context, executionContext, elementJQuery, sector, mustacheParts, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify)];
                     case 2:
                         mustacheValue = _f.sent();
                         mustacheValueIndexer = isMustacheIndexer ? this.Application.Parser.CreateMustacheIndexer(mustacheValue) : mustacheValue;
@@ -628,7 +628,7 @@ var DrapoSolver = (function () {
                     case 4:
                         dataKey = this.Application.Solver.ResolveDataKey(dataPath);
                         dataFields = this.Application.Solver.ResolveDataFields(dataPath);
-                        _a = (!context.IsKey(dataKey));
+                        _a = (!context.IsKey(dataKey)) && (!this.Application.Storage.IsDataKeyExecution(dataKey));
                         if (!_a) return [3, 6];
                         return [4, this.Application.Storage.EnsureDataKeyFieldReady(dataKey, sector, dataPath)];
                     case 5:
@@ -642,7 +642,7 @@ var DrapoSolver = (function () {
                                 this.Application.Observer.SubscribeDelay(elementJQuery != null ? elementJQuery[0] : null, dataKey, dataFields);
                             return [2, (this.CreateMustache(dataPath))];
                         }
-                        return [4, this.ResolveDataPathObject(sector, context, dataPath)];
+                        return [4, this.ResolveDataPathObject(sector, context, executionContext, dataPath)];
                     case 7:
                         data = _f.sent();
                         if (!canBindWriter) return [3, 9];
@@ -663,11 +663,11 @@ var DrapoSolver = (function () {
             });
         });
     };
-    DrapoSolver.prototype.ResolveDataPathObject = function (sector, context, dataPath) {
+    DrapoSolver.prototype.ResolveDataPathObject = function (sector, context, executionContext, dataPath) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.ResolveItemDataPathObject(sector, context.Item, dataPath)];
+                    case 0: return [4, this.ResolveItemDataPathObject(sector, context.Item, dataPath, false, executionContext)];
                     case 1: return [2, (_a.sent())];
                 }
             });
@@ -681,7 +681,7 @@ var DrapoSolver = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        valueSystem = contextItem !== null ? this.GetSystemContextPathValue(sector, contextItem.Context, dataPath) : null;
+                        valueSystem = contextItem !== null ? this.GetSystemContextPathValue(sector, contextItem.Context, executionContext, dataPath) : null;
                         if (valueSystem !== null)
                             return [2, (valueSystem)];
                         valueExecutionContext = executionContext === null ? null : this.GetExecutionContextPathValue(sector, executionContext, dataPath);
@@ -877,14 +877,21 @@ var DrapoSolver = (function () {
             dataPathParent.push(dataPath[i]);
         return (dataPathParent);
     };
-    DrapoSolver.prototype.UpdateItemDataPathObject = function (sector, contextItem, dataPath, value, canNotify) {
+    DrapoSolver.prototype.UpdateItemDataPathObject = function (sector, contextItem, executionContext, dataPath, value, canNotify) {
         if (canNotify === void 0) { canNotify = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var key, storageItem, item, data;
+            var key, data, storageItem, item, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         key = dataPath[0];
+                        if ((executionContext != null) && (this.Application.Storage.IsDataKeyExecution(key))) {
+                            data = this.GetExecutionContextPathValueStack(sector, executionContext, dataPath);
+                            dataPath.splice(1, 1);
+                            if (this.UpdateDataPathObject(data, dataPath, value))
+                                return [2, (true)];
+                            return [2, (false)];
+                        }
                         if (!(contextItem === null)) return [3, 4];
                         return [4, this.Application.Storage.RetrieveDataItem(key, sector)];
                     case 1:
@@ -1013,7 +1020,9 @@ var DrapoSolver = (function () {
         var elj = $(el).clone();
         return (elj[0]);
     };
-    DrapoSolver.prototype.GetSystemContextPathValue = function (sector, context, dataPath) {
+    DrapoSolver.prototype.GetSystemContextPathValue = function (sector, context, executionContext, dataPath) {
+        if (this.Application.Storage.IsDataKeyExecution(dataPath[0]))
+            return (this.GetExecutionContextPathValueSolved(sector, executionContext, dataPath));
         if (dataPath.length != 2)
             return (null);
         var property = dataPath[1];
@@ -1034,6 +1043,11 @@ var DrapoSolver = (function () {
         if (propertyLower === '_haschanges')
             return (this.GetSystemContextPathValueHasChanges(sector, context.Item.DataKey));
         return (null);
+    };
+    DrapoSolver.prototype.GetExecutionContextPathValueSolved = function (sector, executionContext, dataPath) {
+        var data = this.GetExecutionContextPathValueStack(sector, executionContext, dataPath);
+        dataPath.splice(1, 1);
+        return (this.ResolveDataObjectPathObject(data, dataPath));
     };
     DrapoSolver.prototype.GetExecutionContextPathValue = function (sector, executionContext, dataPath) {
         if (dataPath.length != 2)
@@ -1089,7 +1103,7 @@ var DrapoSolver = (function () {
         for (var i = 0; i < mustaches.length; i++) {
             var mustache = mustaches[i];
             var dataPath = this.Application.Parser.ParseMustache(mustache);
-            var data = this.GetSystemContextPathValue(sector, context, dataPath);
+            var data = this.GetSystemContextPathValue(sector, context, null, dataPath);
             if (data === null)
                 continue;
             expression = expression.replace(mustache, data);

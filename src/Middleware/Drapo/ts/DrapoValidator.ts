@@ -98,7 +98,7 @@ class DrapoValidator {
             return (validationID);
         if (contextItem == null)
             return (await this.Application.Storage.ResolveMustachesRecursive(sector, validationID));
-        const validationIDContext: string = await this.Application.Barber.ResolveControlFlowMustacheString(contextItem.Context, null, validationID, null, sector, false);
+        const validationIDContext: string = await this.Application.Barber.ResolveControlFlowMustacheString(contextItem.Context, null, null, validationID, null, sector, false);
         return (validationIDContext);
     }
 
@@ -274,7 +274,7 @@ class DrapoValidator {
         //Mustache
         let validationResolved: string = null;
         if (this.Application.Parser.IsMustacheOnly(validation)) {
-            validationResolved = await this.Application.Barber.ResolveControlFlowMustacheString(contextItem == null ? null : contextItem.Context, null, validation, null, sector, false);
+            validationResolved = await this.Application.Barber.ResolveControlFlowMustacheString(contextItem == null ? null : contextItem.Context, null, null, validation, null, sector, false);
         } else {
             validationResolved = validation;
         }
@@ -423,16 +423,16 @@ class DrapoValidator {
 
     private async IsValidRegex(sector: string, value: string, expression: string, itemContext: DrapoContextItem): Promise<boolean> {
         const context: DrapoContext = this.CreateContext(itemContext);
-        const expressionsResolved: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, expression, null, false);
-        const valueResolved: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, value, null, false);
+        const expressionsResolved: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, expression, null, false);
+        const valueResolved: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, value, null, false);
         const regex: RegExp = new RegExp(expressionsResolved);
         return (regex.test(valueResolved));
     }
 
     private async IsValidCompare(sector: string, value: string, valueToCompare: string, itemContext: DrapoContextItem): Promise<boolean> {
         const context: DrapoContext = this.CreateContext(itemContext);
-        const valueResolved: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, value, null, false);
-        const valueToCompareResolved: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, valueToCompare, null, false);
+        const valueResolved: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, value, null, false);
+        const valueToCompareResolved: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, valueToCompare, null, false);
         return (valueResolved == valueToCompareResolved);
     }
 

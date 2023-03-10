@@ -534,7 +534,7 @@ class DrapoFunctionHandler {
         const stateAny: any = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataPath);
         const state: boolean = this.Application.Solver.ResolveConditionalBoolean(((stateAny == null) || ((typeof stateAny) === 'string')) ? stateAny : stateAny.toString());
         const stateUpdated: boolean = !state;
-        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, stateUpdated, notify);
+        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, stateUpdated, notify);
         return ('');
     }
 
@@ -571,7 +571,7 @@ class DrapoFunctionHandler {
 
     private async ExecuteFunctionUncheckItemField(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataPath: string[] = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
-        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, false);
+        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, false);
         return ('');
     }
 
@@ -579,7 +579,7 @@ class DrapoFunctionHandler {
         const dataPath: string[] = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
         const notifyText: string = functionParsed.Parameters[1];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, null, notify);
+        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, null, notify);
         return ('');
     }
 
@@ -600,7 +600,7 @@ class DrapoFunctionHandler {
         const item: any = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive) : functionParsed.Parameters[1];
         const notifyText: string = functionParsed.Parameters[2];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, item, notify);
+        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, item, notify);
         return ('');
     }
 
@@ -668,7 +668,7 @@ class DrapoFunctionHandler {
         const dataPath: string[] = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
         const notifyText: string = functionParsed.Parameters[1];
         const nofity: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, true, nofity);
+        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, true, nofity);
         return ('');
     }
 
@@ -828,7 +828,7 @@ class DrapoFunctionHandler {
                 let item: any = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataPath);
                 if ((item === null) || (item === '')) {
                     item = this.Application.Document.CreateGuid();
-                    await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, item);
+                    await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, item);
                 }
                 container = item.toString();
             } else {
@@ -1089,7 +1089,7 @@ class DrapoFunctionHandler {
 
     private async ExecuteFunctionIf(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const conditional: string = functionParsed.Parameters[0];
-        const conditionalEvaluated: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, new DrapoContext(contextItem), null, conditional, $(element), false);
+        const conditionalEvaluated: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, new DrapoContext(contextItem), null, executionContext, conditional, $(element), false);
         const conditionalResult: boolean = await this.Application.Solver.ResolveConditional(conditionalEvaluated);
         if (conditionalResult) {
             const statementTrue: string = functionParsed.Parameters[1];
@@ -1324,7 +1324,7 @@ class DrapoFunctionHandler {
         if ((datas.length !== null) && (datas.length === 0))
             return ('');
         const ifTextResolved: string = this.ResolveExecutionContextMustache(sector, executionContext, ifText);
-        await this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, dataKeyIterator, forHierarchyText, ifTextResolved, all, datas, dataKey, key);
+        await this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, dataKeyIterator, forHierarchyText, ifTextResolved, all, datas, dataKey, key, executionContext);
         return ('');
     }
 
@@ -1377,14 +1377,14 @@ class DrapoFunctionHandler {
             if (dataPath.length === 1)
                 await this.Application.Storage.UpdateData(dataPath[0], sector, value, true);
             else
-                await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, value, true);
+                await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, value, true);
         }
         return ('');
     }
 
     private async ExecuteFunctionCast(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
         const context: DrapoContext = contextItem != null ? contextItem.Context : new DrapoContext();
-        const value: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, functionParsed.Parameters[0], null, false);
+        const value: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, functionParsed.Parameters[0], null, false);
         const type: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         if (type === 'number')
             return (this.Application.Parser.ParseNumberBlock(value));
@@ -1393,7 +1393,7 @@ class DrapoFunctionHandler {
 
     private async ExecuteFunctionEncodeUrl(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
         const context: DrapoContext = contextItem != null ? contextItem.Context : new DrapoContext();
-        const value: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, functionParsed.Parameters[0], null, false);
+        const value: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, functionParsed.Parameters[0], null, false);
         const valueEncoded: string = this.Application.Server.EnsureUrlComponentEncoded(value);
         return (valueEncoded);
     }
@@ -1567,7 +1567,7 @@ class DrapoFunctionHandler {
         const notifyText: string = functionParsed.Parameters[1];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         const value: string = await this.Application.Document.GetClipboard();
-        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, value, notify);
+        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, value, notify);
         return ('');
     }
 

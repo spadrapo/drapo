@@ -103,7 +103,7 @@ class DrapoSolver {
             if (item.Type === DrapoExpressionItemType.Function)
                 block.Items[i] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.FunctionHandler.ReplaceFunctionExpressions(sector, context, item.Value, true)));
             else if (item.Type === DrapoExpressionItemType.Mustache)
-                block.Items[i] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, item.Value, elj, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)));
+                block.Items[i] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, item.Value, elj, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)));
         }
     }
 
@@ -127,7 +127,7 @@ class DrapoSolver {
         else if (item.Type === DrapoExpressionItemType.Function)
             block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.FunctionHandler.ReplaceFunctionExpressions(sector, context, item.Value, true)));
         else if (item.Type === DrapoExpressionItemType.Mustache)
-            block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, item.Value, elj, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)));
+            block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, item.Value, elj, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)));
     }
 
     private ResolveConditionalBlock(block: string): boolean {
@@ -297,7 +297,7 @@ class DrapoSolver {
         for (let i: number = 0; i < mustacheParts.length; i++) {
             const mustachePart: string = mustacheParts[i];
             const mustachePartNext: string = i < (mustacheParts.length - 1) ? mustacheParts[i + 1] : null;
-            const mustacheSystem: string = mustachePartNext != null ? this.GetSystemContextPathValue(null, context, [mustachePart, mustachePartNext]) : null;
+            const mustacheSystem: string = mustachePartNext != null ? this.GetSystemContextPathValue(null, context, null, [mustachePart, mustachePartNext]) : null;
             if (mustacheSystem !== null) {
                 return (mustacheSystem);
             } else {
@@ -397,14 +397,14 @@ class DrapoSolver {
         return (mustachePartsAbsolute);
     }
 
-    public async ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string> {
+    public async ResolveDataPathMustache(context: DrapoContext, executionContext: DrapoExecutionContext<any>, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string> {
         let updated: boolean = false;
         for (let i: number = 1; i < mustacheParts.length; i++) {
             const mustachePart: string = mustacheParts[i];
             if (!this.Application.Parser.IsMustache(mustachePart))
                 continue;
             const mustachePartParts: string[] = this.Application.Parser.ParseMustache(mustachePart);
-            const dataValue = await this.ResolveDataPath(context, elementJQuery, sector, mustachePartParts);
+            const dataValue = await this.ResolveDataPath(context, executionContext, elementJQuery, sector, mustachePartParts);
             mustacheParts[i] = dataValue;
             updated = true;
         }
@@ -446,7 +446,7 @@ class DrapoSolver {
         return (true);
     }
 
-    public async ResolveDataPath(context: DrapoContext, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader: boolean = false, canBindWriter: boolean = false, modelEvents: string[] = null, modelEventsCancel: string[] = null, canNotify: boolean = true): Promise<string> {
+    public async ResolveDataPath(context: DrapoContext, executionContext: DrapoExecutionContext<any>, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader: boolean = false, canBindWriter: boolean = false, modelEvents: string[] = null, modelEventsCancel: string[] = null, canNotify: boolean = true): Promise<string> {
         //Path
         const dataPath: string[] = (typeof path === 'string') ? [path] : path;
         //Mustache
@@ -457,21 +457,21 @@ class DrapoSolver {
             if (!this.Application.Parser.IsMustache(mustacheIndexer))
                 continue;
             const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustacheIndexer);
-            const mustacheValue = await this.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify);
+            const mustacheValue = await this.ResolveDataPath(context, executionContext, elementJQuery, sector, mustacheParts, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify);
             const mustacheValueIndexer = isMustacheIndexer ? this.Application.Parser.CreateMustacheIndexer(mustacheValue) : mustacheValue;
             dataPath[i] = mustacheValueIndexer;
         }
         const dataKey: string = this.Application.Solver.ResolveDataKey(dataPath);
         const dataFields: string[] = this.Application.Solver.ResolveDataFields(dataPath);
         //Delay
-        if ((!context.IsKey(dataKey)) && (!await this.Application.Storage.EnsureDataKeyFieldReady(dataKey, sector, dataPath))) {
+        if ((!context.IsKey(dataKey)) && (!this.Application.Storage.IsDataKeyExecution(dataKey))&& (!await this.Application.Storage.EnsureDataKeyFieldReady(dataKey, sector, dataPath))) {
             if ((dataFields.length === 0))
                 return ('');
             if (this.Application.Storage.IsDataKeyDelay(dataKey, sector))
                 this.Application.Observer.SubscribeDelay(elementJQuery != null ? elementJQuery[0] : null, dataKey, dataFields);
             return (this.CreateMustache(dataPath));
         }
-        const data: string = await this.ResolveDataPathObject(sector, context, dataPath);
+        const data: string = await this.ResolveDataPathObject(sector, context, executionContext, dataPath);
         //Bind
         if (canBindWriter)
             this.Application.Binder.BindReaderWriter(await this.ResolveDataPathObjectItem(context.Item, dataKey, sector), elementJQuery != null ? elementJQuery[0] : null, dataFields, modelEvents, modelEventsCancel, canNotify);
@@ -480,13 +480,13 @@ class DrapoSolver {
         return (data);
     }
 
-    private async ResolveDataPathObject(sector: string, context: DrapoContext, dataPath: string[]): Promise<string> {
-        return (await this.ResolveItemDataPathObject(sector, context.Item, dataPath));
+    private async ResolveDataPathObject(sector: string, context: DrapoContext, executionContext: DrapoExecutionContext<any>, dataPath: string[]): Promise<string> {
+        return (await this.ResolveItemDataPathObject(sector, context.Item, dataPath, false, executionContext));
     }
 
     public async ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay: boolean = false, executionContext: DrapoExecutionContext<any> = null): Promise<any> {
         //System. Like _Index or _Level
-        const valueSystem = contextItem !== null ? this.GetSystemContextPathValue(sector, contextItem.Context, dataPath) : null;
+        const valueSystem = contextItem !== null ? this.GetSystemContextPathValue(sector, contextItem.Context, executionContext, dataPath) : null;
         if (valueSystem !== null)
             return (valueSystem);
         //Execution Context
@@ -682,9 +682,17 @@ class DrapoSolver {
         return (dataPathParent);
     }
 
-    public async UpdateItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], value: any, canNotify: boolean = true): Promise<boolean> {
+    public async UpdateItemDataPathObject(sector: string, contextItem: DrapoContextItem, executionContext: DrapoExecutionContext<any>, dataPath: string[], value: any, canNotify: boolean = true): Promise<boolean> {
         //Item
         const key: string = dataPath[0];
+        if ((executionContext != null) && (this.Application.Storage.IsDataKeyExecution(key))) {
+            const data: any = this.GetExecutionContextPathValueStack(sector, executionContext, dataPath);
+            //Remove execution context 
+            dataPath.splice(1, 1);
+            if (this.UpdateDataPathObject(data, dataPath, value))
+                return (true);
+            return (false);
+        }
         if (contextItem === null) {
             //No Context
             const storageItem: DrapoStorageItem = await this.Application.Storage.RetrieveDataItem(key, sector);
@@ -809,7 +817,9 @@ class DrapoSolver {
         return (elj[0]);
     }
 
-    private GetSystemContextPathValue(sector: string, context: DrapoContext, dataPath: string[]): string {
+    private GetSystemContextPathValue(sector: string, context: DrapoContext, executionContext: DrapoExecutionContext<any>, dataPath: string[]): string {
+        if (this.Application.Storage.IsDataKeyExecution(dataPath[0]))
+            return (this.GetExecutionContextPathValueSolved(sector, executionContext, dataPath));
         if (dataPath.length != 2)
             return (null);
         const property: string = dataPath[1];
@@ -830,6 +840,13 @@ class DrapoSolver {
         if (propertyLower === '_haschanges')
             return (this.GetSystemContextPathValueHasChanges(sector, context.Item.DataKey));
         return (null);
+    }
+
+    private GetExecutionContextPathValueSolved(sector: string, executionContext: DrapoExecutionContext<any>, dataPath: string[]): string {
+        const data: any = this.GetExecutionContextPathValueStack(sector, executionContext, dataPath);
+        //Remove execution context 
+        dataPath.splice(1, 1);
+        return (this.ResolveDataObjectPathObject(data, dataPath));
     }
 
     public GetExecutionContextPathValue(sector: string, executionContext: DrapoExecutionContext<any>, dataPath: string[]): any {
@@ -893,7 +910,7 @@ class DrapoSolver {
         for (let i: number = 0; i < mustaches.length; i++) {
             const mustache: string = mustaches[i];
             const dataPath: string[] = this.Application.Parser.ParseMustache(mustache);
-            const data: string = this.GetSystemContextPathValue(sector, context, dataPath);
+            const data: string = this.GetSystemContextPathValue(sector, context, null, dataPath);
             if (data === null)
                 continue;
             expression = expression.replace(mustache, data);

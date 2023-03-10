@@ -188,7 +188,7 @@ class DrapoDocument {
                     let item: any = await this.Application.Solver.ResolveItemDataPathObject(childSector, contextItem, dataPath);
                     if ((item === null) || (item === '')) {
                         item = this.Application.Document.CreateGuid();
-                        await this.Application.Solver.UpdateItemDataPathObject(childSector, contextItem, dataPath, item);
+                        await this.Application.Solver.UpdateItemDataPathObject(childSector, contextItem, null, dataPath, item);
                     }
                     container = item.toString();
                 } else {

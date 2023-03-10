@@ -763,7 +763,7 @@ var DrapoControlFlow = (function () {
                             this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
                             this.Application.Observer.SubscribeFor(elementForTemplate, dataKey);
                         }
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, expression, elj, sector, true, null, true, elementForTemplate)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, expression, elj, sector, true, null, true, elementForTemplate)];
                     case 1:
                         data = _a.sent();
                         return [2, (this.Application.Parser.ParseIterator(data))];
@@ -867,7 +867,7 @@ var DrapoControlFlow = (function () {
                     case 1:
                         if (!(i < templateVariables.length)) return [3, 4];
                         mustacheParts = templateVariables[i];
-                        return [4, this.Application.Solver.ResolveDataPath(context, null, sector, mustacheParts)];
+                        return [4, this.Application.Solver.ResolveDataPath(context, null, null, sector, mustacheParts)];
                     case 2:
                         mustacheResolved = _a.sent();
                         templateKey = templateKey + '_' + mustacheResolved;
@@ -986,7 +986,8 @@ var DrapoControlFlow = (function () {
             return (data.length);
         return (numberHat);
     };
-    DrapoControlFlow.prototype.ExecuteDataItem = function (sector, context, expression, iterator, forText, ifText, all, datas, dataKey, key) {
+    DrapoControlFlow.prototype.ExecuteDataItem = function (sector, context, expression, iterator, forText, ifText, all, datas, dataKey, key, executionContext) {
+        if (executionContext === void 0) { executionContext = null; }
         return __awaiter(this, void 0, void 0, function () {
             var j, data, item, execute, conditionalText, conditional, parsedFor, keyChildren, dataKeyIteratorRange, range, dataKeyIterator, dataKeyChildren, dataKeyIteratorParts, datasChildren, childExecuted;
             return __generator(this, function (_a) {
@@ -1000,7 +1001,7 @@ var DrapoControlFlow = (function () {
                         item = context.Create(data, null, null, dataKey, key, iterator, j);
                         execute = true;
                         if (!(ifText != null)) return [3, 4];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, ifText, null)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, ifText, null)];
                     case 2:
                         conditionalText = _a.sent();
                         return [4, this.Application.Solver.ResolveConditional(conditionalText)];
@@ -1013,7 +1014,7 @@ var DrapoControlFlow = (function () {
                         _a.label = 4;
                     case 4:
                         if (!execute) return [3, 6];
-                        return [4, this.Application.FunctionHandler.ResolveFunction(sector, context.Item, null, null, expression)];
+                        return [4, this.Application.FunctionHandler.ResolveFunction(sector, context.Item, null, null, expression, executionContext)];
                     case 5:
                         _a.sent();
                         if (!all)
@@ -1036,7 +1037,7 @@ var DrapoControlFlow = (function () {
                             datasChildren = this.Application.ControlFlow.ApplyRange(datasChildren, range);
                         if (datasChildren.length === 0)
                             return [3, 8];
-                        return [4, this.ExecuteDataItem(sector, context, expression, dataKeyIterator, forText, ifText, all, datasChildren, dataKeyChildren, keyChildren)];
+                        return [4, this.ExecuteDataItem(sector, context, expression, dataKeyIterator, forText, ifText, all, datasChildren, dataKeyChildren, keyChildren, executionContext)];
                     case 7:
                         childExecuted = _a.sent();
                         if ((childExecuted) && (!all))

@@ -1607,6 +1607,11 @@ namespace WebDrapo.Test
         //    ValidatePage("ServerResponseRedirectAsync");
         //}
         [TestCase]
+        public void StackObjectReferenceTest()
+        {
+            ValidatePage("StackObjectReference");
+        }
+        [TestCase]
         public void ThemesTest()
         {
             ValidatePage("Themes");

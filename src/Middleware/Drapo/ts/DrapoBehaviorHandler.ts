@@ -344,7 +344,7 @@ class DrapoBehaviorHandler {
         if (resizer.Model === null)
             return;
         const dataPath: string[] = this.Application.Parser.ParseMustache(resizer.Model);
-        await this.Application.Solver.UpdateItemDataPathObject(this.Application.Document.GetSector(resizer.Element), resizer.Item, dataPath, sizeNew, true);
+        await this.Application.Solver.UpdateItemDataPathObject(this.Application.Document.GetSector(resizer.Element), resizer.Item, null, dataPath, sizeNew, true);
     }
 
     private GetSize(resizer: DrapoResize): string {

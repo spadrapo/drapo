@@ -15,8 +15,8 @@ declare class DrapoBarber {
     ResolveControlFlowMustacheAttributes(context: DrapoContext, elementJQuery: JQuery, sector: string): Promise<void>;
     ResolveControlFlowMustacheNodes(context: DrapoContext, element: HTMLElement, elementJQuery: JQuery, sector: string): Promise<void>;
     ResolveControlFlowMustacheAttribute(context: DrapoContext, attribute: string, elementJQuery: JQuery, sector: string): Promise<void>;
-    ResolveControlFlowMustacheStringFunction(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, expression: string, elementJQuery: JQuery, canBind?: boolean, type?: DrapoStorageLinkType): Promise<string>;
-    ResolveControlFlowMustacheString(context: DrapoContext, renderContext: DrapoRenderContext, expression: string, elementJQuery: JQuery, sector: string, canBind?: boolean, type?: DrapoStorageLinkType, isForIterator?: boolean, elementForTemplate?: HTMLElement): Promise<string>;
+    ResolveControlFlowMustacheStringFunction(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, executionContext: DrapoExecutionContext<any>, expression: string, elementJQuery: JQuery, canBind?: boolean, type?: DrapoStorageLinkType): Promise<string>;
+    ResolveControlFlowMustacheString(context: DrapoContext, renderContext: DrapoRenderContext, executionContext: DrapoExecutionContext<any>, expression: string, elementJQuery: JQuery, sector: string, canBind?: boolean, type?: DrapoStorageLinkType, isForIterator?: boolean, elementForTemplate?: HTMLElement): Promise<string>;
     ResolveMustacheElementVisibility(el: HTMLElement, canBind?: boolean): Promise<void>;
     HasMustacheContext(expression: string, sector: string, renderContext?: DrapoRenderContext): boolean;
     private HasMustacheContextInternal;

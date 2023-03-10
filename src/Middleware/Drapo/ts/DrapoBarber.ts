@@ -128,7 +128,7 @@ class DrapoBarber {
         if (this.Application.Barber.HasMustacheContext(dRender, sector))
             return (true);
         const context: DrapoContext = new DrapoContext();
-        const expression: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, dRender, null, false);
+        const expression: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, dRender, null, false);
         const result: boolean = await this.Application.Solver.ResolveConditional(expression);
         el.removeAttribute('d-render');
         return (result);
@@ -265,7 +265,7 @@ class DrapoBarber {
                 const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustache);
                 if ((context !== null) && (!context.CanResolve(mustacheParts[0])))
                     continue;
-                const mustacheData = await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, true);
+                const mustacheData = await this.Application.Solver.ResolveDataPath(context, null, elementJQuery, sector, mustacheParts, true);
                 text = text.replace(mustache, mustacheData);
             }
             if (textOriginal !== text)
@@ -286,7 +286,7 @@ class DrapoBarber {
                 const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustache);
                 if (!context.CanResolve(mustacheParts[0]))
                     continue;
-                const mustacheData = await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, true);
+                const mustacheData = await this.Application.Solver.ResolveDataPath(context, null, elementJQuery, sector, mustacheParts, true);
                 text = text.replace(mustache, mustacheData);
             }
             if (context.CanUpdateTemplate) {
@@ -299,21 +299,21 @@ class DrapoBarber {
         }
     }
 
-    public async ResolveControlFlowMustacheStringFunction(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, expression: string, elementJQuery: JQuery, canBind: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render): Promise<string> {
+    public async ResolveControlFlowMustacheStringFunction(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, executionContext: DrapoExecutionContext<any>, expression: string, elementJQuery: JQuery, canBind: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render): Promise<string> {
         //Replace Functions
         const expressionWithoutFunctions: string = await this.Application.FunctionHandler.ReplaceFunctionExpressions(sector, context, expression, canBind);
         //Resolve Mustaches
-        return (this.ResolveControlFlowMustacheString(context, renderContext, expressionWithoutFunctions, elementJQuery, sector, canBind, type));
+        return (this.ResolveControlFlowMustacheString(context, renderContext, executionContext, expressionWithoutFunctions, elementJQuery, sector, canBind, type));
     }
 
-    public async ResolveControlFlowMustacheString(context: DrapoContext, renderContext : DrapoRenderContext, expression: string, elementJQuery: JQuery, sector: string, canBind: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render, isForIterator: boolean = false, elementForTemplate: HTMLElement = null): Promise<string> {
+    public async ResolveControlFlowMustacheString(context: DrapoContext, renderContext: DrapoRenderContext, executionContext: DrapoExecutionContext<any>, expression: string, elementJQuery: JQuery, sector: string, canBind: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render, isForIterator: boolean = false, elementForTemplate: HTMLElement = null): Promise<string> {
         const mustaches = this.Application.Parser.ParseMustaches(expression);
         for (let j = 0; j < mustaches.length; j++) {
             const mustache = mustaches[j];
             const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustache);
             const dataKey: string = this.Application.Solver.ResolveDataKey(mustacheParts);
             const dataFields: string[] = this.Application.Solver.ResolveDataFields(mustacheParts);
-            if (this.Application.Storage.IsDataKey(dataKey, sector, renderContext)) {
+            if ((this.Application.Storage.IsDataKey(dataKey, sector, renderContext)) && (!this.Application.Storage.IsDataKeyExecution(dataKey))) {
                 await this.Application.Storage.EnsureDataKeyFieldReady(dataKey, sector, mustacheParts);
                 //Data Key
                 let mustacheData: string = this.Application.Storage.GetDataKeyField(dataKey, sector, mustacheParts);
@@ -335,7 +335,7 @@ class DrapoBarber {
                 expression = expression.replace(mustache, mustacheData);
             } else {
                 //Context
-                let mustacheData = context.Item === null ? '' : await this.Application.Solver.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBind);
+                let mustacheData = context.Item === null ? '' : await this.Application.Solver.ResolveDataPath(context, executionContext, elementJQuery, sector, mustacheParts, canBind);
                 mustacheData = this.Application.Solver.EnsureString(mustacheData);
                 expression = expression.replace(mustache, mustacheData);
             }
