@@ -293,7 +293,7 @@ var DrapoDocument = (function () {
                         item = _c.sent();
                         if (!((item === null) || (item === ''))) return [3, 8];
                         item = this.Application.Document.CreateGuid();
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(childSector, contextItem, dataPath, item)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(childSector, contextItem, null, dataPath, item)];
                     case 7:
                         _c.sent();
                         _c.label = 8;

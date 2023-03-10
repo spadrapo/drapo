@@ -139,7 +139,7 @@ var DrapoValidator = (function () {
                         if (!(contextItem == null)) return [3, 2];
                         return [4, this.Application.Storage.ResolveMustachesRecursive(sector, validationID)];
                     case 1: return [2, (_a.sent())];
-                    case 2: return [4, this.Application.Barber.ResolveControlFlowMustacheString(contextItem.Context, null, validationID, null, sector, false)];
+                    case 2: return [4, this.Application.Barber.ResolveControlFlowMustacheString(contextItem.Context, null, null, validationID, null, sector, false)];
                     case 3:
                         validationIDContext = _a.sent();
                         return [2, (validationIDContext)];
@@ -362,7 +362,7 @@ var DrapoValidator = (function () {
                     case 0:
                         validationResolved = null;
                         if (!this.Application.Parser.IsMustacheOnly(validation)) return [3, 2];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(contextItem == null ? null : contextItem.Context, null, validation, null, sector, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(contextItem == null ? null : contextItem.Context, null, null, validation, null, sector, false)];
                     case 1:
                         validationResolved = _b.sent();
                         return [3, 3];
@@ -592,10 +592,10 @@ var DrapoValidator = (function () {
                 switch (_a.label) {
                     case 0:
                         context = this.CreateContext(itemContext);
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, expression, null, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, expression, null, false)];
                     case 1:
                         expressionsResolved = _a.sent();
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, value, null, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, value, null, false)];
                     case 2:
                         valueResolved = _a.sent();
                         regex = new RegExp(expressionsResolved);
@@ -611,10 +611,10 @@ var DrapoValidator = (function () {
                 switch (_a.label) {
                     case 0:
                         context = this.CreateContext(itemContext);
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, value, null, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, value, null, false)];
                     case 1:
                         valueResolved = _a.sent();
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, valueToCompare, null, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, valueToCompare, null, false)];
                     case 2:
                         valueToCompareResolved = _a.sent();
                         return [2, (valueResolved == valueToCompareResolved)];

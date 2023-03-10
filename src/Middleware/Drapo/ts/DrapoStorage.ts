@@ -272,6 +272,10 @@ class DrapoStorage {
         return (this.IsDataKeyElement(dataKey, renderContext));
     }
 
+    public IsDataKeyExecution(dataKey: string): boolean {
+        return (dataKey === '_stack');
+    }
+
     public IsDataKeyDelay(dataKey: string, sector: string): boolean {
         const cacheIndex = this.GetCacheKeyIndex(dataKey, sector);
         if (cacheIndex === null)

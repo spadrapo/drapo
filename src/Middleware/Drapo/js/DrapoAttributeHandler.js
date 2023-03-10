@@ -229,7 +229,7 @@ var DrapoAttributeHandler = (function () {
                         data = _b.sent();
                         contextCurrent.Create(data, el, null, dataKey, dataKey, null, null);
                         _b.label = 5;
-                    case 5: return [4, this.Application.Solver.ResolveDataPath(contextCurrent, elj, sector, mustacheParts, canBind)];
+                    case 5: return [4, this.Application.Solver.ResolveDataPath(contextCurrent, null, elj, sector, mustacheParts, canBind)];
                     case 6:
                         valueNew = _b.sent();
                         value = value.replace(mustache, valueNew);
@@ -294,7 +294,7 @@ var DrapoAttributeHandler = (function () {
                         if (this.Application.Barber.HasMustacheContext(did, sector))
                             return [2];
                         context = new DrapoContext();
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, null, did, elj, sector, canBind)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, did, elj, sector, canBind)];
                     case 1:
                         expressionCurrent = _a.sent();
                         if (did !== expressionCurrent)
@@ -313,7 +313,7 @@ var DrapoAttributeHandler = (function () {
                         did = el.getAttribute('d-id');
                         if (did == null)
                             return [2];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, null, did, elj, sector, canBind)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, did, elj, sector, canBind)];
                     case 1:
                         expressionCurrent = _a.sent();
                         if (did !== expressionCurrent)
