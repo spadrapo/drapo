@@ -12,7 +12,7 @@ class DrapoFunctionHandler {
         this._application = application;
     }
 
-    public async ResolveFunctionWithoutContext(sector: string, element: Element, functionsValue: string, executionContext: DrapoExecutionContext<any> = null): Promise<string> {
+    public async ResolveFunctionWithoutContext(sector: string, element: HTMLElement, functionsValue: string, executionContext: DrapoExecutionContext<any> = null): Promise<string> {
         return (await this.ResolveFunction(sector, null, element, null, functionsValue, executionContext, true));
     }
 
@@ -82,7 +82,7 @@ class DrapoFunctionHandler {
         return (expression);
     }
 
-    public async ResolveFunction(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionsValue: string, executionContext: DrapoExecutionContext<any> = null, forceFinalizeExecutionContext: boolean = false): Promise<string> {
+    public async ResolveFunction(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionsValue: string, executionContext: DrapoExecutionContext<any> = null, forceFinalizeExecutionContext: boolean = false): Promise<string> {
         let created: boolean = false;
         if (created = executionContext === null) {
             executionContext = this.CreateExecutionContext();
@@ -93,7 +93,7 @@ class DrapoFunctionHandler {
         return (result);
     }
 
-    private async ResolveFunctionContext(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionsValue: string, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ResolveFunctionContext(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionsValue: string, executionContext: DrapoExecutionContext<any>): Promise<string> {
         let result: string = '';
         //Execution Broked
         if (this.IsExecutionBroked(executionContext))
@@ -142,7 +142,7 @@ class DrapoFunctionHandler {
         return (result);
     }
 
-    public async ResolveFunctionParameter(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, parameter: string, canForceLoadDataDelay: boolean = false, canUseReturnFunction: boolean = false, isRecursive: boolean = false): Promise<any> {
+    public async ResolveFunctionParameter(sector: string, contextItem: DrapoContextItem, element: HTMLElement, executionContext: DrapoExecutionContext<any>, parameter: string, canForceLoadDataDelay: boolean = false, canUseReturnFunction: boolean = false, isRecursive: boolean = false): Promise<any> {
         //Function
         if (canUseReturnFunction) {
             const functionParsed: DrapoFunction = this.Application.Parser.ParseFunction(parameter);
@@ -187,7 +187,7 @@ class DrapoFunctionHandler {
         return (value);
     }
 
-    public async ResolveFunctions(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, value: string, checkInvalidFunction : boolean = true): Promise<any> {
+    public async ResolveFunctions(sector: string, contextItem: DrapoContextItem, element: HTMLElement, executionContext: DrapoExecutionContext<any>, value: string, checkInvalidFunction : boolean = true): Promise<any> {
         //Functions
         const functionsParsed: string[] = this.Application.Parser.ParseFunctionsPartial(value);
         for (let i: number = 0; i < functionsParsed.length; i++) {
@@ -214,7 +214,7 @@ class DrapoFunctionHandler {
         return (await this.ResolveFunctions(sector, contextItem, element, executionContext, valueReplaceMustache, checkInvalidFunction));
     }
 
-    private async ResolveFunctionParameterDataFields(sector: string, contextItem: DrapoContextItem, element: Element, parameter: string, executionContext: DrapoExecutionContext<any>): Promise<string[]> {
+    private async ResolveFunctionParameterDataFields(sector: string, contextItem: DrapoContextItem, element: HTMLElement, parameter: string, executionContext: DrapoExecutionContext<any>): Promise<string[]> {
         const value = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, parameter);
         if ((value == null) || (value == ''))
             return (null);
@@ -223,7 +223,7 @@ class DrapoFunctionHandler {
         return (dataFields);
     }
 
-    private async ExecuteFunctionContextSwitch(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>, checkInvalidFunction: boolean = true): Promise<any> {
+    private async ExecuteFunctionContextSwitch(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>, checkInvalidFunction: boolean = true): Promise<any> {
         await this.Application.Debugger.AddFunction(functionParsed);
         if (functionParsed.Name === 'external')
             return (this.ExecuteFunctionExternal(contextItem, element, event, functionParsed));
@@ -413,7 +413,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionSetExternal(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionSetExternal(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const externalFunction: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const isCloneText: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]);
@@ -425,7 +425,7 @@ class DrapoFunctionHandler {
         windowFunction(isClone ? this.Application.Solver.Clone(data, true) : data);
     }
 
-    private async ExecuteFunctionGetExternal(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionGetExternal(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const externalFunction: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const isCloneText: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]);
@@ -438,7 +438,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionSetExternalFrame(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionSetExternalFrame(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const frameID: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const externalFunction: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]);
@@ -464,7 +464,7 @@ class DrapoFunctionHandler {
         }
     }
 
-    private async ExecuteFunctionGetExternalFrame(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionGetExternalFrame(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const frameID: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const externalFunction: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]);
@@ -482,7 +482,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionSetExternalFrameMessage(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionSetExternalFrameMessage(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const frameID: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const externalFunction: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]);
@@ -504,7 +504,7 @@ class DrapoFunctionHandler {
         });
     }
 
-    private async ExecuteFunctionGetExternalFrameMessage(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionGetExternalFrameMessage(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const frameID: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const externalFunction: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]);
@@ -527,7 +527,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionToggleItemField(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionToggleItemField(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataPath: string[] = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
         const notifyText: string = functionParsed.Parameters[1];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
@@ -538,7 +538,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionToggleData(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionToggleData(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const source: string = functionParsed.Parameters[0];
         const isSourceMustache: boolean = this.Application.Parser.IsMustache(source);
         const mustacheParts: string[] = isSourceMustache ? this.Application.Parser.ParseMustache(source) : null;
@@ -583,7 +583,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionUpdateItemField(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionUpdateItemField(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataPath: string[] = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
         for (let i: number = 0; i < dataPath.length; i++) {
             const dataPathValue: string = dataPath[i];
@@ -604,7 +604,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionCheckDataField(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionCheckDataField(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = functionParsed.Parameters[0];
         const dataFields: string[] = await this.ResolveFunctionParameterDataFields(sector, contextItem, element, functionParsed.Parameters[1], executionContext);
         const notifyText: string = functionParsed.Parameters[2];
@@ -613,7 +613,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionUncheckDataField(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionUncheckDataField(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = functionParsed.Parameters[0];
         const dataFields: string[] = await this.ResolveFunctionParameterDataFields(sector, contextItem, element, functionParsed.Parameters[1], executionContext);
         const notifyText: string = functionParsed.Parameters[2];
@@ -622,7 +622,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionClearDataField(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionClearDataField(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = functionParsed.Parameters[0];
         const dataFields: string[] = await this.ResolveFunctionParameterDataFields(sector, contextItem, element, functionParsed.Parameters[1], executionContext);
         const notifyText: string = functionParsed.Parameters[2];
@@ -631,7 +631,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionUpdateDataField(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionUpdateDataField(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const dataFields: string[] = await this.ResolveFunctionParameterDataFields(sector, contextItem, element, functionParsed.Parameters[1], executionContext);
         const recursiveText: string = functionParsed.Parameters.length > 4 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4]) : null;
@@ -645,7 +645,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionUpdateDataFieldLookup(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionUpdateDataFieldLookup(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const dataFieldSeek: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const valueSeek: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]);
@@ -664,7 +664,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionCheckItemField(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionCheckItemField(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataPath: string[] = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
         const notifyText: string = functionParsed.Parameters[1];
         const nofity: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
@@ -672,7 +672,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionMoveItem(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionMoveItem(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const key: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const rangeIndex: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const notifyText: string = functionParsed.Parameters[2];
@@ -685,7 +685,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionUpdateDataUrl(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionUpdateDataUrl(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = functionParsed.Parameters[0];
         const dataUrl: string = functionParsed.Parameters[1];
         const jqueryDataKeys: JQuery = $("[d-dataKey='" + dataKey + "']");
@@ -700,7 +700,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionUpdateDataUrlSet(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionUpdateDataUrlSet(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = functionParsed.Parameters[0];
         const dataUrl: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const jqueryDataKeys: JQuery = $("[d-dataKey='" + dataKey + "']");
@@ -768,7 +768,7 @@ class DrapoFunctionHandler {
             return (null);
     }
 
-    private async ExecuteFunctionRemoveDataItemLookup(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionRemoveDataItemLookup(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataPath: string = functionParsed.Parameters[0];
         const dataFieldSeek: string[] = await this.ResolveFunctionParameterDataFields(sector, contextItem, element, functionParsed.Parameters[1], executionContext);
         const valueSeek: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]);
@@ -812,7 +812,7 @@ class DrapoFunctionHandler {
         return ('false');
     }
 
-    private async ExecuteFunctionUpdateSector(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionUpdateSector(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         let title: string = null;
         if (functionParsed.Parameters.length >= 3)
             title = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]);
@@ -842,14 +842,14 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionSwitchSector(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionSwitchSector(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const sectorName: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const container: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         await this.Application.SectorContainerHandler.Switch(sectorName, container);
         return ('');
     }
 
-    private async ExecuteFunctionReloadSector(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionReloadSector(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const sectorName: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const url: string = this.Application.Router.GetLastRouteUrlBySector(sectorName);
         if (url == null)
@@ -859,14 +859,14 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionClearSector(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionClearSector(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const sectorName: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         this.Application.Document.StartUpdate(sectorName);
         await this.Application.SectorContainerHandler.Switch(sectorName, null);
         return ('');
     }
 
-    private async ExecuteFunctionLoadSectorContent(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionLoadSectorContent(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const sectorName: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const content: any = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const contentText: string = this.Application.Serializer.SerializeObject(content);
@@ -891,7 +891,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionCreateData(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionCreateData(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = functionParsed.Parameters[0];
         const notifyText: string = functionParsed.Parameters[1];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
@@ -906,7 +906,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionUpdateData(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionUpdateData(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = functionParsed.Parameters[0];
         const recursiveText: string = functionParsed.Parameters.length > 3 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3]) : null;
         const recursive: boolean = ((recursiveText == null) || (recursiveText == '')) ? true : await this.Application.Solver.ResolveConditional(recursiveText);
@@ -921,7 +921,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionReloadData(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionReloadData(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = functionParsed.Parameters[0];
         const notifyText: string = functionParsed.Parameters[1];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
@@ -929,7 +929,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionFilterData(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionFilterData(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         if (functionParsed.Parameters.length < 3)
             return ('');
         const forText: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
@@ -980,7 +980,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionHasDataChanges(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionHasDataChanges(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         let parameterSector: string = functionParsed.Parameters.length <= 0 ? null : await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         if (parameterSector === '=')
             parameterSector = sector;
@@ -994,7 +994,7 @@ class DrapoFunctionHandler {
         return ('false');
     }
 
-    private async ExecuteFunctionAcceptDataChanges(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionAcceptDataChanges(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         let parameterSector: string = functionParsed.Parameters.length <= 0 ? null : await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         if (parameterSector === '=')
             parameterSector = sector;
@@ -1040,20 +1040,20 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionRedirectPage(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionRedirectPage(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const url: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const urlResolved: string = this.Application.Server.ResolveUrl(url);
         window.location.href = urlResolved;
         return ('');
     }
 
-    private async ExecuteFunctionUpdateURL(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionUpdateURL(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const url: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         await this.Application.Router.UpdateURL(url);
         return ('');
     }
 
-    private async ExecuteFunctionUpdateToken(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionUpdateToken(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const token: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         await this.Application.Server.SetToken(token);
         return ('');
@@ -1064,11 +1064,11 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private ExecuteFunctionHasToken(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): string {
+    private ExecuteFunctionHasToken(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): string {
         return (this.Application.Server.HasToken().toString());
     }
 
-    private async ExecuteFunctionUpdateTokenAntiforgery(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionUpdateTokenAntiforgery(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const token: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         await this.Application.Server.SetTokenAntiforgery(token);
         return ('');
@@ -1087,9 +1087,9 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionIf(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionIf(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const conditional: string = functionParsed.Parameters[0];
-        const conditionalEvaluated: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, new DrapoContext(contextItem), null, executionContext, conditional, $(element), false);
+        const conditionalEvaluated: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, new DrapoContext(contextItem), null, executionContext, conditional, element, false);
         const conditionalResult: boolean = await this.Application.Solver.ResolveConditional(conditionalEvaluated);
         if (conditionalResult) {
             const statementTrue: string = functionParsed.Parameters[1];
@@ -1101,7 +1101,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionAsync(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionAsync(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const content: string = functionParsed.Parameters[0];
         const executionContextContent: DrapoExecutionContext<any> = this.CreateExecutionContext(false);
         // tslint:disable-next-line:no-floating-promises
@@ -1109,7 +1109,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionNotify(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionNotify(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const dataIndex: number = this.Application.Parser.GetStringAsNumber(await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]));
         const dataFields: string[] = await this.ResolveFunctionParameterDataFields(sector, contextItem, element, functionParsed.Parameters[2], executionContext);
@@ -1119,7 +1119,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionFocus(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionFocus(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const did: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         if ((did === null) || (did === '') || (did === undefined)) {
             const elementFocused: JQuery = $(document.activeElement);
@@ -1137,7 +1137,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionShowWindow(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionShowWindow(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const windowParameters: [string, string][] = [];
         let windowNameOrUri: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const isUri = this.Application.Parser.IsUri(windowNameOrUri);
@@ -1158,7 +1158,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionCloseWindow(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionCloseWindow(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const did: string = functionParsed.Parameters.length > 0 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0], false, true) : null;
         if ((did === '') && (functionParsed.Parameters.length > 0) && (this.Application.Parser.HasFunction(functionParsed.Parameters[0])))
             return ('');
@@ -1189,7 +1189,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionCreateGuid(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionCreateGuid(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const value: string = this.Application.Document.CreateGuid();
         if (functionParsed.Parameters.length == 0)
             return (value);
@@ -1201,7 +1201,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionCreateTick(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionCreateTick(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const ticks: number = new Date().getTime();
         const value: string = ticks.toString();
         if (functionParsed.Parameters.length == 0)
@@ -1216,7 +1216,7 @@ class DrapoFunctionHandler {
         return (value);
     }
 
-    private async ExecuteFunctionGetDate(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionGetDate(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         let date: Date = new Date();
         //Return Type
         const returnType: string = functionParsed.Parameters.length > 0 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]) : 'date';
@@ -1225,7 +1225,7 @@ class DrapoFunctionHandler {
         return (date as any);
     }
 
-    private async ExecuteFunctionAddDate(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionAddDate(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         //Date
         const dateParameter: any = functionParsed.Parameters.length > 0 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]) : null;
         const dateParameterParsed: Date = this.Application.Parser.ParseDateCulture(dateParameter);
@@ -1249,13 +1249,13 @@ class DrapoFunctionHandler {
         return (date as any);
     }
 
-    private async ExecuteFunctionPushStack(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionPushStack(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const value: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         executionContext.Stack.Push(value);
         return ('');
     }
 
-    private async ExecuteFunctionPopStack(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionPopStack(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const value: any = executionContext.Stack.Pop();
         if (functionParsed.Parameters.length == 0)
             return (value);
@@ -1269,7 +1269,7 @@ class DrapoFunctionHandler {
         return (value);
     }
 
-    private async ExecuteFunctionPeekStack(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionPeekStack(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const value: any = executionContext.Stack.Peek();
         if (functionParsed.Parameters.length == 0)
             return (value);
@@ -1283,14 +1283,14 @@ class DrapoFunctionHandler {
         return (value);
     }
 
-    private async ExecuteFunctionExecute(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionExecute(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const sectorFunction = functionParsed.Parameters.length > 1 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]) : sector;
         const valueFunction = await this.ResolveFunctionParameter(sectorFunction, contextItem, element, executionContext, functionParsed.Parameters[0]);
         await this.ResolveFunctionContext(sectorFunction, contextItem, element, event, valueFunction, executionContext);
         return ('');
     }
 
-    private async ExecuteFunctionExecuteDataItem(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionExecuteDataItem(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const expression: string = functionParsed.Parameters[0];
         const forText: string = await functionParsed.Parameters[1];
         const ifText: string = functionParsed.Parameters.length > 2 ? functionParsed.Parameters[2] : null;
@@ -1328,7 +1328,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionExecuteComponentFunction(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionExecuteComponentFunction(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const did: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         if (did == null)
             return ('');
@@ -1351,7 +1351,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionExecuteInstanceFunction(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionExecuteInstanceFunction(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const instanceSectorParameter: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const instanceSector: string = ((instanceSectorParameter == null) || (instanceSectorParameter == '')) ? sector : instanceSectorParameter;
         const instance: any = this.Application.ComponentHandler.GetComponentInstance(instanceSector);
@@ -1382,7 +1382,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionCast(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
+    private async ExecuteFunctionCast(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
         const context: DrapoContext = contextItem != null ? contextItem.Context : new DrapoContext();
         const value: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, functionParsed.Parameters[0], null, false);
         const type: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
@@ -1391,14 +1391,14 @@ class DrapoFunctionHandler {
         return (value);
     }
 
-    private async ExecuteFunctionEncodeUrl(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
+    private async ExecuteFunctionEncodeUrl(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
         const context: DrapoContext = contextItem != null ? contextItem.Context : new DrapoContext();
         const value: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, functionParsed.Parameters[0], null, false);
         const valueEncoded: string = this.Application.Server.EnsureUrlComponentEncoded(value);
         return (valueEncoded);
     }
 
-    private async ExecuteFunctionAddRequestHeader(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
+    private async ExecuteFunctionAddRequestHeader(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
         const context: DrapoContext = new DrapoContext();
         const name: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const value: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
@@ -1406,13 +1406,13 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionSetClipboard(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionSetClipboard(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const value: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         await this.Application.Document.SetClipboard(value);
         return ('');
     }
 
-    private async ExecuteFunctionCreateTimer(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionCreateTimer(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const content: string = functionParsed.Parameters[0];
         const time: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const loopText: string = functionParsed.Parameters[2];
@@ -1429,13 +1429,13 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionCreateReference(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionCreateReference(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const value: string = functionParsed.Parameters[0];
         const mustacheReference: string = await this.Application.Solver.CreateMustacheReference(sector, contextItem, value);
         return (mustacheReference);
     }
 
-    private async ExecuteFunctionWait(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionWait(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const time: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const timeAsNumber: number = this.Application.Parser.ParseNumber(time, 0);
         await this.Application.Document.Sleep(timeAsNumber);
@@ -1487,7 +1487,7 @@ class DrapoFunctionHandler {
         return (blob);
     }
 
-    private async ExecuteFunctionDetectView(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionDetectView(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const views: DrapoView[] = await this.Application.Config.GetViews();
         if (views == null)
             return ('');
@@ -1502,7 +1502,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionSetConfig(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionSetConfig(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const key: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const value: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         const valueAsNumber: number = this.Application.Parser.ParseNumber(value, 0);
@@ -1512,7 +1512,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionGetConfig(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionGetConfig(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const key: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         const keyLower: string = key.toLowerCase();
         if (keyLower === 'timezone') {
@@ -1533,13 +1533,13 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionLockData(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionLockData(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         this.Application.Observer.Lock(dataKey);
         return ('');
     }
 
-    private async ExecuteFunctionUnlockData(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionUnlockData(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         await this.Application.Observer.Unlock(dataKey);
         return ('');
@@ -1550,7 +1550,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionDebugger(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionDebugger(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const parameters: string[] = [];
         for (let i: number = 0; i < functionParsed.Parameters.length; i++)
             parameters.push(await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[i], true, true, true));

@@ -123,7 +123,7 @@ class DrapoAttributeHandler {
                     const data: any = await this.Application.Storage.RetrieveData(dataKey, sector);
                     contextCurrent.Create(data, el, null, dataKey, dataKey, null, null);
                 }
-                const valueNew: string = await this.Application.Solver.ResolveDataPath(contextCurrent, null, elj, sector, mustacheParts, canBind);
+                const valueNew: string = await this.Application.Solver.ResolveDataPath(contextCurrent, null, el, sector, mustacheParts, canBind);
                 value = value.replace(mustache, valueNew);
             } else if (canSubscribeDelay) {
                 this.Application.Observer.SubscribeDelay(el, dataKey, dataFields);
@@ -163,14 +163,13 @@ class DrapoAttributeHandler {
     }
 
     public async ResolveID(el: HTMLElement, sector: string, canBind: boolean = true, canSubscribeDelay: boolean = true, dataKeyFilter: string = null, dataFieldFilter: string = null): Promise<void> {
-        const elj: JQuery = $(el);
         const did: string = el.getAttribute('d-id');
         if (did == null)
             return;
         if (this.Application.Barber.HasMustacheContext(did, sector))
             return;
         const context: DrapoContext = new DrapoContext();
-        const expressionCurrent: string = await this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, did, elj, sector, canBind);
+        const expressionCurrent: string = await this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, did, el, sector, canBind);
         if (did !== expressionCurrent)
             el.setAttribute('d-id', expressionCurrent);
     }
@@ -179,7 +178,7 @@ class DrapoAttributeHandler {
         const did: string = el.getAttribute('d-id');
         if (did == null)
             return;
-        const expressionCurrent: string = await this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, did, elj, sector, canBind);
+        const expressionCurrent: string = await this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, did, el, sector, canBind);
         if (did !== expressionCurrent)
             el.setAttribute('d-id', expressionCurrent);
     }

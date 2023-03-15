@@ -2450,7 +2450,7 @@ var DrapoFunctionHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         conditional = functionParsed.Parameters[0];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, new DrapoContext(contextItem), null, executionContext, conditional, $(element), false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, new DrapoContext(contextItem), null, executionContext, conditional, element, false)];
                     case 1:
                         conditionalEvaluated = _a.sent();
                         return [4, this.Application.Solver.ResolveConditional(conditionalEvaluated)];

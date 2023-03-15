@@ -394,7 +394,7 @@ var DrapoControlFlow = (function () {
                         item = context.Create(data, template, elementForTemplate, dataKey, key, dataKeyIterator, j, oldNode);
                         _d = (hasIfText);
                         if (!_d) return [3, 21];
-                        return [4, this.Application.Solver.ResolveConditional(ifText, templateJ, sector, context, renderContext, elementForTemplate)];
+                        return [4, this.Application.Solver.ResolveConditional(ifText, template, sector, context, renderContext, elementForTemplate)];
                     case 20:
                         _d = (!(_f.sent()));
                         _f.label = 21;
@@ -559,7 +559,7 @@ var DrapoControlFlow = (function () {
                             return [3, 28];
                         }
                         if (!context.CheckMustacheAttributes) return [3, 11];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheAttributes(context, childJQuery, sector)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheAttributes(context, child, childJQuery, sector)];
                     case 10:
                         _b.sent();
                         _b.label = 11;
@@ -585,7 +585,7 @@ var DrapoControlFlow = (function () {
                         _b.label = 18;
                     case 18:
                         if (!context.CheckClass) return [3, 20];
-                        return [4, this.Application.ClassHandler.ResolveClassContext(context, renderContext, child, childJQuery, sector, true, DrapoStorageLinkType.Render)];
+                        return [4, this.Application.ClassHandler.ResolveClassContext(context, renderContext, child, sector, true, DrapoStorageLinkType.Render)];
                     case 19:
                         _b.sent();
                         _b.label = 20;
@@ -637,7 +637,7 @@ var DrapoControlFlow = (function () {
                         _b.label = 35;
                     case 35:
                         if (!context.CheckClass) return [3, 37];
-                        return [4, this.Application.ClassHandler.ResolveClassContext(context, renderContext, element, elementJQuery, sector, true, DrapoStorageLinkType.RenderClass)];
+                        return [4, this.Application.ClassHandler.ResolveClassContext(context, renderContext, element, sector, true, DrapoStorageLinkType.RenderClass)];
                     case 36:
                         _b.sent();
                         _b.label = 37;
@@ -667,7 +667,7 @@ var DrapoControlFlow = (function () {
                         _b.label = 45;
                     case 45:
                         if (!((!hasChildren) && (context.CheckMustacheAttributes))) return [3, 47];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheAttributes(context, elementJQuery, sector)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheAttributes(context, element, elementJQuery, sector)];
                     case 46:
                         _b.sent();
                         _b.label = 47;
@@ -688,12 +688,9 @@ var DrapoControlFlow = (function () {
     };
     DrapoControlFlow.prototype.ResolveControlFlowForIterationRenderClass = function (context, renderContext, element, sector) {
         return __awaiter(this, void 0, void 0, function () {
-            var elementJQuery;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        elementJQuery = $(element);
-                        return [4, this.Application.ClassHandler.ResolveClassContext(context, renderContext, element, elementJQuery, sector, true, DrapoStorageLinkType.RenderClass)];
+                    case 0: return [4, this.Application.ClassHandler.ResolveClassContext(context, renderContext, element, sector, true, DrapoStorageLinkType.RenderClass)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -747,12 +744,11 @@ var DrapoControlFlow = (function () {
     };
     DrapoControlFlow.prototype.GetControlFlowDataKeyIterators = function (context, renderContext, elementForTemplate, expression) {
         return __awaiter(this, void 0, void 0, function () {
-            var sector, elj, mustaches, i, mustache, mustacheParts, dataKey, data;
+            var sector, mustaches, i, mustache, mustacheParts, dataKey, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         sector = this.Application.Document.GetSector(elementForTemplate);
-                        elj = $(elementForTemplate);
                         mustaches = this.Application.Parser.ParseMustaches(expression);
                         for (i = 0; i < mustaches.length; i++) {
                             mustache = mustaches[i];
@@ -763,7 +759,7 @@ var DrapoControlFlow = (function () {
                             this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
                             this.Application.Observer.SubscribeFor(elementForTemplate, dataKey);
                         }
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, expression, elj, sector, true, null, true, elementForTemplate)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, expression, elementForTemplate, sector, true, null, true, elementForTemplate)];
                     case 1:
                         data = _a.sent();
                         return [2, (this.Application.Parser.ParseIterator(data))];

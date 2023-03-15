@@ -12,7 +12,7 @@ class DrapoSolver {
         this._application = application;
     }
 
-    public async ResolveConditional(expression: string | boolean | number, elj: JQuery = null, sector: string = null, context: DrapoContext = null, renderContext: DrapoRenderContext = null, eljForTemplate: HTMLElement = null): Promise<boolean> {
+    public async ResolveConditional(expression: string | boolean | number, el: HTMLElement = null, sector: string = null, context: DrapoContext = null, renderContext: DrapoRenderContext = null, eljForTemplate: HTMLElement = null): Promise<boolean> {
         if (typeof expression === 'boolean')
             return (expression);
         if (typeof expression === 'number')
@@ -20,40 +20,40 @@ class DrapoSolver {
         //Parser
         const block: DrapoExpressionItem = this.Application.Parser.ParseExpression(expression);
         //Resolve
-        const response: string = await this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, block);
+        const response: string = await this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block);
         //Recursive
         if (this.Application.Parser.HasMustache(response))
-            return (await this.ResolveConditional(response, elj, sector, context, renderContext, eljForTemplate));
+            return (await this.ResolveConditional(response, el, sector, context, renderContext, eljForTemplate));
         //Conditional
         const responseBoolean: boolean = await this.ResolveConditionalBoolean(response);
         return (responseBoolean);
     }
 
-    private async ResolveConditionalExpressionBlock(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, elj: JQuery, eljForTemplate: HTMLElement, block: DrapoExpressionItem): Promise<string> {
+    private async ResolveConditionalExpressionBlock(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, eljForTemplate: HTMLElement, block: DrapoExpressionItem): Promise<string> {
         //Resolve Mustaches
-        await this.EnsureExpressionItemCurrentLevelResolved(sector, context, renderContext, elj, block, eljForTemplate);
+        await this.EnsureExpressionItemCurrentLevelResolved(sector, context, renderContext, el, block, eljForTemplate);
         //Join Texts
         this.JoinTexts(block);
         //Operation
-        return (await this.ResolveConditionalExpressionBlockOperation(sector, context, renderContext, elj, eljForTemplate, block));
+        return (await this.ResolveConditionalExpressionBlockOperation(sector, context, renderContext, el, eljForTemplate, block));
     }
 
-    private async ResolveConditionalExpressionBlockOperation(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, elj: JQuery, eljForTemplate: HTMLElement, block: DrapoExpressionItem): Promise<string> {
+    private async ResolveConditionalExpressionBlockOperation(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, eljForTemplate: HTMLElement, block: DrapoExpressionItem): Promise<string> {
         if (block.Items.length === 0)
             return ('');
         //First
-        await this.EnsureExpressionItemResolved(sector, context, renderContext, elj, block, 0, eljForTemplate);
+        await this.EnsureExpressionItemResolved(sector, context, renderContext, el, block, 0, eljForTemplate);
         const itemFirst: DrapoExpressionItem = block.Items[0];
         if ((itemFirst.Type == DrapoExpressionItemType.Logical) || (itemFirst.Type == DrapoExpressionItemType.Comparator)) {
             const itemEmpty: DrapoExpressionItem = new DrapoExpressionItem(DrapoExpressionItemType.Text, '');
             block.Items.unshift(itemEmpty);
-            return (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, block));
+            return (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block));
         }
         const resultFirst: string = itemFirst.Value;
         if (block.Items.length < 2)
             return (resultFirst);
         //Second
-        await this.EnsureExpressionItemResolved(sector, context, renderContext, elj, block, 1, eljForTemplate);
+        await this.EnsureExpressionItemResolved(sector, context, renderContext, el, block, 1, eljForTemplate);
         const itemSecond: DrapoExpressionItem = block.Items[1];
         const resultSecond: string = itemSecond.Value;
         //Short Circuit
@@ -65,20 +65,20 @@ class DrapoSolver {
             const resultDenyItemSecond: DrapoExpressionItem = new DrapoExpressionItem(DrapoExpressionItemType.Text, resultDenySecond);
             block.Items[0] = resultDenyItemSecond;
             block.Items.splice(1, 1);
-            return (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, block));
+            return (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block));
         }
         //Third
         let resultThird: string = '';
         const hasMoreThanTwoTerms: boolean = block.Items.length > 2;
         if (hasMoreThanTwoTerms) {
-            await this.EnsureExpressionItemResolved(sector, context, renderContext, elj, block, 2, eljForTemplate);
+            await this.EnsureExpressionItemResolved(sector, context, renderContext, el, block, 2, eljForTemplate);
             resultThird = block.Items[2].Value;
         }
         if (resultThird === '!') {
             //Deny Fourth
             let resultFourth: string = 'false';
             if (block.Items.length > 3) {
-                await this.EnsureExpressionItemResolved(sector, context, renderContext, elj, block, 3, eljForTemplate);
+                await this.EnsureExpressionItemResolved(sector, context, renderContext, el, block, 3, eljForTemplate);
                 resultFourth = block.Items[3].Value;
             }
             const resultDenyFourth = (!this.ResolveConditionalBoolean(resultFourth)).toString();
@@ -86,7 +86,7 @@ class DrapoSolver {
             block.Items[2] = resultDenyItemFourth;
             if (block.Items.length > 3)
                 block.Items.splice(3, 1);
-            return (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, block));
+            return (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block));
         }
         //Result
         const result: string = this.ResolveConditionalOperator(resultFirst, resultSecond, resultThird);
@@ -94,16 +94,16 @@ class DrapoSolver {
         resultItem.Value = result;
         block.Items[0] = resultItem;
         block.Items.splice(1, hasMoreThanTwoTerms ? 2 : 1);
-        return (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, block));
+        return (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block));
     }
 
-    private async EnsureExpressionItemCurrentLevelResolved(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, elj: JQuery, block: DrapoExpressionItem, eljForTemplate: HTMLElement): Promise<void> {
+    private async EnsureExpressionItemCurrentLevelResolved(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, block: DrapoExpressionItem, eljForTemplate: HTMLElement): Promise<void> {
         for (let i: number = 0; i < block.Items.length; i++) {
             const item: DrapoExpressionItem = block.Items[i];
             if (item.Type === DrapoExpressionItemType.Function)
                 block.Items[i] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.FunctionHandler.ReplaceFunctionExpressions(sector, context, item.Value, true)));
             else if (item.Type === DrapoExpressionItemType.Mustache)
-                block.Items[i] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, item.Value, elj, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)));
+                block.Items[i] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, item.Value, el, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)));
         }
     }
 
@@ -120,14 +120,14 @@ class DrapoSolver {
         }
     }
 
-    private async EnsureExpressionItemResolved(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, elj: JQuery, block: DrapoExpressionItem, index: number, eljForTemplate: HTMLElement): Promise<void> {
+    private async EnsureExpressionItemResolved(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, block: DrapoExpressionItem, index: number, eljForTemplate: HTMLElement): Promise<void> {
         const item: DrapoExpressionItem = block.Items[index];
         if (item.Type === DrapoExpressionItemType.Block)
-            block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, item)).toString());
+            block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, item)).toString());
         else if (item.Type === DrapoExpressionItemType.Function)
             block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.FunctionHandler.ReplaceFunctionExpressions(sector, context, item.Value, true)));
         else if (item.Type === DrapoExpressionItemType.Mustache)
-            block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, item.Value, elj, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)));
+            block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, item.Value, el, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)));
     }
 
     private ResolveConditionalBlock(block: string): boolean {
@@ -397,14 +397,14 @@ class DrapoSolver {
         return (mustachePartsAbsolute);
     }
 
-    public async ResolveDataPathMustache(context: DrapoContext, executionContext: DrapoExecutionContext<any>, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string> {
+    public async ResolveDataPathMustache(context: DrapoContext, executionContext: DrapoExecutionContext<any>, element: HTMLElement, sector: string, mustacheParts: string[]): Promise<string> {
         let updated: boolean = false;
         for (let i: number = 1; i < mustacheParts.length; i++) {
             const mustachePart: string = mustacheParts[i];
             if (!this.Application.Parser.IsMustache(mustachePart))
                 continue;
             const mustachePartParts: string[] = this.Application.Parser.ParseMustache(mustachePart);
-            const dataValue = await this.ResolveDataPath(context, executionContext, elementJQuery, sector, mustachePartParts);
+            const dataValue = await this.ResolveDataPath(context, executionContext, element, sector, mustachePartParts);
             mustacheParts[i] = dataValue;
             updated = true;
         }
@@ -446,7 +446,7 @@ class DrapoSolver {
         return (true);
     }
 
-    public async ResolveDataPath(context: DrapoContext, executionContext: DrapoExecutionContext<any>, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader: boolean = false, canBindWriter: boolean = false, modelEvents: string[] = null, modelEventsCancel: string[] = null, canNotify: boolean = true): Promise<string> {
+    public async ResolveDataPath(context: DrapoContext, executionContext: DrapoExecutionContext<any>, element: HTMLElement, sector: string, path: (string[] | string), canBindReader: boolean = false, canBindWriter: boolean = false, modelEvents: string[] = null, modelEventsCancel: string[] = null, canNotify: boolean = true): Promise<string> {
         //Path
         const dataPath: string[] = (typeof path === 'string') ? [path] : path;
         //Mustache
@@ -457,7 +457,7 @@ class DrapoSolver {
             if (!this.Application.Parser.IsMustache(mustacheIndexer))
                 continue;
             const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustacheIndexer);
-            const mustacheValue = await this.ResolveDataPath(context, executionContext, elementJQuery, sector, mustacheParts, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify);
+            const mustacheValue = await this.ResolveDataPath(context, executionContext, element, sector, mustacheParts, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify);
             const mustacheValueIndexer = isMustacheIndexer ? this.Application.Parser.CreateMustacheIndexer(mustacheValue) : mustacheValue;
             dataPath[i] = mustacheValueIndexer;
         }
@@ -468,15 +468,15 @@ class DrapoSolver {
             if ((dataFields.length === 0))
                 return ('');
             if (this.Application.Storage.IsDataKeyDelay(dataKey, sector))
-                this.Application.Observer.SubscribeDelay(elementJQuery != null ? elementJQuery[0] : null, dataKey, dataFields);
+                this.Application.Observer.SubscribeDelay(element, dataKey, dataFields);
             return (this.CreateMustache(dataPath));
         }
         const data: string = await this.ResolveDataPathObject(sector, context, executionContext, dataPath);
         //Bind
         if (canBindWriter)
-            this.Application.Binder.BindReaderWriter(await this.ResolveDataPathObjectItem(context.Item, dataKey, sector), elementJQuery != null ? elementJQuery[0] : null, dataFields, modelEvents, modelEventsCancel, canNotify);
+            this.Application.Binder.BindReaderWriter(await this.ResolveDataPathObjectItem(context.Item, dataKey, sector), element, dataFields, modelEvents, modelEventsCancel, canNotify);
         else if (canBindReader)
-            this.Application.Binder.BindReader(await this.ResolveDataPathObjectItem(context.Item, dataKey, sector), elementJQuery != null ? elementJQuery[0] : null, dataFields);
+            this.Application.Binder.BindReader(await this.ResolveDataPathObjectItem(context.Item, dataKey, sector), element, dataFields);
         return (data);
     }
 

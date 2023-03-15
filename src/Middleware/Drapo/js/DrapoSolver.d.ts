@@ -2,7 +2,7 @@ declare class DrapoSolver {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    ResolveConditional(expression: string | boolean | number, elj?: JQuery, sector?: string, context?: DrapoContext, renderContext?: DrapoRenderContext, eljForTemplate?: HTMLElement): Promise<boolean>;
+    ResolveConditional(expression: string | boolean | number, el?: HTMLElement, sector?: string, context?: DrapoContext, renderContext?: DrapoRenderContext, eljForTemplate?: HTMLElement): Promise<boolean>;
     private ResolveConditionalExpressionBlock;
     private ResolveConditionalExpressionBlockOperation;
     private EnsureExpressionItemCurrentLevelResolved;
@@ -29,10 +29,10 @@ declare class DrapoSolver {
     private AppendContextAbsoluteIterators;
     CreateMustacheReference(sector: string, contextItem: DrapoContextItem, mustache: string): Promise<string>;
     private GetContextItemAbsolute;
-    ResolveDataPathMustache(context: DrapoContext, executionContext: DrapoExecutionContext<any>, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string>;
+    ResolveDataPathMustache(context: DrapoContext, executionContext: DrapoExecutionContext<any>, element: HTMLElement, sector: string, mustacheParts: string[]): Promise<string>;
     ExistDataPath(context: DrapoContext, sector: string, path: string[]): Promise<boolean>;
     private ExistDataPathObject;
-    ResolveDataPath(context: DrapoContext, executionContext: DrapoExecutionContext<any>, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader?: boolean, canBindWriter?: boolean, modelEvents?: string[], modelEventsCancel?: string[], canNotify?: boolean): Promise<string>;
+    ResolveDataPath(context: DrapoContext, executionContext: DrapoExecutionContext<any>, element: HTMLElement, sector: string, path: (string[] | string), canBindReader?: boolean, canBindWriter?: boolean, modelEvents?: string[], modelEventsCancel?: string[], canNotify?: boolean): Promise<string>;
     private ResolveDataPathObject;
     ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean, executionContext?: DrapoExecutionContext<any>): Promise<any>;
     ResolveItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): any;
