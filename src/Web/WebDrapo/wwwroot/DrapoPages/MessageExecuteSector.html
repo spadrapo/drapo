@@ -6,7 +6,7 @@
 </head>
 <body>
     <script>
-        function ExecuteMessage(event) {
+        function ExecuteMessage() {
             var message = {};
             message.Action = 'execute';
             message.DataKey = 'itemAdd';
@@ -15,12 +15,9 @@
     </script>
     <br>
     <span>Function External Frame Sector</span>
-    <input id="buttonAdd" type="button" value="Add" onclick="ExecuteMessage(event)">
+    <input id="buttonAdd" type="button" value="Add" onclick="ExecuteMessage()">
     <script>
-        function start() {
-            $(document.getElementById('buttonAdd')).trigger('click');
-        }
-        start();
+        setTimeout(ExecuteMessage,0);
     </script>
 </body>
 </html>
