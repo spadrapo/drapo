@@ -54,7 +54,7 @@ class DrapoAttributeHandler {
         }
     }
 
-    public async ResolveAttrContext(context: DrapoContext, el: HTMLElement, elj: JQuery, canBind: boolean): Promise<void> {
+    public async ResolveAttrContext(context: DrapoContext, el: HTMLElement, canBind: boolean): Promise<void> {
         const attributes: [string, string, string, string][] = this.ExtractAttr(el);
         if (attributes.length == 0)
             return;
@@ -78,10 +78,10 @@ class DrapoAttributeHandler {
                 if (this.Application.Parser.IsMustache(attributeValueOriginal)) {
                     const key = this.Application.Parser.ParseMustache(attributeValueOriginal)[0];
                     if (!context.IsParentKey(key))
-                        elj.removeAttr(attributeNameFull);
+                        el.removeAttribute(attributeNameFull);
                 }
                 else
-                    elj.removeAttr(attributeNameFull);
+                    el.removeAttribute(attributeNameFull);
             }
             if (attributeValue === attributeValueOriginal)
                 continue;
@@ -99,7 +99,7 @@ class DrapoAttributeHandler {
         }
     }
 
-    private async ResolveContextValue(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, isContext: boolean, value: string, canBind: boolean, canSubscribeDelay: boolean = false, dataKeyFilter: string = null, dataFieldFilter: string = null): Promise<string> {
+    private async ResolveContextValue(context: DrapoContext, el: HTMLElement, sector: string, isContext: boolean, value: string, canBind: boolean, canSubscribeDelay: boolean = false, dataKeyFilter: string = null, dataFieldFilter: string = null): Promise<string> {
         const valueOriginal: string = value;
         const mustaches: string[] = this.Application.Parser.ParseMustaches(value);
         for (let j: number = 0; j < mustaches.length; j++) {
@@ -130,7 +130,7 @@ class DrapoAttributeHandler {
             }
         }
         if (valueOriginal !== value)
-            return (await this.ResolveContextValue(context, el, elj, sector, isContext, value, canBind, canSubscribeDelay, null, null));
+            return (await this.ResolveContextValue(context, el, sector, isContext, value, canBind, canSubscribeDelay, null, null));
         return (value);
     }
 
@@ -174,7 +174,7 @@ class DrapoAttributeHandler {
             el.setAttribute('d-id', expressionCurrent);
     }
 
-    public async ResolveIDContext(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, canBind: boolean): Promise<boolean> {
+    public async ResolveIDContext(context: DrapoContext, el: HTMLElement, sector: string, canBind: boolean): Promise<boolean> {
         const did: string = el.getAttribute('d-id');
         if (did == null)
             return;

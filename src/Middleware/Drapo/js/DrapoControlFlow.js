@@ -567,13 +567,13 @@ var DrapoControlFlow = (function () {
                     case 12:
                         _b.sent();
                         if (!context.CheckID) return [3, 14];
-                        return [4, this.Application.AttributeHandler.ResolveIDContext(context, child, childJQuery, sector, true)];
+                        return [4, this.Application.AttributeHandler.ResolveIDContext(context, child, sector, true)];
                     case 13:
                         _b.sent();
                         _b.label = 14;
                     case 14:
                         if (!context.CheckAttribute) return [3, 16];
-                        return [4, this.Application.AttributeHandler.ResolveAttrContext(context, child, childJQuery, true)];
+                        return [4, this.Application.AttributeHandler.ResolveAttrContext(context, child, true)];
                     case 15:
                         _b.sent();
                         _b.label = 16;
@@ -619,13 +619,13 @@ var DrapoControlFlow = (function () {
                     case 29:
                         if (!((isStart) || (!hasChildren))) return [3, 47];
                         if (!context.CheckID) return [3, 31];
-                        return [4, this.Application.AttributeHandler.ResolveIDContext(context, element, elementJQuery, sector, true)];
+                        return [4, this.Application.AttributeHandler.ResolveIDContext(context, element, sector, true)];
                     case 30:
                         _b.sent();
                         _b.label = 31;
                     case 31:
                         if (!context.CheckAttribute) return [3, 33];
-                        return [4, this.Application.AttributeHandler.ResolveAttrContext(context, element, elementJQuery, true)];
+                        return [4, this.Application.AttributeHandler.ResolveAttrContext(context, element, true)];
                     case 32:
                         _b.sent();
                         _b.label = 33;
