@@ -82,13 +82,12 @@ class DrapoValidator {
         const validation: string = this.Application.Solver.Get(validations, '');
         const validationResolved: string = await this.ResolveValidationID(sector, validation, contextItem);
         if (validationResolved != null) {
-            const elj: JQuery = $(el);
             //Add Interface
             this.AddValidationInterface(sector, validationResolved, el, contextItem);
             //Add Class Unchecked
             const validatorUncheckedClass: string = await this.Application.Config.GetValidatorUncheckedClass();
             if (validatorUncheckedClass != null) {
-                elj.addClass(validatorUncheckedClass);
+                el.classList.add(validatorUncheckedClass);
             }
         }
     }
@@ -355,11 +354,10 @@ class DrapoValidator {
         const elements: HTMLElement[] = this.GetValidationRuleElements(sector, validation);
         for (let i: number = 0; i < elements.length; i++) {
             const element: HTMLElement = elements[i];
-            const elj: JQuery = $(element);
             if (uncheckedClass != null)
-                elj.removeClass(uncheckedClass);
-            elj.removeClass(removeClass);
-            elj.addClass(addClass);
+                element.classList.remove(uncheckedClass);
+            element.classList.remove(removeClass);
+            element.classList.add(addClass);
         }
         return (isValid);
     }
@@ -397,7 +395,7 @@ class DrapoValidator {
         if ((!isValid) && (canFocus)) {
             const element: HTMLElement = this.Application.Observer.GetElementByModel(sector, value);
             if (element != null)
-                $(element).focus();
+                element.focus();
         }
         return (isValid);
     }
@@ -481,11 +479,10 @@ class DrapoValidator {
         const elements: HTMLElement[] = this.GetValidationRuleElements(sector, validation);
         for (let i: number = 0; i < elements.length; i++) {
             const element: HTMLElement = elements[i];
-            const elj: JQuery = $(element);
-            elj.removeClass(validClass);
-            elj.removeClass(invalidClass);
+            element.classList.remove(validClass);
+            element.classList.remove(invalidClass);
             if (uncheckedClass != null)
-                elj.addClass(uncheckedClass);
+                element.classList.add(uncheckedClass);
         }
     }
 
