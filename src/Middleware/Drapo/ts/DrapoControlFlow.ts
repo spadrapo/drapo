@@ -306,7 +306,7 @@ class DrapoControlFlow {
             const nodeIndex: number = j - nodesRemovedCount + viewportIndexDifference;
             const oldNode: HTMLElement = ((items !== null) && (nodeIndex < items.length)) ? items[nodeIndex] : null;
             const item: DrapoContextItem = context.Create(data, template, elementForTemplate, dataKey, key, dataKeyIterator, j, oldNode);
-            if ((hasIfText) && (!await this.Application.Solver.ResolveConditional(ifText, templateJ, sector, context, renderContext, elementForTemplate))) {
+            if ((hasIfText) && (!await this.Application.Solver.ResolveConditional(ifText, template, sector, context, renderContext, elementForTemplate))) {
                 if ((isDifference) && (oldNode !== null))
                     this.RemoveListIndex(items, nodeIndex);
                 nodesRemovedCount++;
@@ -421,7 +421,7 @@ class DrapoControlFlow {
                     }
                     //Mustache Attributes
                     if (context.CheckMustacheAttributes)
-                        await this.Application.Barber.ResolveControlFlowMustacheAttributes(context, childJQuery, sector);
+                        await this.Application.Barber.ResolveControlFlowMustacheAttributes(context, child, childJQuery, sector);
                     //Children
                     await this.ResolveControlFlowForIterationRender(sector, context, child, renderContext, false, canResolveComponents);
                     //ID
@@ -435,7 +435,7 @@ class DrapoControlFlow {
                         await this.Application.ModelHandler.ResolveModel(context, renderContext, child, childJQuery, sector, true, true);
                     //Class
                     if (context.CheckClass)
-                        await this.Application.ClassHandler.ResolveClassContext(context, renderContext, child, childJQuery, sector, true, DrapoStorageLinkType.Render);
+                        await this.Application.ClassHandler.ResolveClassContext(context, renderContext, child, sector, true, DrapoStorageLinkType.Render);
                     //Events
                     if (context.CheckEvent)
                         await this.Application.EventHandler.AttachContext(context, child, childJQuery, sector, renderContext);
@@ -463,7 +463,7 @@ class DrapoControlFlow {
                 await this.Application.ModelHandler.ResolveModel(context, renderContext, element, elementJQuery, sector, true, true);
             //Class
             if (context.CheckClass)
-                await this.Application.ClassHandler.ResolveClassContext(context, renderContext, element, elementJQuery, sector, true, DrapoStorageLinkType.RenderClass);
+                await this.Application.ClassHandler.ResolveClassContext(context, renderContext, element, sector, true, DrapoStorageLinkType.RenderClass);
             //Events
             if (context.CheckEvent)
                 await this.Application.EventHandler.AttachContext(context, element, elementJQuery, sector, renderContext);
@@ -478,7 +478,7 @@ class DrapoControlFlow {
                 await this.Application.Validator.RegisterValidation(element, sector, context);
             //Mustache Attributes
             if ((!hasChildren) && (context.CheckMustacheAttributes))
-                await this.Application.Barber.ResolveControlFlowMustacheAttributes(context, elementJQuery, sector);
+                await this.Application.Barber.ResolveControlFlowMustacheAttributes(context, element, elementJQuery, sector);
         }
     }
 
@@ -495,8 +495,7 @@ class DrapoControlFlow {
     }
 
     private async ResolveControlFlowForIterationRenderClass(context: DrapoContext, renderContext: DrapoRenderContext, element: HTMLElement, sector: string): Promise<void> {
-        const elementJQuery: JQuery = $(element);
-        await this.Application.ClassHandler.ResolveClassContext(context, renderContext, element, elementJQuery, sector, true, DrapoStorageLinkType.RenderClass);
+        await this.Application.ClassHandler.ResolveClassContext(context, renderContext, element, sector, true, DrapoStorageLinkType.RenderClass);
     }
 
     public async IsControlFlowForIterationVisible(sector: string, context: DrapoContext, el: Element, elj: JQuery, renderContext: DrapoRenderContext): Promise<boolean> {
@@ -538,7 +537,6 @@ class DrapoControlFlow {
 
     private async GetControlFlowDataKeyIterators(context: DrapoContext, renderContext: DrapoRenderContext, elementForTemplate: HTMLElement, expression: string): Promise<string[]> {
         const sector: string = this.Application.Document.GetSector(elementForTemplate);
-        const elj: JQuery = $(elementForTemplate);
         const mustaches: string[] = this.Application.Parser.ParseMustaches(expression);
         for (let i: number = 0; i < mustaches.length; i++) {
             const mustache: string = mustaches[i];
@@ -549,7 +547,7 @@ class DrapoControlFlow {
             this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
             this.Application.Observer.SubscribeFor(elementForTemplate, dataKey);
         }
-        const data: string = await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, expression, elj, sector, true, null, true, elementForTemplate);
+        const data: string = await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, expression, elementForTemplate, sector, true, null, true, elementForTemplate);
         return (this.Application.Parser.ParseIterator(data));
     }
 

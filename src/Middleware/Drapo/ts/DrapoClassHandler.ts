@@ -23,55 +23,54 @@ class DrapoClassHandler {
             return;
         if (this.Application.Barber.HasMustacheContext(dClassMustache, sector))
             return;
-        const elj: JQuery = $(el);
         const context: DrapoContext = new DrapoContext();
-        const dClass: string = this.Application.Parser.IsMustacheOnly(dClassMustache) ? await this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, dClassMustache, elj, sector, canBind) : dClassMustache;
+        const dClass: string = this.Application.Parser.IsMustacheOnly(dClassMustache) ? await this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, dClassMustache, el, sector, canBind) : dClassMustache;
         if (this.Application.Barber.HasMustacheContext(dClass, sector))
             return;
         const classesExpressions: [string, string, string][] = this.ExtractClasses(dClass);
         for (let i = 0; i < classesExpressions.length; i++) {
             const classExpression: [string, string, string] = classesExpressions[i];
             const classMustachesTrue: string = classExpression[0];
-            const classTrue: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, classMustachesTrue, elj, canBind, type);
-            const classFalse: string = classExpression[2] != null ? await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, classExpression[2], elj, canBind, type) : null;
+            const classTrue: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, classMustachesTrue, el, canBind, type);
+            const classFalse: string = classExpression[2] != null ? await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, classExpression[2], el, canBind, type) : null;
             const expressionMustaches: string = classExpression[1];
-            const expressionCurrent: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, expressionMustaches, elj, canBind, type);
+            const expressionCurrent: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, expressionMustaches, el, canBind, type);
             const addClass: boolean = await this.Application.Solver.ResolveConditional(expressionCurrent);
             if (addClass) {
-                elj.addClass(classTrue);
+                el.classList.add(classTrue);
                 if (classFalse != null)
-                    elj.removeClass(classFalse);
+                    el.classList.remove(classFalse);
             } else {
-                elj.removeClass(classTrue);
+                el.classList.remove(classTrue);
                 if (classFalse != null)
-                    elj.addClass(classFalse);
+                    el.classList.add(classFalse);
             }
         }
      }
 
-    public async ResolveClassContext(context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, elj: JQuery, sector: string, canBind: boolean, type: DrapoStorageLinkType = DrapoStorageLinkType.Render): Promise<boolean> {
+    public async ResolveClassContext(context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, sector: string, canBind: boolean, type: DrapoStorageLinkType = DrapoStorageLinkType.Render): Promise<boolean> {
         const dClassMustache: string = el.getAttribute('d-class');
         if (dClassMustache == null)
             return;
-        const dClass: string = this.Application.Parser.IsMustacheOnly(dClassMustache) ? await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, dClassMustache, elj, sector, canBind) : dClassMustache;
+        const dClass: string = this.Application.Parser.IsMustacheOnly(dClassMustache) ? await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, dClassMustache, el, sector, canBind) : dClassMustache;
         const classesExpressions: [string, string, string][] = this.ExtractClasses(dClass);
         for (let i = 0; i < classesExpressions.length; i++)
         {
             const classExpression: [string, string, string] = classesExpressions[i];
             const classMustachesTrue: string = classExpression[0];
-            const classTrue: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, renderContext, null, classMustachesTrue, elj, canBind, type);
-            const classFalse: string = classExpression[2] != null ? await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, renderContext, null, classExpression[2], elj, canBind, type) : null;
+            const classTrue: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, renderContext, null, classMustachesTrue, el, canBind, type);
+            const classFalse: string = classExpression[2] != null ? await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, renderContext, null, classExpression[2], el, canBind, type) : null;
             const expressionMustaches: string = classExpression[1];
-            const expressionCurrent: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, renderContext, null, expressionMustaches, elj, canBind, type);
+            const expressionCurrent: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, renderContext, null, expressionMustaches, el, canBind, type);
             const addClass: boolean = await this.Application.Solver.ResolveConditional(expressionCurrent);
             if (addClass) {
-                elj.addClass(classTrue);
+                el.classList.add(classTrue);
                 if (classFalse != null)
-                    elj.removeClass(classFalse);
+                    el.classList.remove(classFalse);
             } else {
-                elj.removeClass(classTrue);
+                el.classList.remove(classTrue);
                 if (classFalse != null)
-                    elj.addClass(classFalse);
+                    el.classList.add(classFalse);
             }
         }
     }

@@ -129,7 +129,7 @@ var DrapoModelHandler = (function () {
                         if (modelEvents.length === 0)
                             modelEvents.push('change');
                         if (!((isMustacheOnly) && (context.CanUpdateTemplate))) return [3, 6];
-                        return [4, this.Application.Solver.ResolveDataPathMustache(context, null, elj, sector, mustacheParts)];
+                        return [4, this.Application.Solver.ResolveDataPathMustache(context, null, el, sector, mustacheParts)];
                     case 5:
                         mustacheResolved = _c.sent();
                         if (mustacheResolved !== null)
@@ -280,7 +280,7 @@ var DrapoModelHandler = (function () {
                 switch (_c.label) {
                     case 0:
                         _b = (_a = this.Application.Solver).ResolveConditional;
-                        return [4, this.Application.Solver.ResolveDataPath(context, null, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, null, canNotify)];
+                        return [4, this.Application.Solver.ResolveDataPath(context, null, element, sector, mustacheParts, canBind, canBind, modelEvents, null, canNotify)];
                     case 1: return [4, _b.apply(_a, [_c.sent()])];
                     case 2:
                         value = _c.sent();
@@ -298,7 +298,7 @@ var DrapoModelHandler = (function () {
                     case 0:
                         elj = $(el);
                         if (!(mustacheParts != null)) return [3, 2];
-                        return [4, this.Application.Solver.ResolveDataPath(context, null, elj, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify)];
+                        return [4, this.Application.Solver.ResolveDataPath(context, null, el, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify)];
                     case 1:
                         _a = _b.sent();
                         return [3, 3];
@@ -320,7 +320,7 @@ var DrapoModelHandler = (function () {
                 switch (_b.label) {
                     case 0:
                         if (!(mustacheParts != null)) return [3, 2];
-                        return [4, this.Application.Solver.ResolveDataPath(context, null, elj, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify)];
+                        return [4, this.Application.Solver.ResolveDataPath(context, null, element, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify)];
                     case 1:
                         _a = _b.sent();
                         return [3, 3];
@@ -342,7 +342,7 @@ var DrapoModelHandler = (function () {
             var value, elementInput;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.Application.Solver.ResolveDataPath(context, null, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify)];
+                    case 0: return [4, this.Application.Solver.ResolveDataPath(context, null, element, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify)];
                     case 1:
                         value = _a.sent();
                         elementInput = element;
@@ -358,7 +358,7 @@ var DrapoModelHandler = (function () {
             var value, elementInput;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.Application.Solver.ResolveDataPath(context, null, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify)];
+                    case 0: return [4, this.Application.Solver.ResolveDataPath(context, null, element, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify)];
                     case 1:
                         value = _a.sent();
                         elementInput = element;
@@ -373,7 +373,7 @@ var DrapoModelHandler = (function () {
             var value, elementInput;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.Application.Solver.ResolveDataPath(context, null, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, null, canNotify)];
+                    case 0: return [4, this.Application.Solver.ResolveDataPath(context, null, element, sector, mustacheParts, canBind, canBind, modelEvents, null, canNotify)];
                     case 1:
                         value = _a.sent();
                         elementInput = element;
@@ -389,7 +389,7 @@ var DrapoModelHandler = (function () {
             var value, elementInput;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.Application.Solver.ResolveDataPath(context, null, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, null, canNotify)];
+                    case 0: return [4, this.Application.Solver.ResolveDataPath(context, null, element, sector, mustacheParts, canBind, canBind, modelEvents, null, canNotify)];
                     case 1:
                         value = _a.sent();
                         elementInput = element;
@@ -405,7 +405,7 @@ var DrapoModelHandler = (function () {
             var value, elementSelect;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.Application.Solver.ResolveDataPath(context, null, elementJQuery, sector, mustacheParts, canBind, canBind, modelEvents, null, canNotify)];
+                    case 0: return [4, this.Application.Solver.ResolveDataPath(context, null, element, sector, mustacheParts, canBind, canBind, modelEvents, null, canNotify)];
                     case 1:
                         value = _a.sent();
                         elementSelect = element;
@@ -425,7 +425,7 @@ var DrapoModelHandler = (function () {
                         updated = true;
                         format = el.getAttribute("d-format");
                         if (!(mustacheParts != null)) return [3, 2];
-                        return [4, this.Application.Solver.ResolveDataPath(context, null, elj, sector, mustacheParts, canBind, false)];
+                        return [4, this.Application.Solver.ResolveDataPath(context, null, el, sector, mustacheParts, canBind, false)];
                     case 1:
                         _a = _b.sent();
                         return [3, 3];
@@ -450,7 +450,7 @@ var DrapoModelHandler = (function () {
                         _b.label = 4;
                     case 4:
                         if (!this.Application.Parser.HasMustache(formatResolved)) return [3, 6];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, formatResolved, elj, sector, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, formatResolved, el, sector, false)];
                     case 5:
                         formatResolved = _b.sent();
                         return [3, 4];
@@ -463,7 +463,7 @@ var DrapoModelHandler = (function () {
                         _b.label = 7;
                     case 7:
                         if (!this.Application.Parser.HasMustache(cultureResolved)) return [3, 9];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, cultureResolved, elj, sector, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, cultureResolved, el, sector, false)];
                     case 8:
                         cultureResolved = _b.sent();
                         return [3, 7];
@@ -490,7 +490,7 @@ var DrapoModelHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         updated = true;
-                        return [4, this.Application.Solver.ResolveDataPath(context, null, elj, sector, mustacheParts, canBind, false)];
+                        return [4, this.Application.Solver.ResolveDataPath(context, null, el, sector, mustacheParts, canBind, false)];
                     case 1:
                         value = _a.sent();
                         if (this.Application.Parser.IsMustache(value)) {

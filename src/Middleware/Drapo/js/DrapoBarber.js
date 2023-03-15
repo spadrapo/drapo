@@ -412,14 +412,14 @@ var DrapoBarber = (function () {
             });
         });
     };
-    DrapoBarber.prototype.ResolveControlFlowMustacheAttributes = function (context, elementJQuery, sector) {
+    DrapoBarber.prototype.ResolveControlFlowMustacheAttributes = function (context, element, elementJQuery, sector) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.ResolveControlFlowMustacheAttribute(context, "value", elementJQuery, sector)];
+                    case 0: return [4, this.ResolveControlFlowMustacheAttribute(context, "value", element, elementJQuery, sector)];
                     case 1:
                         _a.sent();
-                        return [4, this.ResolveControlFlowMustacheAttribute(context, "class", elementJQuery, sector)];
+                        return [4, this.ResolveControlFlowMustacheAttribute(context, "class", element, elementJQuery, sector)];
                     case 2:
                         _a.sent();
                         return [2];
@@ -454,7 +454,7 @@ var DrapoBarber = (function () {
                         mustacheParts = this.Application.Parser.ParseMustache(mustache);
                         if ((context !== null) && (!context.CanResolve(mustacheParts[0])))
                             return [3, 4];
-                        return [4, this.Application.Solver.ResolveDataPath(context, null, elementJQuery, sector, mustacheParts, true)];
+                        return [4, this.Application.Solver.ResolveDataPath(context, null, element, sector, mustacheParts, true)];
                     case 3:
                         mustacheData = _a.sent();
                         text = text.replace(mustache, mustacheData);
@@ -474,7 +474,7 @@ var DrapoBarber = (function () {
             });
         });
     };
-    DrapoBarber.prototype.ResolveControlFlowMustacheAttribute = function (context, attribute, elementJQuery, sector) {
+    DrapoBarber.prototype.ResolveControlFlowMustacheAttribute = function (context, attribute, element, elementJQuery, sector) {
         return __awaiter(this, void 0, void 0, function () {
             var jQueryResults, i, el, text, mustaches, j, mustache, mustacheParts, mustacheData;
             return __generator(this, function (_a) {
@@ -498,7 +498,7 @@ var DrapoBarber = (function () {
                         mustacheParts = this.Application.Parser.ParseMustache(mustache);
                         if (!context.CanResolve(mustacheParts[0]))
                             return [3, 4];
-                        return [4, this.Application.Solver.ResolveDataPath(context, null, elementJQuery, sector, mustacheParts, true)];
+                        return [4, this.Application.Solver.ResolveDataPath(context, null, element, sector, mustacheParts, true)];
                     case 3:
                         mustacheData = _a.sent();
                         text = text.replace(mustache, mustacheData);
@@ -523,7 +523,7 @@ var DrapoBarber = (function () {
             });
         });
     };
-    DrapoBarber.prototype.ResolveControlFlowMustacheStringFunction = function (sector, context, renderContext, executionContext, expression, elementJQuery, canBind, type) {
+    DrapoBarber.prototype.ResolveControlFlowMustacheStringFunction = function (sector, context, renderContext, executionContext, expression, element, canBind, type) {
         if (canBind === void 0) { canBind = true; }
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         return __awaiter(this, void 0, void 0, function () {
@@ -533,18 +533,18 @@ var DrapoBarber = (function () {
                     case 0: return [4, this.Application.FunctionHandler.ReplaceFunctionExpressions(sector, context, expression, canBind)];
                     case 1:
                         expressionWithoutFunctions = _a.sent();
-                        return [2, (this.ResolveControlFlowMustacheString(context, renderContext, executionContext, expressionWithoutFunctions, elementJQuery, sector, canBind, type))];
+                        return [2, (this.ResolveControlFlowMustacheString(context, renderContext, executionContext, expressionWithoutFunctions, element, sector, canBind, type))];
                 }
             });
         });
     };
-    DrapoBarber.prototype.ResolveControlFlowMustacheString = function (context, renderContext, executionContext, expression, elementJQuery, sector, canBind, type, isForIterator, elementForTemplate) {
+    DrapoBarber.prototype.ResolveControlFlowMustacheString = function (context, renderContext, executionContext, expression, element, sector, canBind, type, isForIterator, elementForTemplate) {
         if (canBind === void 0) { canBind = true; }
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (isForIterator === void 0) { isForIterator = false; }
         if (elementForTemplate === void 0) { elementForTemplate = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var mustaches, j, mustache, mustacheParts, dataKey, dataFields, mustacheData, contextDataKey, data, el, mustacheData, _a;
+            var mustaches, j, mustache, mustacheParts, dataKey, dataFields, mustacheData, contextDataKey, data, mustacheData, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -572,9 +572,8 @@ var DrapoBarber = (function () {
                         return [4, this.Application.Storage.RetrieveData(dataKey, sector)];
                     case 4:
                         data = _b.sent();
-                        el = elementJQuery != null ? elementJQuery[0] : null;
-                        contextDataKey.Create(data, el, null, dataKey, dataKey, null, null);
-                        this.Application.Binder.BindReader(contextDataKey.Item, el, dataFields);
+                        contextDataKey.Create(data, element, null, dataKey, dataKey, null, null);
+                        this.Application.Binder.BindReader(contextDataKey.Item, element, dataFields);
                         if ((context != null) && (context.Item != null) && (dataKey !== context.Item.DataKey))
                             this.Application.Observer.SubscribeStorage(dataKey, dataFields, context.Item.DataKey, type);
                         _b.label = 5;
@@ -585,7 +584,7 @@ var DrapoBarber = (function () {
                         if (!(context.Item === null)) return [3, 7];
                         _a = '';
                         return [3, 9];
-                    case 7: return [4, this.Application.Solver.ResolveDataPath(context, executionContext, elementJQuery, sector, mustacheParts, canBind)];
+                    case 7: return [4, this.Application.Solver.ResolveDataPath(context, executionContext, element, sector, mustacheParts, canBind)];
                     case 8:
                         _a = _b.sent();
                         _b.label = 9;
@@ -605,7 +604,7 @@ var DrapoBarber = (function () {
     DrapoBarber.prototype.ResolveMustacheElementVisibility = function (el, canBind) {
         if (canBind === void 0) { canBind = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var elFor, elIF, sector, context, elj, visibility;
+            var elFor, elIF, sector, context, visibility, elj;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -619,10 +618,10 @@ var DrapoBarber = (function () {
                         if (this.Application.Barber.HasMustacheContext(elIF, sector))
                             return [2];
                         context = new DrapoContext();
-                        elj = $(el);
-                        return [4, this.Application.Solver.ResolveConditional(elIF, elj, sector, context)];
+                        return [4, this.Application.Solver.ResolveConditional(elIF, el, sector, context)];
                     case 1:
                         visibility = _a.sent();
+                        elj = $(el);
                         if (visibility)
                             this.Application.Document.Show(elj);
                         else
