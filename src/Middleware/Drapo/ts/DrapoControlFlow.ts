@@ -426,10 +426,10 @@ class DrapoControlFlow {
                     await this.ResolveControlFlowForIterationRender(sector, context, child, renderContext, false, canResolveComponents);
                     //ID
                     if (context.CheckID)
-                        await this.Application.AttributeHandler.ResolveIDContext(context, child, childJQuery, sector, true);
+                        await this.Application.AttributeHandler.ResolveIDContext(context, child, sector, true);
                     //Attribute
                     if (context.CheckAttribute)
-                        await this.Application.AttributeHandler.ResolveAttrContext(context, child, childJQuery, true);
+                        await this.Application.AttributeHandler.ResolveAttrContext(context, child, true);
                     //Model
                     if (context.CheckModel)
                         await this.Application.ModelHandler.ResolveModel(context, renderContext, child, childJQuery, sector, true, true);
@@ -454,10 +454,10 @@ class DrapoControlFlow {
         if ((isStart) || (!hasChildren)) {
             //ID
             if (context.CheckID)
-                await this.Application.AttributeHandler.ResolveIDContext(context, element, elementJQuery, sector, true);
+                await this.Application.AttributeHandler.ResolveIDContext(context, element, sector, true);
             //Attribute
             if (context.CheckAttribute)
-                await this.Application.AttributeHandler.ResolveAttrContext(context, element, elementJQuery, true);
+                await this.Application.AttributeHandler.ResolveAttrContext(context, element, true);
             //Model
             if (context.CheckModel)
                 await this.Application.ModelHandler.ResolveModel(context, renderContext, element, elementJQuery, sector, true, true);

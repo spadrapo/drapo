@@ -115,7 +115,7 @@ var DrapoAttributeHandler = (function () {
             });
         });
     };
-    DrapoAttributeHandler.prototype.ResolveAttrContext = function (context, el, elj, canBind) {
+    DrapoAttributeHandler.prototype.ResolveAttrContext = function (context, el, canBind) {
         return __awaiter(this, void 0, void 0, function () {
             var attributes, sector, i, attribute, attributeName, attributeValue, attributeType, format, formatResolved, _a, attributeValueOriginal, attributeNameFull, key, isValid;
             return __generator(this, function (_b) {
@@ -157,10 +157,10 @@ var DrapoAttributeHandler = (function () {
                             if (this.Application.Parser.IsMustache(attributeValueOriginal)) {
                                 key = this.Application.Parser.ParseMustache(attributeValueOriginal)[0];
                                 if (!context.IsParentKey(key))
-                                    elj.removeAttr(attributeNameFull);
+                                    el.removeAttribute(attributeNameFull);
                             }
                             else
-                                elj.removeAttr(attributeNameFull);
+                                el.removeAttribute(attributeNameFull);
                         }
                         if (attributeValue === attributeValueOriginal)
                             return [3, 8];
@@ -185,7 +185,7 @@ var DrapoAttributeHandler = (function () {
             });
         });
     };
-    DrapoAttributeHandler.prototype.ResolveContextValue = function (context, el, elj, sector, isContext, value, canBind, canSubscribeDelay, dataKeyFilter, dataFieldFilter) {
+    DrapoAttributeHandler.prototype.ResolveContextValue = function (context, el, sector, isContext, value, canBind, canSubscribeDelay, dataKeyFilter, dataFieldFilter) {
         if (canSubscribeDelay === void 0) { canSubscribeDelay = false; }
         if (dataKeyFilter === void 0) { dataKeyFilter = null; }
         if (dataFieldFilter === void 0) { dataFieldFilter = null; }
@@ -244,7 +244,7 @@ var DrapoAttributeHandler = (function () {
                         return [3, 1];
                     case 9:
                         if (!(valueOriginal !== value)) return [3, 11];
-                        return [4, this.ResolveContextValue(context, el, elj, sector, isContext, value, canBind, canSubscribeDelay, null, null)];
+                        return [4, this.ResolveContextValue(context, el, sector, isContext, value, canBind, canSubscribeDelay, null, null)];
                     case 10: return [2, (_b.sent())];
                     case 11: return [2, (value)];
                 }
@@ -303,7 +303,7 @@ var DrapoAttributeHandler = (function () {
             });
         });
     };
-    DrapoAttributeHandler.prototype.ResolveIDContext = function (context, el, elj, sector, canBind) {
+    DrapoAttributeHandler.prototype.ResolveIDContext = function (context, el, sector, canBind) {
         return __awaiter(this, void 0, void 0, function () {
             var did, expressionCurrent;
             return __generator(this, function (_a) {
