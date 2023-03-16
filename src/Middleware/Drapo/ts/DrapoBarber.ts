@@ -214,7 +214,7 @@ class DrapoBarber {
         if (!isMustacheOnly)
         {
             const context: DrapoContext = new DrapoContext();
-            await this.Application.ModelHandler.ResolveModel(context, null, el, null, sector, canBind, false);
+            await this.Application.ModelHandler.ResolveModel(context, null, el, sector, canBind, false);
             return;
         }
         const mustaches: string[] = this.Application.Parser.ParseMustaches(model);
@@ -236,7 +236,7 @@ class DrapoBarber {
             const data: any = await this.Application.Storage.RetrieveData(dataKey, sector);
             context.Create(data, el, null, dataKey, dataKey, null, null);
             const elj: JQuery = $(el);
-            await this.Application.ModelHandler.ResolveModel(context, null, el, elj, sector, canBind, false);
+            await this.Application.ModelHandler.ResolveModel(context, null, el, sector, canBind, false);
         } else if (canSubscribeDelay) {
             this.Application.Observer.SubscribeDelay(el, dataKey, dataFields);
         }
