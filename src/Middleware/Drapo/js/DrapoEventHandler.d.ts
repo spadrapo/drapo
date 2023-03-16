@@ -37,6 +37,6 @@ declare class DrapoEventHandler {
     TriggerClick(el: HTMLElement): Promise<boolean>;
     Trigger(el: HTMLElement, type: string): Promise<boolean>;
     TriggerEvent(el: HTMLElement, event: Event): Promise<boolean>;
-    ApplyNodeEventsDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void;
+    SyncNodeEventsDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void;
     private GetEventListener;
 }

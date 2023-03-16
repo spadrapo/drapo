@@ -7941,7 +7941,7 @@ var DrapoDocument = (function () {
         return (false);
     };
     DrapoDocument.prototype.ApplyNodeEventsDifferences = function (nodeOld, nodeNew) {
-        this.Application.EventHandler.ApplyNodeEventsDifferences(nodeOld, nodeNew);
+        this.Application.EventHandler.SyncNodeEventsDifferences(nodeOld, nodeNew);
     };
     DrapoDocument.prototype.ApplyNodeSpecialDifferences = function (nodeOld, nodeNew) {
         var tag = nodeOld.tagName.toLowerCase();
@@ -9228,7 +9228,7 @@ var DrapoEventHandler = (function () {
             });
         });
     };
-    DrapoEventHandler.prototype.ApplyNodeEventsDifferences = function (nodeOld, nodeNew) {
+    DrapoEventHandler.prototype.SyncNodeEventsDifferences = function (nodeOld, nodeNew) {
         var eventsOld = this.GetElementEventListenerContainer(nodeOld);
         var eventsNew = this.GetElementEventListenerContainer(nodeNew);
         for (var i = 0; i < eventsNew.length; i++) {
@@ -9243,8 +9243,8 @@ var DrapoEventHandler = (function () {
                 this.AttachEventListener(nodeOld, elEventListener.EventType, elEventListener.EventNamespace, elEventListener.Function);
             }
             else {
-                eventOld.Function = eventNew.Function;
                 this.DetachEventListener(nodeOld, eventOld.EventNamespace);
+                eventOld.Function = eventNew.Function;
                 this.AttachEventListener(nodeOld, eventOld.EventType, eventOld.EventNamespace, eventOld.Function);
             }
         }
@@ -9255,7 +9255,8 @@ var DrapoEventHandler = (function () {
                 continue;
             this.DetachEventListener(nodeOld, eventOld.EventNamespace);
         }
-        this.SetElementEventListenerContainer(nodeOld, eventsOld);
+        if ((eventsOld.length > 0) || (eventsNew.length > 0))
+            this.SetElementEventListenerContainer(nodeOld, eventsOld);
     };
     DrapoEventHandler.prototype.GetEventListener = function (eventNamespace, events) {
         for (var i = 0; i < events.length; i++) {

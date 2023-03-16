@@ -961,7 +961,7 @@ class DrapoDocument {
     }
 
     private ApplyNodeEventsDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
-        this.Application.EventHandler.ApplyNodeEventsDifferences(nodeOld, nodeNew);
+        this.Application.EventHandler.SyncNodeEventsDifferences(nodeOld, nodeNew);
     }
 
     private ApplyNodeSpecialDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void {

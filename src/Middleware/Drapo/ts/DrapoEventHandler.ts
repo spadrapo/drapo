@@ -425,7 +425,7 @@ class DrapoEventHandler {
         return (el.dispatchEvent(event));
     }
 
-    public ApplyNodeEventsDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
+    public SyncNodeEventsDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
         const eventsOld: DrapoEventListener[] = this.GetElementEventListenerContainer(nodeOld);
         const eventsNew: DrapoEventListener[] = this.GetElementEventListenerContainer(nodeNew);
         //Event Type : Insert - Update
@@ -443,8 +443,8 @@ class DrapoEventHandler {
                 this.AttachEventListener(nodeOld, elEventListener.EventType, elEventListener.EventNamespace, elEventListener.Function);
             } else {
                 //Update
-                eventOld.Function = eventNew.Function;
                 this.DetachEventListener(nodeOld, eventOld.EventNamespace);
+                eventOld.Function = eventNew.Function;
                 this.AttachEventListener(nodeOld, eventOld.EventType, eventOld.EventNamespace, eventOld.Function);
             }
         }
@@ -456,7 +456,8 @@ class DrapoEventHandler {
                 continue;
             this.DetachEventListener(nodeOld, eventOld.EventNamespace);
         }
-        this.SetElementEventListenerContainer(nodeOld, eventsOld);
+        if((eventsOld.length > 0) || (eventsNew.length > 0))
+            this.SetElementEventListenerContainer(nodeOld, eventsOld);
     }
 
     private GetEventListener(eventNamespace: string, events: DrapoEventListener[]): DrapoEventListener {

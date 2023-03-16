@@ -1243,7 +1243,7 @@ var DrapoDocument = (function () {
         return (false);
     };
     DrapoDocument.prototype.ApplyNodeEventsDifferences = function (nodeOld, nodeNew) {
-        this.Application.EventHandler.ApplyNodeEventsDifferences(nodeOld, nodeNew);
+        this.Application.EventHandler.SyncNodeEventsDifferences(nodeOld, nodeNew);
     };
     DrapoDocument.prototype.ApplyNodeSpecialDifferences = function (nodeOld, nodeNew) {
         var tag = nodeOld.tagName.toLowerCase();
