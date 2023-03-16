@@ -21,7 +21,7 @@ class DrapoEventHandler {
         return (content.indexOf('d-on-') > -1);
     }
 
-    public CreateEventNamespace(el: HTMLElement, location: string, eventType: string, namespace: string): string {
+    public CreateEventNamespace(el: HTMLElement, location: string, eventType: string, namespace: string = 'default'): string {
         if (eventType === 'load')
             return (eventType);
         if (location === null)
@@ -37,11 +37,11 @@ class DrapoEventHandler {
         return (this.Application.Solver.ResolveConditionalBoolean(propagationValue));
     }
 
-    private RetrieveEventBinder(elementJQuery: JQuery, location: string): JQuery {
+    private RetrieveEventBinder(element: HTMLElement, location: string): HTMLElement {
         if (location == null)
-            return (elementJQuery);
+            return (element);
         if (this.IsLocationBody(location))
-            return ($(document));
+            return (document.documentElement);
         return (null);
     }
 
@@ -49,15 +49,15 @@ class DrapoEventHandler {
         return (location === 'body');
     }
 
-    public GetElementParent(element: Element, levels: number = 0): JQuery {
-        let current: Element = element;
+    public GetElementParent(element: HTMLElement, levels: number = 0): HTMLElement {
+        let current: HTMLElement = element;
         for (let i: number = 0; (i < levels) && (current != null); i++)
             current = current.parentElement;
         if (current == null)
             return (null);
         if (current.tagName.toLowerCase() === 'body')
-            return ($(document.body));
-        return ($(current));
+            return (document.body);
+        return (current);
     }
 
     public async Attach(el: HTMLElement, renderContext: DrapoRenderContext): Promise<void> {
@@ -66,7 +66,6 @@ class DrapoEventHandler {
         if (events.length == 0)
             return;
         const application: DrapoApplication = this.Application;
-        const elj: JQuery = $(el);
         const sector: string = await this.Application.Document.GetSectorResolved(el);
         const isSectorDynamic: boolean = await this.Application.Document.IsSectorDynamic(el);
         for (let i = 0; i < events.length; i++) {
@@ -81,7 +80,7 @@ class DrapoEventHandler {
             const location: string = event[1];
             const isLocationBody = this.IsLocationBody(location);
             const eventNamespace = this.CreateEventNamespace(el, location, eventType, 'noContext');
-            const binder: JQuery = this.RetrieveEventBinder(elj, location);
+            const binder: HTMLElement = this.RetrieveEventBinder(el, location);
             if (binder === null)
                 continue;
             const propagation: boolean = this.GetEventPropagation(el, eventType);
@@ -97,10 +96,10 @@ class DrapoEventHandler {
             const eventsDetach: string[] = this.GetEventDetach(el, eventType);
             let eventsDetachActivated: boolean = false;
             const eventAttribute: string = event[0];
-            binder.unbind(eventNamespace);
-            binder.bind(eventNamespace, async (e) => {
-                if ((isLocationBody) && (!application.Document.Contains(elj))) {
-                    binder.unbind(eventNamespace);
+            this.DetachEventListener(binder, eventNamespace);
+            this.AttachEventListener(binder, eventType, eventNamespace, async (e: Event) => {
+                if ((isLocationBody) && (!application.Document.Contains(el))) {
+                    application.EventHandler.DetachEventListener(binder, eventNamespace);
                     return (true);
                 }
                 if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
@@ -116,7 +115,7 @@ class DrapoEventHandler {
                     for (let j: number = 0; j < eventsDetach.length; j++) {
                         const eventDetach: string = eventsDetach[j];
                         const eventDetachNamespace: string = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
-                        binder.unbind(eventDetachNamespace);
+                        application.EventHandler.DetachEventListener(binder, eventNamespace);
                         if (eventDetach === eventType)
                             eventsDetachActivated = true;
                     }
@@ -140,7 +139,7 @@ class DrapoEventHandler {
         }
     }
 
-    public async AttachContext(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, renderContext: DrapoRenderContext): Promise<void> {
+    public async AttachContext(context: DrapoContext, el: HTMLElement, sector: string, renderContext: DrapoRenderContext): Promise<void> {
         //Events
         const events: [string, string, string, string, string, string][] = this.RetrieveElementEvents(el);
         if (events.length == 0)
@@ -160,7 +159,7 @@ class DrapoEventHandler {
             const isLocationBody = this.IsLocationBody(location);
             const functionsValue: string = this.Application.Solver.ResolveSystemContextPath(sector, context, functionsValueOriginal);
             const eventNamespace: string = this.CreateEventNamespace(el, location, eventType, 'context');
-            const binder: JQuery = this.RetrieveEventBinder(elj, location);
+            const binder: HTMLElement = this.RetrieveEventBinder(el, location);
             if (binder === null)
                 continue;
             const propagation: boolean = this.GetEventPropagation(el, eventType);
@@ -175,18 +174,18 @@ class DrapoEventHandler {
             //Detach
             const eventsDetach: string[] = this.GetEventDetach(el, eventType);
             let eventsDetachActivated: boolean = false;
-            binder.unbind(eventNamespace);
-            binder.bind(eventNamespace, async (e) => {
-                if ((isLocationBody) && (!application.Document.Contains(elj))) {
-                    binder.unbind(eventNamespace);
+            this.DetachEventListener(binder, eventNamespace);
+            this.AttachEventListener(binder, eventType, eventNamespace, async (event: Event) => {
+                if ((isLocationBody) && (!application.Document.Contains(el))) {
+                    application.EventHandler.DetachEventListener(binder, eventNamespace);
                     return (true);
                 }
-                if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
+                if (!application.EventHandler.IsValidEventFilter(event, eventFilter))
                     return (true);
                 //Sector
-                const sectorLocal: string = application.Document.GetSector(e.target as HTMLElement);
+                const sectorLocal: string = application.Document.GetSector(event.target as HTMLElement);
                 //Validation
-                if (!(await this.Application.Validator.IsValidationEventValid(el, sectorLocal, eventType, location, e, contextItem)))
+                if (!(await this.Application.Validator.IsValidationEventValid(el, sectorLocal, eventType, location, event, contextItem)))
                     return (true);
                 if (eventsDetachActivated)
                     return (true);
@@ -194,14 +193,14 @@ class DrapoEventHandler {
                     for (let j: number = 0; j < eventsDetach.length; j++) {
                         const eventDetach: string = eventsDetach[j];
                         const eventDetachNamespace: string = this.CreateEventNamespace(el, null, eventDetach, 'noContext');
-                        binder.unbind(eventDetachNamespace);
+                        application.EventHandler.DetachEventListener(binder, eventNamespace);
                         if (eventDetach === eventType)
                             eventsDetachActivated = true;
                     }
                 }
                 if (!isDelay) {
                     // tslint:disable-next-line:no-floating-promises
-                    application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, functionsValue);
+                    application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, event, functionsValue);
                 } else {
                     if (delayTimeout != null)
                         clearTimeout(delayTimeout);
@@ -209,7 +208,7 @@ class DrapoEventHandler {
                         clearTimeout(delayTimeout);
                         delayTimeout = null;
                         // tslint:disable-next-line:no-floating-promises
-                        application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, functionsValue);
+                        application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, event, functionsValue);
                     }, debounceTimeout);
                 }
                 return (propagation);
@@ -225,7 +224,47 @@ class DrapoEventHandler {
         return (false);
     }
 
-    private async ExecuteEvent(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionsValue: string, isSectorDynamic: boolean = false): Promise<void> {
+    public AttachEventListener(el: HTMLElement | Window, eventType: string, eventNamespace: string, callback: Function): void {
+        const elEventListeners: DrapoEventListener[] = this.GetElementEventListenerContainer(el);
+        const elEventListener: DrapoEventListener = new DrapoEventListener();
+        elEventListener.EventType = eventType;
+        elEventListener.EventNamespace = eventNamespace;
+        elEventListener.Function = callback;
+        elEventListeners.push(elEventListener);
+        el.addEventListener(eventType, callback as any);
+        this.SetElementEventListenerContainer(el, elEventListeners);
+    }
+
+    public DetachEventListener(el: HTMLElement | Window, eventNamespace: string): boolean {
+        const elEventListeners: DrapoEventListener[] = this.GetElementEventListenerContainer(el);
+        for (let i: number = elEventListeners.length - 1; i >= 0; i--) {
+            const elEventListener: DrapoEventListener = elEventListeners[i];
+            if (elEventListener.EventNamespace !== eventNamespace)
+                continue;
+            elEventListeners.splice(i, 1);
+            el.removeEventListener(elEventListener.EventType, elEventListener.Function as any);
+            this.SetElementEventListenerContainer(el, elEventListeners);
+            return (true);
+        }
+        return (false);
+    }
+
+    private SetElementEventListenerContainer(el: HTMLElement | Window, elEventListeners: DrapoEventListener[]): void {
+        const elAny: any = el as any;
+        elAny._events = elEventListeners;
+    }
+
+    private GetElementEventListenerContainer(el: HTMLElement | Window): DrapoEventListener[] {
+        const elAny: any = el as any;
+        if (elAny._events == null) {
+            const elEventListeners: DrapoEventListener[] = [];
+            elAny._events = elEventListeners;
+            return (elEventListeners);
+        }
+        return (elAny._events as DrapoEventListener[]);
+    }
+
+    private async ExecuteEvent(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionsValue: string, isSectorDynamic: boolean = false): Promise<void> {
         try {
             //Single
             const isEventSingle: boolean = element.getAttribute('d-event-single') === 'true';
@@ -236,7 +275,7 @@ class DrapoEventHandler {
                 this.AddEventRunning(element);
                 eventSingleClass = element.getAttribute('d-event-single-class');
                 if (eventSingleClass != null)
-                    $(element).addClass(eventSingleClass);
+                    element.classList.add(eventSingleClass);
             }
             //Sector
             const sectorEvent: string = isSectorDynamic ? await this.Application.Document.GetSectorResolved(element) : sector;
@@ -246,7 +285,7 @@ class DrapoEventHandler {
             if (isEventSingle) {
                 this.RemoveEventRunning(element);
                 if (eventSingleClass != null)
-                    $(element).removeClass(eventSingleClass);
+                    element.classList.remove(eventSingleClass);
             }
         } catch (e) {
             await this.Application.ExceptionHandler.Handle(e, 'DrapoEventHandler - ExecuteEvent');
@@ -379,10 +418,54 @@ class DrapoEventHandler {
 
     public async Trigger(el: HTMLElement, type: string): Promise<boolean> {
         const event: Event = new Event(type);
-        return(await this.TriggerEvent(el, event));
+        return (await this.TriggerEvent(el, event));
     }
 
     public async TriggerEvent(el: HTMLElement, event: Event): Promise<boolean> {
-        return(el.dispatchEvent(event));
+        return (el.dispatchEvent(event));
+    }
+
+    public SyncNodeEventsDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
+        const eventsOld: DrapoEventListener[] = this.GetElementEventListenerContainer(nodeOld);
+        const eventsNew: DrapoEventListener[] = this.GetElementEventListenerContainer(nodeNew);
+        //Event Type : Insert - Update
+        for (let i: number = 0; i < eventsNew.length; i++) {
+            const eventNew: DrapoEventListener = eventsNew[i];
+            const eventOld: DrapoEventListener = this.GetEventListener(eventNew.EventNamespace, eventsOld);
+            //Event Array : Insert - Update
+            if (eventOld == null) {
+                //Insert
+                const elEventListener: DrapoEventListener = new DrapoEventListener();
+                elEventListener.EventType = eventNew.EventType;
+                elEventListener.EventNamespace = eventNew.EventNamespace;
+                elEventListener.Function = eventNew.Function;
+                eventsOld.push(elEventListener);
+                this.AttachEventListener(nodeOld, elEventListener.EventType, elEventListener.EventNamespace, elEventListener.Function);
+            } else {
+                //Update
+                this.DetachEventListener(nodeOld, eventOld.EventNamespace);
+                eventOld.Function = eventNew.Function;
+                this.AttachEventListener(nodeOld, eventOld.EventType, eventOld.EventNamespace, eventOld.Function);
+            }
+        }
+        //Event Type : Delete
+        for (let i: number = eventsOld.length - 1; i >= 0; i--) {
+            const eventOld: DrapoEventListener = eventsOld[i];
+            const eventNew: DrapoEventListener = this.GetEventListener(eventOld.EventNamespace, eventsNew);
+            if (eventNew !== null)
+                continue;
+            this.DetachEventListener(nodeOld, eventOld.EventNamespace);
+        }
+        if((eventsOld.length > 0) || (eventsNew.length > 0))
+            this.SetElementEventListenerContainer(nodeOld, eventsOld);
+    }
+
+    private GetEventListener(eventNamespace: string, events: DrapoEventListener[]): DrapoEventListener {
+        for (let i: number = 0; i < events.length; i++) {
+            const event: DrapoEventListener = events[i];
+            if (event.EventNamespace === eventNamespace)
+                return (event);
+        }
+        return (null);
     }
 }

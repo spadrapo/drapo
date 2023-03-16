@@ -20,8 +20,8 @@ declare class DrapoValidator {
     RegisterValidation(el: HTMLElement, sector: string, context?: DrapoContext): Promise<void>;
     private ResolveValidationID;
     private GetValidationTag;
-    IsValidationEventValid(el: HTMLElement, sector: string, eventType: string, location: string, event: JQueryEventObject, contextItem: DrapoContextItem): Promise<boolean>;
-    IsValidationExpressionValid(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem, event?: JQueryEventObject): Promise<boolean>;
+    IsValidationEventValid(el: HTMLElement, sector: string, eventType: string, location: string, event: Event, contextItem: DrapoContextItem): Promise<boolean>;
+    IsValidationExpressionValid(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem, event?: Event): Promise<boolean>;
     UncheckValidationExpression(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem): Promise<void>;
     private GetSectorIndex;
     private GetIndex;

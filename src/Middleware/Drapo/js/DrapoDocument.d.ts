@@ -80,10 +80,6 @@ declare class DrapoDocument {
     ApplyNodeDifferencesRenderClass(nodeOld: HTMLElement, nodeNew: HTMLElement): void;
     private IsNodeDifferentType;
     private ApplyNodeEventsDifferences;
-    private ExtractNodeEvents;
-    private ExtractEvents;
-    private ExtractEventHandler;
-    private CreateNodeEventNamespace;
     private ApplyNodeSpecialDifferences;
     private ApplyNodeSpecialDifferencesInput;
     private ApplyNodeSpecialDifferencesSelect;
@@ -91,7 +87,7 @@ declare class DrapoDocument {
     private ApplyNodeAttributesDifferences;
     private ExtactNodeAttributes;
     private ExtractNodeAttributeValue;
-    Contains(elementJQuery: JQuery): boolean;
+    Contains(element: HTMLElement): boolean;
     ExtractQueryString(canUseRouter: boolean): [string, string][];
     Sleep(timeout: number): Promise<{}>;
     WaitForMessage(retry?: number, interval?: number): Promise<DrapoMessage>;

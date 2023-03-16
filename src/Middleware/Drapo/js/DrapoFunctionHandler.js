@@ -826,7 +826,7 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionSetExternalFrame = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var frameID, externalFunction, dataKey, isCloneText, isClone, _a, data, frame, frameContent, application, windowFunction;
+            var frameID, externalFunction, dataKey, isCloneText, isClone, _a, data, frame, frameContent, application, windowFunction, eventType, eventNamespace_1, elFrame_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
@@ -860,11 +860,14 @@ var DrapoFunctionHandler = (function () {
                         application = this.Application;
                         windowFunction = frameContent[externalFunction];
                         if (typeof windowFunction !== 'function') {
-                            $(frame).on('load', function () {
+                            eventType = 'load';
+                            eventNamespace_1 = this.Application.EventHandler.CreateEventNamespace(null, null, eventType);
+                            elFrame_1 = frame;
+                            this.Application.EventHandler.AttachEventListener(elFrame_1, eventType, eventNamespace_1, function () {
                                 windowFunction = frameContent[externalFunction];
                                 if (typeof windowFunction !== 'function')
                                     return ('');
-                                $(frame).off('load');
+                                application.EventHandler.DetachEventListener(elFrame_1, eventNamespace_1);
                                 windowFunction(isClone ? application.Solver.Clone(data, true) : data);
                             });
                         }
@@ -920,7 +923,7 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionSetExternalFrameMessage = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var frameID, externalFunction, dataKey, isCloneText, isClone, _a, data, frame, frameContent, message;
+            var frameID, externalFunction, dataKey, isCloneText, isClone, _a, data, frame, frameContent, message, application, eventType, eventNamespace, elFrame;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
@@ -956,8 +959,12 @@ var DrapoFunctionHandler = (function () {
                         message.DataKey = dataKey;
                         message.Tag = externalFunction;
                         message.Data = isClone ? this.Application.Solver.Clone(data, true) : data;
-                        $(frame).on('load', function () {
-                            $(frame).off('load');
+                        application = this.Application;
+                        eventType = 'load';
+                        eventNamespace = this.Application.EventHandler.CreateEventNamespace(null, null, eventType);
+                        elFrame = frame;
+                        this.Application.EventHandler.AttachEventListener(elFrame, eventType, eventNamespace, function () {
+                            application.EventHandler.DetachEventListener(elFrame, eventNamespace);
                             frameContent.postMessage(message, "*");
                         });
                         return [2];

@@ -438,7 +438,7 @@ class DrapoControlFlow {
                         await this.Application.ClassHandler.ResolveClassContext(context, renderContext, child, sector, true, DrapoStorageLinkType.Render);
                     //Events
                     if (context.CheckEvent)
-                        await this.Application.EventHandler.AttachContext(context, child, childJQuery, sector, renderContext);
+                        await this.Application.EventHandler.AttachContext(context, child, sector, renderContext);
                     //Behavior
                     if (context.CheckBehavior)
                         await this.Application.BehaviorHandler.ResolveBehaviorContext(context, child, true);
@@ -466,7 +466,7 @@ class DrapoControlFlow {
                 await this.Application.ClassHandler.ResolveClassContext(context, renderContext, element, sector, true, DrapoStorageLinkType.RenderClass);
             //Events
             if (context.CheckEvent)
-                await this.Application.EventHandler.AttachContext(context, element, elementJQuery, sector, renderContext);
+                await this.Application.EventHandler.AttachContext(context, element, sector, renderContext);
             //Behavior
             if (context.CheckBehavior)
                 await this.Application.BehaviorHandler.ResolveBehaviorContext(context, element, true);

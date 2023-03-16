@@ -1243,72 +1243,7 @@ var DrapoDocument = (function () {
         return (false);
     };
     DrapoDocument.prototype.ApplyNodeEventsDifferences = function (nodeOld, nodeNew) {
-        var eventsOld = this.ExtractNodeEvents(nodeOld);
-        var eventsNew = this.ExtractNodeEvents(nodeNew);
-        for (var i = 0; i < eventsNew.length; i++) {
-            var eventNew = eventsNew[i];
-            var eventType = eventNew[0];
-            var eventsHandlerNew = eventNew[1];
-            var eventsHandlerOld = this.ExtractEvents(eventType, eventsOld);
-            for (var j = 0; j < eventsHandlerNew.length; j++) {
-                var eventHandlerNew = eventsHandlerNew[j];
-                var eventHandleNamespace = this.CreateNodeEventNamespace(eventHandlerNew);
-                var eventHandlerOld = this.ExtractEventHandler(eventHandleNamespace, eventsHandlerOld);
-                if (eventHandlerOld === null) {
-                    $(nodeOld).bind(eventHandleNamespace, eventHandlerNew.data, eventHandlerNew.handler);
-                }
-                else {
-                    eventHandlerOld.handler = eventHandlerNew.handler;
-                }
-            }
-            if ((eventsHandlerOld !== null) && (eventsHandlerOld.length > eventsHandlerNew.length)) {
-                for (var j = 0; j < eventsHandlerOld.length; j++) {
-                    var eventHandlerOld = eventsHandlerOld[j];
-                    var eventHandleNamespace = this.CreateNodeEventNamespace(eventHandlerOld);
-                    var eventHandlerNew = this.ExtractEventHandler(eventHandleNamespace, eventsHandlerNew);
-                    if (eventHandlerNew === null)
-                        $(nodeOld).unbind(eventHandleNamespace);
-                }
-            }
-        }
-        if (eventsOld.length > eventsNew.length) {
-            for (var i = 0; i < eventsOld.length; i++) {
-                var eventOld = eventsOld[i];
-                var eventType = eventOld[0];
-                var eventsHandlerNew = this.ExtractEvents(eventType, eventsNew);
-                if (eventsHandlerNew === null)
-                    $(nodeOld).unbind(eventType);
-            }
-        }
-    };
-    DrapoDocument.prototype.ExtractNodeEvents = function (node) {
-        var events = [];
-        var dataEvents = $._data(node, 'events');
-        $.each(dataEvents, function (eventType, eventArray) {
-            events.push([eventType, eventArray]);
-        });
-        return (events);
-    };
-    DrapoDocument.prototype.ExtractEvents = function (eventType, events) {
-        for (var i = 0; i < events.length; i++) {
-            var event_1 = events[i];
-            if (event_1[0] === eventType)
-                return (event_1[1]);
-        }
-        return (null);
-    };
-    DrapoDocument.prototype.ExtractEventHandler = function (namespace, eventsHandler) {
-        if (eventsHandler === null)
-            return (null);
-        for (var i = 0; i < eventsHandler.length; i++) {
-            var eventHandler = eventsHandler[i];
-            if (namespace === this.CreateNodeEventNamespace(eventHandler))
-                return (eventHandler);
-        }
-        return (null);
-    };
-    DrapoDocument.prototype.CreateNodeEventNamespace = function (event) {
-        return (event.namespace.length > 0 ? (event.type + '.' + event.namespace) : (event.type));
+        this.Application.EventHandler.SyncNodeEventsDifferences(nodeOld, nodeNew);
     };
     DrapoDocument.prototype.ApplyNodeSpecialDifferences = function (nodeOld, nodeNew) {
         var tag = nodeOld.tagName.toLowerCase();
@@ -1373,8 +1308,8 @@ var DrapoDocument = (function () {
                 return (attributes[i][1]);
         return (null);
     };
-    DrapoDocument.prototype.Contains = function (elementJQuery) {
-        return (jQuery.contains(document.documentElement, elementJQuery[0]));
+    DrapoDocument.prototype.Contains = function (element) {
+        return (document.documentElement.contains(element));
     };
     DrapoDocument.prototype.ExtractQueryString = function (canUseRouter) {
         var url = canUseRouter ? document.location.href : this.Application.Router.GetLastRouteUrl();
