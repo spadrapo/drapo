@@ -579,7 +579,7 @@ var DrapoControlFlow = (function () {
                         _b.label = 16;
                     case 16:
                         if (!context.CheckModel) return [3, 18];
-                        return [4, this.Application.ModelHandler.ResolveModel(context, renderContext, child, childJQuery, sector, true, true)];
+                        return [4, this.Application.ModelHandler.ResolveModel(context, renderContext, child, sector, true, true)];
                     case 17:
                         _b.sent();
                         _b.label = 18;
@@ -631,7 +631,7 @@ var DrapoControlFlow = (function () {
                         _b.label = 33;
                     case 33:
                         if (!context.CheckModel) return [3, 35];
-                        return [4, this.Application.ModelHandler.ResolveModel(context, renderContext, element, elementJQuery, sector, true, true)];
+                        return [4, this.Application.ModelHandler.ResolveModel(context, renderContext, element, sector, true, true)];
                     case 34:
                         _b.sent();
                         _b.label = 35;

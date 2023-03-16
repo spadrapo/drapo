@@ -370,7 +370,7 @@ var DrapoBarber = (function () {
                         isMustacheOnly = this.Application.Parser.IsMustacheOnly(model, true);
                         if (!!isMustacheOnly) return [3, 2];
                         context = new DrapoContext();
-                        return [4, this.Application.ModelHandler.ResolveModel(context, null, el, null, sector, canBind, false)];
+                        return [4, this.Application.ModelHandler.ResolveModel(context, null, el, sector, canBind, false)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -398,7 +398,7 @@ var DrapoBarber = (function () {
                         data = _a.sent();
                         context.Create(data, el, null, dataKey, dataKey, null, null);
                         elj = $(el);
-                        return [4, this.Application.ModelHandler.ResolveModel(context, null, el, elj, sector, canBind, false)];
+                        return [4, this.Application.ModelHandler.ResolveModel(context, null, el, sector, canBind, false)];
                     case 5:
                         _a.sent();
                         return [3, 7];

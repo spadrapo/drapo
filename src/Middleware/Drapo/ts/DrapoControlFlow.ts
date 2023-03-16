@@ -432,7 +432,7 @@ class DrapoControlFlow {
                         await this.Application.AttributeHandler.ResolveAttrContext(context, child, true);
                     //Model
                     if (context.CheckModel)
-                        await this.Application.ModelHandler.ResolveModel(context, renderContext, child, childJQuery, sector, true, true);
+                        await this.Application.ModelHandler.ResolveModel(context, renderContext, child, sector, true, true);
                     //Class
                     if (context.CheckClass)
                         await this.Application.ClassHandler.ResolveClassContext(context, renderContext, child, sector, true, DrapoStorageLinkType.Render);
@@ -460,7 +460,7 @@ class DrapoControlFlow {
                 await this.Application.AttributeHandler.ResolveAttrContext(context, element, true);
             //Model
             if (context.CheckModel)
-                await this.Application.ModelHandler.ResolveModel(context, renderContext, element, elementJQuery, sector, true, true);
+                await this.Application.ModelHandler.ResolveModel(context, renderContext, element, sector, true, true);
             //Class
             if (context.CheckClass)
                 await this.Application.ClassHandler.ResolveClassContext(context, renderContext, element, sector, true, DrapoStorageLinkType.RenderClass);

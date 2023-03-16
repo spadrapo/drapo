@@ -1119,7 +1119,7 @@ var DrapoBarber = (function () {
                         isMustacheOnly = this.Application.Parser.IsMustacheOnly(model, true);
                         if (!!isMustacheOnly) return [3, 2];
                         context = new DrapoContext();
-                        return [4, this.Application.ModelHandler.ResolveModel(context, null, el, null, sector, canBind, false)];
+                        return [4, this.Application.ModelHandler.ResolveModel(context, null, el, sector, canBind, false)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -1147,7 +1147,7 @@ var DrapoBarber = (function () {
                         data = _a.sent();
                         context.Create(data, el, null, dataKey, dataKey, null, null);
                         elj = $(el);
-                        return [4, this.Application.ModelHandler.ResolveModel(context, null, el, elj, sector, canBind, false)];
+                        return [4, this.Application.ModelHandler.ResolveModel(context, null, el, sector, canBind, false)];
                     case 5:
                         _a.sent();
                         return [3, 7];
@@ -4962,7 +4962,7 @@ var DrapoControlFlow = (function () {
                         _b.label = 16;
                     case 16:
                         if (!context.CheckModel) return [3, 18];
-                        return [4, this.Application.ModelHandler.ResolveModel(context, renderContext, child, childJQuery, sector, true, true)];
+                        return [4, this.Application.ModelHandler.ResolveModel(context, renderContext, child, sector, true, true)];
                     case 17:
                         _b.sent();
                         _b.label = 18;
@@ -5014,7 +5014,7 @@ var DrapoControlFlow = (function () {
                         _b.label = 33;
                     case 33:
                         if (!context.CheckModel) return [3, 35];
-                        return [4, this.Application.ModelHandler.ResolveModel(context, renderContext, element, elementJQuery, sector, true, true)];
+                        return [4, this.Application.ModelHandler.ResolveModel(context, renderContext, element, sector, true, true)];
                     case 34:
                         _b.sent();
                         _b.label = 35;
@@ -14534,7 +14534,7 @@ var DrapoModelHandler = (function () {
             });
         });
     };
-    DrapoModelHandler.prototype.ResolveModel = function (context, renderContext, el, elj, sector, canBind, isContext) {
+    DrapoModelHandler.prototype.ResolveModel = function (context, renderContext, el, sector, canBind, isContext) {
         if (isContext === void 0) { isContext = true; }
         return __awaiter(this, void 0, void 0, function () {
             var model, isMustacheContext, isMustacheOnly, mustache, mustacheParts, dataFields, onModelInitialize, _a, canNotify, modelNotify, modelEvents, mustacheResolved, modelOrValue, _b, updated, tag, canRemoveModel, dataKey;
@@ -14597,13 +14597,13 @@ var DrapoModelHandler = (function () {
                         updated = false;
                         tag = el.tagName.toLowerCase();
                         if (!(tag === 'input')) return [3, 11];
-                        return [4, this.ResolveModelInput(context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, this.Application.Parser.ParseEvents(el.getAttribute('d-model-event-cancel')), canNotify)];
+                        return [4, this.ResolveModelInput(context, el, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, this.Application.Parser.ParseEvents(el.getAttribute('d-model-event-cancel')), canNotify)];
                     case 10:
                         updated = _c.sent();
                         return [3, 26];
                     case 11:
                         if (!(tag === 'select')) return [3, 13];
-                        return [4, this.ResolveModelSelect(context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify)];
+                        return [4, this.ResolveModelSelect(context, el, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify)];
                     case 12:
                         updated = _c.sent();
                         return [3, 26];
@@ -14615,13 +14615,13 @@ var DrapoModelHandler = (function () {
                         return [3, 26];
                     case 15:
                         if (!(tag === 'span')) return [3, 17];
-                        return [4, this.ResolveModelSpan(context, el, elj, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, ((isContext) && (!context.CanUpdateTemplate)))];
+                        return [4, this.ResolveModelSpan(context, el, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, ((isContext) && (!context.CanUpdateTemplate)))];
                     case 16:
                         updated = _c.sent();
                         return [3, 26];
                     case 17:
                         if (!(tag === 'li')) return [3, 19];
-                        return [4, this.ResolveModelLI(context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind)];
+                        return [4, this.ResolveModelLI(context, el, sector, model, mustache, mustacheParts, dataFields, canBind)];
                     case 18:
                         updated = _c.sent();
                         return [3, 26];
@@ -14631,13 +14631,13 @@ var DrapoModelHandler = (function () {
                         return [3, 26];
                     case 20:
                         if (!(tag === 'label')) return [3, 22];
-                        return [4, this.ResolveModelSpan(context, el, elj, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, ((isContext) && (!context.CanUpdateTemplate)))];
+                        return [4, this.ResolveModelSpan(context, el, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, ((isContext) && (!context.CanUpdateTemplate)))];
                     case 21:
                         updated = _c.sent();
                         return [3, 26];
                     case 22:
                         if (!(tag === 'button')) return [3, 24];
-                        return [4, this.ResolveModelSpan(context, el, elj, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, ((isContext) && (!context.CanUpdateTemplate)))];
+                        return [4, this.ResolveModelSpan(context, el, sector, modelOrValue, mustache, mustacheParts, dataFields, canBind, ((isContext) && (!context.CanUpdateTemplate)))];
                     case 23:
                         updated = _c.sent();
                         return [3, 26];
@@ -14695,7 +14695,7 @@ var DrapoModelHandler = (function () {
             });
         });
     };
-    DrapoModelHandler.prototype.ResolveModelInput = function (context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify) {
+    DrapoModelHandler.prototype.ResolveModelInput = function (context, el, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify) {
         return __awaiter(this, void 0, void 0, function () {
             var type;
             return __generator(this, function (_a) {
@@ -14703,17 +14703,17 @@ var DrapoModelHandler = (function () {
                     case 0:
                         type = el.getAttribute('type');
                         if (type == 'checkbox')
-                            return [2, (this.ResolveModelInputCheckbox(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify))];
+                            return [2, (this.ResolveModelInputCheckbox(context, el, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify))];
                         if (type == 'text')
-                            return [2, (this.ResolveModelInputText(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify))];
+                            return [2, (this.ResolveModelInputText(context, el, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify))];
                         if (type == 'number')
-                            return [2, (this.ResolveModelInputNumber(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify))];
+                            return [2, (this.ResolveModelInputNumber(context, el, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify))];
                         if (type == 'password')
-                            return [2, (this.ResolveModelInputPassword(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify))];
+                            return [2, (this.ResolveModelInputPassword(context, el, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify))];
                         if (type == 'hidden')
-                            return [2, (this.ResolveModelInputHidden(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify))];
+                            return [2, (this.ResolveModelInputHidden(context, el, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify))];
                         if (type == 'range')
-                            return [2, (this.ResolveModelInputRange(context, el, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify))];
+                            return [2, (this.ResolveModelInputRange(context, el, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify))];
                         return [4, this.Application.ExceptionHandler.HandleError('DrapoModelHandler - ResolveModelInput - model not supported in input type: {0}', type)];
                     case 1:
                         _a.sent();
@@ -14722,7 +14722,7 @@ var DrapoModelHandler = (function () {
             });
         });
     };
-    DrapoModelHandler.prototype.ResolveModelInputCheckbox = function (context, element, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify) {
+    DrapoModelHandler.prototype.ResolveModelInputCheckbox = function (context, element, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify) {
         return __awaiter(this, void 0, void 0, function () {
             var value, _a, _b;
             return __generator(this, function (_c) {
@@ -14733,7 +14733,7 @@ var DrapoModelHandler = (function () {
                     case 1: return [4, _b.apply(_a, [_c.sent()])];
                     case 2:
                         value = _c.sent();
-                        elementJQuery.prop('checked', value);
+                        element.checked = value;
                         return [2, (true)];
                 }
             });
@@ -14741,11 +14741,10 @@ var DrapoModelHandler = (function () {
     };
     DrapoModelHandler.prototype.ResolveModelTextArea = function (context, el, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify) {
         return __awaiter(this, void 0, void 0, function () {
-            var elj, value, _a;
+            var value, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        elj = $(el);
                         if (!(mustacheParts != null)) return [3, 2];
                         return [4, this.Application.Solver.ResolveDataPath(context, null, el, sector, mustacheParts, canBind, canBind, modelEvents, modelEventsCancel, canNotify)];
                     case 1:
@@ -14756,13 +14755,13 @@ var DrapoModelHandler = (function () {
                         _b.label = 3;
                     case 3:
                         value = _a;
-                        elj.val(value);
+                        el.value = value;
                         return [2, (true)];
                 }
             });
         });
     };
-    DrapoModelHandler.prototype.ResolveModelInputText = function (context, element, elj, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify) {
+    DrapoModelHandler.prototype.ResolveModelInputText = function (context, element, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify) {
         return __awaiter(this, void 0, void 0, function () {
             var value, _a, elementInput;
             return __generator(this, function (_b) {
@@ -14786,7 +14785,7 @@ var DrapoModelHandler = (function () {
             });
         });
     };
-    DrapoModelHandler.prototype.ResolveModelInputNumber = function (context, element, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify) {
+    DrapoModelHandler.prototype.ResolveModelInputNumber = function (context, element, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify) {
         return __awaiter(this, void 0, void 0, function () {
             var value, elementInput;
             return __generator(this, function (_a) {
@@ -14802,7 +14801,7 @@ var DrapoModelHandler = (function () {
             });
         });
     };
-    DrapoModelHandler.prototype.ResolveModelInputPassword = function (context, element, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify) {
+    DrapoModelHandler.prototype.ResolveModelInputPassword = function (context, element, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, modelEventsCancel, canNotify) {
         return __awaiter(this, void 0, void 0, function () {
             var value, elementInput;
             return __generator(this, function (_a) {
@@ -14817,7 +14816,7 @@ var DrapoModelHandler = (function () {
             });
         });
     };
-    DrapoModelHandler.prototype.ResolveModelInputHidden = function (context, element, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify) {
+    DrapoModelHandler.prototype.ResolveModelInputHidden = function (context, element, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify) {
         return __awaiter(this, void 0, void 0, function () {
             var value, elementInput;
             return __generator(this, function (_a) {
@@ -14833,7 +14832,7 @@ var DrapoModelHandler = (function () {
             });
         });
     };
-    DrapoModelHandler.prototype.ResolveModelInputRange = function (context, element, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify) {
+    DrapoModelHandler.prototype.ResolveModelInputRange = function (context, element, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify) {
         return __awaiter(this, void 0, void 0, function () {
             var value, elementInput;
             return __generator(this, function (_a) {
@@ -14849,7 +14848,7 @@ var DrapoModelHandler = (function () {
             });
         });
     };
-    DrapoModelHandler.prototype.ResolveModelSelect = function (context, element, elementJQuery, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify) {
+    DrapoModelHandler.prototype.ResolveModelSelect = function (context, element, sector, model, mustache, mustacheParts, dataFields, canBind, modelEvents, canNotify) {
         return __awaiter(this, void 0, void 0, function () {
             var value, elementSelect;
             return __generator(this, function (_a) {
@@ -14865,7 +14864,7 @@ var DrapoModelHandler = (function () {
             });
         });
     };
-    DrapoModelHandler.prototype.ResolveModelSpan = function (context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind, canClean) {
+    DrapoModelHandler.prototype.ResolveModelSpan = function (context, el, sector, model, mustache, mustacheParts, dataFields, canBind, canClean) {
         return __awaiter(this, void 0, void 0, function () {
             var updated, format, value, _a, valueFormatted, formatResolved, culture, cultureResolved, formatTimezone, applyTimezone, elementSpan;
             return __generator(this, function (_b) {
@@ -14932,7 +14931,7 @@ var DrapoModelHandler = (function () {
             });
         });
     };
-    DrapoModelHandler.prototype.ResolveModelLI = function (context, el, elj, sector, model, mustache, mustacheParts, dataFields, canBind) {
+    DrapoModelHandler.prototype.ResolveModelLI = function (context, el, sector, model, mustache, mustacheParts, dataFields, canBind) {
         return __awaiter(this, void 0, void 0, function () {
             var updated, value, elementLI;
             return __generator(this, function (_a) {
