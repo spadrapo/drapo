@@ -66,11 +66,11 @@ var DrapoDebugger = (function () {
     });
     DrapoDebugger.prototype.ConnectDebugger = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var binder, application;
+            var application, elDocument;
             return __generator(this, function (_a) {
-                binder = $(document);
                 application = this.Application;
-                binder.bind('keyup.debugger', function (e) {
+                elDocument = document.documentElement;
+                this.Application.EventHandler.AttachEventListener(elDocument, 'keyup', 'keyup.debugger', function (e) {
                     if (!e.ctrlKey)
                         return;
                     if (e.key !== 'F2')

@@ -25,9 +25,9 @@ class DrapoDebugger {
     }
 
     public async ConnectDebugger(): Promise<void> {
-        const binder: JQuery = $(document);
         const application: DrapoApplication = this.Application;
-        binder.bind('keyup.debugger', (e: JQueryEventObject) => {
+        const elDocument: HTMLElement = document.documentElement;
+        this.Application.EventHandler.AttachEventListener(elDocument, 'keyup', 'keyup.debugger', (e: KeyboardEvent) => {
             if (!e.ctrlKey)
                 return;
             if (e.key !== 'F2')

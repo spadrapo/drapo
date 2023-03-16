@@ -961,81 +961,7 @@ class DrapoDocument {
     }
 
     private ApplyNodeEventsDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
-        const eventsOld: [string, any[]][] = this.ExtractNodeEvents(nodeOld);
-        const eventsNew: [string, any[]][] = this.ExtractNodeEvents(nodeNew);
-        //Event Type : Insert - Update
-        for (let i: number = 0; i < eventsNew.length; i++) {
-            const eventNew: [string, any[]] = eventsNew[i];
-            const eventType: string = eventNew[0];
-            const eventsHandlerNew: any[] = eventNew[1];
-            const eventsHandlerOld: any[] = this.ExtractEvents(eventType, eventsOld);
-            //Event Array : Insert - Update
-            for (let j: number = 0; j < eventsHandlerNew.length; j++) {
-                const eventHandlerNew: any = eventsHandlerNew[j];
-                const eventHandleNamespace = this.CreateNodeEventNamespace(eventHandlerNew);
-                const eventHandlerOld: any = this.ExtractEventHandler(eventHandleNamespace, eventsHandlerOld);
-                if (eventHandlerOld === null) {
-                    //Insert
-                    $(nodeOld).bind(eventHandleNamespace, eventHandlerNew.data, eventHandlerNew.handler);
-                } else {
-                    //Update
-                    eventHandlerOld.handler = eventHandlerNew.handler;
-                }
-            }
-            //Event Array : Delete
-            if ((eventsHandlerOld !== null) && (eventsHandlerOld.length > eventsHandlerNew.length)) {
-                for (let j: number = 0; j < eventsHandlerOld.length; j++) {
-                    const eventHandlerOld: any = eventsHandlerOld[j];
-                    const eventHandleNamespace = this.CreateNodeEventNamespace(eventHandlerOld);
-                    const eventHandlerNew: any = this.ExtractEventHandler(eventHandleNamespace, eventsHandlerNew);
-                    if (eventHandlerNew === null)
-                        $(nodeOld).unbind(eventHandleNamespace);
-                }
-            }
-        }
-        //Event Type : Delete
-        if (eventsOld.length > eventsNew.length) {
-            for (let i: number = 0; i < eventsOld.length; i++) {
-                const eventOld: [string, any[]] = eventsOld[i];
-                const eventType: string = eventOld[0];
-                const eventsHandlerNew: any[] = this.ExtractEvents(eventType, eventsNew);
-                if (eventsHandlerNew === null)
-                    $(nodeOld).unbind(eventType);
-            }
-        }
-    }
-
-    private ExtractNodeEvents(node: HTMLElement): [string, any[]][] {
-        const events: [string, any[]][] = [];
-        const dataEvents = ($ as any)._data(node, 'events');
-        $.each(dataEvents, (eventType: string, eventArray) => {
-            events.push([eventType, eventArray]);
-        });
-        return (events);
-    }
-
-    private ExtractEvents(eventType: string, events: [string, any[]][]): any[] {
-        for (let i: number = 0; i < events.length; i++) {
-            const event: [string, any[]] = events[i];
-            if (event[0] === eventType)
-                return (event[1]);
-        }
-        return (null);
-    }
-
-    private ExtractEventHandler(namespace: string, eventsHandler: any[]) {
-        if (eventsHandler === null)
-            return (null);
-        for (let i: number = 0; i < eventsHandler.length; i++) {
-            const eventHandler: any = eventsHandler[i];
-            if (namespace === this.CreateNodeEventNamespace(eventHandler))
-                return (eventHandler);
-        }
-        return (null);
-    }
-
-    private CreateNodeEventNamespace(event: any): string {
-        return (event.namespace.length > 0 ? (event.type + '.' + event.namespace) : (event.type));
+        this.Application.EventHandler.ApplyNodeEventsDifferences(nodeOld, nodeNew);
     }
 
     private ApplyNodeSpecialDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
@@ -1110,8 +1036,8 @@ class DrapoDocument {
         return (null);
     }
 
-    public Contains(elementJQuery: JQuery): boolean {
-        return (jQuery.contains(document.documentElement, elementJQuery[0]));
+    public Contains(element: HTMLElement): boolean {
+        return (document.documentElement.contains(element));
     }
 
     public ExtractQueryString(canUseRouter: boolean): [string, string][] {

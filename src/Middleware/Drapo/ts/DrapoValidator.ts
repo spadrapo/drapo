@@ -111,7 +111,7 @@ class DrapoValidator {
         return (null);
     }
 
-    public async IsValidationEventValid(el: HTMLElement, sector: string, eventType: string, location: string, event: JQueryEventObject, contextItem: DrapoContextItem): Promise<boolean> {
+    public async IsValidationEventValid(el: HTMLElement, sector: string, eventType: string, location: string, event: Event, contextItem: DrapoContextItem): Promise<boolean> {
         if (el.getAttribute == null)
             return (true);
         const attribute: string = location == null ? 'd-validation-on-' + eventType : 'd-validation-on-' + location + '-' + eventType;
@@ -122,7 +122,7 @@ class DrapoValidator {
         return (isValid);
     }
 
-    public async IsValidationExpressionValid(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem, event: JQueryEventObject = null): Promise<boolean> {
+    public async IsValidationExpressionValid(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem, event: Event = null): Promise<boolean> {
         const uncheckedClass: string = await this.Application.Config.GetValidatorUncheckedClass();
         const validClass: string = await this.Application.Config.GetValidatorValidClass();
         const invalidClass: string = await this.Application.Config.GetValidatorInvalidClass();
@@ -306,7 +306,7 @@ class DrapoValidator {
         return (validators);
     }
 
-    private async IsValidationValid(sector: string, validation: string, el: HTMLElement, event: JQueryEventObject, canFocus: boolean, uncheckedClass: string, validClass: string, invalidClass: string): Promise<boolean> {
+    private async IsValidationValid(sector: string, validation: string, el: HTMLElement, event: Event, canFocus: boolean, uncheckedClass: string, validClass: string, invalidClass: string): Promise<boolean> {
         //Group
         if (this.IsValidationGroup(sector, validation))
             return (await this.IsValidationGroupValid(sector, validation, el, event, canFocus, uncheckedClass, validClass, invalidClass));
@@ -323,7 +323,7 @@ class DrapoValidator {
         return (groupIndex !== null);
     }
 
-    private async IsValidationGroupValid(sector: string, validation: string, el: HTMLElement, event: JQueryEventObject, canFocus: boolean, uncheckedClass: string, validClass: string, invalidClass: string): Promise<boolean> {
+    private async IsValidationGroupValid(sector: string, validation: string, el: HTMLElement, event: Event, canFocus: boolean, uncheckedClass: string, validClass: string, invalidClass: string): Promise<boolean> {
         const rules: string[] = this.GetValidationGroupRules(sector, validation);
         let isValid: boolean = true;
         for (let i: number = 0; i < rules.length; i++)
@@ -345,7 +345,7 @@ class DrapoValidator {
         return (rules);
     }
 
-    private async IsValidationRuleValid(sector: string, validation: string, el: HTMLElement, event: JQueryEventObject, canFocus: boolean, uncheckedClass: string, validClass: string, invalidClass: string): Promise<boolean> {
+    private async IsValidationRuleValid(sector: string, validation: string, el: HTMLElement, event: Event, canFocus: boolean, uncheckedClass: string, validClass: string, invalidClass: string): Promise<boolean> {
         //Rule Expression
         const isValid: boolean = await this.IsRuleValid(sector, validation, canFocus, el, event);
         const addClass: string = isValid ? validClass : invalidClass;
@@ -375,7 +375,7 @@ class DrapoValidator {
         return (interfaceElements);
     }
 
-    private async IsRuleValid(sector: string, validation: string, canFocus: boolean, el: HTMLElement, event: JQueryEventObject): Promise<boolean> {
+    private async IsRuleValid(sector: string, validation: string, canFocus: boolean, el: HTMLElement, event: Event): Promise<boolean> {
         const index: number = this.GetSectorIndex(sector);
         if (index === null)
             return (true);
@@ -400,7 +400,7 @@ class DrapoValidator {
         return (isValid);
     }
 
-    private async IsValid(sector: string, type: string, value: string, tag: string, itemContext: DrapoContextItem, el: HTMLElement, event: JQueryEventObject): Promise<boolean> {
+    private async IsValid(sector: string, type: string, value: string, tag: string, itemContext: DrapoContextItem, el: HTMLElement, event: Event): Promise<boolean> {
         if ((type == null) || (type == 'conditional'))
             return (await this.IsValidConditional(sector, value, itemContext));
         else if (type === 'regex')
@@ -439,8 +439,8 @@ class DrapoValidator {
         return (context);
     }
 
-    private async IsValidOutside(el: HTMLElement, event: JQueryEventObject, validSectors: string): Promise<boolean> {
-        let target: Element = event.target;
+    private async IsValidOutside(el: HTMLElement, event: Event, validSectors: string): Promise<boolean> {
+        let target: Element = event.target as Element;
         if (validSectors != null) {
             let sectorsAllowed: string[] = [];
             const sectorTarget: string = this.Application.Document.GetSector(target as HTMLElement);

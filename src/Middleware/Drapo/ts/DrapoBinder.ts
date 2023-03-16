@@ -46,8 +46,8 @@ class DrapoBinder {
             const debounceTimeout: number = this.Application.EventHandler.GetEventDebounce(el, eventType);
             let delayTimeout: number = null;
             const canNotifyLocal: boolean = canNotify;
-            $(el).unbind(eventNamespace);
-            $(el).bind(eventNamespace, (e) => {
+            this.Application.EventHandler.DetachEventListener(el, eventNamespace);
+            this.Application.EventHandler.AttachEventListener(el, eventType, eventNamespace, (e:Event) => {
                 if (debounceTimeout == null) {
                     // tslint:disable-next-line:no-floating-promises
                     application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index, canNotify);
@@ -70,8 +70,8 @@ class DrapoBinder {
                 const eventType: string = event[0];
                 const eventFilter: string = event[1];
                 const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, eventType, 'modelCancel');
-                $(el).unbind(eventNamespace);
-                $(el).bind(eventNamespace, (e) => {
+                this.Application.EventHandler.DetachEventListener(el, eventNamespace);
+                this.Application.EventHandler.AttachEventListener(el, eventType, eventNamespace, (e: Event) => {
                     if (!this.Application.EventHandler.IsValidEventFilter(e, eventFilter))
                         return (true);
                     const dataPath: string[] = this.Application.Solver.CreateDataPath(dataKey, dataFields);
@@ -87,7 +87,7 @@ class DrapoBinder {
         }
     }
 
-    public async BindWriterEvent(e: JQueryEventObject, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number, canNotify: boolean): Promise<boolean> {
+    public async BindWriterEvent(e: Event, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number, canNotify: boolean): Promise<boolean> {
         if (!this.Application.EventHandler.IsValidEventFilter(e, eventFilter))
             return (true);
         const value: any = this.Application.Binder.GetEventValue(eventType, e);
@@ -133,24 +133,24 @@ class DrapoBinder {
             return;
         }
         const isRoot = (elParent.tagName === 'HTML') || (elParent.tagName === 'BODY');
-        const eljParent: JQuery = $(elParent);
-        const binder: JQuery = isRoot ? $(window) : eljParent;
+        const binder: HTMLElement | Window = isRoot ? window : elParent;
         //Bind
         const dataKeyLocal: string = dataKey;
         const sectorLocal: string = sector;
-        const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(el, null, 'scroll', 'incremental');
-        binder.unbind(eventNamespace);
-        binder.bind(eventNamespace, (e) => {
+        const eventType: string = 'scroll';
+        const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(el, null, eventType, 'incremental');
+        this.Application.EventHandler.DetachEventListener(el, eventNamespace);
+        this.Application.EventHandler.AttachEventListener(binder, eventType, eventNamespace, (e: Event) => {
             // tslint:disable-next-line:no-floating-promises
-            application.Binder.BindIncrementalScroll(binder, eventNamespace, eljParent, dataKeyLocal, sector);
+            application.Binder.BindIncrementalScroll(binder, eventNamespace, $(elParent), dataKeyLocal, sector);
         });
     }
 
-    public async BindIncrementalScroll(binder: JQuery, eventNamespace: string, eljParent: JQuery, dataKey: string, sector: string): Promise<boolean> {
+    public async BindIncrementalScroll(binder: HTMLElement | Window, eventNamespace: string, eljParent: JQuery, dataKey: string, sector: string): Promise<boolean> {
         if ((!this.Application.Observer.IsEnabledNotifyIncremental) || (!this.IsElementScrollVerticalAlmostEnd(eljParent)))
             return (true);
         if (!await this.Application.Storage.CanGrowData(dataKey, sector)) {
-            binder.unbind(eventNamespace);
+            this.Application.EventHandler.DetachEventListener(binder, eventNamespace);
             return (false);
         }
         if (!await this.Application.Storage.GrowData(dataKey, sector))
@@ -159,8 +159,9 @@ class DrapoBinder {
         return (true);
     }
 
-    private GetEventValue(eventType: string, e: JQueryEventObject): any {
-        const tag: string = e.target.tagName.toLowerCase();
+    private GetEventValue(eventType: string, e: Event): any {
+        const target: HTMLElement = e.target as HTMLElement;
+        const tag: string = target.tagName.toLowerCase();
         if (tag == 'input')
             return (this.GetEventValueInput(eventType, e));
         if (tag == 'select')
@@ -170,7 +171,7 @@ class DrapoBinder {
         return (null);
     }
 
-    private GetEventValueInput(eventType: string, e: JQueryEventObject): any {
+    private GetEventValueInput(eventType: string, e: Event): any {
         const el: HTMLElement = e.target as HTMLElement;
         const elementJQuery: JQuery = $(el);
         const type: string = el.getAttribute('type');
@@ -219,19 +220,20 @@ class DrapoBinder {
     }
 
     public UnbindControlFlowViewport(viewport: DrapoViewport): void {
-        const binder: JQuery = $(viewport.ElementScroll);
+        const binder: HTMLElement = viewport.ElementScroll;
         const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
-        binder.unbind(eventNamespace);
+        this.Application.EventHandler.DetachEventListener(binder, eventNamespace);
     }
 
     public BindControlFlowViewport(viewport: DrapoViewport) : void
     {
         const application: DrapoApplication = this.Application;
         const viewportCurrent: DrapoViewport = viewport;
-        const binder: JQuery = $(viewport.ElementScroll);
-        const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
-        binder.unbind(eventNamespace);
-        binder.bind(eventNamespace, (e) => {
+        const binder: HTMLElement = viewport.ElementScroll;
+        const eventType: string = 'scroll';
+        const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, eventType, 'viewport');
+        this.Application.EventHandler.DetachEventListener(binder, eventNamespace);
+        this.Application.EventHandler.AttachEventListener(binder, eventType, eventNamespace, (e: Event) => {
             // tslint:disable-next-line:no-floating-promises
             application.Binder.BindControlFlowViewportScroll(viewportCurrent);
         });

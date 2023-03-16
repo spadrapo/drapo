@@ -591,7 +591,7 @@ var DrapoControlFlow = (function () {
                         _b.label = 20;
                     case 20:
                         if (!context.CheckEvent) return [3, 22];
-                        return [4, this.Application.EventHandler.AttachContext(context, child, childJQuery, sector, renderContext)];
+                        return [4, this.Application.EventHandler.AttachContext(context, child, sector, renderContext)];
                     case 21:
                         _b.sent();
                         _b.label = 22;
@@ -643,7 +643,7 @@ var DrapoControlFlow = (function () {
                         _b.label = 37;
                     case 37:
                         if (!context.CheckEvent) return [3, 39];
-                        return [4, this.Application.EventHandler.AttachContext(context, element, elementJQuery, sector, renderContext)];
+                        return [4, this.Application.EventHandler.AttachContext(context, element, sector, renderContext)];
                     case 38:
                         _b.sent();
                         _b.label = 39;

@@ -3,7 +3,7 @@ declare class DrapoResize {
     private _contextItem;
     private _element;
     private _parentJQuery;
-    private _containerJQuery;
+    private _container;
     private _model;
     private _location;
     private _type;
@@ -22,8 +22,8 @@ declare class DrapoResize {
     set Element(value: HTMLElement);
     get ParentJQuery(): JQuery;
     set ParentJQuery(value: JQuery);
-    get ContainerJQuery(): JQuery;
-    set ContainerJQuery(value: JQuery);
+    get Container(): HTMLElement;
+    set Container(value: HTMLElement);
     get Model(): string;
     set Model(value: string);
     get Location(): string;

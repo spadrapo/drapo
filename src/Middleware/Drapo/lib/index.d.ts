@@ -170,9 +170,9 @@ declare class DrapoBinder {
     BindReaderWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel: string[], canNotify: boolean): void;
     BindReader(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[]): void;
     BindWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel: string[], canNotify: boolean): void;
-    BindWriterEvent(e: JQueryEventObject, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number, canNotify: boolean): Promise<boolean>;
+    BindWriterEvent(e: Event, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number, canNotify: boolean): Promise<boolean>;
     BindIncremental(elj: JQuery, dataKey: string, sector: string, isIncremental: boolean): Promise<void>;
-    BindIncrementalScroll(binder: JQuery, eventNamespace: string, eljParent: JQuery, dataKey: string, sector: string): Promise<boolean>;
+    BindIncrementalScroll(binder: HTMLElement | Window, eventNamespace: string, eljParent: JQuery, dataKey: string, sector: string): Promise<boolean>;
     private GetEventValue;
     private GetEventValueInput;
     private GetParentElementWithScrollVertical;
@@ -629,10 +629,6 @@ declare class DrapoDocument {
     ApplyNodeDifferencesRenderClass(nodeOld: HTMLElement, nodeNew: HTMLElement): void;
     private IsNodeDifferentType;
     private ApplyNodeEventsDifferences;
-    private ExtractNodeEvents;
-    private ExtractEvents;
-    private ExtractEventHandler;
-    private CreateNodeEventNamespace;
     private ApplyNodeSpecialDifferences;
     private ApplyNodeSpecialDifferencesInput;
     private ApplyNodeSpecialDifferencesSelect;
@@ -640,7 +636,7 @@ declare class DrapoDocument {
     private ApplyNodeAttributesDifferences;
     private ExtactNodeAttributes;
     private ExtractNodeAttributeValue;
-    Contains(elementJQuery: JQuery): boolean;
+    Contains(element: HTMLElement): boolean;
     ExtractQueryString(canUseRouter: boolean): [string, string][];
     Sleep(timeout: number): Promise<{}>;
     WaitForMessage(retry?: number, interval?: number): Promise<DrapoMessage>;
@@ -725,14 +721,18 @@ declare class DrapoEventHandler {
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     HasContentEventContext(content: string): boolean;
-    CreateEventNamespace(el: HTMLElement, location: string, eventType: string, namespace: string): string;
+    CreateEventNamespace(el: HTMLElement, location: string, eventType: string, namespace?: string): string;
     GetEventPropagation(el: HTMLElement, eventType: string): boolean;
     private RetrieveEventBinder;
     private IsLocationBody;
-    GetElementParent(element: Element, levels?: number): JQuery;
+    GetElementParent(element: HTMLElement, levels?: number): HTMLElement;
     Attach(el: HTMLElement, renderContext: DrapoRenderContext): Promise<void>;
-    AttachContext(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, renderContext: DrapoRenderContext): Promise<void>;
+    AttachContext(context: DrapoContext, el: HTMLElement, sector: string, renderContext: DrapoRenderContext): Promise<void>;
     private HasEventContext;
+    AttachEventListener(el: HTMLElement | Window, eventType: string, eventNamespace: string, callback: Function): void;
+    DetachEventListener(el: HTMLElement | Window, eventNamespace: string): boolean;
+    private SetElementEventListenerContainer;
+    private GetElementEventListenerContainer;
     private ExecuteEvent;
     private IsEventRunning;
     private AddEventRunning;
@@ -750,6 +750,21 @@ declare class DrapoEventHandler {
     TriggerClick(el: HTMLElement): Promise<boolean>;
     Trigger(el: HTMLElement, type: string): Promise<boolean>;
     TriggerEvent(el: HTMLElement, event: Event): Promise<boolean>;
+    ApplyNodeEventsDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void;
+    private GetEventListener;
+}
+
+declare class DrapoEventListener {
+    private _eventType;
+    private _eventNamespace;
+    private _function;
+    get EventType(): string;
+    set EventType(value: string);
+    get EventNamespace(): string;
+    set EventNamespace(value: string);
+    get Function(): Function;
+    set Function(value: Function);
+    constructor();
 }
 
 declare class DrapoExceptionHandler {
@@ -858,7 +873,7 @@ declare class DrapoFunctionHandler {
     private IsExecutionBroked;
     ReplaceFunctionExpressions(sector: string, context: DrapoContext, expression: string, canBind: boolean): Promise<string>;
     private ReplaceFunctionExpressionsContext;
-    ResolveFunction(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: JQueryEventObject, functionsValue: string, executionContext?: DrapoExecutionContext<any>, forceFinalizeExecutionContext?: boolean): Promise<string>;
+    ResolveFunction(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionsValue: string, executionContext?: DrapoExecutionContext<any>, forceFinalizeExecutionContext?: boolean): Promise<string>;
     private ResolveFunctionContext;
     ResolveFunctionParameter(sector: string, contextItem: DrapoContextItem, element: HTMLElement, executionContext: DrapoExecutionContext<any>, parameter: string, canForceLoadDataDelay?: boolean, canUseReturnFunction?: boolean, isRecursive?: boolean): Promise<any>;
     ResolveExecutionContextMustache(sector: string, executionContext: DrapoExecutionContext<any>, value: string): string;
@@ -1558,7 +1573,7 @@ declare class DrapoResize {
     private _contextItem;
     private _element;
     private _parentJQuery;
-    private _containerJQuery;
+    private _container;
     private _model;
     private _location;
     private _type;
@@ -1577,8 +1592,8 @@ declare class DrapoResize {
     set Element(value: HTMLElement);
     get ParentJQuery(): JQuery;
     set ParentJQuery(value: JQuery);
-    get ContainerJQuery(): JQuery;
-    set ContainerJQuery(value: JQuery);
+    get Container(): HTMLElement;
+    set Container(value: HTMLElement);
     get Model(): string;
     set Model(value: string);
     get Location(): string;
@@ -2226,8 +2241,8 @@ declare class DrapoValidator {
     RegisterValidation(el: HTMLElement, sector: string, context?: DrapoContext): Promise<void>;
     private ResolveValidationID;
     private GetValidationTag;
-    IsValidationEventValid(el: HTMLElement, sector: string, eventType: string, location: string, event: JQueryEventObject, contextItem: DrapoContextItem): Promise<boolean>;
-    IsValidationExpressionValid(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem, event?: JQueryEventObject): Promise<boolean>;
+    IsValidationEventValid(el: HTMLElement, sector: string, eventType: string, location: string, event: Event, contextItem: DrapoContextItem): Promise<boolean>;
+    IsValidationExpressionValid(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem, event?: Event): Promise<boolean>;
     UncheckValidationExpression(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem): Promise<void>;
     private GetSectorIndex;
     private GetIndex;
