@@ -5,4 +5,6 @@ declare class DrapoSearcher {
     FindDataKey(dataKey: string, sector: string): HTMLElement;
     HasDataKeyElement(dataKey: string): boolean;
     private Filter;
+    FindByAttributeAndValue(name: string, value: string): HTMLElement;
+    FindByAttributeAndValueFromParent(name: string, value: string, parent: HTMLElement): HTMLElement;
 }

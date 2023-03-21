@@ -770,6 +770,19 @@ class DrapoDocument {
         }
     }
 
+    public SetElementHTML(el: HTMLElement, html: string) : void {
+        $(el).html(html);
+    }
+
+    public CreateHTMLElement(html: string, onlyLast: boolean = false): HTMLElement {
+        if (html == null)
+            return (null);
+        const elJQuery: JQuery = onlyLast ? $(html).last() : $(html);
+        if ((elJQuery == null) || (elJQuery.length == 0))
+            return (null);
+        return (elJQuery[0]);
+    }
+
     private InitializeSectorElementDetach(el: HTMLElement) {
         if (this.CanDetachElement(el))
             return;
