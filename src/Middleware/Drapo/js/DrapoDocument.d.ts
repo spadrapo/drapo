@@ -62,6 +62,8 @@ declare class DrapoDocument {
     private GetSectorElement;
     GetSectorElementInner(sector: string): HTMLElement;
     SetSectorElementInner(sector: string, el: HTMLElement, canDetach: boolean): void;
+    SetElementHTML(el: HTMLElement, html: string): void;
+    CreateHTMLElement(html: string, onlyLast?: boolean): HTMLElement;
     private InitializeSectorElementDetach;
     CanDetachElement(el: HTMLElement): boolean;
     IsElementDetached(el: HTMLElement): boolean;

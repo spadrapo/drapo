@@ -7,4 +7,6 @@ declare class DrapoStylist {
     private StringfyValues;
     ReloadStyles(): Promise<void>;
     private AddStyleToDocument;
+    GetElementStyleProperty(el: HTMLElement, name: string): string;
+    SetElementStyleProperty(el: HTMLElement, name: string, value: string): void;
 }

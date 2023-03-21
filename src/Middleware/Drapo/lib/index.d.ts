@@ -611,6 +611,8 @@ declare class DrapoDocument {
     private GetSectorElement;
     GetSectorElementInner(sector: string): HTMLElement;
     SetSectorElementInner(sector: string, el: HTMLElement, canDetach: boolean): void;
+    SetElementHTML(el: HTMLElement, html: string): void;
+    CreateHTMLElement(html: string, onlyLast?: boolean): HTMLElement;
     private InitializeSectorElementDetach;
     CanDetachElement(el: HTMLElement): boolean;
     IsElementDetached(el: HTMLElement): boolean;
@@ -1572,7 +1574,7 @@ declare class DrapoResize {
     private _code;
     private _contextItem;
     private _element;
-    private _parentJQuery;
+    private _parent;
     private _container;
     private _model;
     private _location;
@@ -1590,8 +1592,8 @@ declare class DrapoResize {
     set Item(value: DrapoContextItem);
     get Element(): HTMLElement;
     set Element(value: HTMLElement);
-    get ParentJQuery(): JQuery;
-    set ParentJQuery(value: JQuery);
+    get Parent(): HTMLElement;
+    set Parent(value: HTMLElement);
     get Container(): HTMLElement;
     set Container(value: HTMLElement);
     get Model(): string;
@@ -1657,6 +1659,8 @@ declare class DrapoSearcher {
     FindDataKey(dataKey: string, sector: string): HTMLElement;
     HasDataKeyElement(dataKey: string): boolean;
     private Filter;
+    FindByAttributeAndValue(name: string, value: string): HTMLElement;
+    FindByAttributeAndValueFromParent(name: string, value: string, parent: HTMLElement): HTMLElement;
 }
 
 declare class DrapoSectorContainerHandler {
@@ -2217,6 +2221,8 @@ declare class DrapoStylist {
     private StringfyValues;
     ReloadStyles(): Promise<void>;
     private AddStyleToDocument;
+    GetElementStyleProperty(el: HTMLElement, name: string): string;
+    SetElementStyleProperty(el: HTMLElement, name: string, value: string): void;
 }
 
 declare class DrapoValidator {

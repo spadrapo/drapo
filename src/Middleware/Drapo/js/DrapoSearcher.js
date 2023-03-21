@@ -37,5 +37,17 @@ var DrapoSearcher = (function () {
         }
         return (null);
     };
+    DrapoSearcher.prototype.FindByAttributeAndValue = function (name, value) {
+        var elementsJQuery = $("[" + name + "='" + value + "']");
+        if ((elementsJQuery === null) || (elementsJQuery.windowContainer === 0))
+            return (null);
+        return (elementsJQuery[0]);
+    };
+    DrapoSearcher.prototype.FindByAttributeAndValueFromParent = function (name, value, parent) {
+        var elementsJQuery = $(parent).find("[" + name + "='" + value + "']");
+        if ((elementsJQuery === null) || (elementsJQuery.windowContainer === 0))
+            return (null);
+        return (elementsJQuery[0]);
+    };
     return DrapoSearcher;
 }());

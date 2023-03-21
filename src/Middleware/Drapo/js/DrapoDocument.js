@@ -1055,6 +1055,18 @@ var DrapoDocument = (function () {
             }
         }
     };
+    DrapoDocument.prototype.SetElementHTML = function (el, html) {
+        $(el).html(html);
+    };
+    DrapoDocument.prototype.CreateHTMLElement = function (html, onlyLast) {
+        if (onlyLast === void 0) { onlyLast = false; }
+        if (html == null)
+            return (null);
+        var elJQuery = onlyLast ? $(html).last() : $(html);
+        if ((elJQuery == null) || (elJQuery.length == 0))
+            return (null);
+        return (elJQuery[0]);
+    };
     DrapoDocument.prototype.InitializeSectorElementDetach = function (el) {
         if (this.CanDetachElement(el))
             return;

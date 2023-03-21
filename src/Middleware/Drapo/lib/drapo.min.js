@@ -1472,11 +1472,9 @@ var DrapoBehaviorHandler = (function () {
         if (dataKeyFilter === void 0) { dataKeyFilter = null; }
         if (dataFieldFilter === void 0) { dataFieldFilter = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var elj;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        elj = $(el);
                         this.ResolveBehaviorDragStart(el);
                         return [4, this.ResolveBehaviorDragEnd(el)];
                     case 1:
@@ -1910,7 +1908,7 @@ var DrapoBehaviorHandler = (function () {
         resizer.Type = type;
         resizer.Class = resizeClass;
         resizer.Preview = preview;
-        resizer.ParentJQuery = $(resizer.Element.parentElement);
+        resizer.Parent = resizer.Element.parentElement;
         resizer.Container = this.Application.EventHandler.GetElementParent(resizer.Element, container);
         return (resizer);
     };
@@ -1966,7 +1964,7 @@ var DrapoBehaviorHandler = (function () {
     };
     DrapoBehaviorHandler.prototype.GetSize = function (resizer) {
         if (resizer.Location == 'bootstrap') {
-            var classAttribute = resizer.ParentJQuery.attr('class');
+            var classAttribute = resizer.Parent.getAttribute('class');
             var classesAttribute = this.Application.Parser.Tokenize(classAttribute);
             for (var i = 0; i < classesAttribute.length; i++) {
                 var classCurrent = classesAttribute[i];
@@ -1976,7 +1974,7 @@ var DrapoBehaviorHandler = (function () {
             return (null);
         }
         else {
-            return (resizer.ParentJQuery.css('width'));
+            return (this.Application.Stylist.GetElementStyleProperty(resizer.Parent, 'width'));
         }
     };
     DrapoBehaviorHandler.prototype.GetSizeUnit = function (size) {
@@ -2036,7 +2034,7 @@ var DrapoBehaviorHandler = (function () {
     };
     DrapoBehaviorHandler.prototype.ApplySizeNew = function (resizer) {
         if (resizer.Location === 'bootstrap') {
-            var sizeBase = resizer.ParentJQuery.css('width');
+            var sizeBase = this.Application.Stylist.GetElementStyleProperty(resizer.Parent, 'width');
             var sizeBaseUnit = this.GetSizeUnit(sizeBase);
             var sizeBaseValue = this.GetSizeValue(sizeBaseUnit, sizeBase);
             var sizeBaseValueOne = sizeBaseValue / resizer.SizeStart;
@@ -2047,15 +2045,15 @@ var DrapoBehaviorHandler = (function () {
             var valueNew = resizer.SizeStart + valueOffset;
             var classRemove = this.CreateClassBootstrap(resizer.UnitStart, resizer.SizeStart);
             var classInsert = this.CreateClassBootstrap(resizer.UnitStart, valueNew);
-            resizer.ParentJQuery.removeClass(classRemove);
-            resizer.ParentJQuery.addClass(classInsert);
+            resizer.Parent.classList.remove(classRemove);
+            resizer.Parent.classList.add(classInsert);
             return (valueNew);
         }
         else {
             var sizeNew = this.GetSizeStartWithOffset(resizer);
             if (sizeNew === null)
                 return (null);
-            resizer.ParentJQuery.css(resizer.Location, sizeNew + resizer.Unit);
+            this.Application.Stylist.SetElementStyleProperty(resizer.Parent, resizer.Location, sizeNew + resizer.Unit);
             return (sizeNew);
         }
     };
@@ -7752,6 +7750,18 @@ var DrapoDocument = (function () {
                 el.setAttribute('d-detach', 'active');
             }
         }
+    };
+    DrapoDocument.prototype.SetElementHTML = function (el, html) {
+        $(el).html(html);
+    };
+    DrapoDocument.prototype.CreateHTMLElement = function (html, onlyLast) {
+        if (onlyLast === void 0) { onlyLast = false; }
+        if (html == null)
+            return (null);
+        var elJQuery = onlyLast ? $(html).last() : $(html);
+        if ((elJQuery == null) || (elJQuery.length == 0))
+            return (null);
+        return (elJQuery[0]);
     };
     DrapoDocument.prototype.InitializeSectorElementDetach = function (el) {
         if (this.CanDetachElement(el))
@@ -18498,12 +18508,12 @@ var DrapoResize = (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(DrapoResize.prototype, "ParentJQuery", {
+    Object.defineProperty(DrapoResize.prototype, "Parent", {
         get: function () {
-            return (this._parentJQuery);
+            return (this._parent);
         },
         set: function (value) {
-            this._parentJQuery = value;
+            this._parent = value;
         },
         enumerable: false,
         configurable: true
@@ -18875,6 +18885,18 @@ var DrapoSearcher = (function () {
                 return (el);
         }
         return (null);
+    };
+    DrapoSearcher.prototype.FindByAttributeAndValue = function (name, value) {
+        var elementsJQuery = $("[" + name + "='" + value + "']");
+        if ((elementsJQuery === null) || (elementsJQuery.windowContainer === 0))
+            return (null);
+        return (elementsJQuery[0]);
+    };
+    DrapoSearcher.prototype.FindByAttributeAndValueFromParent = function (name, value, parent) {
+        var elementsJQuery = $(parent).find("[" + name + "='" + value + "']");
+        if ((elementsJQuery === null) || (elementsJQuery.windowContainer === 0))
+            return (null);
+        return (elementsJQuery[0]);
     };
     return DrapoSearcher;
 }());
@@ -25916,6 +25938,15 @@ var DrapoStylist = (function () {
             });
         });
     };
+    DrapoStylist.prototype.GetElementStyleProperty = function (el, name) {
+        var elStyle = window.getComputedStyle(el);
+        var value = elStyle.getPropertyValue(name);
+        return (value);
+    };
+    DrapoStylist.prototype.SetElementStyleProperty = function (el, name, value) {
+        var elStyle = window.getComputedStyle(el);
+        elStyle.setProperty(name, value);
+    };
     return DrapoStylist;
 }());
 
@@ -27413,14 +27444,13 @@ var DrapoWindowHandler = (function () {
     DrapoWindowHandler.prototype.CreateAndShowWindow = function (uri, did, parameters, parametersDefault) {
         if (parametersDefault === void 0) { parametersDefault = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var windowsDid, elWindowsDid, allowMultipleInstanceUrl, windowContent, content, i, parameter, parameterCode, parameterValue, windowElement, attributes, templateUrl, template, onLoad, templateUrlContent, _a, templateContent, windowElementTemplateJQuery, elTemplate, elWindow, sector, elSector, window;
+            var elWindowsDid, allowMultipleInstanceUrl, windowContent, elContent, content, i, parameter, parameterCode, parameterValue, windowElement, attributes, templateUrl, template, onLoad, templateUrlContent, _a, templateContent, windowElementTemplate, elTemplate, elWindow, sector, elSector, window;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        windowsDid = $("[d-id='" + did + "']");
-                        if ((windowsDid === null) || (windowsDid.windowContainer === 0))
+                        elWindowsDid = this.Application.Searcher.FindByAttributeAndValue('d-id', did);
+                        if (elWindowsDid == null)
                             return [2];
-                        elWindowsDid = windowsDid[0];
                         allowMultipleInstanceUrl = (!(elWindowsDid.getAttribute('d-window-allowMultipleInstanceUrl') === 'false'));
                         if ((!allowMultipleInstanceUrl) && (this.IsWindowLoaded(uri, did)))
                             return [2];
@@ -27429,7 +27459,8 @@ var DrapoWindowHandler = (function () {
                         windowContent = _b.sent();
                         if (windowContent === null)
                             return [2];
-                        content = $(windowContent).last()[0].outerHTML;
+                        elContent = this.Application.Document.CreateHTMLElement(windowContent, true);
+                        content = elContent.outerHTML;
                         for (i = 0; i < parameters.length; i++) {
                             parameter = parameters[i];
                             content = content.replace(parameter[0], parameter[1]);
@@ -27458,23 +27489,23 @@ var DrapoWindowHandler = (function () {
                         templateUrlContent = _a;
                         templateContent = templateUrlContent === null ? null : this.Application.Parser.ParseDocumentContent(templateUrlContent);
                         if (templateContent !== null) {
-                            windowsDid.append(templateContent);
-                            windowElement = windowsDid.children().last();
-                            windowElementTemplateJQuery = windowElement.find("div[d-template='" + template + "']");
-                            if (windowElementTemplateJQuery.length === 0) {
-                                windowElement.html(content);
+                            elWindowsDid.append(this.Application.Document.CreateHTMLElement(templateContent));
+                            windowElement = elWindowsDid.children[elWindowsDid.children.length - 1];
+                            windowElementTemplate = this.Application.Searcher.FindByAttributeAndValueFromParent('d-template', template, windowElement);
+                            if (windowElementTemplate === null) {
+                                this.Application.Document.SetElementHTML(windowElement, content);
                             }
                             else {
-                                windowElementTemplateJQuery.html(content);
-                                elTemplate = windowElementTemplateJQuery[0];
+                                this.Application.Document.SetElementHTML(windowElementTemplate, content);
+                                elTemplate = windowElementTemplate;
                                 onLoad = elTemplate.getAttribute('d-on-load');
                             }
                         }
                         else {
-                            windowsDid.append(content);
-                            windowElement = windowsDid.children().last();
+                            elWindowsDid.append(this.Application.Document.CreateHTMLElement(content));
+                            windowElement = elWindowsDid.children[elWindowsDid.children.length - 1];
                         }
-                        elWindow = windowElement[0];
+                        elWindow = windowElement;
                         sector = this.Application.Document.GetSectorParent(elWindow);
                         elSector = elWindow.getAttribute('d-sector');
                         if (!(elSector === "@")) return [3, 6];
@@ -27489,7 +27520,7 @@ var DrapoWindowHandler = (function () {
                         window.Code = this.Application.Document.CreateGuid();
                         window.Did = did;
                         window.Uri = uri;
-                        window.Element = windowElement[0];
+                        window.Element = windowElement;
                         this._windows.push(window);
                         return [4, this.Application.Document.ResolveWindow($(window.Element))];
                     case 7:
@@ -27551,8 +27582,8 @@ var DrapoWindowHandler = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        parent = $(window.Element).parent();
-                        if ((parent == null) || (parent.length == 0))
+                        parent = window.Element.parentElement;
+                        if (parent == null)
                             return [2];
                         return [4, this.DestroyWindowElement(window)];
                     case 1:

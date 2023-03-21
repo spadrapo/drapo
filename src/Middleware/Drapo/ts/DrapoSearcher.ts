@@ -43,5 +43,17 @@
         return (null);
     }
 
+    public FindByAttributeAndValue(name: string, value: string): HTMLElement {
+        const elementsJQuery: JQuery = $("[" + name + "='" + value + "']");
+        if ((elementsJQuery === null) || (elementsJQuery.windowContainer === 0))
+            return (null);
+        return (elementsJQuery[0]);
+    }
 
+    public FindByAttributeAndValueFromParent(name: string, value: string, parent: HTMLElement): HTMLElement {
+        const elementsJQuery: JQuery = $(parent).find("[" + name + "='" + value + "']");
+        if ((elementsJQuery === null) || (elementsJQuery.windowContainer === 0))
+            return (null);
+        return (elementsJQuery[0]);
+    }
 }

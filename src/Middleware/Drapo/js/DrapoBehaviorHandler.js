@@ -55,11 +55,9 @@ var DrapoBehaviorHandler = (function () {
         if (dataKeyFilter === void 0) { dataKeyFilter = null; }
         if (dataFieldFilter === void 0) { dataFieldFilter = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var elj;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        elj = $(el);
                         this.ResolveBehaviorDragStart(el);
                         return [4, this.ResolveBehaviorDragEnd(el)];
                     case 1:
@@ -493,7 +491,7 @@ var DrapoBehaviorHandler = (function () {
         resizer.Type = type;
         resizer.Class = resizeClass;
         resizer.Preview = preview;
-        resizer.ParentJQuery = $(resizer.Element.parentElement);
+        resizer.Parent = resizer.Element.parentElement;
         resizer.Container = this.Application.EventHandler.GetElementParent(resizer.Element, container);
         return (resizer);
     };
@@ -549,7 +547,7 @@ var DrapoBehaviorHandler = (function () {
     };
     DrapoBehaviorHandler.prototype.GetSize = function (resizer) {
         if (resizer.Location == 'bootstrap') {
-            var classAttribute = resizer.ParentJQuery.attr('class');
+            var classAttribute = resizer.Parent.getAttribute('class');
             var classesAttribute = this.Application.Parser.Tokenize(classAttribute);
             for (var i = 0; i < classesAttribute.length; i++) {
                 var classCurrent = classesAttribute[i];
@@ -559,7 +557,7 @@ var DrapoBehaviorHandler = (function () {
             return (null);
         }
         else {
-            return (resizer.ParentJQuery.css('width'));
+            return (this.Application.Stylist.GetElementStyleProperty(resizer.Parent, 'width'));
         }
     };
     DrapoBehaviorHandler.prototype.GetSizeUnit = function (size) {
@@ -619,7 +617,7 @@ var DrapoBehaviorHandler = (function () {
     };
     DrapoBehaviorHandler.prototype.ApplySizeNew = function (resizer) {
         if (resizer.Location === 'bootstrap') {
-            var sizeBase = resizer.ParentJQuery.css('width');
+            var sizeBase = this.Application.Stylist.GetElementStyleProperty(resizer.Parent, 'width');
             var sizeBaseUnit = this.GetSizeUnit(sizeBase);
             var sizeBaseValue = this.GetSizeValue(sizeBaseUnit, sizeBase);
             var sizeBaseValueOne = sizeBaseValue / resizer.SizeStart;
@@ -630,15 +628,15 @@ var DrapoBehaviorHandler = (function () {
             var valueNew = resizer.SizeStart + valueOffset;
             var classRemove = this.CreateClassBootstrap(resizer.UnitStart, resizer.SizeStart);
             var classInsert = this.CreateClassBootstrap(resizer.UnitStart, valueNew);
-            resizer.ParentJQuery.removeClass(classRemove);
-            resizer.ParentJQuery.addClass(classInsert);
+            resizer.Parent.classList.remove(classRemove);
+            resizer.Parent.classList.add(classInsert);
             return (valueNew);
         }
         else {
             var sizeNew = this.GetSizeStartWithOffset(resizer);
             if (sizeNew === null)
                 return (null);
-            resizer.ParentJQuery.css(resizer.Location, sizeNew + resizer.Unit);
+            this.Application.Stylist.SetElementStyleProperty(resizer.Parent, resizer.Location, sizeNew + resizer.Unit);
             return (sizeNew);
         }
     };
