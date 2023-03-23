@@ -372,12 +372,11 @@ class DrapoDebugger {
         const sector: string = parameters[3];
         const elBeforeList = document.getElementsByClassName(classHighlight);
         const elBefore: HTMLElement = elBeforeList.length > 0 ? elBeforeList[0] as HTMLElement : null;
-        const eljAfter: JQuery = ((sector != '') && (sector != 'null')) ? $('[d-sector="' + sector + '"]') : null;
-        const elAfter: HTMLElement = ((eljAfter != null) && (eljAfter.length > 0)) ? eljAfter[0] : null;
+        const elAfter: HTMLElement = ((sector != '') && (sector != 'null')) ? this.Application.Searcher.FindByAttributeAndValue('d-sector', sector) : null;
         if (elBefore != null)
-            $(elBefore).removeClass(classHighlight);
+            elBefore.classList.remove(classHighlight);
         if (elBefore != elAfter)
-            $(elAfter).addClass(classHighlight);
+            elAfter.classList.add(classHighlight);
     }
 
     private async ExecuteFunctionDebuggerHighlighComponent(parameters: string[]): Promise<void> {

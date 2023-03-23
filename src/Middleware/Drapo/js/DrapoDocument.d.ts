@@ -33,7 +33,7 @@ declare class DrapoDocument {
     LoadChildSectorDefault(sectorName: string): Promise<boolean>;
     private ReplaceDocument;
     ReplaceElement(el: Element, elNew: Element | string | JQuery): void;
-    Show(elj: JQuery): JQuery;
+    Show(el: HTMLElement): HTMLElement;
     private ShowInternal;
     Hide(selector: JQuery): JQuery;
     GetWrapper(elj: JQuery): HTMLElement;
@@ -74,6 +74,7 @@ declare class DrapoDocument {
     GetSectorImpersonate(el: HTMLElement): string;
     IsSectorDynamic(el: HTMLElement): Promise<boolean>;
     GetSectorResolved(el: HTMLElement): Promise<string>;
+    Clone(el: HTMLElement): HTMLElement;
     CreateGuid(isShort?: boolean): string;
     private CreateGuidShort;
     private CreateGuidShortInternal;

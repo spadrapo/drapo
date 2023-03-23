@@ -259,12 +259,12 @@ class DrapoControlFlow {
             return (false);
         }
         this.Application.Observer.IsEnabledNotifyIncremental = false;
-        let jQueryForReferenceTemplate: JQuery = jQueryForReference.clone();
+        let forReferenceTemplate: HTMLElement = jQueryForReference.clone()[0];
         if ((isContextRoot) || (context.IsInsideRecursion))
-            jQueryForReferenceTemplate = this.Application.Document.Show(jQueryForReferenceTemplate);
-        jQueryForReferenceTemplate.removeAttr('d-for');
+            forReferenceTemplate = this.Application.Document.Show(forReferenceTemplate);
+        forReferenceTemplate.removeAttribute('d-for');
         if (ifText != null)
-            jQueryForReferenceTemplate.removeAttr('d-if');
+            forReferenceTemplate.removeAttribute('d-if');
         //Hash
         const isHash: boolean = this.Application.Solver.Contains(dForRenders, 'hash');
         const hashTemplate: string = isHash ? this.GetElementHashTemplate(elementForTemplate) : null;
@@ -273,10 +273,10 @@ class DrapoControlFlow {
         const length: number = datas.length;
         //Viewport
         const canCreateViewport: boolean = ((isContextRoot) && (isFirstChild) && (!wasWrapped) && (!hasIfText) && (range === null));
-        const viewport: DrapoViewport = (canCreateViewport && isViewport) ? this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas) : null;
+        const viewport: DrapoViewport = (canCreateViewport && isViewport) ? this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, forReferenceTemplate, dataKey, key, dataKeyIteratorRange, datas) : null;
         const isViewportActive: boolean = ((viewport != null) && (viewport.IsActive));
         if (dForRender != null)
-            jQueryForReferenceTemplate.removeAttr('d-for-render');
+            forReferenceTemplate.removeAttribute('d-for-render');
         //Viewport Ballon Before
         lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
         //Document Fragment
@@ -284,7 +284,7 @@ class DrapoControlFlow {
         const fragment: DocumentFragment = document.createDocumentFragment();
         //Inline d-for inside
         const canUseTemplate: boolean = isContextRootFullExclusive && (type == DrapoStorageLinkType.Render) && (datas.length > 3);
-        const templateVariables: string[][] = canUseTemplate ? (await this.GetTemplateVariables(sector, context, dataKey, key, jQueryForReferenceTemplate)) : null;
+        const templateVariables: string[][] = canUseTemplate ? (await this.GetTemplateVariables(sector, context, dataKey, key, forReferenceTemplate)) : null;
         //Render
         let nodesRemovedCount: number = 0;
         const startViewport: number = this.Application.ViewportHandler.GetViewportControlFlowStart(viewport, start);
@@ -295,13 +295,12 @@ class DrapoControlFlow {
             const data: any = datas[j];
             //Template
             const templateKey: string = templateVariables !== null ? await this.CreateTemplateKey(sector, context, dataKey, templateVariables, data, key, j) : null;
-            let templateData: JQuery = templateKey !== null ? await this.GetTemplateFromTemplateKey(context, templateKey) : null;
+            let templateData: HTMLElement = templateKey !== null ? await this.GetTemplateFromTemplateKey(context, templateKey) : null;
             if ((templateKey !== null) && (templateData === null)) {
-                templateData = await this.CreateTemplate(sector, context, renderContext, jQueryForReferenceTemplate.clone(), dataKey, key, j, data);
+                templateData = await this.CreateTemplate(sector, context, renderContext, this.Application.Document.Clone(forReferenceTemplate), dataKey, key, j, data);
                 this.AddTemplate(context, templateKey, templateData);
             }
-            const templateJ: JQuery = templateData !== null ? templateData.clone() : jQueryForReferenceTemplate.clone();
-            const template: HTMLElement = templateJ[0];
+            const template: HTMLElement = templateData !== null ? this.Application.Document.Clone(templateData) : this.Application.Document.Clone(forReferenceTemplate);
             const viewportIndexDifference: number = (isViewportActive ? (1 - startViewport) : 0);
             const nodeIndex: number = j - nodesRemovedCount + viewportIndexDifference;
             const oldNode: HTMLElement = ((items !== null) && (nodeIndex < items.length)) ? items[nodeIndex] : null;
@@ -330,8 +329,8 @@ class DrapoControlFlow {
                         template.setAttribute('d-hash', hashValueCurrent);
                     fragment.appendChild(template);
                 } else {
-                    lastInserted.after(templateJ);
-                    lastInserted = templateJ;
+                    lastInserted.after($(template));
+                    lastInserted = $(template);
                     if (hashValueCurrent !== null)
                         template.setAttribute('d-hash', hashValueCurrent);
                     if (!this.Application.ViewportHandler.HasHeightChanged(viewport)) {
@@ -568,7 +567,8 @@ class DrapoControlFlow {
         return (hashValue);
     }
 
-    private async GetTemplateVariables(sector: string, context: DrapoContext, dataKey: string, key: string, templateJQuery: JQuery): Promise<string[][]> {
+    private async GetTemplateVariables(sector: string, context: DrapoContext, dataKey: string, key: string, template: HTMLElement): Promise<string[][]> {
+        const templateJQuery: JQuery = $(template);
         //At least 2 for creating a template
         const forJQuery = templateJQuery.find('[d-for]');
         if (forJQuery.length < 1)
@@ -634,21 +634,20 @@ class DrapoControlFlow {
         return (templateKey);
     }
 
-    private async CreateTemplate(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, elj: JQuery, dataKey: string, key: string, index: number, data: any): Promise<JQuery> {
+    private async CreateTemplate(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, dataKey: string, key: string, index: number, data: any): Promise<HTMLElement> {
         context.CanUpdateTemplate = true;
-        const el: HTMLElement = elj[0];
         context.Create(data, el, null, dataKey, key, null, index);
         await this.ResolveControlFlowForIterationRender(sector, context, el, renderContext, true, false);
         context.Pop();
         context.CanUpdateTemplate = false;
-        return (elj);
+        return (el);
     }
 
-    private async GetTemplateFromTemplateKey(context: DrapoContext, templateKey: string): Promise<JQuery> {
+    private async GetTemplateFromTemplateKey(context: DrapoContext, templateKey: string): Promise<HTMLElement> {
         return (context.GetTemplate(templateKey));
     }
 
-    private AddTemplate(context: DrapoContext, templateKey: string, template: JQuery): void {
+    private AddTemplate(context: DrapoContext, templateKey: string, template: HTMLElement): void {
         context.AddTemplate(templateKey, template);
     }
 

@@ -4552,7 +4552,7 @@ var DrapoControlFlow = (function () {
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var forText, ifText, forIfText, wasWrapped, viewportBeforeScrollPosition, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, dForRender, dForRenders, isHTML, isViewport, hasViewPortBefore, hasViewPortbeforeRecycle, viewportBefore, itemsViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, jQueryForReferenceTemplate, isHash, hashTemplate, useHash, length, canCreateViewport, viewport, isViewportActive, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, startViewport, endViewport, j, data, templateKey, _b, templateData, _c, templateJ, template, viewportIndexDifference, nodeIndex, oldNode, item, _d, hashValueBefore, hashValueCurrent, _e, applyHash, template;
+            var forText, ifText, forIfText, wasWrapped, viewportBeforeScrollPosition, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, dForRender, dForRenders, isHTML, isViewport, hasViewPortBefore, hasViewPortbeforeRecycle, viewportBefore, itemsViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, forReferenceTemplate, isHash, hashTemplate, useHash, length, canCreateViewport, viewport, isViewportActive, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, startViewport, endViewport, j, data, templateKey, _b, templateData, _c, template, viewportIndexDifference, nodeIndex, oldNode, item, _d, hashValueBefore, hashValueCurrent, _e, applyHash, template;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
@@ -4701,27 +4701,27 @@ var DrapoControlFlow = (function () {
                             return [2, (false)];
                         }
                         this.Application.Observer.IsEnabledNotifyIncremental = false;
-                        jQueryForReferenceTemplate = jQueryForReference.clone();
+                        forReferenceTemplate = jQueryForReference.clone()[0];
                         if ((isContextRoot) || (context.IsInsideRecursion))
-                            jQueryForReferenceTemplate = this.Application.Document.Show(jQueryForReferenceTemplate);
-                        jQueryForReferenceTemplate.removeAttr('d-for');
+                            forReferenceTemplate = this.Application.Document.Show(forReferenceTemplate);
+                        forReferenceTemplate.removeAttribute('d-for');
                         if (ifText != null)
-                            jQueryForReferenceTemplate.removeAttr('d-if');
+                            forReferenceTemplate.removeAttribute('d-if');
                         isHash = this.Application.Solver.Contains(dForRenders, 'hash');
                         hashTemplate = isHash ? this.GetElementHashTemplate(elementForTemplate) : null;
                         useHash = hashTemplate !== null;
                         length = datas.length;
                         canCreateViewport = ((isContextRoot) && (isFirstChild) && (!wasWrapped) && (!hasIfText) && (range === null));
-                        viewport = (canCreateViewport && isViewport) ? this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, jQueryForReferenceTemplate[0], dataKey, key, dataKeyIteratorRange, datas) : null;
+                        viewport = (canCreateViewport && isViewport) ? this.Application.ViewportHandler.CreateViewportControlFlow(sector, elementForTemplate, forReferenceTemplate, dataKey, key, dataKeyIteratorRange, datas) : null;
                         isViewportActive = ((viewport != null) && (viewport.IsActive));
                         if (dForRender != null)
-                            jQueryForReferenceTemplate.removeAttr('d-for-render');
+                            forReferenceTemplate.removeAttribute('d-for-render');
                         lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
                         canFragmentElements = viewport == null;
                         fragment = document.createDocumentFragment();
                         canUseTemplate = isContextRootFullExclusive && (type == DrapoStorageLinkType.Render) && (datas.length > 3);
                         if (!canUseTemplate) return [3, 9];
-                        return [4, this.GetTemplateVariables(sector, context, dataKey, key, jQueryForReferenceTemplate)];
+                        return [4, this.GetTemplateVariables(sector, context, dataKey, key, forReferenceTemplate)];
                     case 8:
                         _a = (_f.sent());
                         return [3, 10];
@@ -4761,14 +4761,13 @@ var DrapoControlFlow = (function () {
                     case 17:
                         templateData = _c;
                         if (!((templateKey !== null) && (templateData === null))) return [3, 19];
-                        return [4, this.CreateTemplate(sector, context, renderContext, jQueryForReferenceTemplate.clone(), dataKey, key, j, data)];
+                        return [4, this.CreateTemplate(sector, context, renderContext, this.Application.Document.Clone(forReferenceTemplate), dataKey, key, j, data)];
                     case 18:
                         templateData = _f.sent();
                         this.AddTemplate(context, templateKey, templateData);
                         _f.label = 19;
                     case 19:
-                        templateJ = templateData !== null ? templateData.clone() : jQueryForReferenceTemplate.clone();
-                        template = templateJ[0];
+                        template = templateData !== null ? this.Application.Document.Clone(templateData) : this.Application.Document.Clone(forReferenceTemplate);
                         viewportIndexDifference = (isViewportActive ? (1 - startViewport) : 0);
                         nodeIndex = j - nodesRemovedCount + viewportIndexDifference;
                         oldNode = ((items !== null) && (nodeIndex < items.length)) ? items[nodeIndex] : null;
@@ -4818,8 +4817,8 @@ var DrapoControlFlow = (function () {
                             fragment.appendChild(template);
                         }
                         else {
-                            lastInserted.after(templateJ);
-                            lastInserted = templateJ;
+                            lastInserted.after($(template));
+                            lastInserted = $(template);
                             if (hashValueCurrent !== null)
                                 template.setAttribute('d-hash', hashValueCurrent);
                             if (!this.Application.ViewportHandler.HasHeightChanged(viewport)) {
@@ -5172,12 +5171,13 @@ var DrapoControlFlow = (function () {
             });
         });
     };
-    DrapoControlFlow.prototype.GetTemplateVariables = function (sector, context, dataKey, key, templateJQuery) {
+    DrapoControlFlow.prototype.GetTemplateVariables = function (sector, context, dataKey, key, template) {
         return __awaiter(this, void 0, void 0, function () {
-            var forJQuery, dataKeys, ifJQuery;
+            var templateJQuery, forJQuery, dataKeys, ifJQuery;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        templateJQuery = $(template);
                         forJQuery = templateJQuery.find('[d-for]');
                         if (forJQuery.length < 1)
                             return [2, (null)];
@@ -5259,21 +5259,19 @@ var DrapoControlFlow = (function () {
             });
         });
     };
-    DrapoControlFlow.prototype.CreateTemplate = function (sector, context, renderContext, elj, dataKey, key, index, data) {
+    DrapoControlFlow.prototype.CreateTemplate = function (sector, context, renderContext, el, dataKey, key, index, data) {
         return __awaiter(this, void 0, void 0, function () {
-            var el;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         context.CanUpdateTemplate = true;
-                        el = elj[0];
                         context.Create(data, el, null, dataKey, key, null, index);
                         return [4, this.ResolveControlFlowForIterationRender(sector, context, el, renderContext, true, false)];
                     case 1:
                         _a.sent();
                         context.Pop();
                         context.CanUpdateTemplate = false;
-                        return [2, (elj)];
+                        return [2, (el)];
                 }
             });
         });
@@ -6531,18 +6529,17 @@ var DrapoDebugger = (function () {
     };
     DrapoDebugger.prototype.ExecuteFunctionDebuggerHighlighSector = function (parameters) {
         return __awaiter(this, void 0, void 0, function () {
-            var classHighlight, sector, elBeforeList, elBefore, eljAfter, elAfter;
+            var classHighlight, sector, elBeforeList, elBefore, elAfter;
             return __generator(this, function (_a) {
                 classHighlight = parameters[2];
                 sector = parameters[3];
                 elBeforeList = document.getElementsByClassName(classHighlight);
                 elBefore = elBeforeList.length > 0 ? elBeforeList[0] : null;
-                eljAfter = ((sector != '') && (sector != 'null')) ? $('[d-sector="' + sector + '"]') : null;
-                elAfter = ((eljAfter != null) && (eljAfter.length > 0)) ? eljAfter[0] : null;
+                elAfter = ((sector != '') && (sector != 'null')) ? this.Application.Searcher.FindByAttributeAndValue('d-sector', sector) : null;
                 if (elBefore != null)
-                    $(elBefore).removeClass(classHighlight);
+                    elBefore.classList.remove(classHighlight);
                 if (elBefore != elAfter)
-                    $(elAfter).addClass(classHighlight);
+                    elAfter.classList.add(classHighlight);
                 return [2];
             });
         });
@@ -7450,7 +7447,8 @@ var DrapoDocument = (function () {
     DrapoDocument.prototype.ReplaceElement = function (el, elNew) {
         $(el).replaceWith(elNew);
     };
-    DrapoDocument.prototype.Show = function (elj) {
+    DrapoDocument.prototype.Show = function (el) {
+        var elj = $(el);
         if (elj.is('span')) {
             var eljChildren = elj.children();
             if ((eljChildren.length === 1) && ((eljChildren.is('option') || (eljChildren.is('optgroup')))))
@@ -7458,7 +7456,7 @@ var DrapoDocument = (function () {
         }
         for (var i = 0; i < elj.length; i++)
             this.ShowInternal(elj[i]);
-        return (elj);
+        return (elj[0]);
     };
     DrapoDocument.prototype.ShowInternal = function (el) {
         var display = el.style.display;
@@ -7873,6 +7871,10 @@ var DrapoDocument = (function () {
                 }
             });
         });
+    };
+    DrapoDocument.prototype.Clone = function (el) {
+        var elj = $(el).clone();
+        return (elj[0]);
     };
     DrapoDocument.prototype.CreateGuid = function (isShort) {
         if (isShort === void 0) { isShort = true; }

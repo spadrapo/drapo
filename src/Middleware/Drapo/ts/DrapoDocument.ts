@@ -463,7 +463,8 @@ class DrapoDocument {
         $(el).replaceWith(elNew);
     }
 
-    public Show(elj: JQuery): JQuery {
+    public Show(el: HTMLElement): HTMLElement {
+        let elj: JQuery = $(el);
         //Unwrap first
         if (elj.is('span')) {
             const eljChildren: JQuery = elj.children();
@@ -473,7 +474,7 @@ class DrapoDocument {
         //Now show it
         for (let i: number = 0; i < elj.length; i++)
             this.ShowInternal(elj[i]);
-        return (elj);
+        return (elj[0]);
     }
 
     private ShowInternal(el: HTMLElement): void {
@@ -885,6 +886,11 @@ class DrapoDocument {
             return (sector);
         const sectorResolved = await this.Application.Storage.ResolveDataUrlMustaches(null, sector, sectorImpersonate, null);
         return (sectorResolved);
+    }
+
+    public Clone(el: HTMLElement): HTMLElement {
+        const elj: JQuery = $(el).clone();
+        return (elj[0]);
     }
 
     public CreateGuid(isShort: boolean = true): string {
