@@ -754,7 +754,8 @@ var DrapoDocument = (function () {
     DrapoDocument.prototype.ReplaceElement = function (el, elNew) {
         $(el).replaceWith(elNew);
     };
-    DrapoDocument.prototype.Show = function (elj) {
+    DrapoDocument.prototype.Show = function (el) {
+        var elj = $(el);
         if (elj.is('span')) {
             var eljChildren = elj.children();
             if ((eljChildren.length === 1) && ((eljChildren.is('option') || (eljChildren.is('optgroup')))))
@@ -762,7 +763,7 @@ var DrapoDocument = (function () {
         }
         for (var i = 0; i < elj.length; i++)
             this.ShowInternal(elj[i]);
-        return (elj);
+        return (elj[0]);
     };
     DrapoDocument.prototype.ShowInternal = function (el) {
         var display = el.style.display;
@@ -1177,6 +1178,10 @@ var DrapoDocument = (function () {
                 }
             });
         });
+    };
+    DrapoDocument.prototype.Clone = function (el) {
+        var elj = $(el).clone();
+        return (elj[0]);
     };
     DrapoDocument.prototype.CreateGuid = function (isShort) {
         if (isShort === void 0) { isShort = true; }

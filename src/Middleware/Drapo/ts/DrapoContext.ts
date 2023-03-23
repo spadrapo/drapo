@@ -23,7 +23,7 @@ class DrapoContext {
     private _checkValidation: boolean = false;
     private _canUpdateTemplate: boolean = false;
     private _templateKeys: string[] = [];
-    private _templateDatas: JQuery[] = [];
+    private _templateDatas: HTMLElement[] = [];
     //Properties
     set Sector(value: string) {
         this._sector = value;
@@ -284,14 +284,14 @@ class DrapoContext {
         return (null);
     }
 
-    public GetTemplate(templateKey: string): JQuery {
+    public GetTemplate(templateKey: string): HTMLElement {
         const index: number = this.GetTemplateIndex(templateKey);
         if (index === null)
             return (null);
         return (this._templateDatas[index]);
     }
 
-    public AddTemplate(templateKey: string, templateData: JQuery): void {
+    public AddTemplate(templateKey: string, templateData: HTMLElement): void {
         const index: number = this.GetTemplateIndex(templateKey);
         if (index === null) {
             this._templateKeys.push(templateKey);

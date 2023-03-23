@@ -386,8 +386,8 @@ declare class DrapoContext {
     GetDataKeyRoot(): string;
     Checkpoint(): void;
     private GetTemplateIndex;
-    GetTemplate(templateKey: string): JQuery;
-    AddTemplate(templateKey: string, templateData: JQuery): void;
+    GetTemplate(templateKey: string): HTMLElement;
+    AddTemplate(templateKey: string, templateData: HTMLElement): void;
     CanResolve(key: string): boolean;
     HasContextItemBefore(): boolean;
     GetIndex(key: string): number;
@@ -582,7 +582,7 @@ declare class DrapoDocument {
     LoadChildSectorDefault(sectorName: string): Promise<boolean>;
     private ReplaceDocument;
     ReplaceElement(el: Element, elNew: Element | string | JQuery): void;
-    Show(elj: JQuery): JQuery;
+    Show(el: HTMLElement): HTMLElement;
     private ShowInternal;
     Hide(selector: JQuery): JQuery;
     GetWrapper(elj: JQuery): HTMLElement;
@@ -623,6 +623,7 @@ declare class DrapoDocument {
     GetSectorImpersonate(el: HTMLElement): string;
     IsSectorDynamic(el: HTMLElement): Promise<boolean>;
     GetSectorResolved(el: HTMLElement): Promise<string>;
+    Clone(el: HTMLElement): HTMLElement;
     CreateGuid(isShort?: boolean): string;
     private CreateGuidShort;
     private CreateGuidShortInternal;

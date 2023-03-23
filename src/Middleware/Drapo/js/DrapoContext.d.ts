@@ -71,8 +71,8 @@ declare class DrapoContext {
     GetDataKeyRoot(): string;
     Checkpoint(): void;
     private GetTemplateIndex;
-    GetTemplate(templateKey: string): JQuery;
-    AddTemplate(templateKey: string, templateData: JQuery): void;
+    GetTemplate(templateKey: string): HTMLElement;
+    AddTemplate(templateKey: string, templateData: HTMLElement): void;
     CanResolve(key: string): boolean;
     HasContextItemBefore(): boolean;
     GetIndex(key: string): number;

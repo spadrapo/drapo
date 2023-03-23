@@ -772,18 +772,17 @@ var DrapoDebugger = (function () {
     };
     DrapoDebugger.prototype.ExecuteFunctionDebuggerHighlighSector = function (parameters) {
         return __awaiter(this, void 0, void 0, function () {
-            var classHighlight, sector, elBeforeList, elBefore, eljAfter, elAfter;
+            var classHighlight, sector, elBeforeList, elBefore, elAfter;
             return __generator(this, function (_a) {
                 classHighlight = parameters[2];
                 sector = parameters[3];
                 elBeforeList = document.getElementsByClassName(classHighlight);
                 elBefore = elBeforeList.length > 0 ? elBeforeList[0] : null;
-                eljAfter = ((sector != '') && (sector != 'null')) ? $('[d-sector="' + sector + '"]') : null;
-                elAfter = ((eljAfter != null) && (eljAfter.length > 0)) ? eljAfter[0] : null;
+                elAfter = ((sector != '') && (sector != 'null')) ? this.Application.Searcher.FindByAttributeAndValue('d-sector', sector) : null;
                 if (elBefore != null)
-                    $(elBefore).removeClass(classHighlight);
+                    elBefore.classList.remove(classHighlight);
                 if (elBefore != elAfter)
-                    $(elAfter).addClass(classHighlight);
+                    elAfter.classList.add(classHighlight);
                 return [2];
             });
         });
