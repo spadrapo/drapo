@@ -565,16 +565,19 @@ var DrapoDocument = (function () {
             });
         });
     };
-    DrapoDocument.prototype.RemoveElement = function (el) {
+    DrapoDocument.prototype.RemoveElement = function (el, checkSector) {
+        if (checkSector === void 0) { checkSector = true; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         $(el).remove();
+                        if (!checkSector) return [3, 2];
                         return [4, this.RemoveElementIteration(el)];
                     case 1:
                         _a.sent();
-                        return [2];
+                        _a.label = 2;
+                    case 2: return [2];
                 }
             });
         });
@@ -780,14 +783,15 @@ var DrapoDocument = (function () {
         if (((isOption) && (!isParentOptGroup)) || (isOptGroup)) {
             var parent_1 = (selector.parent().is('span')) ? selector.parent() : this.Wrap(selector, 'span');
             parent_1.hide();
-            return (parent_1);
+            return (parent_1[0]);
         }
         else {
             selector.hide();
-            return (selector);
+            return (selector[0]);
         }
     };
-    DrapoDocument.prototype.GetWrapper = function (elj) {
+    DrapoDocument.prototype.GetWrapper = function (el) {
+        var elj = $(el);
         if (!elj.is('span'))
             return (null);
         var eljChildren = elj.children();
@@ -1680,11 +1684,27 @@ var DrapoDocument = (function () {
             });
         });
     };
-    DrapoDocument.prototype.IsFirstChild = function (elj) {
-        return (elj.index() === 0);
+    DrapoDocument.prototype.IsFirstChild = function (el) {
+        return (this.GetIndex(el) === 0);
     };
-    DrapoDocument.prototype.IsLastChild = function (elj) {
-        return (elj.next().length === 0);
+    DrapoDocument.prototype.IsLastChild = function (el) {
+        return (this.GetNextAll(el).length === 0);
+    };
+    DrapoDocument.prototype.GetIndex = function (el) {
+        var elParent = el.parentElement;
+        if (elParent == null)
+            return (-1);
+        for (var i = 0; i < elParent.children.length; i++)
+            if (el === elParent.children[i])
+                return (i);
+        return (-1);
+    };
+    DrapoDocument.prototype.GetNextAll = function (el) {
+        var elj = $(el).nextAll();
+        var els = [];
+        for (var i = 0; i < elj.length; i++)
+            els.push(elj[i]);
+        return (els);
     };
     DrapoDocument.prototype.ReceiveMessage = function (message) {
         return __awaiter(this, void 0, void 0, function () {

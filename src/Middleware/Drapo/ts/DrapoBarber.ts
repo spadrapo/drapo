@@ -270,6 +270,8 @@ class DrapoBarber {
     public async ResolveControlFlowMustacheAttribute(context: DrapoContext, attribute: string, el: HTMLElement, sector: string): Promise<void> {
         let hasChanges: boolean = false;
         let text: string = el.getAttribute(attribute);
+        if (text == null)
+            return;
         const mustaches = this.Application.Parser.ParseMustaches(text);
         for (let j = 0; j < mustaches.length; j++) {
             const mustache = mustaches[j];

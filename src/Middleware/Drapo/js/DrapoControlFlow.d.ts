@@ -15,8 +15,7 @@ declare class DrapoControlFlow {
     private ResolveControlFlowForIterationRender;
     private CanApplyConditional;
     private ResolveControlFlowForIterationRenderClass;
-    IsControlFlowForIterationVisible(sector: string, context: DrapoContext, el: Element, elj: JQuery, renderContext: DrapoRenderContext): Promise<boolean>;
-    private CreateList;
+    IsControlFlowForIterationVisible(sector: string, context: DrapoContext, el: Element, renderContext: DrapoRenderContext): Promise<boolean>;
     private RemoveList;
     private RemoveListIndex;
     private IsControlFlowDataKeyIterator;

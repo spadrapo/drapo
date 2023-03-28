@@ -25,7 +25,7 @@ declare class DrapoDocument {
     ResolveWindow(elWindow: HTMLElement): Promise<void>;
     ResolveComponentDynamicSector(el: HTMLElement): Promise<void>;
     ResolveComponentUpdate(el: HTMLElement, context: DrapoContext): Promise<void>;
-    RemoveElement(el: HTMLElement): Promise<void>;
+    RemoveElement(el: HTMLElement, checkSector?: boolean): Promise<void>;
     private RemoveElementIteration;
     private RemoveSectorData;
     LoadChildSector(sectorName: string, url: string, title?: string, canRoute?: boolean, canLoadDefaultSectors?: boolean, container?: string): Promise<boolean>;
@@ -35,8 +35,8 @@ declare class DrapoDocument {
     ReplaceElement(el: Element, elNew: Element | string | JQuery): void;
     Show(el: HTMLElement): HTMLElement;
     private ShowInternal;
-    Hide(el: HTMLElement): JQuery;
-    GetWrapper(elj: JQuery): HTMLElement;
+    Hide(el: HTMLElement): HTMLElement;
+    GetWrapper(el: HTMLElement): HTMLElement;
     private Wrap;
     GetElementAttributes(el: Element): [string, string][];
     GetElementAttributesFilteredPrefix(el: Element, prefix: string): [string, string][];
@@ -124,8 +124,10 @@ declare class DrapoDocument {
     AddSectorFriends(sector: string, sectorFriendsText: string): Promise<void>;
     private GetSectorFriends;
     CollectSector(sector: string): Promise<void>;
-    IsFirstChild(elj: JQuery): boolean;
-    IsLastChild(elj: JQuery): boolean;
+    IsFirstChild(el: HTMLElement): boolean;
+    IsLastChild(el: HTMLElement): boolean;
+    GetIndex(el: HTMLElement): number;
+    GetNextAll(el: HTMLElement): HTMLElement[];
     ReceiveMessage(message: DrapoMessage): Promise<void>;
     private ExecuteMessage;
     private UpdateMessage;

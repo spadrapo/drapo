@@ -472,6 +472,8 @@ var DrapoBarber = (function () {
                     case 0:
                         hasChanges = false;
                         text = el.getAttribute(attribute);
+                        if (text == null)
+                            return [2];
                         mustaches = this.Application.Parser.ParseMustaches(text);
                         j = 0;
                         _a.label = 1;

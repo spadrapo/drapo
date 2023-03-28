@@ -358,9 +358,10 @@ class DrapoDocument {
         await this.Application.Barber.ResolveMustaches(el, null, false);
     }
 
-    public async RemoveElement(el: HTMLElement): Promise<void> {
+    public async RemoveElement(el: HTMLElement, checkSector: boolean = true): Promise<void> {
         $(el).remove();
-        await this.RemoveElementIteration(el);
+        if (checkSector)
+            await this.RemoveElementIteration(el);
     }
 
     private async RemoveElementIteration(el: HTMLElement): Promise<void> {
@@ -398,8 +399,7 @@ class DrapoDocument {
         this.MarkSectorAsLoaded(sectorName);
         const sectorJQuery: JQuery = $("div[d-sector='" + sectorName + "']");
         let elSector: HTMLElement = null;
-        for (let i: number = sectorJQuery.length - 1; i >= 0; i--)
-        {
+        for (let i: number = sectorJQuery.length - 1; i >= 0; i--) {
             const el: HTMLElement = sectorJQuery[i];
             if (this.IsElementDetached(el))
                 continue;
@@ -485,7 +485,7 @@ class DrapoDocument {
             el.removeAttribute('style');
     }
 
-    public Hide(el: HTMLElement): JQuery {
+    public Hide(el: HTMLElement): HTMLElement {
         const selector: JQuery = $(el);
         //Wrap and hide
         const isOption: boolean = selector.is('option');
@@ -494,14 +494,15 @@ class DrapoDocument {
         if (((isOption) && (!isParentOptGroup)) || (isOptGroup)) {
             const parent: JQuery = (selector.parent().is('span')) ? selector.parent() : this.Wrap(selector, 'span');
             parent.hide();
-            return (parent);
+            return (parent[0]);
         } else {
             selector.hide();
-            return (selector);
+            return (selector[0]);
         }
     }
 
-    public GetWrapper(elj: JQuery): HTMLElement {
+    public GetWrapper(el: HTMLElement): HTMLElement {
+        const elj: JQuery = $(el);
         if (!elj.is('span'))
             return (null);
         const eljChildren: JQuery = elj.children();
@@ -725,8 +726,7 @@ class DrapoDocument {
         const elSector: HTMLElement = this.GetSectorElement(sector);
         if ((elSector == null) || (elSector.children.length == 0))
             return (null);
-        for (let i: number = elSector.children.length - 1; i >= 0; i--)
-        {
+        for (let i: number = elSector.children.length - 1; i >= 0; i--) {
             const elSectorChild: HTMLElement = elSector.children[i] as HTMLElement;
             const detach: string = elSectorChild.getAttribute('d-detach');
             if ((detach === null) || (detach === '') || (detach === 'active'))
@@ -771,7 +771,7 @@ class DrapoDocument {
         }
     }
 
-    public SetElementHTML(el: HTMLElement, html: string) : void {
+    public SetElementHTML(el: HTMLElement, html: string): void {
         $(el).html(html);
     }
 
@@ -808,10 +808,10 @@ class DrapoDocument {
             return (true);
         if (el.parentElement == null)
             return (true);
-        return(this.IsElementDetached(el.parentElement));
+        return (this.IsElementDetached(el.parentElement));
     }
 
-    public IsElementAlive(el : HTMLElement): boolean {
+    public IsElementAlive(el: HTMLElement): boolean {
         if (el === null)
             return (false);
         if (el.tagName === 'BODY')
@@ -1364,10 +1364,8 @@ class DrapoDocument {
         return (null);
     }
 
-    public async CollectSector(sector : string) : Promise<void>
-    {
-        for (let i: number = this._sectorHierarchy.length - 1; i >= 0; i--)
-        {
+    public async CollectSector(sector: string): Promise<void> {
+        for (let i: number = this._sectorHierarchy.length - 1; i >= 0; i--) {
             const sectorHierarchy: [string, string] = this._sectorHierarchy[i];
             if (sectorHierarchy[1] !== sector)
                 continue;
@@ -1379,12 +1377,30 @@ class DrapoDocument {
         }
     }
 
-    public IsFirstChild(elj: JQuery): boolean {
-        return (elj.index() === 0);
+    public IsFirstChild(el: HTMLElement): boolean {
+        return (this.GetIndex(el) === 0);
     }
 
-    public IsLastChild(elj: JQuery): boolean {
-        return (elj.next().length === 0);
+    public IsLastChild(el: HTMLElement): boolean {
+        return (this.GetNextAll(el).length === 0);
+    }
+
+    public GetIndex(el: HTMLElement): number {
+        const elParent: HTMLElement = el.parentElement;
+        if (elParent == null)
+            return (-1);
+        for (let i: number = 0; i < elParent.children.length; i++)
+            if (el === elParent.children[i])
+                return (i);
+        return (-1);
+    }
+
+    public GetNextAll(el: HTMLElement): HTMLElement[] {
+        const elj: JQuery = $(el).nextAll();
+        const els: HTMLElement[] = [];
+        for (let i: number = 0; i < elj.length; i++)
+            els.push(elj[i]);
+        return (els);
     }
 
     public async ReceiveMessage(message: DrapoMessage): Promise<void> {
@@ -1418,7 +1434,7 @@ class DrapoDocument {
             if (value !== null)
                 return (value);
             return (this.GetClipboardValueExecCommand());
-        } catch{
+        } catch {
             return ('');
         }
     }
@@ -1462,7 +1478,7 @@ class DrapoDocument {
         try {
             document.addEventListener('copy', listener);
             document.execCommand('copy');
-        } catch{
+        } catch {
             return (false);
         } finally {
             document.removeEventListener('copy', listener);
@@ -1476,7 +1492,7 @@ class DrapoDocument {
         el.value = value;
         document.body.appendChild(el);
         el.select();
-        const result : boolean = document.execCommand('copy');
+        const result: boolean = document.execCommand('copy');
         document.body.removeChild(el);
         return (result);
     }
