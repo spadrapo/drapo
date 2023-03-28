@@ -256,11 +256,11 @@ class DrapoDocument {
         //Control Flow
         await this.Application.ControlFlow.ResolveControlFlowSector(elSectorContent);
         //Components
-        await this.Application.ComponentHandler.ResolveComponents(eljSectorContent);
+        await this.Application.ComponentHandler.ResolveComponents(elSectorContent);
         //Storage After
         await this.Application.Storage.ResolveData(true, elSectorContent);
         //Mustaches
-        await this.Application.Barber.ResolveMustaches(eljSectorContent);
+        await this.Application.Barber.ResolveMustaches(elSectorContent);
         //Children
         await this.ResolveChildren(eljSectorContent);
         //Delay
@@ -309,7 +309,6 @@ class DrapoDocument {
     }
 
     public async ResolveWindow(elWindow: HTMLElement): Promise<void> {
-        const window: JQuery = $(elWindow);
         const sector: string = this.Application.Document.GetSector(elWindow);
         //Start Update
         this.Application.Document.StartUpdate(sector);
@@ -318,11 +317,11 @@ class DrapoDocument {
         //Control Flow
         await this.Application.ControlFlow.ResolveControlFlowSector(elWindow, false);
         //Components
-        await this.Application.ComponentHandler.ResolveComponents(window);
+        await this.Application.ComponentHandler.ResolveComponents(elWindow);
         //Storage After
         await this.Application.Storage.ResolveData(true, elWindow);
         //Mustaches
-        await this.Application.Barber.ResolveMustaches(window);
+        await this.Application.Barber.ResolveMustaches(elWindow);
     }
 
     public async ResolveComponentDynamicSector(el: HTMLElement): Promise<void> {
@@ -356,7 +355,7 @@ class DrapoDocument {
         //Storage After
         await this.Application.Storage.ResolveData(true, el);
         //Mustaches
-        await this.Application.Barber.ResolveMustaches(elj, null, false);
+        await this.Application.Barber.ResolveMustaches(el, null, false);
     }
 
     public async RemoveElement(el: HTMLElement): Promise<void> {
@@ -545,10 +544,10 @@ class DrapoDocument {
         return (attributes);
     }
 
-    public SetElementAttributes(elj: JQuery, attributes: [string, string][]): void {
+    public SetElementAttributes(el: HTMLElement, attributes: [string, string][]): void {
         for (let i: number = 0; i < attributes.length; i++) {
             const attribute: [string, string] = attributes[i];
-            elj.attr(attribute[0], attribute[1]);
+            el.setAttribute(attribute[0], attribute[1]);
         }
     }
 
@@ -906,6 +905,22 @@ class DrapoDocument {
 
     public SetValue(el: HTMLElement, value: string): void {
         $(el).val(value);
+    }
+
+    public GetText(el: HTMLElement): string {
+        return ($(el).text());
+    }
+
+    public SetText(el: HTMLElement, value: string): void {
+        $(el).text(value);
+    }
+
+    public GetHTML(el: HTMLElement): string {
+        return ($(el).html());
+    }
+
+    public SetHTML(el: HTMLElement, value: string): void {
+        $(el).html(value);
     }
 
     public GetProperty(el: HTMLElement, propertyName: string): string {

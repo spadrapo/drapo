@@ -70,7 +70,7 @@
         return (this.GetElementViewport(el) != null);
     }
 
-    public CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: JQuery) {
+    public CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: HTMLElement) : HTMLElement {
         if (viewport === null)
             return (lastInserted);
         const elBallonBeforeInDOM: HTMLElement = this.GetBallonBefore(lastInserted);
@@ -81,16 +81,16 @@
             this.FillBallon(elBallonBefore, viewport.HeightBallonBefore);
             viewport.ElementBallonBefore = elBallonBefore;
             lastInserted.after(elBallonBefore);
-            return ($(elBallonBefore));
+            return (elBallonBefore);
         } else {
             if (viewport.IsActive)
-                return ($(elBallonBeforeInDOM));
+                return (elBallonBeforeInDOM);
             this.FillBallon(elBallonBeforeInDOM, viewport.HeightBallonBefore);
             viewport.ElementBallonBefore = elBallonBeforeInDOM;
             const elParent: HTMLElement = elBallonBeforeInDOM.parentElement;
             while (elParent.children.length > 2)
                 elParent.lastElementChild.remove();
-            return ($(elBallonBeforeInDOM));
+            return (elBallonBeforeInDOM);
         }
     }
 
@@ -117,8 +117,7 @@
         }
     }
 
-    private GetBallonBefore(eljTemplate: JQuery): HTMLElement {
-        const elTemplate: HTMLElement = eljTemplate[0];
+    private GetBallonBefore(elTemplate: HTMLElement): HTMLElement {
         const elTemplateNext: HTMLElement = elTemplate.nextElementSibling as HTMLElement;
         if (elTemplateNext == null)
             return (null);

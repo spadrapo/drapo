@@ -76,17 +76,17 @@ var DrapoViewportHandler = (function () {
             this.FillBallon(elBallonBefore, viewport.HeightBallonBefore);
             viewport.ElementBallonBefore = elBallonBefore;
             lastInserted.after(elBallonBefore);
-            return ($(elBallonBefore));
+            return (elBallonBefore);
         }
         else {
             if (viewport.IsActive)
-                return ($(elBallonBeforeInDOM));
+                return (elBallonBeforeInDOM);
             this.FillBallon(elBallonBeforeInDOM, viewport.HeightBallonBefore);
             viewport.ElementBallonBefore = elBallonBeforeInDOM;
             var elParent = elBallonBeforeInDOM.parentElement;
             while (elParent.children.length > 2)
                 elParent.lastElementChild.remove();
-            return ($(elBallonBeforeInDOM));
+            return (elBallonBeforeInDOM);
         }
     };
     DrapoViewportHandler.prototype.FillBallon = function (elBallon, height, isFull) {
@@ -114,8 +114,7 @@ var DrapoViewportHandler = (function () {
             }
         }
     };
-    DrapoViewportHandler.prototype.GetBallonBefore = function (eljTemplate) {
-        var elTemplate = eljTemplate[0];
+    DrapoViewportHandler.prototype.GetBallonBefore = function (elTemplate) {
         var elTemplateNext = elTemplate.nextElementSibling;
         if (elTemplateNext == null)
             return (null);

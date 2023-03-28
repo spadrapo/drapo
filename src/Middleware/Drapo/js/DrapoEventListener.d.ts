@@ -8,5 +8,4 @@ declare class DrapoEventListener {
     set EventNamespace(value: string);
     get Function(): Function;
     set Function(value: Function);
-    constructor();
 }

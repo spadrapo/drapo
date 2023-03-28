@@ -218,12 +218,11 @@ class DrapoObserver {
             if (dataElement.parentElement === null) {
                 dataElements.splice(i, 1);
             } else if (!this.Application.SectorContainerHandler.IsElementContainerized(dataElement)) {
-                const elj: JQuery = $(dataElement);
-                const eljParent: JQuery = elj.parent();
+                const elParent: HTMLElement = dataElement.parentElement;
                 //Control Flow
                 await this.Application.ControlFlow.ResolveControlFlowForElement(dataElement, false, canUseDifference, type);
                 //Components
-                await this.Application.ComponentHandler.ResolveComponents(eljParent);
+                await this.Application.ComponentHandler.ResolveComponents(elParent);
             }
         }
     }

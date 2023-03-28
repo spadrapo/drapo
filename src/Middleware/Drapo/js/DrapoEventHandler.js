@@ -266,7 +266,7 @@ var DrapoEventHandler = (function () {
                                         eventsDetach = this_2.GetEventDetach(el, eventType);
                                         eventsDetachActivated = false;
                                         this_2.DetachEventListener(binder, eventNamespace);
-                                        this_2.AttachEventListener(binder, eventType, eventNamespace, function (event) { return __awaiter(_this, void 0, void 0, function () {
+                                        this_2.AttachEventListener(binder, eventType, eventNamespace, function (e) { return __awaiter(_this, void 0, void 0, function () {
                                             var sectorLocal, j, eventDetach, eventDetachNamespace;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
@@ -275,10 +275,10 @@ var DrapoEventHandler = (function () {
                                                             application.EventHandler.DetachEventListener(binder, eventNamespace);
                                                             return [2, (true)];
                                                         }
-                                                        if (!application.EventHandler.IsValidEventFilter(event, eventFilter))
+                                                        if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
                                                             return [2, (true)];
-                                                        sectorLocal = application.Document.GetSector(event.target);
-                                                        return [4, this.Application.Validator.IsValidationEventValid(el, sectorLocal, eventType, location_2, event, contextItem)];
+                                                        sectorLocal = application.Document.GetSector(e.target);
+                                                        return [4, this.Application.Validator.IsValidationEventValid(el, sectorLocal, eventType, location_2, e, contextItem)];
                                                     case 1:
                                                         if (!(_a.sent()))
                                                             return [2, (true)];
@@ -294,7 +294,7 @@ var DrapoEventHandler = (function () {
                                                             }
                                                         }
                                                         if (!isDelay) {
-                                                            application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, event, functionsValue);
+                                                            application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, functionsValue);
                                                         }
                                                         else {
                                                             if (delayTimeout != null)
@@ -302,7 +302,7 @@ var DrapoEventHandler = (function () {
                                                             delayTimeout = setTimeout(function () {
                                                                 clearTimeout(delayTimeout);
                                                                 delayTimeout = null;
-                                                                application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, event, functionsValue);
+                                                                application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, functionsValue);
                                                             }, debounceTimeout);
                                                         }
                                                         return [2, (propagation)];

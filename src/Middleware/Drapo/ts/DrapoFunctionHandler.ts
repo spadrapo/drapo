@@ -452,7 +452,7 @@ class DrapoFunctionHandler {
         const application: DrapoApplication = this.Application;
         let windowFunction = (frameContent as any)[externalFunction];
         if (typeof windowFunction !== 'function') {
-            const eventType: string = 'load'
+            const eventType: string = 'load';
             const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, eventType);
             const elFrame: HTMLElement = frame as HTMLElement;
             this.Application.EventHandler.AttachEventListener(elFrame, eventType, eventNamespace, () => {
@@ -502,7 +502,7 @@ class DrapoFunctionHandler {
         message.Tag = externalFunction;
         message.Data = isClone ? this.Application.Solver.Clone(data, true) : data;
         const application: DrapoApplication = this.Application;
-        const eventType: string = 'load'
+        const eventType: string = 'load';
         const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, eventType);
         const elFrame: HTMLElement = frame as HTMLElement;
         this.Application.EventHandler.AttachEventListener(elFrame, eventType, eventNamespace, () => {
@@ -1224,7 +1224,7 @@ class DrapoFunctionHandler {
     }
 
     private async ExecuteFunctionGetDate(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
-        let date: Date = new Date();
+        const date: Date = new Date();
         //Return Type
         const returnType: string = functionParsed.Parameters.length > 0 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]) : 'date';
         if (returnType.toUpperCase() == 'ISO')

@@ -175,17 +175,17 @@ class DrapoEventHandler {
             const eventsDetach: string[] = this.GetEventDetach(el, eventType);
             let eventsDetachActivated: boolean = false;
             this.DetachEventListener(binder, eventNamespace);
-            this.AttachEventListener(binder, eventType, eventNamespace, async (event: Event) => {
+            this.AttachEventListener(binder, eventType, eventNamespace, async (e: Event) => {
                 if ((isLocationBody) && (!application.Document.Contains(el))) {
                     application.EventHandler.DetachEventListener(binder, eventNamespace);
                     return (true);
                 }
-                if (!application.EventHandler.IsValidEventFilter(event, eventFilter))
+                if (!application.EventHandler.IsValidEventFilter(e, eventFilter))
                     return (true);
                 //Sector
-                const sectorLocal: string = application.Document.GetSector(event.target as HTMLElement);
+                const sectorLocal: string = application.Document.GetSector(e.target as HTMLElement);
                 //Validation
-                if (!(await this.Application.Validator.IsValidationEventValid(el, sectorLocal, eventType, location, event, contextItem)))
+                if (!(await this.Application.Validator.IsValidationEventValid(el, sectorLocal, eventType, location, e, contextItem)))
                     return (true);
                 if (eventsDetachActivated)
                     return (true);
@@ -200,7 +200,7 @@ class DrapoEventHandler {
                 }
                 if (!isDelay) {
                     // tslint:disable-next-line:no-floating-promises
-                    application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, event, functionsValue);
+                    application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, functionsValue);
                 } else {
                     if (delayTimeout != null)
                         clearTimeout(delayTimeout);
@@ -208,7 +208,7 @@ class DrapoEventHandler {
                         clearTimeout(delayTimeout);
                         delayTimeout = null;
                         // tslint:disable-next-line:no-floating-promises
-                        application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, event, functionsValue);
+                        application.EventHandler.ExecuteEvent(sectorLocal, contextItem, el, e, functionsValue);
                     }, debounceTimeout);
                 }
                 return (propagation);

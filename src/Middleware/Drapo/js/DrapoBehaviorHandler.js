@@ -465,12 +465,12 @@ var DrapoBehaviorHandler = (function () {
                 this.Application.EventHandler.AttachEventListener(el, eventTypeMousedown, eventNamespaceMousedown, function (e) {
                     var container = resizer.Container;
                     if (resizer.Preview) {
-                        application.EventHandler.AttachEventListener(container, eventTypeMousemove, eventNamespaceMouseMove, function (e) {
-                            application.BehaviorHandler.ResolveBehaviorResizeContinue(resizer, e);
+                        application.EventHandler.AttachEventListener(container, eventTypeMousemove, eventNamespaceMouseMove, function (ev) {
+                            application.BehaviorHandler.ResolveBehaviorResizeContinue(resizer, ev);
                         });
                     }
-                    application.EventHandler.AttachEventListener(container, eventTypeMouseup, eventNamespaceMouseUp, function (e) {
-                        application.BehaviorHandler.ResolveBehaviorResizeFinish(resizer, e);
+                    application.EventHandler.AttachEventListener(container, eventTypeMouseup, eventNamespaceMouseUp, function (ev) {
+                        application.BehaviorHandler.ResolveBehaviorResizeFinish(resizer, ev);
                         if (resizer.Preview)
                             application.EventHandler.DetachEventListener(container, eventNamespaceMouseMove);
                         application.EventHandler.DetachEventListener(container, eventNamespaceMouseUp);

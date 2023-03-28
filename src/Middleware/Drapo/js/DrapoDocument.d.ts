@@ -40,7 +40,7 @@ declare class DrapoDocument {
     private Wrap;
     GetElementAttributes(el: Element): [string, string][];
     GetElementAttributesFilteredPrefix(el: Element, prefix: string): [string, string][];
-    SetElementAttributes(elj: JQuery, attributes: [string, string][]): void;
+    SetElementAttributes(el: HTMLElement, attributes: [string, string][]): void;
     private ExtractHeadInnerHtml;
     private RemoveFramework;
     private ExtractBodyInnerHtml;
@@ -78,6 +78,10 @@ declare class DrapoDocument {
     Select(el: HTMLElement): void;
     GetValue(el: HTMLElement): string;
     SetValue(el: HTMLElement, value: string): void;
+    GetText(el: HTMLElement): string;
+    SetText(el: HTMLElement, value: string): void;
+    GetHTML(el: HTMLElement): string;
+    SetHTML(el: HTMLElement, value: string): void;
     GetProperty(el: HTMLElement, propertyName: string): string;
     CreateGuid(isShort?: boolean): string;
     private CreateGuidShort;

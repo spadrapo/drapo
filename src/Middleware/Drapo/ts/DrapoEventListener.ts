@@ -20,7 +20,4 @@ class DrapoEventListener {
     set Function(value: Function) {
         this._function = value;
     }
-    //Constructors
-    constructor() {
-    }
 }
