@@ -545,7 +545,7 @@ class DrapoSolver {
         if (property[property.length - 1] !== ']')
             return (null);
         const isHat: boolean = (property[1] === '^');
-        const index: number = this.Application.Parser.ParseNumber(property.substring(isHat ? 2 : 1, property.length - 1)) 
+        const index: number = this.Application.Parser.ParseNumber(property.substring(isHat ? 2 : 1, property.length - 1));
         return (((isHat) && (data.length)) ? (data.length - index) : index);
     }
 
@@ -687,7 +687,7 @@ class DrapoSolver {
         const key: string = dataPath[0];
         if ((executionContext != null) && (this.Application.Storage.IsDataKeyExecution(key))) {
             const data: any = this.GetExecutionContextPathValueStack(sector, executionContext, dataPath);
-            //Remove execution context 
+            //Remove execution context
             dataPath.splice(1, 1);
             if (this.UpdateDataPathObject(data, dataPath, value))
                 return (true);
@@ -844,7 +844,7 @@ class DrapoSolver {
 
     private GetExecutionContextPathValueSolved(sector: string, executionContext: DrapoExecutionContext<any>, dataPath: string[]): string {
         const data: any = this.GetExecutionContextPathValueStack(sector, executionContext, dataPath);
-        //Remove execution context 
+        //Remove execution context
         dataPath.splice(1, 1);
         return (this.ResolveDataObjectPathObject(data, dataPath));
     }

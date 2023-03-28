@@ -99,16 +99,16 @@ declare class DrapoBarber {
     HasContentMustacheNodesContext(content: string): boolean;
     HasContentMustacheAttributeContext(content: string): boolean;
     private HasContentMustacheAttributeContextMustache;
-    ResolveMustaches(jQueryStart?: JQuery, sector?: string, stopAtSectors?: boolean): Promise<void>;
+    ResolveMustaches(el?: HTMLElement, sector?: string, stopAtSectors?: boolean): Promise<void>;
     private ResolveMustachesInternal;
     private CanRender;
     ResolveFilter(el: HTMLElement, sector: string, canBind: boolean, dataKeyFilter: string, dataFieldFilter: string): Promise<void>;
     ResolveElementDelayed(el: HTMLElement, sector: string, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
     ResolveMustacheElementLeaf(el: HTMLElement, canUseModel?: boolean, canSubscribeDelay?: boolean, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
     ResolveModel(el: HTMLElement, canBind?: boolean, canSubscribeDelay?: boolean, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
-    ResolveControlFlowMustacheAttributes(context: DrapoContext, element: HTMLElement, elementJQuery: JQuery, sector: string): Promise<void>;
-    ResolveControlFlowMustacheNodes(context: DrapoContext, element: HTMLElement, elementJQuery: JQuery, sector: string): Promise<void>;
-    ResolveControlFlowMustacheAttribute(context: DrapoContext, attribute: string, element: HTMLElement, elementJQuery: JQuery, sector: string): Promise<void>;
+    ResolveControlFlowMustacheAttributes(context: DrapoContext, element: HTMLElement, sector: string): Promise<void>;
+    ResolveControlFlowMustacheNodes(context: DrapoContext, element: HTMLElement, sector: string): Promise<void>;
+    ResolveControlFlowMustacheAttribute(context: DrapoContext, attribute: string, el: HTMLElement, sector: string): Promise<void>;
     ResolveControlFlowMustacheStringFunction(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, executionContext: DrapoExecutionContext<any>, expression: string, element: HTMLElement, canBind?: boolean, type?: DrapoStorageLinkType): Promise<string>;
     ResolveControlFlowMustacheString(context: DrapoContext, renderContext: DrapoRenderContext, executionContext: DrapoExecutionContext<any>, expression: string, element: HTMLElement, sector: string, canBind?: boolean, type?: DrapoStorageLinkType, isForIterator?: boolean, elementForTemplate?: HTMLElement): Promise<string>;
     ResolveMustacheElementVisibility(el: HTMLElement, canBind?: boolean): Promise<void>;
@@ -237,7 +237,7 @@ declare class DrapoComponentHandler {
     private _dataInstances;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    ResolveComponents(jQueryStart?: JQuery): Promise<void>;
+    ResolveComponents(el?: HTMLElement): Promise<void>;
     ResolveComponentsElement(el: HTMLElement, context: DrapoContext, checkSectorReady: boolean, handleDynamicSectors: boolean): Promise<void>;
     private ResolveComponentElement;
     private GetSectorContext;
@@ -590,7 +590,7 @@ declare class DrapoDocument {
     private Wrap;
     GetElementAttributes(el: Element): [string, string][];
     GetElementAttributesFilteredPrefix(el: Element, prefix: string): [string, string][];
-    SetElementAttributes(elj: JQuery, attributes: [string, string][]): void;
+    SetElementAttributes(el: HTMLElement, attributes: [string, string][]): void;
     private ExtractHeadInnerHtml;
     private RemoveFramework;
     private ExtractBodyInnerHtml;
@@ -628,6 +628,10 @@ declare class DrapoDocument {
     Select(el: HTMLElement): void;
     GetValue(el: HTMLElement): string;
     SetValue(el: HTMLElement, value: string): void;
+    GetText(el: HTMLElement): string;
+    SetText(el: HTMLElement, value: string): void;
+    GetHTML(el: HTMLElement): string;
+    SetHTML(el: HTMLElement, value: string): void;
     GetProperty(el: HTMLElement, propertyName: string): string;
     CreateGuid(isShort?: boolean): string;
     private CreateGuidShort;
@@ -772,7 +776,6 @@ declare class DrapoEventListener {
     set EventNamespace(value: string);
     get Function(): Function;
     set Function(value: Function);
-    constructor();
 }
 
 declare class DrapoExceptionHandler {
@@ -2388,7 +2391,7 @@ declare class DrapoViewportHandler {
     CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[]): DrapoViewport;
     GetElementViewport(el: HTMLElement): DrapoViewport;
     HasElementViewport(el: HTMLElement): boolean;
-    CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: JQuery): JQuery;
+    CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: HTMLElement): HTMLElement;
     private FillBallon;
     private GetBallonBefore;
     private GetElementItemHeight;

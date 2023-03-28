@@ -284,7 +284,7 @@ class DrapoControlFlow {
         if (dForRender != null)
             forReferenceTemplate.removeAttribute('d-for-render');
         //Viewport Ballon Before
-        lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
+        lastInserted = $(this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted[0]));
         //Document Fragment
         let canFragmentElements: boolean = viewport == null;
         const fragment: DocumentFragment = document.createDocumentFragment();
@@ -393,7 +393,7 @@ class DrapoControlFlow {
         const elementJQuery: JQuery = $(element);
         //Mustache Nodes
         if (context.CheckMustacheNodes)
-            await this.Application.Barber.ResolveControlFlowMustacheNodes(context, element, elementJQuery, sector);
+            await this.Application.Barber.ResolveControlFlowMustacheNodes(context, element, sector);
         //Children
         const children: Array<HTMLElement> = [].slice.call(element.children);
         const hasChildren: boolean = children.length > 0;
@@ -426,7 +426,7 @@ class DrapoControlFlow {
                     }
                     //Mustache Attributes
                     if (context.CheckMustacheAttributes)
-                        await this.Application.Barber.ResolveControlFlowMustacheAttributes(context, child, childJQuery, sector);
+                        await this.Application.Barber.ResolveControlFlowMustacheAttributes(context, child, sector);
                     //Children
                     await this.ResolveControlFlowForIterationRender(sector, context, child, renderContext, false, canResolveComponents);
                     //ID
@@ -483,7 +483,7 @@ class DrapoControlFlow {
                 await this.Application.Validator.RegisterValidation(element, sector, context);
             //Mustache Attributes
             if ((!hasChildren) && (context.CheckMustacheAttributes))
-                await this.Application.Barber.ResolveControlFlowMustacheAttributes(context, element, elementJQuery, sector);
+                await this.Application.Barber.ResolveControlFlowMustacheAttributes(context, element, sector);
         }
     }
 

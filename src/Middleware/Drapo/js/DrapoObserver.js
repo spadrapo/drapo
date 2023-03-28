@@ -255,7 +255,7 @@ var DrapoObserver = (function () {
         if (canUseDifference === void 0) { canUseDifference = true; }
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         return __awaiter(this, void 0, void 0, function () {
-            var index, dataElements, i, dataElement, elj, eljParent;
+            var index, dataElements, i, dataElement, elParent;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -273,12 +273,11 @@ var DrapoObserver = (function () {
                         return [3, 5];
                     case 2:
                         if (!!this.Application.SectorContainerHandler.IsElementContainerized(dataElement)) return [3, 5];
-                        elj = $(dataElement);
-                        eljParent = elj.parent();
+                        elParent = dataElement.parentElement;
                         return [4, this.Application.ControlFlow.ResolveControlFlowForElement(dataElement, false, canUseDifference, type)];
                     case 3:
                         _a.sent();
-                        return [4, this.Application.ComponentHandler.ResolveComponents(eljParent)];
+                        return [4, this.Application.ComponentHandler.ResolveComponents(elParent)];
                     case 4:
                         _a.sent();
                         _a.label = 5;

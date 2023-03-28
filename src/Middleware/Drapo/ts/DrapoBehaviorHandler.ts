@@ -299,14 +299,14 @@ class DrapoBehaviorHandler {
         this.Application.EventHandler.AttachEventListener(el, eventTypeMousedown, eventNamespaceMousedown, (e: any) => {
             const container: HTMLElement = resizer.Container;
             if (resizer.Preview) {
-                application.EventHandler.AttachEventListener(container, eventTypeMousemove, eventNamespaceMouseMove, (e: any) => {
+                application.EventHandler.AttachEventListener(container, eventTypeMousemove, eventNamespaceMouseMove, (ev: any) => {
                     // tslint:disable-next-line:no-floating-promises
-                    application.BehaviorHandler.ResolveBehaviorResizeContinue(resizer, e);
+                    application.BehaviorHandler.ResolveBehaviorResizeContinue(resizer, ev);
                 });
             }
-            application.EventHandler.AttachEventListener(container, eventTypeMouseup, eventNamespaceMouseUp,(e: any) => {
+            application.EventHandler.AttachEventListener(container, eventTypeMouseup, eventNamespaceMouseUp,(ev: any) => {
                 // tslint:disable-next-line:no-floating-promises
-                application.BehaviorHandler.ResolveBehaviorResizeFinish(resizer, e);
+                application.BehaviorHandler.ResolveBehaviorResizeFinish(resizer, ev);
                 if (resizer.Preview)
                     application.EventHandler.DetachEventListener(container, eventNamespaceMouseMove);
                 application.EventHandler.DetachEventListener(container, eventNamespaceMouseUp);

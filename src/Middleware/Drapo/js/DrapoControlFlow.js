@@ -353,7 +353,7 @@ var DrapoControlFlow = (function () {
                         isViewportActive = ((viewport != null) && (viewport.IsActive));
                         if (dForRender != null)
                             forReferenceTemplate.removeAttribute('d-for-render');
-                        lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
+                        lastInserted = $(this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted[0]));
                         canFragmentElements = viewport == null;
                         fragment = document.createDocumentFragment();
                         canUseTemplate = isContextRootFullExclusive && (type == DrapoStorageLinkType.Render) && (datas.length > 3);
@@ -529,7 +529,7 @@ var DrapoControlFlow = (function () {
                     case 0:
                         elementJQuery = $(element);
                         if (!context.CheckMustacheNodes) return [3, 2];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheNodes(context, element, elementJQuery, sector)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheNodes(context, element, sector)];
                     case 1:
                         _b.sent();
                         _b.label = 2;
@@ -576,7 +576,7 @@ var DrapoControlFlow = (function () {
                             return [3, 28];
                         }
                         if (!context.CheckMustacheAttributes) return [3, 11];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheAttributes(context, child, childJQuery, sector)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheAttributes(context, child, sector)];
                     case 10:
                         _b.sent();
                         _b.label = 11;
@@ -684,7 +684,7 @@ var DrapoControlFlow = (function () {
                         _b.label = 45;
                     case 45:
                         if (!((!hasChildren) && (context.CheckMustacheAttributes))) return [3, 47];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheAttributes(context, element, elementJQuery, sector)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheAttributes(context, element, sector)];
                     case 46:
                         _b.sent();
                         _b.label = 47;

@@ -16,11 +16,10 @@ class DrapoComponentHandler {
         this._application = application;
     }
 
-    public async ResolveComponents(jQueryStart: JQuery = null): Promise<void> {
-        if (jQueryStart == null)
-            jQueryStart = $(document.documentElement);
-        for (let i = 0; i < jQueryStart.length; i++)
-            await this.ResolveComponentsElement(jQueryStart[i], null, true, true);
+    public async ResolveComponents(el: HTMLElement = null): Promise<void> {
+        if (el == null)
+            el = document.documentElement;
+        await this.ResolveComponentsElement(el, null, true, true);
     }
 
     public async ResolveComponentsElement(el: HTMLElement, context: DrapoContext, checkSectorReady: boolean, handleDynamicSectors: boolean): Promise<void> {
@@ -72,11 +71,11 @@ class DrapoComponentHandler {
             return;
         }
         //New Element
-        const eljNew: JQuery = $(html);
+        const eljNew: HTMLElement = this.Application.Document.CreateHTMLElement(html);
         //Extract Attributes
         const attributes: [string, string][] = this.Application.Document.GetElementAttributes(el);
         //Extract Content
-        const content: string = $(el).html();
+        const content: string = this.Application.Document.GetHTML(el);
         //Initialize Context
         if (context != null)
             this.Application.ControlFlow.InitializeContext(context, content);
@@ -86,11 +85,11 @@ class DrapoComponentHandler {
         this.Application.Document.ReplaceElement(el, eljNew);
         //Deploy Attributes
         this.Application.Document.SetElementAttributes(eljNew, attributes);
-        const elNew: HTMLElement = eljNew[0];
+        const elNew: HTMLElement = eljNew;
         //Deploy Content
         const elContent: HTMLElement = ((content != null) && (content != '')) ? this.GetElementContent(elNew) : null;
         if (elContent !== null)
-            $(elContent).html(content);
+            this.Application.Document.SetHTML(elContent, content);
         //Sector Component
         let isSectorContext: boolean = false;
         let elSector: string = elNew.getAttribute('d-sector');
@@ -213,13 +212,13 @@ class DrapoComponentHandler {
         }
         //Content
         const content: string = this.Application.Parser.ParseDocumentContent(html);
-        const eljNew: JQuery = $(content);
-        if (eljNew.length === 0) {
+        const elNew: HTMLElement = this.Application.Document.CreateHTMLElement(content);
+        if (elNew == null) {
             await this.Application.ExceptionHandler.HandleError('There is no html container for the contenturl: {0}', contentUrl);
             return;
         }
         //Swap Content
-        el.innerHTML = eljNew[0].innerHTML;
+        el.innerHTML = elNew.innerHTML;
         //Resolve Component Children
         await this.Application.Document.ResolveComponentUpdate(el, context);
     }

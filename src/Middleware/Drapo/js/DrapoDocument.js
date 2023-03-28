@@ -410,13 +410,13 @@ var DrapoDocument = (function () {
                         return [4, this.Application.ControlFlow.ResolveControlFlowSector(elSectorContent)];
                     case 16:
                         _a.sent();
-                        return [4, this.Application.ComponentHandler.ResolveComponents(eljSectorContent)];
+                        return [4, this.Application.ComponentHandler.ResolveComponents(elSectorContent)];
                     case 17:
                         _a.sent();
                         return [4, this.Application.Storage.ResolveData(true, elSectorContent)];
                     case 18:
                         _a.sent();
-                        return [4, this.Application.Barber.ResolveMustaches(eljSectorContent)];
+                        return [4, this.Application.Barber.ResolveMustaches(elSectorContent)];
                     case 19:
                         _a.sent();
                         return [4, this.ResolveChildren(eljSectorContent)];
@@ -481,11 +481,10 @@ var DrapoDocument = (function () {
     };
     DrapoDocument.prototype.ResolveWindow = function (elWindow) {
         return __awaiter(this, void 0, void 0, function () {
-            var window, sector;
+            var sector;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        window = $(elWindow);
                         sector = this.Application.Document.GetSector(elWindow);
                         this.Application.Document.StartUpdate(sector);
                         return [4, this.Application.Storage.ResolveData(false, elWindow)];
@@ -494,13 +493,13 @@ var DrapoDocument = (function () {
                         return [4, this.Application.ControlFlow.ResolveControlFlowSector(elWindow, false)];
                     case 2:
                         _a.sent();
-                        return [4, this.Application.ComponentHandler.ResolveComponents(window)];
+                        return [4, this.Application.ComponentHandler.ResolveComponents(elWindow)];
                     case 3:
                         _a.sent();
                         return [4, this.Application.Storage.ResolveData(true, elWindow)];
                     case 4:
                         _a.sent();
-                        return [4, this.Application.Barber.ResolveMustaches(window)];
+                        return [4, this.Application.Barber.ResolveMustaches(elWindow)];
                     case 5:
                         _a.sent();
                         return [2];
@@ -558,7 +557,7 @@ var DrapoDocument = (function () {
                         return [4, this.Application.Storage.ResolveData(true, el)];
                     case 4:
                         _a.sent();
-                        return [4, this.Application.Barber.ResolveMustaches(elj, null, false)];
+                        return [4, this.Application.Barber.ResolveMustaches(el, null, false)];
                     case 5:
                         _a.sent();
                         return [2];
@@ -827,10 +826,10 @@ var DrapoDocument = (function () {
         }
         return (attributes);
     };
-    DrapoDocument.prototype.SetElementAttributes = function (elj, attributes) {
+    DrapoDocument.prototype.SetElementAttributes = function (el, attributes) {
         for (var i = 0; i < attributes.length; i++) {
             var attribute = attributes[i];
-            elj.attr(attribute[0], attribute[1]);
+            el.setAttribute(attribute[0], attribute[1]);
         }
     };
     DrapoDocument.prototype.ExtractHeadInnerHtml = function (data) {
@@ -1194,6 +1193,18 @@ var DrapoDocument = (function () {
     };
     DrapoDocument.prototype.SetValue = function (el, value) {
         $(el).val(value);
+    };
+    DrapoDocument.prototype.GetText = function (el) {
+        return ($(el).text());
+    };
+    DrapoDocument.prototype.SetText = function (el, value) {
+        $(el).text(value);
+    };
+    DrapoDocument.prototype.GetHTML = function (el) {
+        return ($(el).html());
+    };
+    DrapoDocument.prototype.SetHTML = function (el, value) {
+        $(el).html(value);
     };
     DrapoDocument.prototype.GetProperty = function (el, propertyName) {
         return ($(el).prop(propertyName));
