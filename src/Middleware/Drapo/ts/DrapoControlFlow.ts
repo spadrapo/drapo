@@ -114,15 +114,14 @@ class DrapoControlFlow {
     }
 
     private async ResolveControlFlowForInternal(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, elFor: HTMLElement, isIncremental: boolean, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render, canResolveComponents: boolean = true): Promise<boolean> {
-        let forJQuery: JQuery = $(elFor);
-        let forText: string = forJQuery.attr('d-for');
+        let forText: string = elFor.getAttribute('d-for');
         let ifText: string = null;
         let forIfText: string = null;
         let wasWrapped: boolean = false;
         let viewportBeforeScrollPosition: number = 0;
         if (forText == null) {
             //Wrapped d-for
-            const wrapper: HTMLElement = this.Application.Document.GetWrapper(forJQuery);
+            const wrapper: HTMLElement = this.Application.Document.GetWrapper(elFor);
             forText = wrapper != null ? wrapper.getAttribute('d-for') : null;
             if (forText == null)
                 return (false);
@@ -139,10 +138,7 @@ class DrapoControlFlow {
         const dataKeyIteratorRange = parsedFor[2];
         //Base Element will be the template. Hide him and remove all elements created after him
         const forElementRecursive: HTMLElement = isIncremental ? null : context.GetElementTemplate(key);
-        const jQueryForReference = forElementRecursive != null ? $(forElementRecursive) : forJQuery;
-        if (jQueryForReference.length == 0)
-            return (false);
-        const elementForTemplate: HTMLElement = jQueryForReference[0];
+        const elementForTemplate: HTMLElement = forElementRecursive != null ? forElementRecursive : elFor;
         //If
         if (ifText == null)
             ifText = elementForTemplate.getAttribute('d-if');
@@ -153,8 +149,8 @@ class DrapoControlFlow {
         let conditionalForIfResult: boolean = true;
         const isContextRoot: boolean = context.IsEmpty;
         //Anchor
-        const anchor: JQuery = (isContextRoot) ? this.Application.Document.Hide(elFor) : forJQuery;
-        const content: string = isContextRoot ? forJQuery[0].outerHTML : null;
+        const elAnchor: HTMLElement = (isContextRoot) ? this.Application.Document.Hide(elFor) : elFor;
+        const content: string = isContextRoot ? elFor.outerHTML : null;
         if (isContextRoot)
             this.InitializeContext(context, content);
         //For render
@@ -173,21 +169,21 @@ class DrapoControlFlow {
             //Backup scrollPosition
             viewportBeforeScrollPosition = viewportBefore.ElementScroll.scrollTop;
             this.Application.ViewportHandler.DestroyViewportControlFlow(viewportBefore);
-            const itemsViewport: HTMLElement[] = this.CreateList(anchor.nextAll());
+            const itemsViewport: HTMLElement[] = this.Application.Document.GetNextAll(elAnchor);
             this.RemoveList(itemsViewport);
         }
         //Difference
         let isDifference: boolean = ((canUseDifference) && ((!isViewport) || (hasViewPortBefore)) && (!isIncremental) && (!hasIfText));
-        const isLastChild: boolean = this.Application.Document.IsLastChild(anchor);
+        const isLastChild: boolean = this.Application.Document.IsLastChild(elAnchor);
         if ((isDifference) && (isContextRoot) && (isLastChild))
             isDifference = false;
         const isContextRootFull: boolean = ((isContextRoot) && (!isDifference));
-        const isFirstChild: boolean = this.Application.Document.IsFirstChild(anchor);
+        const isFirstChild: boolean = this.Application.Document.IsFirstChild(elAnchor);
         const isContextRootFullExclusive: boolean = ((isContextRootFull) && (isFirstChild) && (!wasWrapped));
-        const forJQueryParent: JQuery = anchor.parent();
+        const elForParent: HTMLElement = elAnchor.parentElement;
         if (hasForIfText)
             conditionalForIfResult = await this.Application.Solver.ResolveConditional(forIfText, null, sector, context, renderContext);
-        const items: HTMLElement[] = isContextRootFullExclusive ? null : this.CreateList(anchor.nextAll());
+        const items: HTMLElement[] = isContextRootFullExclusive ? null : this.Application.Document.GetNextAll(elAnchor);
         let dataItem: DrapoStorageItem = null;
         let datas: any[] = null;
         const range: DrapoRange = this.GetIteratorRange(dataKeyIteratorRange);
@@ -233,13 +229,13 @@ class DrapoControlFlow {
         //Apply Range
         if (range !== null)
             datas = this.ApplyRange(datas, range);
-        let lastInserted: JQuery = anchor;
+        let lastInserted: HTMLElement = elAnchor;
         let start: number = 0;
         if (isIncremental) {
-            const nextElements: JQuery = anchor.nextAll();
-            start = anchor.index() + nextElements.length;
+            const nextElements: HTMLElement[] = this.Application.Document.GetNextAll(elAnchor);
+            start = this.Application.Document.GetIndex(elAnchor) + nextElements.length;
             if (nextElements.length > 0)
-                lastInserted = $(nextElements[nextElements.length - 1]);
+                lastInserted = nextElements[nextElements.length - 1];
         }
         if ((!isDifference) && (type == DrapoStorageLinkType.RenderClass))
             type = DrapoStorageLinkType.Render;
@@ -258,14 +254,14 @@ class DrapoControlFlow {
             if (isContextRootFullExclusive) {
                 this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
                 if (!isLastChild)
-                    forJQueryParent.html(content);
-                const template: HTMLElement = forJQueryParent.children()[0];
+                    this.Application.Document.SetHTML(elForParent,content);
+                const template: HTMLElement = elForParent.children[0] as HTMLElement;
                 this.Application.Observer.SubscribeFor(template, dataKey);
             }
             return (false);
         }
         this.Application.Observer.IsEnabledNotifyIncremental = false;
-        let forReferenceTemplate: HTMLElement = jQueryForReference.clone()[0];
+        let forReferenceTemplate: HTMLElement = this.Application.Document.Clone(elementForTemplate);
         if ((isContextRoot) || (context.IsInsideRecursion))
             forReferenceTemplate = this.Application.Document.Show(forReferenceTemplate);
         forReferenceTemplate.removeAttribute('d-for');
@@ -284,7 +280,7 @@ class DrapoControlFlow {
         if (dForRender != null)
             forReferenceTemplate.removeAttribute('d-for-render');
         //Viewport Ballon Before
-        lastInserted = $(this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted[0]));
+        lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
         //Document Fragment
         let canFragmentElements: boolean = viewport == null;
         const fragment: DocumentFragment = document.createDocumentFragment();
@@ -329,14 +325,14 @@ class DrapoControlFlow {
                         this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template, isHTML);
                     if (hashValueCurrent !== null)
                         oldNode.setAttribute('d-hash', hashValueCurrent);
-                    lastInserted = $(oldNode);
+                    lastInserted = oldNode;
                 } else if (canFragmentElements) {
                     if (hashValueCurrent !== null)
                         template.setAttribute('d-hash', hashValueCurrent);
                     fragment.appendChild(template);
                 } else {
-                    lastInserted.after($(template));
-                    lastInserted = $(template);
+                    lastInserted.after(template);
+                    lastInserted = template;
                     if (hashValueCurrent !== null)
                         template.setAttribute('d-hash', hashValueCurrent);
                     if (!this.Application.ViewportHandler.HasHeightChanged(viewport)) {
@@ -355,26 +351,26 @@ class DrapoControlFlow {
         this.Application.ViewportHandler.AppendViewportControlFlowBallonAfter(viewport, fragment);
         if ((viewport == null) && (isContextRootFullExclusive) && (!isIncremental)) {
             this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
-            if (forJQueryParent.children().length !== 1)
-                forJQueryParent.html(content);
-            const template: HTMLElement = forJQueryParent.children()[0];
+            if (elForParent.children.length !== 1)
+                this.Application.Document.SetHTML(elForParent, content);
+            const template: HTMLElement = elForParent.children[0] as HTMLElement;
             this.Application.Observer.SubscribeFor(template, dataKey);
-            forJQueryParent.append(fragment);
-            forJQuery = $(template);
+            elForParent.append(fragment);
+            elFor = template;
         } else {
             if (fragment.childNodes.length > 0)
                 lastInserted.after(fragment);
         }
         //Viewport Activate
-        this.Application.ViewportHandler.ActivateViewportControlFlow(viewport, lastInserted[0]);
+        this.Application.ViewportHandler.ActivateViewportControlFlow(viewport, lastInserted);
         //Enable Incremental Notify
         this.Application.Observer.IsEnabledNotifyIncremental = true;
         //Inside recursion we can remove template.
         if ((context.IsInsideRecursion) && (!context.IsElementTemplateRoot(key)))
-            jQueryForReference.remove();
+            await this.Application.Document.RemoveElement(elementForTemplate, false);
         //Subscribe
         if ((dataItem != null) && (dataItem.IsIncremental))
-            await this.Application.Binder.BindIncremental(forJQuery[0], dataKeyIterator, sector, isIncremental);
+            await this.Application.Binder.BindIncremental(elFor, dataKeyIterator, sector, isIncremental);
         //Garbage Collector
         if (isContextRoot) {
             //Unload Components Detached
@@ -390,7 +386,6 @@ class DrapoControlFlow {
     }
 
     private async ResolveControlFlowForIterationRender(sector: string, context: DrapoContext, element: HTMLElement, renderContext: DrapoRenderContext, isStart: boolean, canResolveComponents: boolean): Promise<void> {
-        const elementJQuery: JQuery = $(element);
         //Mustache Nodes
         if (context.CheckMustacheNodes)
             await this.Application.Barber.ResolveControlFlowMustacheNodes(context, element, sector);
@@ -400,7 +395,6 @@ class DrapoControlFlow {
         if (hasChildren) {
             for (let i = 0; i < children.length; i++) {
                 const child: HTMLElement = children[i];
-                const childJQuery: JQuery = $(child);
                 const forText = child.getAttribute('d-for');
                 if (forText != null) {
                     //Nested or Recursive
@@ -413,13 +407,13 @@ class DrapoControlFlow {
                         context.Up();
                     }
                     //Clean up the dfor Nested or Recursive
-                    childJQuery.remove();
+                    await this.Application.Document.RemoveElement(child);
                     children.splice(i, 1);
                     i--;
                 } else {
                     //Visibility
-                    if (!await this.IsControlFlowForIterationVisible(sector, context, child, childJQuery, renderContext)) {
-                        childJQuery.remove();
+                    if (!await this.IsControlFlowForIterationVisible(sector, context, child, renderContext)) {
+                        await this.Application.Document.RemoveElement(child);
                         children.splice(i, 1);
                         i--;
                         continue;
@@ -503,7 +497,7 @@ class DrapoControlFlow {
         await this.Application.ClassHandler.ResolveClassContext(context, renderContext, element, sector, true, DrapoStorageLinkType.RenderClass);
     }
 
-    public async IsControlFlowForIterationVisible(sector: string, context: DrapoContext, el: Element, elj: JQuery, renderContext: DrapoRenderContext): Promise<boolean> {
+    public async IsControlFlowForIterationVisible(sector: string, context: DrapoContext, el: Element, renderContext: DrapoRenderContext): Promise<boolean> {
         const ifText: string = el.getAttribute('d-if');
         if (ifText == null)
             return (true);
@@ -513,13 +507,6 @@ class DrapoControlFlow {
         if (value)
             el.removeAttribute('d-if');
         return (value);
-    }
-
-    private CreateList(elj: JQuery): HTMLElement[] {
-        const els: HTMLElement[] = [];
-        for (let i: number = 0; i < elj.length; i++)
-            els.push(elj[i]);
-        return (els);
     }
 
     private RemoveList(els: HTMLElement[]): void {
@@ -574,24 +561,23 @@ class DrapoControlFlow {
     }
 
     private async GetTemplateVariables(sector: string, context: DrapoContext, dataKey: string, key: string, template: HTMLElement): Promise<string[][]> {
-        const templateJQuery: JQuery = $(template);
         //At least 2 for creating a template
-        const forJQuery = templateJQuery.find('[d-for]');
-        if (forJQuery.length < 1)
+        const elsFor: HTMLElement[] = this.Application.Searcher.FindByAttributeFromParent('d-for', template);
+        if (elsFor.length < 1)
             return (null);
-        const dataKeys: string[] = await this.GetControlFlowExpressionsDataKey(sector, forJQuery);
-        if ((dataKeys === null) || (dataKeys.length < 1))
+        const dataKeys: string[] = await this.GetControlFlowExpressionsDataKey(sector, elsFor);
+        if ((dataKeys == null) || (dataKeys.length < 1))
             return (null);
-        const ifJQuery: JQuery = templateJQuery.find('[d-if]');
-        if (ifJQuery.length < 1)
+        const elIfs: HTMLElement[] = this.Application.Searcher.FindByAttributeFromParent('d-if', template);
+        if (elIfs.length < 1)
             return ([]);
-        return (this.GetControlFlowConditionsDataKey(sector, dataKey, key, ifJQuery));
+        return (this.GetControlFlowConditionsDataKey(sector, dataKey, key, elIfs));
     }
 
-    private GetControlFlowExpressionsDataKey(sector: string, forJQuery: JQuery): string[] {
+    private GetControlFlowExpressionsDataKey(sector: string, elsFor: HTMLElement[]): string[] {
         const dataKeys: string[] = [];
-        for (let i: number = 0; i < forJQuery.length; i++) {
-            const elForCurrent: HTMLElement = forJQuery[i];
+        for (let i: number = 0; i < elsFor.length; i++) {
+            const elForCurrent: HTMLElement = elsFor[i];
             const forText: string = elForCurrent.getAttribute('d-for');
             const parsedFor: string[] = this.Application.Parser.ParseFor(forText);
             if (parsedFor == null)
@@ -609,10 +595,10 @@ class DrapoControlFlow {
         return (dataKeys);
     }
 
-    private GetControlFlowConditionsDataKey(sector: string, dataKey: string, key: string, ifJQuery: JQuery): string[][] {
+    private GetControlFlowConditionsDataKey(sector: string, dataKey: string, key: string, elIfs: HTMLElement[]): string[][] {
         const dataPaths: string[][] = [];
-        for (let i: number = 0; i < ifJQuery.length; i++) {
-            const elIfCurrent: HTMLElement = ifJQuery[i];
+        for (let i: number = 0; i < elIfs.length; i++) {
+            const elIfCurrent: HTMLElement = elIfs[i];
             const ifText: string = elIfCurrent.getAttribute('d-if');
             const mustaches: string[] = this.Application.Parser.ParseMustaches(ifText);
             for (let j: number = 0; j < mustaches.length; j++) {
@@ -825,7 +811,7 @@ class DrapoControlFlow {
         //Before Insert
         const fragmentBefore: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsBeforeInsertStart, rowsBeforeInsertEnd, hashTemplate);
         if (fragmentBefore !== null) {
-            $(viewport.ElementBallonBefore).after(fragmentBefore);
+            viewport.ElementBallonBefore.after(fragmentBefore);
         }
         //After Remove
         if (rowsAfterRemove !== null) {
@@ -840,7 +826,7 @@ class DrapoControlFlow {
         const fragmentAfter: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsAfterInsertStart, rowsAfterInsertEnd, hashTemplate);
         if (fragmentAfter !== null) {
             const elementAfterPrevious: Element = viewport.ElementBallonAfter.previousElementSibling;
-            $(elementAfterPrevious).after(fragmentAfter);
+            elementAfterPrevious.after(fragmentAfter);
         }
         //Ballon
         this.Application.ViewportHandler.UpdateElementsBallon(viewport);
