@@ -254,7 +254,7 @@ class DrapoDocument {
         //Storage Before
         await this.Application.Storage.ResolveData(false, elSectorContent);
         //Control Flow
-        await this.Application.ControlFlow.ResolveControlFlowSector(eljSectorContent);
+        await this.Application.ControlFlow.ResolveControlFlowSector(elSectorContent);
         //Components
         await this.Application.ComponentHandler.ResolveComponents(eljSectorContent);
         //Storage After
@@ -308,15 +308,15 @@ class DrapoDocument {
         return (true);
     }
 
-    public async ResolveWindow(window: JQuery): Promise<void> {
-        const elWindow: HTMLElement = window.get(0);
+    public async ResolveWindow(elWindow: HTMLElement): Promise<void> {
+        const window: JQuery = $(elWindow);
         const sector: string = this.Application.Document.GetSector(elWindow);
         //Start Update
         this.Application.Document.StartUpdate(sector);
         //Storage Before
         await this.Application.Storage.ResolveData(false, elWindow);
         //Control Flow
-        await this.Application.ControlFlow.ResolveControlFlowSector(window, false);
+        await this.Application.ControlFlow.ResolveControlFlowSector(elWindow, false);
         //Components
         await this.Application.ComponentHandler.ResolveComponents(window);
         //Storage After
@@ -350,7 +350,7 @@ class DrapoDocument {
         //Storage Before
         await this.Application.Storage.ResolveData(false, el);
         //Control Flow
-        await this.Application.ControlFlow.ResolveControlFlowSector(elj);
+        await this.Application.ControlFlow.ResolveControlFlowSector(el);
         //Internal Components
         await this.Application.ComponentHandler.ResolveComponentsElement(el, context, true, true);
         //Storage After
@@ -486,7 +486,8 @@ class DrapoDocument {
             el.removeAttribute('style');
     }
 
-    public Hide(selector: JQuery): JQuery {
+    public Hide(el: HTMLElement): JQuery {
+        const selector: JQuery = $(el);
         //Wrap and hide
         const isOption: boolean = selector.is('option');
         const isOptGroup: boolean = ((!isOption) && (selector.is('optgroup')));
@@ -891,6 +892,24 @@ class DrapoDocument {
     public Clone(el: HTMLElement): HTMLElement {
         const elj: JQuery = $(el).clone();
         return (elj[0]);
+    }
+
+    public Select(el: HTMLElement): void {
+        const eli: HTMLInputElement = el as HTMLInputElement;
+        if (eli.select != null)
+            eli.select();
+    }
+
+    public GetValue(el: HTMLElement): string {
+        return ($(el).val());
+    }
+
+    public SetValue(el: HTMLElement, value: string): void {
+        $(el).val(value);
+    }
+
+    public GetProperty(el: HTMLElement, propertyName: string): string {
+        return ($(el).prop(propertyName));
     }
 
     public CreateGuid(isShort: boolean = true): string {

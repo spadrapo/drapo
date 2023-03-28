@@ -15,15 +15,15 @@ class DrapoControlFlow {
     }
 
     public async ResolveControlFlowDocument(): Promise<void> {
-        const jQuerysFor = $('[d-for]');
-        await this.ResolveControlFlowFor(jQuerysFor);
+        const els: HTMLElement[] = this.Application.Searcher.FindByAttribute('d-for');
+        await this.ResolveControlFlowForArray(els);
     }
 
-    public async ResolveControlFlowSector(jQueryStart: JQuery, canResolveComponents: boolean = true): Promise<void> {
-        if (jQueryStart == null)
+    public async ResolveControlFlowSector(el: HTMLElement, canResolveComponents: boolean = true): Promise<void> {
+        if (el == null)
             return;
-        const jQuerysFor = jQueryStart.find('[d-for]');
-        await this.ResolveControlFlowFor(jQuerysFor, false, true, DrapoStorageLinkType.Render, canResolveComponents);
+        const els: HTMLElement[] = this.Application.Searcher.FindByAttributeFromParent('d-for', el);
+        await this.ResolveControlFlowForArray(els, false, true, DrapoStorageLinkType.Render, canResolveComponents);
     }
 
     private ResolveControlFlowForParent(forElement: HTMLElement): HTMLElement {
@@ -44,12 +44,18 @@ class DrapoControlFlow {
         return (forElement);
     }
 
-    public async ResolveControlFlowFor(forJQuery: JQuery, isIncremental: boolean = false, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render, canResolveComponents: boolean = true): Promise<void> {
+    public async ResolveControlFlowForElement(forElement: HTMLElement, isIncremental: boolean = false, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render, canResolveComponents: boolean = true): Promise<void> {
         const forElements: HTMLElement[] = [];
-        for (let i = 0; i < forJQuery.length; i++) {
-            const forElement: HTMLElement = forJQuery[i];
+        forElements.push(forElement);
+        return (await this.ResolveControlFlowForArray(forElements, isIncremental, canUseDifference, type, canResolveComponents));
+    }
+
+    public async ResolveControlFlowForArray(forElements: HTMLElement[], isIncremental: boolean = false, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render, canResolveComponents: boolean = true): Promise<void> {
+        const forElementsInserted: HTMLElement[] = [];
+        for (let i = 0; i < forElements.length; i++) {
+            const forElement: HTMLElement = forElements[i];
             const forElementRoot: HTMLElement = this.ResolveControlFlowForRoot(forElement);
-            if (!this.Application.Document.IsElementInserted(forElements, forElementRoot))
+            if (!this.Application.Document.IsElementInserted(forElementsInserted, forElementRoot))
                 continue;
             if (this.Application.Document.IsElementPreprocessed(forElement))
                 continue;
@@ -60,9 +66,8 @@ class DrapoControlFlow {
             context.Sector = sector;
             if (!this.Application.Document.IsSectorReady(sector))
                 continue;
-            const forJQueryRoot: JQuery = $(forElementRoot);
             const renderContext: DrapoRenderContext = new DrapoRenderContext();
-            await this.ResolveControlFlowForInternal(sector, context, renderContext, forJQueryRoot, isIncremental, canUseDifference, type, canResolveComponents);
+            await this.ResolveControlFlowForInternal(sector, context, renderContext, forElementRoot, isIncremental, canUseDifference, type, canResolveComponents);
         }
     }
 
@@ -108,7 +113,8 @@ class DrapoControlFlow {
         return (el.style.display === 'none');
     }
 
-    private async ResolveControlFlowForInternal(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, forJQuery: JQuery, isIncremental: boolean, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render, canResolveComponents: boolean = true): Promise<boolean> {
+    private async ResolveControlFlowForInternal(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, elFor: HTMLElement, isIncremental: boolean, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render, canResolveComponents: boolean = true): Promise<boolean> {
+        let forJQuery: JQuery = $(elFor);
         let forText: string = forJQuery.attr('d-for');
         let ifText: string = null;
         let forIfText: string = null;
@@ -147,7 +153,7 @@ class DrapoControlFlow {
         let conditionalForIfResult: boolean = true;
         const isContextRoot: boolean = context.IsEmpty;
         //Anchor
-        const anchor: JQuery = (isContextRoot) ? this.Application.Document.Hide(forJQuery) : forJQuery;
+        const anchor: JQuery = (isContextRoot) ? this.Application.Document.Hide(elFor) : forJQuery;
         const content: string = isContextRoot ? forJQuery[0].outerHTML : null;
         if (isContextRoot)
             this.InitializeContext(context, content);
@@ -368,7 +374,7 @@ class DrapoControlFlow {
             jQueryForReference.remove();
         //Subscribe
         if ((dataItem != null) && (dataItem.IsIncremental))
-            await this.Application.Binder.BindIncremental(forJQuery, dataKeyIterator, sector, isIncremental);
+            await this.Application.Binder.BindIncremental(forJQuery[0], dataKeyIterator, sector, isIncremental);
         //Garbage Collector
         if (isContextRoot) {
             //Unload Components Detached
@@ -403,7 +409,7 @@ class DrapoControlFlow {
                     const applyConditional: boolean = ((hasIfText) && (this.CanApplyConditional(context, forText, ifText)));
                     if ((!applyConditional) || (await this.Application.Solver.ResolveConditional(ifText, null, sector, context, renderContext))) {
                         context.Down();
-                        await this.ResolveControlFlowForInternal(sector, context, renderContext, childJQuery, false, true, DrapoStorageLinkType.Render);
+                        await this.ResolveControlFlowForInternal(sector, context, renderContext, child, false, true, DrapoStorageLinkType.Render);
                         context.Up();
                     }
                     //Clean up the dfor Nested or Recursive

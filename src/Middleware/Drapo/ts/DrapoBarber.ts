@@ -354,11 +354,10 @@ class DrapoBarber {
             return;
         const context: DrapoContext = new DrapoContext();
         const visibility: boolean = await this.Application.Solver.ResolveConditional(elIF, el, sector, context);
-        const elj: JQuery = $(el);
         if (visibility)
-            this.Application.Document.Show(elj);
+            this.Application.Document.Show(el);
         else
-            this.Application.Document.Hide(elj);
+            this.Application.Document.Hide(el);
     }
 
     public HasMustacheContext(expression: string, sector: string, renderContext: DrapoRenderContext = null): boolean {

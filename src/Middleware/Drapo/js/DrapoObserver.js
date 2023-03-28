@@ -275,7 +275,7 @@ var DrapoObserver = (function () {
                         if (!!this.Application.SectorContainerHandler.IsElementContainerized(dataElement)) return [3, 5];
                         elj = $(dataElement);
                         eljParent = elj.parent();
-                        return [4, this.Application.ControlFlow.ResolveControlFlowFor(elj, false, canUseDifference, type)];
+                        return [4, this.Application.ControlFlow.ResolveControlFlowForElement(dataElement, false, canUseDifference, type)];
                     case 3:
                         _a.sent();
                         return [4, this.Application.ComponentHandler.ResolveComponents(eljParent)];
@@ -435,7 +435,7 @@ var DrapoObserver = (function () {
                         if (!(element.parentElement === null)) return [3, 2];
                         elements.splice(i, 1);
                         return [3, 4];
-                    case 2: return [4, this.Application.ControlFlow.ResolveControlFlowFor($(element), true)];
+                    case 2: return [4, this.Application.ControlFlow.ResolveControlFlowForElement(element, true)];
                     case 3:
                         _a.sent();
                         _a.label = 4;

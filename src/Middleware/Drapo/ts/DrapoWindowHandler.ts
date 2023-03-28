@@ -97,7 +97,7 @@ class DrapoWindowHandler {
         //Resolve
         window.Element = windowElement;
         this._windows.push(window);
-        await this.Application.Document.ResolveWindow($(window.Element));
+        await this.Application.Document.ResolveWindow(window.Element);
         //d-on-load
         if (onLoad != null)
             await this.Application.FunctionHandler.ResolveFunctionWithoutContext(elSector, elWindow, onLoad);
@@ -159,7 +159,7 @@ class DrapoWindowHandler {
                 continue;
             window.Visible = false;
             windowHidden = window;
-            this.Application.Document.Hide($(window.Element));
+            this.Application.Document.Hide(window.Element);
             if (!all)
                 break;
         }

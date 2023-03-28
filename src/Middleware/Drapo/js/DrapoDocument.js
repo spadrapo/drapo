@@ -407,7 +407,7 @@ var DrapoDocument = (function () {
                         return [4, this.Application.Storage.ResolveData(false, elSectorContent)];
                     case 15:
                         _a.sent();
-                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(eljSectorContent)];
+                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(elSectorContent)];
                     case 16:
                         _a.sent();
                         return [4, this.Application.ComponentHandler.ResolveComponents(eljSectorContent)];
@@ -479,19 +479,19 @@ var DrapoDocument = (function () {
             });
         });
     };
-    DrapoDocument.prototype.ResolveWindow = function (window) {
+    DrapoDocument.prototype.ResolveWindow = function (elWindow) {
         return __awaiter(this, void 0, void 0, function () {
-            var elWindow, sector;
+            var window, sector;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        elWindow = window.get(0);
+                        window = $(elWindow);
                         sector = this.Application.Document.GetSector(elWindow);
                         this.Application.Document.StartUpdate(sector);
                         return [4, this.Application.Storage.ResolveData(false, elWindow)];
                     case 1:
                         _a.sent();
-                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(window, false)];
+                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(elWindow, false)];
                     case 2:
                         _a.sent();
                         return [4, this.Application.ComponentHandler.ResolveComponents(window)];
@@ -549,7 +549,7 @@ var DrapoDocument = (function () {
                         return [4, this.Application.Storage.ResolveData(false, el)];
                     case 1:
                         _a.sent();
-                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(elj)];
+                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(el)];
                     case 2:
                         _a.sent();
                         return [4, this.Application.ComponentHandler.ResolveComponentsElement(el, context, true, true)];
@@ -773,7 +773,8 @@ var DrapoDocument = (function () {
         if (style === '')
             el.removeAttribute('style');
     };
-    DrapoDocument.prototype.Hide = function (selector) {
+    DrapoDocument.prototype.Hide = function (el) {
+        var selector = $(el);
         var isOption = selector.is('option');
         var isOptGroup = ((!isOption) && (selector.is('optgroup')));
         var isParentOptGroup = ((isOption) && (selector.parent().is('optgroup')));
@@ -1182,6 +1183,20 @@ var DrapoDocument = (function () {
     DrapoDocument.prototype.Clone = function (el) {
         var elj = $(el).clone();
         return (elj[0]);
+    };
+    DrapoDocument.prototype.Select = function (el) {
+        var eli = el;
+        if (eli.select != null)
+            eli.select();
+    };
+    DrapoDocument.prototype.GetValue = function (el) {
+        return ($(el).val());
+    };
+    DrapoDocument.prototype.SetValue = function (el, value) {
+        $(el).val(value);
+    };
+    DrapoDocument.prototype.GetProperty = function (el, propertyName) {
+        return ($(el).prop(propertyName));
     };
     DrapoDocument.prototype.CreateGuid = function (isShort) {
         if (isShort === void 0) { isShort = true; }

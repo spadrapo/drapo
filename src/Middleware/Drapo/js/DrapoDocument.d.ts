@@ -22,7 +22,7 @@ declare class DrapoDocument {
     private ResolveChildren;
     private LoadChildSectorInternal;
     private ReplaceSectorData;
-    ResolveWindow(window: JQuery): Promise<void>;
+    ResolveWindow(elWindow: HTMLElement): Promise<void>;
     ResolveComponentDynamicSector(el: HTMLElement): Promise<void>;
     ResolveComponentUpdate(el: HTMLElement, context: DrapoContext): Promise<void>;
     RemoveElement(el: HTMLElement): Promise<void>;
@@ -35,7 +35,7 @@ declare class DrapoDocument {
     ReplaceElement(el: Element, elNew: Element | string | JQuery): void;
     Show(el: HTMLElement): HTMLElement;
     private ShowInternal;
-    Hide(selector: JQuery): JQuery;
+    Hide(el: HTMLElement): JQuery;
     GetWrapper(elj: JQuery): HTMLElement;
     private Wrap;
     GetElementAttributes(el: Element): [string, string][];
@@ -75,6 +75,10 @@ declare class DrapoDocument {
     IsSectorDynamic(el: HTMLElement): Promise<boolean>;
     GetSectorResolved(el: HTMLElement): Promise<string>;
     Clone(el: HTMLElement): HTMLElement;
+    Select(el: HTMLElement): void;
+    GetValue(el: HTMLElement): string;
+    SetValue(el: HTMLElement, value: string): void;
+    GetProperty(el: HTMLElement, propertyName: string): string;
     CreateGuid(isShort?: boolean): string;
     private CreateGuidShort;
     private CreateGuidShortInternal;

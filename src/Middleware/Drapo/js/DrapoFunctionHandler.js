@@ -1527,19 +1527,19 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionUpdateDataUrl = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, dataUrl, jqueryDataKeys, dataUrlCurrent;
+            var dataKey, dataUrl, elDataKey, dataUrlCurrent;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         dataKey = functionParsed.Parameters[0];
                         dataUrl = functionParsed.Parameters[1];
-                        jqueryDataKeys = $("[d-dataKey='" + dataKey + "']");
-                        if ((jqueryDataKeys == null) || (jqueryDataKeys.length == 0))
+                        elDataKey = this.Application.Searcher.FindByAttributeAndValue('d-dataKey', dataKey);
+                        if (elDataKey == null)
                             return [2, ('')];
-                        dataUrlCurrent = jqueryDataKeys.attr('d-dataUrlGet');
+                        dataUrlCurrent = elDataKey.getAttribute('d-dataUrlGet');
                         if (dataUrl === dataUrlCurrent)
                             return [2, ('')];
-                        jqueryDataKeys.attr('d-dataUrlGet', dataUrl);
+                        elDataKey.setAttribute('d-dataUrlGet', dataUrl);
                         return [4, this.Application.Storage.DiscardCacheData(dataKey, sector)];
                     case 1:
                         _a.sent();
@@ -1553,7 +1553,7 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionUpdateDataUrlSet = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, dataUrl, jqueryDataKeys, dataUrlCurrent;
+            var dataKey, dataUrl, elDataKey, dataUrlCurrent;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1561,13 +1561,13 @@ var DrapoFunctionHandler = (function () {
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1])];
                     case 1:
                         dataUrl = _a.sent();
-                        jqueryDataKeys = $("[d-dataKey='" + dataKey + "']");
-                        if ((jqueryDataKeys == null) || (jqueryDataKeys.length == 0))
+                        elDataKey = this.Application.Searcher.FindByAttributeAndValue('d-dataKey', dataKey);
+                        if (elDataKey == null)
                             return [2, ('')];
-                        dataUrlCurrent = jqueryDataKeys.attr('d-dataUrlSet');
+                        dataUrlCurrent = elDataKey.getAttribute('d-dataUrlSet');
                         if (dataUrl === dataUrlCurrent)
                             return [2, ('')];
-                        jqueryDataKeys.attr('d-dataUrlSet', dataUrl);
+                        elDataKey.setAttribute('d-dataUrlSet', dataUrl);
                         return [4, this.Application.Storage.DiscardCacheData(dataKey, sector)];
                     case 2:
                         _a.sent();
@@ -2536,19 +2536,19 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionFocus = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var did, elementFocused, didJ, isSelectText, isSelect, _a;
+            var did, elementFocused, elDid, isSelectText, isSelect, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
                     case 1:
                         did = _b.sent();
                         if ((did === null) || (did === '') || (did === undefined)) {
-                            elementFocused = $(document.activeElement);
+                            elementFocused = document.activeElement;
                             elementFocused.blur();
                             return [2, ('')];
                         }
-                        didJ = $("[d-id='" + did + "']");
-                        if ((didJ === null) || (didJ.length === 0))
+                        elDid = this.Application.Searcher.FindByAttributeAndValue('d-id', did);
+                        if (elDid === null)
                             return [2, ('')];
                         isSelectText = functionParsed.Parameters[1];
                         if (!((isSelectText == null) || (isSelectText == ''))) return [3, 2];
@@ -2560,9 +2560,9 @@ var DrapoFunctionHandler = (function () {
                         _b.label = 4;
                     case 4:
                         isSelect = _a;
-                        didJ.focus();
+                        elDid.focus();
                         if (isSelect)
-                            didJ.select();
+                            this.Application.Document.Select(elDid);
                         return [2, ('')];
                 }
             });
