@@ -109,11 +109,10 @@ var DrapoBinder = (function () {
                         return (true);
                     var dataPath = _this.Application.Solver.CreateDataPath(dataKey, dataFields);
                     var valueCurrent = _this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
-                    var elj = $(el);
-                    var valueBefore = elj.val();
+                    var valueBefore = _this.Application.Document.GetValue(el);
                     if (valueCurrent == valueBefore)
                         return (true);
-                    elj.val(valueCurrent);
+                    _this.Application.Document.SetValue(el, valueCurrent);
                     return (false);
                 });
             };
@@ -163,15 +162,14 @@ var DrapoBinder = (function () {
             });
         });
     };
-    DrapoBinder.prototype.BindIncremental = function (elj, dataKey, sector, isIncremental) {
+    DrapoBinder.prototype.BindIncremental = function (el, dataKey, sector, isIncremental) {
         return __awaiter(this, void 0, void 0, function () {
-            var el, application, elParent, isRoot, binder, dataKeyLocal, sectorLocal, eventType, eventNamespace;
+            var application, elParent, isRoot, binder, dataKeyLocal, sectorLocal, eventType, eventNamespace;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if ((elj == null) || (elj.length == 0))
+                        if (el == null)
                             return [2, (null)];
-                        el = elj[0];
                         application = this.Application;
                         if (!isIncremental)
                             application.Observer.SubscribeIncremental(el, dataKey);
@@ -198,19 +196,19 @@ var DrapoBinder = (function () {
                         eventNamespace = this.Application.EventHandler.CreateEventNamespace(el, null, eventType, 'incremental');
                         this.Application.EventHandler.DetachEventListener(el, eventNamespace);
                         this.Application.EventHandler.AttachEventListener(binder, eventType, eventNamespace, function (e) {
-                            application.Binder.BindIncrementalScroll(binder, eventNamespace, $(elParent), dataKeyLocal, sector);
+                            application.Binder.BindIncrementalScroll(binder, eventNamespace, elParent, dataKeyLocal, sector);
                         });
                         return [2];
                 }
             });
         });
     };
-    DrapoBinder.prototype.BindIncrementalScroll = function (binder, eventNamespace, eljParent, dataKey, sector) {
+    DrapoBinder.prototype.BindIncrementalScroll = function (binder, eventNamespace, elParent, dataKey, sector) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if ((!this.Application.Observer.IsEnabledNotifyIncremental) || (!this.IsElementScrollVerticalAlmostEnd(eljParent)))
+                        if ((!this.Application.Observer.IsEnabledNotifyIncremental) || (!this.IsElementScrollVerticalAlmostEnd(elParent)))
                             return [2, (true)];
                         return [4, this.Application.Storage.CanGrowData(dataKey, sector)];
                     case 1:
@@ -238,16 +236,15 @@ var DrapoBinder = (function () {
         if (tag == 'select')
             return (e.target.value);
         if (tag == 'textarea')
-            return ($(e.target).val());
+            return (this.Application.Document.GetValue(e.target));
         return (null);
     };
     DrapoBinder.prototype.GetEventValueInput = function (eventType, e) {
         var el = e.target;
-        var elementJQuery = $(el);
         var type = el.getAttribute('type');
         if (type == 'checkbox')
-            return (elementJQuery.prop('checked'));
-        return (elementJQuery.val());
+            return (this.Application.Document.GetProperty(el, 'checked'));
+        return (this.Application.Document.GetValue(el));
     };
     DrapoBinder.prototype.GetParentElementWithScrollVertical = function (el) {
         var elParent = null;
@@ -266,21 +263,20 @@ var DrapoBinder = (function () {
         var overflow = style.getPropertyValue('overflow');
         if (overflow === 'auto')
             return (true);
-        var elj = $(el);
-        if (elj.scrollTop())
+        if (el.scrollTop)
             return (true);
-        elj.scrollTop(1);
-        if (!elj.scrollTop())
+        el.scrollTop = 1;
+        if (!el.scrollTop)
             return (false);
-        elj.scrollTop(0);
+        el.scrollTop = 0;
         return (true);
     };
     DrapoBinder.prototype.IsElementScrollVerticalAlmostEnd = function (el) {
-        var scrollTop = el.scrollTop();
+        var scrollTop = el.scrollTop;
         if (scrollTop == null)
             return (false);
-        var clientHeight = el[0].clientHeight;
-        var scrollHeight = el[0].scrollHeight;
+        var clientHeight = el.clientHeight;
+        var scrollHeight = el.scrollHeight;
         var remaining = scrollHeight - (scrollTop + clientHeight);
         return (remaining < 50);
     };

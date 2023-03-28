@@ -1353,7 +1353,7 @@ var DrapoBarber = (function () {
     DrapoBarber.prototype.ResolveMustacheElementVisibility = function (el, canBind) {
         if (canBind === void 0) { canBind = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var elFor, elIF, sector, context, visibility, elj;
+            var elFor, elIF, sector, context, visibility;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1370,11 +1370,10 @@ var DrapoBarber = (function () {
                         return [4, this.Application.Solver.ResolveConditional(elIF, el, sector, context)];
                     case 1:
                         visibility = _a.sent();
-                        elj = $(el);
                         if (visibility)
-                            this.Application.Document.Show(elj);
+                            this.Application.Document.Show(el);
                         else
-                            this.Application.Document.Hide(elj);
+                            this.Application.Document.Hide(el);
                         return [2];
                 }
             });
@@ -2171,11 +2170,10 @@ var DrapoBinder = (function () {
                         return (true);
                     var dataPath = _this.Application.Solver.CreateDataPath(dataKey, dataFields);
                     var valueCurrent = _this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
-                    var elj = $(el);
-                    var valueBefore = elj.val();
+                    var valueBefore = _this.Application.Document.GetValue(el);
                     if (valueCurrent == valueBefore)
                         return (true);
-                    elj.val(valueCurrent);
+                    _this.Application.Document.SetValue(el, valueCurrent);
                     return (false);
                 });
             };
@@ -2225,15 +2223,14 @@ var DrapoBinder = (function () {
             });
         });
     };
-    DrapoBinder.prototype.BindIncremental = function (elj, dataKey, sector, isIncremental) {
+    DrapoBinder.prototype.BindIncremental = function (el, dataKey, sector, isIncremental) {
         return __awaiter(this, void 0, void 0, function () {
-            var el, application, elParent, isRoot, binder, dataKeyLocal, sectorLocal, eventType, eventNamespace;
+            var application, elParent, isRoot, binder, dataKeyLocal, sectorLocal, eventType, eventNamespace;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if ((elj == null) || (elj.length == 0))
+                        if (el == null)
                             return [2, (null)];
-                        el = elj[0];
                         application = this.Application;
                         if (!isIncremental)
                             application.Observer.SubscribeIncremental(el, dataKey);
@@ -2260,19 +2257,19 @@ var DrapoBinder = (function () {
                         eventNamespace = this.Application.EventHandler.CreateEventNamespace(el, null, eventType, 'incremental');
                         this.Application.EventHandler.DetachEventListener(el, eventNamespace);
                         this.Application.EventHandler.AttachEventListener(binder, eventType, eventNamespace, function (e) {
-                            application.Binder.BindIncrementalScroll(binder, eventNamespace, $(elParent), dataKeyLocal, sector);
+                            application.Binder.BindIncrementalScroll(binder, eventNamespace, elParent, dataKeyLocal, sector);
                         });
                         return [2];
                 }
             });
         });
     };
-    DrapoBinder.prototype.BindIncrementalScroll = function (binder, eventNamespace, eljParent, dataKey, sector) {
+    DrapoBinder.prototype.BindIncrementalScroll = function (binder, eventNamespace, elParent, dataKey, sector) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if ((!this.Application.Observer.IsEnabledNotifyIncremental) || (!this.IsElementScrollVerticalAlmostEnd(eljParent)))
+                        if ((!this.Application.Observer.IsEnabledNotifyIncremental) || (!this.IsElementScrollVerticalAlmostEnd(elParent)))
                             return [2, (true)];
                         return [4, this.Application.Storage.CanGrowData(dataKey, sector)];
                     case 1:
@@ -2300,16 +2297,15 @@ var DrapoBinder = (function () {
         if (tag == 'select')
             return (e.target.value);
         if (tag == 'textarea')
-            return ($(e.target).val());
+            return (this.Application.Document.GetValue(e.target));
         return (null);
     };
     DrapoBinder.prototype.GetEventValueInput = function (eventType, e) {
         var el = e.target;
-        var elementJQuery = $(el);
         var type = el.getAttribute('type');
         if (type == 'checkbox')
-            return (elementJQuery.prop('checked'));
-        return (elementJQuery.val());
+            return (this.Application.Document.GetProperty(el, 'checked'));
+        return (this.Application.Document.GetValue(el));
     };
     DrapoBinder.prototype.GetParentElementWithScrollVertical = function (el) {
         var elParent = null;
@@ -2328,21 +2324,20 @@ var DrapoBinder = (function () {
         var overflow = style.getPropertyValue('overflow');
         if (overflow === 'auto')
             return (true);
-        var elj = $(el);
-        if (elj.scrollTop())
+        if (el.scrollTop)
             return (true);
-        elj.scrollTop(1);
-        if (!elj.scrollTop())
+        el.scrollTop = 1;
+        if (!el.scrollTop)
             return (false);
-        elj.scrollTop(0);
+        el.scrollTop = 0;
         return (true);
     };
     DrapoBinder.prototype.IsElementScrollVerticalAlmostEnd = function (el) {
-        var scrollTop = el.scrollTop();
+        var scrollTop = el.scrollTop;
         if (scrollTop == null)
             return (false);
-        var clientHeight = el[0].clientHeight;
-        var scrollHeight = el[0].scrollHeight;
+        var clientHeight = el.clientHeight;
+        var scrollHeight = el.scrollHeight;
         var remaining = scrollHeight - (scrollTop + clientHeight);
         return (remaining < 50);
     };
@@ -4429,12 +4424,12 @@ var DrapoControlFlow = (function () {
     });
     DrapoControlFlow.prototype.ResolveControlFlowDocument = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var jQuerysFor;
+            var els;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        jQuerysFor = $('[d-for]');
-                        return [4, this.ResolveControlFlowFor(jQuerysFor)];
+                        els = this.Application.Searcher.FindByAttribute('d-for');
+                        return [4, this.ResolveControlFlowForArray(els)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -4442,17 +4437,17 @@ var DrapoControlFlow = (function () {
             });
         });
     };
-    DrapoControlFlow.prototype.ResolveControlFlowSector = function (jQueryStart, canResolveComponents) {
+    DrapoControlFlow.prototype.ResolveControlFlowSector = function (el, canResolveComponents) {
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var jQuerysFor;
+            var els;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (jQueryStart == null)
+                        if (el == null)
                             return [2];
-                        jQuerysFor = jQueryStart.find('[d-for]');
-                        return [4, this.ResolveControlFlowFor(jQuerysFor, false, true, DrapoStorageLinkType.Render, canResolveComponents)];
+                        els = this.Application.Searcher.FindByAttributeFromParent('d-for', el);
+                        return [4, this.ResolveControlFlowForArray(els, false, true, DrapoStorageLinkType.Render, canResolveComponents)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -4476,24 +4471,42 @@ var DrapoControlFlow = (function () {
         }
         return (forElement);
     };
-    DrapoControlFlow.prototype.ResolveControlFlowFor = function (forJQuery, isIncremental, canUseDifference, type, canResolveComponents) {
+    DrapoControlFlow.prototype.ResolveControlFlowForElement = function (forElement, isIncremental, canUseDifference, type, canResolveComponents) {
         if (isIncremental === void 0) { isIncremental = false; }
         if (canUseDifference === void 0) { canUseDifference = true; }
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var forElements, i, forElement, forElementRoot, context, sector, forJQueryRoot, renderContext;
+            var forElements;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         forElements = [];
+                        forElements.push(forElement);
+                        return [4, this.ResolveControlFlowForArray(forElements, isIncremental, canUseDifference, type, canResolveComponents)];
+                    case 1: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
+    DrapoControlFlow.prototype.ResolveControlFlowForArray = function (forElements, isIncremental, canUseDifference, type, canResolveComponents) {
+        if (isIncremental === void 0) { isIncremental = false; }
+        if (canUseDifference === void 0) { canUseDifference = true; }
+        if (type === void 0) { type = DrapoStorageLinkType.Render; }
+        if (canResolveComponents === void 0) { canResolveComponents = true; }
+        return __awaiter(this, void 0, void 0, function () {
+            var forElementsInserted, i, forElement, forElementRoot, context, sector, renderContext;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        forElementsInserted = [];
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < forJQuery.length)) return [3, 4];
-                        forElement = forJQuery[i];
+                        if (!(i < forElements.length)) return [3, 4];
+                        forElement = forElements[i];
                         forElementRoot = this.ResolveControlFlowForRoot(forElement);
-                        if (!this.Application.Document.IsElementInserted(forElements, forElementRoot))
+                        if (!this.Application.Document.IsElementInserted(forElementsInserted, forElementRoot))
                             return [3, 3];
                         if (this.Application.Document.IsElementPreprocessed(forElement))
                             return [3, 3];
@@ -4504,9 +4517,8 @@ var DrapoControlFlow = (function () {
                         context.Sector = sector;
                         if (!this.Application.Document.IsSectorReady(sector))
                             return [3, 3];
-                        forJQueryRoot = $(forElementRoot);
                         renderContext = new DrapoRenderContext();
-                        return [4, this.ResolveControlFlowForInternal(sector, context, renderContext, forJQueryRoot, isIncremental, canUseDifference, type, canResolveComponents)];
+                        return [4, this.ResolveControlFlowForInternal(sector, context, renderContext, forElementRoot, isIncremental, canUseDifference, type, canResolveComponents)];
                     case 2:
                         _a.sent();
                         _a.label = 3;
@@ -4547,15 +4559,16 @@ var DrapoControlFlow = (function () {
             return (false);
         return (el.style.display === 'none');
     };
-    DrapoControlFlow.prototype.ResolveControlFlowForInternal = function (sector, context, renderContext, forJQuery, isIncremental, canUseDifference, type, canResolveComponents) {
+    DrapoControlFlow.prototype.ResolveControlFlowForInternal = function (sector, context, renderContext, elFor, isIncremental, canUseDifference, type, canResolveComponents) {
         if (canUseDifference === void 0) { canUseDifference = true; }
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var forText, ifText, forIfText, wasWrapped, viewportBeforeScrollPosition, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, dForRender, dForRenders, isHTML, isViewport, hasViewPortBefore, hasViewPortbeforeRecycle, viewportBefore, itemsViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, forReferenceTemplate, isHash, hashTemplate, useHash, length, canCreateViewport, viewport, isViewportActive, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, startViewport, endViewport, j, data, templateKey, _b, templateData, _c, template, viewportIndexDifference, nodeIndex, oldNode, item, _d, hashValueBefore, hashValueCurrent, _e, applyHash, template;
+            var forJQuery, forText, ifText, forIfText, wasWrapped, viewportBeforeScrollPosition, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, dForRender, dForRenders, isHTML, isViewport, hasViewPortBefore, hasViewPortbeforeRecycle, viewportBefore, itemsViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, forReferenceTemplate, isHash, hashTemplate, useHash, length, canCreateViewport, viewport, isViewportActive, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, startViewport, endViewport, j, data, templateKey, _b, templateData, _c, template, viewportIndexDifference, nodeIndex, oldNode, item, _d, hashValueBefore, hashValueCurrent, _e, applyHash, template;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
+                        forJQuery = $(elFor);
                         forText = forJQuery.attr('d-for');
                         ifText = null;
                         forIfText = null;
@@ -4588,7 +4601,7 @@ var DrapoControlFlow = (function () {
                         hasForIfText = (forIfText != null);
                         conditionalForIfResult = true;
                         isContextRoot = context.IsEmpty;
-                        anchor = (isContextRoot) ? this.Application.Document.Hide(forJQuery) : forJQuery;
+                        anchor = (isContextRoot) ? this.Application.Document.Hide(elFor) : forJQuery;
                         content = isContextRoot ? forJQuery[0].outerHTML : null;
                         if (isContextRoot)
                             this.InitializeContext(context, content);
@@ -4859,7 +4872,7 @@ var DrapoControlFlow = (function () {
                         if ((context.IsInsideRecursion) && (!context.IsElementTemplateRoot(key)))
                             jQueryForReference.remove();
                         if (!((dataItem != null) && (dataItem.IsIncremental))) return [3, 32];
-                        return [4, this.Application.Binder.BindIncremental(forJQuery, dataKeyIterator, sector, isIncremental)];
+                        return [4, this.Application.Binder.BindIncremental(forJQuery[0], dataKeyIterator, sector, isIncremental)];
                     case 31:
                         _f.sent();
                         _f.label = 32;
@@ -4920,7 +4933,7 @@ var DrapoControlFlow = (function () {
                     case 5:
                         if (!_a) return [3, 7];
                         context.Down();
-                        return [4, this.ResolveControlFlowForInternal(sector, context, renderContext, childJQuery, false, true, DrapoStorageLinkType.Render)];
+                        return [4, this.ResolveControlFlowForInternal(sector, context, renderContext, child, false, true, DrapoStorageLinkType.Render)];
                     case 6:
                         _b.sent();
                         context.Up();
@@ -7100,7 +7113,7 @@ var DrapoDocument = (function () {
                         return [4, this.Application.Storage.ResolveData(false, elSectorContent)];
                     case 15:
                         _a.sent();
-                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(eljSectorContent)];
+                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(elSectorContent)];
                     case 16:
                         _a.sent();
                         return [4, this.Application.ComponentHandler.ResolveComponents(eljSectorContent)];
@@ -7172,19 +7185,19 @@ var DrapoDocument = (function () {
             });
         });
     };
-    DrapoDocument.prototype.ResolveWindow = function (window) {
+    DrapoDocument.prototype.ResolveWindow = function (elWindow) {
         return __awaiter(this, void 0, void 0, function () {
-            var elWindow, sector;
+            var window, sector;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        elWindow = window.get(0);
+                        window = $(elWindow);
                         sector = this.Application.Document.GetSector(elWindow);
                         this.Application.Document.StartUpdate(sector);
                         return [4, this.Application.Storage.ResolveData(false, elWindow)];
                     case 1:
                         _a.sent();
-                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(window, false)];
+                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(elWindow, false)];
                     case 2:
                         _a.sent();
                         return [4, this.Application.ComponentHandler.ResolveComponents(window)];
@@ -7242,7 +7255,7 @@ var DrapoDocument = (function () {
                         return [4, this.Application.Storage.ResolveData(false, el)];
                     case 1:
                         _a.sent();
-                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(elj)];
+                        return [4, this.Application.ControlFlow.ResolveControlFlowSector(el)];
                     case 2:
                         _a.sent();
                         return [4, this.Application.ComponentHandler.ResolveComponentsElement(el, context, true, true)];
@@ -7466,7 +7479,8 @@ var DrapoDocument = (function () {
         if (style === '')
             el.removeAttribute('style');
     };
-    DrapoDocument.prototype.Hide = function (selector) {
+    DrapoDocument.prototype.Hide = function (el) {
+        var selector = $(el);
         var isOption = selector.is('option');
         var isOptGroup = ((!isOption) && (selector.is('optgroup')));
         var isParentOptGroup = ((isOption) && (selector.parent().is('optgroup')));
@@ -7875,6 +7889,20 @@ var DrapoDocument = (function () {
     DrapoDocument.prototype.Clone = function (el) {
         var elj = $(el).clone();
         return (elj[0]);
+    };
+    DrapoDocument.prototype.Select = function (el) {
+        var eli = el;
+        if (eli.select != null)
+            eli.select();
+    };
+    DrapoDocument.prototype.GetValue = function (el) {
+        return ($(el).val());
+    };
+    DrapoDocument.prototype.SetValue = function (el, value) {
+        $(el).val(value);
+    };
+    DrapoDocument.prototype.GetProperty = function (el, propertyName) {
+        return ($(el).prop(propertyName));
     };
     DrapoDocument.prototype.CreateGuid = function (isShort) {
         if (isShort === void 0) { isShort = true; }
@@ -11431,19 +11459,19 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionUpdateDataUrl = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, dataUrl, jqueryDataKeys, dataUrlCurrent;
+            var dataKey, dataUrl, elDataKey, dataUrlCurrent;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         dataKey = functionParsed.Parameters[0];
                         dataUrl = functionParsed.Parameters[1];
-                        jqueryDataKeys = $("[d-dataKey='" + dataKey + "']");
-                        if ((jqueryDataKeys == null) || (jqueryDataKeys.length == 0))
+                        elDataKey = this.Application.Searcher.FindByAttributeAndValue('d-dataKey', dataKey);
+                        if (elDataKey == null)
                             return [2, ('')];
-                        dataUrlCurrent = jqueryDataKeys.attr('d-dataUrlGet');
+                        dataUrlCurrent = elDataKey.getAttribute('d-dataUrlGet');
                         if (dataUrl === dataUrlCurrent)
                             return [2, ('')];
-                        jqueryDataKeys.attr('d-dataUrlGet', dataUrl);
+                        elDataKey.setAttribute('d-dataUrlGet', dataUrl);
                         return [4, this.Application.Storage.DiscardCacheData(dataKey, sector)];
                     case 1:
                         _a.sent();
@@ -11457,7 +11485,7 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionUpdateDataUrlSet = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, dataUrl, jqueryDataKeys, dataUrlCurrent;
+            var dataKey, dataUrl, elDataKey, dataUrlCurrent;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -11465,13 +11493,13 @@ var DrapoFunctionHandler = (function () {
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1])];
                     case 1:
                         dataUrl = _a.sent();
-                        jqueryDataKeys = $("[d-dataKey='" + dataKey + "']");
-                        if ((jqueryDataKeys == null) || (jqueryDataKeys.length == 0))
+                        elDataKey = this.Application.Searcher.FindByAttributeAndValue('d-dataKey', dataKey);
+                        if (elDataKey == null)
                             return [2, ('')];
-                        dataUrlCurrent = jqueryDataKeys.attr('d-dataUrlSet');
+                        dataUrlCurrent = elDataKey.getAttribute('d-dataUrlSet');
                         if (dataUrl === dataUrlCurrent)
                             return [2, ('')];
-                        jqueryDataKeys.attr('d-dataUrlSet', dataUrl);
+                        elDataKey.setAttribute('d-dataUrlSet', dataUrl);
                         return [4, this.Application.Storage.DiscardCacheData(dataKey, sector)];
                     case 2:
                         _a.sent();
@@ -12440,19 +12468,19 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionFocus = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var did, elementFocused, didJ, isSelectText, isSelect, _a;
+            var did, elementFocused, elDid, isSelectText, isSelect, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
                     case 1:
                         did = _b.sent();
                         if ((did === null) || (did === '') || (did === undefined)) {
-                            elementFocused = $(document.activeElement);
+                            elementFocused = document.activeElement;
                             elementFocused.blur();
                             return [2, ('')];
                         }
-                        didJ = $("[d-id='" + did + "']");
-                        if ((didJ === null) || (didJ.length === 0))
+                        elDid = this.Application.Searcher.FindByAttributeAndValue('d-id', did);
+                        if (elDid === null)
                             return [2, ('')];
                         isSelectText = functionParsed.Parameters[1];
                         if (!((isSelectText == null) || (isSelectText == ''))) return [3, 2];
@@ -12464,9 +12492,9 @@ var DrapoFunctionHandler = (function () {
                         _b.label = 4;
                     case 4:
                         isSelect = _a;
-                        didJ.focus();
+                        elDid.focus();
                         if (isSelect)
-                            didJ.select();
+                            this.Application.Document.Select(elDid);
                         return [2, ('')];
                 }
             });
@@ -15246,7 +15274,7 @@ var DrapoObserver = (function () {
                         if (!!this.Application.SectorContainerHandler.IsElementContainerized(dataElement)) return [3, 5];
                         elj = $(dataElement);
                         eljParent = elj.parent();
-                        return [4, this.Application.ControlFlow.ResolveControlFlowFor(elj, false, canUseDifference, type)];
+                        return [4, this.Application.ControlFlow.ResolveControlFlowForElement(dataElement, false, canUseDifference, type)];
                     case 3:
                         _a.sent();
                         return [4, this.Application.ComponentHandler.ResolveComponents(eljParent)];
@@ -15406,7 +15434,7 @@ var DrapoObserver = (function () {
                         if (!(element.parentElement === null)) return [3, 2];
                         elements.splice(i, 1);
                         return [3, 4];
-                    case 2: return [4, this.Application.ControlFlow.ResolveControlFlowFor($(element), true)];
+                    case 2: return [4, this.Application.ControlFlow.ResolveControlFlowForElement(element, true)];
                     case 3:
                         _a.sent();
                         _a.label = 4;
@@ -18899,6 +18927,20 @@ var DrapoSearcher = (function () {
         if ((elementsJQuery === null) || (elementsJQuery.windowContainer === 0))
             return (null);
         return (elementsJQuery[0]);
+    };
+    DrapoSearcher.prototype.FindByAttribute = function (name) {
+        var elj = $('[' + name + ']');
+        var els = [];
+        for (var i = 0; i < elj.length; i++)
+            els.push(elj[i]);
+        return (els);
+    };
+    DrapoSearcher.prototype.FindByAttributeFromParent = function (name, el) {
+        var elj = $(el).find('[' + name + ']');
+        var els = [];
+        for (var i = 0; i < elj.length; i++)
+            els.push(elj[i]);
+        return (els);
     };
     return DrapoSearcher;
 }());
@@ -27524,7 +27566,7 @@ var DrapoWindowHandler = (function () {
                         window.Uri = uri;
                         window.Element = windowElement;
                         this._windows.push(window);
-                        return [4, this.Application.Document.ResolveWindow($(window.Element))];
+                        return [4, this.Application.Document.ResolveWindow(window.Element)];
                     case 7:
                         _b.sent();
                         if (!(onLoad != null)) return [3, 9];
@@ -27631,7 +27673,7 @@ var DrapoWindowHandler = (function () {
                         continue;
                     window_3.Visible = false;
                     windowHidden = window_3;
-                    this.Application.Document.Hide($(window_3.Element));
+                    this.Application.Document.Hide(window_3.Element);
                     if (!all)
                         break;
                 }

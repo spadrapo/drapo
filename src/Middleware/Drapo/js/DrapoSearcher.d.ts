@@ -7,4 +7,6 @@ declare class DrapoSearcher {
     private Filter;
     FindByAttributeAndValue(name: string, value: string): HTMLElement;
     FindByAttributeAndValueFromParent(name: string, value: string, parent: HTMLElement): HTMLElement;
+    FindByAttribute(name: string): HTMLElement[];
+    FindByAttributeFromParent(name: string, el: HTMLElement): HTMLElement[];
 }

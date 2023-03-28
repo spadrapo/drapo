@@ -171,14 +171,14 @@ declare class DrapoBinder {
     BindReader(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[]): void;
     BindWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel: string[], canNotify: boolean): void;
     BindWriterEvent(e: Event, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number, canNotify: boolean): Promise<boolean>;
-    BindIncremental(elj: JQuery, dataKey: string, sector: string, isIncremental: boolean): Promise<void>;
-    BindIncrementalScroll(binder: HTMLElement | Window, eventNamespace: string, eljParent: JQuery, dataKey: string, sector: string): Promise<boolean>;
+    BindIncremental(el: HTMLElement, dataKey: string, sector: string, isIncremental: boolean): Promise<void>;
+    BindIncrementalScroll(binder: HTMLElement | Window, eventNamespace: string, elParent: HTMLElement, dataKey: string, sector: string): Promise<boolean>;
     private GetEventValue;
     private GetEventValueInput;
     private GetParentElementWithScrollVertical;
     private IsElementScrollVisible;
     private HasElementVerticalScroll;
-    IsElementScrollVerticalAlmostEnd(el: JQuery): boolean;
+    IsElementScrollVerticalAlmostEnd(el: HTMLElement): boolean;
     UnbindControlFlowViewport(viewport: DrapoViewport): void;
     BindControlFlowViewport(viewport: DrapoViewport): void;
     BindControlFlowViewportScroll(viewport: DrapoViewport): Promise<void>;
@@ -436,10 +436,11 @@ declare class DrapoControlFlow {
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     ResolveControlFlowDocument(): Promise<void>;
-    ResolveControlFlowSector(jQueryStart: JQuery, canResolveComponents?: boolean): Promise<void>;
+    ResolveControlFlowSector(el: HTMLElement, canResolveComponents?: boolean): Promise<void>;
     private ResolveControlFlowForParent;
     private ResolveControlFlowForRoot;
-    ResolveControlFlowFor(forJQuery: JQuery, isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
+    ResolveControlFlowForElement(forElement: HTMLElement, isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
+    ResolveControlFlowForArray(forElements: HTMLElement[], isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
     InitializeContext(context: DrapoContext, content: string): void;
     IsElementControlFlowTemplate(el: HTMLElement): boolean;
     private ResolveControlFlowForInternal;
@@ -571,7 +572,7 @@ declare class DrapoDocument {
     private ResolveChildren;
     private LoadChildSectorInternal;
     private ReplaceSectorData;
-    ResolveWindow(window: JQuery): Promise<void>;
+    ResolveWindow(elWindow: HTMLElement): Promise<void>;
     ResolveComponentDynamicSector(el: HTMLElement): Promise<void>;
     ResolveComponentUpdate(el: HTMLElement, context: DrapoContext): Promise<void>;
     RemoveElement(el: HTMLElement): Promise<void>;
@@ -584,7 +585,7 @@ declare class DrapoDocument {
     ReplaceElement(el: Element, elNew: Element | string | JQuery): void;
     Show(el: HTMLElement): HTMLElement;
     private ShowInternal;
-    Hide(selector: JQuery): JQuery;
+    Hide(el: HTMLElement): JQuery;
     GetWrapper(elj: JQuery): HTMLElement;
     private Wrap;
     GetElementAttributes(el: Element): [string, string][];
@@ -624,6 +625,10 @@ declare class DrapoDocument {
     IsSectorDynamic(el: HTMLElement): Promise<boolean>;
     GetSectorResolved(el: HTMLElement): Promise<string>;
     Clone(el: HTMLElement): HTMLElement;
+    Select(el: HTMLElement): void;
+    GetValue(el: HTMLElement): string;
+    SetValue(el: HTMLElement, value: string): void;
+    GetProperty(el: HTMLElement, propertyName: string): string;
     CreateGuid(isShort?: boolean): string;
     private CreateGuidShort;
     private CreateGuidShortInternal;
@@ -1662,6 +1667,8 @@ declare class DrapoSearcher {
     private Filter;
     FindByAttributeAndValue(name: string, value: string): HTMLElement;
     FindByAttributeAndValueFromParent(name: string, value: string, parent: HTMLElement): HTMLElement;
+    FindByAttribute(name: string): HTMLElement[];
+    FindByAttributeFromParent(name: string, el: HTMLElement): HTMLElement[];
 }
 
 declare class DrapoSectorContainerHandler {

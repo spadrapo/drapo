@@ -221,7 +221,7 @@ class DrapoObserver {
                 const elj: JQuery = $(dataElement);
                 const eljParent: JQuery = elj.parent();
                 //Control Flow
-                await this.Application.ControlFlow.ResolveControlFlowFor(elj, false, canUseDifference, type);
+                await this.Application.ControlFlow.ResolveControlFlowForElement(dataElement, false, canUseDifference, type);
                 //Components
                 await this.Application.ComponentHandler.ResolveComponents(eljParent);
             }
@@ -306,7 +306,7 @@ class DrapoObserver {
             if (element.parentElement === null)
                 elements.splice(i, 1);
             else
-                await this.Application.ControlFlow.ResolveControlFlowFor($(element), true);
+                await this.Application.ControlFlow.ResolveControlFlowForElement(element, true);
         }
     }
 

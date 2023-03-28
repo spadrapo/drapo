@@ -76,11 +76,10 @@ class DrapoBinder {
                         return (true);
                     const dataPath: string[] = this.Application.Solver.CreateDataPath(dataKey, dataFields);
                     const valueCurrent: any = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
-                    const elj: JQuery = $(el);
-                    const valueBefore: string = elj.val();
+                    const valueBefore: string = this.Application.Document.GetValue(el);
                     if (valueCurrent == valueBefore)
                         return (true);
-                    elj.val(valueCurrent);
+                    this.Application.Document.SetValue(el,valueCurrent);
                     return (false);
                 });
             }
@@ -113,10 +112,9 @@ class DrapoBinder {
         return (true);
     }
 
-    public async BindIncremental(elj: JQuery, dataKey: string, sector: string, isIncremental: boolean): Promise<void> {
-        if ((elj == null) || (elj.length == 0))
+    public async BindIncremental(el: HTMLElement, dataKey: string, sector: string, isIncremental: boolean): Promise<void> {
+        if (el == null)
             return (null);
-        const el: HTMLElement = elj[0];
         const application: DrapoApplication = this.Application;
         //Subscribe Increment
         if (!isIncremental)
@@ -142,12 +140,12 @@ class DrapoBinder {
         this.Application.EventHandler.DetachEventListener(el, eventNamespace);
         this.Application.EventHandler.AttachEventListener(binder, eventType, eventNamespace, (e: Event) => {
             // tslint:disable-next-line:no-floating-promises
-            application.Binder.BindIncrementalScroll(binder, eventNamespace, $(elParent), dataKeyLocal, sector);
+            application.Binder.BindIncrementalScroll(binder, eventNamespace, elParent, dataKeyLocal, sector);
         });
     }
 
-    public async BindIncrementalScroll(binder: HTMLElement | Window, eventNamespace: string, eljParent: JQuery, dataKey: string, sector: string): Promise<boolean> {
-        if ((!this.Application.Observer.IsEnabledNotifyIncremental) || (!this.IsElementScrollVerticalAlmostEnd(eljParent)))
+    public async BindIncrementalScroll(binder: HTMLElement | Window, eventNamespace: string, elParent: HTMLElement, dataKey: string, sector: string): Promise<boolean> {
+        if ((!this.Application.Observer.IsEnabledNotifyIncremental) || (!this.IsElementScrollVerticalAlmostEnd(elParent)))
             return (true);
         if (!await this.Application.Storage.CanGrowData(dataKey, sector)) {
             this.Application.EventHandler.DetachEventListener(binder, eventNamespace);
@@ -167,17 +165,16 @@ class DrapoBinder {
         if (tag == 'select')
             return ((e.target as HTMLSelectElement).value);
         if (tag == 'textarea')
-            return ($(e.target).val());
+            return (this.Application.Document.GetValue(e.target as HTMLElement));
         return (null);
     }
 
     private GetEventValueInput(eventType: string, e: Event): any {
         const el: HTMLElement = e.target as HTMLElement;
-        const elementJQuery: JQuery = $(el);
         const type: string = el.getAttribute('type');
         if (type == 'checkbox')
-            return (elementJQuery.prop('checked'));
-        return (elementJQuery.val());
+            return (this.Application.Document.GetProperty(el, 'checked'));
+        return (this.Application.Document.GetValue(el));
     }
 
     private GetParentElementWithScrollVertical(el: HTMLElement): HTMLElement {
@@ -199,22 +196,21 @@ class DrapoBinder {
         const overflow: string = style.getPropertyValue('overflow');
         if (overflow === 'auto')
             return (true);
-        const elj: JQuery = $(el);
-        if (elj.scrollTop())
+        if (el.scrollTop)
             return (true);
-        elj.scrollTop(1);
-        if (!elj.scrollTop())
+        el.scrollTop = 1;
+        if (!el.scrollTop)
             return (false);
-        elj.scrollTop(0);
+        el.scrollTop = 0;
         return (true);
     }
 
-    public IsElementScrollVerticalAlmostEnd(el: JQuery): boolean {
-        const scrollTop: number = el.scrollTop();
+    public IsElementScrollVerticalAlmostEnd(el: HTMLElement): boolean {
+        const scrollTop: number = el.scrollTop;
         if (scrollTop == null)
             return (false);
-        const clientHeight = el[0].clientHeight;
-        const scrollHeight = el[0].scrollHeight;
+        const clientHeight = el.clientHeight;
+        const scrollHeight = el.scrollHeight;
         const remaining: number = scrollHeight - (scrollTop + clientHeight);
         return (remaining < 50);
     }

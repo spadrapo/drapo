@@ -149,7 +149,7 @@ var DrapoWindowHandler = (function () {
                         window.Uri = uri;
                         window.Element = windowElement;
                         this._windows.push(window);
-                        return [4, this.Application.Document.ResolveWindow($(window.Element))];
+                        return [4, this.Application.Document.ResolveWindow(window.Element)];
                     case 7:
                         _b.sent();
                         if (!(onLoad != null)) return [3, 9];
@@ -256,7 +256,7 @@ var DrapoWindowHandler = (function () {
                         continue;
                     window_3.Visible = false;
                     windowHidden = window_3;
-                    this.Application.Document.Hide($(window_3.Element));
+                    this.Application.Document.Hide(window_3.Element);
                     if (!all)
                         break;
                 }

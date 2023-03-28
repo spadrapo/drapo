@@ -4,10 +4,11 @@ declare class DrapoControlFlow {
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     ResolveControlFlowDocument(): Promise<void>;
-    ResolveControlFlowSector(jQueryStart: JQuery, canResolveComponents?: boolean): Promise<void>;
+    ResolveControlFlowSector(el: HTMLElement, canResolveComponents?: boolean): Promise<void>;
     private ResolveControlFlowForParent;
     private ResolveControlFlowForRoot;
-    ResolveControlFlowFor(forJQuery: JQuery, isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
+    ResolveControlFlowForElement(forElement: HTMLElement, isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
+    ResolveControlFlowForArray(forElements: HTMLElement[], isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
     InitializeContext(context: DrapoContext, content: string): void;
     IsElementControlFlowTemplate(el: HTMLElement): boolean;
     private ResolveControlFlowForInternal;

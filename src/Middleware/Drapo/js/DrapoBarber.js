@@ -604,7 +604,7 @@ var DrapoBarber = (function () {
     DrapoBarber.prototype.ResolveMustacheElementVisibility = function (el, canBind) {
         if (canBind === void 0) { canBind = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var elFor, elIF, sector, context, visibility, elj;
+            var elFor, elIF, sector, context, visibility;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -621,11 +621,10 @@ var DrapoBarber = (function () {
                         return [4, this.Application.Solver.ResolveConditional(elIF, el, sector, context)];
                     case 1:
                         visibility = _a.sent();
-                        elj = $(el);
                         if (visibility)
-                            this.Application.Document.Show(elj);
+                            this.Application.Document.Show(el);
                         else
-                            this.Application.Document.Hide(elj);
+                            this.Application.Document.Hide(el);
                         return [2];
                 }
             });

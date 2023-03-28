@@ -49,5 +49,19 @@ var DrapoSearcher = (function () {
             return (null);
         return (elementsJQuery[0]);
     };
+    DrapoSearcher.prototype.FindByAttribute = function (name) {
+        var elj = $('[' + name + ']');
+        var els = [];
+        for (var i = 0; i < elj.length; i++)
+            els.push(elj[i]);
+        return (els);
+    };
+    DrapoSearcher.prototype.FindByAttributeFromParent = function (name, el) {
+        var elj = $(el).find('[' + name + ']');
+        var els = [];
+        for (var i = 0; i < elj.length; i++)
+            els.push(elj[i]);
+        return (els);
+    };
     return DrapoSearcher;
 }());

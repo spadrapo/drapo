@@ -56,4 +56,20 @@
             return (null);
         return (elementsJQuery[0]);
     }
+
+    public FindByAttribute(name: string): HTMLElement[] {
+        const elj: JQuery = $('[' + name + ']');
+        const els: HTMLElement[] = [];
+        for (let i: number = 0; i < elj.length; i++)
+            els.push(elj[i]);
+        return (els);
+    }
+
+    public FindByAttributeFromParent(name: string, el: HTMLElement): HTMLElement[] {
+        const elj: JQuery = $(el).find('[' + name + ']');
+        const els: HTMLElement[] = [];
+        for (let i: number = 0; i < elj.length; i++)
+            els.push(elj[i]);
+        return (els);
+    }
 }

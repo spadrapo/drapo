@@ -695,13 +695,13 @@ class DrapoFunctionHandler {
     private async ExecuteFunctionUpdateDataUrl(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = functionParsed.Parameters[0];
         const dataUrl: string = functionParsed.Parameters[1];
-        const jqueryDataKeys: JQuery = $("[d-dataKey='" + dataKey + "']");
-        if ((jqueryDataKeys == null) || (jqueryDataKeys.length == 0))
+        const elDataKey: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-dataKey', dataKey);
+        if (elDataKey == null)
             return ('');
-        const dataUrlCurrent: string = jqueryDataKeys.attr('d-dataUrlGet');
+        const dataUrlCurrent: string = elDataKey.getAttribute('d-dataUrlGet');
         if (dataUrl === dataUrlCurrent)
             return ('');
-        jqueryDataKeys.attr('d-dataUrlGet', dataUrl);
+        elDataKey.setAttribute('d-dataUrlGet', dataUrl);
         await this.Application.Storage.DiscardCacheData(dataKey, sector);
         await this.Application.Observer.Notify(dataKey, null, null);
         return ('');
@@ -710,13 +710,13 @@ class DrapoFunctionHandler {
     private async ExecuteFunctionUpdateDataUrlSet(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = functionParsed.Parameters[0];
         const dataUrl: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
-        const jqueryDataKeys: JQuery = $("[d-dataKey='" + dataKey + "']");
-        if ((jqueryDataKeys == null) || (jqueryDataKeys.length == 0))
+        const elDataKey: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-dataKey', dataKey);
+        if (elDataKey == null)
             return ('');
-        const dataUrlCurrent: string = jqueryDataKeys.attr('d-dataUrlSet');
+        const dataUrlCurrent: string = elDataKey.getAttribute('d-dataUrlSet');
         if (dataUrl === dataUrlCurrent)
             return ('');
-        jqueryDataKeys.attr('d-dataUrlSet', dataUrl);
+        elDataKey.setAttribute('d-dataUrlSet', dataUrl);
         await this.Application.Storage.DiscardCacheData(dataKey, sector);
         return ('');
     }
@@ -1129,18 +1129,18 @@ class DrapoFunctionHandler {
     private async ExecuteFunctionFocus(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const did: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         if ((did === null) || (did === '') || (did === undefined)) {
-            const elementFocused: JQuery = $(document.activeElement);
+            const elementFocused: HTMLElement = document.activeElement as HTMLElement;
             elementFocused.blur();
             return ('');
         }
-        const didJ: JQuery = $("[d-id='" + did + "']");
-        if ((didJ === null) || (didJ.length === 0))
+        const elDid: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-id', did);
+        if (elDid === null)
             return ('');
         const isSelectText: string = functionParsed.Parameters[1];
         const isSelect: boolean = ((isSelectText == null) || (isSelectText == '')) ? true : await this.Application.Solver.ResolveConditional(isSelectText);
-        didJ.focus();
+        elDid.focus();
         if (isSelect)
-            didJ.select();
+            this.Application.Document.Select(elDid);
         return ('');
     }
 

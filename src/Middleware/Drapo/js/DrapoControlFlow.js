@@ -48,12 +48,12 @@ var DrapoControlFlow = (function () {
     });
     DrapoControlFlow.prototype.ResolveControlFlowDocument = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var jQuerysFor;
+            var els;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        jQuerysFor = $('[d-for]');
-                        return [4, this.ResolveControlFlowFor(jQuerysFor)];
+                        els = this.Application.Searcher.FindByAttribute('d-for');
+                        return [4, this.ResolveControlFlowForArray(els)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -61,17 +61,17 @@ var DrapoControlFlow = (function () {
             });
         });
     };
-    DrapoControlFlow.prototype.ResolveControlFlowSector = function (jQueryStart, canResolveComponents) {
+    DrapoControlFlow.prototype.ResolveControlFlowSector = function (el, canResolveComponents) {
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var jQuerysFor;
+            var els;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (jQueryStart == null)
+                        if (el == null)
                             return [2];
-                        jQuerysFor = jQueryStart.find('[d-for]');
-                        return [4, this.ResolveControlFlowFor(jQuerysFor, false, true, DrapoStorageLinkType.Render, canResolveComponents)];
+                        els = this.Application.Searcher.FindByAttributeFromParent('d-for', el);
+                        return [4, this.ResolveControlFlowForArray(els, false, true, DrapoStorageLinkType.Render, canResolveComponents)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -95,24 +95,42 @@ var DrapoControlFlow = (function () {
         }
         return (forElement);
     };
-    DrapoControlFlow.prototype.ResolveControlFlowFor = function (forJQuery, isIncremental, canUseDifference, type, canResolveComponents) {
+    DrapoControlFlow.prototype.ResolveControlFlowForElement = function (forElement, isIncremental, canUseDifference, type, canResolveComponents) {
         if (isIncremental === void 0) { isIncremental = false; }
         if (canUseDifference === void 0) { canUseDifference = true; }
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var forElements, i, forElement, forElementRoot, context, sector, forJQueryRoot, renderContext;
+            var forElements;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         forElements = [];
+                        forElements.push(forElement);
+                        return [4, this.ResolveControlFlowForArray(forElements, isIncremental, canUseDifference, type, canResolveComponents)];
+                    case 1: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
+    DrapoControlFlow.prototype.ResolveControlFlowForArray = function (forElements, isIncremental, canUseDifference, type, canResolveComponents) {
+        if (isIncremental === void 0) { isIncremental = false; }
+        if (canUseDifference === void 0) { canUseDifference = true; }
+        if (type === void 0) { type = DrapoStorageLinkType.Render; }
+        if (canResolveComponents === void 0) { canResolveComponents = true; }
+        return __awaiter(this, void 0, void 0, function () {
+            var forElementsInserted, i, forElement, forElementRoot, context, sector, renderContext;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        forElementsInserted = [];
                         i = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(i < forJQuery.length)) return [3, 4];
-                        forElement = forJQuery[i];
+                        if (!(i < forElements.length)) return [3, 4];
+                        forElement = forElements[i];
                         forElementRoot = this.ResolveControlFlowForRoot(forElement);
-                        if (!this.Application.Document.IsElementInserted(forElements, forElementRoot))
+                        if (!this.Application.Document.IsElementInserted(forElementsInserted, forElementRoot))
                             return [3, 3];
                         if (this.Application.Document.IsElementPreprocessed(forElement))
                             return [3, 3];
@@ -123,9 +141,8 @@ var DrapoControlFlow = (function () {
                         context.Sector = sector;
                         if (!this.Application.Document.IsSectorReady(sector))
                             return [3, 3];
-                        forJQueryRoot = $(forElementRoot);
                         renderContext = new DrapoRenderContext();
-                        return [4, this.ResolveControlFlowForInternal(sector, context, renderContext, forJQueryRoot, isIncremental, canUseDifference, type, canResolveComponents)];
+                        return [4, this.ResolveControlFlowForInternal(sector, context, renderContext, forElementRoot, isIncremental, canUseDifference, type, canResolveComponents)];
                     case 2:
                         _a.sent();
                         _a.label = 3;
@@ -166,15 +183,16 @@ var DrapoControlFlow = (function () {
             return (false);
         return (el.style.display === 'none');
     };
-    DrapoControlFlow.prototype.ResolveControlFlowForInternal = function (sector, context, renderContext, forJQuery, isIncremental, canUseDifference, type, canResolveComponents) {
+    DrapoControlFlow.prototype.ResolveControlFlowForInternal = function (sector, context, renderContext, elFor, isIncremental, canUseDifference, type, canResolveComponents) {
         if (canUseDifference === void 0) { canUseDifference = true; }
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         if (canResolveComponents === void 0) { canResolveComponents = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var forText, ifText, forIfText, wasWrapped, viewportBeforeScrollPosition, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, dForRender, dForRenders, isHTML, isViewport, hasViewPortBefore, hasViewPortbeforeRecycle, viewportBefore, itemsViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, forReferenceTemplate, isHash, hashTemplate, useHash, length, canCreateViewport, viewport, isViewportActive, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, startViewport, endViewport, j, data, templateKey, _b, templateData, _c, template, viewportIndexDifference, nodeIndex, oldNode, item, _d, hashValueBefore, hashValueCurrent, _e, applyHash, template;
+            var forJQuery, forText, ifText, forIfText, wasWrapped, viewportBeforeScrollPosition, wrapper, parsedFor, key, dataKeyIteratorRange, forElementRecursive, jQueryForReference, elementForTemplate, hasIfText, hasForIfText, conditionalForIfResult, isContextRoot, anchor, content, dForRender, dForRenders, isHTML, isViewport, hasViewPortBefore, hasViewPortbeforeRecycle, viewportBefore, itemsViewport, isDifference, isLastChild, isContextRootFull, isFirstChild, isContextRootFullExclusive, forJQueryParent, items, dataItem, datas, range, dataKeyIterator, dataKey, dataKeyIteratorParts, isDataKey, dataKeyRoot, lastInserted, start, nextElements, dataLength, i, template, forReferenceTemplate, isHash, hashTemplate, useHash, length, canCreateViewport, viewport, isViewportActive, canFragmentElements, fragment, canUseTemplate, templateVariables, _a, nodesRemovedCount, startViewport, endViewport, j, data, templateKey, _b, templateData, _c, template, viewportIndexDifference, nodeIndex, oldNode, item, _d, hashValueBefore, hashValueCurrent, _e, applyHash, template;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
+                        forJQuery = $(elFor);
                         forText = forJQuery.attr('d-for');
                         ifText = null;
                         forIfText = null;
@@ -207,7 +225,7 @@ var DrapoControlFlow = (function () {
                         hasForIfText = (forIfText != null);
                         conditionalForIfResult = true;
                         isContextRoot = context.IsEmpty;
-                        anchor = (isContextRoot) ? this.Application.Document.Hide(forJQuery) : forJQuery;
+                        anchor = (isContextRoot) ? this.Application.Document.Hide(elFor) : forJQuery;
                         content = isContextRoot ? forJQuery[0].outerHTML : null;
                         if (isContextRoot)
                             this.InitializeContext(context, content);
@@ -478,7 +496,7 @@ var DrapoControlFlow = (function () {
                         if ((context.IsInsideRecursion) && (!context.IsElementTemplateRoot(key)))
                             jQueryForReference.remove();
                         if (!((dataItem != null) && (dataItem.IsIncremental))) return [3, 32];
-                        return [4, this.Application.Binder.BindIncremental(forJQuery, dataKeyIterator, sector, isIncremental)];
+                        return [4, this.Application.Binder.BindIncremental(forJQuery[0], dataKeyIterator, sector, isIncremental)];
                     case 31:
                         _f.sent();
                         _f.label = 32;
@@ -539,7 +557,7 @@ var DrapoControlFlow = (function () {
                     case 5:
                         if (!_a) return [3, 7];
                         context.Down();
-                        return [4, this.ResolveControlFlowForInternal(sector, context, renderContext, childJQuery, false, true, DrapoStorageLinkType.Render)];
+                        return [4, this.ResolveControlFlowForInternal(sector, context, renderContext, child, false, true, DrapoStorageLinkType.Render)];
                     case 6:
                         _b.sent();
                         context.Up();
