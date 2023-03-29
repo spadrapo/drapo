@@ -1184,6 +1184,8 @@ var DrapoDocument = (function () {
         });
     };
     DrapoDocument.prototype.Clone = function (el) {
+        if (el == null)
+            return (null);
         var elj = $(el).clone();
         return (elj[0]);
     };

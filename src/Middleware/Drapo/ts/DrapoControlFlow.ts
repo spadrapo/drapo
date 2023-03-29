@@ -851,7 +851,7 @@ class DrapoControlFlow {
         for (let i = start; i < end; i++) {
             const data: any = viewport.Data[i];
             //Template
-            const template: HTMLElement = this.Application.Solver.CloneElement(viewport.ElementTemplate);
+            const template: HTMLElement = this.Application.Document.Clone(viewport.ElementTemplate);
             const item: DrapoContextItem = context.Create(data, template, template, viewport.DataKey, viewport.Key, viewport.DataKeyIteratorRange, i, null);
             await this.ResolveControlFlowForIterationRender(viewport.Sector, context, template, renderContext, true, true);
             const hashValueCurrent: string = hashTemplate === null ? null : await this.GetElementHashValue(viewport.Sector, context, template, hashTemplate);

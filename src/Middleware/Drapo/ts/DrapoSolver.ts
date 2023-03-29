@@ -464,7 +464,7 @@ class DrapoSolver {
         const dataKey: string = this.Application.Solver.ResolveDataKey(dataPath);
         const dataFields: string[] = this.Application.Solver.ResolveDataFields(dataPath);
         //Delay
-        if ((!context.IsKey(dataKey)) && (!this.Application.Storage.IsDataKeyExecution(dataKey))&& (!await this.Application.Storage.EnsureDataKeyFieldReady(dataKey, sector, dataPath))) {
+        if ((!context.IsKey(dataKey)) && (!this.Application.Storage.IsDataKeyExecution(dataKey)) && (!await this.Application.Storage.EnsureDataKeyFieldReady(dataKey, sector, dataPath))) {
             if ((dataFields.length === 0))
                 return ('');
             if (this.Application.Storage.IsDataKeyDelay(dataKey, sector))
@@ -764,23 +764,41 @@ class DrapoSolver {
     }
 
     public Clone(object: any, deepCopy: boolean = false): any {
+        if (object === null)
+            return (null);
         if (typeof object === "string")
             return (object);
         if (typeof object === "number")
             return (object);
-        if ($.isArray(object))
-            return (this.CloneArray(object, deepCopy));
-        if (deepCopy)
-            return (jQuery.extend(true, {}, object));
-        else
-            return (jQuery.extend({}, object));
+        //Array
+        if (Array.isArray(object))
+            return (this.CloneArray(object as [], deepCopy));
+        //Object
+        return (this.CloneObject(object, deepCopy));
     }
 
-    private CloneArray(object: any, deepCopy: boolean): any {
-        if (deepCopy)
-            return (jQuery.extend(true, [], object));
-        else
-            return (jQuery.extend([], object));
+    private CloneObject(object: any, deepCopy: boolean): any {
+        const clone: any = {};
+        for (const property in object) {
+            if (!Object.prototype.hasOwnProperty.call(object, property))
+                continue;
+            if (deepCopy)
+                clone[property] = this.Clone(object[property], true);
+            else
+                clone[property] = object[property];
+        }
+        return (clone);
+    }
+
+    private CloneArray(object: any[], deepCopy: boolean): any {
+        const clone: any[] = [];
+        for (let i: number = 0; i < object.length; i++) {
+            if (deepCopy)
+                clone.push(this.Clone(object[i], deepCopy));
+            else
+                clone.push(object[i]);
+        }
+        return (clone);
     }
 
     public CloneArrayString(list: string[]): string[] {
@@ -808,13 +826,6 @@ class DrapoSolver {
         for (let i: number = 0; i < list.length; i++)
             clone.push(list[i]);
         return (clone);
-    }
-
-    public CloneElement(el: HTMLElement): HTMLElement {
-        if (el == null)
-            return (null);
-        const elj: JQuery = $(el).clone();
-        return (elj[0]);
     }
 
     private GetSystemContextPathValue(sector: string, context: DrapoContext, executionContext: DrapoExecutionContext<any>, dataPath: string[]): string {

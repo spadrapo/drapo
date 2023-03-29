@@ -1889,11 +1889,11 @@ declare class DrapoSolver {
     UpdateItemDataPathObject(sector: string, contextItem: DrapoContextItem, executionContext: DrapoExecutionContext<any>, dataPath: string[], value: any, canNotify?: boolean): Promise<boolean>;
     UpdateDataPathObject(data: any, dataPath: string[], value: any): boolean;
     Clone(object: any, deepCopy?: boolean): any;
+    private CloneObject;
     private CloneArray;
     CloneArrayString(list: string[]): string[];
     CloneArrayElement(list: HTMLElement[]): HTMLElement[];
     CloneArrayAny(list: any[]): any[];
-    CloneElement(el: HTMLElement): HTMLElement;
     private GetSystemContextPathValue;
     private GetExecutionContextPathValueSolved;
     GetExecutionContextPathValue(sector: string, executionContext: DrapoExecutionContext<any>, dataPath: string[]): any;

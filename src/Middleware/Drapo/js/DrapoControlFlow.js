@@ -1151,7 +1151,7 @@ var DrapoControlFlow = (function () {
                     case 1:
                         if (!(i < end)) return [3, 7];
                         data = viewport.Data[i];
-                        template = this.Application.Solver.CloneElement(viewport.ElementTemplate);
+                        template = this.Application.Document.Clone(viewport.ElementTemplate);
                         item = context.Create(data, template, template, viewport.DataKey, viewport.Key, viewport.DataKeyIteratorRange, i, null);
                         return [4, this.ResolveControlFlowForIterationRender(viewport.Sector, context, template, renderContext, true, true)];
                     case 2:
