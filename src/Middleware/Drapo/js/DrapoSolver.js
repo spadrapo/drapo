@@ -973,22 +973,37 @@ var DrapoSolver = (function () {
     };
     DrapoSolver.prototype.Clone = function (object, deepCopy) {
         if (deepCopy === void 0) { deepCopy = false; }
+        if (object === null)
+            return (null);
         if (typeof object === "string")
             return (object);
         if (typeof object === "number")
             return (object);
-        if ($.isArray(object))
+        if (Array.isArray(object))
             return (this.CloneArray(object, deepCopy));
-        if (deepCopy)
-            return (jQuery.extend(true, {}, object));
-        else
-            return (jQuery.extend({}, object));
+        return (this.CloneObject(object, deepCopy));
+    };
+    DrapoSolver.prototype.CloneObject = function (object, deepCopy) {
+        var clone = {};
+        for (var property in object) {
+            if (!Object.prototype.hasOwnProperty.call(object, property))
+                continue;
+            if (deepCopy)
+                clone[property] = this.Clone(object[property], true);
+            else
+                clone[property] = object[property];
+        }
+        return (clone);
     };
     DrapoSolver.prototype.CloneArray = function (object, deepCopy) {
-        if (deepCopy)
-            return (jQuery.extend(true, [], object));
-        else
-            return (jQuery.extend([], object));
+        var clone = [];
+        for (var i = 0; i < object.length; i++) {
+            if (deepCopy)
+                clone.push(this.Clone(object[i], deepCopy));
+            else
+                clone.push(object[i]);
+        }
+        return (clone);
     };
     DrapoSolver.prototype.CloneArrayString = function (list) {
         if (list == null)
@@ -1013,12 +1028,6 @@ var DrapoSolver = (function () {
         for (var i = 0; i < list.length; i++)
             clone.push(list[i]);
         return (clone);
-    };
-    DrapoSolver.prototype.CloneElement = function (el) {
-        if (el == null)
-            return (null);
-        var elj = $(el).clone();
-        return (elj[0]);
     };
     DrapoSolver.prototype.GetSystemContextPathValue = function (sector, context, executionContext, dataPath) {
         if (this.Application.Storage.IsDataKeyExecution(dataPath[0]))

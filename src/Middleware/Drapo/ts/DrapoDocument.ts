@@ -889,6 +889,8 @@ class DrapoDocument {
     }
 
     public Clone(el: HTMLElement): HTMLElement {
+        if (el == null)
+            return (null);
         const elj: JQuery = $(el).clone();
         return (elj[0]);
     }
