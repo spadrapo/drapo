@@ -880,31 +880,44 @@ class DrapoDocument {
     }
 
     public GetValue(el: HTMLElement): string {
-        return ($(el).val());
+        const eli: HTMLInputElement = el as HTMLInputElement;
+        if (eli.value)
+            return (eli.value);
+        return ('');
     }
 
     public SetValue(el: HTMLElement, value: string): void {
-        $(el).val(value);
+        const eli: HTMLInputElement = el as HTMLInputElement;
+        if (eli.value)
+            eli.value = value;
     }
 
     public GetText(el: HTMLElement): string {
-        return ($(el).text());
+        const eli: HTMLInputElement = el as HTMLInputElement;
+        if (eli.textContent)
+            return (eli.textContent);
+        return (eli.innerText);
     }
 
     public SetText(el: HTMLElement, value: string): void {
-        $(el).text(value);
+        const eli: HTMLInputElement = el as HTMLInputElement;
+        if (eli.textContent)
+            eli.textContent = value;
+        else
+            eli.innerText = value;
     }
 
     public GetHTML(el: HTMLElement): string {
-        return ($(el).html());
+        return (el.innerHTML);
     }
 
     public SetHTML(el: HTMLElement, value: string): void {
-        $(el).html(value);
+        el.innerHTML = value;
     }
 
     public GetProperty(el: HTMLElement, propertyName: string): string {
-        return ($(el).prop(propertyName));
+        const elAny: any = el;
+        return (elAny[propertyName]);
     }
 
     public CreateGuid(isShort: boolean = true): string {

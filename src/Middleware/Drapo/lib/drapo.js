@@ -5851,7 +5851,7 @@ var DrapoDebugger = (function () {
     };
     DrapoDebugger.prototype.ShowDebugger = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var eljSector, fragment, elSector;
+            var elSector, fragment, elSectorNew;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5860,15 +5860,14 @@ var DrapoDebugger = (function () {
                         return [4, this.Application.Storage.UnloadData('__objects', '')];
                     case 1:
                         _a.sent();
-                        eljSector = $("div[d-sector='" + this._sector + "']");
-                        if (eljSector.length === 0) {
+                        elSector = this.Application.Searcher.FindByAttributeAndValue('d-sector', this._sector);
+                        if (elSector == null) {
                             fragment = document.createDocumentFragment();
-                            elSector = document.createElement('div');
-                            elSector.setAttribute('d-sector', this._sector);
-                            elSector.setAttribute('style', 'position:relative;z-index:99999');
-                            fragment.appendChild(elSector);
+                            elSectorNew = document.createElement('div');
+                            elSectorNew.setAttribute('d-sector', this._sector);
+                            elSectorNew.setAttribute('style', 'position:relative;z-index:99999');
+                            fragment.appendChild(elSectorNew);
                             document.body.appendChild(fragment);
-                            eljSector = $(elSector);
                         }
                         this.Application.Document.StartUpdate(this._sector);
                         return [4, this.Application.Document.LoadChildSectorContent(this._sector, '<d-debugger></d-debugger>')];
@@ -5883,7 +5882,7 @@ var DrapoDebugger = (function () {
     };
     DrapoDebugger.prototype.CloseDebugger = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var eljSector;
+            var elSector;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5893,8 +5892,10 @@ var DrapoDebugger = (function () {
                         return [4, this.Application.Document.LoadChildSectorContent(this._sector, '')];
                     case 1:
                         _a.sent();
-                        eljSector = $("div[d-sector='" + this._sector + "']");
-                        eljSector.remove();
+                        elSector = this.Application.Searcher.FindByAttributeAndValue('d-sector', this._sector);
+                        return [4, this.Application.Document.RemoveElement(elSector, false)];
+                    case 2:
+                        _a.sent();
                         this._visible = false;
                         this._active = false;
                         return [2, (true)];
@@ -6536,9 +6537,9 @@ var DrapoDebugger = (function () {
                 components = this.Application.ComponentHandler.Retrieve();
                 elAfter = components[index][2];
                 if (elBefore != null)
-                    $(elBefore).removeClass(classHighlight);
+                    elBefore.classList.remove(classHighlight);
                 if (elBefore != elAfter)
-                    $(elAfter).addClass(classHighlight);
+                    elAfter.classList.add(classHighlight);
                 return [2];
             });
         });
@@ -7849,25 +7850,38 @@ var DrapoDocument = (function () {
             eli.select();
     };
     DrapoDocument.prototype.GetValue = function (el) {
-        return ($(el).val());
+        var eli = el;
+        if (eli.value)
+            return (eli.value);
+        return ('');
     };
     DrapoDocument.prototype.SetValue = function (el, value) {
-        $(el).val(value);
+        var eli = el;
+        if (eli.value)
+            eli.value = value;
     };
     DrapoDocument.prototype.GetText = function (el) {
-        return ($(el).text());
+        var eli = el;
+        if (eli.textContent)
+            return (eli.textContent);
+        return (eli.innerText);
     };
     DrapoDocument.prototype.SetText = function (el, value) {
-        $(el).text(value);
+        var eli = el;
+        if (eli.textContent)
+            eli.textContent = value;
+        else
+            eli.innerText = value;
     };
     DrapoDocument.prototype.GetHTML = function (el) {
-        return ($(el).html());
+        return (el.innerHTML);
     };
     DrapoDocument.prototype.SetHTML = function (el, value) {
-        $(el).html(value);
+        el.innerHTML = value;
     };
     DrapoDocument.prototype.GetProperty = function (el, propertyName) {
-        return ($(el).prop(propertyName));
+        var elAny = el;
+        return (elAny[propertyName]);
     };
     DrapoDocument.prototype.CreateGuid = function (isShort) {
         if (isShort === void 0) { isShort = true; }

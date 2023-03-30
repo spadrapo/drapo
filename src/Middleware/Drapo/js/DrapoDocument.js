@@ -1175,25 +1175,38 @@ var DrapoDocument = (function () {
             eli.select();
     };
     DrapoDocument.prototype.GetValue = function (el) {
-        return ($(el).val());
+        var eli = el;
+        if (eli.value)
+            return (eli.value);
+        return ('');
     };
     DrapoDocument.prototype.SetValue = function (el, value) {
-        $(el).val(value);
+        var eli = el;
+        if (eli.value)
+            eli.value = value;
     };
     DrapoDocument.prototype.GetText = function (el) {
-        return ($(el).text());
+        var eli = el;
+        if (eli.textContent)
+            return (eli.textContent);
+        return (eli.innerText);
     };
     DrapoDocument.prototype.SetText = function (el, value) {
-        $(el).text(value);
+        var eli = el;
+        if (eli.textContent)
+            eli.textContent = value;
+        else
+            eli.innerText = value;
     };
     DrapoDocument.prototype.GetHTML = function (el) {
-        return ($(el).html());
+        return (el.innerHTML);
     };
     DrapoDocument.prototype.SetHTML = function (el, value) {
-        $(el).html(value);
+        el.innerHTML = value;
     };
     DrapoDocument.prototype.GetProperty = function (el, propertyName) {
-        return ($(el).prop(propertyName));
+        var elAny = el;
+        return (elAny[propertyName]);
     };
     DrapoDocument.prototype.CreateGuid = function (isShort) {
         if (isShort === void 0) { isShort = true; }
