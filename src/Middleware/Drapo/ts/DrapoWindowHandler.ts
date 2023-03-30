@@ -69,9 +69,9 @@ class DrapoWindowHandler {
             windowElement = elWindowsDid.children[elWindowsDid.children.length - 1] as HTMLElement;
             const windowElementTemplate: HTMLElement = this.Application.Searcher.FindByAttributeAndValueFromParent('d-template', template, windowElement);
             if (windowElementTemplate === null) {
-                this.Application.Document.SetElementHTML(windowElement, content);
+                this.Application.Document.SetHTML(windowElement, content);
             } else {
-                this.Application.Document.SetElementHTML(windowElementTemplate, content);
+                this.Application.Document.SetHTML(windowElementTemplate, content);
                 const elTemplate: HTMLElement = windowElementTemplate;
                 onLoad = elTemplate.getAttribute('d-on-load');
             }

@@ -32,10 +32,11 @@ declare class DrapoDocument {
     LoadChildSectorContent(sectorName: string, content: string): Promise<boolean>;
     LoadChildSectorDefault(sectorName: string): Promise<boolean>;
     private ReplaceDocument;
-    ReplaceElement(el: Element, elNew: Element | string | JQuery): void;
+    ReplaceElement(el: HTMLElement, elNew: HTMLElement): void;
     Show(el: HTMLElement): HTMLElement;
     private ShowInternal;
     Hide(el: HTMLElement): HTMLElement;
+    private HideInternal;
     GetWrapper(el: HTMLElement): HTMLElement;
     private Wrap;
     GetElementAttributes(el: Element): [string, string][];
@@ -44,7 +45,6 @@ declare class DrapoDocument {
     private ExtractHeadInnerHtml;
     private RemoveFramework;
     private ExtractBodyInnerHtml;
-    private GetOuterHtml;
     IsElementInserted(list: HTMLElement[], itemInsert: HTMLElement): boolean;
     IsElementAttached(el: HTMLElement): boolean;
     IsElementInsideControlFlow(el: HTMLElement): boolean;
@@ -58,11 +58,9 @@ declare class DrapoDocument {
     private InitializeSectorsLoaded;
     GetSectorParent(el: HTMLElement): string;
     GetSector(el: HTMLElement): string;
-    private GetElementByAttribute;
     private GetSectorElement;
     GetSectorElementInner(sector: string): HTMLElement;
     SetSectorElementInner(sector: string, el: HTMLElement, canDetach: boolean): void;
-    SetElementHTML(el: HTMLElement, html: string): void;
     CreateHTMLElement(html: string, onlyLast?: boolean): HTMLElement;
     private InitializeSectorElementDetach;
     CanDetachElement(el: HTMLElement): boolean;

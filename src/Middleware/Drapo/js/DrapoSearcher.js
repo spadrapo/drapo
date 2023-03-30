@@ -39,29 +39,42 @@ var DrapoSearcher = (function () {
     };
     DrapoSearcher.prototype.FindByAttributeAndValue = function (name, value) {
         var elementsJQuery = $("[" + name + "='" + value + "']");
-        if ((elementsJQuery === null) || (elementsJQuery.windowContainer === 0))
+        if ((elementsJQuery === null) || (elementsJQuery.length === 0))
             return (null);
         return (elementsJQuery[0]);
+    };
+    DrapoSearcher.prototype.FindAllByAttributeAndValue = function (name, value) {
+        var elj = $("[" + name + "='" + value + "']");
+        var els = [];
+        for (var i = 0; i < elj.length; i++)
+            els.push(elj[i]);
+        return (els);
     };
     DrapoSearcher.prototype.FindByAttributeAndValueFromParent = function (name, value, parent) {
         var elementsJQuery = $(parent).find("[" + name + "='" + value + "']");
-        if ((elementsJQuery === null) || (elementsJQuery.windowContainer === 0))
+        if ((elementsJQuery === null) || (elementsJQuery.length === 0))
             return (null);
         return (elementsJQuery[0]);
     };
-    DrapoSearcher.prototype.FindByAttribute = function (name) {
+    DrapoSearcher.prototype.FindAllByAttribute = function (name) {
         var elj = $('[' + name + ']');
         var els = [];
         for (var i = 0; i < elj.length; i++)
             els.push(elj[i]);
         return (els);
     };
-    DrapoSearcher.prototype.FindByAttributeFromParent = function (name, el) {
+    DrapoSearcher.prototype.FindAllByAttributeFromParent = function (name, el) {
         var elj = $(el).find('[' + name + ']');
         var els = [];
         for (var i = 0; i < elj.length; i++)
             els.push(elj[i]);
         return (els);
+    };
+    DrapoSearcher.prototype.FindByTagName = function (tagName) {
+        var elj = $(tagName);
+        if ((elj === null) || (elj.length === 0))
+            return (null);
+        return (elj[0]);
     };
     return DrapoSearcher;
 }());
