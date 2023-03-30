@@ -59,15 +59,14 @@ class DrapoDebugger {
             return (false);
         await this.Application.Storage.UnloadData('__objects', '');
         //Inject Sector
-        let eljSector = $("div[d-sector='" + this._sector + "']");
-        if (eljSector.length === 0) {
+        const elSector: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-sector', this._sector);
+        if (elSector == null) {
             const fragment: DocumentFragment = document.createDocumentFragment();
-            const elSector: HTMLElement = document.createElement('div');
-            elSector.setAttribute('d-sector', this._sector);
-            elSector.setAttribute('style', 'position:relative;z-index:99999');
-            fragment.appendChild(elSector);
+            const elSectorNew: HTMLElement = document.createElement('div');
+            elSectorNew.setAttribute('d-sector', this._sector);
+            elSectorNew.setAttribute('style', 'position:relative;z-index:99999');
+            fragment.appendChild(elSectorNew);
             document.body.appendChild(fragment);
-            eljSector = $(elSector);
         }
         //Load Sector
         this.Application.Document.StartUpdate(this._sector);
@@ -84,8 +83,8 @@ class DrapoDebugger {
         this.Application.Document.StartUpdate(this._sector);
         await this.Application.Document.LoadChildSectorContent(this._sector, '');
         //Remove Sector
-        const eljSector = $("div[d-sector='" + this._sector + "']");
-        eljSector.remove();
+        const elSector: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-sector', this._sector);
+        await this.Application.Document.RemoveElement(elSector, false);
         this._visible = false;
         this._active = false;
         return (true);
@@ -387,9 +386,9 @@ class DrapoDebugger {
         const components: [string, string, HTMLElement, any][] = this.Application.ComponentHandler.Retrieve();
         const elAfter: HTMLElement = components[index][2];
         if (elBefore != null)
-            $(elBefore).removeClass(classHighlight);
+            elBefore.classList.remove(classHighlight);
         if (elBefore != elAfter)
-            $(elAfter).addClass(classHighlight);
+            elAfter.classList.add(classHighlight);
     }
 
     public async GetComponents(): Promise<any[]> {

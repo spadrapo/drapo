@@ -15,14 +15,14 @@ class DrapoControlFlow {
     }
 
     public async ResolveControlFlowDocument(): Promise<void> {
-        const els: HTMLElement[] = this.Application.Searcher.FindByAttribute('d-for');
+        const els: HTMLElement[] = this.Application.Searcher.FindAllByAttribute('d-for');
         await this.ResolveControlFlowForArray(els);
     }
 
     public async ResolveControlFlowSector(el: HTMLElement, canResolveComponents: boolean = true): Promise<void> {
         if (el == null)
             return;
-        const els: HTMLElement[] = this.Application.Searcher.FindByAttributeFromParent('d-for', el);
+        const els: HTMLElement[] = this.Application.Searcher.FindAllByAttributeFromParent('d-for', el);
         await this.ResolveControlFlowForArray(els, false, true, DrapoStorageLinkType.Render, canResolveComponents);
     }
 
@@ -562,13 +562,13 @@ class DrapoControlFlow {
 
     private async GetTemplateVariables(sector: string, context: DrapoContext, dataKey: string, key: string, template: HTMLElement): Promise<string[][]> {
         //At least 2 for creating a template
-        const elsFor: HTMLElement[] = this.Application.Searcher.FindByAttributeFromParent('d-for', template);
+        const elsFor: HTMLElement[] = this.Application.Searcher.FindAllByAttributeFromParent('d-for', template);
         if (elsFor.length < 1)
             return (null);
         const dataKeys: string[] = await this.GetControlFlowExpressionsDataKey(sector, elsFor);
         if ((dataKeys == null) || (dataKeys.length < 1))
             return (null);
-        const elIfs: HTMLElement[] = this.Application.Searcher.FindByAttributeFromParent('d-if', template);
+        const elIfs: HTMLElement[] = this.Application.Searcher.FindAllByAttributeFromParent('d-if', template);
         if (elIfs.length < 1)
             return ([]);
         return (this.GetControlFlowConditionsDataKey(sector, dataKey, key, elIfs));

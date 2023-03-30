@@ -52,7 +52,7 @@ var DrapoControlFlow = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        els = this.Application.Searcher.FindByAttribute('d-for');
+                        els = this.Application.Searcher.FindAllByAttribute('d-for');
                         return [4, this.ResolveControlFlowForArray(els)];
                     case 1:
                         _a.sent();
@@ -70,7 +70,7 @@ var DrapoControlFlow = (function () {
                     case 0:
                         if (el == null)
                             return [2];
-                        els = this.Application.Searcher.FindByAttributeFromParent('d-for', el);
+                        els = this.Application.Searcher.FindAllByAttributeFromParent('d-for', el);
                         return [4, this.ResolveControlFlowForArray(els, false, true, DrapoStorageLinkType.Render, canResolveComponents)];
                     case 1:
                         _a.sent();
@@ -809,7 +809,7 @@ var DrapoControlFlow = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        elsFor = this.Application.Searcher.FindByAttributeFromParent('d-for', template);
+                        elsFor = this.Application.Searcher.FindAllByAttributeFromParent('d-for', template);
                         if (elsFor.length < 1)
                             return [2, (null)];
                         return [4, this.GetControlFlowExpressionsDataKey(sector, elsFor)];
@@ -817,7 +817,7 @@ var DrapoControlFlow = (function () {
                         dataKeys = _a.sent();
                         if ((dataKeys == null) || (dataKeys.length < 1))
                             return [2, (null)];
-                        elIfs = this.Application.Searcher.FindByAttributeFromParent('d-if', template);
+                        elIfs = this.Application.Searcher.FindAllByAttributeFromParent('d-if', template);
                         if (elIfs.length < 1)
                             return [2, ([])];
                         return [2, (this.GetControlFlowConditionsDataKey(sector, dataKey, key, elIfs))];

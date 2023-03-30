@@ -120,10 +120,10 @@ var DrapoWindowHandler = (function () {
                             windowElement = elWindowsDid.children[elWindowsDid.children.length - 1];
                             windowElementTemplate = this.Application.Searcher.FindByAttributeAndValueFromParent('d-template', template, windowElement);
                             if (windowElementTemplate === null) {
-                                this.Application.Document.SetElementHTML(windowElement, content);
+                                this.Application.Document.SetHTML(windowElement, content);
                             }
                             else {
-                                this.Application.Document.SetElementHTML(windowElementTemplate, content);
+                                this.Application.Document.SetHTML(windowElementTemplate, content);
                                 elTemplate = windowElementTemplate;
                                 onLoad = elTemplate.getAttribute('d-on-load');
                             }
