@@ -1,5 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
 class DrapoControlFlow {
     //Field
     private _application: DrapoApplication;

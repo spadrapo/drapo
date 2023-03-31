@@ -1201,6 +1201,13 @@ var DrapoDocument = (function () {
     DrapoDocument.prototype.GetHTML = function (el) {
         return (el.innerHTML);
     };
+    DrapoDocument.prototype.GetHTMLEncoded = function (html) {
+        var div = document.createElement('div');
+        var text = document.createTextNode(html);
+        div.appendChild(text);
+        var contentEncoded = div.innerHTML;
+        return (contentEncoded);
+    };
     DrapoDocument.prototype.SetHTML = function (el, value) {
         el.innerHTML = value;
     };

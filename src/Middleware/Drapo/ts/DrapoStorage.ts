@@ -1,5 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
 class DrapoStorage {
     //Field
     private _application: DrapoApplication;

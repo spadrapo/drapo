@@ -1,5 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
 class DrapoParser {
     //Field
     private readonly MUSTACHE_START = '{{';
