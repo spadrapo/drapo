@@ -6,4 +6,6 @@ declare class DrapoClassHandler {
     ResolveClass(el: HTMLElement, sector: string, canBind?: boolean, canSubscribeDelay?: boolean, dataKeyFilter?: string, dataFieldFilter?: string, type?: DrapoStorageLinkType): Promise<void>;
     ResolveClassContext(context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, sector: string, canBind: boolean, type?: DrapoStorageLinkType): Promise<boolean>;
     private ExtractClasses;
+    AddClass(el: HTMLElement, value: string): void;
+    RemoveClass(el: HTMLElement, value: string): void;
 }

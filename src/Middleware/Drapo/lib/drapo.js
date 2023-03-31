@@ -2783,14 +2783,14 @@ var DrapoClassHandler = (function () {
                     case 10:
                         addClass = _c.sent();
                         if (addClass) {
-                            el.classList.add(classTrue);
+                            this.AddClass(el, classTrue);
                             if (classFalse != null)
-                                el.classList.remove(classFalse);
+                                this.RemoveClass(el, classFalse);
                         }
                         else {
-                            el.classList.remove(classTrue);
+                            this.RemoveClass(el, classTrue);
                             if (classFalse != null)
-                                el.classList.add(classFalse);
+                                this.AddClass(el, classFalse);
                         }
                         _c.label = 11;
                     case 11:
@@ -2849,14 +2849,14 @@ var DrapoClassHandler = (function () {
                     case 10:
                         addClass = _c.sent();
                         if (addClass) {
-                            el.classList.add(classTrue);
+                            this.AddClass(el, classTrue);
                             if (classFalse != null)
-                                el.classList.remove(classFalse);
+                                this.RemoveClass(el, classFalse);
                         }
                         else {
-                            el.classList.remove(classTrue);
+                            this.RemoveClass(el, classTrue);
                             if (classFalse != null)
-                                el.classList.add(classFalse);
+                                this.AddClass(el, classFalse);
                         }
                         _c.label = 11;
                     case 11:
@@ -2879,6 +2879,16 @@ var DrapoClassHandler = (function () {
                 classes.push(parseClass);
         }
         return (classes);
+    };
+    DrapoClassHandler.prototype.AddClass = function (el, value) {
+        var values = this.Application.Parser.ParseBlock(value, ' ');
+        for (var i = 0; i < values.length; i++)
+            el.classList.add(values[i]);
+    };
+    DrapoClassHandler.prototype.RemoveClass = function (el, value) {
+        var values = this.Application.Parser.ParseBlock(value, ' ');
+        for (var i = 0; i < values.length; i++)
+            el.classList.remove(values[i]);
     };
     return DrapoClassHandler;
 }());
