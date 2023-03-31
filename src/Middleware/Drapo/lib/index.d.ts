@@ -162,7 +162,6 @@ declare class DrapoBehaviorHandler {
     private ApplySizeNew;
 }
 
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoBinder {
     private _application;
     get Application(): DrapoApplication;
@@ -430,7 +429,6 @@ declare class DrapoContextItem {
     constructor(context: DrapoContext, parent?: DrapoContextItem);
 }
 
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoControlFlow {
     private _application;
     get Application(): DrapoApplication;
@@ -547,7 +545,6 @@ declare class DrapoDebugger {
     private ExecuteFunctionDebuggerPersist;
 }
 
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoDocument {
     private _application;
     private _pendingAuthorizations;
@@ -628,6 +625,7 @@ declare class DrapoDocument {
     GetText(el: HTMLElement): string;
     SetText(el: HTMLElement, value: string): void;
     GetHTML(el: HTMLElement): string;
+    GetHTMLEncoded(html: string): string;
     SetHTML(el: HTMLElement, value: string): void;
     GetProperty(el: HTMLElement, propertyName: string): string;
     CreateGuid(isShort?: boolean): string;
@@ -1232,7 +1230,6 @@ declare class DrapoObserver {
     private IsLocked;
 }
 
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoParser {
     private readonly MUSTACHE_START;
     private readonly MUSTACHE_START_OVERFLOW;
@@ -1928,7 +1925,6 @@ declare class DrapoStack {
     Pop(): any;
 }
 
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoStorage {
     private _application;
     private _cacheItems;

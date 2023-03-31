@@ -1,5 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
 class DrapoBinder {
     //Field
     private _application: DrapoApplication;

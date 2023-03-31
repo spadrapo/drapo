@@ -61,10 +61,10 @@ var Code = (function () {
             return __generator(this, function (_a) {
                 elContent = this.GetElementContent();
                 elCode = this.GetElementCode();
-                content = $(elContent).html();
-                contentEncoded = $('<textarea/>').text(content).html();
-                $(elContent).remove();
-                $(elCode).html(contentEncoded);
+                content = this._app.Document.GetHTML(elContent);
+                contentEncoded = this._app.Document.GetHTMLEncoded(content);
+                this._app.Document.RemoveElement(elContent);
+                this._app.Document.SetHTML(elCode, contentEncoded);
                 return [2];
             });
         });

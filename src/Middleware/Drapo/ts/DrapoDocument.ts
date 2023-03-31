@@ -1,5 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
 class DrapoDocument {
     //Field
     private _application: DrapoApplication;
@@ -909,6 +907,14 @@ class DrapoDocument {
 
     public GetHTML(el: HTMLElement): string {
         return (el.innerHTML);
+    }
+
+    public GetHTMLEncoded(html: string): string {
+        const div: HTMLElement = document.createElement('div');
+        const text = document.createTextNode(html);
+        div.appendChild(text);
+        const contentEncoded = div.innerHTML;
+        return (contentEncoded);
     }
 
     public SetHTML(el: HTMLElement, value: string): void {

@@ -1,4 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoParser {
     private readonly MUSTACHE_START;
     private readonly MUSTACHE_START_OVERFLOW;

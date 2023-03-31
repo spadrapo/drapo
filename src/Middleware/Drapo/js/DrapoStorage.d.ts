@@ -1,4 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoStorage {
     private _application;
     private _cacheItems;
