@@ -891,6 +891,8 @@ class DrapoDocument {
     }
 
     public GetText(el: HTMLElement): string {
+        if (el.children.length > 0)
+            return('');
         const eli: HTMLInputElement = el as HTMLInputElement;
         if (eli.textContent)
             return (eli.textContent);
@@ -898,6 +900,8 @@ class DrapoDocument {
     }
 
     public SetText(el: HTMLElement, value: string): void {
+        if (el.children.length > 0)
+            return;
         const eli: HTMLInputElement = el as HTMLInputElement;
         if (eli.textContent)
             eli.textContent = value;
