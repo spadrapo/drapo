@@ -88,14 +88,29 @@ class DrapoClassHandler {
     }
 
     public AddClass(el: HTMLElement, value: string): void {
-        const values: string[] = this.Application.Parser.ParseBlock(value, ' ');
+        const values: string[] = this.GetClassValues(value);
         for (let i: number = 0; i < values.length; i++)
             el.classList.add(values[i]);
     }
 
     public RemoveClass(el: HTMLElement, value: string): void {
-        const values: string[] = this.Application.Parser.ParseBlock(value, ' ');
+        const values: string[] = this.GetClassValues(value);
         for (let i: number = 0; i < values.length; i++)
             el.classList.remove(values[i]);
+    }
+
+    private GetClassValues(value: string): string[] {
+        const valuesClass: string[] = [];
+        const values: string[] = this.Application.Parser.ParseBlock(value, ' ');
+        for (let i: number = 0; i < values.length; i++) {
+            const value: string = values[i];
+            if (value == null)
+                continue;
+            const valueTrim: string = value.trim();
+            if (valueTrim == '')
+                continue;
+            valuesClass.push(valueTrim);
+        }
+        return (valuesClass);
     }
 }

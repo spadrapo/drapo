@@ -2881,14 +2881,28 @@ var DrapoClassHandler = (function () {
         return (classes);
     };
     DrapoClassHandler.prototype.AddClass = function (el, value) {
-        var values = this.Application.Parser.ParseBlock(value, ' ');
+        var values = this.GetClassValues(value);
         for (var i = 0; i < values.length; i++)
             el.classList.add(values[i]);
     };
     DrapoClassHandler.prototype.RemoveClass = function (el, value) {
-        var values = this.Application.Parser.ParseBlock(value, ' ');
+        var values = this.GetClassValues(value);
         for (var i = 0; i < values.length; i++)
             el.classList.remove(values[i]);
+    };
+    DrapoClassHandler.prototype.GetClassValues = function (value) {
+        var valuesClass = [];
+        var values = this.Application.Parser.ParseBlock(value, ' ');
+        for (var i = 0; i < values.length; i++) {
+            var value_1 = values[i];
+            if (value_1 == null)
+                continue;
+            var valueTrim = value_1.trim();
+            if (valueTrim == '')
+                continue;
+            valuesClass.push(valueTrim);
+        }
+        return (valuesClass);
     };
     return DrapoClassHandler;
 }());

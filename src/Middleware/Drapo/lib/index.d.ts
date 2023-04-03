@@ -228,6 +228,7 @@ declare class DrapoClassHandler {
     private ExtractClasses;
     AddClass(el: HTMLElement, value: string): void;
     RemoveClass(el: HTMLElement, value: string): void;
+    private GetClassValues;
 }
 
 declare class DrapoComponentHandler {
