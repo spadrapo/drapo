@@ -1186,12 +1186,16 @@ var DrapoDocument = (function () {
             eli.value = value;
     };
     DrapoDocument.prototype.GetText = function (el) {
+        if (el.children.length > 0)
+            return ('');
         var eli = el;
         if (eli.textContent)
             return (eli.textContent);
         return (eli.innerText);
     };
     DrapoDocument.prototype.SetText = function (el, value) {
+        if (el.children.length > 0)
+            return;
         var eli = el;
         if (eli.textContent)
             eli.textContent = value;
