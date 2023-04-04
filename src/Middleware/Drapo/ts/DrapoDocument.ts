@@ -922,6 +922,7 @@ class DrapoDocument {
     }
 
     public SetHTML(el: HTMLElement, value: string): void {
+        value = value.replace(/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi, "<$1></$2>");
         el.innerHTML = value;
     }
 
