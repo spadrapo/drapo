@@ -1213,6 +1213,7 @@ var DrapoDocument = (function () {
         return (contentEncoded);
     };
     DrapoDocument.prototype.SetHTML = function (el, value) {
+        value = value.replace(/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi, "<$1></$2>");
         el.innerHTML = value;
     };
     DrapoDocument.prototype.GetProperty = function (el, propertyName) {
