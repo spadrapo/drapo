@@ -763,13 +763,31 @@ class DrapoSolver {
         return (true);
     }
 
-    public Clone(object: any, deepCopy: boolean = false): any {
+    private IsPrimitive(object: any): boolean {
         if (object === null)
-            return (null);
+            return (true);
         if (typeof object === "string")
-            return (object);
+            return (true);
         if (typeof object === "number")
+            return (true);
+        if (typeof object === "boolean")
+            return (true);
+        if (typeof object === "bigint")
+            return (true);
+        if (typeof object === "undefined")
+            return (true);
+        if (typeof object === "symbol")
+            return (true);
+        return (false);
+    }
+
+    public Clone(object: any, deepCopy: boolean = false): any {
+        //Primitive
+        if (this.IsPrimitive(object))
             return (object);
+        //Date
+        if (object instanceof Date)
+            return (new Date(object.getTime()));
         //Array
         if (Array.isArray(object))
             return (this.CloneArray(object as [], deepCopy));

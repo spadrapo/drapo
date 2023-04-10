@@ -1890,6 +1890,7 @@ declare class DrapoSolver {
     GetDataPathParent(dataPath: string[]): string[];
     UpdateItemDataPathObject(sector: string, contextItem: DrapoContextItem, executionContext: DrapoExecutionContext<any>, dataPath: string[], value: any, canNotify?: boolean): Promise<boolean>;
     UpdateDataPathObject(data: any, dataPath: string[], value: any): boolean;
+    private IsPrimitive;
     Clone(object: any, deepCopy?: boolean): any;
     private CloneObject;
     private CloneArray;
