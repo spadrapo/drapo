@@ -103,10 +103,10 @@ class DrapoClassHandler {
         const valuesClass: string[] = [];
         const values: string[] = this.Application.Parser.ParseBlock(value, ' ');
         for (let i: number = 0; i < values.length; i++) {
-            const value: string = values[i];
-            if (value == null)
+            const valueCurrent: string = values[i];
+            if (valueCurrent == null)
                 continue;
-            const valueTrim: string = value.trim();
+            const valueTrim: string = valueCurrent.trim();
             if (valueTrim == '')
                 continue;
             valuesClass.push(valueTrim);

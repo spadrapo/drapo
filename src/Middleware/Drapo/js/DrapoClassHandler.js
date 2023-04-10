@@ -217,10 +217,10 @@ var DrapoClassHandler = (function () {
         var valuesClass = [];
         var values = this.Application.Parser.ParseBlock(value, ' ');
         for (var i = 0; i < values.length; i++) {
-            var value_1 = values[i];
-            if (value_1 == null)
+            var valueCurrent = values[i];
+            if (valueCurrent == null)
                 continue;
-            var valueTrim = value_1.trim();
+            var valueTrim = valueCurrent.trim();
             if (valueTrim == '')
                 continue;
             valuesClass.push(valueTrim);
