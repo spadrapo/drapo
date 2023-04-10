@@ -629,6 +629,7 @@ declare class DrapoDocument {
     SetText(el: HTMLElement, value: string): void;
     GetHTML(el: HTMLElement): string;
     GetHTMLEncoded(html: string): string;
+    private EnsureHTML;
     SetHTML(el: HTMLElement, value: string): void;
     GetProperty(el: HTMLElement, propertyName: string): string;
     CreateGuid(isShort?: boolean): string;

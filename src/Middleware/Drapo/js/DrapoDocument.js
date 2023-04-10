@@ -344,7 +344,7 @@ var DrapoDocument = (function () {
                             return [2];
                         content = this.Application.Parser.ParseDocumentContent(data);
                         elContentParent = document.createElement('div');
-                        elContentParent.innerHTML = content;
+                        elContentParent.innerHTML = this.EnsureHTML(content);
                         elSector.appendChild(elContentParent.children[0]);
                         return [3, 4];
                     case 2:
@@ -1048,7 +1048,7 @@ var DrapoDocument = (function () {
         if (html == null)
             return (null);
         var elContainer = document.createElement('div');
-        elContainer.innerHTML = html;
+        elContainer.innerHTML = this.EnsureHTML(html);
         if (onlyLast)
             return elContainer.children[elContainer.children.length - 1];
         return elContainer.children[0];
@@ -1212,9 +1212,13 @@ var DrapoDocument = (function () {
         var contentEncoded = div.innerHTML;
         return (contentEncoded);
     };
+    DrapoDocument.prototype.EnsureHTML = function (value) {
+        var valueHTML = value.replace(/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi, "<$1></$2>");
+        return (valueHTML);
+    };
     DrapoDocument.prototype.SetHTML = function (el, value) {
-        value = value.replace(/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi, "<$1></$2>");
-        el.innerHTML = value;
+        var valueHTML = this.EnsureHTML(value);
+        el.innerHTML = valueHTML;
     };
     DrapoDocument.prototype.GetProperty = function (el, propertyName) {
         var elAny = el;

@@ -206,7 +206,7 @@ class DrapoDocument {
             //Append
             const content: string = this.Application.Parser.ParseDocumentContent(data);
             const elContentParent = document.createElement('div');
-            elContentParent.innerHTML = content;
+            elContentParent.innerHTML = this.EnsureHTML(content);
             elSector.appendChild(elContentParent.children[0]);
         } else {
             //Replacing
@@ -755,7 +755,7 @@ class DrapoDocument {
         if (html == null)
             return (null);
         const elContainer: HTMLElement = document.createElement('div');
-        elContainer.innerHTML = html;
+        elContainer.innerHTML = this.EnsureHTML(html);
         if (onlyLast)
             return (elContainer.children[elContainer.children.length - 1] as HTMLElement);
         return (elContainer.children[0] as HTMLElement);
@@ -921,9 +921,14 @@ class DrapoDocument {
         return (contentEncoded);
     }
 
+    private EnsureHTML(value: string): string {
+        const valueHTML: string = value.replace(/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi, "<$1></$2>");
+        return (valueHTML);
+    }
+
     public SetHTML(el: HTMLElement, value: string): void {
-        value = value.replace(/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi, "<$1></$2>");
-        el.innerHTML = value;
+        const valueHTML: string = this.EnsureHTML(value);
+        el.innerHTML = valueHTML;
     }
 
     public GetProperty(el: HTMLElement, propertyName: string): string {
