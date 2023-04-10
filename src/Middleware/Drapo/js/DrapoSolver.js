@@ -971,14 +971,29 @@ var DrapoSolver = (function () {
         }
         return (true);
     };
+    DrapoSolver.prototype.IsPrimitive = function (object) {
+        if (object === null)
+            return (true);
+        if (typeof object === "string")
+            return (true);
+        if (typeof object === "number")
+            return (true);
+        if (typeof object === "boolean")
+            return (true);
+        if (typeof object === "bigint")
+            return (true);
+        if (typeof object === "undefined")
+            return (true);
+        if (typeof object === "symbol")
+            return (true);
+        return (false);
+    };
     DrapoSolver.prototype.Clone = function (object, deepCopy) {
         if (deepCopy === void 0) { deepCopy = false; }
-        if (object === null)
-            return (null);
-        if (typeof object === "string")
+        if (this.IsPrimitive(object))
             return (object);
-        if (typeof object === "number")
-            return (object);
+        if (object instanceof Date)
+            return (new Date(object.getTime()));
         if (Array.isArray(object))
             return (this.CloneArray(object, deepCopy));
         return (this.CloneObject(object, deepCopy));
