@@ -270,6 +270,11 @@ namespace WebDrapo.Test
             ValidatePage("ComponentLabelContextIndex");
         }
         [TestCase]
+        public void ComponentLabelContextIndexIFTest()
+        {
+            ValidatePage("ComponentLabelContextIndexIF");
+        }
+        [TestCase]
         public void ComponentLabelContextInlineForTest()
         {
             ValidatePage("ComponentLabelContextInlineFor");
@@ -403,6 +408,26 @@ namespace WebDrapo.Test
         public void ControlFlowForAttributeExpressionTest()
         {
             ValidatePage("ControlFlowForAttributeExpression");
+        }
+        [TestCase]
+        public void ControlFlowForComponentMultipleSourcesTest()
+        {
+            ValidatePage("ControlFlowForComponentMultipleSources");
+        }
+        [TestCase]
+        public void ControlFlowForComponentMultipleSourcesCompositeTest()
+        {
+            ValidatePage("ControlFlowForComponentMultipleSourcesComposite");
+        }
+        [TestCase]
+        public void ControlFlowForComponentMultipleSourcesCompositeRangeTest()
+        {
+            ValidatePage("ControlFlowForComponentMultipleSourcesCompositeRange");
+        }
+        [TestCase]
+        public void ControlFlowForComponentMultipleSourcesRangeTest()
+        {
+            ValidatePage("ControlFlowForComponentMultipleSourcesRange");
         }
         [TestCase]
         public void ControlFlowForDataFieldTest()
@@ -1071,6 +1096,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionAddDataItemReference");
         }
         [TestCase]
+        public void FunctionAddDateTest()
+        {
+            ValidatePage("FunctionAddDate");
+        }
+        [TestCase]
         public void FunctionAddRequestHeaderTest()
         {
             ValidatePage("FunctionAddRequestHeader");
@@ -1327,6 +1357,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionUpdateDataResolve");
         }
         [TestCase]
+        public void FunctionUpdateItemFieldMustacheIndexTest()
+        {
+            ValidatePage("FunctionUpdateItemFieldMustacheIndex");
+        }
+        [TestCase]
         public void FunctionUpdateItemFieldResolveTest()
         {
             ValidatePage("FunctionUpdateItemFieldResolve");
@@ -1420,6 +1455,11 @@ namespace WebDrapo.Test
         public void ModelTextAreaMultipleMustachesTest()
         {
             ValidatePage("ModelTextAreaMultipleMustaches");
+        }
+        [TestCase]
+        public void MustacheHatTest()
+        {
+            ValidatePage("MustacheHat");
         }
         [TestCase]
         public void MustacheNullTest()
@@ -1566,6 +1606,11 @@ namespace WebDrapo.Test
         //{
         //    ValidatePage("ServerResponseRedirectAsync");
         //}
+        [TestCase]
+        public void StackObjectReferenceTest()
+        {
+            ValidatePage("StackObjectReference");
+        }
         [TestCase]
         public void ThemesTest()
         {

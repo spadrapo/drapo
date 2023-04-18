@@ -12,28 +12,24 @@
         this._application = application;
     }
 
-    public Create(values: [string, string][], name: string = null) : string
-    {
+    public Create(values: [string, string][], name: string = null): string {
         const styleName: string = ((name === null) || (name === '')) ? this.CreateStyleName() : name;
         const elStyle: HTMLStyleElement = document.createElement('style');
         elStyle.id = styleName;
         elStyle.type = 'text/css';
         const style: string = this.StringfyValues(values);
-        elStyle.innerHTML = '.' + styleName + ' \n{\n ' + style +' }';
+        elStyle.innerHTML = '.' + styleName + ' \n{\n ' + style + ' }';
         document.head.appendChild(elStyle);
         return (styleName);
     }
 
-    private CreateStyleName() : string
-    {
+    private CreateStyleName(): string {
         return ('s-' + this.Application.Document.CreateGuid());
     }
 
-    private StringfyValues(values: [string, string][]): string
-    {
+    private StringfyValues(values: [string, string][]): string {
         let valueText: string = '';
-        for (let i: number = 0; i < values.length; i++)
-        {
+        for (let i: number = 0; i < values.length; i++) {
             const entry: [string, string] = values[i];
             const valueEntry: string = entry[0] + ':' + entry[1] + ';\n';
             valueText += valueEntry;
@@ -44,8 +40,7 @@
     public async ReloadStyles(): Promise<void> {
         const reloaded: string[] = [];
         const length: number = document.head.childNodes.length;
-        for (let i: number = 0; i < length; i++)
-        {
+        for (let i: number = 0; i < length; i++) {
             const childNode: ChildNode = document.head.childNodes[i];
             if (childNode.nodeName.toLowerCase() !== 'link')
                 continue;
@@ -62,10 +57,21 @@
         }
     }
 
-    private async AddStyleToDocument(url : string): Promise<void> {
+    private async AddStyleToDocument(url: string): Promise<void> {
         const link: HTMLLinkElement = document.createElement('link');
         link.href = url;
         link.rel = 'stylesheet';
         document.head.appendChild(link);
+    }
+
+    public GetElementStyleProperty(el: HTMLElement, name: string): string {
+        const elStyle: CSSStyleDeclaration = window.getComputedStyle(el);
+        const value: string = elStyle.getPropertyValue(name);
+        return (value);
+    }
+
+    public SetElementStyleProperty(el: HTMLElement, name: string, value: string): void {
+        const elStyle: CSSStyleDeclaration = window.getComputedStyle(el);
+        elStyle.setProperty(name, value);
     }
 }

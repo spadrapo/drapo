@@ -1,21 +1,20 @@
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoControlFlow {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     ResolveControlFlowDocument(): Promise<void>;
-    ResolveControlFlowSector(jQueryStart: JQuery, canResolveComponents?: boolean): Promise<void>;
+    ResolveControlFlowSector(el: HTMLElement, canResolveComponents?: boolean): Promise<void>;
     private ResolveControlFlowForParent;
     private ResolveControlFlowForRoot;
-    ResolveControlFlowFor(forJQuery: JQuery, isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
+    ResolveControlFlowForElement(forElement: HTMLElement, isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
+    ResolveControlFlowForArray(forElements: HTMLElement[], isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
     InitializeContext(context: DrapoContext, content: string): void;
     IsElementControlFlowTemplate(el: HTMLElement): boolean;
     private ResolveControlFlowForInternal;
     private ResolveControlFlowForIterationRender;
     private CanApplyConditional;
     private ResolveControlFlowForIterationRenderClass;
-    IsControlFlowForIterationVisible(sector: string, context: DrapoContext, el: Element, elj: JQuery, renderContext: DrapoRenderContext): Promise<boolean>;
-    private CreateList;
+    IsControlFlowForIterationVisible(sector: string, context: DrapoContext, el: Element, renderContext: DrapoRenderContext): Promise<boolean>;
     private RemoveList;
     private RemoveListIndex;
     private IsControlFlowDataKeyIterator;
@@ -37,7 +36,7 @@ declare class DrapoControlFlow {
     private IsValidRangeIndex;
     ApplyRange(data: any[], range: DrapoRange): any[];
     GetRangeIndex(data: any[], rangeIndex: string): number;
-    ExecuteDataItem(sector: string, context: DrapoContext, expression: string, iterator: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string): Promise<boolean>;
+    ExecuteDataItem(sector: string, context: DrapoContext, expression: string, iterator: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string, executionContext?: DrapoExecutionContext<any>): Promise<boolean>;
     ResolveControlFlowForViewportScroll(viewport: DrapoViewport): Promise<void>;
     private CreateControlFlowForViewportFragment;
 }

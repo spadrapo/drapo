@@ -56,7 +56,7 @@ var DrapoClassHandler = (function () {
         if (dataFieldFilter === void 0) { dataFieldFilter = null; }
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         return __awaiter(this, void 0, void 0, function () {
-            var dClassMustache, elj, context, dClass, _a, classesExpressions, i, classExpression, classMustachesTrue, classTrue, classFalse, _b, expressionMustaches, expressionCurrent, addClass;
+            var dClassMustache, context, dClass, _a, classesExpressions, i, classExpression, classMustachesTrue, classTrue, classFalse, _b, expressionMustaches, expressionCurrent, addClass;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -65,10 +65,9 @@ var DrapoClassHandler = (function () {
                             return [2];
                         if (this.Application.Barber.HasMustacheContext(dClassMustache, sector))
                             return [2];
-                        elj = $(el);
                         context = new DrapoContext();
                         if (!this.Application.Parser.IsMustacheOnly(dClassMustache)) return [3, 2];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, null, dClassMustache, elj, sector, canBind)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, null, null, dClassMustache, el, sector, canBind)];
                     case 1:
                         _a = _c.sent();
                         return [3, 3];
@@ -86,11 +85,11 @@ var DrapoClassHandler = (function () {
                         if (!(i < classesExpressions.length)) return [3, 12];
                         classExpression = classesExpressions[i];
                         classMustachesTrue = classExpression[0];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, classMustachesTrue, elj, canBind, type)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, classMustachesTrue, el, canBind, type)];
                     case 5:
                         classTrue = _c.sent();
                         if (!(classExpression[2] != null)) return [3, 7];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, classExpression[2], elj, canBind, type)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, classExpression[2], el, canBind, type)];
                     case 6:
                         _b = _c.sent();
                         return [3, 8];
@@ -100,21 +99,21 @@ var DrapoClassHandler = (function () {
                     case 8:
                         classFalse = _b;
                         expressionMustaches = classExpression[1];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, expressionMustaches, elj, canBind, type)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, expressionMustaches, el, canBind, type)];
                     case 9:
                         expressionCurrent = _c.sent();
                         return [4, this.Application.Solver.ResolveConditional(expressionCurrent)];
                     case 10:
                         addClass = _c.sent();
                         if (addClass) {
-                            elj.addClass(classTrue);
+                            this.AddClass(el, classTrue);
                             if (classFalse != null)
-                                elj.removeClass(classFalse);
+                                this.RemoveClass(el, classFalse);
                         }
                         else {
-                            elj.removeClass(classTrue);
+                            this.RemoveClass(el, classTrue);
                             if (classFalse != null)
-                                elj.addClass(classFalse);
+                                this.AddClass(el, classFalse);
                         }
                         _c.label = 11;
                     case 11:
@@ -125,7 +124,7 @@ var DrapoClassHandler = (function () {
             });
         });
     };
-    DrapoClassHandler.prototype.ResolveClassContext = function (context, renderContext, el, elj, sector, canBind, type) {
+    DrapoClassHandler.prototype.ResolveClassContext = function (context, renderContext, el, sector, canBind, type) {
         if (type === void 0) { type = DrapoStorageLinkType.Render; }
         return __awaiter(this, void 0, void 0, function () {
             var dClassMustache, dClass, _a, classesExpressions, i, classExpression, classMustachesTrue, classTrue, classFalse, _b, expressionMustaches, expressionCurrent, addClass;
@@ -136,7 +135,7 @@ var DrapoClassHandler = (function () {
                         if (dClassMustache == null)
                             return [2];
                         if (!this.Application.Parser.IsMustacheOnly(dClassMustache)) return [3, 2];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, dClassMustache, elj, sector, canBind)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, dClassMustache, el, sector, canBind)];
                     case 1:
                         _a = _c.sent();
                         return [3, 3];
@@ -152,11 +151,11 @@ var DrapoClassHandler = (function () {
                         if (!(i < classesExpressions.length)) return [3, 12];
                         classExpression = classesExpressions[i];
                         classMustachesTrue = classExpression[0];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, renderContext, classMustachesTrue, elj, canBind, type)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, renderContext, null, classMustachesTrue, el, canBind, type)];
                     case 5:
                         classTrue = _c.sent();
                         if (!(classExpression[2] != null)) return [3, 7];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, renderContext, classExpression[2], elj, canBind, type)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, renderContext, null, classExpression[2], el, canBind, type)];
                     case 6:
                         _b = _c.sent();
                         return [3, 8];
@@ -166,21 +165,21 @@ var DrapoClassHandler = (function () {
                     case 8:
                         classFalse = _b;
                         expressionMustaches = classExpression[1];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, renderContext, expressionMustaches, elj, canBind, type)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, renderContext, null, expressionMustaches, el, canBind, type)];
                     case 9:
                         expressionCurrent = _c.sent();
                         return [4, this.Application.Solver.ResolveConditional(expressionCurrent)];
                     case 10:
                         addClass = _c.sent();
                         if (addClass) {
-                            elj.addClass(classTrue);
+                            this.AddClass(el, classTrue);
                             if (classFalse != null)
-                                elj.removeClass(classFalse);
+                                this.RemoveClass(el, classFalse);
                         }
                         else {
-                            elj.removeClass(classTrue);
+                            this.RemoveClass(el, classTrue);
                             if (classFalse != null)
-                                elj.addClass(classFalse);
+                                this.AddClass(el, classFalse);
                         }
                         _c.label = 11;
                     case 11:
@@ -203,6 +202,30 @@ var DrapoClassHandler = (function () {
                 classes.push(parseClass);
         }
         return (classes);
+    };
+    DrapoClassHandler.prototype.AddClass = function (el, value) {
+        var values = this.GetClassValues(value);
+        for (var i = 0; i < values.length; i++)
+            el.classList.add(values[i]);
+    };
+    DrapoClassHandler.prototype.RemoveClass = function (el, value) {
+        var values = this.GetClassValues(value);
+        for (var i = 0; i < values.length; i++)
+            el.classList.remove(values[i]);
+    };
+    DrapoClassHandler.prototype.GetClassValues = function (value) {
+        var valuesClass = [];
+        var values = this.Application.Parser.ParseBlock(value, ' ');
+        for (var i = 0; i < values.length; i++) {
+            var valueCurrent = values[i];
+            if (valueCurrent == null)
+                continue;
+            var valueTrim = valueCurrent.trim();
+            if (valueTrim == '')
+                continue;
+            valuesClass.push(valueTrim);
+        }
+        return (valuesClass);
     };
     return DrapoClassHandler;
 }());

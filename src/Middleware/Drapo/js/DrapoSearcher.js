@@ -11,18 +11,18 @@ var DrapoSearcher = (function () {
         configurable: true
     });
     DrapoSearcher.prototype.FindDataKey = function (dataKey, sector) {
-        var jqueryDataKeys = $("[d-dataKey='" + dataKey + "']");
-        var el = this.Filter(sector, jqueryDataKeys);
+        var els = this.FindAllByAttributeAndValue('d-datakey', dataKey);
+        var el = this.Filter(sector, els);
         return (el);
     };
     DrapoSearcher.prototype.HasDataKeyElement = function (dataKey) {
-        var jqueryDataKeys = $("[d-dataKey='" + dataKey + "']");
-        return ((jqueryDataKeys != null) && (jqueryDataKeys.length > 0));
+        var el = this.FindByAttributeAndValue('d-datakey', dataKey);
+        return (el != null);
     };
-    DrapoSearcher.prototype.Filter = function (sector, jqueryDataKeys) {
+    DrapoSearcher.prototype.Filter = function (sector, els) {
         var sectors = this.Application.Document.GetSectorsAllowed(sector);
-        for (var i = 0; i < jqueryDataKeys.length; i++) {
-            var el = jqueryDataKeys[i];
+        for (var i = 0; i < els.length; i++) {
+            var el = els[i];
             var elSector = this.Application.Document.GetSector(el);
             if (elSector !== sector) {
                 var elAccess = el.getAttribute('d-dataAccess');
@@ -36,6 +36,36 @@ var DrapoSearcher = (function () {
                 return (el);
         }
         return (null);
+    };
+    DrapoSearcher.prototype.CreateElementsList = function (nodes) {
+        var els = [];
+        for (var i = 0; i < nodes.length; i++)
+            els.push(nodes[i]);
+        return (els);
+    };
+    DrapoSearcher.prototype.FindByAttributeAndValue = function (name, value) {
+        var el = document.querySelector("[" + name + "='" + value + "']");
+        return (el);
+    };
+    DrapoSearcher.prototype.FindAllByAttributeAndValue = function (name, value) {
+        var nodes = document.querySelectorAll("[" + name + "='" + value + "']");
+        return (this.CreateElementsList(nodes));
+    };
+    DrapoSearcher.prototype.FindByAttributeAndValueFromParent = function (name, value, parent) {
+        var el = parent.querySelector("[" + name + "='" + value + "']");
+        return (el);
+    };
+    DrapoSearcher.prototype.FindAllByAttribute = function (name) {
+        var nodes = document.querySelectorAll("[" + name + "]");
+        return (this.CreateElementsList(nodes));
+    };
+    DrapoSearcher.prototype.FindAllByAttributeFromParent = function (name, parent) {
+        var nodes = parent.querySelectorAll("[" + name + "]");
+        return (this.CreateElementsList(nodes));
+    };
+    DrapoSearcher.prototype.FindByTagName = function (tagName) {
+        var el = document.querySelector(tagName);
+        return (el);
     };
     return DrapoSearcher;
 }());

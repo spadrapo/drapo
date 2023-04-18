@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Stack Object Reference</title>
+</head>
+<body>
+    <span>Stack Object Reference</span>
+    <div d-datakey="objects1" d-dataurlget="~/Data/GetLevels?children=5&amp;levels=1&amp;prefix=O1"></div>
+    <div d-datakey="objects2" d-dataurlget="~/Data/GetLevels?children=5&amp;levels=1&amp;prefix=O2"></div>
+    <div d-datakey="Update" d-datatype="value" d-dataloadtype="startup" d-datavalue="ExecuteDataItem({{UpdateObject1}},obj1 in objects1);Notify(objects1)"></div>
+    <div d-datakey="UpdateObject1" d-datatype="value" d-dataloadtype="startup" d-datavalue="PushStack({{obj1}});ExecuteDataItem({{UpdateObject1Object2}},obj2 in objects2);PopStack()"></div>
+    <div d-datakey="UpdateObject1Object2" d-datatype="value" d-dataloadtype="startup" d-datavalue="IF({{_stack.peek.Value}}={{obj2.Value}},UpdateItemField({{_stack.peek.Key}},{{obj2.Key}}))"></div>
+    <div>
+        <div d-for="object1 in objects1" style="display: none;">
+            <span d-model="{{object1.Key}}"></span>
+            <br />
+        </div>
+    <div>
+            <span>O2L1K0</span>
+            <br />
+        </div><div>
+            <span>O2L1K1</span>
+            <br />
+        </div><div>
+            <span>O2L1K2</span>
+            <br />
+        </div><div>
+            <span>O2L1K3</span>
+            <br />
+        </div><div>
+            <span>O2L1K4</span>
+            <br />
+        </div></div>
+    <br />
+    <div>
+        <div d-for="object2 in objects2" style="display: none;">
+            <span d-model="{{object2.Key}}"></span>
+            <br />
+        </div>
+    <div>
+            <span>O2L1K0</span>
+            <br />
+        </div><div>
+            <span>O2L1K1</span>
+            <br />
+        </div><div>
+            <span>O2L1K2</span>
+            <br />
+        </div><div>
+            <span>O2L1K3</span>
+            <br />
+        </div><div>
+            <span>O2L1K4</span>
+            <br />
+        </div></div>
+    <br />
+    <input type="button" value="update" d-id="__drapoUnitTest" d-on-click="{{Update}}" />
+
+</body></html>

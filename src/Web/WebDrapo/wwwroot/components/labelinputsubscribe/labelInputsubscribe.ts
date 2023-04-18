@@ -1,4 +1,4 @@
-﻿async function labelinputsubscribeConstructor(el: HTMLElement, app: any): Promise<LabelInputSubscribe> {
+﻿async function labelinputsubscribeConstructor(el: HTMLElement, app: DrapoApplication): Promise<LabelInputSubscribe> {
     //Initialize
     let instance: LabelInputSubscribe = new LabelInputSubscribe(el, app);
     await instance.Initalize();
@@ -8,43 +8,40 @@
 class LabelInputSubscribe {
     //Field
     private _el: HTMLElement = null;
-    private _app: any;
+    private _app: DrapoApplication;
     private _sector: string = null;
     //Properties
     //Constructors
-    constructor(el: HTMLElement, app: any) {
+    constructor(el: HTMLElement, app: DrapoApplication) {
         this._el = el;
         this._app = app;
     }
 
     public async Initalize(): Promise<void> {
-        let elj = $(this._el);
-        this._sector = this._app._document.GetSector(this._el);
-        let dataKey = elj.attr("d-dataKeySource");
+        this._sector = this._app.Document.GetSector(this._el);
+        let dataKey = this._el.getAttribute("d-dataKeySource");
         let instance: LabelInputSubscribe = this;
-        this._app._observer.SubscribeComponent(dataKey, this._el, async () => { await instance.Notify(); });
+        this._app.Observer.SubscribeComponent(dataKey, this._el, async () => { await instance.Notify(); });
         await this.Notify();
     }
 
     public async Notify(): Promise<void> {
-        let elj = $(this._el);
-        let dataKey = elj.attr("d-dataKeySource");
-        let dataField = elj.attr("d-dataKeyField");
-        let caption = elj.attr("d-caption");
-        let label = elj.children().first();
-        let input = elj.children().last();
-        label.html(caption);
-        let dataItem: any = await this._app._storage.RetrieveData(dataKey, this._sector);
+        let dataKey = this._el.getAttribute("d-dataKeySource");
+        let dataField = this._el.getAttribute("d-dataKeyField");
+        let caption = this._el.getAttribute("d-caption");
+        let label: HTMLElement = this._el.children[0] as HTMLElement;
+        let input: HTMLElement = this._el.children[this._el.children.length - 1] as HTMLElement;
+        this._app.Document.SetHTML(label, caption);
+        let dataItem: any = await this._app.Storage.RetrieveData(dataKey, this._sector);
         let value = (dataItem != null) ? dataItem[dataField] : '';
-        input.html(value);
+        this._app.Document.SetHTML(input, value);
     }
 
     public async Update(value: string): Promise<void> {
-        let elj = $(this._el);
-        let dataKey = elj.attr("d-dataKeySource");
-        let dataField = elj.attr("d-dataKeyField");
+        let dataKey = this._el.getAttribute("d-dataKeySource");
+        let dataField = this._el.getAttribute("d-dataKeyField");
         let mustache: string = '{{' + dataKey + '.' + dataField + '}}';
-        let dataPath: string[] = this._app._parser.ParseMustache(mustache);
-        await this._app._storage.UpdateDataPath(this._sector, null, dataPath, value);
+        let dataPath: string[] = this._app.Parser.ParseMustache(mustache);
+        await this._app.Storage.UpdateDataPath(this._sector, null, dataPath, value);
     }
 }

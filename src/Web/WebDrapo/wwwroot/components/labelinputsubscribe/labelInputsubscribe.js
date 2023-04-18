@@ -58,16 +58,15 @@ var LabelInputSubscribe = (function () {
     }
     LabelInputSubscribe.prototype.Initalize = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var elj, dataKey, instance;
+            var dataKey, instance;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        elj = $(this._el);
-                        this._sector = this._app._document.GetSector(this._el);
-                        dataKey = elj.attr("d-dataKeySource");
+                        this._sector = this._app.Document.GetSector(this._el);
+                        dataKey = this._el.getAttribute("d-dataKeySource");
                         instance = this;
-                        this._app._observer.SubscribeComponent(dataKey, this._el, function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                        this._app.Observer.SubscribeComponent(dataKey, this._el, function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0: return [4, instance.Notify()];
                                 case 1:
@@ -85,22 +84,21 @@ var LabelInputSubscribe = (function () {
     };
     LabelInputSubscribe.prototype.Notify = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var elj, dataKey, dataField, caption, label, input, dataItem, value;
+            var dataKey, dataField, caption, label, input, dataItem, value;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        elj = $(this._el);
-                        dataKey = elj.attr("d-dataKeySource");
-                        dataField = elj.attr("d-dataKeyField");
-                        caption = elj.attr("d-caption");
-                        label = elj.children().first();
-                        input = elj.children().last();
-                        label.html(caption);
-                        return [4, this._app._storage.RetrieveData(dataKey, this._sector)];
+                        dataKey = this._el.getAttribute("d-dataKeySource");
+                        dataField = this._el.getAttribute("d-dataKeyField");
+                        caption = this._el.getAttribute("d-caption");
+                        label = this._el.children[0];
+                        input = this._el.children[this._el.children.length - 1];
+                        this._app.Document.SetHTML(label, caption);
+                        return [4, this._app.Storage.RetrieveData(dataKey, this._sector)];
                     case 1:
                         dataItem = _a.sent();
                         value = (dataItem != null) ? dataItem[dataField] : '';
-                        input.html(value);
+                        this._app.Document.SetHTML(input, value);
                         return [2];
                 }
             });
@@ -108,16 +106,15 @@ var LabelInputSubscribe = (function () {
     };
     LabelInputSubscribe.prototype.Update = function (value) {
         return __awaiter(this, void 0, void 0, function () {
-            var elj, dataKey, dataField, mustache, dataPath;
+            var dataKey, dataField, mustache, dataPath;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        elj = $(this._el);
-                        dataKey = elj.attr("d-dataKeySource");
-                        dataField = elj.attr("d-dataKeyField");
+                        dataKey = this._el.getAttribute("d-dataKeySource");
+                        dataField = this._el.getAttribute("d-dataKeyField");
                         mustache = '{{' + dataKey + '.' + dataField + '}}';
-                        dataPath = this._app._parser.ParseMustache(mustache);
-                        return [4, this._app._storage.UpdateDataPath(this._sector, null, dataPath, value)];
+                        dataPath = this._app.Parser.ParseMustache(mustache);
+                        return [4, this._app.Storage.UpdateDataPath(this._sector, null, dataPath, value)];
                     case 1:
                         _a.sent();
                         return [2];

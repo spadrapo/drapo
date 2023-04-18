@@ -33,22 +33,22 @@ var DrapoResize = (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(DrapoResize.prototype, "ParentJQuery", {
+    Object.defineProperty(DrapoResize.prototype, "Parent", {
         get: function () {
-            return (this._parentJQuery);
+            return (this._parent);
         },
         set: function (value) {
-            this._parentJQuery = value;
+            this._parent = value;
         },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(DrapoResize.prototype, "ContainerJQuery", {
+    Object.defineProperty(DrapoResize.prototype, "Container", {
         get: function () {
-            return (this._containerJQuery);
+            return (this._container);
         },
         set: function (value) {
-            this._containerJQuery = value;
+            this._container = value;
         },
         enumerable: false,
         configurable: true

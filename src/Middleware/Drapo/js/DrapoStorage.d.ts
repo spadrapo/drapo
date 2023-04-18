@@ -1,4 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoStorage {
     private _application;
     private _cacheItems;
@@ -24,6 +23,7 @@ declare class DrapoStorage {
     ReloadPipe(dataPipe: string): Promise<boolean>;
     IsMustachePartsDataKey(sector: string, mustacheParts: string[]): boolean;
     IsDataKey(dataKey: string, sector: string, renderContext?: DrapoRenderContext): boolean;
+    IsDataKeyExecution(dataKey: string): boolean;
     IsDataKeyDelay(dataKey: string, sector: string): boolean;
     private IsDataKeyElement;
     EnsureDataKeyReady(dataKey: string, sector: string): Promise<number>;

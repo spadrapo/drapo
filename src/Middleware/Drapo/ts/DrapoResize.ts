@@ -2,8 +2,8 @@
     private _code: string;
     private _contextItem: DrapoContextItem;
     private _element: HTMLElement;
-    private _parentJQuery: JQuery;
-    private _containerJQuery: JQuery;
+    private _parent: HTMLElement;
+    private _container: HTMLElement;
     private _model: string;
     private _location: string;
     private _type: string;
@@ -33,17 +33,17 @@
     set Element(value: HTMLElement) {
         this._element = value;
     }
-    get ParentJQuery(): JQuery {
-        return (this._parentJQuery);
+    get Parent(): HTMLElement {
+        return (this._parent);
     }
-    set ParentJQuery(value: JQuery) {
-        this._parentJQuery = value;
+    set Parent(value: HTMLElement) {
+        this._parent = value;
     }
-    get ContainerJQuery(): JQuery {
-        return (this._containerJQuery);
+    get Container(): HTMLElement {
+        return (this._container);
     }
-    set ContainerJQuery(value: JQuery) {
-        this._containerJQuery = value;
+    set Container(value: HTMLElement) {
+        this._container = value;
     }
     get Model(): string {
         return (this._model);

@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Component Multiple Sources Composite Range</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <span>Control Flow - For - Component Multiple Sources Composite Range</span>
+    <div d-datakey="objectSizes" d-datatype="array" d-dataurlget="~/Data/GetObjectSizes"></div>
+    <div d-datakey="options" d-dataurlget="~/Data/GetLevels?children=4&amp;levels=2&amp;prefix=O"></div>
+    <div>
+        <div d-for="size in objectSizes.Sizes" style="display: none;">
+            <br />
+            <span d-model="{{size.Value}}"></span>
+            <div>
+                <div d-for="option in options.[1].Children[1..^0]">
+                    <d-switch dc-model="{{option.Visible}}" dc-titleturnon="On" dc-titleturnoff="Off" dc-on-click="ToggleItemField({{option.Visible}})"></d-switch>
+                </div>
+            </div>
+        </div>
+    <div>
+            <br />
+            <span>2</span>
+            <div>
+                <div>
+                    <div class="ppSwitch">
+	<input type="checkbox" disabled="disabled" d-model="{{options.[1].Children.[0].Visible}}" />
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="Off" d-if="{{options.[1].Children.[0].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[0].Visible}})"></span>
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="On" d-if="!{{options.[1].Children.[0].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[0].Visible}})" style="display: none;"></span>
+</div>
+                </div><div>
+                    <div class="ppSwitch">
+	<input type="checkbox" disabled="disabled" d-model="{{options.[1].Children.[1].Visible}}" />
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="Off" d-if="{{options.[1].Children.[1].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[1].Visible}})"></span>
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="On" d-if="!{{options.[1].Children.[1].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[1].Visible}})" style="display: none;"></span>
+</div>
+                </div><div>
+                    <div class="ppSwitch">
+	<input type="checkbox" disabled="disabled" d-model="{{options.[1].Children.[2].Visible}}" />
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="Off" d-if="{{options.[1].Children.[2].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[2].Visible}})"></span>
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="On" d-if="!{{options.[1].Children.[2].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[2].Visible}})" style="display: none;"></span>
+</div>
+                </div>
+            </div>
+        </div><div>
+            <br />
+            <span>3</span>
+            <div>
+                <div>
+                    <div class="ppSwitch">
+	<input type="checkbox" disabled="disabled" d-model="{{options.[1].Children.[0].Visible}}" />
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="Off" d-if="{{options.[1].Children.[0].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[0].Visible}})"></span>
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="On" d-if="!{{options.[1].Children.[0].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[0].Visible}})" style="display: none;"></span>
+</div>
+                </div><div>
+                    <div class="ppSwitch">
+	<input type="checkbox" disabled="disabled" d-model="{{options.[1].Children.[1].Visible}}" />
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="Off" d-if="{{options.[1].Children.[1].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[1].Visible}})"></span>
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="On" d-if="!{{options.[1].Children.[1].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[1].Visible}})" style="display: none;"></span>
+</div>
+                </div><div>
+                    <div class="ppSwitch">
+	<input type="checkbox" disabled="disabled" d-model="{{options.[1].Children.[2].Visible}}" />
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="Off" d-if="{{options.[1].Children.[2].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[2].Visible}})"></span>
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="On" d-if="!{{options.[1].Children.[2].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[2].Visible}})" style="display: none;"></span>
+</div>
+                </div>
+            </div>
+        </div><div>
+            <br />
+            <span>4</span>
+            <div>
+                <div>
+                    <div class="ppSwitch">
+	<input type="checkbox" disabled="disabled" d-model="{{options.[1].Children.[0].Visible}}" />
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="Off" d-if="{{options.[1].Children.[0].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[0].Visible}})"></span>
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="On" d-if="!{{options.[1].Children.[0].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[0].Visible}})" style="display: none;"></span>
+</div>
+                </div><div>
+                    <div class="ppSwitch">
+	<input type="checkbox" disabled="disabled" d-model="{{options.[1].Children.[1].Visible}}" />
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="Off" d-if="{{options.[1].Children.[1].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[1].Visible}})"></span>
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="On" d-if="!{{options.[1].Children.[1].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[1].Visible}})" style="display: none;"></span>
+</div>
+                </div><div>
+                    <div class="ppSwitch">
+	<input type="checkbox" disabled="disabled" d-model="{{options.[1].Children.[2].Visible}}" />
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="Off" d-if="{{options.[1].Children.[2].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[2].Visible}})"></span>
+	<span class="ppSlider" data-toggle="tooltip" data-placement="top" d-attr-title="On" d-if="!{{options.[1].Children.[2].Visible}}" d-on-click="ToggleItemField({{options.[1].Children.[2].Visible}})" style="display: none;"></span>
+</div>
+                </div>
+            </div>
+        </div></div>
+
+</body></html>

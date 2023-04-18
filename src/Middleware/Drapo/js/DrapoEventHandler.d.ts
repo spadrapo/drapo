@@ -8,14 +8,18 @@ declare class DrapoEventHandler {
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     HasContentEventContext(content: string): boolean;
-    CreateEventNamespace(el: HTMLElement, location: string, eventType: string, namespace: string): string;
+    CreateEventNamespace(el: HTMLElement, location: string, eventType: string, namespace?: string): string;
     GetEventPropagation(el: HTMLElement, eventType: string): boolean;
     private RetrieveEventBinder;
     private IsLocationBody;
-    GetElementParent(element: Element, levels?: number): JQuery;
+    GetElementParent(element: HTMLElement, levels?: number): HTMLElement;
     Attach(el: HTMLElement, renderContext: DrapoRenderContext): Promise<void>;
-    AttachContext(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, renderContext: DrapoRenderContext): Promise<void>;
+    AttachContext(context: DrapoContext, el: HTMLElement, sector: string, renderContext: DrapoRenderContext): Promise<void>;
     private HasEventContext;
+    AttachEventListener(el: HTMLElement | Window, eventType: string, eventNamespace: string, callback: Function): void;
+    DetachEventListener(el: HTMLElement | Window, eventNamespace: string): boolean;
+    private SetElementEventListenerContainer;
+    private GetElementEventListenerContainer;
     private ExecuteEvent;
     private IsEventRunning;
     private AddEventRunning;
@@ -33,4 +37,6 @@ declare class DrapoEventHandler {
     TriggerClick(el: HTMLElement): Promise<boolean>;
     Trigger(el: HTMLElement, type: string): Promise<boolean>;
     TriggerEvent(el: HTMLElement, event: Event): Promise<boolean>;
+    SyncNodeEventsDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void;
+    private GetEventListener;
 }

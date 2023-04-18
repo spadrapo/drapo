@@ -443,6 +443,9 @@ var DrapoStorage = (function () {
             return (true);
         return (this.IsDataKeyElement(dataKey, renderContext));
     };
+    DrapoStorage.prototype.IsDataKeyExecution = function (dataKey) {
+        return (dataKey === '_stack');
+    };
     DrapoStorage.prototype.IsDataKeyDelay = function (dataKey, sector) {
         var cacheIndex = this.GetCacheKeyIndex(dataKey, sector);
         if (cacheIndex === null)

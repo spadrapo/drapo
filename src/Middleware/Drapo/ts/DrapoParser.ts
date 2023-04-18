@@ -1,5 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
 class DrapoParser {
     //Field
     private readonly MUSTACHE_START = '{{';
@@ -689,6 +687,8 @@ class DrapoParser {
     public ParseDateCulture(data: string, culture: string = null): Date {
         if (data === null)
             return (null);
+        if (typeof (data as any).getMonth === 'function')
+            return ((data as any) as Date);
         const dateISO: Date = this.GetDateISO(data);
         if (dateISO !== null)
             return (dateISO);

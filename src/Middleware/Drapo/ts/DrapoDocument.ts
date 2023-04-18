@@ -1,5 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
 class DrapoDocument {
     //Field
     private _application: DrapoApplication;
@@ -67,12 +65,11 @@ class DrapoDocument {
 
     private async ResolveParent(): Promise<boolean> {
         this.Application.Log.WriteVerbose('Document - ResolveParent - Started');
-        const div = $('div').first();
-        if ((div == null) || (div.length === 0)) {
+        const divElement: HTMLElement = this.Application.Searcher.FindByTagName('div');
+        if (divElement == null) {
             this.Application.Log.WriteVerbose('Document - ResolveParent - Finished - NoDiv');
             return (false);
         }
-        const divElement: HTMLElement = div.get(0);
         const parent = divElement.getAttribute('d-sector-parent-url');
         if (parent == null) {
             this.Application.Log.WriteVerbose('Document - ResolveParent - Finished - NoParent');
@@ -100,15 +97,11 @@ class DrapoDocument {
         this.ReplaceDocument(data);
         //Replace Child html
         this.Application.Log.WriteVerbose('Document - ResolveParentResponse - parent = {0}, parentSector = {1}', parent, parentSector);
-        const divChildSector = $("div[d-sector='" + parentSector + "']");
-        if (divChildSector == null) {
-            this.Application.Log.WriteVerbose('Document - ResolveParentResponse - Finished - divChildSector == null');
-            return;
+        const elChildSector: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-sector', parentSector);
+        if (elChildSector != null) {
+            await this.AddSectorFriends(parentSector, elChildSector.getAttribute('d-sector-friend'));
+            this.SetHTML(elChildSector, childHtml);
         }
-        if (this.Application.Log.ShowHTML)
-            this.Application.Log.WriteVerbose('Document - ResolveParentResponse - childHtml - {0}', childHtml);
-        await this.AddSectorFriends(parentSector, divChildSector.attr('d-sector-friend'));
-        divChildSector.html(childHtml);
         //Sectors
         for (let i: number = 0; i < sectors.length; i++) {
             const sector: [string, string, string] = sectors[i];
@@ -146,19 +139,19 @@ class DrapoDocument {
         return (parse[3]);
     }
 
-    private async ResolveChildren(divStart: JQuery): Promise<void> {
+    private async ResolveChildren(elStart: HTMLElement): Promise<void> {
         //Children Sectors
-        const divChildrenSector = divStart == null ? $('div[d-sector]') : divStart.find('div[d-sector]');
-        if ((divChildrenSector == null) || (divChildrenSector.length === 0))
+        const elsSector: HTMLElement[] = elStart == null ? this.Application.Searcher.FindAllByAttribute('d-sector') : this.Application.Searcher.FindAllByAttributeFromParent('d-sector', elStart);
+        if (elsSector.length === 0)
             return;
         //Retrieve First Level Sectors
-        const sector: string = this.GetSector(divStart != null ? divStart.get(0) : null);
+        const sector: string = this.GetSector(elStart);
         const sectorChildren: HTMLElement[] = [];
-        for (let i = 0; i < divChildrenSector.length; i++) {
-            const sectorChild: HTMLElement = divChildrenSector[i];
-            const sectorChildParent = this.GetSectorParent(sectorChild);
+        for (let i = 0; i < elsSector.length; i++) {
+            const elSector: HTMLElement = elsSector[i];
+            const sectorChildParent = this.GetSectorParent(elSector);
             if (sector === sectorChildParent)
-                sectorChildren.push(sectorChild);
+                sectorChildren.push(elSector);
         }
         //Resolve Children Sectors
         for (let i = 0; i < sectorChildren.length; i++) {
@@ -188,7 +181,7 @@ class DrapoDocument {
                     let item: any = await this.Application.Solver.ResolveItemDataPathObject(childSector, contextItem, dataPath);
                     if ((item === null) || (item === '')) {
                         item = this.Application.Document.CreateGuid();
-                        await this.Application.Solver.UpdateItemDataPathObject(childSector, contextItem, dataPath, item);
+                        await this.Application.Solver.UpdateItemDataPathObject(childSector, contextItem, null, dataPath, item);
                     }
                     container = item.toString();
                 } else {
@@ -213,12 +206,12 @@ class DrapoDocument {
             //Append
             const content: string = this.Application.Parser.ParseDocumentContent(data);
             const elContentParent = document.createElement('div');
-            elContentParent.innerHTML = content;
+            elContentParent.innerHTML = this.EnsureHTML(content);
             elSector.appendChild(elContentParent.children[0]);
         } else {
             //Replacing
             if (data != null)
-                await this.ReplaceSectorData($(elSector), data);
+                await this.ReplaceSectorData(elSector, data);
         }
         //Routing
         const route: string = ((canRoute) && (url != null)) ? elSector.getAttribute('d-route') : 'false';
@@ -230,11 +223,10 @@ class DrapoDocument {
         await this.AddSectorHierarchy(sector, sectorParent);
         //Sector Friend
         await this.AddSectorFriends(sector, elSector.getAttribute('d-sector-friend'));
-        const eljSector: JQuery = $(elSector);
         //Load Default Sectors
         if (canLoadDefaultSectors) {
-            const divChildSectorLoaded: JQuery = eljSector.children();
-            const divElement: HTMLElement = divChildSectorLoaded.length > 0 ? divChildSectorLoaded.get(0) : null;
+            const divChildSectorLoaded: HTMLCollection = elSector.children;
+            const divElement: HTMLElement = divChildSectorLoaded.length > 0 ? divChildSectorLoaded[0] as HTMLElement : null;
             const sectors: [string, string, string][] = divElement != null ? this.ExtractSectors(divElement) : [];
             for (let i: number = 0; i < sectors.length; i++) {
                 const sectorInfo: [string, string, string] = sectors[i];
@@ -250,19 +242,18 @@ class DrapoDocument {
             return;
         //Content
         const elSectorContent: HTMLElement = container !== null ? elSector.children[elSector.children.length - 1] as HTMLElement : elSector;
-        const eljSectorContent: JQuery = $(elSectorContent);
         //Storage Before
         await this.Application.Storage.ResolveData(false, elSectorContent);
         //Control Flow
-        await this.Application.ControlFlow.ResolveControlFlowSector(eljSectorContent);
+        await this.Application.ControlFlow.ResolveControlFlowSector(elSectorContent);
         //Components
-        await this.Application.ComponentHandler.ResolveComponents(eljSectorContent);
+        await this.Application.ComponentHandler.ResolveComponents(elSectorContent);
         //Storage After
         await this.Application.Storage.ResolveData(true, elSectorContent);
         //Mustaches
-        await this.Application.Barber.ResolveMustaches(eljSectorContent);
+        await this.Application.Barber.ResolveMustaches(elSectorContent);
         //Children
-        await this.ResolveChildren(eljSectorContent);
+        await this.ResolveChildren(elSectorContent);
         //Delay
         await this.Application.Storage.LoadDataDelayedAndNotify();
         //Event On Load
@@ -278,9 +269,9 @@ class DrapoDocument {
         await this.Application.ComponentHandler.UnloadComponentInstancesDetached(sector);
     }
 
-    private async ReplaceSectorData(divChildSector: JQuery, data: string): Promise<boolean> {
+    private async ReplaceSectorData(elChildSector: HTMLElement, data: string): Promise<boolean> {
         if (data === null) {
-            divChildSector.html('');
+            this.SetHTML(elChildSector, '');
             return (false);
         }
         const content: string = this.Application.Parser.ParseDocumentContent(data);
@@ -288,7 +279,7 @@ class DrapoDocument {
         //Template Url
         const templateUrl: string = this.Application.Solver.Get(attributes, 'd-templateurl');
         if (templateUrl === null) {
-            divChildSector.html(content);
+            this.SetHTML(elChildSector, content);
             return (true);
         }
         //Template
@@ -299,30 +290,29 @@ class DrapoDocument {
         const templateUrlContent = await this.Application.Server.GetViewHTML(templateUrl);
         const templateContent = this.Application.Parser.ParseDocumentContent(templateUrlContent);
         //Insert Template
-        divChildSector.html(templateContent);
-        const sectorTemplateJQuery: JQuery = divChildSector.find("div[d-template='" + template + "']");
-        if (sectorTemplateJQuery.length === 0)
-            divChildSector.html(content);
+        this.SetHTML(elChildSector, templateContent);
+        const elSectorTemplate: HTMLElement = this.Application.Searcher.FindByAttributeAndValueFromParent('d-template', template, elChildSector);
+        if (elSectorTemplate == null)
+            this.SetHTML(elChildSector, content);
         else
-            sectorTemplateJQuery.html(content);
+            this.SetHTML(elSectorTemplate, content);
         return (true);
     }
 
-    public async ResolveWindow(window: JQuery): Promise<void> {
-        const elWindow: HTMLElement = window.get(0);
+    public async ResolveWindow(elWindow: HTMLElement): Promise<void> {
         const sector: string = this.Application.Document.GetSector(elWindow);
         //Start Update
         this.Application.Document.StartUpdate(sector);
         //Storage Before
         await this.Application.Storage.ResolveData(false, elWindow);
         //Control Flow
-        await this.Application.ControlFlow.ResolveControlFlowSector(window, false);
+        await this.Application.ControlFlow.ResolveControlFlowSector(elWindow, false);
         //Components
-        await this.Application.ComponentHandler.ResolveComponents(window);
+        await this.Application.ComponentHandler.ResolveComponents(elWindow);
         //Storage After
         await this.Application.Storage.ResolveData(true, elWindow);
         //Mustaches
-        await this.Application.Barber.ResolveMustaches(window);
+        await this.Application.Barber.ResolveMustaches(elWindow);
     }
 
     public async ResolveComponentDynamicSector(el: HTMLElement): Promise<void> {
@@ -345,23 +335,23 @@ class DrapoDocument {
     }
 
     public async ResolveComponentUpdate(el: HTMLElement, context: DrapoContext): Promise<void> {
-        //Sector
-        const elj: JQuery = $(el);
         //Storage Before
         await this.Application.Storage.ResolveData(false, el);
         //Control Flow
-        await this.Application.ControlFlow.ResolveControlFlowSector(elj);
+        await this.Application.ControlFlow.ResolveControlFlowSector(el);
         //Internal Components
         await this.Application.ComponentHandler.ResolveComponentsElement(el, context, true, true);
         //Storage After
         await this.Application.Storage.ResolveData(true, el);
         //Mustaches
-        await this.Application.Barber.ResolveMustaches(elj, null, false);
+        await this.Application.Barber.ResolveMustaches(el, null, false);
     }
 
-    public async RemoveElement(el: HTMLElement): Promise<void> {
-        $(el).remove();
-        await this.RemoveElementIteration(el);
+    public async RemoveElement(el: HTMLElement, checkSector: boolean = true): Promise<void> {
+        if (el.parentNode)
+            el.parentNode.removeChild(el);
+        if (checkSector)
+            await this.RemoveElementIteration(el);
     }
 
     private async RemoveElementIteration(el: HTMLElement): Promise<void> {
@@ -397,11 +387,10 @@ class DrapoDocument {
             return (false);
         //Mark Sector as Loaded
         this.MarkSectorAsLoaded(sectorName);
-        const sectorJQuery: JQuery = $("div[d-sector='" + sectorName + "']");
+        const elsSector: HTMLElement[] = this.Application.Searcher.FindAllByAttributeAndValue('d-sector', sectorName);
         let elSector: HTMLElement = null;
-        for (let i: number = sectorJQuery.length - 1; i >= 0; i--)
-        {
-            const el: HTMLElement = sectorJQuery[i];
+        for (let i: number = elsSector.length - 1; i >= 0; i--) {
+            const el: HTMLElement = elsSector[i];
             if (this.IsElementDetached(el))
                 continue;
             elSector = el;
@@ -422,58 +411,58 @@ class DrapoDocument {
             return (false);
         //Mark Sector as Loaded
         this.MarkSectorAsLoaded(sectorName);
-        const sectorJQuery: JQuery = $("div[d-sector='" + sectorName + "']");
-        if (sectorJQuery.length == 0) {
+        const elSector: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-sector', sectorName);
+        if (elSector == null) {
             this.Application.Log.WriteVerbose('Document - LoadChildSectorContent - Missing Sector - {0}', sectorName);
             return (false);
         }
-        await this.LoadChildSectorInternal(null, content, sectorName, sectorJQuery[0], null, false, false, null);
+        await this.LoadChildSectorInternal(null, content, sectorName, elSector, null, false, false, null);
         return (true);
     }
 
     public async LoadChildSectorDefault(sectorName: string): Promise<boolean> {
-        const sectorJQuery: JQuery = $("div[d-sector='" + sectorName + "']");
-        if (sectorJQuery.length == 0) {
+        const elSector: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-sector', sectorName);
+        if (elSector == null) {
             this.Application.Log.WriteVerbose('Document - LoadChildSectorDefault - Missing Sector - {0}', sectorName);
             return (false);
         }
-        if (sectorJQuery.children.length == 0)
+        if (elSector.children.length == 0)
             return (false);
-        let url: string = sectorJQuery.attr('d-sector-url');
+        let url: string = elSector.getAttribute('d-sector-url');
         if ((url === null))
             url = '';
-        const urlSector = this.GetSectorParent(sectorJQuery[0]);
+        const urlSector = this.GetSectorParent(elSector);
         const urlResolved = await this.Application.Storage.ResolveDataUrlMustaches(null, urlSector, url, null);
         return (await this.LoadChildSector(sectorName, urlResolved, null, false, false));
     }
 
     private ReplaceDocument(data: string): void {
-        this.Application.Log.WriteVerbose('Document - ReplaceDocument - Before - {0}', $('html').html());
         this.Application.Log.WriteVerbose('Document - ReplaceDocument - Data - {0}', data);
         const head: string = this.ExtractHeadInnerHtml(data);
         if (head != null)
-            $('head').html(head);
+            this.SetHTML(document.head, head);
         const body: string = this.ExtractBodyInnerHtml(data);
         if (body != null)
-            $('body').html(body);
-        this.Application.Log.WriteVerbose('Document - ReplaceDocument - After - {0}', $('html').html());
+            this.SetHTML(document.body, body);
     }
 
-    public ReplaceElement(el: Element, elNew: Element | string | JQuery): void {
-        $(el).replaceWith(elNew);
+    public ReplaceElement(el: HTMLElement, elNew: HTMLElement): void {
+        const parent: HTMLElement = el.parentElement;
+        if (parent != null)
+            parent.replaceChild(elNew, el);
     }
 
-    public Show(elj: JQuery): JQuery {
+    public Show(el: HTMLElement): HTMLElement {
+        let elCurrent: HTMLElement = el;
         //Unwrap first
-        if (elj.is('span')) {
-            const eljChildren: JQuery = elj.children();
-            if ((eljChildren.length === 1) && ((eljChildren.is('option') || (eljChildren.is('optgroup')))))
-                elj = eljChildren;
+        if ((elCurrent.tagName === 'SPAN') && (el.children.length == 1)) {
+            const elChild: HTMLElement = el.children[0] as HTMLElement;
+            if ((elChild.tagName === 'OPTION') || (elChild.tagName === 'OPTGROUP'))
+                elCurrent = elChild;
         }
         //Now show it
-        for (let i: number = 0; i < elj.length; i++)
-            this.ShowInternal(elj[i]);
-        return (elj);
+        this.ShowInternal(elCurrent);
+        return (elCurrent);
     }
 
     private ShowInternal(el: HTMLElement): void {
@@ -485,36 +474,40 @@ class DrapoDocument {
             el.removeAttribute('style');
     }
 
-    public Hide(selector: JQuery): JQuery {
+    public Hide(el: HTMLElement): HTMLElement {
         //Wrap and hide
-        const isOption: boolean = selector.is('option');
-        const isOptGroup: boolean = ((!isOption) && (selector.is('optgroup')));
-        const isParentOptGroup = ((isOption) && (selector.parent().is('optgroup')));
+        const isOption: boolean = el.tagName === 'OPTION';
+        const isOptGroup: boolean = ((!isOption) && (el.tagName === 'OPTGROUP'));
+        const elParent: HTMLElement = el.parentElement;
+        const hasParent: boolean = elParent != null;
+        const isParentOptGroup = ((isOption) && (hasParent) && (elParent.tagName === 'OPTGROUP'));
         if (((isOption) && (!isParentOptGroup)) || (isOptGroup)) {
-            const parent: JQuery = (selector.parent().is('span')) ? selector.parent() : this.Wrap(selector, 'span');
-            parent.hide();
-            return (parent);
+            const elWrap: HTMLElement = ((hasParent) && (elParent.tagName === 'SPAN')) ? elParent : this.Wrap(el, 'SPAN');
+            this.HideInternal(elWrap);
+            return (elWrap);
         } else {
-            selector.hide();
-            return (selector);
+            this.HideInternal(el);
+            return (el);
         }
     }
 
-    public GetWrapper(elj: JQuery): HTMLElement {
-        if (!elj.is('span'))
-            return (null);
-        const eljChildren: JQuery = elj.children();
-        if (eljChildren.length !== 1)
-            return (null);
-        return (eljChildren.get(0));
+    private HideInternal(el: HTMLElement): void {
+        el.style.display = 'none';
     }
 
-    private Wrap(elj: JQuery, tagName: string): JQuery {
-        const el: HTMLElement = elj[0];
+    public GetWrapper(el: HTMLElement): HTMLElement {
+        if (el.tagName !== 'span')
+            return (null);
+        if (el.children.length !== 1)
+            return (null);
+        return (el.children[0] as HTMLElement);
+    }
+
+    private Wrap(el: HTMLElement, tagName: string): HTMLElement {
         const wrapper: HTMLElement = document.createElement(tagName);
         el.parentNode.insertBefore(wrapper, el);
         wrapper.appendChild(el);
-        return ($(wrapper));
+        return (wrapper);
     }
 
     public GetElementAttributes(el: Element): [string, string][] {
@@ -543,10 +536,10 @@ class DrapoDocument {
         return (attributes);
     }
 
-    public SetElementAttributes(elj: JQuery, attributes: [string, string][]): void {
+    public SetElementAttributes(el: HTMLElement, attributes: [string, string][]): void {
         for (let i: number = 0; i < attributes.length; i++) {
             const attribute: [string, string] = attributes[i];
-            elj.attr(attribute[0], attribute[1]);
+            el.setAttribute(attribute[0], attribute[1]);
         }
     }
 
@@ -589,10 +582,6 @@ class DrapoDocument {
             return (data.substr(index));
         }
         return (null);
-    }
-
-    private GetOuterHtml(el: any): any {
-        return ($('<div>').append($(el).clone()).html());
     }
 
     public IsElementInserted(list: HTMLElement[], itemInsert: HTMLElement): boolean {
@@ -709,23 +698,15 @@ class DrapoDocument {
         return (this.GetSector(el.parentElement));
     }
 
-    private GetElementByAttribute(name: string, value: string): HTMLElement {
-        const elj: JQuery = $("[" + name + "='" + value + "']");
-        if ((elj == null) || (elj.length == 0))
-            return (null);
-        return (elj[0]);
-    }
-
     private GetSectorElement(sector: string): HTMLElement {
-        return (this.GetElementByAttribute('d-sector', sector));
+        return (this.Application.Searcher.FindByAttributeAndValue('d-sector', sector));
     }
 
     public GetSectorElementInner(sector: string): HTMLElement {
         const elSector: HTMLElement = this.GetSectorElement(sector);
         if ((elSector == null) || (elSector.children.length == 0))
             return (null);
-        for (let i: number = elSector.children.length - 1; i >= 0; i--)
-        {
+        for (let i: number = elSector.children.length - 1; i >= 0; i--) {
             const elSectorChild: HTMLElement = elSector.children[i] as HTMLElement;
             const detach: string = elSectorChild.getAttribute('d-detach');
             if ((detach === null) || (detach === '') || (detach === 'active'))
@@ -770,6 +751,16 @@ class DrapoDocument {
         }
     }
 
+    public CreateHTMLElement(html: string, onlyLast: boolean = false): HTMLElement {
+        if (html == null)
+            return (null);
+        const elContainer: HTMLElement = document.createElement('div');
+        elContainer.innerHTML = this.EnsureHTML(html);
+        if (onlyLast)
+            return (elContainer.children[elContainer.children.length - 1] as HTMLElement);
+        return (elContainer.children[0] as HTMLElement);
+    }
+
     private InitializeSectorElementDetach(el: HTMLElement) {
         if (this.CanDetachElement(el))
             return;
@@ -794,10 +785,10 @@ class DrapoDocument {
             return (true);
         if (el.parentElement == null)
             return (true);
-        return(this.IsElementDetached(el.parentElement));
+        return (this.IsElementDetached(el.parentElement));
     }
 
-    public IsElementAlive(el : HTMLElement): boolean {
+    public IsElementAlive(el: HTMLElement): boolean {
         if (el === null)
             return (false);
         if (el.tagName === 'BODY')
@@ -872,6 +863,77 @@ class DrapoDocument {
             return (sector);
         const sectorResolved = await this.Application.Storage.ResolveDataUrlMustaches(null, sector, sectorImpersonate, null);
         return (sectorResolved);
+    }
+
+    public Clone(el: HTMLElement): HTMLElement {
+        if (el == null)
+            return (null);
+        return (el.cloneNode(true) as HTMLElement);
+    }
+
+    public Select(el: HTMLElement): void {
+        const eli: HTMLInputElement = el as HTMLInputElement;
+        if (eli.select != null)
+            eli.select();
+    }
+
+    public GetValue(el: HTMLElement): string {
+        const eli: HTMLInputElement = el as HTMLInputElement;
+        if (eli.value)
+            return (eli.value);
+        return ('');
+    }
+
+    public SetValue(el: HTMLElement, value: string): void {
+        const eli: HTMLInputElement = el as HTMLInputElement;
+        if (eli.value)
+            eli.value = value;
+    }
+
+    public GetText(el: HTMLElement): string {
+        if (el.children.length > 0)
+            return('');
+        const eli: HTMLInputElement = el as HTMLInputElement;
+        if (eli.textContent)
+            return (eli.textContent);
+        return (eli.innerText);
+    }
+
+    public SetText(el: HTMLElement, value: string): void {
+        if (el.children.length > 0)
+            return;
+        const eli: HTMLInputElement = el as HTMLInputElement;
+        if (eli.textContent)
+            eli.textContent = value;
+        else
+            eli.innerText = value;
+    }
+
+    public GetHTML(el: HTMLElement): string {
+        return (el.innerHTML);
+    }
+
+    public GetHTMLEncoded(html: string): string {
+        const div: HTMLElement = document.createElement('div');
+        const text = document.createTextNode(html);
+        div.appendChild(text);
+        const contentEncoded = div.innerHTML;
+        return (contentEncoded);
+    }
+
+    private EnsureHTML(value: string): string {
+        const valueHTML: string = value.replace(/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi, "<$1></$2>");
+        return (valueHTML);
+    }
+
+    public SetHTML(el: HTMLElement, value: string): void {
+        const valueHTML: string = this.EnsureHTML(value);
+        el.innerHTML = valueHTML;
+    }
+
+    public GetProperty(el: HTMLElement, propertyName: string): string {
+        const elAny: any = el;
+        return (elAny[propertyName]);
     }
 
     public CreateGuid(isShort: boolean = true): string {
@@ -961,81 +1023,7 @@ class DrapoDocument {
     }
 
     private ApplyNodeEventsDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
-        const eventsOld: [string, any[]][] = this.ExtractNodeEvents(nodeOld);
-        const eventsNew: [string, any[]][] = this.ExtractNodeEvents(nodeNew);
-        //Event Type : Insert - Update
-        for (let i: number = 0; i < eventsNew.length; i++) {
-            const eventNew: [string, any[]] = eventsNew[i];
-            const eventType: string = eventNew[0];
-            const eventsHandlerNew: any[] = eventNew[1];
-            const eventsHandlerOld: any[] = this.ExtractEvents(eventType, eventsOld);
-            //Event Array : Insert - Update
-            for (let j: number = 0; j < eventsHandlerNew.length; j++) {
-                const eventHandlerNew: any = eventsHandlerNew[j];
-                const eventHandleNamespace = this.CreateNodeEventNamespace(eventHandlerNew);
-                const eventHandlerOld: any = this.ExtractEventHandler(eventHandleNamespace, eventsHandlerOld);
-                if (eventHandlerOld === null) {
-                    //Insert
-                    $(nodeOld).bind(eventHandleNamespace, eventHandlerNew.data, eventHandlerNew.handler);
-                } else {
-                    //Update
-                    eventHandlerOld.handler = eventHandlerNew.handler;
-                }
-            }
-            //Event Array : Delete
-            if ((eventsHandlerOld !== null) && (eventsHandlerOld.length > eventsHandlerNew.length)) {
-                for (let j: number = 0; j < eventsHandlerOld.length; j++) {
-                    const eventHandlerOld: any = eventsHandlerOld[j];
-                    const eventHandleNamespace = this.CreateNodeEventNamespace(eventHandlerOld);
-                    const eventHandlerNew: any = this.ExtractEventHandler(eventHandleNamespace, eventsHandlerNew);
-                    if (eventHandlerNew === null)
-                        $(nodeOld).unbind(eventHandleNamespace);
-                }
-            }
-        }
-        //Event Type : Delete
-        if (eventsOld.length > eventsNew.length) {
-            for (let i: number = 0; i < eventsOld.length; i++) {
-                const eventOld: [string, any[]] = eventsOld[i];
-                const eventType: string = eventOld[0];
-                const eventsHandlerNew: any[] = this.ExtractEvents(eventType, eventsNew);
-                if (eventsHandlerNew === null)
-                    $(nodeOld).unbind(eventType);
-            }
-        }
-    }
-
-    private ExtractNodeEvents(node: HTMLElement): [string, any[]][] {
-        const events: [string, any[]][] = [];
-        const dataEvents = ($ as any)._data(node, 'events');
-        $.each(dataEvents, (eventType: string, eventArray) => {
-            events.push([eventType, eventArray]);
-        });
-        return (events);
-    }
-
-    private ExtractEvents(eventType: string, events: [string, any[]][]): any[] {
-        for (let i: number = 0; i < events.length; i++) {
-            const event: [string, any[]] = events[i];
-            if (event[0] === eventType)
-                return (event[1]);
-        }
-        return (null);
-    }
-
-    private ExtractEventHandler(namespace: string, eventsHandler: any[]) {
-        if (eventsHandler === null)
-            return (null);
-        for (let i: number = 0; i < eventsHandler.length; i++) {
-            const eventHandler: any = eventsHandler[i];
-            if (namespace === this.CreateNodeEventNamespace(eventHandler))
-                return (eventHandler);
-        }
-        return (null);
-    }
-
-    private CreateNodeEventNamespace(event: any): string {
-        return (event.namespace.length > 0 ? (event.type + '.' + event.namespace) : (event.type));
+        this.Application.EventHandler.SyncNodeEventsDifferences(nodeOld, nodeNew);
     }
 
     private ApplyNodeSpecialDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
@@ -1110,8 +1098,8 @@ class DrapoDocument {
         return (null);
     }
 
-    public Contains(elementJQuery: JQuery): boolean {
-        return (jQuery.contains(document.documentElement, elementJQuery[0]));
+    public Contains(element: HTMLElement): boolean {
+        return (document.documentElement.contains(element));
     }
 
     public ExtractQueryString(canUseRouter: boolean): [string, string][] {
@@ -1385,27 +1373,51 @@ class DrapoDocument {
         return (null);
     }
 
-    public async CollectSector(sector : string) : Promise<void>
-    {
-        for (let i: number = this._sectorHierarchy.length - 1; i >= 0; i--)
-        {
+    public async CollectSector(sector: string): Promise<void> {
+        for (let i: number = this._sectorHierarchy.length - 1; i >= 0; i--) {
             const sectorHierarchy: [string, string] = this._sectorHierarchy[i];
             if (sectorHierarchy[1] !== sector)
                 continue;
             const sectorCurrent: string = sectorHierarchy[0];
             await this.CollectSector(sectorCurrent);
-            if (this.GetElementByAttribute('d-sector', sectorCurrent) !== null)
+            if (this.Application.Searcher.FindByAttributeAndValue('d-sector', sectorCurrent) !== null)
                 continue;
             await this.Application.SectorContainerHandler.UnloadSector(sectorCurrent);
         }
     }
 
-    public IsFirstChild(elj: JQuery): boolean {
-        return (elj.index() === 0);
+    public IsFirstChild(el: HTMLElement): boolean {
+        return (this.GetIndex(el) === 0);
     }
 
-    public IsLastChild(elj: JQuery): boolean {
-        return (elj.next().length === 0);
+    public IsLastChild(el: HTMLElement): boolean {
+        return (this.GetNextAll(el).length === 0);
+    }
+
+    public GetIndex(el: HTMLElement): number {
+        const elParent: HTMLElement = el.parentElement;
+        if (elParent == null)
+            return (-1);
+        for (let i: number = 0; i < elParent.children.length; i++)
+            if (el === elParent.children[i])
+                return (i);
+        return (-1);
+    }
+
+    public GetNextAll(el: HTMLElement): HTMLElement[] {
+        const elParent: HTMLElement = el.parentElement;
+        if (elParent == null)
+            return ([]);
+        const els: HTMLElement[] = [];
+        let found: boolean = false;
+        for (let i: number = 0; i < elParent.children.length; i++) {
+            const elChild: HTMLElement = elParent.children[i] as HTMLElement;
+            if (el === elChild)
+                found = true;
+            else if (found)
+                els.push(elChild);
+        }
+        return (els);
     }
 
     public async ReceiveMessage(message: DrapoMessage): Promise<void> {
@@ -1439,7 +1451,7 @@ class DrapoDocument {
             if (value !== null)
                 return (value);
             return (this.GetClipboardValueExecCommand());
-        } catch{
+        } catch {
             return ('');
         }
     }
@@ -1483,7 +1495,7 @@ class DrapoDocument {
         try {
             document.addEventListener('copy', listener);
             document.execCommand('copy');
-        } catch{
+        } catch {
             return (false);
         } finally {
             document.removeEventListener('copy', listener);
@@ -1497,15 +1509,15 @@ class DrapoDocument {
         el.value = value;
         document.body.appendChild(el);
         el.select();
-        const result : boolean = document.execCommand('copy');
+        const result: boolean = document.execCommand('copy');
         document.body.removeChild(el);
         return (result);
     }
 
     public async StartUnitTest(): Promise<void> {
-        const unitTest: JQuery = $("[d-id='__drapoUnitTest']");
-        if ((unitTest === null) || (unitTest.length === 0))
+        const elUnitTest: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-id', '__drapoUnitTest');
+        if ((elUnitTest == null))
             return;
-        await this.Application.EventHandler.TriggerClick(unitTest[0]);
+        await this.Application.EventHandler.TriggerClick(elUnitTest);
     }
 }

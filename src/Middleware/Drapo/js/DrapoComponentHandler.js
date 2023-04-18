@@ -50,27 +50,18 @@ var DrapoComponentHandler = (function () {
         enumerable: false,
         configurable: true
     });
-    DrapoComponentHandler.prototype.ResolveComponents = function (jQueryStart) {
-        if (jQueryStart === void 0) { jQueryStart = null; }
+    DrapoComponentHandler.prototype.ResolveComponents = function (el) {
+        if (el === void 0) { el = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var i;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (jQueryStart == null)
-                            jQueryStart = $(document.documentElement);
-                        i = 0;
-                        _a.label = 1;
+                        if (el == null)
+                            el = document.documentElement;
+                        return [4, this.ResolveComponentsElement(el, null, true, true)];
                     case 1:
-                        if (!(i < jQueryStart.length)) return [3, 4];
-                        return [4, this.ResolveComponentsElement(jQueryStart[i], null, true, true)];
-                    case 2:
                         _a.sent();
-                        _a.label = 3;
-                    case 3:
-                        i++;
-                        return [3, 1];
-                    case 4: return [2];
+                        return [2];
                 }
             });
         });
@@ -160,18 +151,18 @@ var DrapoComponentHandler = (function () {
                         _a.sent();
                         return [2];
                     case 8:
-                        eljNew = $(html);
+                        eljNew = this.Application.Document.CreateHTMLElement(html);
                         attributes = this.Application.Document.GetElementAttributes(el);
-                        content = $(el).html();
+                        content = this.Application.Document.GetHTML(el);
                         if (context != null)
                             this.Application.ControlFlow.InitializeContext(context, content);
                         sector = this.GetSectorContext(el, context);
                         this.Application.Document.ReplaceElement(el, eljNew);
                         this.Application.Document.SetElementAttributes(eljNew, attributes);
-                        elNew = eljNew[0];
+                        elNew = eljNew;
                         elContent = ((content != null) && (content != '')) ? this.GetElementContent(elNew) : null;
                         if (elContent !== null)
-                            $(elContent).html(content);
+                            this.Application.Document.SetHTML(elContent, content);
                         isSectorContext = false;
                         elSector = elNew.getAttribute('d-sector');
                         if (!(elSector === "@")) return [3, 11];
@@ -295,7 +286,7 @@ var DrapoComponentHandler = (function () {
     };
     DrapoComponentHandler.prototype.ResolveContentElement = function (el, context, contentUrl, checkSectorReady, handleDynamicSectors) {
         return __awaiter(this, void 0, void 0, function () {
-            var html, content, eljNew;
+            var html, content, elNew;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.Application.Server.GetViewHTML(contentUrl)];
@@ -308,14 +299,14 @@ var DrapoComponentHandler = (function () {
                         return [2];
                     case 3:
                         content = this.Application.Parser.ParseDocumentContent(html);
-                        eljNew = $(content);
-                        if (!(eljNew.length === 0)) return [3, 5];
+                        elNew = this.Application.Document.CreateHTMLElement(content);
+                        if (!(elNew == null)) return [3, 5];
                         return [4, this.Application.ExceptionHandler.HandleError('There is no html container for the contenturl: {0}', contentUrl)];
                     case 4:
                         _a.sent();
                         return [2];
                     case 5:
-                        el.innerHTML = eljNew[0].innerHTML;
+                        el.innerHTML = elNew.innerHTML;
                         return [4, this.Application.Document.ResolveComponentUpdate(el, context)];
                     case 6:
                         _a.sent();

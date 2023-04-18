@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - AddDate</title>
+</head>
+<body>
+    <br>
+    <span>GetDate</span>
+    <div d-dataKey="data" d-dataType="object" d-dataProperty-date="1980-06-03T17:27:51.500Z" d-dataProperty-increment="1"></div>
+    <div>
+        <span d-model="{{data.date}}"></span>
+        <br />
+        <input type="text" d-model="{{data.increment}}" />
+        <br />
+        <input type="button" value="Date" d-on-click="UpdateItemField({{data.date}},GetDate())">
+        <br />
+        <input type="button" value="Date ISO" d-on-click="UpdateItemField({{data.date}},GetDate(ISO))">
+        <br />
+        <input type="button" value="Add Date Days" d-on-click="UpdateItemField({{data.date}},AddDate({{data.date}},day,{{data.increment}}));Notify(data)">
+        <br />
+        <input type="button" value="Add Date Days ISO" d-on-click="UpdateItemField({{data.date}},AddDate({{data.date}},day,{{data.increment}},ISO));Notify(data)" d-id="__drapoUnitTest">
+        <br />
+        <input type="button" value="Add Date Months" d-on-click="UpdateItemField({{data.date}},AddDate({{data.date}},month,{{data.increment}}));Notify(data)">
+        <br />
+        <input type="button" value="Add Date Months ISO" d-on-click="UpdateItemField({{data.date}},AddDate({{data.date}},month,{{data.increment}},ISO));Notify(data)">
+        <br />
+        <input type="button" value="Add Date Years" d-on-click="UpdateItemField({{data.date}},AddDate({{data.date}},year,{{data.increment}}));Notify(data)">
+        <br />
+        <input type="button" value="Add Date Years ISO" d-on-click="UpdateItemField({{data.date}},AddDate({{data.date}},year,{{data.increment}},ISO));Notify(data)">
+    </div>
+</body>
+</html>

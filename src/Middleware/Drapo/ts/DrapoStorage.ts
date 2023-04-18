@@ -1,5 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
 class DrapoStorage {
     //Field
     private _application: DrapoApplication;
@@ -270,6 +268,10 @@ class DrapoStorage {
         if (cacheIndex != null)
             return (true);
         return (this.IsDataKeyElement(dataKey, renderContext));
+    }
+
+    public IsDataKeyExecution(dataKey: string): boolean {
+        return (dataKey === '_stack');
     }
 
     public IsDataKeyDelay(dataKey: string, sector: string): boolean {

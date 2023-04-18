@@ -6,7 +6,7 @@ declare class DrapoComponentHandler {
     private _dataInstances;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    ResolveComponents(jQueryStart?: JQuery): Promise<void>;
+    ResolveComponents(el?: HTMLElement): Promise<void>;
     ResolveComponentsElement(el: HTMLElement, context: DrapoContext, checkSectorReady: boolean, handleDynamicSectors: boolean): Promise<void>;
     private ResolveComponentElement;
     private GetSectorContext;

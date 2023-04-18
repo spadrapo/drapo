@@ -25,10 +25,9 @@ class DrapoWindowHandler {
 
     public async CreateAndShowWindow(uri: string, did: string, parameters: [string, string][], parametersDefault: any = null): Promise<void> {
         //Windows Container
-        const windowsDid: JQuery = $("[d-id='" + did + "']");
-        if ((windowsDid === null) || (windowsDid.windowContainer === 0))
+        const elWindowsDid: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-id', did);
+        if (elWindowsDid == null)
             return;
-        const elWindowsDid : HTMLElement = windowsDid[0];
         const allowMultipleInstanceUrl: boolean = (!(elWindowsDid.getAttribute('d-window-allowMultipleInstanceUrl') === 'false'));
         if ((!allowMultipleInstanceUrl) && (this.IsWindowLoaded(uri, did)))
             return;
@@ -37,7 +36,8 @@ class DrapoWindowHandler {
         if (windowContent === null)
             return;
         //Parameters
-        let content: string = $(windowContent).last()[0].outerHTML;
+        const elContent: HTMLElement = this.Application.Document.CreateHTMLElement(windowContent, true);
+        let content: string = elContent.outerHTML;
         for (let i: number = 0; i < parameters.length; i++) {
             const parameter: [string, string] = parameters[i];
             content = content.replace(parameter[0], parameter[1]);
@@ -49,8 +49,8 @@ class DrapoWindowHandler {
                 content = content.replace(parameterCode, parameterValue);
             }
         }
-        //Jquery Window
-        let windowElement: JQuery = null;
+        //Window
+        let windowElement: HTMLElement = null;
         //Template
         const attributes: [string, string][] = this.Application.Parser.ParseElementAttributes(content);
         //Template Url
@@ -65,23 +65,23 @@ class DrapoWindowHandler {
         const templateContent = templateUrlContent === null ? null : this.Application.Parser.ParseDocumentContent(templateUrlContent);
         if (templateContent !== null) {
             //Append Template
-            windowsDid.append(templateContent);
-            windowElement = windowsDid.children().last();
-            const windowElementTemplateJQuery: JQuery = windowElement.find("div[d-template='" + template + "']");
-            if (windowElementTemplateJQuery.length === 0) {
-                windowElement.html(content);
+            elWindowsDid.append(this.Application.Document.CreateHTMLElement(templateContent));
+            windowElement = elWindowsDid.children[elWindowsDid.children.length - 1] as HTMLElement;
+            const windowElementTemplate: HTMLElement = this.Application.Searcher.FindByAttributeAndValueFromParent('d-template', template, windowElement);
+            if (windowElementTemplate === null) {
+                this.Application.Document.SetHTML(windowElement, content);
             } else {
-                windowElementTemplateJQuery.html(content);
-                const elTemplate: HTMLElement = windowElementTemplateJQuery[0];
+                this.Application.Document.SetHTML(windowElementTemplate, content);
+                const elTemplate: HTMLElement = windowElementTemplate;
                 onLoad = elTemplate.getAttribute('d-on-load');
             }
         } else {
             //Append Content
-            windowsDid.append(content);
-            windowElement = windowsDid.children().last();
+            elWindowsDid.append(this.Application.Document.CreateHTMLElement(content));
+            windowElement = elWindowsDid.children[elWindowsDid.children.length - 1] as HTMLElement;
         }
         //Sector
-        const elWindow: HTMLElement = windowElement[0];
+        const elWindow: HTMLElement = windowElement;
         const sector: string = this.Application.Document.GetSectorParent(elWindow);
         let elSector: string = elWindow.getAttribute('d-sector');
         if (elSector === "@") {
@@ -95,9 +95,9 @@ class DrapoWindowHandler {
         window.Did = did;
         window.Uri = uri;
         //Resolve
-        window.Element = windowElement[0];
+        window.Element = windowElement;
         this._windows.push(window);
-        await this.Application.Document.ResolveWindow($(window.Element));
+        await this.Application.Document.ResolveWindow(window.Element);
         //d-on-load
         if (onLoad != null)
             await this.Application.FunctionHandler.ResolveFunctionWithoutContext(elSector, elWindow, onLoad);
@@ -130,8 +130,8 @@ class DrapoWindowHandler {
     }
 
     public async TryClose(window: DrapoWindow): Promise<void> {
-        const parent: JQuery = $(window.Element).parent();
-        if ((parent == null) || (parent.length == 0))
+        const parent: HTMLElement = window.Element.parentElement;
+        if (parent == null)
             return;
         await this.DestroyWindowElement(window);
         for (let i: number = this._windows.length - 1; i >= 0; i--) {
@@ -159,7 +159,7 @@ class DrapoWindowHandler {
                 continue;
             window.Visible = false;
             windowHidden = window;
-            this.Application.Document.Hide($(window.Element));
+            this.Application.Document.Hide(window.Element);
             if (!all)
                 break;
         }

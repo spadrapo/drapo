@@ -625,122 +625,126 @@ var DrapoFunctionHandler = (function () {
                         return [4, this.ExecuteFunctionGetDate(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 116: return [2, (_a.sent())];
                     case 117:
-                        if (!(functionParsed.Name === 'pushstack')) return [3, 119];
-                        return [4, this.ExecuteFunctionPushStack(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'adddate')) return [3, 119];
+                        return [4, this.ExecuteFunctionAddDate(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 118: return [2, (_a.sent())];
                     case 119:
-                        if (!(functionParsed.Name === 'popstack')) return [3, 121];
-                        return [4, this.ExecuteFunctionPopStack(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'pushstack')) return [3, 121];
+                        return [4, this.ExecuteFunctionPushStack(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 120: return [2, (_a.sent())];
                     case 121:
-                        if (!(functionParsed.Name === 'peekstack')) return [3, 123];
-                        return [4, this.ExecuteFunctionPeekStack(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'popstack')) return [3, 123];
+                        return [4, this.ExecuteFunctionPopStack(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 122: return [2, (_a.sent())];
                     case 123:
-                        if (!(functionParsed.Name === 'execute')) return [3, 125];
-                        return [4, this.ExecuteFunctionExecute(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'peekstack')) return [3, 125];
+                        return [4, this.ExecuteFunctionPeekStack(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 124: return [2, (_a.sent())];
                     case 125:
-                        if (!(functionParsed.Name === 'executedataitem')) return [3, 127];
-                        return [4, this.ExecuteFunctionExecuteDataItem(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'execute')) return [3, 127];
+                        return [4, this.ExecuteFunctionExecute(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 126: return [2, (_a.sent())];
                     case 127:
-                        if (!(functionParsed.Name === 'executecomponentfunction')) return [3, 129];
-                        return [4, this.ExecuteFunctionExecuteComponentFunction(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'executedataitem')) return [3, 129];
+                        return [4, this.ExecuteFunctionExecuteDataItem(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 128: return [2, (_a.sent())];
                     case 129:
-                        if (!(functionParsed.Name === 'executeinstancefunction')) return [3, 131];
-                        return [4, this.ExecuteFunctionExecuteInstanceFunction(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'executecomponentfunction')) return [3, 131];
+                        return [4, this.ExecuteFunctionExecuteComponentFunction(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 130: return [2, (_a.sent())];
                     case 131:
-                        if (!(functionParsed.Name === 'cast')) return [3, 133];
-                        return [4, this.ExecuteFunctionCast(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'executeinstancefunction')) return [3, 133];
+                        return [4, this.ExecuteFunctionExecuteInstanceFunction(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 132: return [2, (_a.sent())];
                     case 133:
-                        if (!(functionParsed.Name === 'encodeurl')) return [3, 135];
-                        return [4, this.ExecuteFunctionEncodeUrl(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'cast')) return [3, 135];
+                        return [4, this.ExecuteFunctionCast(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 134: return [2, (_a.sent())];
                     case 135:
-                        if (!(functionParsed.Name === 'addrequestheader')) return [3, 137];
-                        return [4, this.ExecuteFunctionAddRequestHeader(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'encodeurl')) return [3, 137];
+                        return [4, this.ExecuteFunctionEncodeUrl(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 136: return [2, (_a.sent())];
                     case 137:
-                        if (!(functionParsed.Name === 'getsector')) return [3, 139];
-                        return [4, this.ExecuteFunctionGetSector(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'addrequestheader')) return [3, 139];
+                        return [4, this.ExecuteFunctionAddRequestHeader(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 138: return [2, (_a.sent())];
                     case 139:
-                        if (!(functionParsed.Name === 'getclipboard')) return [3, 141];
-                        return [4, this.ExecuteFunctionGetClipboard(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'getsector')) return [3, 141];
+                        return [4, this.ExecuteFunctionGetSector(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 140: return [2, (_a.sent())];
                     case 141:
-                        if (!(functionParsed.Name === 'setclipboard')) return [3, 143];
-                        return [4, this.ExecuteFunctionSetClipboard(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'getclipboard')) return [3, 143];
+                        return [4, this.ExecuteFunctionGetClipboard(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 142: return [2, (_a.sent())];
                     case 143:
-                        if (!(functionParsed.Name === 'createtimer')) return [3, 145];
-                        return [4, this.ExecuteFunctionCreateTimer(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'setclipboard')) return [3, 145];
+                        return [4, this.ExecuteFunctionSetClipboard(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 144: return [2, (_a.sent())];
                     case 145:
-                        if (!(functionParsed.Name === 'createreference')) return [3, 147];
-                        return [4, this.ExecuteFunctionCreateReference(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'createtimer')) return [3, 147];
+                        return [4, this.ExecuteFunctionCreateTimer(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 146: return [2, (_a.sent())];
                     case 147:
-                        if (!(functionParsed.Name === 'wait')) return [3, 149];
-                        return [4, this.ExecuteFunctionWait(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'createreference')) return [3, 149];
+                        return [4, this.ExecuteFunctionCreateReference(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 148: return [2, (_a.sent())];
                     case 149:
-                        if (!(functionParsed.Name === 'executevalidation')) return [3, 151];
-                        return [4, this.ExecuteFunctionExecuteValidation(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'wait')) return [3, 151];
+                        return [4, this.ExecuteFunctionWait(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 150: return [2, (_a.sent())];
                     case 151:
-                        if (!(functionParsed.Name === 'clearvalidation')) return [3, 153];
-                        return [4, this.ExecuteFunctionClearValidation(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'executevalidation')) return [3, 153];
+                        return [4, this.ExecuteFunctionExecuteValidation(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 152: return [2, (_a.sent())];
                     case 153:
-                        if (!(functionParsed.Name === 'downloaddata')) return [3, 155];
-                        return [4, this.ExecuteFunctionDownloadData(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'clearvalidation')) return [3, 155];
+                        return [4, this.ExecuteFunctionClearValidation(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 154: return [2, (_a.sent())];
                     case 155:
-                        if (!(functionParsed.Name === 'detectview')) return [3, 157];
-                        return [4, this.ExecuteFunctionDetectView(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'downloaddata')) return [3, 157];
+                        return [4, this.ExecuteFunctionDownloadData(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 156: return [2, (_a.sent())];
                     case 157:
-                        if (!(functionParsed.Name === 'setconfig')) return [3, 159];
-                        return [4, this.ExecuteFunctionSetConfig(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'detectview')) return [3, 159];
+                        return [4, this.ExecuteFunctionDetectView(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 158: return [2, (_a.sent())];
                     case 159:
-                        if (!(functionParsed.Name === 'getconfig')) return [3, 161];
-                        return [4, this.ExecuteFunctionGetConfig(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'setconfig')) return [3, 161];
+                        return [4, this.ExecuteFunctionSetConfig(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 160: return [2, (_a.sent())];
                     case 161:
-                        if (!(functionParsed.Name === 'lockplumber')) return [3, 163];
-                        return [4, this.ExecuteFunctionLockPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'getconfig')) return [3, 163];
+                        return [4, this.ExecuteFunctionGetConfig(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 162: return [2, (_a.sent())];
                     case 163:
-                        if (!(functionParsed.Name === 'unlockplumber')) return [3, 165];
-                        return [4, this.ExecuteFunctionUnlockPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'lockplumber')) return [3, 165];
+                        return [4, this.ExecuteFunctionLockPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 164: return [2, (_a.sent())];
                     case 165:
-                        if (!(functionParsed.Name === 'lockdata')) return [3, 167];
-                        return [4, this.ExecuteFunctionLockData(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'unlockplumber')) return [3, 167];
+                        return [4, this.ExecuteFunctionUnlockPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 166: return [2, (_a.sent())];
                     case 167:
-                        if (!(functionParsed.Name === 'unlockdata')) return [3, 169];
-                        return [4, this.ExecuteFunctionUnlockData(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'lockdata')) return [3, 169];
+                        return [4, this.ExecuteFunctionLockData(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 168: return [2, (_a.sent())];
                     case 169:
-                        if (!(functionParsed.Name === 'clearplumber')) return [3, 171];
-                        return [4, this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'unlockdata')) return [3, 171];
+                        return [4, this.ExecuteFunctionUnlockData(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 170: return [2, (_a.sent())];
                     case 171:
-                        if (!(functionParsed.Name === 'debugger')) return [3, 173];
-                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                        if (!(functionParsed.Name === 'clearplumber')) return [3, 173];
+                        return [4, this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext)];
                     case 172: return [2, (_a.sent())];
                     case 173:
+                        if (!(functionParsed.Name === 'debugger')) return [3, 175];
+                        return [4, this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext)];
+                    case 174: return [2, (_a.sent())];
+                    case 175:
                         if (!checkInvalidFunction)
                             return [2, (null)];
                         return [4, this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name)];
-                    case 174:
+                    case 176:
                         _a.sent();
                         return [2, ('')];
                 }
@@ -822,7 +826,7 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionSetExternalFrame = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var frameID, externalFunction, dataKey, isCloneText, isClone, _a, data, frame, frameContent, application, windowFunction;
+            var frameID, externalFunction, dataKey, isCloneText, isClone, _a, data, frame, frameContent, application, windowFunction, eventType, eventNamespace_1, elFrame_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
@@ -856,11 +860,14 @@ var DrapoFunctionHandler = (function () {
                         application = this.Application;
                         windowFunction = frameContent[externalFunction];
                         if (typeof windowFunction !== 'function') {
-                            $(frame).on('load', function () {
+                            eventType = 'load';
+                            eventNamespace_1 = this.Application.EventHandler.CreateEventNamespace(null, null, eventType);
+                            elFrame_1 = frame;
+                            this.Application.EventHandler.AttachEventListener(elFrame_1, eventType, eventNamespace_1, function () {
                                 windowFunction = frameContent[externalFunction];
                                 if (typeof windowFunction !== 'function')
                                     return ('');
-                                $(frame).off('load');
+                                application.EventHandler.DetachEventListener(elFrame_1, eventNamespace_1);
                                 windowFunction(isClone ? application.Solver.Clone(data, true) : data);
                             });
                         }
@@ -916,7 +923,7 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionSetExternalFrameMessage = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var frameID, externalFunction, dataKey, isCloneText, isClone, _a, data, frame, frameContent, message;
+            var frameID, externalFunction, dataKey, isCloneText, isClone, _a, data, frame, frameContent, message, application, eventType, eventNamespace, elFrame;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
@@ -952,8 +959,12 @@ var DrapoFunctionHandler = (function () {
                         message.DataKey = dataKey;
                         message.Tag = externalFunction;
                         message.Data = isClone ? this.Application.Solver.Clone(data, true) : data;
-                        $(frame).on('load', function () {
-                            $(frame).off('load');
+                        application = this.Application;
+                        eventType = 'load';
+                        eventNamespace = this.Application.EventHandler.CreateEventNamespace(null, null, eventType);
+                        elFrame = frame;
+                        this.Application.EventHandler.AttachEventListener(elFrame, eventType, eventNamespace, function () {
+                            application.EventHandler.DetachEventListener(elFrame, eventNamespace);
                             frameContent.postMessage(message, "*");
                         });
                         return [2];
@@ -1032,7 +1043,7 @@ var DrapoFunctionHandler = (function () {
                         stateAny = _b.sent();
                         state = this.Application.Solver.ResolveConditionalBoolean(((stateAny == null) || ((typeof stateAny) === 'string')) ? stateAny : stateAny.toString());
                         stateUpdated = !state;
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, stateUpdated, notify)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, stateUpdated, notify)];
                     case 5:
                         _b.sent();
                         return [2, ('')];
@@ -1105,7 +1116,7 @@ var DrapoFunctionHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         dataPath = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, false)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, false)];
                     case 1:
                         _a.sent();
                         return [2, ('')];
@@ -1130,7 +1141,7 @@ var DrapoFunctionHandler = (function () {
                         _b.label = 3;
                     case 3:
                         notify = _a;
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, null, notify)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, null, notify)];
                     case 4:
                         _b.sent();
                         return [2, ('')];
@@ -1140,71 +1151,88 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionUpdateItemField = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataPath, recursiveText, _a, recursive, _b, resolveText, _c, resolve, _d, item, _e, notifyText, notify, _f;
+            var dataPath, i, dataPathValue, dataPathValueResolved, recursiveText, _a, recursive, _b, resolveText, _c, resolve, _d, item, _e, notifyText, notify, _f;
             return __generator(this, function (_g) {
                 switch (_g.label) {
                     case 0:
                         dataPath = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
-                        if (!(functionParsed.Parameters.length > 3)) return [3, 2];
-                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3])];
+                        i = 0;
+                        _g.label = 1;
                     case 1:
-                        _a = _g.sent();
-                        return [3, 3];
+                        if (!(i < dataPath.length)) return [3, 4];
+                        dataPathValue = dataPath[i];
+                        if (!this.Application.Parser.HasMustache(dataPathValue))
+                            return [3, 3];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, dataPathValue)];
                     case 2:
-                        _a = null;
+                        dataPathValueResolved = _g.sent();
+                        if (dataPathValue !== dataPathValueResolved)
+                            dataPath[i] = dataPathValueResolved;
                         _g.label = 3;
                     case 3:
-                        recursiveText = _a;
-                        if (!((recursiveText == null) || (recursiveText == ''))) return [3, 4];
-                        _b = false;
-                        return [3, 6];
-                    case 4: return [4, this.Application.Solver.ResolveConditional(recursiveText)];
+                        i++;
+                        return [3, 1];
+                    case 4:
+                        if (!(functionParsed.Parameters.length > 3)) return [3, 6];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3])];
                     case 5:
-                        _b = _g.sent();
-                        _g.label = 6;
+                        _a = _g.sent();
+                        return [3, 7];
                     case 6:
-                        recursive = _b;
-                        if (!(functionParsed.Parameters.length > 4)) return [3, 8];
-                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4])];
+                        _a = null;
+                        _g.label = 7;
                     case 7:
-                        _c = _g.sent();
-                        return [3, 9];
-                    case 8:
-                        _c = null;
-                        _g.label = 9;
+                        recursiveText = _a;
+                        if (!((recursiveText == null) || (recursiveText == ''))) return [3, 8];
+                        _b = false;
+                        return [3, 10];
+                    case 8: return [4, this.Application.Solver.ResolveConditional(recursiveText)];
                     case 9:
-                        resolveText = _c;
-                        if (!((resolveText == null) || (resolveText == ''))) return [3, 10];
-                        _d = true;
-                        return [3, 12];
-                    case 10: return [4, this.Application.Solver.ResolveConditional(resolveText)];
+                        _b = _g.sent();
+                        _g.label = 10;
+                    case 10:
+                        recursive = _b;
+                        if (!(functionParsed.Parameters.length > 4)) return [3, 12];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4])];
                     case 11:
-                        _d = _g.sent();
-                        _g.label = 12;
+                        _c = _g.sent();
+                        return [3, 13];
                     case 12:
-                        resolve = _d;
-                        if (!resolve) return [3, 14];
-                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive)];
+                        _c = null;
+                        _g.label = 13;
                     case 13:
-                        _e = _g.sent();
-                        return [3, 15];
-                    case 14:
-                        _e = functionParsed.Parameters[1];
-                        _g.label = 15;
+                        resolveText = _c;
+                        if (!((resolveText == null) || (resolveText == ''))) return [3, 14];
+                        _d = true;
+                        return [3, 16];
+                    case 14: return [4, this.Application.Solver.ResolveConditional(resolveText)];
                     case 15:
+                        _d = _g.sent();
+                        _g.label = 16;
+                    case 16:
+                        resolve = _d;
+                        if (!resolve) return [3, 18];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive)];
+                    case 17:
+                        _e = _g.sent();
+                        return [3, 19];
+                    case 18:
+                        _e = functionParsed.Parameters[1];
+                        _g.label = 19;
+                    case 19:
                         item = _e;
                         notifyText = functionParsed.Parameters[2];
-                        if (!((notifyText == null) || (notifyText == ''))) return [3, 16];
+                        if (!((notifyText == null) || (notifyText == ''))) return [3, 20];
                         _f = true;
-                        return [3, 18];
-                    case 16: return [4, this.Application.Solver.ResolveConditional(notifyText)];
-                    case 17:
+                        return [3, 22];
+                    case 20: return [4, this.Application.Solver.ResolveConditional(notifyText)];
+                    case 21:
                         _f = _g.sent();
-                        _g.label = 18;
-                    case 18:
+                        _g.label = 22;
+                    case 22:
                         notify = _f;
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, item, notify)];
-                    case 19:
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, item, notify)];
+                    case 23:
                         _g.sent();
                         return [2, ('')];
                 }
@@ -1454,7 +1482,7 @@ var DrapoFunctionHandler = (function () {
                         _b.label = 3;
                     case 3:
                         nofity = _a;
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, true, nofity)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, true, nofity)];
                     case 4:
                         _b.sent();
                         return [2, ('')];
@@ -1499,19 +1527,19 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionUpdateDataUrl = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, dataUrl, jqueryDataKeys, dataUrlCurrent;
+            var dataKey, dataUrl, elDataKey, dataUrlCurrent;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         dataKey = functionParsed.Parameters[0];
                         dataUrl = functionParsed.Parameters[1];
-                        jqueryDataKeys = $("[d-dataKey='" + dataKey + "']");
-                        if ((jqueryDataKeys == null) || (jqueryDataKeys.length == 0))
+                        elDataKey = this.Application.Searcher.FindByAttributeAndValue('d-dataKey', dataKey);
+                        if (elDataKey == null)
                             return [2, ('')];
-                        dataUrlCurrent = jqueryDataKeys.attr('d-dataUrlGet');
+                        dataUrlCurrent = elDataKey.getAttribute('d-dataUrlGet');
                         if (dataUrl === dataUrlCurrent)
                             return [2, ('')];
-                        jqueryDataKeys.attr('d-dataUrlGet', dataUrl);
+                        elDataKey.setAttribute('d-dataUrlGet', dataUrl);
                         return [4, this.Application.Storage.DiscardCacheData(dataKey, sector)];
                     case 1:
                         _a.sent();
@@ -1525,7 +1553,7 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionUpdateDataUrlSet = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey, dataUrl, jqueryDataKeys, dataUrlCurrent;
+            var dataKey, dataUrl, elDataKey, dataUrlCurrent;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1533,13 +1561,13 @@ var DrapoFunctionHandler = (function () {
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1])];
                     case 1:
                         dataUrl = _a.sent();
-                        jqueryDataKeys = $("[d-dataKey='" + dataKey + "']");
-                        if ((jqueryDataKeys == null) || (jqueryDataKeys.length == 0))
+                        elDataKey = this.Application.Searcher.FindByAttributeAndValue('d-dataKey', dataKey);
+                        if (elDataKey == null)
                             return [2, ('')];
-                        dataUrlCurrent = jqueryDataKeys.attr('d-dataUrlSet');
+                        dataUrlCurrent = elDataKey.getAttribute('d-dataUrlSet');
                         if (dataUrl === dataUrlCurrent)
                             return [2, ('')];
-                        jqueryDataKeys.attr('d-dataUrlSet', dataUrl);
+                        elDataKey.setAttribute('d-dataUrlSet', dataUrl);
                         return [4, this.Application.Storage.DiscardCacheData(dataKey, sector)];
                     case 2:
                         _a.sent();
@@ -1794,7 +1822,7 @@ var DrapoFunctionHandler = (function () {
                         item = _c.sent();
                         if (!((item === null) || (item === ''))) return [3, 11];
                         item = this.Application.Document.CreateGuid();
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, item)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, item)];
                     case 10:
                         _c.sent();
                         _c.label = 11;
@@ -2429,7 +2457,7 @@ var DrapoFunctionHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         conditional = functionParsed.Parameters[0];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, new DrapoContext(contextItem), null, conditional, $(element), false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, new DrapoContext(contextItem), null, executionContext, conditional, element, false)];
                     case 1:
                         conditionalEvaluated = _a.sent();
                         return [4, this.Application.Solver.ResolveConditional(conditionalEvaluated)];
@@ -2508,19 +2536,19 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionFocus = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var did, elementFocused, didJ, isSelectText, isSelect, _a;
+            var did, elementFocused, elDid, isSelectText, isSelect, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
                     case 1:
                         did = _b.sent();
                         if ((did === null) || (did === '') || (did === undefined)) {
-                            elementFocused = $(document.activeElement);
+                            elementFocused = document.activeElement;
                             elementFocused.blur();
                             return [2, ('')];
                         }
-                        didJ = $("[d-id='" + did + "']");
-                        if ((didJ === null) || (didJ.length === 0))
+                        elDid = this.Application.Searcher.FindByAttributeAndValue('d-id', did);
+                        if (elDid === null)
                             return [2, ('')];
                         isSelectText = functionParsed.Parameters[1];
                         if (!((isSelectText == null) || (isSelectText == ''))) return [3, 2];
@@ -2532,9 +2560,9 @@ var DrapoFunctionHandler = (function () {
                         _b.label = 4;
                     case 4:
                         isSelect = _a;
-                        didJ.focus();
+                        elDid.focus();
                         if (isSelect)
-                            didJ.select();
+                            this.Application.Document.Select(elDid);
                         return [2, ('')];
                 }
             });
@@ -2789,6 +2817,69 @@ var DrapoFunctionHandler = (function () {
             });
         });
     };
+    DrapoFunctionHandler.prototype.ExecuteFunctionAddDate = function (sector, contextItem, element, event, functionParsed, executionContext) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dateParameter, _a, dateParameterParsed, date, typeParameter, _b, type, incrementParameter, _c, increment, returnType, _d;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
+                    case 0:
+                        if (!(functionParsed.Parameters.length > 0)) return [3, 2];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
+                    case 1:
+                        _a = _e.sent();
+                        return [3, 3];
+                    case 2:
+                        _a = null;
+                        _e.label = 3;
+                    case 3:
+                        dateParameter = _a;
+                        dateParameterParsed = this.Application.Parser.ParseDateCulture(dateParameter);
+                        date = (dateParameterParsed != null) ? dateParameterParsed : new Date();
+                        if (!(functionParsed.Parameters.length > 1)) return [3, 5];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1])];
+                    case 4:
+                        _b = _e.sent();
+                        return [3, 6];
+                    case 5:
+                        _b = 'day';
+                        _e.label = 6;
+                    case 6:
+                        typeParameter = _b;
+                        type = typeParameter != null ? typeParameter : 'day';
+                        if (!(functionParsed.Parameters.length > 2)) return [3, 8];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2])];
+                    case 7:
+                        _c = _e.sent();
+                        return [3, 9];
+                    case 8:
+                        _c = '1';
+                        _e.label = 9;
+                    case 9:
+                        incrementParameter = _c;
+                        increment = this.Application.Parser.ParseNumber(incrementParameter, 1);
+                        if (type === 'day')
+                            date.setDate(date.getDate() + increment);
+                        else if (type === 'month')
+                            date.setMonth(date.getMonth() + increment);
+                        if (type === 'year')
+                            date.setFullYear(date.getFullYear() + increment);
+                        if (!(functionParsed.Parameters.length > 3)) return [3, 11];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3])];
+                    case 10:
+                        _d = _e.sent();
+                        return [3, 12];
+                    case 11:
+                        _d = 'date';
+                        _e.label = 12;
+                    case 12:
+                        returnType = _d;
+                        if (returnType.toUpperCase() == 'ISO')
+                            return [2, (date.toISOString())];
+                        return [2, date];
+                }
+            });
+        });
+    };
     DrapoFunctionHandler.prototype.ExecuteFunctionPushStack = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
             var value;
@@ -2969,7 +3060,7 @@ var DrapoFunctionHandler = (function () {
                         if ((datas.length !== null) && (datas.length === 0))
                             return [2, ('')];
                         ifTextResolved = this.ResolveExecutionContextMustache(sector, executionContext, ifText);
-                        return [4, this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, dataKeyIterator, forHierarchyText, ifTextResolved, all, datas, dataKey, key)];
+                        return [4, this.Application.ControlFlow.ExecuteDataItem(sector, context, expression, dataKeyIterator, forHierarchyText, ifTextResolved, all, datas, dataKey, key, executionContext)];
                     case 10:
                         _c.sent();
                         return [2, ('')];
@@ -3071,7 +3162,7 @@ var DrapoFunctionHandler = (function () {
                     case 9:
                         _c.sent();
                         return [3, 12];
-                    case 10: return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, value, true)];
+                    case 10: return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, value, true)];
                     case 11:
                         _c.sent();
                         _c.label = 12;
@@ -3087,7 +3178,7 @@ var DrapoFunctionHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         context = contextItem != null ? contextItem.Context : new DrapoContext();
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, functionParsed.Parameters[0], null, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, functionParsed.Parameters[0], null, false)];
                     case 1:
                         value = _a.sent();
                         return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1])];
@@ -3107,7 +3198,7 @@ var DrapoFunctionHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         context = contextItem != null ? contextItem.Context : new DrapoContext();
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, functionParsed.Parameters[0], null, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, functionParsed.Parameters[0], null, false)];
                     case 1:
                         value = _a.sent();
                         valueEncoded = this.Application.Server.EnsureUrlComponentEncoded(value);
@@ -3461,7 +3552,7 @@ var DrapoFunctionHandler = (function () {
                         return [4, this.Application.Document.GetClipboard()];
                     case 4:
                         value = _b.sent();
-                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, dataPath, value, notify)];
+                        return [4, this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, value, notify)];
                     case 5:
                         _b.sent();
                         return [2, ('')];

@@ -46,8 +46,8 @@ var DrapoSolver = (function () {
         enumerable: false,
         configurable: true
     });
-    DrapoSolver.prototype.ResolveConditional = function (expression, elj, sector, context, renderContext, eljForTemplate) {
-        if (elj === void 0) { elj = null; }
+    DrapoSolver.prototype.ResolveConditional = function (expression, el, sector, context, renderContext, eljForTemplate) {
+        if (el === void 0) { el = null; }
         if (sector === void 0) { sector = null; }
         if (context === void 0) { context = null; }
         if (renderContext === void 0) { renderContext = null; }
@@ -62,11 +62,11 @@ var DrapoSolver = (function () {
                         if (typeof expression === 'number')
                             return [2, (expression > 0)];
                         block = this.Application.Parser.ParseExpression(expression);
-                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, block)];
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block)];
                     case 1:
                         response = _a.sent();
                         if (!this.Application.Parser.HasMustache(response)) return [3, 3];
-                        return [4, this.ResolveConditional(response, elj, sector, context, renderContext, eljForTemplate)];
+                        return [4, this.ResolveConditional(response, el, sector, context, renderContext, eljForTemplate)];
                     case 2: return [2, (_a.sent())];
                     case 3: return [4, this.ResolveConditionalBoolean(response)];
                     case 4:
@@ -76,21 +76,21 @@ var DrapoSolver = (function () {
             });
         });
     };
-    DrapoSolver.prototype.ResolveConditionalExpressionBlock = function (sector, context, renderContext, elj, eljForTemplate, block) {
+    DrapoSolver.prototype.ResolveConditionalExpressionBlock = function (sector, context, renderContext, el, eljForTemplate, block) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.EnsureExpressionItemCurrentLevelResolved(sector, context, renderContext, elj, block, eljForTemplate)];
+                    case 0: return [4, this.EnsureExpressionItemCurrentLevelResolved(sector, context, renderContext, el, block, eljForTemplate)];
                     case 1:
                         _a.sent();
                         this.JoinTexts(block);
-                        return [4, this.ResolveConditionalExpressionBlockOperation(sector, context, renderContext, elj, eljForTemplate, block)];
+                        return [4, this.ResolveConditionalExpressionBlockOperation(sector, context, renderContext, el, eljForTemplate, block)];
                     case 2: return [2, (_a.sent())];
                 }
             });
         });
     };
-    DrapoSolver.prototype.ResolveConditionalExpressionBlockOperation = function (sector, context, renderContext, elj, eljForTemplate, block) {
+    DrapoSolver.prototype.ResolveConditionalExpressionBlockOperation = function (sector, context, renderContext, el, eljForTemplate, block) {
         return __awaiter(this, void 0, void 0, function () {
             var itemFirst, itemEmpty, resultFirst, itemSecond, resultSecond, resultDenySecond, resultDenyItemSecond, resultThird, hasMoreThanTwoTerms, resultFourth, resultDenyFourth, resultDenyItemFourth, result, resultItem;
             return __generator(this, function (_a) {
@@ -98,20 +98,20 @@ var DrapoSolver = (function () {
                     case 0:
                         if (block.Items.length === 0)
                             return [2, ('')];
-                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, elj, block, 0, eljForTemplate)];
+                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, el, block, 0, eljForTemplate)];
                     case 1:
                         _a.sent();
                         itemFirst = block.Items[0];
                         if (!((itemFirst.Type == DrapoExpressionItemType.Logical) || (itemFirst.Type == DrapoExpressionItemType.Comparator))) return [3, 3];
                         itemEmpty = new DrapoExpressionItem(DrapoExpressionItemType.Text, '');
                         block.Items.unshift(itemEmpty);
-                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, block)];
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block)];
                     case 2: return [2, (_a.sent())];
                     case 3:
                         resultFirst = itemFirst.Value;
                         if (block.Items.length < 2)
                             return [2, (resultFirst)];
-                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, elj, block, 1, eljForTemplate)];
+                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, el, block, 1, eljForTemplate)];
                     case 4:
                         _a.sent();
                         itemSecond = block.Items[1];
@@ -123,13 +123,13 @@ var DrapoSolver = (function () {
                         resultDenyItemSecond = new DrapoExpressionItem(DrapoExpressionItemType.Text, resultDenySecond);
                         block.Items[0] = resultDenyItemSecond;
                         block.Items.splice(1, 1);
-                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, block)];
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block)];
                     case 5: return [2, (_a.sent())];
                     case 6:
                         resultThird = '';
                         hasMoreThanTwoTerms = block.Items.length > 2;
                         if (!hasMoreThanTwoTerms) return [3, 8];
-                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, elj, block, 2, eljForTemplate)];
+                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, el, block, 2, eljForTemplate)];
                     case 7:
                         _a.sent();
                         resultThird = block.Items[2].Value;
@@ -138,7 +138,7 @@ var DrapoSolver = (function () {
                         if (!(resultThird === '!')) return [3, 12];
                         resultFourth = 'false';
                         if (!(block.Items.length > 3)) return [3, 10];
-                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, elj, block, 3, eljForTemplate)];
+                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, el, block, 3, eljForTemplate)];
                     case 9:
                         _a.sent();
                         resultFourth = block.Items[3].Value;
@@ -149,7 +149,7 @@ var DrapoSolver = (function () {
                         block.Items[2] = resultDenyItemFourth;
                         if (block.Items.length > 3)
                             block.Items.splice(3, 1);
-                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, block)];
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block)];
                     case 11: return [2, (_a.sent())];
                     case 12:
                         result = this.ResolveConditionalOperator(resultFirst, resultSecond, resultThird);
@@ -157,13 +157,13 @@ var DrapoSolver = (function () {
                         resultItem.Value = result;
                         block.Items[0] = resultItem;
                         block.Items.splice(1, hasMoreThanTwoTerms ? 2 : 1);
-                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, block)];
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block)];
                     case 13: return [2, (_a.sent())];
                 }
             });
         });
     };
-    DrapoSolver.prototype.EnsureExpressionItemCurrentLevelResolved = function (sector, context, renderContext, elj, block, eljForTemplate) {
+    DrapoSolver.prototype.EnsureExpressionItemCurrentLevelResolved = function (sector, context, renderContext, el, block, eljForTemplate) {
         return __awaiter(this, void 0, void 0, function () {
             var i, item, _a, _b, _c, _d, _e, _f, _g, _h;
             return __generator(this, function (_j) {
@@ -189,7 +189,7 @@ var DrapoSolver = (function () {
                         _f = i;
                         _g = DrapoExpressionItem.bind;
                         _h = [void 0, DrapoExpressionItemType.Text];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, item.Value, elj, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, item.Value, el, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)];
                     case 4:
                         _e[_f] = new (_g.apply(DrapoExpressionItem, _h.concat([(_j.sent())])))();
                         _j.label = 5;
@@ -213,7 +213,7 @@ var DrapoSolver = (function () {
             block.Items.splice(i, 1);
         }
     };
-    DrapoSolver.prototype.EnsureExpressionItemResolved = function (sector, context, renderContext, elj, block, index, eljForTemplate) {
+    DrapoSolver.prototype.EnsureExpressionItemResolved = function (sector, context, renderContext, el, block, index, eljForTemplate) {
         return __awaiter(this, void 0, void 0, function () {
             var item, _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
             return __generator(this, function (_o) {
@@ -225,7 +225,7 @@ var DrapoSolver = (function () {
                         _b = index;
                         _c = DrapoExpressionItem.bind;
                         _d = [void 0, DrapoExpressionItemType.Text];
-                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, elj, eljForTemplate, item)];
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, item)];
                     case 1:
                         _a[_b] = new (_c.apply(DrapoExpressionItem, _d.concat([(_o.sent()).toString()])))();
                         return [3, 6];
@@ -245,7 +245,7 @@ var DrapoSolver = (function () {
                         _k = index;
                         _l = DrapoExpressionItem.bind;
                         _m = [void 0, DrapoExpressionItemType.Text];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, item.Value, elj, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, item.Value, el, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)];
                     case 5:
                         _j[_k] = new (_l.apply(DrapoExpressionItem, _m.concat([(_o.sent())])))();
                         _o.label = 6;
@@ -417,7 +417,7 @@ var DrapoSolver = (function () {
         for (var i = 0; i < mustacheParts.length; i++) {
             var mustachePart = mustacheParts[i];
             var mustachePartNext = i < (mustacheParts.length - 1) ? mustacheParts[i + 1] : null;
-            var mustacheSystem = mustachePartNext != null ? this.GetSystemContextPathValue(null, context, [mustachePart, mustachePartNext]) : null;
+            var mustacheSystem = mustachePartNext != null ? this.GetSystemContextPathValue(null, context, null, [mustachePart, mustachePartNext]) : null;
             if (mustacheSystem !== null) {
                 return (mustacheSystem);
             }
@@ -445,9 +445,11 @@ var DrapoSolver = (function () {
     DrapoSolver.prototype.CreateContextAbsoluteArray = function (context, mustachePart, canResolveKey) {
         if ((canResolveKey) && (context.Item.Key === mustachePart)) {
             var contextKey = [];
+            var hasInsertedContext = false;
             for (var i = 0; i < context.IndexRelatives.length; i++)
-                this.AppendContextAbsoluteArray(context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0);
-            this.AppendContextAbsoluteArray(context.Item, context.IndexRelative, contextKey, context.IndexRelatives.length === 0);
+                if (this.AppendContextAbsoluteArray(context.Item, context.ItemsCurrentStack[i], context.IndexRelatives[i], contextKey, i === 0))
+                    hasInsertedContext = true;
+            this.AppendContextAbsoluteArray(context.Item, context.Item, context.IndexRelative, contextKey, !hasInsertedContext);
             return (contextKey);
         }
         for (var i = 0; i < context.ItemsCurrentStack.length; i++) {
@@ -458,13 +460,23 @@ var DrapoSolver = (function () {
         }
         return (null);
     };
-    DrapoSolver.prototype.AppendContextAbsoluteArray = function (item, index, context, checkIndex) {
+    DrapoSolver.prototype.AppendContextAbsoluteArray = function (itemCurrent, item, index, context, checkIndex) {
+        if (!this.IsContextItemSameDataKey(itemCurrent, item))
+            return (false);
         var iterators = this.Application.Parser.ParseForIterable(item.Iterator);
         if (iterators.length == 1)
             context.push(item.Iterator);
         else
             this.AppendContextAbsoluteIterators(item, context, iterators, checkIndex);
         context.push('[' + index + ']');
+        return (true);
+    };
+    DrapoSolver.prototype.IsContextItemSameDataKey = function (itemCurrent, item) {
+        if (item.DataKey == itemCurrent.DataKey)
+            return (true);
+        if (item.Key == itemCurrent.DataKey)
+            return (true);
+        return (false);
     };
     DrapoSolver.prototype.AppendContextAbsoluteIterators = function (item, context, iterators, checkIndex) {
         var start = ((checkIndex) && (item.DataKey === iterators[0])) ? 0 : 1;
@@ -511,7 +523,7 @@ var DrapoSolver = (function () {
         var mustachePartsAbsolute = iteratorParts.concat('[' + contextItem.Index + ']');
         return (mustachePartsAbsolute);
     };
-    DrapoSolver.prototype.ResolveDataPathMustache = function (context, elementJQuery, sector, mustacheParts) {
+    DrapoSolver.prototype.ResolveDataPathMustache = function (context, executionContext, element, sector, mustacheParts) {
         return __awaiter(this, void 0, void 0, function () {
             var updated, i, mustachePart, mustachePartParts, dataValue;
             return __generator(this, function (_a) {
@@ -526,7 +538,7 @@ var DrapoSolver = (function () {
                         if (!this.Application.Parser.IsMustache(mustachePart))
                             return [3, 3];
                         mustachePartParts = this.Application.Parser.ParseMustache(mustachePart);
-                        return [4, this.ResolveDataPath(context, elementJQuery, sector, mustachePartParts)];
+                        return [4, this.ResolveDataPath(context, executionContext, element, sector, mustachePartParts)];
                     case 2:
                         dataValue = _a.sent();
                         mustacheParts[i] = dataValue;
@@ -565,7 +577,7 @@ var DrapoSolver = (function () {
         var data = dataObject;
         for (var i = 1; i < dataPath.length; i++) {
             var currentKey = dataPath[i];
-            var index = this.GetDataObjectPathObjectPropertyIndex(currentKey);
+            var index = this.GetDataObjectPathObjectPropertyIndex(data, currentKey);
             if (index === null) {
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
                     return (false);
@@ -582,7 +594,7 @@ var DrapoSolver = (function () {
             return (false);
         return (true);
     };
-    DrapoSolver.prototype.ResolveDataPath = function (context, elementJQuery, sector, path, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify) {
+    DrapoSolver.prototype.ResolveDataPath = function (context, executionContext, element, sector, path, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify) {
         if (canBindReader === void 0) { canBindReader = false; }
         if (canBindWriter === void 0) { canBindWriter = false; }
         if (modelEvents === void 0) { modelEvents = null; }
@@ -604,7 +616,7 @@ var DrapoSolver = (function () {
                         if (!this.Application.Parser.IsMustache(mustacheIndexer))
                             return [3, 3];
                         mustacheParts = this.Application.Parser.ParseMustache(mustacheIndexer);
-                        return [4, this.ResolveDataPath(context, elementJQuery, sector, mustacheParts, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify)];
+                        return [4, this.ResolveDataPath(context, executionContext, element, sector, mustacheParts, canBindReader, canBindWriter, modelEvents, modelEventsCancel, canNotify)];
                     case 2:
                         mustacheValue = _f.sent();
                         mustacheValueIndexer = isMustacheIndexer ? this.Application.Parser.CreateMustacheIndexer(mustacheValue) : mustacheValue;
@@ -616,7 +628,7 @@ var DrapoSolver = (function () {
                     case 4:
                         dataKey = this.Application.Solver.ResolveDataKey(dataPath);
                         dataFields = this.Application.Solver.ResolveDataFields(dataPath);
-                        _a = (!context.IsKey(dataKey));
+                        _a = (!context.IsKey(dataKey)) && (!this.Application.Storage.IsDataKeyExecution(dataKey));
                         if (!_a) return [3, 6];
                         return [4, this.Application.Storage.EnsureDataKeyFieldReady(dataKey, sector, dataPath)];
                     case 5:
@@ -627,35 +639,35 @@ var DrapoSolver = (function () {
                             if ((dataFields.length === 0))
                                 return [2, ('')];
                             if (this.Application.Storage.IsDataKeyDelay(dataKey, sector))
-                                this.Application.Observer.SubscribeDelay(elementJQuery != null ? elementJQuery[0] : null, dataKey, dataFields);
+                                this.Application.Observer.SubscribeDelay(element, dataKey, dataFields);
                             return [2, (this.CreateMustache(dataPath))];
                         }
-                        return [4, this.ResolveDataPathObject(sector, context, dataPath)];
+                        return [4, this.ResolveDataPathObject(sector, context, executionContext, dataPath)];
                     case 7:
                         data = _f.sent();
                         if (!canBindWriter) return [3, 9];
                         _c = (_b = this.Application.Binder).BindReaderWriter;
                         return [4, this.ResolveDataPathObjectItem(context.Item, dataKey, sector)];
                     case 8:
-                        _c.apply(_b, [_f.sent(), elementJQuery != null ? elementJQuery[0] : null, dataFields, modelEvents, modelEventsCancel, canNotify]);
+                        _c.apply(_b, [_f.sent(), element, dataFields, modelEvents, modelEventsCancel, canNotify]);
                         return [3, 11];
                     case 9:
                         if (!canBindReader) return [3, 11];
                         _e = (_d = this.Application.Binder).BindReader;
                         return [4, this.ResolveDataPathObjectItem(context.Item, dataKey, sector)];
                     case 10:
-                        _e.apply(_d, [_f.sent(), elementJQuery != null ? elementJQuery[0] : null, dataFields]);
+                        _e.apply(_d, [_f.sent(), element, dataFields]);
                         _f.label = 11;
                     case 11: return [2, (data)];
                 }
             });
         });
     };
-    DrapoSolver.prototype.ResolveDataPathObject = function (sector, context, dataPath) {
+    DrapoSolver.prototype.ResolveDataPathObject = function (sector, context, executionContext, dataPath) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.ResolveItemDataPathObject(sector, context.Item, dataPath)];
+                    case 0: return [4, this.ResolveItemDataPathObject(sector, context.Item, dataPath, false, executionContext)];
                     case 1: return [2, (_a.sent())];
                 }
             });
@@ -669,7 +681,7 @@ var DrapoSolver = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        valueSystem = contextItem !== null ? this.GetSystemContextPathValue(sector, contextItem.Context, dataPath) : null;
+                        valueSystem = contextItem !== null ? this.GetSystemContextPathValue(sector, contextItem.Context, executionContext, dataPath) : null;
                         if (valueSystem !== null)
                             return [2, (valueSystem)];
                         valueExecutionContext = executionContext === null ? null : this.GetExecutionContextPathValue(sector, executionContext, dataPath);
@@ -697,7 +709,7 @@ var DrapoSolver = (function () {
         var data = dataObject;
         for (var i = 1; i < dataPath.length; i++) {
             var currentKey = dataPath[i];
-            var index = this.GetDataObjectPathObjectPropertyIndex(currentKey);
+            var index = this.GetDataObjectPathObjectPropertyIndex(data, currentKey);
             if (index === null) {
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
                     if ((dataEnforce !== null) && (i === dataPath.length - 1)) {
@@ -718,14 +730,16 @@ var DrapoSolver = (function () {
             return ('');
         return (data);
     };
-    DrapoSolver.prototype.GetDataObjectPathObjectPropertyIndex = function (property) {
+    DrapoSolver.prototype.GetDataObjectPathObjectPropertyIndex = function (data, property) {
         if (property.length < 3)
             return (null);
         if (property[0] !== '[')
             return (null);
         if (property[property.length - 1] !== ']')
             return (null);
-        return (this.Application.Parser.ParseNumber(property.substring(1, property.length - 1)));
+        var isHat = (property[1] === '^');
+        var index = this.Application.Parser.ParseNumber(property.substring(isHat ? 2 : 1, property.length - 1));
+        return (((isHat) && (data.length)) ? (data.length - index) : index);
     };
     DrapoSolver.prototype.ResolveDataObjectLookupHierarchy = function (data, searchField, searchValue, searchHierarchyField) {
         if (searchHierarchyField === void 0) { searchHierarchyField = null; }
@@ -863,14 +877,21 @@ var DrapoSolver = (function () {
             dataPathParent.push(dataPath[i]);
         return (dataPathParent);
     };
-    DrapoSolver.prototype.UpdateItemDataPathObject = function (sector, contextItem, dataPath, value, canNotify) {
+    DrapoSolver.prototype.UpdateItemDataPathObject = function (sector, contextItem, executionContext, dataPath, value, canNotify) {
         if (canNotify === void 0) { canNotify = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var key, storageItem, item, data;
+            var key, data, storageItem, item, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         key = dataPath[0];
+                        if ((executionContext != null) && (this.Application.Storage.IsDataKeyExecution(key))) {
+                            data = this.GetExecutionContextPathValueStack(sector, executionContext, dataPath);
+                            dataPath.splice(1, 1);
+                            if (this.UpdateDataPathObject(data, dataPath, value))
+                                return [2, (true)];
+                            return [2, (false)];
+                        }
                         if (!(contextItem === null)) return [3, 4];
                         return [4, this.Application.Storage.RetrieveDataItem(key, sector)];
                     case 1:
@@ -921,7 +942,7 @@ var DrapoSolver = (function () {
     DrapoSolver.prototype.UpdateDataPathObject = function (data, dataPath, value) {
         for (var i = 1; i < dataPath.length - 1; i++) {
             var currentKey = dataPath[i];
-            var index = this.GetDataObjectPathObjectPropertyIndex(currentKey);
+            var index = this.GetDataObjectPathObjectPropertyIndex(data, currentKey);
             if (index === null) {
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
                     return (false);
@@ -937,7 +958,7 @@ var DrapoSolver = (function () {
         if (data == null)
             return (false);
         var dataField = dataPath[dataPath.length - 1];
-        var indexDataField = this.GetDataObjectPathObjectPropertyIndex(dataField);
+        var indexDataField = this.GetDataObjectPathObjectPropertyIndex(data, dataField);
         if (indexDataField === null) {
             if (data[dataField] === value)
                 return (false);
@@ -950,24 +971,54 @@ var DrapoSolver = (function () {
         }
         return (true);
     };
+    DrapoSolver.prototype.IsPrimitive = function (object) {
+        if (object === null)
+            return (true);
+        if (typeof object === "string")
+            return (true);
+        if (typeof object === "number")
+            return (true);
+        if (typeof object === "boolean")
+            return (true);
+        if (typeof object === "bigint")
+            return (true);
+        if (typeof object === "undefined")
+            return (true);
+        if (typeof object === "symbol")
+            return (true);
+        return (false);
+    };
     DrapoSolver.prototype.Clone = function (object, deepCopy) {
         if (deepCopy === void 0) { deepCopy = false; }
-        if (typeof object === "string")
+        if (this.IsPrimitive(object))
             return (object);
-        if (typeof object === "number")
-            return (object);
-        if ($.isArray(object))
+        if (object instanceof Date)
+            return (new Date(object.getTime()));
+        if (Array.isArray(object))
             return (this.CloneArray(object, deepCopy));
-        if (deepCopy)
-            return (jQuery.extend(true, {}, object));
-        else
-            return (jQuery.extend({}, object));
+        return (this.CloneObject(object, deepCopy));
+    };
+    DrapoSolver.prototype.CloneObject = function (object, deepCopy) {
+        var clone = {};
+        for (var property in object) {
+            if (!Object.prototype.hasOwnProperty.call(object, property))
+                continue;
+            if (deepCopy)
+                clone[property] = this.Clone(object[property], true);
+            else
+                clone[property] = object[property];
+        }
+        return (clone);
     };
     DrapoSolver.prototype.CloneArray = function (object, deepCopy) {
-        if (deepCopy)
-            return (jQuery.extend(true, [], object));
-        else
-            return (jQuery.extend([], object));
+        var clone = [];
+        for (var i = 0; i < object.length; i++) {
+            if (deepCopy)
+                clone.push(this.Clone(object[i], deepCopy));
+            else
+                clone.push(object[i]);
+        }
+        return (clone);
     };
     DrapoSolver.prototype.CloneArrayString = function (list) {
         if (list == null)
@@ -993,13 +1044,9 @@ var DrapoSolver = (function () {
             clone.push(list[i]);
         return (clone);
     };
-    DrapoSolver.prototype.CloneElement = function (el) {
-        if (el == null)
-            return (null);
-        var elj = $(el).clone();
-        return (elj[0]);
-    };
-    DrapoSolver.prototype.GetSystemContextPathValue = function (sector, context, dataPath) {
+    DrapoSolver.prototype.GetSystemContextPathValue = function (sector, context, executionContext, dataPath) {
+        if (this.Application.Storage.IsDataKeyExecution(dataPath[0]))
+            return (this.GetExecutionContextPathValueSolved(sector, executionContext, dataPath));
         if (dataPath.length != 2)
             return (null);
         var property = dataPath[1];
@@ -1020,6 +1067,11 @@ var DrapoSolver = (function () {
         if (propertyLower === '_haschanges')
             return (this.GetSystemContextPathValueHasChanges(sector, context.Item.DataKey));
         return (null);
+    };
+    DrapoSolver.prototype.GetExecutionContextPathValueSolved = function (sector, executionContext, dataPath) {
+        var data = this.GetExecutionContextPathValueStack(sector, executionContext, dataPath);
+        dataPath.splice(1, 1);
+        return (this.ResolveDataObjectPathObject(data, dataPath));
     };
     DrapoSolver.prototype.GetExecutionContextPathValue = function (sector, executionContext, dataPath) {
         if (dataPath.length != 2)
@@ -1075,7 +1127,7 @@ var DrapoSolver = (function () {
         for (var i = 0; i < mustaches.length; i++) {
             var mustache = mustaches[i];
             var dataPath = this.Application.Parser.ParseMustache(mustache);
-            var data = this.GetSystemContextPathValue(sector, context, dataPath);
+            var data = this.GetSystemContextPathValue(sector, context, null, dataPath);
             if (data === null)
                 continue;
             expression = expression.replace(mustache, data);

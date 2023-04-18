@@ -117,5 +117,14 @@ var DrapoStylist = (function () {
             });
         });
     };
+    DrapoStylist.prototype.GetElementStyleProperty = function (el, name) {
+        var elStyle = window.getComputedStyle(el);
+        var value = elStyle.getPropertyValue(name);
+        return (value);
+    };
+    DrapoStylist.prototype.SetElementStyleProperty = function (el, name, value) {
+        var elStyle = window.getComputedStyle(el);
+        elStyle.setProperty(name, value);
+    };
     return DrapoStylist;
 }());

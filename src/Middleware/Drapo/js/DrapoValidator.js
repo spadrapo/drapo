@@ -86,7 +86,7 @@ var DrapoValidator = (function () {
     DrapoValidator.prototype.RegisterValidation = function (el, sector, context) {
         if (context === void 0) { context = null; }
         return __awaiter(this, void 0, void 0, function () {
-            var validations, contextItem, validationID, validationIDResolved, validationType, validationValue, validationGroup, validationGroups, validationTag, validation, validationResolved, elj, validatorUncheckedClass;
+            var validations, contextItem, validationID, validationIDResolved, validationType, validationValue, validationGroup, validationGroups, validationTag, validation, validationResolved, validatorUncheckedClass;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -114,13 +114,12 @@ var DrapoValidator = (function () {
                     case 2:
                         validationResolved = _a.sent();
                         if (!(validationResolved != null)) return [3, 4];
-                        elj = $(el);
                         this.AddValidationInterface(sector, validationResolved, el, contextItem);
                         return [4, this.Application.Config.GetValidatorUncheckedClass()];
                     case 3:
                         validatorUncheckedClass = _a.sent();
                         if (validatorUncheckedClass != null) {
-                            elj.addClass(validatorUncheckedClass);
+                            el.classList.add(validatorUncheckedClass);
                         }
                         _a.label = 4;
                     case 4: return [2];
@@ -139,7 +138,7 @@ var DrapoValidator = (function () {
                         if (!(contextItem == null)) return [3, 2];
                         return [4, this.Application.Storage.ResolveMustachesRecursive(sector, validationID)];
                     case 1: return [2, (_a.sent())];
-                    case 2: return [4, this.Application.Barber.ResolveControlFlowMustacheString(contextItem.Context, null, validationID, null, sector, false)];
+                    case 2: return [4, this.Application.Barber.ResolveControlFlowMustacheString(contextItem.Context, null, null, validationID, null, sector, false)];
                     case 3:
                         validationIDContext = _a.sent();
                         return [2, (validationIDContext)];
@@ -362,7 +361,7 @@ var DrapoValidator = (function () {
                     case 0:
                         validationResolved = null;
                         if (!this.Application.Parser.IsMustacheOnly(validation)) return [3, 2];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(contextItem == null ? null : contextItem.Context, null, validation, null, sector, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(contextItem == null ? null : contextItem.Context, null, null, validation, null, sector, false)];
                     case 1:
                         validationResolved = _b.sent();
                         return [3, 3];
@@ -474,7 +473,7 @@ var DrapoValidator = (function () {
     };
     DrapoValidator.prototype.IsValidationRuleValid = function (sector, validation, el, event, canFocus, uncheckedClass, validClass, invalidClass) {
         return __awaiter(this, void 0, void 0, function () {
-            var isValid, addClass, removeClass, elements, i, element, elj;
+            var isValid, addClass, removeClass, elements, i, element;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.IsRuleValid(sector, validation, canFocus, el, event)];
@@ -485,11 +484,10 @@ var DrapoValidator = (function () {
                         elements = this.GetValidationRuleElements(sector, validation);
                         for (i = 0; i < elements.length; i++) {
                             element = elements[i];
-                            elj = $(element);
                             if (uncheckedClass != null)
-                                elj.removeClass(uncheckedClass);
-                            elj.removeClass(removeClass);
-                            elj.addClass(addClass);
+                                element.classList.remove(uncheckedClass);
+                            element.classList.remove(removeClass);
+                            element.classList.add(addClass);
                         }
                         return [2, (isValid)];
                 }
@@ -535,7 +533,7 @@ var DrapoValidator = (function () {
                         if ((!isValid) && (canFocus)) {
                             element = this.Application.Observer.GetElementByModel(sector, value);
                             if (element != null)
-                                $(element).focus();
+                                element.focus();
                         }
                         return [2, (isValid)];
                 }
@@ -592,10 +590,10 @@ var DrapoValidator = (function () {
                 switch (_a.label) {
                     case 0:
                         context = this.CreateContext(itemContext);
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, expression, null, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, expression, null, false)];
                     case 1:
                         expressionsResolved = _a.sent();
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, value, null, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, value, null, false)];
                     case 2:
                         valueResolved = _a.sent();
                         regex = new RegExp(expressionsResolved);
@@ -611,10 +609,10 @@ var DrapoValidator = (function () {
                 switch (_a.label) {
                     case 0:
                         context = this.CreateContext(itemContext);
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, value, null, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, value, null, false)];
                     case 1:
                         valueResolved = _a.sent();
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, valueToCompare, null, false)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, null, valueToCompare, null, false)];
                     case 2:
                         valueToCompareResolved = _a.sent();
                         return [2, (valueResolved == valueToCompareResolved)];
@@ -667,11 +665,10 @@ var DrapoValidator = (function () {
         var elements = this.GetValidationRuleElements(sector, validation);
         for (var i = 0; i < elements.length; i++) {
             var element = elements[i];
-            var elj = $(element);
-            elj.removeClass(validClass);
-            elj.removeClass(invalidClass);
+            element.classList.remove(validClass);
+            element.classList.remove(invalidClass);
             if (uncheckedClass != null)
-                elj.addClass(uncheckedClass);
+                element.classList.add(uncheckedClass);
         }
     };
     DrapoValidator.prototype.IsValidatorInterface = function (el) {

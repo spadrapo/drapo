@@ -82,12 +82,12 @@ declare class DrapoAttributeHandler {
     HasContentIDContext(content: string): boolean;
     HasContentAttributeContext(content: string): boolean;
     ResolveAttr(el: HTMLElement, canBind?: boolean, canSubscribeDelay?: boolean, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
-    ResolveAttrContext(context: DrapoContext, el: HTMLElement, elj: JQuery, canBind: boolean): Promise<void>;
+    ResolveAttrContext(context: DrapoContext, el: HTMLElement, canBind: boolean): Promise<void>;
     private ResolveContextValue;
     private ExtractAttr;
     private ExtractAttrProperty;
     ResolveID(el: HTMLElement, sector: string, canBind?: boolean, canSubscribeDelay?: boolean, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
-    ResolveIDContext(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, canBind: boolean): Promise<boolean>;
+    ResolveIDContext(context: DrapoContext, el: HTMLElement, sector: string, canBind: boolean): Promise<boolean>;
     private ResolveConversionAttributeValue;
     private ResolveConversionAttributeSourceValue;
 }
@@ -99,18 +99,18 @@ declare class DrapoBarber {
     HasContentMustacheNodesContext(content: string): boolean;
     HasContentMustacheAttributeContext(content: string): boolean;
     private HasContentMustacheAttributeContextMustache;
-    ResolveMustaches(jQueryStart?: JQuery, sector?: string, stopAtSectors?: boolean): Promise<void>;
+    ResolveMustaches(el?: HTMLElement, sector?: string, stopAtSectors?: boolean): Promise<void>;
     private ResolveMustachesInternal;
     private CanRender;
     ResolveFilter(el: HTMLElement, sector: string, canBind: boolean, dataKeyFilter: string, dataFieldFilter: string): Promise<void>;
     ResolveElementDelayed(el: HTMLElement, sector: string, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
     ResolveMustacheElementLeaf(el: HTMLElement, canUseModel?: boolean, canSubscribeDelay?: boolean, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
     ResolveModel(el: HTMLElement, canBind?: boolean, canSubscribeDelay?: boolean, dataKeyFilter?: string, dataFieldFilter?: string): Promise<void>;
-    ResolveControlFlowMustacheAttributes(context: DrapoContext, elementJQuery: JQuery, sector: string): Promise<void>;
-    ResolveControlFlowMustacheNodes(context: DrapoContext, element: HTMLElement, elementJQuery: JQuery, sector: string): Promise<void>;
-    ResolveControlFlowMustacheAttribute(context: DrapoContext, attribute: string, elementJQuery: JQuery, sector: string): Promise<void>;
-    ResolveControlFlowMustacheStringFunction(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, expression: string, elementJQuery: JQuery, canBind?: boolean, type?: DrapoStorageLinkType): Promise<string>;
-    ResolveControlFlowMustacheString(context: DrapoContext, renderContext: DrapoRenderContext, expression: string, elementJQuery: JQuery, sector: string, canBind?: boolean, type?: DrapoStorageLinkType, isForIterator?: boolean, elementForTemplate?: HTMLElement): Promise<string>;
+    ResolveControlFlowMustacheAttributes(context: DrapoContext, element: HTMLElement, sector: string): Promise<void>;
+    ResolveControlFlowMustacheNodes(context: DrapoContext, element: HTMLElement, sector: string): Promise<void>;
+    ResolveControlFlowMustacheAttribute(context: DrapoContext, attribute: string, el: HTMLElement, sector: string): Promise<void>;
+    ResolveControlFlowMustacheStringFunction(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, executionContext: DrapoExecutionContext<any>, expression: string, element: HTMLElement, canBind?: boolean, type?: DrapoStorageLinkType): Promise<string>;
+    ResolveControlFlowMustacheString(context: DrapoContext, renderContext: DrapoRenderContext, executionContext: DrapoExecutionContext<any>, expression: string, element: HTMLElement, sector: string, canBind?: boolean, type?: DrapoStorageLinkType, isForIterator?: boolean, elementForTemplate?: HTMLElement): Promise<string>;
     ResolveMustacheElementVisibility(el: HTMLElement, canBind?: boolean): Promise<void>;
     HasMustacheContext(expression: string, sector: string, renderContext?: DrapoRenderContext): boolean;
     private HasMustacheContextInternal;
@@ -162,7 +162,6 @@ declare class DrapoBehaviorHandler {
     private ApplySizeNew;
 }
 
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoBinder {
     private _application;
     get Application(): DrapoApplication;
@@ -170,15 +169,15 @@ declare class DrapoBinder {
     BindReaderWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel: string[], canNotify: boolean): void;
     BindReader(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[]): void;
     BindWriter(contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], eventTypes: string[], eventTypesCancel: string[], canNotify: boolean): void;
-    BindWriterEvent(e: JQueryEventObject, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number, canNotify: boolean): Promise<boolean>;
-    BindIncremental(elj: JQuery, dataKey: string, sector: string, isIncremental: boolean): Promise<void>;
-    BindIncrementalScroll(binder: JQuery, eventNamespace: string, eljParent: JQuery, dataKey: string, sector: string): Promise<boolean>;
+    BindWriterEvent(e: Event, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number, canNotify: boolean): Promise<boolean>;
+    BindIncremental(el: HTMLElement, dataKey: string, sector: string, isIncremental: boolean): Promise<void>;
+    BindIncrementalScroll(binder: HTMLElement | Window, eventNamespace: string, elParent: HTMLElement, dataKey: string, sector: string): Promise<boolean>;
     private GetEventValue;
     private GetEventValueInput;
     private GetParentElementWithScrollVertical;
     private IsElementScrollVisible;
     private HasElementVerticalScroll;
-    IsElementScrollVerticalAlmostEnd(el: JQuery): boolean;
+    IsElementScrollVerticalAlmostEnd(el: HTMLElement): boolean;
     UnbindControlFlowViewport(viewport: DrapoViewport): void;
     BindControlFlowViewport(viewport: DrapoViewport): void;
     BindControlFlowViewportScroll(viewport: DrapoViewport): Promise<void>;
@@ -225,8 +224,11 @@ declare class DrapoClassHandler {
     constructor(application: DrapoApplication);
     HasContentClassContext(content: string): boolean;
     ResolveClass(el: HTMLElement, sector: string, canBind?: boolean, canSubscribeDelay?: boolean, dataKeyFilter?: string, dataFieldFilter?: string, type?: DrapoStorageLinkType): Promise<void>;
-    ResolveClassContext(context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, elj: JQuery, sector: string, canBind: boolean, type?: DrapoStorageLinkType): Promise<boolean>;
+    ResolveClassContext(context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, sector: string, canBind: boolean, type?: DrapoStorageLinkType): Promise<boolean>;
     private ExtractClasses;
+    AddClass(el: HTMLElement, value: string): void;
+    RemoveClass(el: HTMLElement, value: string): void;
+    private GetClassValues;
 }
 
 declare class DrapoComponentHandler {
@@ -237,7 +239,7 @@ declare class DrapoComponentHandler {
     private _dataInstances;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    ResolveComponents(jQueryStart?: JQuery): Promise<void>;
+    ResolveComponents(el?: HTMLElement): Promise<void>;
     ResolveComponentsElement(el: HTMLElement, context: DrapoContext, checkSectorReady: boolean, handleDynamicSectors: boolean): Promise<void>;
     private ResolveComponentElement;
     private GetSectorContext;
@@ -386,8 +388,8 @@ declare class DrapoContext {
     GetDataKeyRoot(): string;
     Checkpoint(): void;
     private GetTemplateIndex;
-    GetTemplate(templateKey: string): JQuery;
-    AddTemplate(templateKey: string, templateData: JQuery): void;
+    GetTemplate(templateKey: string): HTMLElement;
+    AddTemplate(templateKey: string, templateData: HTMLElement): void;
     CanResolve(key: string): boolean;
     HasContextItemBefore(): boolean;
     GetIndex(key: string): number;
@@ -430,24 +432,23 @@ declare class DrapoContextItem {
     constructor(context: DrapoContext, parent?: DrapoContextItem);
 }
 
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoControlFlow {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     ResolveControlFlowDocument(): Promise<void>;
-    ResolveControlFlowSector(jQueryStart: JQuery, canResolveComponents?: boolean): Promise<void>;
+    ResolveControlFlowSector(el: HTMLElement, canResolveComponents?: boolean): Promise<void>;
     private ResolveControlFlowForParent;
     private ResolveControlFlowForRoot;
-    ResolveControlFlowFor(forJQuery: JQuery, isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
+    ResolveControlFlowForElement(forElement: HTMLElement, isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
+    ResolveControlFlowForArray(forElements: HTMLElement[], isIncremental?: boolean, canUseDifference?: boolean, type?: DrapoStorageLinkType, canResolveComponents?: boolean): Promise<void>;
     InitializeContext(context: DrapoContext, content: string): void;
     IsElementControlFlowTemplate(el: HTMLElement): boolean;
     private ResolveControlFlowForInternal;
     private ResolveControlFlowForIterationRender;
     private CanApplyConditional;
     private ResolveControlFlowForIterationRenderClass;
-    IsControlFlowForIterationVisible(sector: string, context: DrapoContext, el: Element, elj: JQuery, renderContext: DrapoRenderContext): Promise<boolean>;
-    private CreateList;
+    IsControlFlowForIterationVisible(sector: string, context: DrapoContext, el: Element, renderContext: DrapoRenderContext): Promise<boolean>;
     private RemoveList;
     private RemoveListIndex;
     private IsControlFlowDataKeyIterator;
@@ -469,7 +470,7 @@ declare class DrapoControlFlow {
     private IsValidRangeIndex;
     ApplyRange(data: any[], range: DrapoRange): any[];
     GetRangeIndex(data: any[], rangeIndex: string): number;
-    ExecuteDataItem(sector: string, context: DrapoContext, expression: string, iterator: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string): Promise<boolean>;
+    ExecuteDataItem(sector: string, context: DrapoContext, expression: string, iterator: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string, executionContext?: DrapoExecutionContext<any>): Promise<boolean>;
     ResolveControlFlowForViewportScroll(viewport: DrapoViewport): Promise<void>;
     private CreateControlFlowForViewportFragment;
 }
@@ -547,7 +548,6 @@ declare class DrapoDebugger {
     private ExecuteFunctionDebuggerPersist;
 }
 
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoDocument {
     private _application;
     private _pendingAuthorizations;
@@ -571,29 +571,29 @@ declare class DrapoDocument {
     private ResolveChildren;
     private LoadChildSectorInternal;
     private ReplaceSectorData;
-    ResolveWindow(window: JQuery): Promise<void>;
+    ResolveWindow(elWindow: HTMLElement): Promise<void>;
     ResolveComponentDynamicSector(el: HTMLElement): Promise<void>;
     ResolveComponentUpdate(el: HTMLElement, context: DrapoContext): Promise<void>;
-    RemoveElement(el: HTMLElement): Promise<void>;
+    RemoveElement(el: HTMLElement, checkSector?: boolean): Promise<void>;
     private RemoveElementIteration;
     private RemoveSectorData;
     LoadChildSector(sectorName: string, url: string, title?: string, canRoute?: boolean, canLoadDefaultSectors?: boolean, container?: string): Promise<boolean>;
     LoadChildSectorContent(sectorName: string, content: string): Promise<boolean>;
     LoadChildSectorDefault(sectorName: string): Promise<boolean>;
     private ReplaceDocument;
-    ReplaceElement(el: Element, elNew: Element | string | JQuery): void;
-    Show(elj: JQuery): JQuery;
+    ReplaceElement(el: HTMLElement, elNew: HTMLElement): void;
+    Show(el: HTMLElement): HTMLElement;
     private ShowInternal;
-    Hide(selector: JQuery): JQuery;
-    GetWrapper(elj: JQuery): HTMLElement;
+    Hide(el: HTMLElement): HTMLElement;
+    private HideInternal;
+    GetWrapper(el: HTMLElement): HTMLElement;
     private Wrap;
     GetElementAttributes(el: Element): [string, string][];
     GetElementAttributesFilteredPrefix(el: Element, prefix: string): [string, string][];
-    SetElementAttributes(elj: JQuery, attributes: [string, string][]): void;
+    SetElementAttributes(el: HTMLElement, attributes: [string, string][]): void;
     private ExtractHeadInnerHtml;
     private RemoveFramework;
     private ExtractBodyInnerHtml;
-    private GetOuterHtml;
     IsElementInserted(list: HTMLElement[], itemInsert: HTMLElement): boolean;
     IsElementAttached(el: HTMLElement): boolean;
     IsElementInsideControlFlow(el: HTMLElement): boolean;
@@ -607,10 +607,10 @@ declare class DrapoDocument {
     private InitializeSectorsLoaded;
     GetSectorParent(el: HTMLElement): string;
     GetSector(el: HTMLElement): string;
-    private GetElementByAttribute;
     private GetSectorElement;
     GetSectorElementInner(sector: string): HTMLElement;
     SetSectorElementInner(sector: string, el: HTMLElement, canDetach: boolean): void;
+    CreateHTMLElement(html: string, onlyLast?: boolean): HTMLElement;
     private InitializeSectorElementDetach;
     CanDetachElement(el: HTMLElement): boolean;
     IsElementDetached(el: HTMLElement): boolean;
@@ -621,6 +621,17 @@ declare class DrapoDocument {
     GetSectorImpersonate(el: HTMLElement): string;
     IsSectorDynamic(el: HTMLElement): Promise<boolean>;
     GetSectorResolved(el: HTMLElement): Promise<string>;
+    Clone(el: HTMLElement): HTMLElement;
+    Select(el: HTMLElement): void;
+    GetValue(el: HTMLElement): string;
+    SetValue(el: HTMLElement, value: string): void;
+    GetText(el: HTMLElement): string;
+    SetText(el: HTMLElement, value: string): void;
+    GetHTML(el: HTMLElement): string;
+    GetHTMLEncoded(html: string): string;
+    private EnsureHTML;
+    SetHTML(el: HTMLElement, value: string): void;
+    GetProperty(el: HTMLElement, propertyName: string): string;
     CreateGuid(isShort?: boolean): string;
     private CreateGuidShort;
     private CreateGuidShortInternal;
@@ -629,10 +640,6 @@ declare class DrapoDocument {
     ApplyNodeDifferencesRenderClass(nodeOld: HTMLElement, nodeNew: HTMLElement): void;
     private IsNodeDifferentType;
     private ApplyNodeEventsDifferences;
-    private ExtractNodeEvents;
-    private ExtractEvents;
-    private ExtractEventHandler;
-    private CreateNodeEventNamespace;
     private ApplyNodeSpecialDifferences;
     private ApplyNodeSpecialDifferencesInput;
     private ApplyNodeSpecialDifferencesSelect;
@@ -640,7 +647,7 @@ declare class DrapoDocument {
     private ApplyNodeAttributesDifferences;
     private ExtactNodeAttributes;
     private ExtractNodeAttributeValue;
-    Contains(elementJQuery: JQuery): boolean;
+    Contains(element: HTMLElement): boolean;
     ExtractQueryString(canUseRouter: boolean): [string, string][];
     Sleep(timeout: number): Promise<{}>;
     WaitForMessage(retry?: number, interval?: number): Promise<DrapoMessage>;
@@ -666,8 +673,10 @@ declare class DrapoDocument {
     AddSectorFriends(sector: string, sectorFriendsText: string): Promise<void>;
     private GetSectorFriends;
     CollectSector(sector: string): Promise<void>;
-    IsFirstChild(elj: JQuery): boolean;
-    IsLastChild(elj: JQuery): boolean;
+    IsFirstChild(el: HTMLElement): boolean;
+    IsLastChild(el: HTMLElement): boolean;
+    GetIndex(el: HTMLElement): number;
+    GetNextAll(el: HTMLElement): HTMLElement[];
     ReceiveMessage(message: DrapoMessage): Promise<void>;
     private ExecuteMessage;
     private UpdateMessage;
@@ -725,14 +734,18 @@ declare class DrapoEventHandler {
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     HasContentEventContext(content: string): boolean;
-    CreateEventNamespace(el: HTMLElement, location: string, eventType: string, namespace: string): string;
+    CreateEventNamespace(el: HTMLElement, location: string, eventType: string, namespace?: string): string;
     GetEventPropagation(el: HTMLElement, eventType: string): boolean;
     private RetrieveEventBinder;
     private IsLocationBody;
-    GetElementParent(element: Element, levels?: number): JQuery;
+    GetElementParent(element: HTMLElement, levels?: number): HTMLElement;
     Attach(el: HTMLElement, renderContext: DrapoRenderContext): Promise<void>;
-    AttachContext(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, renderContext: DrapoRenderContext): Promise<void>;
+    AttachContext(context: DrapoContext, el: HTMLElement, sector: string, renderContext: DrapoRenderContext): Promise<void>;
     private HasEventContext;
+    AttachEventListener(el: HTMLElement | Window, eventType: string, eventNamespace: string, callback: Function): void;
+    DetachEventListener(el: HTMLElement | Window, eventNamespace: string): boolean;
+    private SetElementEventListenerContainer;
+    private GetElementEventListenerContainer;
     private ExecuteEvent;
     private IsEventRunning;
     private AddEventRunning;
@@ -750,6 +763,20 @@ declare class DrapoEventHandler {
     TriggerClick(el: HTMLElement): Promise<boolean>;
     Trigger(el: HTMLElement, type: string): Promise<boolean>;
     TriggerEvent(el: HTMLElement, event: Event): Promise<boolean>;
+    SyncNodeEventsDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void;
+    private GetEventListener;
+}
+
+declare class DrapoEventListener {
+    private _eventType;
+    private _eventNamespace;
+    private _function;
+    get EventType(): string;
+    set EventType(value: string);
+    get EventNamespace(): string;
+    set EventNamespace(value: string);
+    get Function(): Function;
+    set Function(value: Function);
 }
 
 declare class DrapoExceptionHandler {
@@ -852,17 +879,17 @@ declare class DrapoFunctionHandler {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    ResolveFunctionWithoutContext(sector: string, element: Element, functionsValue: string, executionContext?: DrapoExecutionContext<any>): Promise<string>;
+    ResolveFunctionWithoutContext(sector: string, element: HTMLElement, functionsValue: string, executionContext?: DrapoExecutionContext<any>): Promise<string>;
     CreateExecutionContext(canReset?: boolean): DrapoExecutionContext<any>;
     private FinalizeExecutionContext;
     private IsExecutionBroked;
     ReplaceFunctionExpressions(sector: string, context: DrapoContext, expression: string, canBind: boolean): Promise<string>;
     private ReplaceFunctionExpressionsContext;
-    ResolveFunction(sector: string, contextItem: DrapoContextItem, element: Element, event: JQueryEventObject, functionsValue: string, executionContext?: DrapoExecutionContext<any>, forceFinalizeExecutionContext?: boolean): Promise<string>;
+    ResolveFunction(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionsValue: string, executionContext?: DrapoExecutionContext<any>, forceFinalizeExecutionContext?: boolean): Promise<string>;
     private ResolveFunctionContext;
-    ResolveFunctionParameter(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, parameter: string, canForceLoadDataDelay?: boolean, canUseReturnFunction?: boolean, isRecursive?: boolean): Promise<any>;
+    ResolveFunctionParameter(sector: string, contextItem: DrapoContextItem, element: HTMLElement, executionContext: DrapoExecutionContext<any>, parameter: string, canForceLoadDataDelay?: boolean, canUseReturnFunction?: boolean, isRecursive?: boolean): Promise<any>;
     ResolveExecutionContextMustache(sector: string, executionContext: DrapoExecutionContext<any>, value: string): string;
-    ResolveFunctions(sector: string, contextItem: DrapoContextItem, element: Element, executionContext: DrapoExecutionContext<any>, value: string, checkInvalidFunction?: boolean): Promise<any>;
+    ResolveFunctions(sector: string, contextItem: DrapoContextItem, element: HTMLElement, executionContext: DrapoExecutionContext<any>, value: string, checkInvalidFunction?: boolean): Promise<any>;
     private ResolveFunctionParameterDataFields;
     private ExecuteFunctionContextSwitch;
     private ExecuteFunctionExternal;
@@ -925,6 +952,7 @@ declare class DrapoFunctionHandler {
     private ExecuteFunctionCreateGuid;
     private ExecuteFunctionCreateTick;
     private ExecuteFunctionGetDate;
+    private ExecuteFunctionAddDate;
     private ExecuteFunctionPushStack;
     private ExecuteFunctionPopStack;
     private ExecuteFunctionPeekStack;
@@ -1101,19 +1129,19 @@ declare class DrapoModelHandler {
     HasContentModelContext(content: string): boolean;
     ResolveOnModelChange(contextItem: DrapoContextItem, el: HTMLElement): Promise<void>;
     ResolveOnModelComplete(contextItem: DrapoContextItem, el: HTMLElement): Promise<void>;
-    ResolveModel(context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, elj: JQuery, sector: string, canBind: boolean, isContext?: boolean): Promise<boolean>;
+    ResolveModel(context: DrapoContext, renderContext: DrapoRenderContext, el: HTMLElement, sector: string, canBind: boolean, isContext?: boolean): Promise<boolean>;
     ResolveValueExpression(context: DrapoContext, el: HTMLElement, sector: string, model: string, canBind: boolean): Promise<string>;
-    ResolveModelInput(context: DrapoContext, el: HTMLElement, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
-    ResolveModelInputCheckbox(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean>;
-    ResolveModelTextArea(context: DrapoContext, el: Element, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
-    ResolveModelInputText(context: DrapoContext, element: Element, elj: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
-    ResolveModelInputNumber(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
-    ResolveModelInputPassword(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
-    ResolveModelInputHidden(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean>;
-    ResolveModelInputRange(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean>;
-    ResolveModelSelect(context: DrapoContext, element: Element, elementJQuery: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInput(context: DrapoContext, el: HTMLElement, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInputCheckbox(context: DrapoContext, element: HTMLInputElement, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelTextArea(context: DrapoContext, el: HTMLTextAreaElement, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInputText(context: DrapoContext, element: HTMLElement, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInputNumber(context: DrapoContext, element: HTMLElement, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInputPassword(context: DrapoContext, element: HTMLElement, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], modelEventsCancel: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInputHidden(context: DrapoContext, element: HTMLElement, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelInputRange(context: DrapoContext, element: HTMLElement, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean>;
+    ResolveModelSelect(context: DrapoContext, element: HTMLElement, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean, modelEvents: string[], canNotify: boolean): Promise<boolean>;
     private ResolveModelSpan;
-    ResolveModelLI(context: DrapoContext, el: HTMLElement, elj: JQuery, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean): Promise<boolean>;
+    ResolveModelLI(context: DrapoContext, el: HTMLElement, sector: string, model: string, mustache: string, mustacheParts: string[], dataFields: string[], canBind: boolean): Promise<boolean>;
 }
 
 declare class DrapoObserver {
@@ -1206,7 +1234,6 @@ declare class DrapoObserver {
     private IsLocked;
 }
 
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoParser {
     private readonly MUSTACHE_START;
     private readonly MUSTACHE_START_OVERFLOW;
@@ -1556,8 +1583,8 @@ declare class DrapoResize {
     private _code;
     private _contextItem;
     private _element;
-    private _parentJQuery;
-    private _containerJQuery;
+    private _parent;
+    private _container;
     private _model;
     private _location;
     private _type;
@@ -1574,10 +1601,10 @@ declare class DrapoResize {
     set Item(value: DrapoContextItem);
     get Element(): HTMLElement;
     set Element(value: HTMLElement);
-    get ParentJQuery(): JQuery;
-    set ParentJQuery(value: JQuery);
-    get ContainerJQuery(): JQuery;
-    set ContainerJQuery(value: JQuery);
+    get Parent(): HTMLElement;
+    set Parent(value: HTMLElement);
+    get Container(): HTMLElement;
+    set Container(value: HTMLElement);
     get Model(): string;
     set Model(value: string);
     get Location(): string;
@@ -1641,6 +1668,13 @@ declare class DrapoSearcher {
     FindDataKey(dataKey: string, sector: string): HTMLElement;
     HasDataKeyElement(dataKey: string): boolean;
     private Filter;
+    private CreateElementsList;
+    FindByAttributeAndValue(name: string, value: string): HTMLElement;
+    FindAllByAttributeAndValue(name: string, value: string): HTMLElement[];
+    FindByAttributeAndValueFromParent(name: string, value: string, parent: HTMLElement): HTMLElement;
+    FindAllByAttribute(name: string): HTMLElement[];
+    FindAllByAttributeFromParent(name: string, parent: HTMLElement): HTMLElement[];
+    FindByTagName(tagName: string): HTMLElement;
 }
 
 declare class DrapoSectorContainerHandler {
@@ -1807,7 +1841,7 @@ declare class DrapoSolver {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    ResolveConditional(expression: string | boolean | number, elj?: JQuery, sector?: string, context?: DrapoContext, renderContext?: DrapoRenderContext, eljForTemplate?: HTMLElement): Promise<boolean>;
+    ResolveConditional(expression: string | boolean | number, el?: HTMLElement, sector?: string, context?: DrapoContext, renderContext?: DrapoRenderContext, eljForTemplate?: HTMLElement): Promise<boolean>;
     private ResolveConditionalExpressionBlock;
     private ResolveConditionalExpressionBlockOperation;
     private EnsureExpressionItemCurrentLevelResolved;
@@ -1830,13 +1864,14 @@ declare class DrapoSolver {
     CreateMustacheContext(context: DrapoContext, mustacheParts: string[], canResolveKey?: boolean): string;
     private CreateContextAbsoluteArray;
     private AppendContextAbsoluteArray;
+    private IsContextItemSameDataKey;
     private AppendContextAbsoluteIterators;
     CreateMustacheReference(sector: string, contextItem: DrapoContextItem, mustache: string): Promise<string>;
     private GetContextItemAbsolute;
-    ResolveDataPathMustache(context: DrapoContext, elementJQuery: JQuery, sector: string, mustacheParts: string[]): Promise<string>;
+    ResolveDataPathMustache(context: DrapoContext, executionContext: DrapoExecutionContext<any>, element: HTMLElement, sector: string, mustacheParts: string[]): Promise<string>;
     ExistDataPath(context: DrapoContext, sector: string, path: string[]): Promise<boolean>;
     private ExistDataPathObject;
-    ResolveDataPath(context: DrapoContext, elementJQuery: JQuery, sector: string, path: (string[] | string), canBindReader?: boolean, canBindWriter?: boolean, modelEvents?: string[], modelEventsCancel?: string[], canNotify?: boolean): Promise<string>;
+    ResolveDataPath(context: DrapoContext, executionContext: DrapoExecutionContext<any>, element: HTMLElement, sector: string, path: (string[] | string), canBindReader?: boolean, canBindWriter?: boolean, modelEvents?: string[], modelEventsCancel?: string[], canNotify?: boolean): Promise<string>;
     private ResolveDataPathObject;
     ResolveItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], canForceLoadDataDelay?: boolean, executionContext?: DrapoExecutionContext<any>): Promise<any>;
     ResolveItemStoragePathObject(item: DrapoStorageItem, dataPath: string[]): any;
@@ -1853,15 +1888,17 @@ declare class DrapoSolver {
     CreateDataPath(dataKey: string, dataFields: string[]): string[];
     CombineDataPath(dataPath1: string[], dataPath2: string[]): string[];
     GetDataPathParent(dataPath: string[]): string[];
-    UpdateItemDataPathObject(sector: string, contextItem: DrapoContextItem, dataPath: string[], value: any, canNotify?: boolean): Promise<boolean>;
+    UpdateItemDataPathObject(sector: string, contextItem: DrapoContextItem, executionContext: DrapoExecutionContext<any>, dataPath: string[], value: any, canNotify?: boolean): Promise<boolean>;
     UpdateDataPathObject(data: any, dataPath: string[], value: any): boolean;
+    private IsPrimitive;
     Clone(object: any, deepCopy?: boolean): any;
+    private CloneObject;
     private CloneArray;
     CloneArrayString(list: string[]): string[];
     CloneArrayElement(list: HTMLElement[]): HTMLElement[];
     CloneArrayAny(list: any[]): any[];
-    CloneElement(el: HTMLElement): HTMLElement;
     private GetSystemContextPathValue;
+    private GetExecutionContextPathValueSolved;
     GetExecutionContextPathValue(sector: string, executionContext: DrapoExecutionContext<any>, dataPath: string[]): any;
     private GetExecutionContextPathValueStack;
     private GetSystemPathValue;
@@ -1893,7 +1930,6 @@ declare class DrapoStack {
     Pop(): any;
 }
 
-/// <reference path="../typings/index.d.ts" />
 declare class DrapoStorage {
     private _application;
     private _cacheItems;
@@ -1919,6 +1955,7 @@ declare class DrapoStorage {
     ReloadPipe(dataPipe: string): Promise<boolean>;
     IsMustachePartsDataKey(sector: string, mustacheParts: string[]): boolean;
     IsDataKey(dataKey: string, sector: string, renderContext?: DrapoRenderContext): boolean;
+    IsDataKeyExecution(dataKey: string): boolean;
     IsDataKeyDelay(dataKey: string, sector: string): boolean;
     private IsDataKeyElement;
     EnsureDataKeyReady(dataKey: string, sector: string): Promise<number>;
@@ -2102,8 +2139,8 @@ declare class DrapoStorageItem {
     set Type(value: string);
     get Access(): string;
     set Access(value: string);
-    get Element(): Element;
-    set Element(value: Element);
+    get Element(): HTMLElement;
+    set Element(value: HTMLElement);
     get Data(): any[];
     set Data(value: any[]);
     get DataInserted(): any[];
@@ -2177,7 +2214,7 @@ declare class DrapoStorageItem {
     set HeadersSet(value: [string, string][]);
     get HasChanges(): boolean;
     set HasChanges(value: boolean);
-    constructor(dataKey: string, type: string, access: string, element: Element, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
+    constructor(dataKey: string, type: string, access: string, element: HTMLElement, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
     private Initialize;
     ContainsGroup(group: string): boolean;
 }
@@ -2198,6 +2235,8 @@ declare class DrapoStylist {
     private StringfyValues;
     ReloadStyles(): Promise<void>;
     private AddStyleToDocument;
+    GetElementStyleProperty(el: HTMLElement, name: string): string;
+    SetElementStyleProperty(el: HTMLElement, name: string, value: string): void;
 }
 
 declare class DrapoValidator {
@@ -2222,8 +2261,8 @@ declare class DrapoValidator {
     RegisterValidation(el: HTMLElement, sector: string, context?: DrapoContext): Promise<void>;
     private ResolveValidationID;
     private GetValidationTag;
-    IsValidationEventValid(el: HTMLElement, sector: string, eventType: string, location: string, event: JQueryEventObject, contextItem: DrapoContextItem): Promise<boolean>;
-    IsValidationExpressionValid(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem, event?: JQueryEventObject): Promise<boolean>;
+    IsValidationEventValid(el: HTMLElement, sector: string, eventType: string, location: string, event: Event, contextItem: DrapoContextItem): Promise<boolean>;
+    IsValidationExpressionValid(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem, event?: Event): Promise<boolean>;
     UncheckValidationExpression(el: HTMLElement, sector: string, validation: string, contextItem: DrapoContextItem): Promise<void>;
     private GetSectorIndex;
     private GetIndex;
@@ -2355,7 +2394,7 @@ declare class DrapoViewportHandler {
     CreateViewportControlFlow(sector: string, el: HTMLElement, elTemplate: HTMLElement, dataKey: string, key: string, dataKeyIteratorRange: string, data: any[]): DrapoViewport;
     GetElementViewport(el: HTMLElement): DrapoViewport;
     HasElementViewport(el: HTMLElement): boolean;
-    CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: JQuery): JQuery;
+    CreateViewportControlFlowBallonBefore(viewport: DrapoViewport, lastInserted: HTMLElement): HTMLElement;
     private FillBallon;
     private GetBallonBefore;
     private GetElementItemHeight;

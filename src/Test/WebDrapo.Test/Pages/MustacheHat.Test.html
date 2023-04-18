@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Mustache Hat</title>
+</head>
+<body>
+    <span>Mustache Hat</span>
+    <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children=5&amp;levels=1&amp;prefix=D"></div>
+    <div>
+        <div d-for="object in objects" style="display: none;">
+            <span d-model="{{object.Key}}"></span>
+            <br />
+        </div>
+    <div>
+            <span>DL1K0</span>
+            <br />
+        </div><div>
+            <span>DL1K1</span>
+            <br />
+        </div><div>
+            <span>DL1K2</span>
+            <br />
+        </div><div>
+            <span>Thiago</span>
+            <br />
+        </div><div>
+            <span>DL1K4</span>
+            <br />
+        </div></div>
+    <input type="button" value="update" d-id="__drapoUnitTest" d-on-click="UpdateItemField({{objects.[^2].Key}},Thiago)" />
+
+</body></html>

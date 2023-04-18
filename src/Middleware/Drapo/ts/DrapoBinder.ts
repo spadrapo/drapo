@@ -1,5 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
 class DrapoBinder {
     //Field
     private _application: DrapoApplication;
@@ -46,8 +44,8 @@ class DrapoBinder {
             const debounceTimeout: number = this.Application.EventHandler.GetEventDebounce(el, eventType);
             let delayTimeout: number = null;
             const canNotifyLocal: boolean = canNotify;
-            $(el).unbind(eventNamespace);
-            $(el).bind(eventNamespace, (e) => {
+            this.Application.EventHandler.DetachEventListener(el, eventNamespace);
+            this.Application.EventHandler.AttachEventListener(el, eventType, eventNamespace, (e:Event) => {
                 if (debounceTimeout == null) {
                     // tslint:disable-next-line:no-floating-promises
                     application.Binder.BindWriterEvent(e, eventType, eventFilter, contextItem, el, dataFields, data, dataKey, index, canNotify);
@@ -70,24 +68,23 @@ class DrapoBinder {
                 const eventType: string = event[0];
                 const eventFilter: string = event[1];
                 const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, eventType, 'modelCancel');
-                $(el).unbind(eventNamespace);
-                $(el).bind(eventNamespace, (e) => {
+                this.Application.EventHandler.DetachEventListener(el, eventNamespace);
+                this.Application.EventHandler.AttachEventListener(el, eventType, eventNamespace, (e: Event) => {
                     if (!this.Application.EventHandler.IsValidEventFilter(e, eventFilter))
                         return (true);
                     const dataPath: string[] = this.Application.Solver.CreateDataPath(dataKey, dataFields);
                     const valueCurrent: any = this.Application.Solver.ResolveDataObjectPathObject(data, dataPath);
-                    const elj: JQuery = $(el);
-                    const valueBefore: string = elj.val();
+                    const valueBefore: string = this.Application.Document.GetValue(el);
                     if (valueCurrent == valueBefore)
                         return (true);
-                    elj.val(valueCurrent);
+                    this.Application.Document.SetValue(el,valueCurrent);
                     return (false);
                 });
             }
         }
     }
 
-    public async BindWriterEvent(e: JQueryEventObject, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number, canNotify: boolean): Promise<boolean> {
+    public async BindWriterEvent(e: Event, eventType: string, eventFilter: string, contextItem: DrapoContextItem, el: HTMLElement, dataFields: string[], data: any, dataKey: string, index: number, canNotify: boolean): Promise<boolean> {
         if (!this.Application.EventHandler.IsValidEventFilter(e, eventFilter))
             return (true);
         const value: any = this.Application.Binder.GetEventValue(eventType, e);
@@ -113,10 +110,9 @@ class DrapoBinder {
         return (true);
     }
 
-    public async BindIncremental(elj: JQuery, dataKey: string, sector: string, isIncremental: boolean): Promise<void> {
-        if ((elj == null) || (elj.length == 0))
+    public async BindIncremental(el: HTMLElement, dataKey: string, sector: string, isIncremental: boolean): Promise<void> {
+        if (el == null)
             return (null);
-        const el: HTMLElement = elj[0];
         const application: DrapoApplication = this.Application;
         //Subscribe Increment
         if (!isIncremental)
@@ -133,24 +129,24 @@ class DrapoBinder {
             return;
         }
         const isRoot = (elParent.tagName === 'HTML') || (elParent.tagName === 'BODY');
-        const eljParent: JQuery = $(elParent);
-        const binder: JQuery = isRoot ? $(window) : eljParent;
+        const binder: HTMLElement | Window = isRoot ? window : elParent;
         //Bind
         const dataKeyLocal: string = dataKey;
         const sectorLocal: string = sector;
-        const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(el, null, 'scroll', 'incremental');
-        binder.unbind(eventNamespace);
-        binder.bind(eventNamespace, (e) => {
+        const eventType: string = 'scroll';
+        const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(el, null, eventType, 'incremental');
+        this.Application.EventHandler.DetachEventListener(el, eventNamespace);
+        this.Application.EventHandler.AttachEventListener(binder, eventType, eventNamespace, (e: Event) => {
             // tslint:disable-next-line:no-floating-promises
-            application.Binder.BindIncrementalScroll(binder, eventNamespace, eljParent, dataKeyLocal, sector);
+            application.Binder.BindIncrementalScroll(binder, eventNamespace, elParent, dataKeyLocal, sector);
         });
     }
 
-    public async BindIncrementalScroll(binder: JQuery, eventNamespace: string, eljParent: JQuery, dataKey: string, sector: string): Promise<boolean> {
-        if ((!this.Application.Observer.IsEnabledNotifyIncremental) || (!this.IsElementScrollVerticalAlmostEnd(eljParent)))
+    public async BindIncrementalScroll(binder: HTMLElement | Window, eventNamespace: string, elParent: HTMLElement, dataKey: string, sector: string): Promise<boolean> {
+        if ((!this.Application.Observer.IsEnabledNotifyIncremental) || (!this.IsElementScrollVerticalAlmostEnd(elParent)))
             return (true);
         if (!await this.Application.Storage.CanGrowData(dataKey, sector)) {
-            binder.unbind(eventNamespace);
+            this.Application.EventHandler.DetachEventListener(binder, eventNamespace);
             return (false);
         }
         if (!await this.Application.Storage.GrowData(dataKey, sector))
@@ -159,24 +155,24 @@ class DrapoBinder {
         return (true);
     }
 
-    private GetEventValue(eventType: string, e: JQueryEventObject): any {
-        const tag: string = e.target.tagName.toLowerCase();
+    private GetEventValue(eventType: string, e: Event): any {
+        const target: HTMLElement = e.target as HTMLElement;
+        const tag: string = target.tagName.toLowerCase();
         if (tag == 'input')
             return (this.GetEventValueInput(eventType, e));
         if (tag == 'select')
             return ((e.target as HTMLSelectElement).value);
         if (tag == 'textarea')
-            return ($(e.target).val());
+            return (this.Application.Document.GetValue(e.target as HTMLElement));
         return (null);
     }
 
-    private GetEventValueInput(eventType: string, e: JQueryEventObject): any {
+    private GetEventValueInput(eventType: string, e: Event): any {
         const el: HTMLElement = e.target as HTMLElement;
-        const elementJQuery: JQuery = $(el);
         const type: string = el.getAttribute('type');
         if (type == 'checkbox')
-            return (elementJQuery.prop('checked'));
-        return (elementJQuery.val());
+            return (this.Application.Document.GetProperty(el, 'checked'));
+        return (this.Application.Document.GetValue(el));
     }
 
     private GetParentElementWithScrollVertical(el: HTMLElement): HTMLElement {
@@ -198,40 +194,40 @@ class DrapoBinder {
         const overflow: string = style.getPropertyValue('overflow');
         if (overflow === 'auto')
             return (true);
-        const elj: JQuery = $(el);
-        if (elj.scrollTop())
+        if (el.scrollTop)
             return (true);
-        elj.scrollTop(1);
-        if (!elj.scrollTop())
+        el.scrollTop = 1;
+        if (!el.scrollTop)
             return (false);
-        elj.scrollTop(0);
+        el.scrollTop = 0;
         return (true);
     }
 
-    public IsElementScrollVerticalAlmostEnd(el: JQuery): boolean {
-        const scrollTop: number = el.scrollTop();
+    public IsElementScrollVerticalAlmostEnd(el: HTMLElement): boolean {
+        const scrollTop: number = el.scrollTop;
         if (scrollTop == null)
             return (false);
-        const clientHeight = el[0].clientHeight;
-        const scrollHeight = el[0].scrollHeight;
+        const clientHeight = el.clientHeight;
+        const scrollHeight = el.scrollHeight;
         const remaining: number = scrollHeight - (scrollTop + clientHeight);
         return (remaining < 50);
     }
 
     public UnbindControlFlowViewport(viewport: DrapoViewport): void {
-        const binder: JQuery = $(viewport.ElementScroll);
+        const binder: HTMLElement = viewport.ElementScroll;
         const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
-        binder.unbind(eventNamespace);
+        this.Application.EventHandler.DetachEventListener(binder, eventNamespace);
     }
 
     public BindControlFlowViewport(viewport: DrapoViewport) : void
     {
         const application: DrapoApplication = this.Application;
         const viewportCurrent: DrapoViewport = viewport;
-        const binder: JQuery = $(viewport.ElementScroll);
-        const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, 'scroll', 'viewport');
-        binder.unbind(eventNamespace);
-        binder.bind(eventNamespace, (e) => {
+        const binder: HTMLElement = viewport.ElementScroll;
+        const eventType: string = 'scroll';
+        const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, eventType, 'viewport');
+        this.Application.EventHandler.DetachEventListener(binder, eventNamespace);
+        this.Application.EventHandler.AttachEventListener(binder, eventType, eventNamespace, (e: Event) => {
             // tslint:disable-next-line:no-floating-promises
             application.Binder.BindControlFlowViewportScroll(viewportCurrent);
         });
