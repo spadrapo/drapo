@@ -739,13 +739,13 @@ class DrapoObserver {
         return (true);
     }
 
-    public async Unlock(dataKey: string): Promise<boolean> {
+    public async Unlock(dataKey: string, notify: boolean): Promise<boolean> {
         for (let i: number = 0; i < this._lockedData.length; i++) {
             const locked: [string, boolean] = this._lockedData[i];
             if (locked[0] !== dataKey)
                 continue;
             this._lockedData.splice(i, 1);
-            if (locked[1])
+            if ((locked[1]) && (notify))
                 await this.Notify(dataKey, null, null);
             return (true);
         }
