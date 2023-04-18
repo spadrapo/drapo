@@ -13443,15 +13443,34 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionUnlockData = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataKey;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var dataKey, notifyText, _a, notify, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0: return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0])];
                     case 1:
-                        dataKey = _a.sent();
-                        return [4, this.Application.Observer.Unlock(dataKey)];
+                        dataKey = _c.sent();
+                        if (!(functionParsed.Parameters.length > 1)) return [3, 3];
+                        return [4, this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1])];
                     case 2:
-                        _a.sent();
+                        _a = _c.sent();
+                        return [3, 4];
+                    case 3:
+                        _a = null;
+                        _c.label = 4;
+                    case 4:
+                        notifyText = _a;
+                        if (!((notifyText == null) || (notifyText == ''))) return [3, 5];
+                        _b = true;
+                        return [3, 7];
+                    case 5: return [4, this.Application.Solver.ResolveConditional(notifyText)];
+                    case 6:
+                        _b = _c.sent();
+                        _c.label = 7;
+                    case 7:
+                        notify = _b;
+                        return [4, this.Application.Observer.Unlock(dataKey, notify)];
+                    case 8:
+                        _c.sent();
                         return [2, ('')];
                 }
             });
@@ -15944,7 +15963,7 @@ var DrapoObserver = (function () {
         this._lockedData.push([dataKey, false]);
         return (true);
     };
-    DrapoObserver.prototype.Unlock = function (dataKey) {
+    DrapoObserver.prototype.Unlock = function (dataKey, notify) {
         return __awaiter(this, void 0, void 0, function () {
             var i, locked;
             return __generator(this, function (_a) {
@@ -15958,7 +15977,7 @@ var DrapoObserver = (function () {
                         if (locked[0] !== dataKey)
                             return [3, 4];
                         this._lockedData.splice(i, 1);
-                        if (!locked[1]) return [3, 3];
+                        if (!((locked[1]) && (notify))) return [3, 3];
                         return [4, this.Notify(dataKey, null, null)];
                     case 2:
                         _a.sent();

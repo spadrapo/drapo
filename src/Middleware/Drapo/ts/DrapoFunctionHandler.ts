@@ -1548,7 +1548,9 @@ class DrapoFunctionHandler {
 
     private async ExecuteFunctionUnlockData(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const dataKey: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
-        await this.Application.Observer.Unlock(dataKey);
+        const notifyText: string = functionParsed.Parameters.length > 1 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]) : null;
+        const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
+        await this.Application.Observer.Unlock(dataKey, notify);
         return ('');
     }
 

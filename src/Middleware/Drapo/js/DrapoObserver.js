@@ -906,7 +906,7 @@ var DrapoObserver = (function () {
         this._lockedData.push([dataKey, false]);
         return (true);
     };
-    DrapoObserver.prototype.Unlock = function (dataKey) {
+    DrapoObserver.prototype.Unlock = function (dataKey, notify) {
         return __awaiter(this, void 0, void 0, function () {
             var i, locked;
             return __generator(this, function (_a) {
@@ -920,7 +920,7 @@ var DrapoObserver = (function () {
                         if (locked[0] !== dataKey)
                             return [3, 4];
                         this._lockedData.splice(i, 1);
-                        if (!locked[1]) return [3, 3];
+                        if (!((locked[1]) && (notify))) return [3, 3];
                         return [4, this.Notify(dataKey, null, null)];
                     case 2:
                         _a.sent();

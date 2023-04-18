@@ -1230,7 +1230,7 @@ declare class DrapoObserver {
     private IsCompatibleDataFields;
     private IsEqualDataFields;
     Lock(dataKey: string): boolean;
-    Unlock(dataKey: string): Promise<boolean>;
+    Unlock(dataKey: string, notify: boolean): Promise<boolean>;
     private IsLocked;
 }
 
