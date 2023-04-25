@@ -323,10 +323,19 @@ namespace WebDrapo.Controllers
             objects.Add(CreateDataCompare(new DateTime(1980, 6, 3, 0, 0, 0, 0), null));
             objects.Add(CreateDataCompare(new DateTime(1980, 6, 3, 0, 0, 0, 0), new DateTime(1980, 6, 3, 0, 2, 30, 0)));
             objects.Add(CreateDataCompare(new DateTime(1980, 6, 3, 0, 0, 0, 0), new DateTime(1980, 6, 3, 4, 1, 22, 0)));
+            objects.Add(CreateDataCompare("2023-03-15 00:00:00:000", "2023-03-20 00:00:00:000"));
             return (objects);
         }
 
         private DrapoObject CreateDataCompare(DateTime dateStart, DateTime? dateEnd)
+        {
+            DrapoObject obj = new DrapoObject();
+            obj.Properties.Add("start", dateStart);
+            obj.Properties.Add("end", dateEnd);
+            return (obj);
+        }
+
+        private DrapoObject CreateDataCompare(string dateStart, string dateEnd)
         {
             DrapoObject obj = new DrapoObject();
             obj.Properties.Add("start", dateStart);

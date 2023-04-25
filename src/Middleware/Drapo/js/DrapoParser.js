@@ -437,6 +437,11 @@ var DrapoParser = (function () {
         return (this.ParseNumber(this.Application.Solver.ResolveMathematicalExpression(dataWithoutDate), valueDefault));
     };
     DrapoParser.prototype.ReplaceDateWithTimespan = function (data) {
+        var dataWithoutISO = this.ReplaceDateWithTimespanISO(data);
+        var dataWithoutShort = this.ReplaceDateWithTimespanShort(dataWithoutISO);
+        return (dataWithoutShort);
+    };
+    DrapoParser.prototype.ReplaceDateWithTimespanISO = function (data) {
         var matchs = data.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?((\-|\+)\d{2}:\d{2})?/gi);
         if (matchs === null)
             return (data);
@@ -444,6 +449,20 @@ var DrapoParser = (function () {
         for (var i = 0; i < matchs.length; i++) {
             var match = matchs[i];
             var date = new Date(match);
+            var timespan = date.getTime();
+            dataTimespan = dataTimespan.replace(match, timespan.toString());
+        }
+        return (dataTimespan);
+    };
+    DrapoParser.prototype.ReplaceDateWithTimespanShort = function (data) {
+        var matchs = data.match(/\d{4}-\d{2}-\d{2}\d{2}:\d{2}:\d{2}:\d{3}/gi);
+        if (matchs === null)
+            return (data);
+        var dataTimespan = data;
+        for (var i = 0; i < matchs.length; i++) {
+            var match = matchs[i];
+            var matchISO = match.substring(0, 10) + 'T' + match.substring(10, 18) + 'Z';
+            var date = new Date(matchISO);
             var timespan = date.getTime();
             dataTimespan = dataTimespan.replace(match, timespan.toString());
         }
