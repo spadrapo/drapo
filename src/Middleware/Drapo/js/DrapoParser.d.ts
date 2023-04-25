@@ -53,6 +53,8 @@ declare class DrapoParser {
     private ParseIteratorArray;
     ParseNumberBlock(data: string, valueDefault?: number): number;
     private ReplaceDateWithTimespan;
+    private ReplaceDateWithTimespanISO;
+    private ReplaceDateWithTimespanShort;
     IsClassArray(data: string): boolean;
     IsMustacheOnly(data: string, allowInternal?: boolean): boolean;
     private IsMutacheOnlyInternal;

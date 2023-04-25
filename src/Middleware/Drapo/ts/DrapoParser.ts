@@ -455,7 +455,14 @@ class DrapoParser {
         return (this.ParseNumber(this.Application.Solver.ResolveMathematicalExpression(dataWithoutDate), valueDefault));
     }
 
-    private ReplaceDateWithTimespan(data : string) : string
+    private ReplaceDateWithTimespan(data: string): string
+    {
+        const dataWithoutISO: string = this.ReplaceDateWithTimespanISO(data);
+        const dataWithoutShort: string = this.ReplaceDateWithTimespanShort(dataWithoutISO);
+        return (dataWithoutShort);
+    }
+
+    private ReplaceDateWithTimespanISO(data : string) : string
     {
         const matchs: RegExpMatchArray = data.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?((\-|\+)\d{2}:\d{2})?/gi);
         if (matchs === null)
@@ -465,6 +472,21 @@ class DrapoParser {
         {
             const match: string = matchs[i];
             const date: Date = new Date(match);
+            const timespan: number = date.getTime();
+            dataTimespan = dataTimespan.replace(match, timespan.toString());
+        }
+        return (dataTimespan);
+    }
+
+    private ReplaceDateWithTimespanShort(data: string): string {
+        const matchs: RegExpMatchArray = data.match(/\d{4}-\d{2}-\d{2}\d{2}:\d{2}:\d{2}:\d{3}/gi);
+        if (matchs === null)
+            return (data);
+        let dataTimespan: string = data;
+        for (let i: number = 0; i < matchs.length; i++) {
+            const match: string = matchs[i];
+            const matchISO: string = match.substring(0, 10) + 'T' + match.substring(10,18) + 'Z';
+            const date: Date = new Date(matchISO);
             const timespan: number = date.getTime();
             dataTimespan = dataTimespan.replace(match, timespan.toString());
         }
