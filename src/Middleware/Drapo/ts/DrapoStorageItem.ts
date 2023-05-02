@@ -38,6 +38,10 @@
     private _headersGet: [string, string][] = [];
     private _headersSet: [string, string][] = [];
     private _hasChanges: boolean = false;
+    private _pollingKey: string = null;
+    private _pollingTimespan: number = null;
+    private _pollingDate: Date = null;
+    private _pollingHash: string = null;
 
     //Properties
     get DataKey(): string {
@@ -326,8 +330,36 @@
         this._hasChanges = value;
     }
 
+    get PollingKey(): string {
+        return (this._pollingKey);
+    }
+    set PollingKey(value: string) {
+        this._pollingKey = value;
+    }
+
+    get PollingTimespan(): number {
+        return (this._pollingTimespan);
+    }
+    set PollingTimespan(value: number) {
+        this._pollingTimespan = value;
+    }
+
+    get PollingDate(): Date {
+        return (this._pollingDate);
+    }
+    set PollingDate(value: Date) {
+        this._pollingDate = value;
+    }
+
+    get PollingHash(): string {
+        return (this._pollingHash);
+    }
+    set PollingHash(value: string) {
+        this._pollingHash = value;
+    }
+
     //Constructor
-    constructor(dataKey:string, type: string, access: string, element: HTMLElement, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]) {
+    constructor(dataKey: string, type: string, access: string, element: HTMLElement, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][], pollingKey: string, pollingTimespan: number) {
         this._dataKey = dataKey;
         this._type = type;
         this._access = access;
@@ -361,6 +393,8 @@
         this._onNotify = onNotify == null ? null : onNotify;
         this._headersGet = headersGet;
         this._headersSet = headersSet;
+        this._pollingKey = pollingKey;
+        this._pollingTimespan = pollingTimespan;
         this.Initialize();
     }
 
@@ -368,6 +402,15 @@
         //Access
         if (this._access == null)
             this._access = this.IsTypeParent ? 'private' : 'public';
+        this.CheckpointPolling();
+    }
+
+    public CheckpointPolling() {
+        if (this._pollingTimespan === null)
+            return;
+        const currentDate = new Date();
+        currentDate.setMilliseconds(currentDate.getMilliseconds() + this._pollingTimespan);
+        this._pollingDate = currentDate;
     }
 
     public ContainsGroup(group: string): boolean {

@@ -33,6 +33,7 @@ declare class DrapoApplication {
     private _stylist;
     private _viewportHandler;
     private _cacheHandler;
+    private _worker;
     private _debugger;
     get IsLoaded(): boolean;
     get Log(): DrapoLogger;
@@ -68,6 +69,7 @@ declare class DrapoApplication {
     get Stylist(): DrapoStylist;
     get ViewportHandler(): DrapoViewportHandler;
     get CacheHandler(): DrapoCacheHandler;
+    get Worker(): DrapoWorker;
     get Debugger(): DrapoDebugger;
     constructor();
     OnLoad(): Promise<void>;
@@ -296,6 +298,7 @@ declare class DrapoConfig {
     GetPipeHubName(): Promise<string>;
     GetPipeActionRegister(): Promise<string>;
     GetPipeActionNotify(): Promise<string>;
+    GetPipeActionPolling(): Promise<string>;
     GetPipeHeaderConnectionId(): Promise<string>;
     GetOnAuthorizationRequest(): Promise<string>;
     GetOnError(): Promise<string>;
@@ -1386,11 +1389,19 @@ declare enum DrapoPipeMessageType {
     Execute = 2
 }
 
+declare class DrapoPipePollingMessage {
+    Key: string;
+    Hash: string;
+}
+
 declare var signalR: any;
 declare class DrapoPlumber {
     private _application;
+    private _connection;
     private _lock;
     private _messages;
+    private _actionPolling;
+    private _pollingMessages;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     private CanUsePipes;
@@ -1401,6 +1412,10 @@ declare class DrapoPlumber {
     NotifyPipeStorage(message: DrapoPipeMessage): Promise<void>;
     private NofityPipeRegister;
     private NofityPipeExecute;
+    SendPolling(pollingKey: string): Promise<string>;
+    private GetMessagePolling;
+    private WaitForMessagePollingHash;
+    ReceivePollingPipe(message: DrapoPipePollingMessage): Promise<void>;
     Lock(): boolean;
     Unlock(): Promise<boolean>;
     Clear(): void;
@@ -1974,6 +1989,8 @@ declare class DrapoStorage {
     LoadDataDelayedAndNotify(): Promise<void>;
     RetrieveDataItem(dataKey: string, sector: string, canLoadDelay?: boolean, dataDelayFields?: string[]): Promise<DrapoStorageItem>;
     private RetrieveDataItemInternal;
+    private ResolveValueMustaches;
+    private ResolveValueMustachesAsNumber;
     private RetrieveDataKey;
     private RetrieveDataKeyUrl;
     private ParseChannels;
@@ -2026,6 +2043,9 @@ declare class DrapoStorage {
     private RemoveCacheData;
     AppendCacheDataItemBySector(storageItems: DrapoStorageItem[], sector: string): void;
     AddCacheDataItems(storageItems: DrapoStorageItem[]): Promise<void>;
+    GetCachedDataItemByDatePolling(): DrapoStorageItem;
+    ExistCachedDataItem(item: DrapoStorageItem): boolean;
+    ExecuteCachedDataItemPolling(item: DrapoStorageItem): Promise<void>;
     RemoveBySector(sector: string): Promise<void>;
     DiscardCacheData(dataKey: string, sector: string, canRemoveObservers?: boolean): Promise<boolean>;
     DiscardCacheDataBySector(sector: string): Promise<boolean>;
@@ -2136,6 +2156,10 @@ declare class DrapoStorageItem {
     private _headersGet;
     private _headersSet;
     private _hasChanges;
+    private _pollingKey;
+    private _pollingTimespan;
+    private _pollingDate;
+    private _pollingHash;
     get DataKey(): string;
     get Type(): string;
     set Type(value: string);
@@ -2216,8 +2240,17 @@ declare class DrapoStorageItem {
     set HeadersSet(value: [string, string][]);
     get HasChanges(): boolean;
     set HasChanges(value: boolean);
-    constructor(dataKey: string, type: string, access: string, element: HTMLElement, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][]);
+    get PollingKey(): string;
+    set PollingKey(value: string);
+    get PollingTimespan(): number;
+    set PollingTimespan(value: number);
+    get PollingDate(): Date;
+    set PollingDate(value: Date);
+    get PollingHash(): string;
+    set PollingHash(value: string);
+    constructor(dataKey: string, type: string, access: string, element: HTMLElement, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][], pollingKey: string, pollingTimespan: number);
     private Initialize;
+    CheckpointPolling(): void;
     ContainsGroup(group: string): boolean;
 }
 
@@ -2452,4 +2485,15 @@ declare class DrapoWindowHandler {
     HideWindow(did: string, all: boolean): Promise<DrapoWindow>;
     private GetWindowDefinition;
     GetWindowByElement(el: Element): DrapoWindow;
+}
+
+declare class DrapoWorker {
+    private _application;
+    private _pollingItem;
+    private _pollingTimeout;
+    get Application(): DrapoApplication;
+    constructor(application: DrapoApplication);
+    Check(): void;
+    private Destroy;
+    private Work;
 }

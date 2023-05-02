@@ -118,6 +118,7 @@ namespace WebDrapo
             options.Config.ValidatorValidClass = "validatorValid";
             options.Config.ValidatorInvalidClass = "validatorInvalid";
             options.Config.LoadComponents(string.Format("{0}{1}components", env.WebRootPath, Path.AltDirectorySeparatorChar), "~/components");
+            options.PollingEvent += Polling;
             this._options = options;
         }
 
@@ -165,6 +166,11 @@ namespace WebDrapo
             if (File.Exists(filePath))
                 return (filePath);
             return (null);
+        }
+
+        private async Task<string> Polling(string domain, string connectionId, string key) {
+            string hash = Math.Ceiling((decimal)(DateTime.Now.Second / 5)).ToString();
+            return (await Task.FromResult<string>(hash));
         }
     }
 }

@@ -25,6 +25,7 @@ declare class DrapoConfig {
     GetPipeHubName(): Promise<string>;
     GetPipeActionRegister(): Promise<string>;
     GetPipeActionNotify(): Promise<string>;
+    GetPipeActionPolling(): Promise<string>;
     GetPipeHeaderConnectionId(): Promise<string>;
     GetOnAuthorizationRequest(): Promise<string>;
     GetOnError(): Promise<string>;

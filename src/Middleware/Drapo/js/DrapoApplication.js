@@ -71,6 +71,7 @@ var DrapoApplication = (function () {
         this._stylist = new DrapoStylist(this);
         this._viewportHandler = new DrapoViewportHandler(this);
         this._cacheHandler = new DrapoCacheHandler(this);
+        this._worker = new DrapoWorker(this);
         this._debugger = new DrapoDebugger(this);
     }
     Object.defineProperty(DrapoApplication.prototype, "IsLoaded", {
@@ -307,6 +308,13 @@ var DrapoApplication = (function () {
     Object.defineProperty(DrapoApplication.prototype, "CacheHandler", {
         get: function () {
             return (this._cacheHandler);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoApplication.prototype, "Worker", {
+        get: function () {
+            return (this._worker);
         },
         enumerable: false,
         configurable: true
