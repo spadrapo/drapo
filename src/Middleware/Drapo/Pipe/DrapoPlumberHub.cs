@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -72,6 +73,15 @@ namespace Sysphera.Middleware.Drapo.Pipe
 
         private string GetContainerId() {
             return (Environment.MachineName);
+        }
+
+        public async Task Polling(DrapoPipePollingMessage message) {
+            string domain = this.GetDomain();
+            string connectionId = this.GetConnectionId();
+            string hash = this._options.PollingEvent != null ? await this._options.PollingEvent(domain, connectionId, message.Key): string.Empty;
+            IClientProxy proxy = this.Clients.Client(connectionId);
+            message.Hash = hash;
+            await proxy.SendAsync(this._options.Config.PipeActionPolling, message);
         }
     }
 }

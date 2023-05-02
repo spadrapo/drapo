@@ -1,6 +1,6 @@
 "use strict";
 var DrapoStorageItem = (function () {
-    function DrapoStorageItem(dataKey, type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet) {
+    function DrapoStorageItem(dataKey, type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet, pollingKey, pollingTimespan) {
         this._dataKey = null;
         this._type = null;
         this._access = null;
@@ -38,6 +38,10 @@ var DrapoStorageItem = (function () {
         this._headersGet = [];
         this._headersSet = [];
         this._hasChanges = false;
+        this._pollingKey = null;
+        this._pollingTimespan = null;
+        this._pollingDate = null;
+        this._pollingHash = null;
         this._dataKey = dataKey;
         this._type = type;
         this._access = access;
@@ -71,6 +75,8 @@ var DrapoStorageItem = (function () {
         this._onNotify = onNotify == null ? null : onNotify;
         this._headersGet = headersGet;
         this._headersSet = headersSet;
+        this._pollingKey = pollingKey;
+        this._pollingTimespan = pollingTimespan;
         this.Initialize();
     }
     Object.defineProperty(DrapoStorageItem.prototype, "DataKey", {
@@ -495,9 +501,57 @@ var DrapoStorageItem = (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(DrapoStorageItem.prototype, "PollingKey", {
+        get: function () {
+            return (this._pollingKey);
+        },
+        set: function (value) {
+            this._pollingKey = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoStorageItem.prototype, "PollingTimespan", {
+        get: function () {
+            return (this._pollingTimespan);
+        },
+        set: function (value) {
+            this._pollingTimespan = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoStorageItem.prototype, "PollingDate", {
+        get: function () {
+            return (this._pollingDate);
+        },
+        set: function (value) {
+            this._pollingDate = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoStorageItem.prototype, "PollingHash", {
+        get: function () {
+            return (this._pollingHash);
+        },
+        set: function (value) {
+            this._pollingHash = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
     DrapoStorageItem.prototype.Initialize = function () {
         if (this._access == null)
             this._access = this.IsTypeParent ? 'private' : 'public';
+        this.CheckpointPolling();
+    };
+    DrapoStorageItem.prototype.CheckpointPolling = function () {
+        if (this._pollingTimespan === null)
+            return;
+        var currentDate = new Date();
+        currentDate.setMilliseconds(currentDate.getMilliseconds() + this._pollingTimespan);
+        this._pollingDate = currentDate;
     };
     DrapoStorageItem.prototype.ContainsGroup = function (group) {
         if (this._groups == null)

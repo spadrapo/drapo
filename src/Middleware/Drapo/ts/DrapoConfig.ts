@@ -120,6 +120,10 @@ class DrapoConfig {
         return (await this.GetProperty('PipeActionNotify'));
     }
 
+    public async GetPipeActionPolling(): Promise<string> {
+        return (await this.GetProperty('PipeActionPolling'));
+    }
+
     public async GetPipeHeaderConnectionId(): Promise<string> {
         return (await this.GetProperty('PipeHeaderConnectionId'));
     }

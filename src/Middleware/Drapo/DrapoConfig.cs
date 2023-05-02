@@ -31,6 +31,7 @@ namespace Sysphera.Middleware.Drapo
         private string _pipeHubName = "drapoHub";
         private string _pipeActionRegister = "Register";
         private string _pipeActionNotify = "Notify";
+        private string _pipeActionPolling = "Polling";
         private string _pipeHeaderConnectionId = "DrapoPipeConnnectionId";
         private string _cookieName = null;
         private string _storageErrors = null;
@@ -70,6 +71,7 @@ namespace Sysphera.Middleware.Drapo
         public string PipeHubName { get => _pipeHubName; set => _pipeHubName = value; }
         public string PipeActionRegister { get => _pipeActionRegister; set => _pipeActionRegister = value; }
         public string PipeActionNotify { get => _pipeActionNotify; set => _pipeActionNotify = value; }
+        public string PipeActionPolling { get => _pipeActionPolling; set => _pipeActionPolling = value; }
         public string PipeHeaderConnectionId { get => _pipeHeaderConnectionId; set => _pipeHeaderConnectionId = value; }
         public string CookieName { get => _cookieName; set => _cookieName = value; }
         public string StorageErrors { get => _storageErrors; set => _storageErrors = value; }

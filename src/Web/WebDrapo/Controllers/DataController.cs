@@ -57,6 +57,12 @@ namespace WebDrapo.Controllers
         }
 
         [HttpGet]
+        public string GetDate()
+        {
+            return (DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff tt"));
+        }
+
+        [HttpGet]
         public List<string> GetColumns()
         {
             List<string> columns = new List<string>();
