@@ -26336,8 +26336,7 @@ var DrapoStylist = (function () {
         return (value);
     };
     DrapoStylist.prototype.SetElementStyleProperty = function (el, name, value) {
-        var elStyle = window.getComputedStyle(el);
-        elStyle.setProperty(name, value);
+        el.style.setProperty(name, value);
     };
     return DrapoStylist;
 }());

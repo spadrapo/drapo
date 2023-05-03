@@ -71,7 +71,6 @@
     }
 
     public SetElementStyleProperty(el: HTMLElement, name: string, value: string): void {
-        const elStyle: CSSStyleDeclaration = window.getComputedStyle(el);
-        elStyle.setProperty(name, value);
+        el.style.setProperty(name, value);
     }
 }
