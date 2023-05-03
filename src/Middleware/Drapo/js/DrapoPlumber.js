@@ -320,7 +320,7 @@ var DrapoPlumber = (function () {
         if (retry === void 0) { retry = 1000; }
         if (interval === void 0) { interval = 50; }
         return __awaiter(this, void 0, void 0, function () {
-            var i, i_1, currentMessage;
+            var i, j, currentMessage;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -328,11 +328,11 @@ var DrapoPlumber = (function () {
                         _a.label = 1;
                     case 1:
                         if (!(i < retry)) return [3, 4];
-                        for (i_1 = this._pollingMessages.length - 1; i_1 >= 0; i_1--) {
-                            currentMessage = this._pollingMessages[i_1];
+                        for (j = this._pollingMessages.length - 1; j >= 0; j--) {
+                            currentMessage = this._pollingMessages[j];
                             if ((currentMessage.Key !== pollingKey) || (currentMessage.Hash === null))
                                 continue;
-                            this._pollingMessages.splice(i_1, 1);
+                            this._pollingMessages.splice(j, 1);
                             return [2, (currentMessage.Hash)];
                         }
                         return [4, this.Application.Document.Sleep(interval)];

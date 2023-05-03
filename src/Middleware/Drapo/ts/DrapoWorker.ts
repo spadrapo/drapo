@@ -15,7 +15,7 @@ class DrapoWorker {
     }
 
     public Check(): void {
-        //Try find next storage 
+        //Try find next storage
         const item: DrapoStorageItem = this.Application.Storage.GetCachedDataItemByDatePolling();
         if (item == null) {
             this.Destroy(true);
@@ -24,7 +24,7 @@ class DrapoWorker {
         if ((this._pollingItem != null) && (this._pollingItem === item))
             return;
         //Work
-        this._pollingItem = item;    
+        this._pollingItem = item;
         const application: DrapoApplication = this.Application;
         this._pollingTimeout = setTimeout(async () => {
             application.Worker.Destroy(false);
@@ -44,12 +44,12 @@ class DrapoWorker {
 
     private async Work(item: DrapoStorageItem): Promise<void> {
         if (!this.Application.Storage.ExistCachedDataItem(item)) {
-            this.Check()
+            this.Check();
             return;
         }
         const pollingHash: string = await this.Application.Plumber.SendPolling(item.PollingKey);
         if (!this.Application.Storage.ExistCachedDataItem(item)) {
-            this.Check()
+            this.Check();
             return;
         }
         if (item.PollingHash !== pollingHash) {

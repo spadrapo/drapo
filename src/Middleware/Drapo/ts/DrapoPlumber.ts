@@ -151,11 +151,11 @@ class DrapoPlumber {
 
     private async WaitForMessagePollingHash(pollingKey: string, retry: number = 1000, interval: number = 50): Promise<string> {
         for (let i: number = 0; i < retry; i++) {
-            for (let i: number = this._pollingMessages.length - 1; i >= 0; i--) {
-                const currentMessage: DrapoPipePollingMessage = this._pollingMessages[i];
+            for (let j: number = this._pollingMessages.length - 1; j >= 0; j--) {
+                const currentMessage: DrapoPipePollingMessage = this._pollingMessages[j];
                 if ((currentMessage.Key !== pollingKey) || (currentMessage.Hash === null))
                     continue;
-                this._pollingMessages.splice(i, 1);
+                this._pollingMessages.splice(j, 1);
                 return (currentMessage.Hash);
             }
             await this.Application.Document.Sleep(interval);
