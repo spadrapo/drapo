@@ -106,8 +106,8 @@ var DrapoBehaviorHandler = (function () {
         this.Application.EventHandler.DetachEventListener(el, eventNamespace);
         this.Application.EventHandler.AttachEventListener(el, eventType, eventNamespace, function (e) {
             application.BehaviorHandler.SetDrag(drag);
-            e.originalEvent.dataTransfer.effectAllowed = 'move';
-            e.originalEvent.dataTransfer.setData('text', drag.Code);
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text', drag.Code);
         });
     };
     DrapoBehaviorHandler.prototype.ResolveBehaviorDragEnd = function (el) {
@@ -143,9 +143,9 @@ var DrapoBehaviorHandler = (function () {
                         this.Application.EventHandler.AttachEventListener(el, eventTypeDragover, eventNamespaceDragover, function (e) {
                             e.preventDefault();
                             var drag = application.BehaviorHandler.GetDrag();
-                            if (!application.BehaviorHandler.IsDragMatch(drag, e.originalEvent.dataTransfer.getData('Text'), tags))
+                            if (!application.BehaviorHandler.IsDragMatch(drag, e.dataTransfer.getData('Text'), tags))
                                 return;
-                            e.originalEvent.dataTransfer.dropEffect = 'move';
+                            e.dataTransfer.dropEffect = 'move';
                         });
                         eventTypeDrop = 'drop';
                         eventNamespaceDrop = this.Application.EventHandler.CreateEventNamespace(null, null, eventTypeDrop, 'drag');
@@ -197,8 +197,8 @@ var DrapoBehaviorHandler = (function () {
                         this.Application.EventHandler.DetachEventListener(el, eventNamespace);
                         this.Application.EventHandler.AttachEventListener(el, eventType, eventNamespace, function (e) {
                             application.BehaviorHandler.SetDrag(drag);
-                            e.originalEvent.dataTransfer.effectAllowed = 'move';
-                            e.originalEvent.dataTransfer.setData('text', drag.Code);
+                            e.dataTransfer.effectAllowed = 'move';
+                            e.dataTransfer.setData('text', drag.Code);
                         });
                         return [2];
                 }
@@ -240,9 +240,9 @@ var DrapoBehaviorHandler = (function () {
                         this.Application.EventHandler.AttachEventListener(el, eventTypeDragover, eventNamespaceDragover, function (e) {
                             e.preventDefault();
                             var drag = application.BehaviorHandler.GetDrag();
-                            if (!application.BehaviorHandler.IsDragMatch(drag, e.originalEvent.dataTransfer.getData('Text'), tags))
+                            if (!application.BehaviorHandler.IsDragMatch(drag, e.dataTransfer.getData('Text'), tags))
                                 return;
-                            e.originalEvent.dataTransfer.dropEffect = 'move';
+                            e.dataTransfer.dropEffect = 'move';
                         });
                         eventTypeDrop = 'drop';
                         eventNamespaceDrop = this.Application.EventHandler.CreateEventNamespace(null, null, eventTypeDrop, 'drag');
@@ -263,7 +263,7 @@ var DrapoBehaviorHandler = (function () {
                     case 0:
                         e.preventDefault();
                         dragBefore = this.GetDrag();
-                        if (!this.IsDragMatch(dragBefore, e.originalEvent.dataTransfer.getData('Text'), tags))
+                        if (!this.IsDragMatch(dragBefore, e.dataTransfer.getData('Text'), tags))
                             return [2];
                         this.SetDrag(null);
                         dragAfter = this.CreateDrag(null, null, item, tags, notify, dataKey, sector, onBefore, onAfter);
@@ -310,13 +310,13 @@ var DrapoBehaviorHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         if (!(dragBefore.OnBefore != null)) return [3, 2];
-                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragBefore.Sector, dragBefore.Item.Element, dragBefore.OnBefore)];
+                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragBefore.Sector, dragBefore.Item != null ? dragBefore.Item.Element : null, dragBefore.OnBefore)];
                     case 1:
                         _a.sent();
                         _a.label = 2;
                     case 2:
                         if (!((dragAfter.OnBefore != null) && (dragAfter.OnBefore != dragBefore.OnBefore))) return [3, 4];
-                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragAfter.Sector, dragAfter.Item.Element, dragAfter.OnBefore)];
+                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragAfter.Sector, dragAfter.Item != null ? dragAfter.Item.Element : null, dragAfter.OnBefore)];
                     case 3:
                         _a.sent();
                         _a.label = 4;
@@ -331,13 +331,13 @@ var DrapoBehaviorHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         if (!(dragBefore.OnAfter != null)) return [3, 2];
-                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragBefore.Sector, dragBefore.Item.Element, dragBefore.OnAfter)];
+                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragBefore.Sector, dragBefore.Item != null ? dragBefore.Item.Element : null, dragBefore.OnAfter)];
                     case 1:
                         _a.sent();
                         _a.label = 2;
                     case 2:
                         if (!((dragAfter.OnAfter != null) && (dragAfter.OnAfter != dragBefore.OnAfter))) return [3, 4];
-                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragAfter.Sector, dragAfter.Item.Element, dragAfter.OnAfter)];
+                        return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragAfter.Sector, dragAfter.Item != null ? dragAfter.Item.Element : null, dragAfter.OnAfter)];
                     case 3:
                         _a.sent();
                         _a.label = 4;
@@ -403,7 +403,7 @@ var DrapoBehaviorHandler = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragBefore.Sector, dragBefore.Item.Element, dragBefore.Custom)];
+                    case 0: return [4, this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragBefore.Sector, dragBefore.Item != null ? dragBefore.Item.Element : null, dragBefore.Custom)];
                     case 1:
                         _a.sent();
                         return [2, (true)];
@@ -612,8 +612,8 @@ var DrapoBehaviorHandler = (function () {
     };
     DrapoBehaviorHandler.prototype.GetResizerEventValue = function (resizer, event) {
         if (resizer.Location === 'height')
-            return (event.originalEvent.pageY);
-        return (event.originalEvent.pageX);
+            return (event.pageY);
+        return (event.pageX);
     };
     DrapoBehaviorHandler.prototype.ApplySizeNew = function (resizer) {
         if (resizer.Location === 'bootstrap') {
