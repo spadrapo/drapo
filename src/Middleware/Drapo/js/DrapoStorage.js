@@ -2198,6 +2198,8 @@ var DrapoStorage = (function () {
         var item = null;
         for (var i = this._cacheItems.length - 1; i >= 0; i--) {
             var storageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             if (storageItem.PollingDate == null)
                 continue;
             if ((item == null) || (item.PollingDate > storageItem.PollingDate))

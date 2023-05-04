@@ -1460,6 +1460,8 @@ class DrapoStorage {
         let item: DrapoStorageItem = null;
         for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
             const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
             if (storageItem.PollingDate == null)
                 continue;
             if ((item == null) || (item.PollingDate > storageItem.PollingDate))
