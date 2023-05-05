@@ -8,6 +8,7 @@ namespace Sysphera.Middleware.Drapo.Pipe
     {
         Others,
         Me,
-        Everyone
+        Everyone,
+        Connection
     }
 }
