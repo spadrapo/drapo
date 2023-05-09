@@ -35,6 +35,8 @@ namespace Sysphera.Middleware.Drapo.Pipe
 
         private IClientProxy GetRecipients(DrapoPipeAudienceType recipient, string recipientConnectionId)
         {
+            if (recipient == DrapoPipeAudienceType.Connection)
+                return (this._hub.Clients.Client(recipientConnectionId));
             string connectionId = this._requestReader.GetPipeHeaderConnectionId();
             if (string.IsNullOrEmpty(connectionId))
                 return (null);
@@ -47,8 +49,6 @@ namespace Sysphera.Middleware.Drapo.Pipe
                 return (this._hub.Clients.Client(connectionId));
             else if (recipient == DrapoPipeAudienceType.Everyone)
                 return (this._hub.Clients.Group(connection.Domain));
-            else if (recipient == DrapoPipeAudienceType.Connection)
-                return (this._hub.Clients.Client(recipientConnectionId));
             return (null);
         }
 
