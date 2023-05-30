@@ -50,7 +50,7 @@ class DrapoFunctionHandler {
         return (await this.ReplaceFunctionExpressionsContext(sector, context, expression, canBind, this.CreateExecutionContext(false)));
     }
 
-    private async ReplaceFunctionExpressionsContext(sector: string, context: DrapoContext, expression: string, canBind: boolean, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    public async ReplaceFunctionExpressionsContext(sector: string, context: DrapoContext, expression: string, canBind: boolean, executionContext: DrapoExecutionContext<any>): Promise<string> {
         //Parser
         const functionsParsed: string[] = this.Application.Parser.ParseFunctions(expression);
         for (let i = 0; i < functionsParsed.length; i++) {
@@ -1096,8 +1096,8 @@ class DrapoFunctionHandler {
 
     private async ExecuteFunctionIf(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const conditional: string = functionParsed.Parameters[0];
-        const conditionalEvaluated: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, new DrapoContext(contextItem), null, executionContext, conditional, element, false);
-        const conditionalResult: boolean = await this.Application.Solver.ResolveConditional(conditionalEvaluated);
+        const context: DrapoContext = new DrapoContext(contextItem);
+        const conditionalResult: boolean = await this.Application.Solver.ResolveConditional(conditional, element, sector, context, null, null, executionContext);
         if (conditionalResult) {
             const statementTrue: string = functionParsed.Parameters[1];
             await this.ResolveFunctionContext(sector, contextItem, element, event, statementTrue, executionContext);

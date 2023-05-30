@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Conditional Characters</title>
+</head>
+<body>
+    <span>Conditional Characters</span>
+    <div d-datakey="value" d-datatype="value" d-datavalue="True ()"></div>
+    <div d-datakey="valueUpdated" d-datatype="value" d-datavalue="Empty"></div>
+    <div d-datakey="valueFunction" d-datatype="value" d-dataloadtype="startup" d-datavalue="IF({{value}}!=,UpdateData(valueUpdated,New Value))"></div>
+    <span d-model="{{valueUpdated}}">New Value</span>
+    <br />
+    <input type="button" value="startup" d-on-click="{{valueFunction}}" d-id="__drapoUnitTest" />
+
+</body></html>
