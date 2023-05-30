@@ -335,6 +335,11 @@ namespace WebDrapo.Test
             ValidatePage("ConditionalBoolean");
         }
         [TestCase]
+        public void ConditionalCharactersTest()
+        {
+            ValidatePage("ConditionalCharacters");
+        }
+        [TestCase]
         public void ConditionalSpaceTextTest()
         {
             ValidatePage("ConditionalSpaceText");
