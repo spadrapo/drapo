@@ -1097,7 +1097,7 @@ class DrapoFunctionHandler {
     private async ExecuteFunctionIf(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const conditional: string = functionParsed.Parameters[0];
         const context: DrapoContext = new DrapoContext(contextItem);
-        const conditionalResult: boolean = await this.Application.Solver.ResolveConditional(conditional, element, sector, context, null, null, executionContext);
+        const conditionalResult: boolean = await this.Application.Solver.ResolveConditional(conditional, element, sector, context, null, null, executionContext, false);
         if (conditionalResult) {
             const statementTrue: string = functionParsed.Parameters[1];
             await this.ResolveFunctionContext(sector, contextItem, element, event, statementTrue, executionContext);
