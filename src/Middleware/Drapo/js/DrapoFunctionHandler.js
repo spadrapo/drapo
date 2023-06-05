@@ -2458,7 +2458,7 @@ var DrapoFunctionHandler = (function () {
                     case 0:
                         conditional = functionParsed.Parameters[0];
                         context = new DrapoContext(contextItem);
-                        return [4, this.Application.Solver.ResolveConditional(conditional, element, sector, context, null, null, executionContext)];
+                        return [4, this.Application.Solver.ResolveConditional(conditional, element, sector, context, null, null, executionContext, false)];
                     case 1:
                         conditionalResult = _a.sent();
                         if (!conditionalResult) return [3, 3];
