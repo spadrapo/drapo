@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Class Complex</title>
+    <style>
+        .selected {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <span>Class Complex</span>
+        <div d-dataKey="object" d-dataType="object" d-dataProperty-true="true" d-dataProperty-false="false"></div>
+        <ul>
+            <li d-class="{selected:{{object.true}} && (!{{object.false}}||!{{object.false}})}">True1</li>
+            <li d-class="{selected:{{object.true}} && ({{object.false}}||{{object.false}})}">False1</li>
+        </ul>
+    </div>
+</body>
+</html>

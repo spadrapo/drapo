@@ -40,6 +40,7 @@ declare class DrapoParser {
     private GetFunctionStart;
     private IsFunctionStartValid;
     ParseFunction(data: string, checkParameters?: boolean): DrapoFunction;
+    private IsValidFunctionName;
     ParseParameters(data: string): string[];
     ParseBlock(data: string, delimiter: string): string[];
     ParseBlockMathematicalExpression(data: string): string[];

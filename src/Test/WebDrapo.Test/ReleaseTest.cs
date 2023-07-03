@@ -185,6 +185,11 @@ namespace WebDrapo.Test
             ValidatePage("Class");
         }
         [TestCase]
+        public void ClassComplexTest()
+        {
+            ValidatePage("ClassComplex");
+        }
+        [TestCase]
         public void ClassConditionalTest()
         {
             ValidatePage("ClassConditional");
