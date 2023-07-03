@@ -265,7 +265,10 @@ class DrapoParser {
         if (data[data.length - 1] !== ')')
             return (null);
         const functionParsed: DrapoFunction = new DrapoFunction();
-        functionParsed.Name = data.substr(0, indexStart).toLowerCase();
+        const name: string = data.substr(0, indexStart).toLowerCase();
+        if (!this.IsValidFunctionName(name))
+            return (null);
+        functionParsed.Name = name;
         functionParsed.Parameters = this.ParseParameters(data.substr(indexStart + 1, (data.length - (indexStart + 2))));
         if (!checkParameters)
             return (functionParsed);
@@ -273,6 +276,14 @@ class DrapoParser {
             if (!this.IsValidFunctionParameter(functionParsed.Parameters[i]))
                 return (null);
         return (functionParsed);
+    }
+
+    private IsValidFunctionName(name: string): boolean {
+        if (name.length == 0)
+            return (false);
+        if (name[name.length - 1] === ' ')
+            return (false);
+        return (true);
     }
 
     public ParseParameters(data: string): string[] {
