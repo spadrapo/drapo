@@ -1,0 +1,57 @@
+﻿.ppUploader {
+    font-size: 1rem;
+    border: none;
+    padding: 0;
+    height: 10px;
+    width: 300px;
+    background-color: transparent;
+}
+
+    .ppUploader > div {
+        border: dotted;
+        height: 100%;
+        margin-right: 50px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+        .ppUploader > div > span {
+            padding-left: 10px;
+            line-height: 2.2;
+            vertical-align: middle;
+            color: black;
+        }
+
+        .ppUploader > div:hover {
+            border: dotted;
+        }
+
+    .ppUploader > button {
+        float: right;
+        cursor: pointer;
+        background-color: white;
+        padding: 0 12px;
+        border-radius: 0.2rem;
+        border: 0;
+        height: 100%;
+        line-height: 41px;
+        margin-right: 0;
+        pointer-events: auto !important;
+    }
+
+        .ppUploader > button:hover {
+            background-color: white;
+        }
+
+        .ppUploader > button > span {
+            font: 1.05rem;
+            color: black;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+
+.ppDownload {
+    color: #ddd;
+}
+

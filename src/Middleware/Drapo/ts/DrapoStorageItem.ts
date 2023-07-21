@@ -10,6 +10,8 @@
     private _dataDeleted: any = [];
     private _urlGet: string = null;
     private _urlSet: string = null;
+    private _urlSetChunk: string = null;
+    private _chunk: string = null;
     private _urlParameters: string = null;
     private _postGet: string = null;
     private _start: number = null;
@@ -110,6 +112,20 @@
     }
     set UrlSet(value: string) {
         this._urlSet = value;
+    }
+
+    get UrlSetChunk(): string {
+        return (this._urlSetChunk);
+    }
+    set UrlSetChunk(value: string) {
+        this._urlSetChunk = value;
+    }
+
+    get Chunk(): string {
+        return (this._chunk);
+    }
+    set Chunk(value: string) {
+        this._chunk = value;
     }
 
     get UrlParameters(): string {
@@ -359,7 +375,7 @@
     }
 
     //Constructor
-    constructor(dataKey: string, type: string, access: string, element: HTMLElement, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][], pollingKey: string, pollingTimespan: number) {
+    constructor(dataKey: string, type: string, access: string, element: HTMLElement, data: any[], urlGet: string, urlSet: string, urlSetChunk: string, chunk: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][], pollingKey: string, pollingTimespan: number) {
         this._dataKey = dataKey;
         this._type = type;
         this._access = access;
@@ -367,6 +383,8 @@
         this._data = data;
         this._urlGet = urlGet;
         this._urlSet = urlSet;
+        this._urlSetChunk = urlSetChunk;
+        this._chunk = chunk;
         this._urlParameters = urlParameters;
         this._postGet = postGet;
         this._start = start;

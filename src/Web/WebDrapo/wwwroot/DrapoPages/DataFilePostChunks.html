@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data File Post Chunks</title>
+</head>
+<body>
+    <span>Data File Post Chunks</span>
+    <div>
+        <div>
+            <div d-dataKey="panelFileObjectCode" d-dataType="value"></div>
+            <div d-dataKey="panelFileObject" d-dataType="object" d-dataProperty-name-name="Name" d-dataProperty-name-value="" d-dataProperty-content-name="Content" d-dataProperty-content-value="" d-dataUrlSet="~/Data/CreateFile" d-dataUrlSetChunk="~/Data/AppendFile?name={{panelFileObject.Name}}&code={{panelFileObjectCode}}" d-dataChunk="{{panelFileObject.Content}}"></div>
+        </div>
+        <div>
+            <span d-model="{{panelFileObject.Name}}"></span>
+            <br />
+            <d-uploader d-dataKeySource="panelFileObject" d-dataFieldName="Name" d-dataFieldData="Content" dc-labeluploader="File" dc-required="true" d-dataMessage="Load file" d-dataFileExtensionType=".*"></d-uploader>
+            <br />
+            <input type="button" value="Upload" d-on-click="PostDataItem(panelFileObject,panelFileObjectCode)" />
+        </div>
+    </div>
+</body>
+</html>
