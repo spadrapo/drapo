@@ -1,6 +1,6 @@
 "use strict";
 var DrapoStorageItem = (function () {
-    function DrapoStorageItem(dataKey, type, access, element, data, urlGet, urlSet, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet, pollingKey, pollingTimespan) {
+    function DrapoStorageItem(dataKey, type, access, element, data, urlGet, urlSet, urlSetChunk, chunk, urlParameters, postGet, start, increment, isIncremental, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, sector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet, pollingKey, pollingTimespan) {
         this._dataKey = null;
         this._type = null;
         this._access = null;
@@ -10,6 +10,8 @@ var DrapoStorageItem = (function () {
         this._dataDeleted = [];
         this._urlGet = null;
         this._urlSet = null;
+        this._urlSetChunk = null;
+        this._chunk = null;
         this._urlParameters = null;
         this._postGet = null;
         this._start = null;
@@ -49,6 +51,8 @@ var DrapoStorageItem = (function () {
         this._data = data;
         this._urlGet = urlGet;
         this._urlSet = urlSet;
+        this._urlSetChunk = urlSetChunk;
+        this._chunk = chunk;
         this._urlParameters = urlParameters;
         this._postGet = postGet;
         this._start = start;
@@ -174,6 +178,26 @@ var DrapoStorageItem = (function () {
         },
         set: function (value) {
             this._urlSet = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoStorageItem.prototype, "UrlSetChunk", {
+        get: function () {
+            return (this._urlSetChunk);
+        },
+        set: function (value) {
+            this._urlSetChunk = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DrapoStorageItem.prototype, "Chunk", {
+        get: function () {
+            return (this._chunk);
+        },
+        set: function (value) {
+            this._chunk = value;
         },
         enumerable: false,
         configurable: true

@@ -3,7 +3,9 @@ declare class DrapoStorage {
     private _cacheItems;
     private _isDelayTriggered;
     private readonly CONTENT_TYPE_JSON;
+    private readonly CONTENT_TYPE_TEXT;
     private _lock;
+    private readonly CHUNK_SIZE;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     private AdquireLock;

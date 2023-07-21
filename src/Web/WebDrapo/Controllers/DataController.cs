@@ -9,6 +9,8 @@ using Sysphera.Middleware.Drapo;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.StaticFiles;
 using System.Threading;
+using System.IO;
+using Microsoft.AspNetCore.SignalR.Protocol;
 
 namespace WebDrapo.Controllers
 {
@@ -557,6 +559,36 @@ namespace WebDrapo.Controllers
                 array.Add(value);
             }
             return (array);
+        }
+
+        [HttpPost]
+        public ActionResult CreateFile([FromBody] FileVM file)
+        {
+            string path = System.IO.Path.Combine(@"C:\tmp\", file.Name);
+            byte[] content = Convert.FromBase64String(file.Content);
+            System.IO.File.WriteAllBytes(path, content);
+            return (Ok(Guid.NewGuid().ToString()));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AppendFile([FromQuery]string name, [FromQuery] string code) {
+            string chunk = null;
+            using (StreamReader reader = new StreamReader(Request.Body))
+                chunk = await reader.ReadToEndAsync();
+            string path = System.IO.Path.Combine(@"C:\tmp\", name);
+            byte[] content = Convert.FromBase64String(chunk);
+            AppendAllBytes(path, content);
+            return (Ok(true));
+        }
+
+        public static void AppendAllBytes(string path, byte[] bytes)
+        {
+            using (var stream = new System.IO.FileStream(path, System.IO.FileMode.Append))
+            {
+                stream.Write(bytes, 0, bytes.Length);
+                stream.Close();
+                stream.Dispose();
+            }
         }
     }
 }

@@ -1953,7 +1953,9 @@ declare class DrapoStorage {
     private _cacheItems;
     private _isDelayTriggered;
     private readonly CONTENT_TYPE_JSON;
+    private readonly CONTENT_TYPE_TEXT;
     private _lock;
+    private readonly CHUNK_SIZE;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     private AdquireLock;
@@ -2129,6 +2131,8 @@ declare class DrapoStorageItem {
     private _dataDeleted;
     private _urlGet;
     private _urlSet;
+    private _urlSetChunk;
+    private _chunk;
     private _urlParameters;
     private _postGet;
     private _start;
@@ -2180,6 +2184,10 @@ declare class DrapoStorageItem {
     set UrlGet(value: string);
     get UrlSet(): string;
     set UrlSet(value: string);
+    get UrlSetChunk(): string;
+    set UrlSetChunk(value: string);
+    get Chunk(): string;
+    set Chunk(value: string);
     get UrlParameters(): string;
     get IsUrlParametersRequired(): boolean;
     get PostGet(): string;
@@ -2249,7 +2257,7 @@ declare class DrapoStorageItem {
     set PollingDate(value: Date);
     get PollingHash(): string;
     set PollingHash(value: string);
-    constructor(dataKey: string, type: string, access: string, element: HTMLElement, data: any[], urlGet: string, urlSet: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][], pollingKey: string, pollingTimespan: number);
+    constructor(dataKey: string, type: string, access: string, element: HTMLElement, data: any[], urlGet: string, urlSet: string, urlSetChunk: string, chunk: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][], pollingKey: string, pollingTimespan: number);
     private Initialize;
     CheckpointPolling(): void;
     ContainsGroup(group: string): boolean;
