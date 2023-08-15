@@ -535,6 +535,11 @@ namespace WebDrapo.Test
             ValidatePage("ControlFlowForNested");
         }
         [TestCase]
+        public void ControlFlowForNestedArrayTest()
+        {
+            ValidatePage("ControlFlowForNestedArray");
+        }
+        [TestCase]
         public void ControlFlowForNestedConditionalTest()
         {
             ValidatePage("ControlFlowForNestedConditional");

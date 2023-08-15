@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For Nested Array</title>
+</head>
+<body>
+    <span>Control Flow - For Nested Array</span>
+    <div d-dataKey="table" d-dataUrlGet="/Data/CreateTable"></div>
+    <div>
+        <div d-for="row in table.Rows">
+            <div d-for="cell in row">
+                <span d-model="{{cell.Value}}"></span>
+                <br>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
