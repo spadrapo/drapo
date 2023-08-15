@@ -221,7 +221,7 @@ namespace WebDrapo.Controllers
         }
 
         [HttpPost]
-        public DataVM SetFunctionPostDataItemIncremental([FromBody] DataVM data, [FromQuery]long incremental)
+        public DataVM SetFunctionPostDataItemIncremental([FromBody] DataVM data, [FromQuery] long incremental)
         {
             long value = long.Parse(data.Name);
             data.Name = (value + incremental).ToString();
@@ -544,15 +544,17 @@ namespace WebDrapo.Controllers
         }
 
         [HttpGet]
-        public string GetApplicationBuild() {
+        public string GetApplicationBuild()
+        {
             return ("1.0");
         }
 
         [HttpGet]
-        public List<string> GetArray(int start = 0, int length = 10,string prefix = null, int? divisor = null)
+        public List<string> GetArray(int start = 0, int length = 10, string prefix = null, int? divisor = null)
         {
             List<string> array = new List<string>();
-            for (int i = start; i < length; i++) {
+            for (int i = start; i < length; i++)
+            {
                 if ((divisor.HasValue) && ((i % divisor.Value) != 0))
                     continue;
                 string value = $"{prefix}{i.ToString()}";
@@ -571,7 +573,8 @@ namespace WebDrapo.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AppendFile([FromQuery]string name, [FromQuery] string code) {
+        public async Task<ActionResult> AppendFile([FromQuery] string name, [FromQuery] string code)
+        {
             string chunk = null;
             using (StreamReader reader = new StreamReader(Request.Body))
                 chunk = await reader.ReadToEndAsync();
@@ -589,6 +592,34 @@ namespace WebDrapo.Controllers
                 stream.Close();
                 stream.Dispose();
             }
+        }
+
+        [HttpGet]
+        public DrapoObject CreateTable(int columns = 3, int rows = 3)
+        {
+            DrapoObject obj = new DrapoObject();
+            List<DrapoObject> columnsObjects = new List<DrapoObject>();
+            for (int i = 0; i < columns; i++)
+            {
+                DrapoObject columnObject = new DrapoObject();
+                columnObject.Properties.Add($"Name", $"N{i}");
+                columnsObjects.Add(columnObject);
+            }
+            List<List<DrapoObject>> rowsObjects = new List<List<DrapoObject>>();
+            for (int i = 0; i < rows; i++)
+            {
+                List<DrapoObject> cells = new List<DrapoObject>();
+                for (int j = 0; j < columns; j++)
+                {
+                    DrapoObject cell = new DrapoObject();
+                    cell.Properties.Add("Value", $"R{i}C{j}");
+                    cells.Add(cell);
+                }
+                rowsObjects.Add(cells);
+            }
+            obj.Properties.Add("Columns", columnsObjects);
+            obj.Properties.Add("Rows", rowsObjects);
+            return (obj);
         }
     }
 }

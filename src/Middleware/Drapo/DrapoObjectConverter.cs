@@ -32,7 +32,12 @@ namespace Sysphera.Middleware.Drapo
                 return (false);
             writer.WriteStartArray();
             foreach (Object itemArray in list)
-                WriteJson(writer, itemArray, serializer);
+            {
+                if (itemArray is System.Collections.IList)
+                    WriteJsonArray(writer, itemArray, serializer);
+                else
+                    WriteJson(writer, itemArray, serializer);
+            }
             writer.WriteEndArray();
             return (true);
         }

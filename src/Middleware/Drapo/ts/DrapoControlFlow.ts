@@ -208,13 +208,17 @@ class DrapoControlFlow {
             }
             //Storage
             if (conditionalForIfResult) {
-                dataItem = await this.Application.Storage.Retrieve(dataKey, sector, context, dataKeyIteratorParts);
-                if (dataItem == null)
-                    return (false);
-                if ((isDataKey) && (dataKeyIteratorParts.length > 1)) {
-                    datas = this.Application.Solver.ResolveDataObjectPathObject(dataItem.Data, dataKeyIteratorParts);
+                if (this.HasContextIterators(context, dataKeyIteratorParts)) {
+                    datas = this.GetContextIteratorsData(context, dataKeyIteratorParts);
                 } else {
-                    datas = dataItem.Data;
+                    dataItem = await this.Application.Storage.Retrieve(dataKey, sector, context, dataKeyIteratorParts);
+                    if (dataItem == null)
+                        return (false);
+                    if ((isDataKey) && (dataKeyIteratorParts.length > 1)) {
+                        datas = this.Application.Solver.ResolveDataObjectPathObject(dataItem.Data, dataKeyIteratorParts);
+                    } else {
+                        datas = dataItem.Data;
+                    }
                 }
             } else {
                 datas = [];
@@ -723,6 +727,32 @@ class DrapoControlFlow {
         if (numberHat > data.length)
             return (data.length);
         return (numberHat);
+    }
+
+    private HasContextIterators(context: DrapoContext, dataKeyIteratorParts: string[]): boolean {
+        if (dataKeyIteratorParts.length != 1)
+            return (false);
+        const key: string = dataKeyIteratorParts[0];
+        const item: DrapoContextItem = this.GetContextItemByKey(context, key);
+        return (item != null);
+    }
+
+    private GetContextIteratorsData(context: DrapoContext, dataKeyIteratorParts: string[]): any[] {
+        if (dataKeyIteratorParts.length < 1)
+            return ([]);
+        const key: string = dataKeyIteratorParts[0];
+        const item: DrapoContextItem = this.GetContextItemByKey(context, key);
+        const datas: any[] = this.Application.Solver.ResolveDataObjectPathObject(item.Data, dataKeyIteratorParts);
+        return (datas);
+    }
+
+    private GetContextItemByKey(context: DrapoContext, key: string): DrapoContextItem{
+        for (let i: number = 0; i < context.ItemsCurrentStack.length; i++) {
+            const item: DrapoContextItem = context.ItemsCurrentStack[i];
+            if (item.Key == key)
+                return (item);
+        }
+        return (null);
     }
 
     public async ExecuteDataItem(sector: string, context: DrapoContext, expression: string, iterator: string, forText: string, ifText: string, all: boolean, datas: any[], dataKey: string, key: string, executionContext: DrapoExecutionContext<any> = null): Promise<boolean> {

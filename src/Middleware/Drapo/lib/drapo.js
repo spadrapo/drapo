@@ -4651,7 +4651,7 @@ var DrapoControlFlow = (function () {
                         return [4, this.GetControlFlowDataKeyIterators(context, renderContext, elementForTemplate, dataKeyIterator)];
                     case 3:
                         datas = _f.sent();
-                        return [3, 7];
+                        return [3, 9];
                     case 4:
                         dataKeyIteratorParts = this.Application.Parser.ParseForIterable(dataKeyIterator);
                         dataKey = dataKeyIteratorParts[0];
@@ -4668,9 +4668,12 @@ var DrapoControlFlow = (function () {
                             if (hasForIfText)
                                 this.Application.Observer.SubscribeLinkMustache(forIfText, dataKey);
                         }
-                        if (!conditionalForIfResult) return [3, 6];
-                        return [4, this.Application.Storage.Retrieve(dataKey, sector, context, dataKeyIteratorParts)];
-                    case 5:
+                        if (!conditionalForIfResult) return [3, 8];
+                        if (!this.HasContextIterators(context, dataKeyIteratorParts)) return [3, 5];
+                        datas = this.GetContextIteratorsData(context, dataKeyIteratorParts);
+                        return [3, 7];
+                    case 5: return [4, this.Application.Storage.Retrieve(dataKey, sector, context, dataKeyIteratorParts)];
+                    case 6:
                         dataItem = _f.sent();
                         if (dataItem == null)
                             return [2, (false)];
@@ -4680,11 +4683,12 @@ var DrapoControlFlow = (function () {
                         else {
                             datas = dataItem.Data;
                         }
-                        return [3, 7];
-                    case 6:
-                        datas = [];
                         _f.label = 7;
-                    case 7:
+                    case 7: return [3, 9];
+                    case 8:
+                        datas = [];
+                        _f.label = 9;
+                    case 9:
                         if (datas == null)
                             return [2, (false)];
                         if (!datas.length)
@@ -4741,15 +4745,15 @@ var DrapoControlFlow = (function () {
                         canFragmentElements = viewport == null;
                         fragment = document.createDocumentFragment();
                         canUseTemplate = isContextRootFullExclusive && (type == DrapoStorageLinkType.Render) && (datas.length > 3);
-                        if (!canUseTemplate) return [3, 9];
+                        if (!canUseTemplate) return [3, 11];
                         return [4, this.GetTemplateVariables(sector, context, dataKey, key, forReferenceTemplate)];
-                    case 8:
-                        _a = (_f.sent());
-                        return [3, 10];
-                    case 9:
-                        _a = null;
-                        _f.label = 10;
                     case 10:
+                        _a = (_f.sent());
+                        return [3, 12];
+                    case 11:
+                        _a = null;
+                        _f.label = 12;
+                    case 12:
                         templateVariables = _a;
                         nodesRemovedCount = 0;
                         startViewport = this.Application.ViewportHandler.GetViewportControlFlowStart(viewport, start);
@@ -4757,74 +4761,74 @@ var DrapoControlFlow = (function () {
                         if (isViewportActive)
                             context.Initialize(startViewport - 1);
                         j = startViewport;
-                        _f.label = 11;
-                    case 11:
-                        if (!(j < endViewport)) return [3, 30];
-                        data = datas[j];
-                        if (!(templateVariables !== null)) return [3, 13];
-                        return [4, this.CreateTemplateKey(sector, context, dataKey, templateVariables, data, key, j)];
-                    case 12:
-                        _b = _f.sent();
-                        return [3, 14];
+                        _f.label = 13;
                     case 13:
-                        _b = null;
-                        _f.label = 14;
+                        if (!(j < endViewport)) return [3, 32];
+                        data = datas[j];
+                        if (!(templateVariables !== null)) return [3, 15];
+                        return [4, this.CreateTemplateKey(sector, context, dataKey, templateVariables, data, key, j)];
                     case 14:
-                        templateKey = _b;
-                        if (!(templateKey !== null)) return [3, 16];
-                        return [4, this.GetTemplateFromTemplateKey(context, templateKey)];
+                        _b = _f.sent();
+                        return [3, 16];
                     case 15:
-                        _c = _f.sent();
-                        return [3, 17];
+                        _b = null;
+                        _f.label = 16;
                     case 16:
-                        _c = null;
-                        _f.label = 17;
+                        templateKey = _b;
+                        if (!(templateKey !== null)) return [3, 18];
+                        return [4, this.GetTemplateFromTemplateKey(context, templateKey)];
                     case 17:
-                        templateData = _c;
-                        if (!((templateKey !== null) && (templateData === null))) return [3, 19];
-                        return [4, this.CreateTemplate(sector, context, renderContext, this.Application.Document.Clone(forReferenceTemplate), dataKey, key, j, data)];
+                        _c = _f.sent();
+                        return [3, 19];
                     case 18:
-                        templateData = _f.sent();
-                        this.AddTemplate(context, templateKey, templateData);
+                        _c = null;
                         _f.label = 19;
                     case 19:
+                        templateData = _c;
+                        if (!((templateKey !== null) && (templateData === null))) return [3, 21];
+                        return [4, this.CreateTemplate(sector, context, renderContext, this.Application.Document.Clone(forReferenceTemplate), dataKey, key, j, data)];
+                    case 20:
+                        templateData = _f.sent();
+                        this.AddTemplate(context, templateKey, templateData);
+                        _f.label = 21;
+                    case 21:
                         template = templateData !== null ? this.Application.Document.Clone(templateData) : this.Application.Document.Clone(forReferenceTemplate);
                         viewportIndexDifference = (isViewportActive ? (1 - startViewport) : 0);
                         nodeIndex = j - nodesRemovedCount + viewportIndexDifference;
                         oldNode = ((items !== null) && (nodeIndex < items.length)) ? items[nodeIndex] : null;
                         item = context.Create(data, template, elementForTemplate, dataKey, key, dataKeyIterator, j, oldNode);
                         _d = (hasIfText);
-                        if (!_d) return [3, 21];
+                        if (!_d) return [3, 23];
                         return [4, this.Application.Solver.ResolveConditional(ifText, template, sector, context, renderContext, elementForTemplate)];
-                    case 20:
+                    case 22:
                         _d = (!(_f.sent()));
-                        _f.label = 21;
-                    case 21:
+                        _f.label = 23;
+                    case 23:
                         if (_d) {
                             if ((isDifference) && (oldNode !== null))
                                 this.RemoveListIndex(items, nodeIndex);
                             nodesRemovedCount++;
                             context.Pop();
-                            return [3, 29];
+                            return [3, 31];
                         }
-                        if (!(type == DrapoStorageLinkType.Render)) return [3, 27];
+                        if (!(type == DrapoStorageLinkType.Render)) return [3, 29];
                         hashValueBefore = ((useHash) && (oldNode != null)) ? oldNode.getAttribute('d-hash') : null;
-                        if (!(hashTemplate === null)) return [3, 22];
+                        if (!(hashTemplate === null)) return [3, 24];
                         _e = null;
-                        return [3, 24];
-                    case 22: return [4, this.GetElementHashValue(sector, context, template, hashTemplate)];
-                    case 23:
-                        _e = _f.sent();
-                        _f.label = 24;
-                    case 24:
-                        hashValueCurrent = _e;
-                        applyHash = ((!useHash) || (hashValueCurrent !== hashValueBefore));
-                        if (!applyHash) return [3, 26];
-                        return [4, this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents)];
+                        return [3, 26];
+                    case 24: return [4, this.GetElementHashValue(sector, context, template, hashTemplate)];
                     case 25:
-                        _f.sent();
+                        _e = _f.sent();
                         _f.label = 26;
                     case 26:
+                        hashValueCurrent = _e;
+                        applyHash = ((!useHash) || (hashValueCurrent !== hashValueBefore));
+                        if (!applyHash) return [3, 28];
+                        return [4, this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents)];
+                    case 27:
+                        _f.sent();
+                        _f.label = 28;
+                    case 28:
                         if (((isDifference) || (isViewportActive)) && (oldNode != null)) {
                             if (applyHash)
                                 this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template, isHTML);
@@ -4848,19 +4852,19 @@ var DrapoControlFlow = (function () {
                                 canFragmentElements = true;
                             }
                         }
-                        return [3, 29];
-                    case 27:
-                        if (!(type == DrapoStorageLinkType.RenderClass)) return [3, 29];
+                        return [3, 31];
+                    case 29:
+                        if (!(type == DrapoStorageLinkType.RenderClass)) return [3, 31];
                         return [4, this.ResolveControlFlowForIterationRenderClass(context, renderContext, template, sector)];
-                    case 28:
+                    case 30:
                         _f.sent();
                         if (oldNode != null)
                             this.Application.Document.ApplyNodeDifferencesRenderClass(oldNode, template);
-                        _f.label = 29;
-                    case 29:
+                        _f.label = 31;
+                    case 31:
                         j++;
-                        return [3, 11];
-                    case 30:
+                        return [3, 13];
+                    case 32:
                         this.Application.ViewportHandler.AppendViewportControlFlowBallonAfter(viewport, fragment);
                         if ((viewport == null) && (isContextRootFullExclusive) && (!isIncremental)) {
                             this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
@@ -4877,34 +4881,34 @@ var DrapoControlFlow = (function () {
                         }
                         this.Application.ViewportHandler.ActivateViewportControlFlow(viewport, lastInserted);
                         this.Application.Observer.IsEnabledNotifyIncremental = true;
-                        if (!((context.IsInsideRecursion) && (!context.IsElementTemplateRoot(key)))) return [3, 32];
+                        if (!((context.IsInsideRecursion) && (!context.IsElementTemplateRoot(key)))) return [3, 34];
                         return [4, this.Application.Document.RemoveElement(elementForTemplate, false)];
-                    case 31:
-                        _f.sent();
-                        _f.label = 32;
-                    case 32:
-                        if (!((dataItem != null) && (dataItem.IsIncremental))) return [3, 34];
-                        return [4, this.Application.Binder.BindIncremental(elFor, dataKeyIterator, sector, isIncremental)];
                     case 33:
                         _f.sent();
                         _f.label = 34;
                     case 34:
-                        if (!isContextRoot) return [3, 37];
-                        return [4, this.Application.ComponentHandler.UnloadComponentInstancesDetached(sector)];
+                        if (!((dataItem != null) && (dataItem.IsIncremental))) return [3, 36];
+                        return [4, this.Application.Binder.BindIncremental(elFor, dataKeyIterator, sector, isIncremental)];
                     case 35:
                         _f.sent();
-                        return [4, this.Application.Document.CollectSector(sector)];
+                        _f.label = 36;
                     case 36:
-                        _f.sent();
-                        _f.label = 37;
+                        if (!isContextRoot) return [3, 39];
+                        return [4, this.Application.ComponentHandler.UnloadComponentInstancesDetached(sector)];
                     case 37:
-                        if (!hasViewPortbeforeRecycle) return [3, 39];
-                        viewport.ElementScroll.scrollTop = viewportBeforeScrollPosition;
-                        return [4, this.ResolveControlFlowForViewportScroll(viewport)];
+                        _f.sent();
+                        return [4, this.Application.Document.CollectSector(sector)];
                     case 38:
                         _f.sent();
                         _f.label = 39;
-                    case 39: return [2];
+                    case 39:
+                        if (!hasViewPortbeforeRecycle) return [3, 41];
+                        viewport.ElementScroll.scrollTop = viewportBeforeScrollPosition;
+                        return [4, this.ResolveControlFlowForViewportScroll(viewport)];
+                    case 40:
+                        _f.sent();
+                        _f.label = 41;
+                    case 41: return [2];
                 }
             });
         });
@@ -5379,6 +5383,29 @@ var DrapoControlFlow = (function () {
         if (numberHat > data.length)
             return (data.length);
         return (numberHat);
+    };
+    DrapoControlFlow.prototype.HasContextIterators = function (context, dataKeyIteratorParts) {
+        if (dataKeyIteratorParts.length != 1)
+            return (false);
+        var key = dataKeyIteratorParts[0];
+        var item = this.GetContextItemByKey(context, key);
+        return (item != null);
+    };
+    DrapoControlFlow.prototype.GetContextIteratorsData = function (context, dataKeyIteratorParts) {
+        if (dataKeyIteratorParts.length < 1)
+            return ([]);
+        var key = dataKeyIteratorParts[0];
+        var item = this.GetContextItemByKey(context, key);
+        var datas = this.Application.Solver.ResolveDataObjectPathObject(item.Data, dataKeyIteratorParts);
+        return (datas);
+    };
+    DrapoControlFlow.prototype.GetContextItemByKey = function (context, key) {
+        for (var i = 0; i < context.ItemsCurrentStack.length; i++) {
+            var item = context.ItemsCurrentStack[i];
+            if (item.Key == key)
+                return (item);
+        }
+        return (null);
     };
     DrapoControlFlow.prototype.ExecuteDataItem = function (sector, context, expression, iterator, forText, ifText, all, datas, dataKey, key, executionContext) {
         if (executionContext === void 0) { executionContext = null; }
