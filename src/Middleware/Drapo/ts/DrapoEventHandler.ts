@@ -98,6 +98,8 @@ class DrapoEventHandler {
             const eventAttribute: string = event[0];
             this.DetachEventListener(binder, eventNamespace);
             this.AttachEventListener(binder, eventType, eventNamespace, async (e: Event) => {
+                if (!propagation)
+                    e.stopPropagation();
                 if ((isLocationBody) && (!application.Document.Contains(el))) {
                     application.EventHandler.DetachEventListener(binder, eventNamespace);
                     return (true);
@@ -176,6 +178,8 @@ class DrapoEventHandler {
             let eventsDetachActivated: boolean = false;
             this.DetachEventListener(binder, eventNamespace);
             this.AttachEventListener(binder, eventType, eventNamespace, async (e: Event) => {
+                if (!propagation)
+                    e.stopPropagation();
                 if ((isLocationBody) && (!application.Document.Contains(el))) {
                     application.EventHandler.DetachEventListener(binder, eventNamespace);
                     return (true);
