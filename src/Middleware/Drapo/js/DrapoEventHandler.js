@@ -151,6 +151,8 @@ var DrapoEventHandler = (function () {
                                             return __generator(this, function (_b) {
                                                 switch (_b.label) {
                                                     case 0:
+                                                        if (!propagation)
+                                                            e.stopPropagation();
                                                         if ((isLocationBody) && (!application.Document.Contains(el))) {
                                                             application.EventHandler.DetachEventListener(binder, eventNamespace);
                                                             return [2, (true)];
@@ -271,6 +273,8 @@ var DrapoEventHandler = (function () {
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
                                                     case 0:
+                                                        if (!propagation)
+                                                            e.stopPropagation();
                                                         if ((isLocationBody) && (!application.Document.Contains(el))) {
                                                             application.EventHandler.DetachEventListener(binder, eventNamespace);
                                                             return [2, (true)];
