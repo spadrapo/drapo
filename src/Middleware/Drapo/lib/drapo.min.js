@@ -12565,7 +12565,7 @@ var DrapoFunctionHandler = (function () {
                             elementFocused.blur();
                             return [2, ('')];
                         }
-                        elDid = this.Application.Searcher.FindByAttributeAndValue('d-id', did);
+                        elDid = this.Application.Searcher.FindLastByAttributeAndValue('d-id', did);
                         if (elDid === null)
                             return [2, ('')];
                         isSelectText = functionParsed.Parameters[1];
@@ -19155,6 +19155,12 @@ var DrapoSearcher = (function () {
     DrapoSearcher.prototype.FindByAttributeAndValue = function (name, value) {
         var el = document.querySelector("[" + name + "='" + value + "']");
         return (el);
+    };
+    DrapoSearcher.prototype.FindLastByAttributeAndValue = function (name, value) {
+        var els = this.FindAllByAttributeAndValue(name, value);
+        if ((els != null) && (els.length > 0))
+            return (els[els.length - 1]);
+        return (null);
     };
     DrapoSearcher.prototype.FindAllByAttributeAndValue = function (name, value) {
         var nodes = document.querySelectorAll("[" + name + "='" + value + "']");

@@ -55,6 +55,13 @@
         return (el);
     }
 
+    public FindLastByAttributeAndValue(name: string, value: string): HTMLElement {
+        const els: HTMLElement[] = this.FindAllByAttributeAndValue(name, value);
+        if ((els != null) && (els.length > 0))
+            return (els[els.length - 1]);
+        return (null);
+    }
+
     public FindAllByAttributeAndValue(name: string, value: string): HTMLElement[] {
         const nodes: NodeListOf<Element> = document.querySelectorAll("[" + name + "='" + value + "']");
         return (this.CreateElementsList(nodes));
