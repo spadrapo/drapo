@@ -1133,7 +1133,7 @@ class DrapoFunctionHandler {
             elementFocused.blur();
             return ('');
         }
-        const elDid: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-id', did);
+        const elDid: HTMLElement = this.Application.Searcher.FindLastByAttributeAndValue('d-id', did);
         if (elDid === null)
             return ('');
         const isSelectText: string = functionParsed.Parameters[1];
