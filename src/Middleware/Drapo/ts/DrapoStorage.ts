@@ -4,7 +4,9 @@ class DrapoStorage {
     private _cacheItems: DrapoStorageItem[] = [];
     private _isDelayTriggered: boolean = false;
     private readonly CONTENT_TYPE_JSON: string = 'application/json; charset=utf-8';
+    private readonly CONTENT_TYPE_TEXT: string = 'text/plain';
     private _lock: boolean = false;
+    private readonly CHUNK_SIZE: number = 3 * 1024 * 1024;
     //Properties
     get Application(): DrapoApplication {
         return (this._application);
@@ -563,6 +565,8 @@ class DrapoStorage {
         if ((dataUrlParameters == null) || (dataUrlParameters == ''))
             dataUrlParameters = 'optional';
         const dataUrlSet: string = el.getAttribute('d-dataUrlSet');
+        const dataUrlSetChunk: string = ((dataUrlSet == null) || (dataUrlSet == '')) ? null : el.getAttribute('d-dataUrlSetChunk');
+        const chunk: string = ((dataUrlSetChunk == null) || (dataUrlSetChunk == '')) ? null : el.getAttribute('d-dataChunk');
         const dataPostGet: string = el.getAttribute('d-dataPostGet');
         const isLazy: boolean = el.getAttribute('d-dataLazy') === 'true';
         const dataStart: string = el.getAttribute('d-dataLazyStart');
@@ -603,8 +607,24 @@ class DrapoStorage {
         }
         const increment: number = this.Application.Parser.GetStringAsNumber(dataIncrement);
         const isFull: boolean = ((isLazy) && (data.length < increment)) ? true : false;
-        const item: DrapoStorageItem = new DrapoStorageItem(dataKey, type, access, el, data, dataUrlGet, dataUrlSet, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet);
+        const pollingKey: string = await this.ResolveValueMustaches(dataKey, sector, el.getAttribute('d-dataPollingKey'));
+        const pollingTimespan: number = await this.ResolveValueMustachesAsNumber(dataKey, sector, el.getAttribute('d-dataPollingTimespan'));
+        const item: DrapoStorageItem = new DrapoStorageItem(dataKey, type, access, el, data, dataUrlGet, dataUrlSet, dataUrlSetChunk, chunk, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet, pollingKey, pollingTimespan);
         return (item);
+    }
+
+    private async ResolveValueMustaches(dataKey: string, sector: string, value: string): Promise<string> {
+        if (value == null)
+            return (null);
+        return (await this.ResolveDataUrlMustaches(dataKey, sector, value, null, null));
+    }
+
+    private async ResolveValueMustachesAsNumber(dataKey: string, sector: string, value: string): Promise<number> {
+        if (value == null)
+            return (null);
+        const valueResolved: string = await this.ResolveDataUrlMustaches(dataKey, sector, value, null, null);
+        const valueAsNumber: number = this.Application.Parser.ParseNumber(valueResolved, null);
+        return (valueAsNumber);
     }
 
     private async RetrieveDataKey(dataKey: string, sector: string, el: HTMLElement, dataUrlGet: string, dataUrlParameters: string, dataPostGet: string, dataStart: string, dataIncrement: string, isDelay: boolean, dataDelayFields: string[], cookieName: string, type: string, isToken: boolean, cacheKeys: string[], channels: string[], headersGet: [string, string][], headersResponse: [string, string][]): Promise<any[]> {
@@ -1272,7 +1292,7 @@ class DrapoStorage {
                 return (null);
             current = current[dataKeyCurrent];
         }
-        return (new DrapoStorageItem(dataKey, 'array', null, null, current, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, null, false, null, null, null, null, null, null, null, null, null));
+        return (new DrapoStorageItem(dataKey, 'array', null, null, current, null, null, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null));
     }
 
     public async AddDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify: boolean = true): Promise<boolean> {
@@ -1391,6 +1411,7 @@ class DrapoStorage {
         //After Cached
         if ((canFireEventOnAfterCached) && (dataItem.OnAfterCached != null))
             await this.Application.FunctionHandler.ResolveFunctionWithoutContext(sector, dataItem.Element, dataItem.OnAfterCached);
+        this.Application.Worker.Check();
         return (index);
     }
 
@@ -1415,6 +1436,7 @@ class DrapoStorage {
         await this.AdquireLock();
         this._cacheItems.splice(index, 1);
         this.ReleaseLock();
+        this.Application.Worker.Check();
     }
 
     public AppendCacheDataItemBySector(storageItems: DrapoStorageItem[], sector: string): void {
@@ -1435,6 +1457,36 @@ class DrapoStorage {
             this._cacheItems.push(storageItem);
         }
         this.ReleaseLock();
+        this.Application.Worker.Check();
+    }
+
+    public GetCachedDataItemByDatePolling(): DrapoStorageItem {
+        let item: DrapoStorageItem = null;
+        for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
+            const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
+            if (storageItem.PollingDate == null)
+                continue;
+            if ((item == null) || (item.PollingDate > storageItem.PollingDate))
+                item = storageItem;
+        }
+        return (item);
+    }
+
+    public ExistCachedDataItem(item: DrapoStorageItem): boolean {
+        for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
+            const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem === item)
+                return (true);
+        }
+        return (false);
+    }
+
+    public async ExecuteCachedDataItemPolling(item: DrapoStorageItem): Promise<void>{
+        if (!item.IsTypeValue)
+            return;
+        await this.Application.FunctionHandler.ResolveFunctionWithoutContext(item.Sector, item.Element, (item.Data as any) as string);
     }
 
     public async RemoveBySector(sector: string): Promise<void> {
@@ -1448,6 +1500,7 @@ class DrapoStorage {
             this._cacheItems.splice(i, 1);
         }
         this.ReleaseLock();
+        this.Application.Worker.Check();
     }
 
     public async DiscardCacheData(dataKey: string, sector: string, canRemoveObservers: boolean = false): Promise<boolean> {
@@ -1567,14 +1620,33 @@ class DrapoStorage {
         let url: string = dataItem.UrlSet;
         //Mustaches
         url = await this.ResolveDataUrlMustaches(null, sector, url, executionContext);
-        const object: any = dataItem.Data;
+        //Chunk
+        const canChunk: boolean = dataItem.Chunk != null;
+        const chunkMustache: string[] = canChunk ? this.Application.Parser.ParseMustache(dataItem.Chunk): null;
+        let dataChunk: string = canChunk ? this.Application.Solver.ResolveItemStoragePathObject(dataItem, chunkMustache) : "";
+        const isChunk: boolean = dataChunk.length > this.CHUNK_SIZE;
+        const object: any = isChunk ? this.Application.Solver.Clone(dataItem.Data, true) : dataItem.Data;
+        if (isChunk)
+            this.Application.Solver.UpdateDataPathObject(object, chunkMustache, dataChunk.substring(0, this.CHUNK_SIZE));
+        //Request
         const headersResponse: [string, string][] = dataItem.IsCookieChange ? [] : null;
         const data: any[] = await this.Application.Server.GetJSON(url, "POST", this.Application.Serializer.Serialize(object), this.CONTENT_TYPE_JSON, null, headers, headersResponse);
         if (this.Application.Server.HasBadRequest)
             return (false);
-
         if (dataItemResponse != null)
             dataItemResponse.Data = data;
+        //Continue Chunk
+        if (isChunk) {
+            const urlChunk = await this.ResolveDataUrlMustaches(null, sector, dataItem.UrlSetChunk, executionContext);
+            while (dataChunk.length > this.CHUNK_SIZE) {
+                dataChunk = dataChunk.substring(this.CHUNK_SIZE);
+                const chunkCurrent = dataChunk.substring(0, this.CHUNK_SIZE);
+                await this.Application.Server.GetJSON(urlChunk, "POST", chunkCurrent, this.CONTENT_TYPE_TEXT, null, headers, null);
+                if (this.Application.Server.HasBadRequest)
+                    return (false);
+            }
+        }
+        //Notify
         if (dataKey !== dataKeyResponse)
             await this.NotifyNoChanges(dataItem, notify, dataKey);
         await this.NotifyChanges(dataItem, ((notify) && (dataItemResponse != null)), dataKeyResponse, null, null);
@@ -1897,7 +1969,7 @@ class DrapoStorage {
     }
 
     private CreateDataItemInternal(dataKey: string, data: any, canCache: boolean = true): DrapoStorageItem {
-        const item: DrapoStorageItem = new DrapoStorageItem(dataKey, data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, null, canCache, null, null, null, null, null, null, null, null, null);
+        const item: DrapoStorageItem = new DrapoStorageItem(dataKey, data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, null, canCache, null, null, null, null, null, null, null, null, null, null, null);
         return (item);
     }
 

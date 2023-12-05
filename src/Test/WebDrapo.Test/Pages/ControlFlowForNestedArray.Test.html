@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For Nested Array</title>
+</head>
+<body>
+    <span>Control Flow - For Nested Array</span>
+    <div d-datakey="table" d-dataurlget="/Data/CreateTable"></div>
+    <div>
+        <div d-for="row in table.Rows" style="display: none;">
+            <div d-for="cell in row">
+                <span d-model="{{cell.Value}}"></span>
+                <br />
+            </div>
+        </div>
+    <div>
+            <div>
+                <span>R0C0</span>
+                <br />
+            </div><div>
+                <span>R0C1</span>
+                <br />
+            </div><div>
+                <span>R0C2</span>
+                <br />
+            </div>
+        </div><div>
+            <div>
+                <span>R1C0</span>
+                <br />
+            </div><div>
+                <span>R1C1</span>
+                <br />
+            </div><div>
+                <span>R1C2</span>
+                <br />
+            </div>
+        </div><div>
+            <div>
+                <span>R2C0</span>
+                <br />
+            </div><div>
+                <span>R2C1</span>
+                <br />
+            </div><div>
+                <span>R2C2</span>
+                <br />
+            </div>
+        </div></div>
+
+</body></html>

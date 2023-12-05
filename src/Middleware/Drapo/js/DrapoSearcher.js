@@ -47,6 +47,12 @@ var DrapoSearcher = (function () {
         var el = document.querySelector("[" + name + "='" + value + "']");
         return (el);
     };
+    DrapoSearcher.prototype.FindLastByAttributeAndValue = function (name, value) {
+        var els = this.FindAllByAttributeAndValue(name, value);
+        if ((els != null) && (els.length > 0))
+            return (els[els.length - 1]);
+        return (null);
+    };
     DrapoSearcher.prototype.FindAllByAttributeAndValue = function (name, value) {
         var nodes = document.querySelectorAll("[" + name + "='" + value + "']");
         return (this.CreateElementsList(nodes));

@@ -40,6 +40,7 @@ declare class DrapoParser {
     private GetFunctionStart;
     private IsFunctionStartValid;
     ParseFunction(data: string, checkParameters?: boolean): DrapoFunction;
+    private IsValidFunctionName;
     ParseParameters(data: string): string[];
     ParseBlock(data: string, delimiter: string): string[];
     ParseBlockMathematicalExpression(data: string): string[];
@@ -53,6 +54,8 @@ declare class DrapoParser {
     private ParseIteratorArray;
     ParseNumberBlock(data: string, valueDefault?: number): number;
     private ReplaceDateWithTimespan;
+    private ReplaceDateWithTimespanISO;
+    private ReplaceDateWithTimespanShort;
     IsClassArray(data: string): boolean;
     IsMustacheOnly(data: string, allowInternal?: boolean): boolean;
     private IsMutacheOnlyInternal;

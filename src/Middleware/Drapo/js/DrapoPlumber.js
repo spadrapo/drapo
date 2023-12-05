@@ -37,8 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var DrapoPlumber = (function () {
     function DrapoPlumber(application) {
+        this._connection = null;
         this._lock = false;
         this._messages = [];
+        this._actionPolling = null;
+        this._pollingMessages = [];
         this._application = application;
     }
     Object.defineProperty(DrapoPlumber.prototype, "Application", {
@@ -60,19 +63,19 @@ var DrapoPlumber = (function () {
     };
     DrapoPlumber.prototype.ConnectPipe = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var usePipes, application, pipHubName, urlRelative, urlAbsolute, connection, actionNotify;
+            var usePipes, application, pipHubName, urlRelative, urlAbsolute, connection, actionNotify, _a;
             var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0: return [4, this.CanUsePipes()];
                     case 1:
-                        usePipes = _a.sent();
+                        usePipes = _b.sent();
                         if (!usePipes)
                             return [2, (false)];
                         application = this.Application;
                         return [4, this.Application.Config.GetPipeHubName()];
                     case 2:
-                        pipHubName = _a.sent();
+                        pipHubName = _b.sent();
                         urlRelative = '~/' + pipHubName;
                         urlAbsolute = this.Application.Server.ResolveUrl(urlRelative);
                         connection = new signalR.HubConnectionBuilder()
@@ -90,14 +93,22 @@ var DrapoPlumber = (function () {
                             }
                         })
                             .build();
+                        this._connection = connection;
                         return [4, connection.start()];
                     case 3:
-                        _a.sent();
+                        _b.sent();
                         return [4, this.Application.Config.GetPipeActionNotify()];
                     case 4:
-                        actionNotify = _a.sent();
+                        actionNotify = _b.sent();
                         connection.on(actionNotify, function (message) {
                             application.Plumber.NotifyPipe(message);
+                        });
+                        _a = this;
+                        return [4, this.Application.Config.GetPipeActionPolling()];
+                    case 5:
+                        _a._actionPolling = _b.sent();
+                        connection.on(this._actionPolling, function (message) {
+                            application.Plumber.ReceivePollingPipe(message);
                         });
                         connection.onreconnected(function (connectionId) { return __awaiter(_this, void 0, void 0, function () {
                             var onReconnect;
@@ -119,8 +130,8 @@ var DrapoPlumber = (function () {
                             });
                         }); });
                         return [4, this.RequestPipeRegister(connection)];
-                    case 5:
-                        _a.sent();
+                    case 6:
+                        _b.sent();
                         return [2, (true)];
                 }
             });
@@ -267,6 +278,83 @@ var DrapoPlumber = (function () {
                         _a.sent();
                         return [2];
                 }
+            });
+        });
+    };
+    DrapoPlumber.prototype.SendPolling = function (pollingKey) {
+        return __awaiter(this, void 0, void 0, function () {
+            var message, pollingHash;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        message = this.GetMessagePolling(pollingKey);
+                        if (message === null) {
+                            message = new DrapoPipePollingMessage();
+                            message.Key = pollingKey;
+                            this._pollingMessages.push(message);
+                        }
+                        else {
+                            message.Hash = null;
+                        }
+                        return [4, this._connection.invoke(this._actionPolling, message)];
+                    case 1:
+                        _a.sent();
+                        return [4, this.WaitForMessagePollingHash(pollingKey)];
+                    case 2:
+                        pollingHash = _a.sent();
+                        return [2, (pollingHash)];
+                }
+            });
+        });
+    };
+    DrapoPlumber.prototype.GetMessagePolling = function (key) {
+        for (var i = this._pollingMessages.length - 1; i >= 0; i--) {
+            var currentMessage = this._pollingMessages[i];
+            if (currentMessage.Key !== key)
+                continue;
+            return (currentMessage);
+        }
+        return (null);
+    };
+    DrapoPlumber.prototype.WaitForMessagePollingHash = function (pollingKey, retry, interval) {
+        if (retry === void 0) { retry = 1000; }
+        if (interval === void 0) { interval = 50; }
+        return __awaiter(this, void 0, void 0, function () {
+            var i, j, currentMessage;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < retry)) return [3, 4];
+                        for (j = this._pollingMessages.length - 1; j >= 0; j--) {
+                            currentMessage = this._pollingMessages[j];
+                            if ((currentMessage.Key !== pollingKey) || (currentMessage.Hash === null))
+                                continue;
+                            this._pollingMessages.splice(j, 1);
+                            return [2, (currentMessage.Hash)];
+                        }
+                        return [4, this.Application.Document.Sleep(interval)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        i++;
+                        return [3, 1];
+                    case 4: return [2, (null)];
+                }
+            });
+        });
+    };
+    DrapoPlumber.prototype.ReceivePollingPipe = function (message) {
+        return __awaiter(this, void 0, void 0, function () {
+            var currentMessage;
+            return __generator(this, function (_a) {
+                currentMessage = this.GetMessagePolling(message.Key);
+                if (currentMessage !== null)
+                    currentMessage.Hash = message.Hash;
+                return [2];
             });
         });
     };

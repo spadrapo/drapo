@@ -48,8 +48,8 @@ class DrapoBehaviorHandler {
         this.Application.EventHandler.DetachEventListener(el, eventNamespace);
         this.Application.EventHandler.AttachEventListener(el, eventType, eventNamespace, (e: any) => {
             application.BehaviorHandler.SetDrag(drag);
-            e.originalEvent.dataTransfer.effectAllowed = 'move';
-            e.originalEvent.dataTransfer.setData('text', drag.Code);
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text', drag.Code);
         });
     }
 
@@ -74,9 +74,9 @@ class DrapoBehaviorHandler {
         this.Application.EventHandler.AttachEventListener(el, eventTypeDragover, eventNamespaceDragover, (e: any) => {
             e.preventDefault();
             const drag: DrapoDrag = application.BehaviorHandler.GetDrag();
-            if (!application.BehaviorHandler.IsDragMatch(drag, e.originalEvent.dataTransfer.getData('Text'), tags))
+            if (!application.BehaviorHandler.IsDragMatch(drag, e.dataTransfer.getData('Text'), tags))
                 return;
-            e.originalEvent.dataTransfer.dropEffect = 'move';
+            e.dataTransfer.dropEffect = 'move';
         });
         //Drop
         const eventTypeDrop: string = 'drop';
@@ -115,8 +115,8 @@ class DrapoBehaviorHandler {
         this.Application.EventHandler.DetachEventListener(el, eventNamespace);
         this.Application.EventHandler.AttachEventListener(el, eventType, eventNamespace, (e: any) => {
             application.BehaviorHandler.SetDrag(drag);
-            e.originalEvent.dataTransfer.effectAllowed = 'move';
-            e.originalEvent.dataTransfer.setData('text', drag.Code);
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text', drag.Code);
         });
     }
 
@@ -143,9 +143,9 @@ class DrapoBehaviorHandler {
         this.Application.EventHandler.AttachEventListener(el, eventTypeDragover, eventNamespaceDragover, (e: any) => {
             e.preventDefault();
             const drag: DrapoDrag = application.BehaviorHandler.GetDrag();
-            if (!application.BehaviorHandler.IsDragMatch(drag, e.originalEvent.dataTransfer.getData('Text'), tags))
+            if (!application.BehaviorHandler.IsDragMatch(drag, e.dataTransfer.getData('Text'), tags))
                 return;
-            e.originalEvent.dataTransfer.dropEffect = 'move';
+            e.dataTransfer.dropEffect = 'move';
         });
         //Drop
         const eventTypeDrop: string = 'drop';
@@ -160,7 +160,7 @@ class DrapoBehaviorHandler {
     public async ResolveBehaviorDragEndDrop(e: any, item: DrapoContextItem, tags: string[], notify: boolean, dataKey: string, sector: string, onBefore: string, onAfter: string): Promise<void> {
         e.preventDefault();
         const dragBefore: DrapoDrag = this.GetDrag();
-        if (!this.IsDragMatch(dragBefore, e.originalEvent.dataTransfer.getData('Text'), tags))
+        if (!this.IsDragMatch(dragBefore, e.dataTransfer.getData('Text'), tags))
             return;
         this.SetDrag(null);
         const dragAfter: DrapoDrag = this.CreateDrag(null, null, item, tags, notify, dataKey, sector, onBefore, onAfter);
@@ -184,19 +184,19 @@ class DrapoBehaviorHandler {
     public async ResolveBehaviorDragStartOnBefore(dragBefore: DrapoDrag, dragAfter: DrapoDrag): Promise<void> {
         //OnBefore Start
         if (dragBefore.OnBefore != null)
-            await this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragBefore.Sector, dragBefore.Item.Element, dragBefore.OnBefore);
+            await this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragBefore.Sector, dragBefore.Item != null ? dragBefore.Item.Element : null, dragBefore.OnBefore);
         //OnBefore End
         if ((dragAfter.OnBefore != null) && (dragAfter.OnBefore != dragBefore.OnBefore))
-            await this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragAfter.Sector, dragAfter.Item.Element, dragAfter.OnBefore);
+            await this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragAfter.Sector, dragAfter.Item != null ? dragAfter.Item.Element : null, dragAfter.OnBefore);
     }
 
     public async ResolveBehaviorDragEndOnAfter(dragBefore: DrapoDrag, dragAfter: DrapoDrag): Promise<void> {
         //OnAfter Start
         if (dragBefore.OnAfter != null)
-            await this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragBefore.Sector, dragBefore.Item.Element, dragBefore.OnAfter);
+            await this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragBefore.Sector, dragBefore.Item != null ? dragBefore.Item.Element : null, dragBefore.OnAfter);
         //OnAfter End
         if ((dragAfter.OnAfter != null) && (dragAfter.OnAfter != dragBefore.OnAfter))
-            await this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragAfter.Sector, dragAfter.Item.Element, dragAfter.OnAfter);
+            await this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragAfter.Sector, dragAfter.Item != null ? dragAfter.Item.Element : null, dragAfter.OnAfter);
     }
 
     public GetDrag(): DrapoDrag {
@@ -260,7 +260,7 @@ class DrapoBehaviorHandler {
     }
 
     private async CustomDrag(dragBefore: DrapoDrag, dragAfter: DrapoDrag): Promise<boolean> {
-        await this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragBefore.Sector, dragBefore.Item.Element, dragBefore.Custom);
+        await this.Application.FunctionHandler.ResolveFunctionWithoutContext(dragBefore.Sector, dragBefore.Item != null ? dragBefore.Item.Element : null, dragBefore.Custom);
         return (true);
     }
 
@@ -304,7 +304,7 @@ class DrapoBehaviorHandler {
                     application.BehaviorHandler.ResolveBehaviorResizeContinue(resizer, ev);
                 });
             }
-            application.EventHandler.AttachEventListener(container, eventTypeMouseup, eventNamespaceMouseUp,(ev: any) => {
+            application.EventHandler.AttachEventListener(container, eventTypeMouseup, eventNamespaceMouseUp, (ev: any) => {
                 // tslint:disable-next-line:no-floating-promises
                 application.BehaviorHandler.ResolveBehaviorResizeFinish(resizer, ev);
                 if (resizer.Preview)
@@ -373,7 +373,7 @@ class DrapoBehaviorHandler {
             }
             return (null);
         } else {
-            return (this.Application.Stylist.GetElementStyleProperty(resizer.Parent,'width'));
+            return (this.Application.Stylist.GetElementStyleProperty(resizer.Parent, 'width'));
         }
     }
 
@@ -436,13 +436,13 @@ class DrapoBehaviorHandler {
 
     private GetResizerEventValue(resizer: DrapoResize, event: any): number {
         if (resizer.Location === 'height')
-            return (event.originalEvent.pageY);
-        return (event.originalEvent.pageX);
+            return (event.pageY);
+        return (event.pageX);
     }
 
     private ApplySizeNew(resizer: DrapoResize): number {
         if (resizer.Location === 'bootstrap') {
-            const sizeBase: string = this.Application.Stylist.GetElementStyleProperty(resizer.Parent,'width');
+            const sizeBase: string = this.Application.Stylist.GetElementStyleProperty(resizer.Parent, 'width');
             const sizeBaseUnit = this.GetSizeUnit(sizeBase);
             const sizeBaseValue: number = this.GetSizeValue(sizeBaseUnit, sizeBase);
             const sizeBaseValueOne: number = sizeBaseValue / resizer.SizeStart;
@@ -460,7 +460,7 @@ class DrapoBehaviorHandler {
             const sizeNew: number = this.GetSizeStartWithOffset(resizer);
             if (sizeNew === null)
                 return (null);
-            this.Application.Stylist.SetElementStyleProperty(resizer.Parent,resizer.Location, sizeNew + resizer.Unit);
+            this.Application.Stylist.SetElementStyleProperty(resizer.Parent, resizer.Location, sizeNew + resizer.Unit);
             return (sizeNew);
         }
     }

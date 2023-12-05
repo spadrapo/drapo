@@ -185,6 +185,11 @@ namespace WebDrapo.Test
             ValidatePage("Class");
         }
         [TestCase]
+        public void ClassComplexTest()
+        {
+            ValidatePage("ClassComplex");
+        }
+        [TestCase]
         public void ClassConditionalTest()
         {
             ValidatePage("ClassConditional");
@@ -333,6 +338,11 @@ namespace WebDrapo.Test
         public void ConditionalBooleanTest()
         {
             ValidatePage("ConditionalBoolean");
+        }
+        [TestCase]
+        public void ConditionalCharactersTest()
+        {
+            ValidatePage("ConditionalCharacters");
         }
         [TestCase]
         public void ConditionalSpaceTextTest()
@@ -523,6 +533,11 @@ namespace WebDrapo.Test
         public void ControlFlowForNestedTest()
         {
             ValidatePage("ControlFlowForNested");
+        }
+        [TestCase]
+        public void ControlFlowForNestedArrayTest()
+        {
+            ValidatePage("ControlFlowForNestedArray");
         }
         [TestCase]
         public void ControlFlowForNestedConditionalTest()

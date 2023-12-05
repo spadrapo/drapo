@@ -46,12 +46,14 @@ var DrapoSolver = (function () {
         enumerable: false,
         configurable: true
     });
-    DrapoSolver.prototype.ResolveConditional = function (expression, el, sector, context, renderContext, eljForTemplate) {
+    DrapoSolver.prototype.ResolveConditional = function (expression, el, sector, context, renderContext, eljForTemplate, executionContext, canBind) {
         if (el === void 0) { el = null; }
         if (sector === void 0) { sector = null; }
         if (context === void 0) { context = null; }
         if (renderContext === void 0) { renderContext = null; }
         if (eljForTemplate === void 0) { eljForTemplate = null; }
+        if (executionContext === void 0) { executionContext = null; }
+        if (canBind === void 0) { canBind = true; }
         return __awaiter(this, void 0, void 0, function () {
             var block, response, responseBoolean;
             return __generator(this, function (_a) {
@@ -62,11 +64,11 @@ var DrapoSolver = (function () {
                         if (typeof expression === 'number')
                             return [2, (expression > 0)];
                         block = this.Application.Parser.ParseExpression(expression);
-                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block)];
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind)];
                     case 1:
                         response = _a.sent();
                         if (!this.Application.Parser.HasMustache(response)) return [3, 3];
-                        return [4, this.ResolveConditional(response, el, sector, context, renderContext, eljForTemplate)];
+                        return [4, this.ResolveConditional(response, el, sector, context, renderContext, eljForTemplate, executionContext, canBind)];
                     case 2: return [2, (_a.sent())];
                     case 3: return [4, this.ResolveConditionalBoolean(response)];
                     case 4:
@@ -76,21 +78,21 @@ var DrapoSolver = (function () {
             });
         });
     };
-    DrapoSolver.prototype.ResolveConditionalExpressionBlock = function (sector, context, renderContext, el, eljForTemplate, block) {
+    DrapoSolver.prototype.ResolveConditionalExpressionBlock = function (sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.EnsureExpressionItemCurrentLevelResolved(sector, context, renderContext, el, block, eljForTemplate)];
+                    case 0: return [4, this.EnsureExpressionItemCurrentLevelResolved(sector, context, renderContext, executionContext, el, block, eljForTemplate, canBind)];
                     case 1:
                         _a.sent();
                         this.JoinTexts(block);
-                        return [4, this.ResolveConditionalExpressionBlockOperation(sector, context, renderContext, el, eljForTemplate, block)];
+                        return [4, this.ResolveConditionalExpressionBlockOperation(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind)];
                     case 2: return [2, (_a.sent())];
                 }
             });
         });
     };
-    DrapoSolver.prototype.ResolveConditionalExpressionBlockOperation = function (sector, context, renderContext, el, eljForTemplate, block) {
+    DrapoSolver.prototype.ResolveConditionalExpressionBlockOperation = function (sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind) {
         return __awaiter(this, void 0, void 0, function () {
             var itemFirst, itemEmpty, resultFirst, itemSecond, resultSecond, resultDenySecond, resultDenyItemSecond, resultThird, hasMoreThanTwoTerms, resultFourth, resultDenyFourth, resultDenyItemFourth, result, resultItem;
             return __generator(this, function (_a) {
@@ -98,20 +100,20 @@ var DrapoSolver = (function () {
                     case 0:
                         if (block.Items.length === 0)
                             return [2, ('')];
-                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, el, block, 0, eljForTemplate)];
+                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, executionContext, el, block, 0, eljForTemplate, canBind)];
                     case 1:
                         _a.sent();
                         itemFirst = block.Items[0];
                         if (!((itemFirst.Type == DrapoExpressionItemType.Logical) || (itemFirst.Type == DrapoExpressionItemType.Comparator))) return [3, 3];
                         itemEmpty = new DrapoExpressionItem(DrapoExpressionItemType.Text, '');
                         block.Items.unshift(itemEmpty);
-                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block)];
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind)];
                     case 2: return [2, (_a.sent())];
                     case 3:
                         resultFirst = itemFirst.Value;
                         if (block.Items.length < 2)
                             return [2, (resultFirst)];
-                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, el, block, 1, eljForTemplate)];
+                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, executionContext, el, block, 1, eljForTemplate, canBind)];
                     case 4:
                         _a.sent();
                         itemSecond = block.Items[1];
@@ -123,13 +125,13 @@ var DrapoSolver = (function () {
                         resultDenyItemSecond = new DrapoExpressionItem(DrapoExpressionItemType.Text, resultDenySecond);
                         block.Items[0] = resultDenyItemSecond;
                         block.Items.splice(1, 1);
-                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block)];
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind)];
                     case 5: return [2, (_a.sent())];
                     case 6:
                         resultThird = '';
                         hasMoreThanTwoTerms = block.Items.length > 2;
                         if (!hasMoreThanTwoTerms) return [3, 8];
-                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, el, block, 2, eljForTemplate)];
+                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, executionContext, el, block, 2, eljForTemplate, canBind)];
                     case 7:
                         _a.sent();
                         resultThird = block.Items[2].Value;
@@ -138,7 +140,7 @@ var DrapoSolver = (function () {
                         if (!(resultThird === '!')) return [3, 12];
                         resultFourth = 'false';
                         if (!(block.Items.length > 3)) return [3, 10];
-                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, el, block, 3, eljForTemplate)];
+                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, executionContext, el, block, 3, eljForTemplate, canBind)];
                     case 9:
                         _a.sent();
                         resultFourth = block.Items[3].Value;
@@ -149,7 +151,7 @@ var DrapoSolver = (function () {
                         block.Items[2] = resultDenyItemFourth;
                         if (block.Items.length > 3)
                             block.Items.splice(3, 1);
-                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block)];
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind)];
                     case 11: return [2, (_a.sent())];
                     case 12:
                         result = this.ResolveConditionalOperator(resultFirst, resultSecond, resultThird);
@@ -157,13 +159,13 @@ var DrapoSolver = (function () {
                         resultItem.Value = result;
                         block.Items[0] = resultItem;
                         block.Items.splice(1, hasMoreThanTwoTerms ? 2 : 1);
-                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, block)];
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind)];
                     case 13: return [2, (_a.sent())];
                 }
             });
         });
     };
-    DrapoSolver.prototype.EnsureExpressionItemCurrentLevelResolved = function (sector, context, renderContext, el, block, eljForTemplate) {
+    DrapoSolver.prototype.EnsureExpressionItemCurrentLevelResolved = function (sector, context, renderContext, executionContext, el, block, eljForTemplate, canBind) {
         return __awaiter(this, void 0, void 0, function () {
             var i, item, _a, _b, _c, _d, _e, _f, _g, _h;
             return __generator(this, function (_j) {
@@ -179,7 +181,7 @@ var DrapoSolver = (function () {
                         _b = i;
                         _c = DrapoExpressionItem.bind;
                         _d = [void 0, DrapoExpressionItemType.Text];
-                        return [4, this.Application.FunctionHandler.ReplaceFunctionExpressions(sector, context, item.Value, true)];
+                        return [4, this.Application.FunctionHandler.ReplaceFunctionExpressionsContext(sector, context, item.Value, canBind, executionContext)];
                     case 2:
                         _a[_b] = new (_c.apply(DrapoExpressionItem, _d.concat([(_j.sent())])))();
                         return [3, 5];
@@ -189,7 +191,7 @@ var DrapoSolver = (function () {
                         _f = i;
                         _g = DrapoExpressionItem.bind;
                         _h = [void 0, DrapoExpressionItemType.Text];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, item.Value, el, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, executionContext, item.Value, el, sector, canBind, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)];
                     case 4:
                         _e[_f] = new (_g.apply(DrapoExpressionItem, _h.concat([(_j.sent())])))();
                         _j.label = 5;
@@ -213,7 +215,7 @@ var DrapoSolver = (function () {
             block.Items.splice(i, 1);
         }
     };
-    DrapoSolver.prototype.EnsureExpressionItemResolved = function (sector, context, renderContext, el, block, index, eljForTemplate) {
+    DrapoSolver.prototype.EnsureExpressionItemResolved = function (sector, context, renderContext, executionContext, el, block, index, eljForTemplate, canBind) {
         return __awaiter(this, void 0, void 0, function () {
             var item, _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
             return __generator(this, function (_o) {
@@ -225,7 +227,7 @@ var DrapoSolver = (function () {
                         _b = index;
                         _c = DrapoExpressionItem.bind;
                         _d = [void 0, DrapoExpressionItemType.Text];
-                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, el, eljForTemplate, item)];
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, item, canBind)];
                     case 1:
                         _a[_b] = new (_c.apply(DrapoExpressionItem, _d.concat([(_o.sent()).toString()])))();
                         return [3, 6];
@@ -235,7 +237,7 @@ var DrapoSolver = (function () {
                         _f = index;
                         _g = DrapoExpressionItem.bind;
                         _h = [void 0, DrapoExpressionItemType.Text];
-                        return [4, this.Application.FunctionHandler.ReplaceFunctionExpressions(sector, context, item.Value, true)];
+                        return [4, this.Application.FunctionHandler.ReplaceFunctionExpressionsContext(sector, context, item.Value, canBind, executionContext)];
                     case 3:
                         _e[_f] = new (_g.apply(DrapoExpressionItem, _h.concat([(_o.sent())])))();
                         return [3, 6];
@@ -245,7 +247,7 @@ var DrapoSolver = (function () {
                         _k = index;
                         _l = DrapoExpressionItem.bind;
                         _m = [void 0, DrapoExpressionItemType.Text];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, null, item.Value, el, sector, true, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)];
+                        return [4, this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, executionContext, item.Value, el, sector, canBind, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)];
                     case 5:
                         _j[_k] = new (_l.apply(DrapoExpressionItem, _m.concat([(_o.sent())])))();
                         _o.label = 6;

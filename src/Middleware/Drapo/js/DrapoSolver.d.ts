@@ -2,7 +2,7 @@ declare class DrapoSolver {
     private _application;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
-    ResolveConditional(expression: string | boolean | number, el?: HTMLElement, sector?: string, context?: DrapoContext, renderContext?: DrapoRenderContext, eljForTemplate?: HTMLElement): Promise<boolean>;
+    ResolveConditional(expression: string | boolean | number, el?: HTMLElement, sector?: string, context?: DrapoContext, renderContext?: DrapoRenderContext, eljForTemplate?: HTMLElement, executionContext?: DrapoExecutionContext<any>, canBind?: boolean): Promise<boolean>;
     private ResolveConditionalExpressionBlock;
     private ResolveConditionalExpressionBlockOperation;
     private EnsureExpressionItemCurrentLevelResolved;

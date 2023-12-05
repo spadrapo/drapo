@@ -1,0 +1,13 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Polling</title>
+</head>
+<body>
+    <span>Data Polling</span>
+    <div d-dataKey="date" d-dataType="value" d-dataUrlGet="/Data/GetDate"></div>
+    <div d-dataKey="datePolling" d-dataType="value" d-dataLoadType="startup" d-dataValue="ReloadData(date)" d-dataPollingKey="date" d-dataPollingTimespan="5000"></div>
+    <span d-model="{{date}}"></span>
+</body>
+</html>

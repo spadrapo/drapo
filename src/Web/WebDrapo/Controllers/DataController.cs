@@ -9,6 +9,8 @@ using Sysphera.Middleware.Drapo;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.StaticFiles;
 using System.Threading;
+using System.IO;
+using Microsoft.AspNetCore.SignalR.Protocol;
 
 namespace WebDrapo.Controllers
 {
@@ -53,6 +55,12 @@ namespace WebDrapo.Controllers
         public string GetDateDelay()
         {
             Thread.Sleep(5000);
+            return (DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff tt"));
+        }
+
+        [HttpGet]
+        public string GetDate()
+        {
             return (DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff tt"));
         }
 
@@ -213,7 +221,7 @@ namespace WebDrapo.Controllers
         }
 
         [HttpPost]
-        public DataVM SetFunctionPostDataItemIncremental([FromBody] DataVM data, [FromQuery]long incremental)
+        public DataVM SetFunctionPostDataItemIncremental([FromBody] DataVM data, [FromQuery] long incremental)
         {
             long value = long.Parse(data.Name);
             data.Name = (value + incremental).ToString();
@@ -323,10 +331,19 @@ namespace WebDrapo.Controllers
             objects.Add(CreateDataCompare(new DateTime(1980, 6, 3, 0, 0, 0, 0), null));
             objects.Add(CreateDataCompare(new DateTime(1980, 6, 3, 0, 0, 0, 0), new DateTime(1980, 6, 3, 0, 2, 30, 0)));
             objects.Add(CreateDataCompare(new DateTime(1980, 6, 3, 0, 0, 0, 0), new DateTime(1980, 6, 3, 4, 1, 22, 0)));
+            objects.Add(CreateDataCompare("2023-03-15 00:00:00:000", "2023-03-20 00:00:00:000"));
             return (objects);
         }
 
         private DrapoObject CreateDataCompare(DateTime dateStart, DateTime? dateEnd)
+        {
+            DrapoObject obj = new DrapoObject();
+            obj.Properties.Add("start", dateStart);
+            obj.Properties.Add("end", dateEnd);
+            return (obj);
+        }
+
+        private DrapoObject CreateDataCompare(string dateStart, string dateEnd)
         {
             DrapoObject obj = new DrapoObject();
             obj.Properties.Add("start", dateStart);
@@ -527,21 +544,82 @@ namespace WebDrapo.Controllers
         }
 
         [HttpGet]
-        public string GetApplicationBuild() {
+        public string GetApplicationBuild()
+        {
             return ("1.0");
         }
 
         [HttpGet]
-        public List<string> GetArray(int start = 0, int length = 10,string prefix = null, int? divisor = null)
+        public List<string> GetArray(int start = 0, int length = 10, string prefix = null, int? divisor = null)
         {
             List<string> array = new List<string>();
-            for (int i = start; i < length; i++) {
+            for (int i = start; i < length; i++)
+            {
                 if ((divisor.HasValue) && ((i % divisor.Value) != 0))
                     continue;
                 string value = $"{prefix}{i.ToString()}";
                 array.Add(value);
             }
             return (array);
+        }
+
+        [HttpPost]
+        public ActionResult CreateFile([FromBody] FileVM file)
+        {
+            string path = System.IO.Path.Combine(@"C:\tmp\", file.Name);
+            byte[] content = Convert.FromBase64String(file.Content);
+            System.IO.File.WriteAllBytes(path, content);
+            return (Ok(Guid.NewGuid().ToString()));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AppendFile([FromQuery] string name, [FromQuery] string code)
+        {
+            string chunk = null;
+            using (StreamReader reader = new StreamReader(Request.Body))
+                chunk = await reader.ReadToEndAsync();
+            string path = System.IO.Path.Combine(@"C:\tmp\", name);
+            byte[] content = Convert.FromBase64String(chunk);
+            AppendAllBytes(path, content);
+            return (Ok(true));
+        }
+
+        public static void AppendAllBytes(string path, byte[] bytes)
+        {
+            using (var stream = new System.IO.FileStream(path, System.IO.FileMode.Append))
+            {
+                stream.Write(bytes, 0, bytes.Length);
+                stream.Close();
+                stream.Dispose();
+            }
+        }
+
+        [HttpGet]
+        public DrapoObject CreateTable(int columns = 3, int rows = 3)
+        {
+            DrapoObject obj = new DrapoObject();
+            List<DrapoObject> columnsObjects = new List<DrapoObject>();
+            for (int i = 0; i < columns; i++)
+            {
+                DrapoObject columnObject = new DrapoObject();
+                columnObject.Properties.Add($"Name", $"N{i}");
+                columnsObjects.Add(columnObject);
+            }
+            List<List<DrapoObject>> rowsObjects = new List<List<DrapoObject>>();
+            for (int i = 0; i < rows; i++)
+            {
+                List<DrapoObject> cells = new List<DrapoObject>();
+                for (int j = 0; j < columns; j++)
+                {
+                    DrapoObject cell = new DrapoObject();
+                    cell.Properties.Add("Value", $"R{i}C{j}");
+                    cells.Add(cell);
+                }
+                rowsObjects.Add(cells);
+            }
+            obj.Properties.Add("Columns", columnsObjects);
+            obj.Properties.Add("Rows", rowsObjects);
+            return (obj);
         }
     }
 }

@@ -3,7 +3,9 @@ declare class DrapoStorage {
     private _cacheItems;
     private _isDelayTriggered;
     private readonly CONTENT_TYPE_JSON;
+    private readonly CONTENT_TYPE_TEXT;
     private _lock;
+    private readonly CHUNK_SIZE;
     get Application(): DrapoApplication;
     constructor(application: DrapoApplication);
     private AdquireLock;
@@ -40,6 +42,8 @@ declare class DrapoStorage {
     LoadDataDelayedAndNotify(): Promise<void>;
     RetrieveDataItem(dataKey: string, sector: string, canLoadDelay?: boolean, dataDelayFields?: string[]): Promise<DrapoStorageItem>;
     private RetrieveDataItemInternal;
+    private ResolveValueMustaches;
+    private ResolveValueMustachesAsNumber;
     private RetrieveDataKey;
     private RetrieveDataKeyUrl;
     private ParseChannels;
@@ -92,6 +96,9 @@ declare class DrapoStorage {
     private RemoveCacheData;
     AppendCacheDataItemBySector(storageItems: DrapoStorageItem[], sector: string): void;
     AddCacheDataItems(storageItems: DrapoStorageItem[]): Promise<void>;
+    GetCachedDataItemByDatePolling(): DrapoStorageItem;
+    ExistCachedDataItem(item: DrapoStorageItem): boolean;
+    ExecuteCachedDataItemPolling(item: DrapoStorageItem): Promise<void>;
     RemoveBySector(sector: string): Promise<void>;
     DiscardCacheData(dataKey: string, sector: string, canRemoveObservers?: boolean): Promise<boolean>;
     DiscardCacheDataBySector(sector: string): Promise<boolean>;

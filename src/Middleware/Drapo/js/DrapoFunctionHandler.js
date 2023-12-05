@@ -2452,31 +2452,29 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionIf = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var conditional, conditionalEvaluated, conditionalResult, statementTrue, statementFalse;
+            var conditional, context, conditionalResult, statementTrue, statementFalse;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         conditional = functionParsed.Parameters[0];
-                        return [4, this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, new DrapoContext(contextItem), null, executionContext, conditional, element, false)];
+                        context = new DrapoContext(contextItem);
+                        return [4, this.Application.Solver.ResolveConditional(conditional, element, sector, context, null, null, executionContext, false)];
                     case 1:
-                        conditionalEvaluated = _a.sent();
-                        return [4, this.Application.Solver.ResolveConditional(conditionalEvaluated)];
-                    case 2:
                         conditionalResult = _a.sent();
-                        if (!conditionalResult) return [3, 4];
+                        if (!conditionalResult) return [3, 3];
                         statementTrue = functionParsed.Parameters[1];
                         return [4, this.ResolveFunctionContext(sector, contextItem, element, event, statementTrue, executionContext)];
-                    case 3:
+                    case 2:
                         _a.sent();
-                        return [3, 6];
-                    case 4:
-                        if (!(functionParsed.Parameters.length > 2)) return [3, 6];
+                        return [3, 5];
+                    case 3:
+                        if (!(functionParsed.Parameters.length > 2)) return [3, 5];
                         statementFalse = functionParsed.Parameters[2];
                         return [4, this.ResolveFunctionContext(sector, contextItem, element, event, statementFalse, executionContext)];
-                    case 5:
+                    case 4:
                         _a.sent();
-                        _a.label = 6;
-                    case 6: return [2, ('')];
+                        _a.label = 5;
+                    case 5: return [2, ('')];
                 }
             });
         });
@@ -2547,7 +2545,7 @@ var DrapoFunctionHandler = (function () {
                             elementFocused.blur();
                             return [2, ('')];
                         }
-                        elDid = this.Application.Searcher.FindByAttributeAndValue('d-id', did);
+                        elDid = this.Application.Searcher.FindLastByAttributeAndValue('d-id', did);
                         if (elDid === null)
                             return [2, ('')];
                         isSelectText = functionParsed.Parameters[1];

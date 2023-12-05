@@ -248,7 +248,10 @@ var DrapoParser = (function () {
         if (data[data.length - 1] !== ')')
             return (null);
         var functionParsed = new DrapoFunction();
-        functionParsed.Name = data.substr(0, indexStart).toLowerCase();
+        var name = data.substr(0, indexStart).toLowerCase();
+        if (!this.IsValidFunctionName(name))
+            return (null);
+        functionParsed.Name = name;
         functionParsed.Parameters = this.ParseParameters(data.substr(indexStart + 1, (data.length - (indexStart + 2))));
         if (!checkParameters)
             return (functionParsed);
@@ -256,6 +259,13 @@ var DrapoParser = (function () {
             if (!this.IsValidFunctionParameter(functionParsed.Parameters[i]))
                 return (null);
         return (functionParsed);
+    };
+    DrapoParser.prototype.IsValidFunctionName = function (name) {
+        if (name.length == 0)
+            return (false);
+        if (name[name.length - 1] === ' ')
+            return (false);
+        return (true);
     };
     DrapoParser.prototype.ParseParameters = function (data) {
         return (this.ParseBlock(data, ','));
@@ -437,6 +447,11 @@ var DrapoParser = (function () {
         return (this.ParseNumber(this.Application.Solver.ResolveMathematicalExpression(dataWithoutDate), valueDefault));
     };
     DrapoParser.prototype.ReplaceDateWithTimespan = function (data) {
+        var dataWithoutISO = this.ReplaceDateWithTimespanISO(data);
+        var dataWithoutShort = this.ReplaceDateWithTimespanShort(dataWithoutISO);
+        return (dataWithoutShort);
+    };
+    DrapoParser.prototype.ReplaceDateWithTimespanISO = function (data) {
         var matchs = data.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?((\-|\+)\d{2}:\d{2})?/gi);
         if (matchs === null)
             return (data);
@@ -444,6 +459,20 @@ var DrapoParser = (function () {
         for (var i = 0; i < matchs.length; i++) {
             var match = matchs[i];
             var date = new Date(match);
+            var timespan = date.getTime();
+            dataTimespan = dataTimespan.replace(match, timespan.toString());
+        }
+        return (dataTimespan);
+    };
+    DrapoParser.prototype.ReplaceDateWithTimespanShort = function (data) {
+        var matchs = data.match(/\d{4}-\d{2}-\d{2}\d{2}:\d{2}:\d{2}:\d{3}/gi);
+        if (matchs === null)
+            return (data);
+        var dataTimespan = data;
+        for (var i = 0; i < matchs.length; i++) {
+            var match = matchs[i];
+            var matchISO = match.substring(0, 10) + 'T' + match.substring(10, 18) + 'Z';
+            var date = new Date(matchISO);
             var timespan = date.getTime();
             dataTimespan = dataTimespan.replace(match, timespan.toString());
         }

@@ -2,8 +2,11 @@ declare var signalR: any;
 class DrapoPlumber {
     //Field
     private _application: DrapoApplication;
+    private _connection: any = null;
     private _lock: boolean = false;
     private _messages: DrapoPipeMessage[] = [];
+    private _actionPolling: string = null;
+    private _pollingMessages: DrapoPipePollingMessage[] = [];
 
     //Properties
     get Application(): DrapoApplication {
@@ -33,7 +36,7 @@ class DrapoPlumber {
                 transport: signalR.HttpTransportType.WebSockets
             })
             .withAutomaticReconnect({
-                nextRetryDelayInMilliseconds: (retryContext: { previousRetryCount : number; }) => {
+                nextRetryDelayInMilliseconds: (retryContext: { previousRetryCount: number; }) => {
                     if (retryContext.previousRetryCount < 10)
                         return (1000);
                     if (retryContext.previousRetryCount < 100)
@@ -42,11 +45,17 @@ class DrapoPlumber {
                 }
             })
             .build();
+        this._connection = connection;
         await connection.start();
         const actionNotify = await this.Application.Config.GetPipeActionNotify();
         connection.on(actionNotify, (message: any) => {
             // tslint:disable-next-line:no-floating-promises
             application.Plumber.NotifyPipe(message);
+        });
+        this._actionPolling = await this.Application.Config.GetPipeActionPolling();
+        connection.on(this._actionPolling, (message: any) => {
+            // tslint:disable-next-line:no-floating-promises
+            application.Plumber.ReceivePollingPipe(message);
         });
         connection.onreconnected(async (connectionId: string) => {
             await this.RequestPipeRegister(connection);
@@ -58,8 +67,7 @@ class DrapoPlumber {
         return (true);
     }
 
-    public async RequestPipeRegister(connection : any): Promise<void>
-    {
+    public async RequestPipeRegister(connection: any): Promise<void> {
         const actionRegister = await this.Application.Config.GetPipeActionRegister();
         await connection.send(actionRegister);
         await this.WaitForRegister();
@@ -97,8 +105,7 @@ class DrapoPlumber {
         const dataPipes: string[] = this.Application.Parser.ParsePipes(message.Data);
         if (dataPipes == null)
             return;
-        for (let i: number = 0; i < dataPipes.length; i++)
-        {
+        for (let i: number = 0; i < dataPipes.length; i++) {
             const dataPipe: string = dataPipes[i];
             //Debugger
             await this.Application.Debugger.AddPipe(dataPipe);
@@ -109,15 +116,57 @@ class DrapoPlumber {
         }
     }
 
-    private async NofityPipeRegister(message: DrapoPipeMessage) : Promise<void>
-    {
+    private async NofityPipeRegister(message: DrapoPipeMessage): Promise<void> {
         const pipeHeaderConnectionId: string = await this.Application.Config.GetPipeHeaderConnectionId();
         this.Application.Server.AddRequestHeader(pipeHeaderConnectionId, message.Data);
     }
 
-    private async NofityPipeExecute(message: DrapoPipeMessage): Promise<void>
-    {
+    private async NofityPipeExecute(message: DrapoPipeMessage): Promise<void> {
         await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, message.Data);
+    }
+
+    public async SendPolling(pollingKey: string): Promise<string> {
+        let message: DrapoPipePollingMessage = this.GetMessagePolling(pollingKey);
+        if (message === null) {
+            message = new DrapoPipePollingMessage();
+            message.Key = pollingKey;
+            this._pollingMessages.push(message);
+        } else {
+            message.Hash = null;
+        }
+        await this._connection.invoke(this._actionPolling, message);
+        const pollingHash: string = await this.WaitForMessagePollingHash(pollingKey);
+        return (pollingHash);
+    }
+
+    private GetMessagePolling(key: string): DrapoPipePollingMessage {
+        for (let i: number = this._pollingMessages.length - 1; i >= 0; i--) {
+            const currentMessage: DrapoPipePollingMessage = this._pollingMessages[i];
+            if (currentMessage.Key !== key)
+                continue;
+            return (currentMessage);
+        }
+        return (null);
+    }
+
+    private async WaitForMessagePollingHash(pollingKey: string, retry: number = 1000, interval: number = 50): Promise<string> {
+        for (let i: number = 0; i < retry; i++) {
+            for (let j: number = this._pollingMessages.length - 1; j >= 0; j--) {
+                const currentMessage: DrapoPipePollingMessage = this._pollingMessages[j];
+                if ((currentMessage.Key !== pollingKey) || (currentMessage.Hash === null))
+                    continue;
+                this._pollingMessages.splice(j, 1);
+                return (currentMessage.Hash);
+            }
+            await this.Application.Document.Sleep(interval);
+        }
+        return (null);
+    }
+
+    public async ReceivePollingPipe(message: DrapoPipePollingMessage): Promise<void> {
+        const currentMessage: DrapoPipePollingMessage = this.GetMessagePolling(message.Key);
+        if (currentMessage !== null)
+            currentMessage.Hash = message.Hash;
     }
 
     public Lock(): boolean {
