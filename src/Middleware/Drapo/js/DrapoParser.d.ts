@@ -43,6 +43,7 @@ declare class DrapoParser {
     private IsValidFunctionName;
     ParseParameters(data: string): string[];
     ParseBlock(data: string, delimiter: string): string[];
+    private ParseBlockWithQuotationMark;
     ParseBlockMathematicalExpression(data: string): string[];
     private IsBlockNumber;
     private ParseBlockMathematicalExpressionSignals;

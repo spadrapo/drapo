@@ -1292,6 +1292,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionMoveItem");
         }
         [TestCase]
+        public void FunctionParametersPlicasTest()
+        {
+            ValidatePage("FunctionParametersPlicas");
+        }
+        [TestCase]
         public void FunctionPostDataItemTest()
         {
             ValidatePage("FunctionPostDataItem");
