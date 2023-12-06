@@ -268,7 +268,7 @@ var DrapoParser = (function () {
         return (true);
     };
     DrapoParser.prototype.ParseParameters = function (data) {
-        return (this.ParseBlock(data, ','));
+        return (this.ParseBlockWithQuotationMark(data, ',', ["'", '"']));
     };
     DrapoParser.prototype.ParseBlock = function (data, delimiter) {
         var items = [];
@@ -285,6 +285,44 @@ var DrapoParser = (function () {
                 buffer += chr;
             }
             else if (chr === delimiter) {
+                if (blockCount === 0) {
+                    items.push(buffer);
+                    buffer = '';
+                }
+                else {
+                    buffer += chr;
+                }
+            }
+            else {
+                buffer += chr;
+            }
+        }
+        if (data.length > 0)
+            items.push(buffer);
+        return (items);
+    };
+    DrapoParser.prototype.ParseBlockWithQuotationMark = function (data, delimiter, quotations) {
+        var items = [];
+        var buffer = '';
+        var blockCount = 0;
+        var quotation = null;
+        for (var i = 0; i < data.length; i++) {
+            var chr = data[i];
+            if (chr === '(') {
+                blockCount++;
+                buffer += chr;
+            }
+            else if (chr === ')') {
+                blockCount--;
+                buffer += chr;
+            }
+            else if (quotations.indexOf(chr) >= 0) {
+                quotation = chr;
+            }
+            else if (chr === quotation) {
+                quotation = null;
+            }
+            else if ((chr === delimiter) && (quotation === null)) {
                 if (blockCount === 0) {
                     items.push(buffer);
                     buffer = '';

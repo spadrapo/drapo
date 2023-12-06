@@ -287,7 +287,7 @@ class DrapoParser {
     }
 
     public ParseParameters(data: string): string[] {
-        return (this.ParseBlock(data, ','));
+        return (this.ParseBlockWithQuotationMark(data, ',', ["'",'"']));
     }
 
     public ParseBlock(data: string, delimiter: string): string[] {
@@ -303,6 +303,39 @@ class DrapoParser {
                 blockCount--;
                 buffer += chr;
             } else if (chr === delimiter) {
+                if (blockCount === 0) {
+                    items.push(buffer);
+                    buffer = '';
+                } else {
+                    buffer += chr;
+                }
+            } else {
+                buffer += chr;
+            }
+        }
+        if (data.length > 0)
+            items.push(buffer);
+        return (items);
+    }
+
+    private ParseBlockWithQuotationMark(data: string, delimiter: string, quotations: string[]): string[] {
+        const items: string[] = [];
+        let buffer: string = '';
+        let blockCount: number = 0;
+        let quotation: string = null;
+        for (let i: number = 0; i < data.length; i++) {
+            const chr: string = data[i];
+            if (chr === '(') {
+                blockCount++;
+                buffer += chr;
+            } else if (chr === ')') {
+                blockCount--;
+                buffer += chr;
+            } else if (quotations.indexOf(chr) >= 0) {
+                quotation = chr;
+            } else if (chr === quotation) {
+                quotation = null;
+            } else if ((chr === delimiter) && (quotation === null)) {
                 if (blockCount === 0) {
                     items.push(buffer);
                     buffer = '';
