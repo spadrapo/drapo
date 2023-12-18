@@ -1341,7 +1341,7 @@ declare class DrapoParser {
     private ParseBlockAttribute;
     ParseExpression(expression: string): DrapoExpressionItem;
     private ParseExpressionInsert;
-    ExpressionNormalizer(expression: string): string;
+    private ExpressionNormalizer;
     private ParseExpressionTokens;
     private AddTokenNonEmpty;
     private Trim;

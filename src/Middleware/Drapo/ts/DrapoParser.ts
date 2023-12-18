@@ -980,8 +980,7 @@ class DrapoParser {
         }
     }
 
-    public ExpressionNormalizer(expression: string): string {
-        //const expressionNormalized: string[] = expression.split('');
+    private ExpressionNormalizer(expression: string): string {
         const expressionNormalized: string[] = expression.split('');
         let blockCount: number = 0;
         let textBlock: string = null;
