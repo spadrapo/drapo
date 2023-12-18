@@ -981,6 +981,7 @@ class DrapoParser {
     }
 
     private ExpressionNormalizer(expression: string): string {
+        //Encapsulates clauses between logical operators.
         const expressionNormalized: string[] = expression.split('');
         let blockCount: number = 0;
         let textBlock: string = null;

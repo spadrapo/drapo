@@ -5,31 +5,82 @@
     <title>IF in elements (OR - AND)</title>
 </head>
 <body>
-    <br>
-    <span>IF in elements (OR - AND)</span>
-    <div d-dataKey="myObject" d-dataType="object" d-dataLoadType="startup" d-dataProperty-number-name="Number" d-dataProperty-number-value=""></div>
+    <div d-dataKey="IsEmptyOrEqualOne" d-dataType="value" d-dataLoadType="startup" d-dataValue="Number is empty OR Number = 1"></div>
+    <div d-dataKey="EqualOneOrIsEmpty" d-dataType="value" d-dataLoadType="startup" d-dataValue="Number = 1 OR Number is empty"></div>
+    <div d-dataKey="IsNotEmptyAndIsGreaterThanOne" d-dataType="value" d-dataLoadType="startup" d-dataValue="Number is not empty AND Number > 1"></div>
+    <div d-dataKey="IsGreaterThanOneAndIsNotEmpty" d-dataType="value" d-dataLoadType="startup" d-dataValue="Number > 1 AND Number is not empty"></div>
+
+    <div d-dataKey="myObject" d-dataType="object" d-dataLoadType="startup" d-dataProperty-numberempty-name="NumberEmpty" d-dataProperty-numberempty-value="" d-dataProperty-numberzero-name="NumberZero" d-dataProperty-numberzero-value="0" d-dataProperty-numberone-name="NumberOne" d-dataProperty-numberone-value="1" d-dataProperty-numbertwo-name="NumberTwo" d-dataProperty-numbertwo-value="2"></div>
     <div>
-        <br />
-        Number: <span d-model="{{myObject.Number}}"></span><br /><br />
-        Without parenteses:<br /><br />
+        <br>
+        <span>IF in elements (OR - AND)</span>
+        <br /></br />
+        <b>Number Empty: <span d-model="{{myObject.NumberEmpty}}"></span></b><br />
+        <b>Without parenteses:</b><br />
         OR<br />
-        = 1 OR is empty: <input d-if="{{myObject.Number}}=1||{{myObject.Number}}=" type="button" value="Number = 1 OR is empty" /><br />
-        is empty OR = 1: <input d-if="{{myObject.Number}}=||{{myObject.Number}}=1" type="button" value="Number is empty OR = 1" /><br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="{{myObject.NumberEmpty}}=1||{{myObject.NumberEmpty}}=" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="{{myObject.NumberEmpty}}=||{{myObject.NumberEmpty}}=1" type="button" value="OK" /><br />
         AND<br />
-        > 1 AND is NOT empty: <input d-if="{{myObject.Number}}>1&&{{myObject.Number}}!=" type="button" value="Number > 1 AND is NOT empty" /><br />
-        is NOT empty AND > 1: <input d-if="{{myObject.Number}}!=&&{{myObject.Number}}>1" type="button" value="Number is NOT empty AND > 1" /><br />
-        <br /><br /><br />
-        With parenteses:<br /><br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="{{myObject.NumberEmpty}}>1&&{{myObject.NumberEmpty}}!=" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="{{myObject.NumberEmpty}}!=&&{{myObject.NumberEmpty}}>1" type="button" value="OK" /><br />
+        <b>With parenteses:</b><br />
         OR<br />
-        = 1 OR is empty: <input d-if="({{myObject.Number}}=1)||({{myObject.Number}}=)" type="button" value="Number = 1 OR is empty" /><br />
-        is empty OR = 1: <input d-if="({{myObject.Number}}=)||({{myObject.Number}}=1)" type="button" value="Number is empty OR = 1" /><br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="({{myObject.NumberEmpty}}=1)||({{myObject.NumberEmpty}}=)" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="({{myObject.NumberEmpty}}=)||({{myObject.NumberEmpty}}=1)" type="button" value="OK" /><br />
         AND<br />
-        > 1 AND is NOT empty: <input d-if="({{myObject.Number}}>1)&&({{myObject.Number}}!=)" type="button" value="Number > 1 AND is NOT empty" /><br />
-        is NOT empty AND > 1: <input d-if="({{myObject.Number}}!=)&&({{myObject.Number}}>1)" type="button" value="Number is NOT empty AND > 1" /><br />
-        <br /><br /><br />
-        <input type="button" value="Clear data" d-on-click="UpdateDataField(myObject,Number,)" />
-        <input type="button" value="Set to zero" d-on-click="UpdateDataField(myObject,Number,0)" />
-        <input type="button" value="Increase Value" d-on-click="UpdateDataField(myObject,Number,Cast({{myObject.Number}} + 1,number))" />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="({{myObject.NumberEmpty}}>1)&&({{myObject.NumberEmpty}}!=)" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="({{myObject.NumberEmpty}}!=)&&({{myObject.NumberEmpty}}>1)" type="button" value="OK" /><br />
+        <br /><br />
+
+        <b>Number Zero: <span d-model="{{myObject.NumberZero}}"></span></b><br />
+        <b>Without parenteses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="{{myObject.NumberZero}}=1||{{myObject.NumberZero}}=" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="{{myObject.NumberZero}}=||{{myObject.NumberZero}}=1" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="{{myObject.NumberZero}}>1&&{{myObject.NumberZero}}!=" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="{{myObject.NumberZero}}!=&&{{myObject.NumberZero}}>1" type="button" value="OK" /><br />
+        <b>With parenteses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="({{myObject.NumberZero}}=1)||({{myObject.NumberZero}}=)" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="({{myObject.NumberZero}}=)||({{myObject.NumberZero}}=1)" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="({{myObject.NumberZero}}>1)&&({{myObject.NumberZero}}!=)" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="({{myObject.NumberZero}}!=)&&({{myObject.NumberZero}}>1)" type="button" value="OK" /><br />
+        <br /><br />
+
+        <b>Number One: <span d-model="{{myObject.NumberOne}}"></span></b><br />
+        <b>Without parenteses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="{{myObject.NumberOne}}=1||{{myObject.NumberOne}}=" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="{{myObject.NumberOne}}=||{{myObject.NumberOne}}=1" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>:<input d-if="{{myObject.NumberOne}}>1&&{{myObject.NumberOne}}!=" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>:<input d-if="{{myObject.NumberOne}}!=&&{{myObject.NumberOne}}>1" type="button" value="OK" /><br />
+        <b>With parenteses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="({{myObject.NumberOne}}=1)||({{myObject.NumberOne}}=)" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="({{myObject.NumberOne}}=)||({{myObject.NumberOne}}=1)" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="({{myObject.NumberOne}}>1)&&({{myObject.NumberOne}}!=)" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="({{myObject.NumberOne}}!=)&&({{myObject.NumberOne}}>1)" type="button" value="OK" /><br />
+        <br /><br />
+
+        <b>Number Two: <span d-model="{{myObject.NumberTwo}}"></span></b><br />
+        <b>Without parenteses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="{{myObject.NumberTwo}}=1||{{myObject.NumberTwo}}=" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="{{myObject.NumberTwo}}=||{{myObject.NumberTwo}}=1" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="{{myObject.NumberTwo}}>1&&{{myObject.NumberTwo}}!=" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="{{myObject.NumberTwo}}!=&&{{myObject.NumberTwo}}>1" type="button" value="OK" /><br />
+        <b>With parenteses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="({{myObject.NumberTwo}}=1)||({{myObject.NumberTwo}}=)" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="({{myObject.NumberTwo}}=)||({{myObject.NumberTwo}}=1)" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="({{myObject.NumberTwo}}>1)&&({{myObject.NumberTwo}}!=)" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="({{myObject.NumberTwo}}!=)&&({{myObject.NumberTwo}}>1)" type="button" value="OK" /><br />
     </div>
 </body>
 </html>

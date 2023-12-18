@@ -12,6 +12,10 @@
         <span>Interval Numbers using OR</span>
         <ul>
             <li d-for="value in values" d-if="(({{value}}<-1)||({{value}}>1))">{{value}}</li>
+        </ul><br /><br />
+        <span>Interval Numbers using OR without parenteses in expression</span>
+        <ul>
+            <li d-for="value in values" d-if="{{value}}<-1||{{value}}>1">{{value}}</li>
         </ul>
     </div>
 </body>
