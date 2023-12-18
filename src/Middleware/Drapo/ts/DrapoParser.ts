@@ -964,9 +964,10 @@ class DrapoParser {
     }
 
     public ParseExpression(expression: string): DrapoExpressionItem {
+        const normalizedExpression: string = this.ExpressionNormalizer(expression);
         const block: DrapoExpressionItem = new DrapoExpressionItem(DrapoExpressionItemType.Block);
-        this.ParseExpressionInsert(block, expression);
-        block.Value = expression;
+        this.ParseExpressionInsert(block, normalizedExpression);
+        block.Value = normalizedExpression;
         return (block);
     }
 
@@ -977,6 +978,69 @@ class DrapoParser {
             const item: DrapoExpressionItem = this.ParseExpressionItem(token);
             block.Items.push(item);
         }
+    }
+
+    public ExpressionNormalizer(expression: string): string {
+        //const expressionNormalized: string[] = expression.split('');
+        const expressionNormalized: string[] = expression.split('');
+        let blockCount: number = 0;
+        let textBlock: string = null;
+        let buffer: string = '';
+        let lastOperatorLogicalStartIndex = 0;
+        let expressionNormalizedOffSet = 0;
+        for (let i: number = 0; i < expression.length; i++) {
+            const chr: string = expression[i];
+            //Finish TextBlock
+            if (chr === textBlock) {
+                buffer = buffer + chr;
+                buffer = '';
+                textBlock = null;
+                continue;
+            }
+            //Start Text Block
+            if ((chr === '"') || (chr === "'")) {
+                buffer = chr;
+                textBlock = chr;
+                continue;
+            }
+            //Inside Text Block
+            if (textBlock !== null) {
+                buffer = buffer + chr;
+                continue;
+            }
+            //Start Block
+            if (chr === '(') {
+                if ((blockCount === 0) && (this.ParseExpressionItemType(buffer) !== DrapoExpressionItemType.Text)) {
+                    buffer = '';
+                }
+                blockCount++;
+            } else if (chr === ')') { // Finish Block
+                blockCount--;
+                if ((blockCount === 0) && (buffer !== '')) {
+                    buffer = buffer + chr;
+                    buffer = '';
+                    continue;
+                }
+            }
+            if ((blockCount === 0) && (this.IsParseExpressionStartingToken(chr)) && (!this.IsParseExpressionMiddleToken(buffer, chr))) {
+                if (buffer === '||' || buffer === '&&') {
+                    expressionNormalized.splice(i + expressionNormalizedOffSet - 2, 0, ')');
+                    expressionNormalized.splice(lastOperatorLogicalStartIndex, 0, '(');
+                    lastOperatorLogicalStartIndex = i + 2;
+                    expressionNormalizedOffSet += 2;
+                }
+                buffer = '';
+            }
+            if ((blockCount === 0) && (buffer !== '') && (this.IsParseExpressionItemTypeComplete(buffer)) && (!this.IsParseExpressionItemTypeComplete(buffer + chr))) {
+                buffer = '';
+            }
+            buffer = buffer + chr;
+        }
+        if (lastOperatorLogicalStartIndex > 0) {
+            expressionNormalized.splice(lastOperatorLogicalStartIndex, 0, '(');
+            expressionNormalized.push(')');
+        }
+        return expressionNormalized.join('');
     }
 
     private ParseExpressionTokens(expression: string): string[] {

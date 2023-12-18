@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>IF in elements (OR - AND)</title>
+</head>
+<body>
+    <br>
+    <span>IF in elements (OR - AND)</span>
+    <div d-dataKey="myObject" d-dataType="object" d-dataLoadType="startup" d-dataProperty-number-name="Number" d-dataProperty-number-value=""></div>
+    <div>
+        <br />
+        Number: <span d-model="{{myObject.Number}}"></span><br /><br />
+        Without parenteses:<br /><br />
+        OR<br />
+        = 1 OR is empty: <input d-if="{{myObject.Number}}=1||{{myObject.Number}}=" type="button" value="Number = 1 OR is empty" /><br />
+        is empty OR = 1: <input d-if="{{myObject.Number}}=||{{myObject.Number}}=1" type="button" value="Number is empty OR = 1" /><br />
+        AND<br />
+        > 1 AND is NOT empty: <input d-if="{{myObject.Number}}>1&&{{myObject.Number}}!=" type="button" value="Number > 1 AND is NOT empty" /><br />
+        is NOT empty AND > 1: <input d-if="{{myObject.Number}}!=&&{{myObject.Number}}>1" type="button" value="Number is NOT empty AND > 1" /><br />
+        <br /><br /><br />
+        With parenteses:<br /><br />
+        OR<br />
+        = 1 OR is empty: <input d-if="({{myObject.Number}}=1)||({{myObject.Number}}=)" type="button" value="Number = 1 OR is empty" /><br />
+        is empty OR = 1: <input d-if="({{myObject.Number}}=)||({{myObject.Number}}=1)" type="button" value="Number is empty OR = 1" /><br />
+        AND<br />
+        > 1 AND is NOT empty: <input d-if="({{myObject.Number}}>1)&&({{myObject.Number}}!=)" type="button" value="Number > 1 AND is NOT empty" /><br />
+        is NOT empty AND > 1: <input d-if="({{myObject.Number}}!=)&&({{myObject.Number}}>1)" type="button" value="Number is NOT empty AND > 1" /><br />
+        <br /><br /><br />
+        <input type="button" value="Clear data" d-on-click="UpdateDataField(myObject,Number,)" />
+        <input type="button" value="Set to zero" d-on-click="UpdateDataField(myObject,Number,0)" />
+        <input type="button" value="Increase Value" d-on-click="UpdateDataField(myObject,Number,Cast({{myObject.Number}} + 1,number))" />
+    </div>
+</body>
+</html>
