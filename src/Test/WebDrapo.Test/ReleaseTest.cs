@@ -1417,7 +1417,7 @@ namespace WebDrapo.Test
             ValidatePage("IFOR");
         }
         [TestCase]
-        public void IFWithLogicalOperatorsWithAndWithoutParenthesesTeste()
+        public void IFWithLogicalOperatorsWithAndWithoutParenthesesTest()
         {
             ValidatePage("IFWithLogicalOperatorsWithAndWithoutParentheses");
         }

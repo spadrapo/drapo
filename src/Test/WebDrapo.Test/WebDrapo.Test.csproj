@@ -12,7 +12,7 @@
   </ItemGroup>
  
   <ItemGroup>
-    <EmbeddedResource Remove="Pages\IFWithLogicalOperatorsWithAndWithoutParentheses.Test.html" />
+    <None Remove="Pages\IFWithLogicalOperatorsWithAndWithoutParentheses.Test.html" />
   </ItemGroup>
  
   <ItemGroup>
