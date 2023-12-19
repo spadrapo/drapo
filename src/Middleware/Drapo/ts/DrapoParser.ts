@@ -985,59 +985,59 @@ class DrapoParser {
         const expressionNormalized: string[] = expression.split('');
         let blockCount: number = 0;
         let textBlock: string = null;
-        let buffer: string = '';
-        let lastOperatorLogicalStartIndex = 0;
+        let tokenBuffer: string = '';
+        let indexBeginningNextLogicalBlock = 0;
         let expressionNormalizedOffSet = 0;
         for (let i: number = 0; i < expression.length; i++) {
             const chr: string = expression[i];
             //Finish TextBlock
             if (chr === textBlock) {
-                buffer = buffer + chr;
-                buffer = '';
+                tokenBuffer = tokenBuffer + chr;
+                tokenBuffer = '';
                 textBlock = null;
                 continue;
             }
             //Start Text Block
             if ((chr === '"') || (chr === "'")) {
-                buffer = chr;
+                tokenBuffer = chr;
                 textBlock = chr;
                 continue;
             }
             //Inside Text Block
             if (textBlock !== null) {
-                buffer = buffer + chr;
+                tokenBuffer = tokenBuffer + chr;
                 continue;
             }
             //Start Block
             if (chr === '(') {
-                if ((blockCount === 0) && (this.ParseExpressionItemType(buffer) !== DrapoExpressionItemType.Text)) {
-                    buffer = '';
+                if ((blockCount === 0) && (this.ParseExpressionItemType(tokenBuffer) !== DrapoExpressionItemType.Text)) {
+                    tokenBuffer = '';
                 }
                 blockCount++;
             } else if (chr === ')') { // Finish Block
                 blockCount--;
-                if ((blockCount === 0) && (buffer !== '')) {
-                    buffer = buffer + chr;
-                    buffer = '';
+                if ((blockCount === 0) && (tokenBuffer !== '')) {
+                    tokenBuffer = tokenBuffer + chr;
+                    tokenBuffer = '';
                     continue;
                 }
             }
-            if ((blockCount === 0) && (this.IsParseExpressionStartingToken(chr)) && (!this.IsParseExpressionMiddleToken(buffer, chr))) {
-                if (buffer === '||' || buffer === '&&') {
-                    expressionNormalized.splice(i + expressionNormalizedOffSet - 2, 0, ')');
-                    expressionNormalized.splice(lastOperatorLogicalStartIndex, 0, '(');
-                    lastOperatorLogicalStartIndex = i + 2;
-                    expressionNormalizedOffSet += 2;
+            if ((blockCount === 0) && (this.IsParseExpressionStartingToken(chr)) && (!this.IsParseExpressionMiddleToken(tokenBuffer, chr))) {
+                if (this._tokensLogical.indexOf(tokenBuffer) > -1) {
+                    expressionNormalized.splice(i + expressionNormalizedOffSet - tokenBuffer.length, 0, ')');
+                    expressionNormalized.splice(indexBeginningNextLogicalBlock, 0, '(');
+                    indexBeginningNextLogicalBlock = i + tokenBuffer.length;
+                    expressionNormalizedOffSet += tokenBuffer.length;
                 }
-                buffer = '';
+                tokenBuffer = '';
             }
-            if ((blockCount === 0) && (buffer !== '') && (this.IsParseExpressionItemTypeComplete(buffer)) && (!this.IsParseExpressionItemTypeComplete(buffer + chr))) {
-                buffer = '';
+            if ((blockCount === 0) && (tokenBuffer !== '') && (this.IsParseExpressionItemTypeComplete(tokenBuffer)) && (!this.IsParseExpressionItemTypeComplete(tokenBuffer + chr))) {
+                tokenBuffer = '';
             }
-            buffer = buffer + chr;
+            tokenBuffer = tokenBuffer + chr;
         }
-        if (lastOperatorLogicalStartIndex > 0) {
-            expressionNormalized.splice(lastOperatorLogicalStartIndex, 0, '(');
+        if (indexBeginningNextLogicalBlock > 0) {
+            expressionNormalized.splice(indexBeginningNextLogicalBlock, 0, '(');
             expressionNormalized.push(')');
         }
         return expressionNormalized.join('');
