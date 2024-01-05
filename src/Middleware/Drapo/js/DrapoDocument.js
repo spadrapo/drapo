@@ -1033,6 +1033,8 @@ var DrapoDocument = (function () {
         }
         else {
             if (el.parentElement == null) {
+                var detach = el.getAttribute('d-detach');
+                el.style.display = detach != 'empty' ? detach : '';
                 el.setAttribute('d-detach', 'active');
                 elSector.appendChild(el);
             }
