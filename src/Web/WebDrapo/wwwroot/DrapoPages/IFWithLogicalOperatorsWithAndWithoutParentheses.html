@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>'IF' with logical operators (OR - AND) with and without parentheses.</title>
+</head>
+<body>
+    <div d-dataKey="IsEmptyOrEqualOne" d-dataType="value" d-dataLoadType="startup" d-dataValue="Number is empty OR Number = 1"></div>
+    <div d-dataKey="EqualOneOrIsEmpty" d-dataType="value" d-dataLoadType="startup" d-dataValue="Number = 1 OR Number is empty"></div>
+    <div d-dataKey="IsNotEmptyAndIsGreaterThanOne" d-dataType="value" d-dataLoadType="startup" d-dataValue="Number is not empty AND Number > 1"></div>
+    <div d-dataKey="IsGreaterThanOneAndIsNotEmpty" d-dataType="value" d-dataLoadType="startup" d-dataValue="Number > 1 AND Number is not empty"></div>
+
+    <div d-dataKey="myObject" d-dataType="object" d-dataLoadType="startup" d-dataProperty-numberempty-name="NumberEmpty" d-dataProperty-numberempty-value="" d-dataProperty-numberzero-name="NumberZero" d-dataProperty-numberzero-value="0" d-dataProperty-numberone-name="NumberOne" d-dataProperty-numberone-value="1" d-dataProperty-numbertwo-name="NumberTwo" d-dataProperty-numbertwo-value="2"></div>
+    <div>
+        <br>
+        <b><span>'IF' with logical operators (OR - AND) with and without parentheses.</span></b>
+        <br /></br />
+        <b>Number Empty: <span d-model="{{myObject.NumberEmpty}}"></span></b><br />
+        <b>Without parentheses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="{{myObject.NumberEmpty}}=1||{{myObject.NumberEmpty}}=" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="{{myObject.NumberEmpty}}=||{{myObject.NumberEmpty}}=1" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="{{myObject.NumberEmpty}}>1&&{{myObject.NumberEmpty}}!=" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="{{myObject.NumberEmpty}}!=&&{{myObject.NumberEmpty}}>1" type="button" value="OK" /><br />
+        <b>With parentheses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="({{myObject.NumberEmpty}}=1)||({{myObject.NumberEmpty}}=)" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="({{myObject.NumberEmpty}}=)||({{myObject.NumberEmpty}}=1)" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="({{myObject.NumberEmpty}}>1)&&({{myObject.NumberEmpty}}!=)" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="({{myObject.NumberEmpty}}!=)&&({{myObject.NumberEmpty}}>1)" type="button" value="OK" /><br />
+        <br /><br />
+
+        <b>Number Zero: <span d-model="{{myObject.NumberZero}}"></span></b><br />
+        <b>Without parentheses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="{{myObject.NumberZero}}=1||{{myObject.NumberZero}}=" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="{{myObject.NumberZero}}=||{{myObject.NumberZero}}=1" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="{{myObject.NumberZero}}>1&&{{myObject.NumberZero}}!=" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="{{myObject.NumberZero}}!=&&{{myObject.NumberZero}}>1" type="button" value="OK" /><br />
+        <b>With parentheses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="({{myObject.NumberZero}}=1)||({{myObject.NumberZero}}=)" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="({{myObject.NumberZero}}=)||({{myObject.NumberZero}}=1)" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="({{myObject.NumberZero}}>1)&&({{myObject.NumberZero}}!=)" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="({{myObject.NumberZero}}!=)&&({{myObject.NumberZero}}>1)" type="button" value="OK" /><br />
+        <br /><br />
+
+        <b>Number One: <span d-model="{{myObject.NumberOne}}"></span></b><br />
+        <b>Without parentheses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="{{myObject.NumberOne}}=1||{{myObject.NumberOne}}=" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="{{myObject.NumberOne}}=||{{myObject.NumberOne}}=1" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>:<input d-if="{{myObject.NumberOne}}>1&&{{myObject.NumberOne}}!=" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>:<input d-if="{{myObject.NumberOne}}!=&&{{myObject.NumberOne}}>1" type="button" value="OK" /><br />
+        <b>With parentheses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="({{myObject.NumberOne}}=1)||({{myObject.NumberOne}}=)" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="({{myObject.NumberOne}}=)||({{myObject.NumberOne}}=1)" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="({{myObject.NumberOne}}>1)&&({{myObject.NumberOne}}!=)" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="({{myObject.NumberOne}}!=)&&({{myObject.NumberOne}}>1)" type="button" value="OK" /><br />
+        <br /><br />
+
+        <b>Number Two: <span d-model="{{myObject.NumberTwo}}"></span></b><br />
+        <b>Without parentheses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="{{myObject.NumberTwo}}=1||{{myObject.NumberTwo}}=" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="{{myObject.NumberTwo}}=||{{myObject.NumberTwo}}=1" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="{{myObject.NumberTwo}}>1&&{{myObject.NumberTwo}}!=" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="{{myObject.NumberTwo}}!=&&{{myObject.NumberTwo}}>1" type="button" value="OK" /><br />
+        <b>With parentheses:</b><br />
+        OR<br />
+        <span d-model="{{EqualOneOrIsEmpty}}"></span>: <input d-if="({{myObject.NumberTwo}}=1)||({{myObject.NumberTwo}}=)" type="button" value="OK" /><br />
+        <span d-model="{{IsEmptyOrEqualOne}}"></span>: <input d-if="({{myObject.NumberTwo}}=)||({{myObject.NumberTwo}}=1)" type="button" value="OK" /><br />
+        AND<br />
+        <span d-model="{{IsGreaterThanOneAndIsNotEmpty}}"></span>: <input d-if="({{myObject.NumberTwo}}>1)&&({{myObject.NumberTwo}}!=)" type="button" value="OK" /><br />
+        <span d-model="{{IsNotEmptyAndIsGreaterThanOne}}"></span>: <input d-if="({{myObject.NumberTwo}}!=)&&({{myObject.NumberTwo}}>1)" type="button" value="OK" /><br />
+    </div>
+</body>
+</html>

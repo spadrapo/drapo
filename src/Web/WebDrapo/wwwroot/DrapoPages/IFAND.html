@@ -12,6 +12,10 @@
         <span>Interval Numbers using AND</span>
         <ul>
             <li d-for="value in values" d-if="(({{value}}>-1)&&({{value}}<3))">{{value}}</li>
+        </ul><br />
+        <span>Interval Numbers using AND without parenteses in the expression.</span>
+        <ul>
+            <li d-for="value in values" d-if="{{value}}>-1&&{{value}}<3">{{value}}</li>
         </ul>
     </div>
 </body>
