@@ -128,6 +128,7 @@ class DrapoServer {
                 await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, 'RedirectPage(' + location + ')', this.Application.FunctionHandler.CreateExecutionContext(false));
         }
         if (response.Status == 200) {
+            await this.CleanBadRequestStorage();
             await this.Application.CookieHandler.HandleCookieValuesChanges(cookieValues);
             if (response.Body == '')
                 return (null);
@@ -139,6 +140,7 @@ class DrapoServer {
             dataResponse = this.Application.Serializer.Deserialize(response.Body);
             return (dataResponse);
         } else if (response.Status == 204) {
+            await this.CleanBadRequestStorage();
             return (null);
         } else if (response.Status == 400) {
             //Event On BadRequest
@@ -159,6 +161,7 @@ class DrapoServer {
             if (dataKey !== null)
                 await this.Application.Document.RequestAuthorization(dataKey, 'notify');
         } else if (response.Status == 500) {
+            await this.CleanBadRequestStorage();
             //Event On Error
             this.HasBadRequest = true;
             const onError: string = await this.Application.Config.GetOnError();
@@ -247,6 +250,14 @@ class DrapoServer {
             return ([]);
         }
         return ([]);
+    }
+
+    private async CleanBadRequestStorage(): Promise<void> {
+        const storageBadRequest: string = await this.Application.Config.GetStorageBadRequest();
+        if (storageBadRequest !== null) {
+            const object: any = {};
+            await this.Application.Storage.UpdateData(storageBadRequest, null, object);
+        }
     }
 
     private CreateFileObject(headers: [string, string][], body: Blob): any {
