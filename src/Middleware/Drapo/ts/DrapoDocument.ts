@@ -741,6 +741,8 @@ class DrapoDocument {
             elSector.appendChild(el);
         } else {
             if (el.parentElement == null) {
+                const detach: string = el.getAttribute('d-detach');
+                el.style.display = detach != 'empty' ? detach : '';
                 el.setAttribute('d-detach', 'active');
                 elSector.appendChild(el);
             } else {
