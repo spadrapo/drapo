@@ -789,12 +789,13 @@ class DrapoFunctionHandler {
         //Item
         const dataItemText: string = functionParsed.Parameters[1];
         let dataItemPath: string[] = [];
-        if (this.Application.Parser.IsMustache(dataItemText)) {
+        const isMustache: boolean = this.Application.Parser.IsMustache(dataItemText);
+        if (isMustache) {
             dataItemPath = this.Application.Parser.ParseMustache(dataItemText);
         } else {
             dataItemPath.push(dataItemText);
         }
-        const item: any = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataItemPath);
+        const item: any = ((!isMustache) && (contextItem == null)) ? dataItemText : await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataItemPath);
         //Container
         const dataContainerText: string = functionParsed.Parameters[0];
         let dataContainerPath: string[] = [];
