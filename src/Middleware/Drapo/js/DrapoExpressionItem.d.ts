@@ -10,4 +10,5 @@ declare class DrapoExpressionItem {
     set Items(value: DrapoExpressionItem[]);
     constructor(type: DrapoExpressionItemType, value?: string);
     GetItemIndex(value: string): number;
+    CreateBlock(startingIndex: number, endingIndex: number): DrapoExpressionItem;
 }

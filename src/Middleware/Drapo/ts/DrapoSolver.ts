@@ -71,6 +71,12 @@ class DrapoSolver {
         let resultThird: string = '';
         const hasMoreThanTwoTerms: boolean = block.Items.length > 2;
         if (hasMoreThanTwoTerms) {
+            const itemThird: DrapoExpressionItem = block.Items[2];
+            if ((itemThird.Type == DrapoExpressionItemType.Logical) || (itemThird.Type == DrapoExpressionItemType.Comparator)) {
+                const itemEmpty: DrapoExpressionItem = new DrapoExpressionItem(DrapoExpressionItemType.Text, '');
+                block.Items.splice(2, 0, itemEmpty);
+                return (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind));
+            }
             await this.EnsureExpressionItemResolved(sector, context, renderContext, executionContext, el, block, 2, eljForTemplate, canBind);
             resultThird = block.Items[2].Value;
         }
@@ -88,12 +94,57 @@ class DrapoSolver {
                 block.Items.splice(3, 1);
             return (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind));
         }
+        //Fourth
+        if (this.HasBlockConditionalOperatorsNextResolve(block, 3))
+            return (await this.ResolveBlockConditionalOperatorsNext(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind, 3));
         //Result
         const result: string = this.ResolveConditionalOperator(resultFirst, resultSecond, resultThird);
         const resultItem: DrapoExpressionItem = new DrapoExpressionItem(DrapoExpressionItemType.Text);
         resultItem.Value = result;
         block.Items[0] = resultItem;
         block.Items.splice(1, hasMoreThanTwoTerms ? 2 : 1);
+        return (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind));
+    }
+
+    private GetBlockConditionalOperatorsNextIndex(block: DrapoExpressionItem, start: number): number {
+        for (let i: number = start; i < block.Items.length; i++) {
+            const item: DrapoExpressionItem = block.Items[i];
+            if (item.Type == DrapoExpressionItemType.Logical)
+                return (null);
+            if (item.Type == DrapoExpressionItemType.Comparator)
+                return (i);
+        }
+        return (null);
+    }
+
+    private HasBlockConditionalOperatorsNextResolve(block: DrapoExpressionItem, start: number): boolean {
+        const index: number = this.GetBlockConditionalOperatorsNextIndex(block, start);
+        return (index !== null);
+    }
+
+    private GetBlockConditionalOperatorsNextIndexStartingIndex(block: DrapoExpressionItem, index: number): number {
+        if (((index - 2) >= 0) && (block.Items[index - 2].Type == DrapoExpressionItemType.Deny))
+            return (index - 2);
+        return (index - 1);
+    }
+
+    private GetBlockConditionalOperatorsNextIndexEndingIndex(block: DrapoExpressionItem, index: number): number {
+        if (index == (block.Items.length - 1))
+            return (index);
+        if (((index + 1) < block.Items.length) && (block.Items[index + 1].Type == DrapoExpressionItemType.Deny))
+            return (index + 2);
+        return (index + 1);
+    }
+
+    private async ResolveBlockConditionalOperatorsNext(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, executionContext: DrapoExecutionContext<any>, el: HTMLElement, eljForTemplate: HTMLElement, block: DrapoExpressionItem, canBind: boolean, start: number): Promise<string> {
+        const index: number = this.GetBlockConditionalOperatorsNextIndex(block, start);
+        const startingIndex: number = this.GetBlockConditionalOperatorsNextIndexStartingIndex(block, index);
+        const endingIndex: number = this.GetBlockConditionalOperatorsNextIndexEndingIndex(block, index);
+        const blockConditional: DrapoExpressionItem = block.CreateBlock(startingIndex, endingIndex);
+        const valueConditional: string = await this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, blockConditional, false);
+        const itemConditinal: DrapoExpressionItem = new DrapoExpressionItem(DrapoExpressionItemType.Text, valueConditional);
+        block.Items[startingIndex] = itemConditinal;
+        block.Items.splice(startingIndex + 1, (endingIndex - startingIndex));
         return (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind));
     }
 

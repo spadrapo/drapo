@@ -838,6 +838,7 @@ declare class DrapoExpressionItem {
     set Items(value: DrapoExpressionItem[]);
     constructor(type: DrapoExpressionItemType, value?: string);
     GetItemIndex(value: string): number;
+    CreateBlock(startingIndex: number, endingIndex: number): DrapoExpressionItem;
 }
 
 declare enum DrapoExpressionItemType {
@@ -1341,7 +1342,6 @@ declare class DrapoParser {
     private ParseBlockAttribute;
     ParseExpression(expression: string): DrapoExpressionItem;
     private ParseExpressionInsert;
-    private ExpressionNormalizer;
     private ParseExpressionTokens;
     private AddTokenNonEmpty;
     private Trim;
@@ -1868,6 +1868,11 @@ declare class DrapoSolver {
     ResolveConditional(expression: string | boolean | number, el?: HTMLElement, sector?: string, context?: DrapoContext, renderContext?: DrapoRenderContext, eljForTemplate?: HTMLElement, executionContext?: DrapoExecutionContext<any>, canBind?: boolean): Promise<boolean>;
     private ResolveConditionalExpressionBlock;
     private ResolveConditionalExpressionBlockOperation;
+    private GetBlockConditionalOperatorsNextIndex;
+    private HasBlockConditionalOperatorsNextResolve;
+    private GetBlockConditionalOperatorsNextIndexStartingIndex;
+    private GetBlockConditionalOperatorsNextIndexEndingIndex;
+    private ResolveBlockConditionalOperatorsNext;
     private EnsureExpressionItemCurrentLevelResolved;
     private JoinTexts;
     private EnsureExpressionItemResolved;
