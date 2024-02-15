@@ -42,4 +42,11 @@ class DrapoExpressionItem {
                 return (i);
         return (null);
     }
+
+    public CreateBlock(startingIndex: number, endingIndex: number): DrapoExpressionItem {
+        const block: DrapoExpressionItem = new DrapoExpressionItem(DrapoExpressionItemType.Block);
+        for (let i: number = startingIndex; i <= endingIndex; i++)
+            block.Items.push(this.Items[i]);
+        return (block);
+    }
 }

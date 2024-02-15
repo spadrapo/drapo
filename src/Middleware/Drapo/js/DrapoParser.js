@@ -907,10 +907,9 @@ var DrapoParser = (function () {
         return (items);
     };
     DrapoParser.prototype.ParseExpression = function (expression) {
-        var normalizedExpression = this.ExpressionNormalizer(expression);
         var block = new DrapoExpressionItem(DrapoExpressionItemType.Block);
-        this.ParseExpressionInsert(block, normalizedExpression);
-        block.Value = normalizedExpression;
+        this.ParseExpressionInsert(block, expression);
+        block.Value = expression;
         return (block);
     };
     DrapoParser.prototype.ParseExpressionInsert = function (block, expression) {
@@ -920,64 +919,6 @@ var DrapoParser = (function () {
             var item = this.ParseExpressionItem(token);
             block.Items.push(item);
         }
-    };
-    DrapoParser.prototype.ExpressionNormalizer = function (expression) {
-        var expressionNormalized = expression.split('');
-        var blockCount = 0;
-        var textBlock = null;
-        var tokenBuffer = '';
-        var indexBeginningNextLogicalBlock = 0;
-        var expressionNormalizedOffSet = 0;
-        for (var i = 0; i < expression.length; i++) {
-            var chr = expression[i];
-            if (chr === textBlock) {
-                tokenBuffer = tokenBuffer + chr;
-                tokenBuffer = '';
-                textBlock = null;
-                continue;
-            }
-            if ((chr === '"') || (chr === "'")) {
-                tokenBuffer = chr;
-                textBlock = chr;
-                continue;
-            }
-            if (textBlock !== null) {
-                tokenBuffer = tokenBuffer + chr;
-                continue;
-            }
-            if (chr === '(') {
-                if ((blockCount === 0) && (this.ParseExpressionItemType(tokenBuffer) !== DrapoExpressionItemType.Text)) {
-                    tokenBuffer = '';
-                }
-                blockCount++;
-            }
-            else if (chr === ')') {
-                blockCount--;
-                if ((blockCount === 0) && (tokenBuffer !== '')) {
-                    tokenBuffer = tokenBuffer + chr;
-                    tokenBuffer = '';
-                    continue;
-                }
-            }
-            if ((blockCount === 0) && (this.IsParseExpressionStartingToken(chr)) && (!this.IsParseExpressionMiddleToken(tokenBuffer, chr))) {
-                if (this._tokensLogical.indexOf(tokenBuffer) > -1) {
-                    expressionNormalized.splice(i + expressionNormalizedOffSet - tokenBuffer.length, 0, ')');
-                    expressionNormalized.splice(indexBeginningNextLogicalBlock, 0, '(');
-                    indexBeginningNextLogicalBlock = i + tokenBuffer.length;
-                    expressionNormalizedOffSet += tokenBuffer.length;
-                }
-                tokenBuffer = '';
-            }
-            if ((blockCount === 0) && (tokenBuffer !== '') && (this.IsParseExpressionItemTypeComplete(tokenBuffer)) && (!this.IsParseExpressionItemTypeComplete(tokenBuffer + chr))) {
-                tokenBuffer = '';
-            }
-            tokenBuffer = tokenBuffer + chr;
-        }
-        if (indexBeginningNextLogicalBlock > 0) {
-            expressionNormalized.splice(indexBeginningNextLogicalBlock, 0, '(');
-            expressionNormalized.push(')');
-        }
-        return expressionNormalized.join('');
     };
     DrapoParser.prototype.ParseExpressionTokens = function (expression) {
         var tokens = [];
