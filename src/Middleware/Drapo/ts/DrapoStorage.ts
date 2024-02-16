@@ -1545,6 +1545,23 @@ class DrapoStorage {
         return (true);
     }
 
+    public async DeleteDataItemArray(dataKey: string, sector: string, item: any, notify: boolean): Promise<boolean> {
+        const dataItem: DrapoStorageItem = await this.RetrieveDataItem(dataKey, sector);
+        if (dataItem == null)
+            return (false);
+        const value: any = this.Application.Parser.IsMustache(item) ? await this.RetrieveDataValue(sector, item) : item;
+        const length: number = dataItem.Data.length;
+        for (let i: number = 0; i < length; i++) {
+            const valueCurrent = dataItem.Data[i];
+            if (value != valueCurrent)
+                continue;
+            this.DeleteDataItemIndex(dataItem, i);
+            await this.NotifyChanges(dataItem, notify, dataKey, null, null);
+            return (true);
+        }
+        return (false);
+    }
+
     public DeleteDataItemIndex(dataItem: DrapoStorageItem, index: number): boolean {
         const data: any[] = dataItem.Data;
         if (data == null)

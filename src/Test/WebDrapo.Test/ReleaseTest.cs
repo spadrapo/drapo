@@ -1332,6 +1332,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionRemoveDataItemMustache");
         }
         [TestCase]
+        public void FunctionRemoveDataItemWithoutContextTest()
+        {
+            ValidatePage("FunctionRemoveDataItemWithoutContext");
+        }
+        [TestCase]
         public void FunctionSwitchSectorIframeTest()
         {
             ValidatePage("FunctionSwitchSectorIframe");

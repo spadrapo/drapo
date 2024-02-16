@@ -1646,9 +1646,9 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionRemoveDataItem = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var source, isSourceMustache, mustacheParts, dataKey, itemText, itemPath, item, notifyText, notify, _a, deleted;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var source, isSourceMustache, mustacheParts, dataKey, itemText, itemPath, item, _a, notifyText, notify, _b, deleted, _c;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0:
                         source = functionParsed.Parameters[0];
                         isSourceMustache = this.Application.Parser.IsMustache(source);
@@ -1662,24 +1662,38 @@ var DrapoFunctionHandler = (function () {
                         else {
                             itemPath.push(itemText);
                         }
-                        return [4, this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, itemPath)];
-                    case 1:
-                        item = _b.sent();
+                        if (!(contextItem === null)) return [3, 1];
+                        _a = itemText;
+                        return [3, 3];
+                    case 1: return [4, this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, itemPath)];
+                    case 2:
+                        _a = _d.sent();
+                        _d.label = 3;
+                    case 3:
+                        item = _a;
                         if (item == null)
                             return [2, (null)];
                         notifyText = functionParsed.Parameters[2];
-                        if (!((notifyText == null) || (notifyText == ''))) return [3, 2];
-                        _a = true;
-                        return [3, 4];
-                    case 2: return [4, this.Application.Solver.ResolveConditional(notifyText)];
-                    case 3:
-                        _a = _b.sent();
-                        _b.label = 4;
-                    case 4:
-                        notify = _a;
-                        return [4, this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item, notify)];
+                        if (!((notifyText == null) || (notifyText == ''))) return [3, 4];
+                        _b = true;
+                        return [3, 6];
+                    case 4: return [4, this.Application.Solver.ResolveConditional(notifyText)];
                     case 5:
-                        deleted = _b.sent();
+                        _b = _d.sent();
+                        _d.label = 6;
+                    case 6:
+                        notify = _b;
+                        if (!(contextItem === null)) return [3, 8];
+                        return [4, this.Application.Storage.DeleteDataItemArray(dataKey, sector, item, notify)];
+                    case 7:
+                        _c = _d.sent();
+                        return [3, 10];
+                    case 8: return [4, this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item, notify)];
+                    case 9:
+                        _c = _d.sent();
+                        _d.label = 10;
+                    case 10:
+                        deleted = _c;
                         if (!deleted)
                             return [2, (null)];
                         return [2];

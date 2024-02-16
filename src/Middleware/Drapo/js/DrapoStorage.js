@@ -2334,6 +2334,47 @@ var DrapoStorage = (function () {
             });
         });
     };
+    DrapoStorage.prototype.DeleteDataItemArray = function (dataKey, sector, item, notify) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dataItem, value, _a, length, i, valueCurrent;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4, this.RetrieveDataItem(dataKey, sector)];
+                    case 1:
+                        dataItem = _b.sent();
+                        if (dataItem == null)
+                            return [2, (false)];
+                        if (!this.Application.Parser.IsMustache(item)) return [3, 3];
+                        return [4, this.RetrieveDataValue(sector, item)];
+                    case 2:
+                        _a = _b.sent();
+                        return [3, 4];
+                    case 3:
+                        _a = item;
+                        _b.label = 4;
+                    case 4:
+                        value = _a;
+                        length = dataItem.Data.length;
+                        i = 0;
+                        _b.label = 5;
+                    case 5:
+                        if (!(i < length)) return [3, 8];
+                        valueCurrent = dataItem.Data[i];
+                        if (value != valueCurrent)
+                            return [3, 7];
+                        this.DeleteDataItemIndex(dataItem, i);
+                        return [4, this.NotifyChanges(dataItem, notify, dataKey, null, null)];
+                    case 6:
+                        _b.sent();
+                        return [2, (true)];
+                    case 7:
+                        i++;
+                        return [3, 5];
+                    case 8: return [2, (false)];
+                }
+            });
+        });
+    };
     DrapoStorage.prototype.DeleteDataItemIndex = function (dataItem, index) {
         var data = dataItem.Data;
         if (data == null)
