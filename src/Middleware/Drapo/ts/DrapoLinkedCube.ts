@@ -240,23 +240,23 @@
 
     public ToList(node: DrapoLinkedCubeNode<T> = null): DrapoLinkedCubeNode<T>[] {
         const list: DrapoLinkedCubeNode<T>[] = [];
+        const stack: DrapoLinkedCubeNode<T>[] = [];
         if (node === null)
             node = this._head;
-        if (node != null)
-            this.AppendNodeToList(list, node);
-        return (list);
-    }
-
-    private AppendNodeToList(list: DrapoLinkedCubeNode<T>[], node: DrapoLinkedCubeNode<T>) : void
-    {
-        list.push(node);
-        if (node.Next == null)
-            return;
-        for (let i: number = 0; i < node.Next.length; i++) {
-            const nodeNext: DrapoLinkedCubeNode<T> = node.Next[i];
-            if (nodeNext !== null)
-                this.AppendNodeToList(list, nodeNext);
+        while (node != null || stack.length > 0) {
+            if (node != null) {
+                list.push(node);
+                if (node.Next != null) {
+                    for (let i: number = node.Next.length - 1; i >= 0; i--) {
+                        const nodeNext: DrapoLinkedCubeNode<T> = node.Next[i];
+                        if (nodeNext !== null)
+                            stack.push(nodeNext);
+                    }
+                }
+            }
+            node = stack.pop();
         }
+        return list;
     }
 
     public ToListValues(node: DrapoLinkedCubeNode<T> = null): T[] {
