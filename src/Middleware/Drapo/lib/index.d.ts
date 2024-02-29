@@ -1054,7 +1054,6 @@ declare class DrapoLinkedCube<T> {
     private MoveLinks;
     private GetNodeNext;
     ToList(node?: DrapoLinkedCubeNode<T>): DrapoLinkedCubeNode<T>[];
-    private AppendNodeToList;
     ToListValues(node?: DrapoLinkedCubeNode<T>): T[];
 }
 

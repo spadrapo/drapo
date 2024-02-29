@@ -14237,21 +14237,23 @@ var DrapoLinkedCube = (function () {
     DrapoLinkedCube.prototype.ToList = function (node) {
         if (node === void 0) { node = null; }
         var list = [];
+        var stack = [];
         if (node === null)
             node = this._head;
-        if (node != null)
-            this.AppendNodeToList(list, node);
-        return (list);
-    };
-    DrapoLinkedCube.prototype.AppendNodeToList = function (list, node) {
-        list.push(node);
-        if (node.Next == null)
-            return;
-        for (var i = 0; i < node.Next.length; i++) {
-            var nodeNext = node.Next[i];
-            if (nodeNext !== null)
-                this.AppendNodeToList(list, nodeNext);
+        while (node != null || stack.length > 0) {
+            if (node != null) {
+                list.push(node);
+                if (node.Next != null) {
+                    for (var i = node.Next.length - 1; i >= 0; i--) {
+                        var nodeNext = node.Next[i];
+                        if (nodeNext !== null)
+                            stack.push(nodeNext);
+                    }
+                }
+            }
+            node = stack.pop();
         }
+        return list;
     };
     DrapoLinkedCube.prototype.ToListValues = function (node) {
         if (node === void 0) { node = null; }
