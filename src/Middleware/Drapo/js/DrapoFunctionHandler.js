@@ -1646,9 +1646,9 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionRemoveDataItem = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var source, isSourceMustache, mustacheParts, dataKey, itemText, itemPath, item, notifyText, notify, _a, deleted;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var source, isSourceMustache, mustacheParts, dataKey, itemText, itemPath, item, _a, notifyText, notify, _b, deleted, _c;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0:
                         source = functionParsed.Parameters[0];
                         isSourceMustache = this.Application.Parser.IsMustache(source);
@@ -1662,24 +1662,38 @@ var DrapoFunctionHandler = (function () {
                         else {
                             itemPath.push(itemText);
                         }
-                        return [4, this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, itemPath)];
-                    case 1:
-                        item = _b.sent();
+                        if (!(contextItem === null)) return [3, 1];
+                        _a = itemText;
+                        return [3, 3];
+                    case 1: return [4, this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, itemPath)];
+                    case 2:
+                        _a = _d.sent();
+                        _d.label = 3;
+                    case 3:
+                        item = _a;
                         if (item == null)
                             return [2, (null)];
                         notifyText = functionParsed.Parameters[2];
-                        if (!((notifyText == null) || (notifyText == ''))) return [3, 2];
-                        _a = true;
-                        return [3, 4];
-                    case 2: return [4, this.Application.Solver.ResolveConditional(notifyText)];
-                    case 3:
-                        _a = _b.sent();
-                        _b.label = 4;
-                    case 4:
-                        notify = _a;
-                        return [4, this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item, notify)];
+                        if (!((notifyText == null) || (notifyText == ''))) return [3, 4];
+                        _b = true;
+                        return [3, 6];
+                    case 4: return [4, this.Application.Solver.ResolveConditional(notifyText)];
                     case 5:
-                        deleted = _b.sent();
+                        _b = _d.sent();
+                        _d.label = 6;
+                    case 6:
+                        notify = _b;
+                        if (!(contextItem === null)) return [3, 8];
+                        return [4, this.Application.Storage.DeleteDataItemArray(dataKey, sector, item, notify)];
+                    case 7:
+                        _c = _d.sent();
+                        return [3, 10];
+                    case 8: return [4, this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item, notify)];
+                    case 9:
+                        _c = _d.sent();
+                        _d.label = 10;
+                    case 10:
+                        deleted = _c;
                         if (!deleted)
                             return [2, (null)];
                         return [2];
@@ -1729,21 +1743,28 @@ var DrapoFunctionHandler = (function () {
     };
     DrapoFunctionHandler.prototype.ExecuteFunctionContainsDataItem = function (sector, contextItem, element, event, functionParsed, executionContext) {
         return __awaiter(this, void 0, void 0, function () {
-            var dataItemText, dataItemPath, item, dataContainerText, dataContainerPath, dataKeyContainer, storageItem, contextContainer, i, dataContainer, containerItem, itemContainer;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var dataItemText, dataItemPath, isMustache, item, _a, dataContainerText, dataContainerPath, dataKeyContainer, storageItem, contextContainer, i, dataContainer, containerItem, itemContainer;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         dataItemText = functionParsed.Parameters[1];
                         dataItemPath = [];
-                        if (this.Application.Parser.IsMustache(dataItemText)) {
+                        isMustache = this.Application.Parser.IsMustache(dataItemText);
+                        if (isMustache) {
                             dataItemPath = this.Application.Parser.ParseMustache(dataItemText);
                         }
                         else {
                             dataItemPath.push(dataItemText);
                         }
-                        return [4, this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataItemPath)];
-                    case 1:
-                        item = _a.sent();
+                        if (!((!isMustache) && (contextItem == null))) return [3, 1];
+                        _a = dataItemText;
+                        return [3, 3];
+                    case 1: return [4, this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataItemPath)];
+                    case 2:
+                        _a = _b.sent();
+                        _b.label = 3;
+                    case 3:
+                        item = _a;
                         dataContainerText = functionParsed.Parameters[0];
                         dataContainerPath = [];
                         if (this.Application.Parser.IsMustache(dataContainerText)) {
@@ -1754,27 +1775,27 @@ var DrapoFunctionHandler = (function () {
                         }
                         dataKeyContainer = dataContainerPath[0];
                         return [4, this.Application.Storage.RetrieveDataItem(dataKeyContainer, sector)];
-                    case 2:
-                        storageItem = _a.sent();
+                    case 4:
+                        storageItem = _b.sent();
                         if (storageItem == null)
                             return [2, ('false')];
                         contextContainer = new DrapoContext();
                         i = 0;
-                        _a.label = 3;
-                    case 3:
-                        if (!(i < storageItem.Data.length)) return [3, 6];
+                        _b.label = 5;
+                    case 5:
+                        if (!(i < storageItem.Data.length)) return [3, 8];
                         dataContainer = storageItem.Data[i];
                         containerItem = contextContainer.Create(dataContainer, null, null, dataKeyContainer, dataKeyContainer, null, i);
                         return [4, this.Application.Solver.ResolveItemDataPathObject(sector, containerItem, dataContainerPath)];
-                    case 4:
-                        itemContainer = _a.sent();
+                    case 6:
+                        itemContainer = _b.sent();
                         if (item == itemContainer)
                             return [2, ('true')];
-                        _a.label = 5;
-                    case 5:
+                        _b.label = 7;
+                    case 7:
                         i++;
-                        return [3, 3];
-                    case 6: return [2, ('false')];
+                        return [3, 5];
+                    case 8: return [2, ('false')];
                 }
             });
         });

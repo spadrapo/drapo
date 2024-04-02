@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function ContainsDataItem Value Without Context</title>
+</head>
+<body>
+    <span>Function ContainsDataItem Value Without Context</span>
+    <div d-datakey="selected" d-datatype="array" d-datavalue="[2,4,6]"></div>
+    <div>
+        <ul>
+            <li d-if="ContainsDataItem({{selected}},1)" style="display: none;">1</li>
+            <li d-if="ContainsDataItem({{selected}},2)">2</li>
+        </ul>
+    </div>
+
+</body></html>

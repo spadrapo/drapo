@@ -838,6 +838,7 @@ declare class DrapoExpressionItem {
     set Items(value: DrapoExpressionItem[]);
     constructor(type: DrapoExpressionItemType, value?: string);
     GetItemIndex(value: string): number;
+    CreateBlock(startingIndex: number, endingIndex: number): DrapoExpressionItem;
 }
 
 declare enum DrapoExpressionItemType {
@@ -1053,7 +1054,6 @@ declare class DrapoLinkedCube<T> {
     private MoveLinks;
     private GetNodeNext;
     ToList(node?: DrapoLinkedCubeNode<T>): DrapoLinkedCubeNode<T>[];
-    private AppendNodeToList;
     ToListValues(node?: DrapoLinkedCubeNode<T>): T[];
 }
 
@@ -1341,7 +1341,6 @@ declare class DrapoParser {
     private ParseBlockAttribute;
     ParseExpression(expression: string): DrapoExpressionItem;
     private ParseExpressionInsert;
-    private ExpressionNormalizer;
     private ParseExpressionTokens;
     private AddTokenNonEmpty;
     private Trim;
@@ -1868,6 +1867,11 @@ declare class DrapoSolver {
     ResolveConditional(expression: string | boolean | number, el?: HTMLElement, sector?: string, context?: DrapoContext, renderContext?: DrapoRenderContext, eljForTemplate?: HTMLElement, executionContext?: DrapoExecutionContext<any>, canBind?: boolean): Promise<boolean>;
     private ResolveConditionalExpressionBlock;
     private ResolveConditionalExpressionBlockOperation;
+    private GetBlockConditionalOperatorsNextIndex;
+    private HasBlockConditionalOperatorsNextResolve;
+    private GetBlockConditionalOperatorsNextIndexStartingIndex;
+    private GetBlockConditionalOperatorsNextIndexEndingIndex;
+    private ResolveBlockConditionalOperatorsNext;
     private EnsureExpressionItemCurrentLevelResolved;
     private JoinTexts;
     private EnsureExpressionItemResolved;
@@ -2059,6 +2063,7 @@ declare class DrapoStorage {
     DiscardCacheData(dataKey: string, sector: string, canRemoveObservers?: boolean): Promise<boolean>;
     DiscardCacheDataBySector(sector: string): Promise<boolean>;
     DeleteDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify: boolean): Promise<boolean>;
+    DeleteDataItemArray(dataKey: string, sector: string, item: any, notify: boolean): Promise<boolean>;
     DeleteDataItemIndex(dataItem: DrapoStorageItem, index: number): boolean;
     private GetDataItemIndex;
     PostData(dataKey: string, sector: string, dataKeyResponse: string, notify: boolean, executionContext: DrapoExecutionContext<any>): Promise<boolean>;

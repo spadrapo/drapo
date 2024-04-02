@@ -48,5 +48,11 @@ var DrapoExpressionItem = (function () {
                 return (i);
         return (null);
     };
+    DrapoExpressionItem.prototype.CreateBlock = function (startingIndex, endingIndex) {
+        var block = new DrapoExpressionItem(DrapoExpressionItemType.Block);
+        for (var i = startingIndex; i <= endingIndex; i++)
+            block.Items.push(this.Items[i]);
+        return (block);
+    };
     return DrapoExpressionItem;
 }());

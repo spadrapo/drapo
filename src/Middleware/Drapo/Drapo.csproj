@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp3.1;netcoreapp6.0</TargetFrameworks>
+		<TargetFrameworks>netcoreapp3.1;netcoreapp6.0;net8.0</TargetFrameworks>
 		<AssemblyName>Sysphera.Middleware.Drapo</AssemblyName>
 		<RootNamespace>Sysphera.Middleware.Drapo</RootNamespace>
 	</PropertyGroup>

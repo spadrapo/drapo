@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function RemoveDataItem Value Without Context</title>
+</head>
+<body>
+    <span>Function RemoveDataItem Value Without Context</span>
+    <div d-datakey="values" d-datatype="array" d-datavalue="[2,4,6]"></div>
+    <div d-datakey="valueRemove" d-datatype="value" d-dataloadtype="startup" d-datavalue="6"></div>
+    <div>
+        <ul>
+            <li d-for="value in values" style="display: none;">{{value}}</li>
+        <li>2</li></ul>
+    </div>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="RemoveDataItem({{values}},4);RemoveDataItem({{values}},{{valueRemove}})"></div>
+
+</body></html>

@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Conditional Complex</title>
+</head>
+<body>
+    <span>Conditional Complex</span>
+    <div>
+        <div>
+            <!--Data-->
+            <div d-dataKey="d" d-dataType="object" d-dataProperty-v1="6" d-dataProperty-v2="false"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <div d-if="{{d.v1}}>2||{{d.v1}}||!{{d.v2}}">
+                <span>Show</span>
+            </div>
+            <br />
+            <!--UI-->
+            <div d-if="{{d.v1}}>2&&{{d.v1}}&&{{d.v2}}">
+                <span>Hidden</span>
+            </div>
+            <br />
+        </div>
+    </div>
+</body>
+</html>

@@ -94,7 +94,7 @@ var DrapoSolver = (function () {
     };
     DrapoSolver.prototype.ResolveConditionalExpressionBlockOperation = function (sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind) {
         return __awaiter(this, void 0, void 0, function () {
-            var itemFirst, itemEmpty, resultFirst, itemSecond, resultSecond, resultDenySecond, resultDenyItemSecond, resultThird, hasMoreThanTwoTerms, resultFourth, resultDenyFourth, resultDenyItemFourth, result, resultItem;
+            var itemFirst, itemEmpty, resultFirst, itemSecond, resultSecond, resultDenySecond, resultDenyItemSecond, resultThird, hasMoreThanTwoTerms, itemThird, itemEmpty, resultFourth, resultDenyFourth, resultDenyItemFourth, result, resultItem;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -130,37 +130,95 @@ var DrapoSolver = (function () {
                     case 6:
                         resultThird = '';
                         hasMoreThanTwoTerms = block.Items.length > 2;
-                        if (!hasMoreThanTwoTerms) return [3, 8];
-                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, executionContext, el, block, 2, eljForTemplate, canBind)];
-                    case 7:
-                        _a.sent();
-                        resultThird = block.Items[2].Value;
-                        _a.label = 8;
-                    case 8:
-                        if (!(resultThird === '!')) return [3, 12];
-                        resultFourth = 'false';
-                        if (!(block.Items.length > 3)) return [3, 10];
-                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, executionContext, el, block, 3, eljForTemplate, canBind)];
+                        if (!hasMoreThanTwoTerms) return [3, 10];
+                        itemThird = block.Items[2];
+                        if (!((itemThird.Type == DrapoExpressionItemType.Logical) || (itemThird.Type == DrapoExpressionItemType.Comparator))) return [3, 8];
+                        itemEmpty = new DrapoExpressionItem(DrapoExpressionItemType.Text, '');
+                        block.Items.splice(2, 0, itemEmpty);
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind)];
+                    case 7: return [2, (_a.sent())];
+                    case 8: return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, executionContext, el, block, 2, eljForTemplate, canBind)];
                     case 9:
                         _a.sent();
-                        resultFourth = block.Items[3].Value;
+                        resultThird = block.Items[2].Value;
                         _a.label = 10;
                     case 10:
+                        if (!(resultThird === '!')) return [3, 14];
+                        resultFourth = 'false';
+                        if (!(block.Items.length > 3)) return [3, 12];
+                        return [4, this.EnsureExpressionItemResolved(sector, context, renderContext, executionContext, el, block, 3, eljForTemplate, canBind)];
+                    case 11:
+                        _a.sent();
+                        resultFourth = block.Items[3].Value;
+                        _a.label = 12;
+                    case 12:
                         resultDenyFourth = (!this.ResolveConditionalBoolean(resultFourth)).toString();
                         resultDenyItemFourth = new DrapoExpressionItem(DrapoExpressionItemType.Text, resultDenyFourth);
                         block.Items[2] = resultDenyItemFourth;
                         if (block.Items.length > 3)
                             block.Items.splice(3, 1);
                         return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind)];
-                    case 11: return [2, (_a.sent())];
-                    case 12:
+                    case 13: return [2, (_a.sent())];
+                    case 14:
+                        if (!this.HasBlockConditionalOperatorsNextResolve(block, 3)) return [3, 16];
+                        return [4, this.ResolveBlockConditionalOperatorsNext(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind, 3)];
+                    case 15: return [2, (_a.sent())];
+                    case 16:
                         result = this.ResolveConditionalOperator(resultFirst, resultSecond, resultThird);
                         resultItem = new DrapoExpressionItem(DrapoExpressionItemType.Text);
                         resultItem.Value = result;
                         block.Items[0] = resultItem;
                         block.Items.splice(1, hasMoreThanTwoTerms ? 2 : 1);
                         return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind)];
-                    case 13: return [2, (_a.sent())];
+                    case 17: return [2, (_a.sent())];
+                }
+            });
+        });
+    };
+    DrapoSolver.prototype.GetBlockConditionalOperatorsNextIndex = function (block, start) {
+        for (var i = start; i < block.Items.length; i++) {
+            var item = block.Items[i];
+            if (item.Type == DrapoExpressionItemType.Logical)
+                return (null);
+            if (item.Type == DrapoExpressionItemType.Comparator)
+                return (i);
+        }
+        return (null);
+    };
+    DrapoSolver.prototype.HasBlockConditionalOperatorsNextResolve = function (block, start) {
+        var index = this.GetBlockConditionalOperatorsNextIndex(block, start);
+        return (index !== null);
+    };
+    DrapoSolver.prototype.GetBlockConditionalOperatorsNextIndexStartingIndex = function (block, index) {
+        if (((index - 2) >= 0) && (block.Items[index - 2].Type == DrapoExpressionItemType.Deny))
+            return (index - 2);
+        return (index - 1);
+    };
+    DrapoSolver.prototype.GetBlockConditionalOperatorsNextIndexEndingIndex = function (block, index) {
+        if (index == (block.Items.length - 1))
+            return (index);
+        if (((index + 1) < block.Items.length) && (block.Items[index + 1].Type == DrapoExpressionItemType.Deny))
+            return (index + 2);
+        return (index + 1);
+    };
+    DrapoSolver.prototype.ResolveBlockConditionalOperatorsNext = function (sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind, start) {
+        return __awaiter(this, void 0, void 0, function () {
+            var index, startingIndex, endingIndex, blockConditional, valueConditional, itemConditinal;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        index = this.GetBlockConditionalOperatorsNextIndex(block, start);
+                        startingIndex = this.GetBlockConditionalOperatorsNextIndexStartingIndex(block, index);
+                        endingIndex = this.GetBlockConditionalOperatorsNextIndexEndingIndex(block, index);
+                        blockConditional = block.CreateBlock(startingIndex, endingIndex);
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, blockConditional, false)];
+                    case 1:
+                        valueConditional = _a.sent();
+                        itemConditinal = new DrapoExpressionItem(DrapoExpressionItemType.Text, valueConditional);
+                        block.Items[startingIndex] = itemConditinal;
+                        block.Items.splice(startingIndex + 1, (endingIndex - startingIndex));
+                        return [4, this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, block, canBind)];
+                    case 2: return [2, (_a.sent())];
                 }
             });
         });

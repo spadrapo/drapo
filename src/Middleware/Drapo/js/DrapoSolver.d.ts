@@ -5,6 +5,11 @@ declare class DrapoSolver {
     ResolveConditional(expression: string | boolean | number, el?: HTMLElement, sector?: string, context?: DrapoContext, renderContext?: DrapoRenderContext, eljForTemplate?: HTMLElement, executionContext?: DrapoExecutionContext<any>, canBind?: boolean): Promise<boolean>;
     private ResolveConditionalExpressionBlock;
     private ResolveConditionalExpressionBlockOperation;
+    private GetBlockConditionalOperatorsNextIndex;
+    private HasBlockConditionalOperatorsNextResolve;
+    private GetBlockConditionalOperatorsNextIndexStartingIndex;
+    private GetBlockConditionalOperatorsNextIndexEndingIndex;
+    private ResolveBlockConditionalOperatorsNext;
     private EnsureExpressionItemCurrentLevelResolved;
     private JoinTexts;
     private EnsureExpressionItemResolved;

@@ -345,6 +345,11 @@ namespace WebDrapo.Test
             ValidatePage("ConditionalCharacters");
         }
         [TestCase]
+        public void ConditionalComplexTest()
+        {
+            ValidatePage("ConditionalComplex");
+        }
+        [TestCase]
         public void ConditionalSpaceTextTest()
         {
             ValidatePage("ConditionalSpaceText");
@@ -1167,6 +1172,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionContainsDataItemComplexObject");
         }
         [TestCase]
+        public void FunctionContainsDataItemValueWithoutContextTest()
+        {
+            ValidatePage("FunctionContainsDataItemValueWithoutContext");
+        }
+        [TestCase]
         public void FunctionCreateDataTest()
         {
             ValidatePage("FunctionCreateData");
@@ -1320,6 +1330,11 @@ namespace WebDrapo.Test
         public void FunctionRemoveDataItemMustacheTest()
         {
             ValidatePage("FunctionRemoveDataItemMustache");
+        }
+        [TestCase]
+        public void FunctionRemoveDataItemWithoutContextTest()
+        {
+            ValidatePage("FunctionRemoveDataItemWithoutContext");
         }
         [TestCase]
         public void FunctionSwitchSectorIframeTest()
