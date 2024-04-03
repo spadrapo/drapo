@@ -7772,15 +7772,10 @@ var DrapoDocument = (function () {
             elSector.appendChild(el);
         }
         else {
-            if (el.parentElement == null) {
-                el.setAttribute('d-detach', 'active');
+            el.style.display = '';
+            el.setAttribute('d-detach', 'active');
+            if (el.parentElement == null)
                 elSector.appendChild(el);
-            }
-            else {
-                var detach = el.getAttribute('d-detach');
-                el.style.display = detach != 'empty' ? detach : '';
-                el.setAttribute('d-detach', 'active');
-            }
         }
     };
     DrapoDocument.prototype.CreateHTMLElement = function (html, onlyLast) {

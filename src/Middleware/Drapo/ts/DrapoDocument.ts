@@ -740,14 +740,10 @@ class DrapoDocument {
         if (canDetach) {
             elSector.appendChild(el);
         } else {
-            if (el.parentElement == null) {
-                el.setAttribute('d-detach', 'active');
+            el.style.display = '';
+            el.setAttribute('d-detach', 'active');
+            if (el.parentElement == null)
                 elSector.appendChild(el);
-            } else {
-                const detach: string = el.getAttribute('d-detach');
-                el.style.display = detach != 'empty' ? detach : '';
-                el.setAttribute('d-detach', 'active');
-            }
         }
     }
 
@@ -892,7 +888,7 @@ class DrapoDocument {
 
     public GetText(el: HTMLElement): string {
         if (el.children.length > 0)
-            return('');
+            return ('');
         const eli: HTMLInputElement = el as HTMLInputElement;
         if (eli.textContent)
             return (eli.textContent);
