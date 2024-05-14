@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Function - UpdateItemField - d-for</title>
+    <script src="/drapo.js"></script>
+</head>
+<body>
+    <h1>Function - UpdateItemField - d-for</h1>
+    <div d-dataKey="valueData" d-dataType="value" d-dataValue="Empty"></div>
+    <div d-dataKey="objectData" d-dataType="object" d-dataProperty-value="Empty"></div>
+    <div d-dataKey="arrayData" d-dataType="array" d-dataValue='["Empty","Empty","Empty"]'></div>
+    <div d-dataKey="arrayFinalData" d-dataType="array" d-dataValue='["Wrong1","Correct","Wrong2"]'></div>
+    <section>
+        <h2>Value dataKey</h2>
+        <p>
+            valueData = <span d-model="{{valueData}}" />
+            <ul>
+                <li d-for="finalData in arrayFinalData">
+                    <input type="button" d-if="{{finalData}}=Correct" driverunittest="click" d-on-click="UpdateItemField({{valueData}},{{finalData}})" value="Click here to change to '{{finalData}}''">
+                    <input type="button" d-if="{{finalData}}!=Correct" d-on-click="UpdateItemField({{valueData}},{{finalData}})" value="Click here to change to '{{finalData}}'">
+                </li>
+            </ul>
+        </p>
+    </section>
+    <section>
+        <h2>Object dataKey</h2>
+        <p>
+            objectData.value = <span d-model="{{objectData.value}}" />
+            <ul>
+                <li d-for="finalData in arrayFinalData">
+                    <input type="button" d-if="{{finalData}}=Correct" driverunittest="click" d-on-click="UpdateItemField({{objectData.value}},{{finalData}})" value="Click here to change to '{{finalData}}'">
+                    <input type="button" d-if="{{finalData}}!=Correct" d-on-click="UpdateItemField({{objectData.value}},{{finalData}})" value="Click here to change to '{{finalData}}'">
+                </li>
+            </ul>
+        </p>
+    </section>
+    <section>
+        <h2>Array dataKey</h2>
+        <p>
+            arrayData.[1] = <span d-model="{{arrayData.[1]}}" />
+            <ul>
+                <li d-for="finalData in arrayFinalData">
+                    <input type="button" d-if="{{finalData}}=Correct" driverunittest="click" d-on-click="UpdateItemField({{arrayData.[1]}},{{finalData}})" value="Click here to change to '{{finalData}}'">
+                    <input type="button" d-if="{{finalData}}!=Correct" d-on-click="UpdateItemField({{arrayData.[1]}},{{finalData}})" value="Click here to change to '{{finalData}}'">
+                </li>
+            </ul>
+        </p>
+    </section>
+    <section id="console"></section>
+</body>
+</html>
