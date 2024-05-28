@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Alias property coalesce</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Outer Join Coalesce</span>
+        <div d-dataKey="objectNames" d-dataType="array" d-dataValue='[{"Code":1,"Name":"Heber"},{"Code":2,"Name":"Junior"},{"Code":3,"Name":"Daniela"}]'></div>
+        <div d-dataKey="objectSelect" d-dataType="array" d-dataValue="[2,3]"></div>
+        <div d-dataKey="objectsQuery" d-dataType="query" d-dataValue="SELECT COALESCE(ObjName.Name,ObjSelected) AS NameCoalesce, ObjName.Name AS Name, ObjSelected as NameSelected FROM objectSelect AS ObjSelected LEFT JOIN objectNames AS ObjName ON ObjSelected = ObjNames.Code"></div>
+        <div>
+            <div d-for="object in objectsQuery">
+                <span>{{object.NameCoalesce}}</span>
+                <span>{{object.Name}}</span>
+                <span>{{object.NameSelected}}</span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

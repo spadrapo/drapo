@@ -2328,6 +2328,7 @@ class DrapoStorage {
             const projection: DrapoQueryProjection = query.Projections[i];
             if (projection.FunctionName !== null) {
                 //Function
+                //TODO-COALESCE FIX: Need projecting the fields used in coalesce function for the objectInformation array object for when this function was resolved this information will be there.
                 for (let j: number = 0; j < projection.FunctionParameters.length; j++) {
                     const functionParameter: string = projection.FunctionParameters[j];
                     const functionParameterName: string = this.ResolveQueryFunctionParameterName(functionParameter);
