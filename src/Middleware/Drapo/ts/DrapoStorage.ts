@@ -2335,8 +2335,15 @@ class DrapoStorage {
                         continue;
                     const functionParameterValues: string[] = this.Application.Parser.ParseQueryProjectionFunctionParameterValue(functionParameterName);
                     const sourceProperty: string[] = functionParameterValues[0].split('_');
-                    const source: string = sourceProperty[0];
-                    const property: string = sourceProperty[1];
+                    let source: string;
+                    let property: string;
+                    if (sourceProperty.length > 1) {
+                        source = sourceProperty[0];
+                        property = sourceProperty[1];
+                    }
+                    else {
+                        source = property = sourceProperty[0];
+                    }
                     if ((query.Sources.length > 1) && ((querySource.Alias ?? querySource.Source) !== source))
                         continue;
                     const value: any = isObject ? sourceObject[projection.Column ?? property] : sourceObject;
