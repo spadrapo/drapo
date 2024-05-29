@@ -56,7 +56,7 @@ namespace WebDrapo.Test
             if ((elClickUnitTest != null) && (elClickUnitTest.Count > 0))
             {
                 foreach (IWebElement el in elClickUnitTest)
-                    el.Click();
+                    if(el.Displayed) el.Click();
                 System.Threading.Thread.Sleep(5000);
             }
             if (pageName.Contains("Async"))
