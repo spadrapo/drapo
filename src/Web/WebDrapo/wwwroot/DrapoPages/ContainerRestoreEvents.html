@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Container Restore Events</title>
+</head>
+<body>
+    <div>
+        <span>Container Restore Events</span>
+        <div d-dataKey="tabs" d-dataType="array"></div>
+        <div d-dataKey="tabNew" d-dataType="object" d-dataProperty-type="" d-dataProperty-container=""></div>
+        <div d-dataKey="functionAddType1" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateDataField(tabNew,type,Type1);ClearDataField(tabNew,container);UpdateSector(content,~/DrapoPages/ContainerRestoreEventsSector.html,Type1,true,true,{{tabNew.container}});AddDataItem(tabs,tabNew);"></div>
+        <div d-dataKey="functionAddType2" d-dataType="value" d-dataLoadType="startup" d-dataValue="UpdateDataField(tabNew,type,Type2);ClearDataField(tabNew,container);UpdateSector(content,~/DrapoPages/ContainerRestoreEventsSector.html,Type2,true,true,{{tabNew.container}});AddDataItem(tabs,tabNew);"></div>
+        <div>
+            <br />
+            <div style="position:relative;float:left;">
+                <input d-for="tab in tabs" type="button" d-on-click="SwitchSector(content,{{tab.container}})" value="{{tab.type}}" />
+            </div>
+        </div>
+        <br />
+        <br />
+        <div d-sector="startup" d-sector-friend="content">
+            <div d-dataKey="startup" d-dataType="function" d-dataLoadType="startup" d-dataValue="Execute({{functionAddType1}});Execute({{functionAddType2}});ExecuteDataItem(SwitchSector(content,{{tab.container}}),tab in tabs,true,false)"></div>
+        </div>
+        <div d-sector="content"></div>
+    </div>
+</body>
+</html>
