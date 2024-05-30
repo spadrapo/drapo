@@ -940,7 +940,7 @@ var DrapoSolver = (function () {
     DrapoSolver.prototype.UpdateItemDataPathObject = function (sector, contextItem, executionContext, dataPath, value, canNotify) {
         if (canNotify === void 0) { canNotify = true; }
         return __awaiter(this, void 0, void 0, function () {
-            var key, data, storageItem, item, data;
+            var key, data, storageItem, item;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -952,7 +952,7 @@ var DrapoSolver = (function () {
                                 return [2, (true)];
                             return [2, (false)];
                         }
-                        if (!(contextItem === null)) return [3, 4];
+                        if (!(contextItem === null || dataPath.length === 1)) return [3, 4];
                         return [4, this.Application.Storage.RetrieveDataItem(key, sector)];
                     case 1:
                         storageItem = _a.sent();
@@ -979,16 +979,8 @@ var DrapoSolver = (function () {
                         item = _a.sent();
                         if (item == null)
                             return [2, (false)];
-                        if (dataPath.length === 1) {
-                            if (item.Data === value)
-                                return [2, (false)];
-                            item.Data = value;
-                        }
-                        else {
-                            data = item.Data;
-                            if (!this.UpdateDataPathObject(item.Data, dataPath, value))
-                                return [2, (false)];
-                        }
+                        if (!this.UpdateDataPathObject(item.Data, dataPath, value))
+                            return [2, (false)];
                         if (!canNotify) return [3, 7];
                         return [4, this.Application.Observer.Notify(item.DataKey, item.Index, this.ResolveDataFields(dataPath))];
                     case 6:
