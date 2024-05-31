@@ -5,19 +5,51 @@
     <title>Data Query - Alias property coalesce</title>
 </head>
 <body>
-    <div>
-        <span>Data Query - Outer Join Coalesce</span>
-        <div d-dataKey="objectNames" d-dataType="array" d-dataValue='[{"Code":1,"Name":"Heber"},{"Code":2,"Name":"Junior"},{"Code":3}]'></div>
-        <div d-dataKey="objectSelect" d-dataType="array" d-dataValue="[2,3]"></div>
-        <div d-dataKey="objectsQuery" d-dataType="query" d-dataValue="SELECT COALESCE(ObjName.Name,ObjSelected) AS NameCoalesce, ObjName.Name AS Name, ObjSelected as NameSelected FROM objectSelect AS ObjSelected LEFT JOIN objectNames AS ObjName ON ObjSelected = ObjNames.Code"></div>
-        <div>
-            <div d-for="object in objectsQuery">
-                <span>{{object.NameCoalesce}}</span>
-                <span>{{object.Name}}</span>
-                <span>{{object.NameSelected}}</span>
-                <br />
-            </div>
-        </div>
-    </div>
+    <span>Data Query - LEFT Join Coalesce (simple and complex objects)</span>
+    <div d-dataKey="order" d-dataType="array" d-dataValue='[{"Code":1,"Product":1},{"Code":2,"Product":4}]'></div>
+    <div d-dataKey="products" d-dataType="array" d-dataValue='[{"Code":1,"BarCode":"9997891"},{"Code":2,"BarCode":"9997892","Description":"Product_2"},{"Code":"3","Description":""},{"Code":"4","Description":"Product_4"}]'></div>
+    <div d-dataKey="productsSelected" d-dataType="array" d-dataValue="[2,3]"></div>
+    <div d-dataKey="querySelectedProducts" d-dataType="query" d-dataValue="SELECT P.Code, COALESCE(P.BarCode,PS.Code) as BarCode, P.Description FROM productsSelected as PS LEFT JOIN products as P ON PS = P.Code"></div>
+    <div d-dataKey="queryProductsSelected" d-dataType="query" d-dataValue="SELECT P.Code, COALESCE(P.BarCode,P.Code) as BarCode, P.Description FROM products as P LEFT JOIN productsSelected as PS ON PS = P.Code"></div>
+    <div d-dataKey="queryOrders" d-dataType="query" d-dataValue="SELECT O.Code as OrderCode, P.BarCode, COALESCE(P.Description,P.BarCode) as Description FROM order as O LEFT JOIN products as P ON O.Product = P.Code"></div>
+    <br />
+    <table>
+        <tr>
+            <td>Code</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="product in querySelectedProducts">
+            <td>{{product.Code}}</td>
+            <td>{{product.BarCode}}</td>
+            <td>{{product.Description}}</td>
+        </tr>
+    </table>
+    <br />
+    <table>
+        <tr>
+            <td>Code</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="product in queryProductsSelected">
+            <td>{{product.Code}}</td>
+            <td>{{product.BarCode}}</td>
+            <td>{{product.Description}}</td>
+        </tr>
+    </table>
+    <br />
+    <table>
+        <tr>
+            <td>Order</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="order in queryOrders">
+            <td>{{order.OrderCode}}</td>
+            <td>{{order.BarCode}}</td>
+            <td>{{order.Description}}</td>
+        </tr>
+    </table>
 </body>
 </html>
