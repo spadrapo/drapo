@@ -331,7 +331,7 @@ class DrapoParser {
             } else if (chr === ')') {
                 blockCount--;
                 buffer += chr;
-            } else if ((buffer.length == 0) && (quotations.indexOf(chr) >= 0)) {
+            } else if ((buffer.length == 0) && (quotations.indexOf(chr) >= 0) && (quotation === null)) {
                 quotation = chr;
             } else if (chr === quotation) {
                 quotation = null;
