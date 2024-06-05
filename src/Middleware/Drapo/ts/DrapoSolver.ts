@@ -744,7 +744,7 @@ class DrapoSolver {
                 return (true);
             return (false);
         }
-        if (contextItem === null) {
+        if (contextItem === null || dataPath.length === 1) {
             //No Context
             const storageItem: DrapoStorageItem = await this.Application.Storage.RetrieveDataItem(key, sector);
             if (storageItem === null)
@@ -765,15 +765,8 @@ class DrapoSolver {
         const item: DrapoContextItem = await this.ResolveDataPathObjectItem(contextItem, key, sector);
         if (item == null)
             return (false);
-        if (dataPath.length === 1) {
-            if (item.Data === value)
-                return (false);
-            item.Data = value;
-        } else {
-            const data: any = item.Data;
-            if (!this.UpdateDataPathObject(item.Data, dataPath, value))
-                return (false);
-        }
+        if (!this.UpdateDataPathObject(item.Data, dataPath, value))
+            return (false);
         if (canNotify)
             await this.Application.Observer.Notify(item.DataKey, item.Index, this.ResolveDataFields(dataPath));
         return (true);
