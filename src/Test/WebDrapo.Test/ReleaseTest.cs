@@ -1557,6 +1557,11 @@ namespace WebDrapo.Test
             ValidatePage("ParameterFunctionMustacheInside");
         }
         [TestCase]
+        public void ParameterFunctionQuotedTest()
+        {
+            ValidatePage("ParameterFunctionQuoted");
+        }
+        [TestCase]
         public void ParseDateTest()
         {
             ValidatePage("ParseDate");

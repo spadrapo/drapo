@@ -316,7 +316,7 @@ var DrapoParser = (function () {
                 blockCount--;
                 buffer += chr;
             }
-            else if ((buffer.length == 0) && (quotations.indexOf(chr) >= 0)) {
+            else if ((buffer.length == 0) && (quotation === null) && (quotations.indexOf(chr) >= 0)) {
                 quotation = chr;
             }
             else if (chr === quotation) {
