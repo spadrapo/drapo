@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <title>Parameter Function With Quotation Mark</title>
+</head>
+<body>
+    <span>Parameter Function With Quotation Mark</span>
+    <div d-datakey="resultUsingParameterWithValue" d-datatype="value" d-dataloadtype="startup" d-datavalue="Result1"></div>
+    <div d-datakey="resultUsingParameterWithEmptyValue" d-datatype="value" d-dataloadtype="startup" d-datavalue="Result2"></div>
+    <div d-datakey="onPageLoad" d-datatype="function" d-dataloadtype="startup" d-datavalue="Execute({{updateWithValue}});Execute({{updateWithEmptyValue}})"></div>
+    <div d-datakey="updateWithValue" d-datatype="value" d-datavalue="UpdateItemField('{{resultUsingParameterWithValue}}','InformationHere',true,false,false)"></div>
+    <div d-datakey="updateWithEmptyValue" d-datatype="value" d-datavalue="UpdateItemField('{{resultUsingParameterWithEmptyValue}}','',true,false,false)"></div>
+    <div>
+        <br />
+        <span>Update datakey with value: </span><span d-model="{{resultUsingParameterWithValue}}">InformationHere</span><br />
+        <span>Update datakey with empty value: </span><span d-model="{{resultUsingParameterWithEmptyValue}}"></span><br />
+    </div>
+
+</body>
+</html>
