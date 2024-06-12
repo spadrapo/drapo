@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Alias property coalesce</title>
+</head>
+<body>
+    <div d-dataKey="products" d-dataType="array" d-dataValue='[{"Code":1,"BarCode":"9997891"},{"Code":2,"BarCode":"9997892","Description":"Product_2"},{"Code":"3","Description":""},{"Code":"4","Description":"Product_4"}]'></div>
+    <div d-dataKey="productsSelected" d-dataType="array" d-dataValue="[2,3]"></div>
+    <div d-dataKey="order" d-dataType="array" d-dataValue='[{"Code":1,"Product":1},{"Code":2,"Product":2},{"Code":3},{"Code":4,"Product":4}]'></div>
+    <!-- Mix of simple and complex objects-->
+    <div d-dataKey="querySelectedProductsSimpleLeftCoalesceRight" d-dataType="query" d-dataValue="SELECT P.Code, COALESCE(P.BarCode,PS) as BarCode, P.Description FROM productsSelected as PS LEFT JOIN products as P ON PS = P.Code"></div>
+    <div d-dataKey="querySelectedProductsSimpleLeftCoalesceLeft" d-dataType="query" d-dataValue="SELECT P.Code, COALESCE(PS,P.BarCode) as BarCode, P.Description FROM productsSelected as PS LEFT JOIN products as P ON PS = P.Code"></div>
+    <div d-dataKey="queryProductsSelectedSimpleRightCoalesceRight" d-dataType="query" d-dataValue="SELECT P.Code, COALESCE(P.BarCode,PS) as BarCode, P.Description FROM products as P LEFT JOIN productsSelected as PS ON PS = P.Code"></div>
+    <div d-dataKey="queryProductsSelectedSimpleRightCoalesceLeft" d-dataType="query" d-dataValue="SELECT P.Code, COALESCE(PS,P.BarCode) as BarCode, P.Description FROM products as P LEFT JOIN productsSelected as PS ON PS = P.Code"></div>
+    <!-- Only complex objects -->
+    <div d-datakey="queryOrdersProductdCoalesceRight" d-datatype="query" d-datavalue="SELECT O.Code, P.BarCode, COALESCE(P.Description,O.Product) as Description FROM order as O LEFT JOIN products as P ON O.Product = P.Code"></div>
+    <div d-datakey="queryOrdersProductdCoalesceLeft" d-datatype="query" d-datavalue="SELECT O.Code, P.BarCode, COALESCE(O.Product, P.Description) as Description FROM order as O LEFT JOIN products as P ON O.Product = P.Code"></div>
+    <div d-datakey="queryProductOrdersCoalesceRight" d-datatype="query" d-datavalue="SELECT P.Code, P.BarCode, COALESCE(O.Product, P.Description) as Description FROM products as P LEFT JOIN order as O ON O.Product = P.Code"></div>
+    <div d-datakey="queryProductOrdersCoalesceLeft" d-datatype="query" d-datavalue="SELECT P.Code, P.BarCode, COALESCE(P.Description,O.Product) as Description FROM products as P LEFT JOIN order as O ON O.Product = P.Code"></div>
+    <!-- Layout -->
+    <br />
+    <h1>Using coalesce with mix of simple and complex objects.</h1>
+    <h2>Join with simple object in left side.</h2>
+    <table>
+        <caption>Simple object in Coalesce left side.</caption>
+        <tr>
+            <td>Code</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="product in querySelectedProductsSimpleLeftCoalesceLeft">
+            <td>{{product.Code}}</td>
+            <td>{{product.BarCode}}</td>
+            <td>{{product.Description}}</td>
+        </tr>
+    </table>
+    <br />
+    <table>
+        <caption>Simple object in Coalesce right side.</caption>
+        <tr>
+            <td>Code</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="product in querySelectedProductsSimpleLeftCoalesceRight">
+            <td>{{product.Code}}</td>
+            <td>{{product.BarCode}}</td>
+            <td>{{product.Description}}</td>
+        </tr>
+    </table>
+    <h2>Join with simple object in right side.</h2>
+    <table>
+        <caption>Simple object in Coalesce left side.</caption>
+        <tr>
+            <td>Code</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="product in queryProductsSelectedSimpleRightCoalesceLeft">
+            <td>{{product.Code}}</td>
+            <td>{{product.BarCode}}</td>
+            <td>{{product.Description}}</td>
+        </tr>
+    </table>
+    <br />
+    <table>
+        <caption>Simple object in Coalesce right side.</caption>
+        <tr>
+            <td>Code</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="product in queryProductsSelectedSimpleRightCoalesceRight">
+            <td>{{product.Code}}</td>
+            <td>{{product.BarCode}}</td>
+            <td>{{product.Description}}</td>
+        </tr>
+    </table>
+    <br />
+    <h1>Using coalesce just with complex objects.</h1>
+    <h2>Join order vs product.</h2>
+    <table>
+        <caption>Order in Coalesce left side.</caption>
+        <tr>
+            <td>Code</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="product in queryOrdersProductdCoalesceLeft">
+            <td>{{product.Code}}</td>
+            <td>{{product.BarCode}}</td>
+            <td>{{product.Description}}</td>
+        </tr>
+    </table>
+    <br />
+    <table>
+        <caption>Order in Coalesce right side.</caption>
+        <tr>
+            <td>Code</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="product in queryOrdersProductdCoalesceRight">
+            <td>{{product.Code}}</td>
+            <td>{{product.BarCode}}</td>
+            <td>{{product.Description}}</td>
+        </tr>
+    </table>
+    <h2>Join product vs order.</h2>
+    <table>
+        <caption>Product in Coalesce left side.</caption>
+        <tr>
+            <td>Code</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="product in queryProductOrdersCoalesceLeft">
+            <td>{{product.Code}}</td>
+            <td>{{product.BarCode}}</td>
+            <td>{{product.Description}}</td>
+        </tr>
+    </table>
+    <br />
+    <table>
+        <caption>Product in Coalesce right side.</caption>
+        <tr>
+            <td>Code</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="product in queryProductOrdersCoalesceRight">
+            <td>{{product.Code}}</td>
+            <td>{{product.BarCode}}</td>
+            <td>{{product.Description}}</td>
+        </tr>
+    </table>
+</body>
+</html>
