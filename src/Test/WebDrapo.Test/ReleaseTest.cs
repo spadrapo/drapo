@@ -911,6 +911,11 @@ namespace WebDrapo.Test
             ValidatePage("DataQueryChain");
         }
         [TestCase]
+        public void DataQueryCoalesceWithMustacheTest()
+        {
+            ValidatePage("DataQueryCoalesceWithMustache");
+        }
+        [TestCase]
         public void DataQueryDuplicateTest()
         {
             ValidatePage("DataQueryDuplicate");

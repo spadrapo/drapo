@@ -2334,10 +2334,6 @@ class DrapoStorage {
                     if (objectInformation[functionParameterName] != null)
                         continue;
                     const functionParameterValues: string[] = this.Application.Parser.ParseQueryProjectionFunctionParameterValue(functionParameterName);
-                    //const functionParameterValue: string = functionParameterValues[0];
-                    //if (this.Application.Parser.IsMustache(functionParameterValue)) {
-
-                    //}
                     const sourceProperty: string[] = functionParameterValues[0].split('_');
                     let source: string;
                     let property: string;

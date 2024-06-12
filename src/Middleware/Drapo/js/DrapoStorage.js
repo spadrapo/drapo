@@ -3403,7 +3403,9 @@ var DrapoStorage = (function () {
                         objectsAggregations = this.ResolveQueryAggregations(query, objects, objectsInformation);
                         if (objectsAggregations !== null)
                             return [2, (objectsAggregations)];
-                        this.ResolveQueryFunctions(query, objects, objectsInformation);
+                        return [4, this.ResolveQueryFunctions(query, sector, objects, objectsInformation)];
+                    case 6:
+                        _a.sent();
                         if (query.OutputArray != null) {
                             outputArray = [];
                             for (i = 0; i < objects.length; i++) {
@@ -3495,10 +3497,19 @@ var DrapoStorage = (function () {
                     if (objectInformation[functionParameterName] != null)
                         continue;
                     var functionParameterValues = this.Application.Parser.ParseQueryProjectionFunctionParameterValue(functionParameterName);
-                    var source = functionParameterValues[0];
+                    var sourceProperty = functionParameterValues[0].split('_');
+                    var source = void 0;
+                    var property = void 0;
+                    if (sourceProperty.length > 1) {
+                        source = sourceProperty[0];
+                        property = sourceProperty[1];
+                    }
+                    else {
+                        source = property = sourceProperty[0];
+                    }
                     if ((query.Sources.length > 1) && (((_a = querySource.Alias) !== null && _a !== void 0 ? _a : querySource.Source) !== source))
                         continue;
-                    var value = isObject ? sourceObject[(_b = projection.Column) !== null && _b !== void 0 ? _b : functionParameterName] : sourceObject;
+                    var value = isObject ? sourceObject[(_b = projection.Column) !== null && _b !== void 0 ? _b : property] : sourceObject;
                     objectInformation[functionParameterName] = value;
                 }
             }
@@ -3595,30 +3606,85 @@ var DrapoStorage = (function () {
         }
         return (value);
     };
-    DrapoStorage.prototype.ResolveQueryFunctions = function (query, objects, objectsInformation) {
-        for (var i = 0; i < query.Projections.length; i++) {
-            var projection = query.Projections[i];
-            if (projection.FunctionName !== null)
-                this.ResolveQueryFunction(projection.Alias, projection.FunctionName, projection.FunctionParameters, objects, objectsInformation);
-        }
+    DrapoStorage.prototype.ResolveQueryFunctions = function (query, sector, objects, objectsInformation) {
+        return __awaiter(this, void 0, void 0, function () {
+            var i, projection;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < query.Projections.length)) return [3, 4];
+                        projection = query.Projections[i];
+                        if (!(projection.FunctionName !== null)) return [3, 3];
+                        return [4, this.ResolveQueryFunction(projection.Alias, projection.FunctionName, projection.FunctionParameters, objects, objectsInformation, sector)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        i++;
+                        return [3, 1];
+                    case 4: return [2];
+                }
+            });
+        });
     };
-    DrapoStorage.prototype.ResolveQueryFunction = function (projectionAlias, functionName, functionParameters, objects, objectsInformation) {
-        if (functionName === 'COALESCE')
-            this.ResolveQueryFunctionCoalesce(projectionAlias, functionParameters, objects, objectsInformation);
+    DrapoStorage.prototype.ResolveQueryFunction = function (projectionAlias, functionName, functionParameters, objects, objectsInformation, sector) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(functionName === 'COALESCE')) return [3, 2];
+                        return [4, this.ResolveQueryFunctionCoalesce(projectionAlias, functionParameters, objects, objectsInformation, sector)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2];
+                }
+            });
+        });
     };
-    DrapoStorage.prototype.ResolveQueryFunctionCoalesce = function (projectionAlias, functionParameters, objects, objectsInformation) {
-        for (var i = 0; i < objects.length; i++) {
-            var object = objects[i];
-            var objectInformation = objectsInformation[i];
-            for (var j = 0; j < functionParameters.length; j++) {
-                var functionParameter = functionParameters[j];
-                var functionParameterName = this.ResolveQueryFunctionParameterName(functionParameter);
-                if (objectInformation[functionParameterName] == null)
-                    continue;
-                object[projectionAlias] = objectInformation[functionParameterName];
-                break;
-            }
-        }
+    DrapoStorage.prototype.ResolveQueryFunctionCoalesce = function (projectionAlias, functionParameters, objects, objectsInformation, sector) {
+        return __awaiter(this, void 0, void 0, function () {
+            var i, object, objectInformation, j, functionParameter, functionParameterName, _a, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        i = 0;
+                        _c.label = 1;
+                    case 1:
+                        if (!(i < objects.length)) return [3, 7];
+                        object = objects[i];
+                        objectInformation = objectsInformation[i];
+                        j = 0;
+                        _c.label = 2;
+                    case 2:
+                        if (!(j < functionParameters.length)) return [3, 6];
+                        functionParameter = functionParameters[j];
+                        functionParameterName = this.ResolveQueryFunctionParameterName(functionParameter);
+                        if (!this.Application.Parser.IsMustache(functionParameterName)) return [3, 4];
+                        _a = object;
+                        _b = projectionAlias;
+                        return [4, this.RetrieveDataValue(sector, functionParameterName)];
+                    case 3:
+                        _a[_b] = _c.sent();
+                        return [3, 6];
+                    case 4:
+                        if (objectInformation[functionParameterName] == null)
+                            return [3, 5];
+                        object[projectionAlias] = objectInformation[functionParameterName];
+                        return [3, 6];
+                    case 5:
+                        j++;
+                        return [3, 2];
+                    case 6:
+                        i++;
+                        return [3, 1];
+                    case 7: return [2];
+                }
+            });
+        });
     };
     DrapoStorage.prototype.ResolveQueryConditionMustaches = function (sector, dataKey, query) {
         return __awaiter(this, void 0, void 0, function () {
