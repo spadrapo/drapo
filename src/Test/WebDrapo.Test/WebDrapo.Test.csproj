@@ -12,11 +12,6 @@
   </ItemGroup>
  
   <ItemGroup>
-    <None Remove="Pages\DataQueryCoalesceWithMustache.Test.html" />
-    <None Remove="Pages\DataQueryCoalesceWithProperties.Test.html" />
-  </ItemGroup>
- 
-  <ItemGroup>
     <PackageReference Include="NUnit" Version="3.8.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.6.0" />

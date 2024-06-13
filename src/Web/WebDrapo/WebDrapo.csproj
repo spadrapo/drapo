@@ -61,9 +61,6 @@
 		<Content Remove="wwwroot\components\stylist\stylist.ts" />
 	</ItemGroup>
 	<ItemGroup>
-	  <_ContentIncludedByDefault Remove="wwwroot\DrapoPages\DataQueryCoalesceWithMustache.html" />
-	</ItemGroup>
-	<ItemGroup>
 		<Folder Include="wwwroot\components\labelinputinstance\" />
 		<Folder Include="wwwroot\components\code\" />
 		<Folder Include="wwwroot\js\" />
