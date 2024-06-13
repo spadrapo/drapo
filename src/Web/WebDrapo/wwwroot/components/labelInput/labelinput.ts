@@ -1,4 +1,4 @@
-﻿function labelinputConstructor(el, app)
+﻿function labelinputConstructor(el: any, app: any)
 {
     let model = el.getAttribute("d-model");
     let caption = el.getAttribute("d-caption");

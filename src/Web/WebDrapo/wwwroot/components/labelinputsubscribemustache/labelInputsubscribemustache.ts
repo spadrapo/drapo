@@ -1,12 +1,12 @@
-﻿function labelinputsubscribemustacheConstructor(el, app) {
+﻿function labelinputsubscribemustacheConstructor(el: any, app: any) {
     let input = el.children[el.children.length - 1];
     let dataKey = el.getAttribute("d-dataKeySource");
     app._observer.SubscribeComponent(dataKey, el, labelinputsubscribeNotify, input);
-    input.addEventListener('change', function (evt) { labelinputsubscribeChange(evt, el, app); }, false);
+    input.addEventListener('change', function (evt: any) { labelinputsubscribeChange(evt, el, app); }, false);
     return(labelinputsubscribeNotify(el, app));
 }
 
-function labelinputsubscribeNotify(el, app) {
+function labelinputsubscribeNotify(el: any, app: any) {
     let sector = app._document.GetSector(el);
     let data = el.getAttribute("d-dataKeySource");
     var mustachePartes = app._parser.ParseMustache(data);
@@ -16,14 +16,14 @@ function labelinputsubscribeNotify(el, app) {
     let label = el.children[0];
     let input = el.children[el.children.length - 1];
     label.html(caption);
-    let promise = app._storage.RetrieveData(dataKey, sector).then(function (dataItem) {
+    let promise = app._storage.RetrieveData(dataKey, sector).then(function (dataItem: any) {
         let value = (dataItem !== null) ? dataItem[dataField] : '';
         input.html(value);
     });
     return (promise);
 }
 
-function labelinputsubscribeChange(evt, el, app)
+function labelinputsubscribeChange(evt: any, el: any, app: any)
 {
     var target = evt.target;
     let sector = app._document.GetSector(el);
