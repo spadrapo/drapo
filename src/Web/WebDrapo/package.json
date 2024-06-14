@@ -3,11 +3,9 @@
   "name": "asp.net",
   "private": true,
   "devDependencies": {
+    "typescript": "^5.4.5",
     "natives": "^1.1.6",
-    "es6-promise": "4.2.4",
+    "es6-promise": "^4.2.4",
     "tslint": "^5.12.0"
-  },
-  "dependencies": {
-    "typescript": "^3.2.2"
   }
 }
