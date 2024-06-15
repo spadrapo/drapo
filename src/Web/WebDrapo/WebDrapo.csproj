@@ -6,7 +6,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
-		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.9.4">
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.4.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -14,6 +14,9 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Middleware\Drapo\Drapo.csproj" />
 	</ItemGroup>
+	<Target Name="CopyDrapoLib" BeforeTargets="PrepareResources">
+		<Copy SourceFiles="..\..\Middleware\Drapo\lib\index.d.ts" DestinationFolder="node_modules\@types\drapo\" />
+	</Target>
 	<ItemGroup>
 		<Compile Remove="node_modules\**\*;Client\**\*" />
 		<Content Include="Dockerfile" />

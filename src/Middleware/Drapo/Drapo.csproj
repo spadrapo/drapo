@@ -7,6 +7,7 @@
 	<PropertyGroup>
 		<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
 		<TypeScriptCompileBlocked>false</TypeScriptCompileBlocked>
+		<TypeScriptCompileBlocked Condition="!$(TargetFrameworks.StartsWith($(TargetFramework)))">true</TypeScriptCompileBlocked>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.4.5">
@@ -15,13 +16,25 @@
 		</PackageReference>
 		<Content Include="tsconfig.json" />
 	</ItemGroup>
-	<Target Name="CopyLib" AfterTargets="Build">
-		<Copy SourceFiles="lib\index.d.ts" DestinationFolder="$(ProjectDir)..\..\Web\WebDrapo\node_modules\@types\drapo\" Condition="Exists('%(Copy.FullPath)')"/>
+	<Target Name="CleanLibFiles" BeforeTargets="Clean" Condition="'$(TypeScriptCompileBlocked)' != 'true' AND '$(DesignTimeBuild)' != 'true'">
+		<ItemGroup>
+			<FilesToDelete Include="lib\*"/>
+		</ItemGroup>
+		<Delete Files="@(FilesToDelete)" />
 	</Target>
-	<ItemGroup>
-		<None Remove="lib\*.js" />
-		<None Remove="js\*.*" />
-	</ItemGroup>
+	<Target Name="CreateLibFiles" AfterTargets="CompileTypeScriptWithTSConfig" Condition="'$(TypeScriptCompileBlocked)' != 'true' AND '$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
+		<ItemGroup>
+			<JsFiles Include="node_modules/es6-promise/dist/es6-promise.auto.min.js;node_modules/@microsoft/signalr/dist/browser/signalr.min.js;js\*.js"/>
+			<DefFiles Include="js\*.d.ts"/>
+		</ItemGroup>
+		<ItemGroup>
+			<JsFileContents Include="$([System.IO.File]::ReadAllText(%(JsFiles.Identity)))"/>
+			<DefFileContents Include="$([System.IO.File]::ReadAllText(%(DefFiles.Identity)))"/>
+		</ItemGroup>
+		<WriteLinesToFile File="lib\drapo.js" Lines="@(JsFileContents)" Overwrite="true" />
+		<WriteLinesToFile File="lib\drapo.min.js" Lines="@(JsFileContents)" Overwrite="true" />
+		<WriteLinesToFile File="lib\index.d.ts" Lines="@(DefFileContents)" Overwrite="true" />
+	</Target>
 	<ItemGroup>
 		<EmbeddedResource Include="lib\*.js" />
 	</ItemGroup>
