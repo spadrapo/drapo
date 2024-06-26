@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Coalesce with mustache</title>
+</head>
+<body>
+    <div d-dataKey="wordUnkown" d-dataType="value" d-dataValue="Unknown product"></div>
+    <div d-dataKey="emptyData" d-dataType="value"></div>
+    <div d-dataKey="products" d-dataType="array" d-dataValue='[{"Code":1,"BarCode":"9997891"},{"Code":2,"BarCode":"9997892","Description":"Product_2"},{"Code":"3","Description":""},{"Code":"4","Description":"Product_4"}]'></div>
+    <div d-dataKey="order" d-dataType="array" d-dataValue='[{"Code":1,"Product":1},{"Code":2,"Product":2},{"Code":3},{"Code":4,"Product":4}]'></div>
+
+    <div d-dataKey="queryOrdersMustacheWordLeft" d-dataType="query" d-dataValue="SELECT O.Code as OrderCode, P.BarCode, COALESCE(P.Description,{{wordUnkown}}) as Description FROM order as O LEFT JOIN products as P ON O.Product = P.Code"></div>
+    <div d-dataKey="queryOrdersMustacheWordRight" d-dataType="query" d-dataValue="SELECT O.Code as OrderCode, P.BarCode, COALESCE({{wordUnkown}}, P.Description) as Description FROM order as O LEFT JOIN products as P ON O.Product = P.Code"></div>
+
+    <div d-dataKey="queryOrdersMustacheEmptyLeft" d-dataType="query" d-dataValue="SELECT O.Code as OrderCode, P.BarCode, COALESCE(P.Description,{{emptyData}}) as Description FROM order as O LEFT JOIN products as P ON O.Product = P.Code"></div>
+    <div d-dataKey="queryOrdersMustacheEmptyRight" d-dataType="query" d-dataValue="SELECT O.Code as OrderCode, P.BarCode, COALESCE({{emptyData}}, P.Description) as Description FROM order as O LEFT JOIN products as P ON O.Product = P.Code"></div>
+
+    <!-- Layout -->
+    <br />
+    <table>
+        <caption>Mustache "Unknown product" in coalesce right side.</caption>
+        <tr>
+            <td>Order</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="order in queryOrdersMustacheWordLeft">
+            <td>{{order.OrderCode}}</td>
+            <td>{{order.BarCode}}</td>
+            <td>{{order.Description}}</td>
+        </tr>
+    </table>
+    <br />
+    <table>
+        <caption>Mustache "Unknown product" in coalesce left side.</caption>
+        <tr>
+            <td>Order</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="order in queryOrdersMustacheWordRight">
+            <td>{{order.OrderCode}}</td>
+            <td>{{order.BarCode}}</td>
+            <td>{{order.Description}}</td>
+        </tr>
+    </table>
+    <br />
+    <table>
+        <caption>Mustache "emptyData" in coalesce right side.</caption>
+        <tr>
+            <td>Order</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="order in queryOrdersMustacheEmptyLeft">
+            <td>{{order.OrderCode}}</td>
+            <td>{{order.BarCode}}</td>
+            <td>{{order.Description}}</td>
+        </tr>
+    </table>
+    <br />
+    <table>
+        <caption>Mustache "emptyData" in coalesce left side.</caption>
+        <tr>
+            <td>Order</td>
+            <td>Coalesce(Bar code or Code)</td>
+            <td>Description</td>
+        </tr>
+        <tr d-for="order in queryOrdersMustacheEmptyRight">
+            <td>{{order.OrderCode}}</td>
+            <td>{{order.BarCode}}</td>
+            <td>{{order.Description}}</td>
+        </tr>
+    </table>
+</body>
+</html>
