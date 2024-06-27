@@ -2238,7 +2238,7 @@ class DrapoStorage {
         if (objectsAggregations !== null)
             return (objectsAggregations);
         //Functions
-        this.ResolveQueryFunctions(query, objects, objectsInformation);
+        await this.ResolveQueryFunctions(query, sector, objects, objectsInformation);
         //Output Array
         if (query.OutputArray != null) {
             const outputArray: any[] = [];
@@ -2334,10 +2334,19 @@ class DrapoStorage {
                     if (objectInformation[functionParameterName] != null)
                         continue;
                     const functionParameterValues: string[] = this.Application.Parser.ParseQueryProjectionFunctionParameterValue(functionParameterName);
-                    const source: string = functionParameterValues[0];
+                    const sourceProperty: string[] = functionParameterValues[0].split('_');
+                    let source: string;
+                    let property: string;
+                    if (sourceProperty.length > 1) {
+                        source = sourceProperty[0];
+                        property = sourceProperty[1];
+                    }
+                    else {
+                        source = property = sourceProperty[0];
+                    }
                     if ((query.Sources.length > 1) && ((querySource.Alias ?? querySource.Source) !== source))
                         continue;
-                    const value: any = isObject ? sourceObject[projection.Column ?? functionParameterName] : sourceObject;
+                    const value: any = isObject ? sourceObject[projection.Column ?? property] : sourceObject;
                     objectInformation[functionParameterName] = value;
                 }
             } else {
@@ -2440,26 +2449,30 @@ class DrapoStorage {
         return (value);
     }
 
-    private ResolveQueryFunctions(query: DrapoQuery, objects: any[], objectsInformation: any[]): void {
+    private async ResolveQueryFunctions(query: DrapoQuery, sector: string, objects: any[], objectsInformation: any[]): Promise<void> {
         for (let i: number = 0; i < query.Projections.length; i++) {
             const projection: DrapoQueryProjection = query.Projections[i];
             if (projection.FunctionName !== null)
-                this.ResolveQueryFunction(projection.Alias, projection.FunctionName, projection.FunctionParameters, objects, objectsInformation);
+                await this.ResolveQueryFunction(projection.Alias, projection.FunctionName, projection.FunctionParameters, objects, objectsInformation, sector);
         }
     }
 
-    private ResolveQueryFunction(projectionAlias: string, functionName: string, functionParameters: string[], objects: any[], objectsInformation: any[]): void {
+    private async ResolveQueryFunction(projectionAlias: string, functionName: string, functionParameters: string[], objects: any[], objectsInformation: any[], sector: string): Promise<void> {
         if (functionName === 'COALESCE')
-            this.ResolveQueryFunctionCoalesce(projectionAlias, functionParameters, objects, objectsInformation);
+            await this.ResolveQueryFunctionCoalesce(projectionAlias, functionParameters, objects, objectsInformation, sector);
     }
 
-    private ResolveQueryFunctionCoalesce(projectionAlias: string, functionParameters: string[], objects: any[], objectsInformation: any[]): void {
+    private async ResolveQueryFunctionCoalesce(projectionAlias: string, functionParameters: string[], objects: any[], objectsInformation: any[], sector: string): Promise<void> {
         for (let i: number = 0; i < objects.length; i++) {
             const object: any = objects[i];
             const objectInformation: any = objectsInformation[i];
             for (let j: number = 0; j < functionParameters.length; j++) {
                 const functionParameter: string = functionParameters[j];
                 const functionParameterName: string = this.ResolveQueryFunctionParameterName(functionParameter);
+                if (this.Application.Parser.IsMustache(functionParameterName)) {
+                    object[projectionAlias] = await this.RetrieveDataValue(sector, functionParameterName);
+                    break;
+                }
                 if (objectInformation[functionParameterName] == null)
                     continue;
                 object[projectionAlias] = objectInformation[functionParameterName];
