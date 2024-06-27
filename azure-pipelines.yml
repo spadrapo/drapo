@@ -29,6 +29,20 @@ stages:
       inputs:
         workingDir: src/Web/WebDrapo
         verbose: false
+    - task: Npm@1
+      displayName: 'install tsc'
+      inputs:
+        command: 'custom'
+        customCommand: 'install -g typescript'
+    - script: 'tsc'
+      name: 'tsc Middleware/Drapo'
+      workingDirectory: 'src/Middleware/Drapo'
+    - task: DotNetCoreCLI@2
+      displayName: Cake
+      inputs:
+        command: 'custom'
+        custom: 'cake'
+        workingDirectory: 'src/Web/WebDrapo'
     - task: DotNetCoreCLI@2
       displayName: Build
       inputs:

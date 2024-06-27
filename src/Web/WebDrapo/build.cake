@@ -15,7 +15,10 @@ Task("Debug")
      IEnumerable<FilePath> files = GetFiles("../../Middleware/Drapo/js/*.js");
      foreach(FilePath file in files)
        fileContent = fileContent + "\n" + FileReadText(file);
+     CreateDirectory("../../Middleware/Drapo/lib");
      FileWriteText("../../Middleware/Drapo/lib/drapo.js", fileContent);
+     CreateDirectory("../../Web/WebDrapo/node_modules/@types/drapo");
+     CopyFile("../../Middleware/Drapo/lib/drapo.js","../../Web/WebDrapo/node_modules/@types/drapo/drapo.js");
 });
 
 Task("Release")
@@ -28,7 +31,10 @@ Task("Release")
      foreach(FilePath file in files)
        fileContent = fileContent + "\n" + FileReadText(file);
      //TODO: Uglify fileContent here
+     CreateDirectory("../../Middleware/Drapo/lib");
      FileWriteText("../../Middleware/Drapo/lib/drapo.min.js", fileContent);
+     CreateDirectory("../../Web/WebDrapo/node_modules/@types/drapo");
+     CopyFile("../../Middleware/Drapo/lib/drapo.min.js","../../Web/WebDrapo/node_modules/@types/drapo/drapo.min.js");
 });
 
 Task("Type")
@@ -41,7 +47,10 @@ Task("Type")
             fileContent = fileContent + "\n";
         fileContent = fileContent + FileReadText(file);
      }
-      FileWriteText("../../Middleware/Drapo/lib/index.d.ts", fileContent);
+     CreateDirectory("../../Middleware/Drapo/lib");
+     FileWriteText("../../Middleware/Drapo/lib/index.d.ts", fileContent);
+     CreateDirectory("../../Web/WebDrapo/node_modules/@types/drapo");
+     CopyFile("../../Middleware/Drapo/lib/index.d.ts","../../Web/WebDrapo/node_modules/@types/drapo/index.d.ts");
 });
 
 Task("Lint")
