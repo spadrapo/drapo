@@ -42,7 +42,7 @@
 	</Target>
 	<Target Name="EmbedGeneratedFiles" AfterTargets="CreateLibFiles">
 		<ItemGroup>
-			<EmbeddedResource Include="lib\$(TargetFramework)\*.js" WithCulture="false" Type="Non-Resx"/>
+			<EmbeddedResource Include="lib\$(TargetFramework)\*.js" WithCulture="false" Type="Non-Resx" />
 		</ItemGroup>
 	</Target>
 	<ItemGroup>
