@@ -247,3 +247,5 @@ paket-files/
 # FAKE - F# Make
 .fake/
 
+#npm
+package-lock.json
