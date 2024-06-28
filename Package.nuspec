@@ -20,6 +20,6 @@
     <file src="src\Middleware\Drapo\bin\Release\netcoreapp6.0\Sysphera.Middleware.Drapo.dll" target="lib\netcoreapp6.0\" />
     <file src="src\Middleware\Drapo\bin\Release\net8.0\Sysphera.Middleware.Drapo.dll" target="lib\net8.0\" />
     <file src="src\**\*.*" exclude="src\**\*.*" />
-    <file src="src\Middleware\Drapo\lib\*.d.ts" target="contentFiles\any\any\node_modules\@types\drapo" />
+    <file src="src\Middleware\Drapo\lib\net8.0\*.d.ts" target="contentFiles\any\any\node_modules\@types\drapo" />
   </files>
 </package>
