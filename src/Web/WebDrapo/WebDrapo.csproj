@@ -15,7 +15,7 @@
 		<ProjectReference Include="..\..\Middleware\Drapo\Drapo.csproj" />
 	</ItemGroup>
 	<Target Name="CopyDrapoLib" BeforeTargets="PrepareResources">
-		<Copy SourceFiles="..\..\Middleware\Drapo\lib\index.d.ts" DestinationFolder="node_modules\@types\drapo\" />
+		<Copy SourceFiles="..\..\Middleware\Drapo\lib\$(TargetFramework)\index.d.ts" DestinationFolder="node_modules\@types\drapo\" />
 	</Target>
 	<ItemGroup>
 		<Compile Remove="node_modules\**\*;Client\**\*" />
