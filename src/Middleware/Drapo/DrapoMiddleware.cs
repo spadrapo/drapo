@@ -19,8 +19,8 @@ namespace Sysphera.Middleware.Drapo
         #region Constants
         private const string ACTIVATORJS = "drapo.js";
         private const string ACTIVATORJSON = "drapo.json";
-        private const string LIB_RELEASE = "Sysphera.Middleware.Drapo.lib.drapo.min.js";
-        private const string LIB_DEBUG = "Sysphera.Middleware.Drapo.lib.drapo.js";
+        private const string LIB_RELEASE = "drapo.min.js";
+        private const string LIB_DEBUG = "drapo.js";
         private const string CONTENT_TYPE_HTML = "text/html; charset=utf-8";
         #endregion
         #region Fields
