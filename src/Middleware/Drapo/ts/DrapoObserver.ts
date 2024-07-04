@@ -6,6 +6,7 @@ class DrapoObserver {
     private _dataBarberElements: HTMLElement[][] = [];
     private _dataForDataKey: string[] = [];
     private _dataForElement: HTMLElement[][] = [];
+    private _dataForSector: string[][] = [];
     private _dataIncrementalKey: string[] = [];
     private _dataIncrementalElements: HTMLElement[][] = [];
     private _IsEnabledNotifyIncremental: boolean = true;
@@ -79,6 +80,7 @@ class DrapoObserver {
     private CreateForDataKeyIndex(dataKey: string): number {
         const index: number = this._dataForDataKey.push(dataKey);
         this._dataForElement.push([]);
+        this._dataForSector.push([]);
         return (index - 1);
     }
 
@@ -120,6 +122,7 @@ class DrapoObserver {
         if (dataKeyIndex == null)
             dataKeyIndex = this.CreateForDataKeyIndex(dataKey);
         this._dataForElement[dataKeyIndex].push(elementForTemplate);
+        this._dataForSector[dataKeyIndex].push(this.Application.Document.GetSector(elementForTemplate));
     }
 
     public SubscribeStorage(dataKey: string, dataFields: string[], dataReferenceKey: string, type: DrapoStorageLinkType = DrapoStorageLinkType.Reload): void {
@@ -176,6 +179,7 @@ class DrapoObserver {
         if (elementForTemplate === null) {
             this._dataForDataKey.splice(dataKeyIndex, 1);
             this._dataForElement.splice(dataKeyIndex, 1);
+            this._dataForSector.splice(dataKeyIndex, 1);
             return;
         }
         const dataElements: HTMLElement[] = this._dataForElement[dataKeyIndex];
@@ -184,6 +188,7 @@ class DrapoObserver {
             if (dataElementParent != elementForTemplate)
                 continue;
             this._dataForElement[dataKeyIndex].splice(i, 1);
+            this._dataForSector[dataKeyIndex].splice(i, 1);
         }
     }
 
@@ -761,5 +766,54 @@ class DrapoObserver {
             return (true);
         }
         return (false);
+    }
+
+    public UnloadSector(sector: string): void {
+        //Control Flow
+        this.UnloadSectorFor(sector);
+    }
+
+    private UnloadSectorFor(sector: string): void {
+        for (let i: number = this._dataForDataKey.length - 1; i >= 0; i--) {
+            const sectors = this._dataForSector[i];
+            for (let j: number = sectors.length - 1; j >= 0; j--) {
+                if (sectors[j] !== sector)
+                    continue;
+                sectors.splice(j, 1);
+                this._dataForElement[i].splice(j, i);
+            }
+            if (sector.length > 0)
+                continue;
+            this._dataForDataKey.splice(i, 1);
+            this._dataForElement.splice(i, 1);
+            this._dataForSector.splice(i, 1);
+        }
+    }
+
+    public AppendObserverItem(observerItem: DrapoSectorContainerObserverItem, sector: string): void
+    {
+        //Control Flow
+        for (let i: number = this._dataForDataKey.length - 1; i >= 0; i--) {
+            const dataKey: string = this._dataForDataKey[i];
+            const sectors = this._dataForSector[i];
+            for (let j: number = sectors.length - 1; j >= 0; j--)
+                if (sectors[j] === sector)
+                    observerItem.AddFor(dataKey, this._dataForElement[i][j], sector);
+        }
+    }
+
+    public AddObserverItem(observerItem: DrapoSectorContainerObserverItem): void
+    {
+        //Control Flow
+        for (let i: number = observerItem.DataForDataKey.length - 1; i >= 0; i--) {
+            const dataKey: string = observerItem.DataForDataKey[i];
+            const el: HTMLElement = observerItem.DataForElement[i];
+            const sector: string = observerItem.DataForSector[i];
+            let dataKeyIndex: number = this.GetForDataKeyIndex(dataKey);
+            if (dataKeyIndex == null)
+                dataKeyIndex = this.CreateForDataKeyIndex(dataKey);
+            this._dataForElement[dataKeyIndex].push(el);
+            this._dataForSector[dataKeyIndex].push(sector);
+        }
     }
 }

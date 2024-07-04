@@ -98,6 +98,8 @@ class DrapoSectorContainerHandler {
         const sectorHierarchys: [string, string][] = [];
         //Sector Friends
         const sectorFriends: [string, string[]][] = [];
+        //Observer
+        const observerItem: DrapoSectorContainerObserverItem = new DrapoSectorContainerObserverItem();
         //Component Sectors
         const componentSectors: string[] = [];
         //Component Tags
@@ -115,10 +117,12 @@ class DrapoSectorContainerHandler {
             this.Application.Document.AppendSectorHierarchyBySector(sectorHierarchys, sectorCurrent);
             //Sector Friends
             this.Application.Document.AppendSectorFriendsBySector(sectorFriends, sectorCurrent);
+            //Observer
+            this.Application.Observer.AppendObserverItem(observerItem, sectorCurrent);
             //Components
             this.Application.ComponentHandler.AppendInstances(sectorCurrent, componentSectors, componentTags, componentElements, componentInstances);
         }
-        return (new DrapoSectorContainerItem(sector, containerCode, storageItems, sectorHierarchys, sectorFriends, componentSectors, componentTags, componentElements, componentInstances, el, canDetachElement));
+        return (new DrapoSectorContainerItem(sector, containerCode, storageItems, sectorHierarchys, sectorFriends, observerItem, componentSectors, componentTags, componentElements, componentInstances, el, canDetachElement));
     }
 
     private async LoadContainer(container: DrapoSectorContainerItem): Promise<void> {
@@ -130,6 +134,8 @@ class DrapoSectorContainerHandler {
         this.Application.Document.AddSectorHierarchys(container.SectorHierarchys);
         //Sector Friends
         this.Application.Document.AddSectorFriendsRange(container.SectorFriends);
+        //Observer
+        this.Application.Observer.AddObserverItem(container.ObserverItem);
         //Component
         await this.Application.ComponentHandler.AddInstances(container);
         //Sector Event
@@ -148,6 +154,8 @@ class DrapoSectorContainerHandler {
             const sectorCurrent: string = sectorChildren[i];
             //Sector Event
             await this.Application.Storage.FireEventOnBeforeContainerUnload(sectorCurrent);
+            //Unload Observer
+            this.Application.Observer.UnloadSector(sectorCurrent);
             //Unload Validation
             this.Application.Validator.UnloadSector(sectorCurrent);
             //Unload Component Instances
