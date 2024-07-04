@@ -782,7 +782,7 @@ class DrapoObserver {
                 sectors.splice(j, 1);
                 this._dataForElement[i].splice(j, i);
             }
-            if (sector.length > 0)
+            if (sectors.length > 0)
                 continue;
             this._dataForDataKey.splice(i, 1);
             this._dataForElement.splice(i, 1);
