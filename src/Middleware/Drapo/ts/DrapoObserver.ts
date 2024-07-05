@@ -26,6 +26,7 @@ class DrapoObserver {
     private _dataComponentKey: string[] = [];
     private _dataComponentField: string[][][] = [];
     private _dataComponentElements: HTMLElement[][] = [];
+    private _dataComponentSector: string[][] = [];
     private _dataComponentFunction: Function[][] = [];
     private _dataComponentElementsFocus: HTMLElement[][] = [];
     private _lockedData: [string, boolean][] = [];
@@ -577,6 +578,7 @@ class DrapoObserver {
         const index: number = this._dataComponentKey.push(dataKey);
         this._dataComponentField.push([]);
         this._dataComponentElements.push([]);
+        this._dataComponentSector.push([]);
         this._dataComponentFunction.push([]);
         this._dataComponentElementsFocus.push([]);
         return (index - 1);
@@ -599,6 +601,7 @@ class DrapoObserver {
             dataKeyIndex = this.CreateComponentDataKeyIndex(dataKey);
         this._dataComponentField[dataKeyIndex].push(dataFields);
         this._dataComponentElements[dataKeyIndex].push(el);
+        this._dataComponentSector[dataKeyIndex].push(this.Application.Document.GetSector(el));
         this._dataComponentFunction[dataKeyIndex].push(notifyFunction);
         this._dataComponentElementsFocus[dataKeyIndex].push(elComponentFocus);
     }
@@ -610,6 +613,7 @@ class DrapoObserver {
         this._dataComponentKey.splice(dataKeyIndex, 1);
         this._dataComponentField.splice(dataKeyIndex, 1);
         this._dataComponentElements.splice(dataKeyIndex, 1);
+        this._dataComponentSector.splice(dataKeyIndex, 1);
         this._dataComponentFunction.splice(dataKeyIndex, 1);
         this._dataComponentElementsFocus.splice(dataKeyIndex, 1);
     }
@@ -622,6 +626,7 @@ class DrapoObserver {
                 if (this.Application.Document.IsElementAttached(dataComponentElement))
                     continue;
                 dataComponentElements.splice(j, 1);
+                this._dataComponentSector[i].splice(j, 1);
                 this._dataComponentField[i].splice(j, 1);
                 this._dataComponentFunction[i].splice(j, 1);
                 this._dataComponentElementsFocus[i].splice(j, 1);
@@ -631,6 +636,7 @@ class DrapoObserver {
             this._dataComponentKey.splice(i, 1);
             this._dataComponentField.splice(i, 1);
             this._dataComponentElements.splice(i, 1);
+            this._dataComponentSector.splice(i, 1);
             this._dataComponentFunction.splice(i, 1);
             this._dataComponentElementsFocus.splice(i, 1);
         }
@@ -652,6 +658,7 @@ class DrapoObserver {
             } else if (!this.Application.SectorContainerHandler.IsElementContainerized(dataComponentElement)) {
                 this._dataComponentField[dataKeyIndex].splice(i, 1);
                 this._dataComponentElements[dataKeyIndex].splice(i, 1);
+                this._dataComponentSector[dataKeyIndex].splice(i, 1);
                 this._dataComponentFunction[dataKeyIndex].splice(i, 1);
                 this._dataComponentElementsFocus[dataKeyIndex].splice(i, 1);
             }
@@ -780,6 +787,8 @@ class DrapoObserver {
         this.UnloadSectorFor(sector);
         //Barber
         this.UnloadSectorBarber(sector);
+        //Component
+        this.UnloadSectorComponent(sector);
     }
 
     private UnloadSectorFor(sector: string): void {
@@ -818,6 +827,29 @@ class DrapoObserver {
         }
     }
 
+    private UnloadSectorComponent(sector: string): void {
+        for (let i: number = this._dataComponentKey.length - 1; i >= 0; i--) {
+            const sectors: string[] = this._dataComponentSector[i];
+            for (let j: number = sectors.length - 1; j >= 0; j--) {
+                if (sectors[j] !== sector)
+                    continue;
+                sectors.splice(j, 1);
+                this._dataComponentField[i].splice(j, i);
+                this._dataComponentElements[i].splice(j, i);
+                this._dataComponentFunction[i].splice(j, i);
+                this._dataComponentElementsFocus[i].splice(j, i);
+            }
+            if (sectors.length > 0)
+                continue;
+            this._dataComponentKey.splice(i, 1);
+            this._dataComponentField.splice(i, 1);
+            this._dataComponentElements.splice(i, 1);
+            this._dataComponentSector.splice(i, 1);
+            this._dataComponentFunction.splice(i, 1);
+            this._dataComponentElementsFocus.splice(i, 1);
+        }
+    }
+
     public AppendObserverItem(observerItem: DrapoSectorContainerObserverItem, sector: string): void
     {
         //Control Flow
@@ -835,6 +867,14 @@ class DrapoObserver {
             for (let j: number = sectors.length - 1; j >= 0; j--)
                 if (sectors[j] === sector)
                     observerItem.AddBarber(dataKey, this._dataBarberElements[i][j], sector, this._dataBarberFields[i][j]);
+        }
+        //Component
+        for (let i: number = this._dataComponentKey.length - 1; i >= 0; i--) {
+            const dataKey: string = this._dataComponentKey[i];
+            const sectors = this._dataComponentSector[i];
+            for (let j: number = sectors.length - 1; j >= 0; j--)
+                if (sectors[j] === sector)
+                    observerItem.AddComponent(dataKey, this._dataComponentElements[i][j], sector, this._dataComponentField[i][j], this._dataComponentFunction[i][j], this._dataComponentElementsFocus[i][j]);
         }
     }
 
@@ -863,6 +903,23 @@ class DrapoObserver {
             this._dataBarberElements[dataKeyIndex].push(el);
             this._dataBarberSector[dataKeyIndex].push(sector);
             this._dataBarberFields[dataKeyIndex].push(fields);
+        }
+        //Component
+        for (let i: number = observerItem.DataComponentKey.length - 1; i >= 0; i--) {
+            const dataKey: string = observerItem.DataComponentKey[i];
+            const el: HTMLElement = observerItem.DataComponentElements[i];
+            const sector: string = observerItem.DataComponentSector[i];
+            const fields: string[] = observerItem.DataComponentField[i];
+            const componentFunction: Function = observerItem.DataComponentFunction[i];
+            const elFocus: HTMLElement = observerItem.DataComponentElementsFocus[i];
+            let dataKeyIndex: number = this.GetComponentDataKeyIndex(dataKey);
+            if (dataKeyIndex == null)
+                dataKeyIndex = this.CreateComponentDataKeyIndex(dataKey);
+            this._dataComponentElements[dataKeyIndex].push(el);
+            this._dataComponentSector[dataKeyIndex].push(sector);
+            this._dataComponentField[dataKeyIndex].push(fields);
+            this._dataComponentFunction[dataKeyIndex].push(componentFunction);
+            this._dataComponentElementsFocus[dataKeyIndex].push(elFocus);
         }
     }
 }
