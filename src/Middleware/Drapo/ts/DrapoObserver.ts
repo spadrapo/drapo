@@ -4,6 +4,7 @@ class DrapoObserver {
     private _dataBarberDataKeys: string[] = [];
     private _dataBarberFields: string[][][] = [];
     private _dataBarberElements: HTMLElement[][] = [];
+    private _dataBarberSector: string[][] = [];
     private _dataForDataKey: string[] = [];
     private _dataForElement: HTMLElement[][] = [];
     private _dataForSector: string[][] = [];
@@ -74,6 +75,7 @@ class DrapoObserver {
         const index: number = this._dataBarberDataKeys.push(dataKey);
         this._dataBarberFields.push([]);
         this._dataBarberElements.push([]);
+        this._dataBarberSector.push([]);
         return (index - 1);
     }
 
@@ -96,6 +98,7 @@ class DrapoObserver {
             dataKeyIndex = this.CreateBarberDataKeyIndex(dataKey);
         const dataBarberFields: string[][] = this._dataBarberFields[dataKeyIndex];
         const elements: HTMLElement[] = this._dataBarberElements[dataKeyIndex];
+        const sectors: string[] = this._dataBarberSector[dataKeyIndex];
         for (let i: number = 0; i < dataBarberFields.length; i++) {
             if (!this.IsEqualDataFields(dataBarberFields[i], dataFields))
                 continue;
@@ -105,6 +108,7 @@ class DrapoObserver {
         }
         dataBarberFields.push(dataFields);
         elements.push(element);
+        sectors.push(this.Application.Document.GetSector(element));
         return (true);
     }
 
@@ -115,6 +119,7 @@ class DrapoObserver {
         this._dataBarberDataKeys.splice(dataKeyIndex, 1);
         this._dataBarberElements.splice(dataKeyIndex, 1);
         this._dataBarberFields.splice(dataKeyIndex, 1);
+        this._dataBarberSector.splice(dataKeyIndex, 1);
     }
 
     public SubscribeFor(elementForTemplate: HTMLElement, dataKey: string): void {
@@ -239,6 +244,7 @@ class DrapoObserver {
         const dataField: string = ((dataFields != null) && (dataFields.length > 0)) ? dataFields[0] : null;
         const dataElements: HTMLElement[] = this._dataBarberElements[dataKeyIndex];
         const dataBarberFields: string[][] = this._dataBarberFields[dataKeyIndex];
+        const dataBarberSector: string[] = this._dataBarberSector[dataKeyIndex];
         for (let i = dataElements.length - 1; i >= 0; i--) {
             const element: HTMLElement = dataElements[i];
             if (this.Application.Document.IsElementAttached(element)) {
@@ -251,6 +257,7 @@ class DrapoObserver {
             } else if (!this.Application.SectorContainerHandler.IsElementContainerized(element)) {
                 dataElements.splice(i, 1);
                 dataBarberFields.splice(i, 1);
+                dataBarberSector.splice(i, 1);
             }
         }
     }
@@ -771,6 +778,8 @@ class DrapoObserver {
     public UnloadSector(sector: string): void {
         //Control Flow
         this.UnloadSectorFor(sector);
+        //Barber
+        this.UnloadSectorBarber(sector);
     }
 
     private UnloadSectorFor(sector: string): void {
@@ -790,6 +799,25 @@ class DrapoObserver {
         }
     }
 
+    private UnloadSectorBarber(sector: string): void {
+        for (let i: number = this._dataBarberDataKeys.length - 1; i >= 0; i--) {
+            const sectors: string[] = this._dataBarberSector[i];
+            for (let j: number = sectors.length - 1; j >= 0; j--) {
+                if (sectors[j] !== sector)
+                    continue;
+                sectors.splice(j, 1);
+                this._dataBarberElements[i].splice(j, i);
+                this._dataBarberFields[i].splice(j, i);
+            }
+            if (sectors.length > 0)
+                continue;
+            this._dataBarberDataKeys.splice(i, 1);
+            this._dataBarberFields.splice(i, 1);
+            this._dataBarberElements.splice(i, 1);
+            this._dataBarberSector.splice(i, 1);
+        }
+    }
+
     public AppendObserverItem(observerItem: DrapoSectorContainerObserverItem, sector: string): void
     {
         //Control Flow
@@ -799,6 +827,14 @@ class DrapoObserver {
             for (let j: number = sectors.length - 1; j >= 0; j--)
                 if (sectors[j] === sector)
                     observerItem.AddFor(dataKey, this._dataForElement[i][j], sector);
+        }
+        //Barber
+        for (let i: number = this._dataBarberDataKeys.length - 1; i >= 0; i--) {
+            const dataKey: string = this._dataBarberDataKeys[i];
+            const sectors = this._dataBarberSector[i];
+            for (let j: number = sectors.length - 1; j >= 0; j--)
+                if (sectors[j] === sector)
+                    observerItem.AddBarber(dataKey, this._dataBarberElements[i][j], sector, this._dataBarberFields[i][j]);
         }
     }
 
@@ -814,6 +850,19 @@ class DrapoObserver {
                 dataKeyIndex = this.CreateForDataKeyIndex(dataKey);
             this._dataForElement[dataKeyIndex].push(el);
             this._dataForSector[dataKeyIndex].push(sector);
+        }
+        //Barber
+        for (let i: number = observerItem.DataBarberDataKey.length - 1; i >= 0; i--) {
+            const dataKey: string = observerItem.DataBarberDataKey[i];
+            const el: HTMLElement = observerItem.DataBarberElement[i];
+            const sector: string = observerItem.DataBarberSector[i];
+            const fields: string[] = observerItem.DataBarberFields[i];
+            let dataKeyIndex: number = this.GetBarberDataKeyIndex(dataKey);
+            if (dataKeyIndex == null)
+                dataKeyIndex = this.CreateBarberDataKeyIndex(dataKey);
+            this._dataBarberElements[dataKeyIndex].push(el);
+            this._dataBarberSector[dataKeyIndex].push(sector);
+            this._dataBarberFields[dataKeyIndex].push(fields);
         }
     }
 }
