@@ -3,6 +3,8 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Reflection.Metadata;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -158,6 +160,67 @@ namespace Sysphera.Middleware.Drapo
             if (extension == ".js")
                 return (DrapoFileType.Script);
             return (null);
+        }
+
+        public List<DrapoComponent> LoadComponentsEmbedded(Assembly assembly, string pathBase)
+        {
+            List<DrapoComponent> components = new List<DrapoComponent>();
+            List<string> componentsNames = this.GetComponentsNamesFromAssembly(assembly, pathBase);
+            foreach (string componentName in componentsNames)
+            {
+                DrapoComponent component = this.CreateComponent(componentName.ToLower());
+                foreach (string resourcePath in GetResourceFilesPathForComponent(assembly, pathBase, componentName))
+                {
+                    string fileName = this.GetFileNameFromResourcePath(resourcePath);
+                    DrapoFileType? type = this.GetFileType(resourcePath);
+                    if (!type.HasValue)
+                        continue;
+                    component.CreateFile(fileName, type.Value, DrapoResourceType.Embedded, resourcePath, assembly);
+                }
+                component.SortFiles();
+                components.Add(component);
+            }
+            return (components);
+        }
+
+        private List<string> GetComponentsNamesFromAssembly(Assembly assembly, string pathBase)
+        {
+            List<string> componentsNames = new List<string>();
+            foreach (string resourcePath in assembly.GetManifestResourceNames())
+            {
+                string componnetName = GetComponentNameFromResourcePath(pathBase, resourcePath);
+                if (string.IsNullOrEmpty(componnetName))
+                    continue;
+                if (componentsNames.Contains(componnetName))
+                    continue;
+                componentsNames.Add(componnetName);
+            }
+            return (componentsNames);
+        }
+
+        private string GetComponentNameFromResourcePath(string pathBase, string resourcePath)
+        {
+            if (!resourcePath.StartsWith(pathBase))
+                return (null);
+            string name = resourcePath.Substring(pathBase.Length + 1);
+            string[] namesplit = name.Split('.');
+            if(namesplit.Length > 1)
+                return(namesplit[0]);
+            return (null);
+        }
+
+        private List<string> GetResourceFilesPathForComponent(Assembly assembly, string pathBase, string componentName)
+        {
+            List<string> resourcesPaths = new List<string>();
+            foreach (string resourcePath in assembly.GetManifestResourceNames())
+                if (resourcePath.StartsWith($"{pathBase}.{componentName}."))
+                    resourcesPaths.Add(resourcePath);
+            return (resourcesPaths);
+        }
+
+        private string GetFileNameFromResourcePath(string resourcePath) {
+            string[] nameSplit = resourcePath.Split(".");
+            return ($"{nameSplit[nameSplit.Length - 2]}.{nameSplit[nameSplit.Length - 1]}");
         }
         #endregion
         #region Theme

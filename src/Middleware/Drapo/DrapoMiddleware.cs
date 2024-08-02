@@ -75,10 +75,11 @@ namespace Sysphera.Middleware.Drapo
         }
         #endregion
         #region Resources
-        private Dictionary<string, string> GetResources()
+        private Dictionary<string, string> GetResources(Assembly assembly = null)
         {
             Dictionary<string, string> resources = new Dictionary<string, string>();
-            Assembly assembly = typeof(DrapoMiddleware).GetTypeInfo().Assembly;
+            if (assembly == null)
+                assembly = typeof(DrapoMiddleware).GetTypeInfo().Assembly;
             foreach (string resourcePath in assembly.GetManifestResourceNames())
                 resources.Add(resourcePath, (new StreamReader(assembly.GetManifestResourceStream(resourcePath))).ReadToEnd());
             return (resources);
@@ -261,15 +262,8 @@ namespace Sysphera.Middleware.Drapo
         #region Components
         private void InitilizeInternalComponents()
         {
-            InitilizeInternalComponentDebugger();
-        }
-
-        private void InitilizeInternalComponentDebugger()
-        {
-            DrapoComponent component = this._options.Config.CreateComponent("debugger");
-            component.CreateFile("debugger.html", DrapoFileType.View, DrapoResourceType.Embedded, "Sysphera.Middleware.Drapo.components.debugger.debugger.html");
-            component.CreateFile("debugger.css", DrapoFileType.Style, DrapoResourceType.Embedded, "Sysphera.Middleware.Drapo.components.debugger.debugger.css");
-            component.CreateFile("debugger.js", DrapoFileType.Script, DrapoResourceType.Embedded, "Sysphera.Middleware.Drapo.components.debugger.debugger.js");
+            Assembly assembly = typeof(DrapoMiddleware).GetTypeInfo().Assembly;
+            this._options.Config.LoadComponentsEmbedded(assembly, "Sysphera.Middleware.Drapo.components");
         }
 
         private bool IsComponentFile(HttpContext context, out DrapoComponent component, out DrapoComponentFile file)
@@ -325,8 +319,7 @@ namespace Sysphera.Middleware.Drapo
 
         private string GetComponentFileContentInternalEmbedded(DrapoComponent component, DrapoComponentFile file, string key)
         {
-            //We only support embedded drapo resources for now
-            Dictionary<string, string> resources = GetResources();
+            Dictionary<string, string> resources = GetResources(file.Assembly);
             if (resources.ContainsKey(file.Path))
                 return (resources[file.Path]);
             throw new Exception("Drapo: resource embedded not found");
