@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Sysphera.Middleware.Drapo
@@ -20,13 +21,14 @@ namespace Sysphera.Middleware.Drapo
         #endregion
 
         #region File
-        public DrapoComponentFile CreateFile(string name, DrapoFileType type, DrapoResourceType resourceType, string path)
+        public DrapoComponentFile CreateFile(string name, DrapoFileType type, DrapoResourceType resourceType, string path, Assembly assembly = null)
         {
             DrapoComponentFile file = new DrapoComponentFile();
             file.Name = name;
 			file.Type = type;
 			file.ResourceType = resourceType;
             file.Path = path;
+            file.Assembly = assembly;
             this.Files.Add(file);
             return (file);
         }

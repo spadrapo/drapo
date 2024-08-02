@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Sysphera.Middleware.Drapo
@@ -11,5 +12,8 @@ namespace Sysphera.Middleware.Drapo
 		public DrapoFileType Type { set; get; }
 
 		public string Path { set; get; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        public Assembly Assembly { set; get; } 
     }
 }
