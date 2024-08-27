@@ -23,6 +23,14 @@ class DrapoServer {
         this._hasBadRequest = value;
     }
 
+    get Token(): string {
+        return (this._token);
+    }
+
+    get TokenAntiforgery(): string {
+        return (this._tokenAntiforgery);
+    }
+
     //Constructors
     constructor(application: DrapoApplication) {
         this._application = application;
@@ -86,7 +94,7 @@ class DrapoServer {
         return (html);
     }
 
-    public async GetHTML(url: string): Promise<[string,boolean]> {
+    public async GetHTML(url: string): Promise<[string, boolean]> {
         const requestHeaders: [string, string][] = [];
         this.InsertHeader(requestHeaders, 'X-Requested-With', 'XMLHttpRequest');
         if (this._headerContainerIdValue !== null)
@@ -205,7 +213,7 @@ class DrapoServer {
                 return (null);
             if (headersResponse !== null) {
                 this.InsertHeaders(headersResponse, response.Headers);
-                return(this.CreateFileObject(headersResponse, response.Body));
+                return (this.CreateFileObject(headersResponse, response.Body));
             }
             let dataResponse: any[];
             dataResponse = this.Application.Serializer.Deserialize(response.Body);
