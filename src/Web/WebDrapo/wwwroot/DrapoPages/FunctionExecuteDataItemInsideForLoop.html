@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function ExecuteDataItem Inside a For Loop</title>
+    <style>
+        .selected {
+            color: white;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <span>Function ExecuteDataItem</span>
+    <div d-dataKey="data" d-dataUrlGet="/Data/GetModelSample"></div>
+    <div d-dataKey="functionToggle" d-dataType="value" d-dataLoadType="startup" d-dataValue="ToggleItemField({{item.Visible}})"></div>
+    <div>
+        <div d-for="row in data" d-for-render="viewport,html">
+            <span>Key:</span><span d-model="{{row.Key}}"></span>
+            <span>Value:</span><span d-model="{{row.Value}}"></span>
+            <span>Visible:</span><span d-model="{{row.Visible}}"></span>
+            <button d-on-click="ExecuteDataItem({{functionToggle}},item in data,{{item._index}}={{row._index}},false)">Teste</button>
+        </div>
+    </div>
+    <br />
+    <br />
+    <!--A função só será executada uma vez, e depois o botão tera o evento click removido-->
+    <div>
+        <div d-for="row in data">
+            <span>Key:</span><span d-model="{{row.Key}}"></span>
+            <span>Value:</span><span d-model="{{row.Value}}"></span>
+            <span>Visible:</span><span d-model="{{row.Visible}}"></span>
+            <button d-on-click="ExecuteDataItem({{functionToggle}},item in data,true,true)">Teste</button>
+        </div>
+    </div>
+    <!--Por algum motivo desconhecido, o d-on-click não é observado dentro do switch-->
+    <div>
+        <div d-for="row in data">
+            <span>Key:</span><span d-model="{{row.Key}}"></span>
+            <span>Value:</span><span d-model="{{row.Value}}"></span>
+            <d-switch dc-model="{{row.Visible}}" dc-titleTurnOn="On" dc-titleTurnOff="Off" dc-on-click="ExecuteDataItem({{functionToggle}},item in data,{{item._index}}={{row._index}},false)"></d-switch>
+        </div>
+    </div>
+</body>
+</html>
