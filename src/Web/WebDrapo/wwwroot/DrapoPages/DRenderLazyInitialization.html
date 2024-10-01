@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>D-Render lazy content initialization</title>
+</head>
+<body>
+    <br>
+    <span>D-Render lazy content initialization</span>
+    <div d-dataKey="initialized" d-dataType="value" d-dataValue="false"></div>
+    <div d-dataKey="shouldInitialize" d-dataType="value" d-dataValue="false"></div>
+    <span>Should initialize:</span><span d-model="{{shouldInitialize}}"></span>
+    <span>Initialized:</span><span d-model="{{initialized}}"></span>
+    <button d-on-click="ToggleItemField({{shouldInitialize}})">
+        Renderizar
+    </button>
+    <!--Por mais que shouldInitialize inicie com o valor false, o componente d-initializationtest vai ser inicializado. após ele ser inicializado, o d-render vai deixar de funcionar--> 
+    <div d-render="{{shouldInitialize}}">
+        <d-initializationtest dc-initialized-result="initialized"></d-initializationtest>
+    </div>
+</body>
+</html>
