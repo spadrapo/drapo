@@ -767,6 +767,8 @@ class DrapoDocument {
         //If we dont find an iframe we can detach it
         if (this.HasElementIframe(el))
             return (false);
+        if (this.HasAttributeDetach(el))
+            return (false);
         if (this.HasElementCantDetach(el))
             return (false);
         return (true);
@@ -814,6 +816,22 @@ class DrapoDocument {
             const child: HTMLElement = children[i];
             const hasChildIframe: boolean = this.HasElementIframe(child);
             if (hasChildIframe)
+                return (true);
+        }
+        return (false);
+    }
+
+    private HasAttributeDetach(el: HTMLElement): boolean {
+        if (el == null)
+            return (false);
+        const detach: string = el.getAttribute('d-detach');
+        if ((detach !== null))
+            return (true);
+        const children: Array<HTMLElement> = [].slice.call(el.children);
+        for (let i = 0; i < children.length; i++) {
+            const child: HTMLElement = children[i];
+            const hasElementWithDetach: boolean = this.HasAttributeDetach(child);
+            if (hasElementWithDetach)
                 return (true);
         }
         return (false);
