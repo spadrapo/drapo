@@ -1811,6 +1811,11 @@ namespace WebDrapo.Test
         {
             ValidatePage("WindowsTemplateOnLoad");
         }
+        [TestCase]
+        public void FunctionUnloadDataTest()
+        {
+            ValidatePage("FunctionUnloadData");
+        }
         #endregion
     }
 }
