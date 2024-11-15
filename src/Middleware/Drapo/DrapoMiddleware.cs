@@ -6,8 +6,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +21,7 @@ namespace Sysphera.Middleware.Drapo
         #region Constants
         private const string ACTIVATORJS = "drapo.js";
         private const string ACTIVATORJSON = "drapo.json";
+        private const string ACTIVATORJSMAP = "/drapo.js.map";
         private const string LIB_RELEASE = "drapo.min.js";
         private const string LIB_DEBUG = "drapo.js";
         private const string CONTENT_TYPE_HTML = "text/html; charset=utf-8";
@@ -34,6 +37,8 @@ namespace Sysphera.Middleware.Drapo
         private string _libLastModified = null;
         private string _configContent = null;
         private string _configETag = null;
+        private string _jsMapContent = null;
+        private string _jsMapETag = null;
         private ConcurrentDictionary<string, string> _cacheComponentFileEtag = new ConcurrentDictionary<string, string>();
         private ConcurrentDictionary<string, string> _cacheComponentFileContent = new ConcurrentDictionary<string, string>();
         private ConcurrentDictionary<string, string> _cacheComponentFileContentType = new ConcurrentDictionary<string, string>();
@@ -69,6 +74,8 @@ namespace Sysphera.Middleware.Drapo
             //Content
             this._libContent = resources[libName];
             this._libETag = GenerateETag(Encoding.UTF8.GetBytes(this._libContent));
+            this._jsMapContent = this.CreateJsMapContent(resources);
+            this._jsMapETag = GenerateETag(Encoding.UTF8.GetBytes(this._jsMapContent));
             this._configContent = this.GetConfigContent();
             this._configETag = GenerateETag(Encoding.UTF8.GetBytes(this._configContent));
             this._libLastModified = System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetEntryAssembly().Location).ToString("R");
@@ -96,7 +103,7 @@ namespace Sysphera.Middleware.Drapo
             if (this.IsActivator(context))
             {
                 //JS
-                bool isCache = ((context.Request.Headers.Keys.Contains("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._libETag));
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._libETag));
                 context.Response.OnStarting(state =>
                 {
                     var httpContext = (HttpContext)state;
@@ -111,10 +118,28 @@ namespace Sysphera.Middleware.Drapo
                 if (!isCache)
                     await context.Response.WriteAsync(this._libContent);
             }
+            else if (this.IsJsMapActivator(context))
+            {
+                //.JS.MAP
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._jsMapETag));
+                context.Response.OnStarting(state =>
+                {
+                    var httpContext = (HttpContext)state;
+                    httpContext.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                    httpContext.Response.Headers["ETag"] = new[] { this._jsMapETag };
+                    httpContext.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
+                    httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                    httpContext.Response.Headers.Add("Content-Type", new[] { "application/json" });
+                    AppendHeaderContainerId(httpContext);
+                    return Task.FromResult(0);
+                }, context);
+                if (!isCache)
+                    await context.Response.WriteAsync(this._jsMapContent);
+            }
             else if (this.IsConfig(context))
             {
                 //Config
-                bool isCache = ((context.Request.Headers.Keys.Contains("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._configETag));
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._configETag));
                 context.Response.OnStarting(state =>
                 {
                     var httpContext = (HttpContext)state;
@@ -134,7 +159,7 @@ namespace Sysphera.Middleware.Drapo
                 //Component File
                 string key = this.CreateKeyComponentFile(component, file);
                 string eTag = this.GetComponentFileEtag(component, file, key);
-                bool isCache = ((context.Request.Headers.Keys.Contains("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == eTag));
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == eTag));
                 context.Response.OnStarting(state =>
                 {
                     var httpContext = (HttpContext)state;
@@ -152,7 +177,7 @@ namespace Sysphera.Middleware.Drapo
             else if ((dynamic = await this.IsRequestCustom(context)) != null)
             {
                 //Custom
-                bool isCache = ((context.Request.Headers.Keys.Contains("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == dynamic.ETag));
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == dynamic.ETag));
                 context.Response.OnStarting(state =>
                 {
                     var httpContext = (HttpContext)state;
@@ -246,6 +271,46 @@ namespace Sysphera.Middleware.Drapo
         private bool IsActivator(HttpContext context)
         {
             return (context.Request.Path.Value == this._urlActivator);
+        }
+        #endregion
+        #region JsMap
+        private bool IsJsMapActivator(HttpContext context)
+        {
+            return (context.Request.Path.Value == ACTIVATORJSMAP);
+        }
+
+        private static string GetThisSourceFilePath([CallerFilePath] string path = null) => path;
+
+        private string CreateJsMapContent(Dictionary<string, string> resources, [CallerFilePath] string thisSourceFilePath = "")
+        {
+            //collect line offsets
+            List<(string jsMapFilename, int lineOffset)> jsMapsOffsets = new List<(string jsMapFilename, int offset)>();
+            string[] libLines = this._libContent.Split('\n');
+            int currentOffset = 0;
+            for (int lineNumber = 0; lineNumber < libLines.Length; ++lineNumber)
+            {
+                string line = libLines[lineNumber];
+                if (line.StartsWith("//# sourceMappingURL="))
+                {
+                    string jsMapFilename = line[21..].Trim();
+                    jsMapsOffsets.Add((jsMapFilename, currentOffset));
+                    currentOffset = lineNumber + 1;
+                }
+            }
+            //mount sections
+            string localRootPath = Path.GetDirectoryName(GetThisSourceFilePath()).Replace('\\','/');
+            List<string> sections = new List<string>(jsMapsOffsets.Count);
+            foreach (var jsOffset in jsMapsOffsets) 
+            {
+                string jsOffsetMapContent = null;
+                if (resources.TryGetValue(jsOffset.jsMapFilename, out jsOffsetMapContent))
+                {
+                    jsOffsetMapContent = jsOffsetMapContent.Replace("../ts", $"file:///{localRootPath}/ts");
+                    sections.Add($@" {{ ""offset"": {{""line"":{jsOffset.lineOffset}, ""column"":0}}, ""map"": {jsOffsetMapContent} }} ");
+                }
+            }
+            string sectionsString = string.Join(',', sections);
+            return $@"{{ ""version"": 3, ""file"": ""drapo.js"", ""sections"": [{sectionsString}] }}";
         }
         #endregion
         #region Config
