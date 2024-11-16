@@ -44,16 +44,17 @@
 		<WriteLinesToFile File="lib\$(TargetFramework)\drapo.js" Lines="//# sourceMappingURL=drapo.js.map" Overwrite="false" />
 		<WriteLinesToFile File="lib\$(TargetFramework)\drapo.min.js" Lines="@(JsFileContents)" Overwrite="true" />
 		<WriteLinesToFile File="lib\$(TargetFramework)\index.d.ts" Lines="@(DefFileContents)" Overwrite="true" />
+		<ItemGroup>
+			<EmbeddedResource Include="lib\$(TargetFramework)\*.js" WithCulture="false" Type="Non-Resx" />
+		</ItemGroup>
 	</Target>
 	<Target Name="CreateDebugLibFiles" AfterTargets="CompileTypeScriptWithTSConfig" Condition="'$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true' AND '$(Configuration)' == 'Debug'">
 		<ItemGroup>
 			<LibFiles Include="js\*.map" />
 		</ItemGroup>
 		<Copy SourceFiles="@(LibFiles)" DestinationFolder="lib\$(TargetFramework)" />
-	</Target>
-	<Target Name="EmbedLibFiles" AfterTargets="CreateLibFiles;CreateDebugLibFiles">
 		<ItemGroup>
-			<EmbeddedResource Include="lib\$(TargetFramework)\**\*" WithCulture="false" Type="Non-Resx" />
+			<EmbeddedResource Include="lib\$(TargetFramework)\*.map" WithCulture="false" Type="Non-Resx" />
 		</ItemGroup>
 	</Target>
 	<ItemGroup>
