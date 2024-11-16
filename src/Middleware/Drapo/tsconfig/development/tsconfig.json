@@ -9,12 +9,12 @@
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": true,
-    "target": "es2021",
+    "target": "es2022",
     "outDir": "../../js/",
     "declaration": true,
     "lib": [
       "dom",
-      "es2021"
+      "es2022"
     ]
   },
   "exclude": [

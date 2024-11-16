@@ -281,7 +281,7 @@ namespace Sysphera.Middleware.Drapo
 
         private static string GetThisSourceFilePath([CallerFilePath] string path = null) => path;
 
-        private string CreateJsMapContent(Dictionary<string, string> resources, [CallerFilePath] string thisSourceFilePath = "")
+        private string CreateJsMapContent(Dictionary<string, string> resources)
         {
             //collect line offsets
             List<(string jsMapFilename, int lineOffset)> jsMapsOffsets = new List<(string jsMapFilename, int offset)>();
