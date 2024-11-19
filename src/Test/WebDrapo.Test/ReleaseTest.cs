@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 using System.Text;
+using System.Collections.Generic;
 
 namespace WebDrapo.Test
 {
@@ -21,6 +22,18 @@ namespace WebDrapo.Test
             //HACK: Config is not loading anymore. Its only my machine ?
             VirtualDirectory = TestContext.Parameters["WebDrapoURL"] ?? "http://localhost:9991/";
             ChromeOptions options = new ChromeOptions();
+            //Configure location for x64 or x86
+            List<string> locations = new List<string>()
+            {
+                @"C:\Program Files\Google\Chrome\Application\chrome.exe",
+                @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+            };
+            foreach (string location in locations) {
+                if (!System.IO.File.Exists(location))
+                    continue;
+                options.BinaryLocation = location;
+                break;
+            }
             options.AddArgument("--no-sandbox");
             Driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), options);
         }
