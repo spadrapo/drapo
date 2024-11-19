@@ -64,8 +64,6 @@ class DrapoSectorContainerObserverItem {
         return (this._dataComponentElementsFocus);
     }
 
-
-
     public AddFor(dataKey: string, el: HTMLElement, sector: string): void {
         this._dataForDataKey.push(dataKey);
         this._dataForElement.push(el);
