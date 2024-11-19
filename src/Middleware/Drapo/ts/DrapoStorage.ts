@@ -1416,18 +1416,9 @@ class DrapoStorage {
     }
 
     public async FireEventOnNotify(dataKey: string): Promise<void> {
-        for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
-            if (i >= this._cacheItems.length)
-                continue;
-            const storageItem: DrapoStorageItem = this._cacheItems[i];
-            if (storageItem == null)
-                continue;
-            if (storageItem.DataKey != dataKey)
-                continue;
-            if (storageItem.OnNotify == null)
-                continue;
+        const storageItems: DrapoStorageItem[] = this._cacheItems.filter((i) => i.DataKey === dataKey && i.OnNotify != null);
+        for (const storageItem of storageItems)
             await this.Application.FunctionHandler.ResolveFunctionWithoutContext(storageItem.Sector, null, storageItem.OnNotify);
-        }
     }
 
     private async RemoveCacheData(index: number, canRemoveObservers = true): Promise<void> {

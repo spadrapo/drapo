@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - UnloadData</title>
+</head>
+<body>
+    <section>
+        <h1>UnloadData() inside a d-dataOnNotify</h1>
+        <div d-datakey="notifiesCount" d-datatype="value" d-datavalue="0"></div>
+        <div d-datakey="dataReloadTrigger" d-datatype="value" d-dataonnotify="UnloadData(data);UpdateData(notifiesCount,Cast({{notifiesCount}}+1,number));IF({{data}}=,,)"></div>
+        <div d-datakey="data" d-dataurlget="~/Data?dummyParam={{dataReloadTrigger}}"></div>
+        <div>
+            <p>Number of notifies trigered: <span d-model="{{notifiesCount}}">1</span></p>
+            <ul>
+                <li d-for="item in data" style="display: none;">{{item.Key}} - {{item.Value}}</li>
+                <li>K0 - V0</li>
+                <li>K1 - V1</li>
+                <li>K2 - V2</li>
+                <li>K3 - V3</li>
+                <li>K4 - V4</li>
+            </ul>
+        </div>
+        <br />
+        <input type="button" value="Reload Data" driverunittest="click" d-on-click="UnloadData(dataReloadTrigger);UpdateData(dataReloadTrigger,0)" />
+    </section>
+</body>
+</html>
