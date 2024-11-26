@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Pipes Debounce</title>
+</head>
+<body>
+    <br>
+    <span>Data Pipes Debounce</span>
+    <div d-datakey="update" d-datatype="value" d-dataloadtype="startup" d-dataurlset="~/Plumber/Notify?datakey=date"></div>
+    <div d-dataKey="date" d-dataUrlGet="~/Data/GetDate" d-dataPipes="date" d-dataPipesDebounce="3000"></div>
+    <span>Date: </span><span d-model="{{date}}"></span>
+    <input type="button" value="Update" d-on-click="PostDataItem(update)" />
+</body>
+</html>
