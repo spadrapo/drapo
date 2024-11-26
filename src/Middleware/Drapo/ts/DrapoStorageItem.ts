@@ -28,6 +28,7 @@
     private _sector: string = null;
     private _groups: string[] = null;
     private _pipes: string[] = null;
+    private _pipesDebounce: number = null;
     private _channels: string[] = null;
     private _canCache: boolean = true;
     private _cacheKeys: string[] = null;
@@ -261,6 +262,12 @@
     set Pipes(value: string[]) {
         this._pipes = value;
     }
+    get PipesDebounce(): number {
+        return (this._pipesDebounce);
+    }
+    set PipesDebounce(value: number) {
+        this._pipesDebounce = value;
+    }
 
     get Channels(): string[] {
         return (this._channels);
@@ -375,7 +382,7 @@
     }
 
     //Constructor
-    constructor(dataKey: string, type: string, access: string, element: HTMLElement, data: any[], urlGet: string, urlSet: string, urlSetChunk: string, chunk: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][], pollingKey: string, pollingTimespan: number) {
+    constructor(dataKey: string, type: string, access: string, element: HTMLElement, data: any[], urlGet: string, urlSet: string, urlSetChunk: string, chunk: string, urlParameters: string, postGet: string, start: number, increment: number, isIncremental: boolean, isFull: boolean, isUnitOfWork: boolean, isDelay: boolean, cookieName: string, isCookieChange: boolean, userConfig: string, isToken: boolean, sector: string, groups: string[], pipes: string[], pipesDebounce: number, channels: string[], canCache: boolean, cacheKeys: string[], onLoad: string, onAfterLoad: string, onAfterContainerLoad: string, onBeforeContainerUnload: string, onAfterCached: string, onNotify: string, headersGet: [string, string][], headersSet: [string, string][], pollingKey: string, pollingTimespan: number) {
         this._dataKey = dataKey;
         this._type = type;
         this._access = access;
@@ -400,6 +407,7 @@
         this._sector = sector;
         this._groups = groups;
         this._pipes = pipes;
+        this._pipesDebounce = pipesDebounce;
         this._channels = channels;
         this._canCache = canCache;
         this._cacheKeys = cacheKeys;

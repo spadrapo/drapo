@@ -7,6 +7,7 @@ class DrapoStorage {
     private readonly CONTENT_TYPE_TEXT: string = 'text/plain';
     private _lock: boolean = false;
     private readonly CHUNK_SIZE: number = 3 * 1024 * 1024;
+    private readonly _debounceReloadData: Map<string, number> = new Map<string, number>();
     //Properties
     get Application(): DrapoApplication {
         return (this._application);
@@ -230,22 +231,31 @@ class DrapoStorage {
 
     public async ReloadPipe(dataPipe: string): Promise<boolean> {
         let reloaded = false;
-        for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
-            //We need to check if the storage item is still loaded. Because we have an async method in ReloadData.
-            //I don't know if we are coming from EventLoop or not
-            if (i >= this._cacheItems.length)
-                continue;
-            const storageItem: DrapoStorageItem = this._cacheItems[i];
-            if (storageItem == null)
-                continue;
-            if (storageItem.Pipes == null)
-                continue;
-            if (!this.Application.Solver.Contains(storageItem.Pipes, dataPipe))
-                continue;
-            if (await this.ReloadData(storageItem.DataKey, null))
-                reloaded = true;
+        const storageItems: DrapoStorageItem[] = this._cacheItems.filter((i) => (i.Pipes != null) && (this.Application.Solver.Contains(i.Pipes, dataPipe)));
+        for (const storageItem of storageItems)
+        {
+            if (storageItem.PipesDebounce != null) {
+                if (await this.ReloadDataDebounce(dataPipe + '_' + storageItem.DataKey, storageItem.DataKey, storageItem.PipesDebounce))
+                    reloaded = true;
+            } else {
+                if (await this.ReloadData(storageItem.DataKey, null))
+                    reloaded = true;
+            }
         }
         return (reloaded);
+    }
+
+    private async ReloadDataDebounce(debounceKey: string, dataKey: string, timeout: number): Promise<boolean> {
+        if (this._debounceReloadData.has(debounceKey)) {
+            clearTimeout(this._debounceReloadData.get(debounceKey));
+            this._debounceReloadData.delete(debounceKey);
+        }
+        this._debounceReloadData.set(debounceKey, setTimeout(async () => {
+            clearTimeout(this._debounceReloadData.get(debounceKey));
+            this._debounceReloadData.delete(debounceKey);
+            await this.ReloadData(dataKey, null);
+        }, timeout));
+        return (false);
     }
 
     public IsMustachePartsDataKey(sector: string, mustacheParts: string[]): boolean {
@@ -583,6 +593,7 @@ class DrapoStorage {
         const groupsAttribute: string = el.getAttribute('d-dataGroups');
         const groups: string[] = ((groupsAttribute == null) || (groupsAttribute == '')) ? null : this.Application.Parser.ParsePipes(groupsAttribute);
         const pipes: string[] = this.Application.Parser.ParsePipes(el.getAttribute('d-dataPipes'));
+        const pipesDebounce: number = this.Application.Parser.ParseNumber(el.getAttribute('d-dataPipesDebounce'), null);
         const channels: string[] = await this.ParseChannels(sector, el.getAttribute('d-dataChannels'));
         const canCache: boolean = this.Application.Parser.ParseBoolean(el.getAttribute('d-dataCache'), true);
         const cacheKeys: string[] = this.Application.Parser.ParsePipes(el.getAttribute('d-dataCacheKeys'));
@@ -609,7 +620,7 @@ class DrapoStorage {
         const isFull: boolean = ((isLazy) && (data.length < increment)) ? true : false;
         const pollingKey: string = await this.ResolveValueMustaches(dataKey, sector, el.getAttribute('d-dataPollingKey'));
         const pollingTimespan: number = await this.ResolveValueMustachesAsNumber(dataKey, sector, el.getAttribute('d-dataPollingTimespan'));
-        const item: DrapoStorageItem = new DrapoStorageItem(dataKey, type, access, el, data, dataUrlGet, dataUrlSet, dataUrlSetChunk, chunk, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet, pollingKey, pollingTimespan);
+        const item: DrapoStorageItem = new DrapoStorageItem(dataKey, type, access, el, data, dataUrlGet, dataUrlSet, dataUrlSetChunk, chunk, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, pipesDebounce, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet, pollingKey, pollingTimespan);
         return (item);
     }
 
@@ -1292,7 +1303,7 @@ class DrapoStorage {
                 return (null);
             current = current[dataKeyCurrent];
         }
-        return (new DrapoStorageItem(dataKey, 'array', null, null, current, null, null, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null));
+        return (new DrapoStorageItem(dataKey, 'array', null, null, current, null, null, null, null, null, null, null, null, false, true, false, false, null, false, null, false, null, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null));
     }
 
     public async AddDataItem(dataKey: string, dataPath: string[], sector: string, item: any, notify: boolean = true): Promise<boolean> {
@@ -1977,7 +1988,7 @@ class DrapoStorage {
     }
 
     private CreateDataItemInternal(dataKey: string, data: any, canCache: boolean = true): DrapoStorageItem {
-        const item: DrapoStorageItem = new DrapoStorageItem(dataKey, data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, null, canCache, null, null, null, null, null, null, null, null, null, null, null);
+        const item: DrapoStorageItem = new DrapoStorageItem(dataKey, data.length != null ? 'array' : 'object', null, null, data, null, null, null, null, null, null, null, null, false, true, false, false, null, false, null, false, '', null, null, null, null, canCache, null, null, null, null, null, null, null, null, null, null, null);
         return (item);
     }
 
