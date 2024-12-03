@@ -4,30 +4,17 @@
 		<AssemblyName>Sysphera.Middleware.Drapo</AssemblyName>
 		<RootNamespace>Sysphera.Middleware.Drapo</RootNamespace>
 	</PropertyGroup>
-	<Import
-		  Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props"
-		  Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
-	<PropertyGroup>
-		<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
-		<TypeScriptCompileBlocked>false</TypeScriptCompileBlocked>
-	</PropertyGroup>
-	<ItemGroup>
-		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.4.5">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<Content Include="tsconfig.json" />
-	</ItemGroup>
 	<Target Name="CleanLibFiles" BeforeTargets="Clean" Condition="'$(DesignTimeBuild)' != 'true'">
 		<ItemGroup>
 			<FilesToDelete Include="lib\$(TargetFramework)\*;js\*" />
 		</ItemGroup>
 		<Delete Files="@(FilesToDelete)" />
 	</Target>
-	<Target Name="TSLint" BeforeTargets="CompileTypeScriptWithTSConfig" Condition="$(TargetFrameworks.StartsWith($(TargetFramework))) AND '$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
+	<Target Name="CompileTypescript" BeforeTargets="DispatchToInnerBuilds" Condition="'$(DesignTimeBuild)' != 'true'">
 		<Exec Command="npx tslint --project ." />
+		<Exec Command="npx tsc" />
 	</Target>
-	<Target Name="CreateLibFiles" AfterTargets="CompileTypeScriptWithTSConfig" Condition="'$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
+	<Target Name="CreateLibFiles" BeforeTargets="PrepareResources">
 		<ItemGroup>
 			<JsFiles Include="node_modules/es6-promise/dist/es6-promise.auto.min.js;node_modules/@microsoft/signalr/dist/browser/signalr.min.js;js\*.js" />
 			<DefFiles Include="js\*.d.ts" />
@@ -40,7 +27,7 @@
 		<WriteLinesToFile File="lib\$(TargetFramework)\drapo.min.js" Lines="@(JsFileContents)" Overwrite="true" />
 		<WriteLinesToFile File="lib\$(TargetFramework)\index.d.ts" Lines="@(DefFileContents)" Overwrite="true" />
 	</Target>
-	<Target Name="EmbedGeneratedFiles" AfterTargets="CreateLibFiles">
+	<Target Name="EmbedGeneratedFiles" AfterTargets="CreateLibFiles" BeforeTargets="PrepareResources">
 		<ItemGroup>
 			<EmbeddedResource Include="lib\$(TargetFramework)\*.js" WithCulture="false" Type="Non-Resx" />
 		</ItemGroup>
@@ -56,7 +43,4 @@
 		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
 		<PackageReference Include="StackExchange.Redis" Version="2.2.50" />
 	</ItemGroup>
-	<Import
-		Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets"
-		Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
 </Project>
