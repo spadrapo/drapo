@@ -1,6 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 		<TargetFrameworks>netcoreapp3.1;netcoreapp6.0;net8.0</TargetFrameworks>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<TargetFramework>netcoreapp6.0</TargetFramework>
+	</PropertyGroup>
+	<PropertyGroup>
 		<AssemblyName>Sysphera.Middleware.Drapo</AssemblyName>
 		<RootNamespace>Sysphera.Middleware.Drapo</RootNamespace>
 	</PropertyGroup>
