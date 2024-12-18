@@ -222,9 +222,12 @@ class DrapoFormatter {
             const minutes: number = Math.floor(value / (1000 * 60));
             return (minutes.toString() + 'm' + this.FormatNumberTimespan(value - (minutes * 1000 * 60), null, culture));
         }
-        const hours: number = Math.floor(value / (1000 * 60 * 60));
-        return (hours.toString() + 'h' + this.FormatNumberTimespan(value - (hours * 1000 * 60 * 60), null, culture));
-    }
+        if (value < (1000 * 60 * 60 * 24)) {
+            const hours: number = Math.floor(value / (1000 * 60 * 60));
+            return (hours.toString() + 'h' + this.FormatNumberTimespan(value - (hours * 1000 * 60 * 60), null, culture));
+        }
+        const days: number = Math.floor(value / (1000 * 60 * 60 * 24));
+        return (days.toString() + 'd' + this.FormatNumberTimespan(value - (days * 1000 * 60 * 60 * 24), null, culture));    }
 
     private FormatNumberSize(value: number, formatTokens: string[], culture: string): string {
         let type: number = 0;
