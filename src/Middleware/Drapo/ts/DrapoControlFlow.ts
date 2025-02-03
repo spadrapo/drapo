@@ -351,6 +351,7 @@ class DrapoControlFlow {
         }
         //Viewport Ballon After
         this.Application.ViewportHandler.AppendViewportControlFlowBallonAfter(viewport, fragment);
+        let fragmentParent: HTMLElement = null;
         if ((viewport == null) && (isContextRootFullExclusive) && (!isIncremental)) {
             this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
             if (elForParent.children.length !== 1)
@@ -358,10 +359,16 @@ class DrapoControlFlow {
             const template: HTMLElement = elForParent.children[0] as HTMLElement;
             this.Application.Observer.SubscribeFor(template, dataKey);
             elForParent.append(fragment);
+            fragmentParent = elForParent;
             elFor = template;
-        } else {
-            if (fragment.childNodes.length > 0)
-                lastInserted.after(fragment);
+        } else if (fragment.childNodes.length > 0) {
+            lastInserted.after(fragment);
+            fragmentParent = lastInserted.parentElement;
+        }
+        if (fragmentParent != null) {
+            await this.Application.Storage.ResolveData(true, fragmentParent);
+            await this.Application.Barber.ResolveMustaches(fragmentParent, sector, false);
+            await this.Application.Storage.LoadDataDelayedAndNotify();
         }
         //Viewport Activate
         this.Application.ViewportHandler.ActivateViewportControlFlow(viewport, lastInserted);

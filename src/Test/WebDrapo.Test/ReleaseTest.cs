@@ -348,6 +348,11 @@ namespace WebDrapo.Test
             ValidatePage("ComponentStylist");
         }
         [TestCase]
+        public void ComponentUploaderTest()
+        {
+            ValidatePage("ComponentUploader");
+        }
+        [TestCase]
         public void ConditionalBooleanTest()
         {
             ValidatePage("ConditionalBoolean");
