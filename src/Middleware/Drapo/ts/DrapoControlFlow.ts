@@ -351,7 +351,12 @@ class DrapoControlFlow {
         }
         //Viewport Ballon After
         this.Application.ViewportHandler.AppendViewportControlFlowBallonAfter(viewport, fragment);
-        let fragmentParent: HTMLElement = null;
+        const fragmentHTMLChildren: HTMLElement[] = [];
+        for (let i = 0; i < fragment.childNodes.length; ++i) {
+            const child: HTMLElement = fragment.childNodes[i] as HTMLElement;
+            if (child != null)
+                fragmentHTMLChildren.push(child);
+        }
         if ((viewport == null) && (isContextRootFullExclusive) && (!isIncremental)) {
             this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
             if (elForParent.children.length !== 1)
@@ -359,17 +364,15 @@ class DrapoControlFlow {
             const template: HTMLElement = elForParent.children[0] as HTMLElement;
             this.Application.Observer.SubscribeFor(template, dataKey);
             elForParent.append(fragment);
-            fragmentParent = elForParent;
             elFor = template;
         } else if (fragment.childNodes.length > 0) {
             lastInserted.after(fragment);
-            fragmentParent = lastInserted.parentElement;
         }
-        if (fragmentParent != null) {
-            await this.Application.Storage.ResolveData(true, fragmentParent);
-            await this.Application.Barber.ResolveMustaches(fragmentParent, sector, false);
-            await this.Application.Storage.LoadDataDelayedAndNotify();
+        for (let fragChild of fragmentHTMLChildren) {
+            await this.Application.Storage.ResolveData(true, fragChild);
+            await this.Application.Barber.ResolveMustaches(fragChild, sector, false);
         }
+        await this.Application.Storage.LoadDataDelayedAndNotify();
         //Viewport Activate
         this.Application.ViewportHandler.ActivateViewportControlFlow(viewport, lastInserted);
         //Enable Incremental Notify
