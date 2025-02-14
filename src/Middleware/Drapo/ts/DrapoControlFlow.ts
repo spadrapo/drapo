@@ -368,7 +368,7 @@ class DrapoControlFlow {
         } else if (fragment.childNodes.length > 0) {
             lastInserted.after(fragment);
         }
-        for (let fragChild of fragmentHTMLChildren) {
+        for (const fragChild of fragmentHTMLChildren) {
             await this.Application.Storage.ResolveData(true, fragChild);
             await this.Application.Barber.ResolveMustaches(fragChild, sector, false);
         }
