@@ -29,7 +29,7 @@
 		</ItemGroup>
 		<Delete Files="@(FilesToDelete)" />
 	</Target>
-	<Target Name="TSLint" BeforeTargets="CompileTypeScriptWithTSConfig" Condition="($(TargetFrameworks.StartsWith($(TargetFramework))) OR $(TargetFramework) != '') AND '$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
+	<Target Name="TSLint" BeforeTargets="CompileTypeScriptWithTSConfig" Condition="($(TargetFrameworks.StartsWith($(TargetFramework))) OR $(Configuration) == 'Debug') AND '$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
 		<Exec Command="npx tslint --project ." />
 	</Target>
 	<Target Name="CreateLibFiles" AfterTargets="CompileTypeScriptWithTSConfig" Condition="'$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
