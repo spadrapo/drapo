@@ -103,6 +103,7 @@ namespace WebDrapo.Test
                 html = html.Replace(match.Value, @"src=""""");
             html = html.Replace(@"<script src=""""></script>", string.Empty);
             html = html.Replace(@"<link href="""" rel=""stylesheet"" />", string.Empty);
+            html = html.Replace(@" style=""""", string.Empty);
             return (html);
         }
 
