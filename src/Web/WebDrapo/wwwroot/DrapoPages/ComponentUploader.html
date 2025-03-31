@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Component - Uploader</title>
+</head>
+<body>
+    <span>Component - Uploader</span>
+    <div d-dataKey="objects" d-dataUrlGet="/Data/GetLevels?levels=0&children=2"></div>
+    <div d-dataKey="dkFileName"></div>
+    <div d-dataKey="dkFileContent"></div>
+    <div d-for="object in objects">
+        <d-uploader d-dataFieldName="{{dkFileName}}" d-dataFieldData="{{dkFileContent}}" d-dataMessage="Select file for object {{object.Value}}" dc-downloadbutton="true" dc-uploadbutton="true"></d-uploader>
+        <d-uploader d-dataFieldName="{{dkFileName}}" d-dataFieldData="{{dkFileContent}}" d-dataMessage="Select file for object {{object.Value}}" dc-downloadbutton="true" dc-uploadbutton="false"></d-uploader>
+        <d-uploader d-dataFieldName="{{dkFileName}}" d-dataFieldData="{{dkFileContent}}" d-dataMessage="Select file for object {{object.Value}}" dc-downloadbutton="false" dc-uploadbutton="true"></d-uploader>
+        <d-uploader d-dataFieldName="{{dkFileName}}" d-dataFieldData="{{dkFileContent}}" d-dataMessage="Select file for object {{object.Value}}" dc-downloadbutton="false" dc-uploadbutton="false"></d-uploader>
+        <hr/>
+    </div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="/drapo.js"></script>
+    <title>Component - Uploader</title>
+    <link href="" rel="stylesheet" />
+    <script src=""></script>
+</head>
+<body>
+    <span>Component - Uploader</span>
+    <div d-datakey="objects" d-dataurlget="/Data/GetLevels?levels=0&amp;children=2"></div>
+    <div d-datakey="dkFileName"></div>
+    <div d-datakey="dkFileContent"></div>
+    <div d-for="object in objects" style="display: none;">
+        <d-uploader d-datafieldname="{{dkFileName}}" d-datafielddata="{{dkFileContent}}" d-datamessage="Select file for object {{object.Value}}" dc-downloadbutton="true" dc-uploadbutton="true"></d-uploader>
+        <d-uploader d-datafieldname="{{dkFileName}}" d-datafielddata="{{dkFileContent}}" d-datamessage="Select file for object {{object.Value}}" dc-downloadbutton="true" dc-uploadbutton="false"></d-uploader>
+        <d-uploader d-datafieldname="{{dkFileName}}" d-datafielddata="{{dkFileContent}}" d-datamessage="Select file for object {{object.Value}}" dc-downloadbutton="false" dc-uploadbutton="true"></d-uploader>
+        <d-uploader d-datafieldname="{{dkFileName}}" d-datafielddata="{{dkFileContent}}" d-datamessage="Select file for object {{object.Value}}" dc-downloadbutton="false" dc-uploadbutton="false"></d-uploader>
+        <hr />
+    </div><div>
+        <div d-sector="@" class="ppUploader" d-datafileextensiontype="" d-datamessage="Select file for object {{objects.[0].Value}}" dc-fileextensionsdefault="" dc-downloadbutton="true" dc-uploadbutton="true" dc-uploadaction="false" d-datafieldname="{{dkFileName}}" d-datafielddata="{{dkFileContent}}">
+            <div>
+                <!--Data-->
+                <div d-datakey="dcProperties" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+            </div>
+            <button d-if="{{dcProperties.downloadbutton}}" class="suDownloadDisabled" disabled="">
+                <span class="pp ppDownload"></span>
+            </button>
+            <button d-if="{{dcProperties.uploadbutton}}" class="suDownloadDisabled" d-on-click="{{dcProperties.uploadaction}}" disabled="">
+                <span class="pp ppUpload"></span>
+            </button>
+            <div class="suUploaderBoxDotted">
+                <span title="Select file for object {{objects.[0].Value}}">Select file for object L0V0</span>
+            </div>
+            <input type="file" style="display:none;" accept="" />
+        </div>
+        <div d-sector="@" class="ppUploader" d-datafileextensiontype="" d-datamessage="Select file for object {{objects.[0].Value}}" dc-fileextensionsdefault="" dc-downloadbutton="true" dc-uploadbutton="false" dc-uploadaction="false" d-datafieldname="{{dkFileName}}" d-datafielddata="{{dkFileContent}}">
+            <div>
+                <!--Data-->
+                <div d-datakey="dcProperties" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+            </div>
+            <button d-if="{{dcProperties.downloadbutton}}" class="suDownloadDisabled" disabled="">
+                <span class="pp ppDownload"></span>
+            </button>
+            <button d-if="{{dcProperties.uploadbutton}}" class="ppUploaderButton" d-on-click="{{dcProperties.uploadaction}}" style="display: none;">
+                <span class="pp ppUpload"></span>
+            </button>
+            <div class="suUploaderBoxDotted">
+                <span title="Select file for object {{objects.[0].Value}}">Select file for object L0V0</span>
+            </div>
+            <input type="file" style="display:none;" accept="" />
+        </div>
+        <div d-sector="@" class="ppUploader" d-datafileextensiontype="" d-datamessage="Select file for object {{objects.[0].Value}}" dc-fileextensionsdefault="" dc-downloadbutton="false" dc-uploadbutton="true" dc-uploadaction="false" d-datafieldname="{{dkFileName}}" d-datafielddata="{{dkFileContent}}">
+            <div>
+                <!--Data-->
+                <div d-datakey="dcProperties" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+            </div>
+            <button d-if="{{dcProperties.downloadbutton}}" class="ppUploaderButton" style="display: none;">
+                <span class="pp ppDownload"></span>
+            </button>
+            <button d-if="{{dcProperties.uploadbutton}}" class="suDownloadDisabled" d-on-click="{{dcProperties.uploadaction}}" disabled="">
+                <span class="pp ppUpload"></span>
+            </button>
+            <div class="suUploaderBoxDotted">
+                <span title="Select file for object {{objects.[0].Value}}">Select file for object L0V0</span>
+            </div>
+            <input type="file" style="display:none;" accept="" />
+        </div>
+        <div d-sector="@" class="ppUploader" d-datafileextensiontype="" d-datamessage="Select file for object {{objects.[0].Value}}" dc-fileextensionsdefault="" dc-downloadbutton="false" dc-uploadbutton="false" dc-uploadaction="false" d-datafieldname="{{dkFileName}}" d-datafielddata="{{dkFileContent}}">
+            <div>
+                <!--Data-->
+                <div d-datakey="dcProperties" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+            </div>
+            <button d-if="{{dcProperties.downloadbutton}}" class="ppUploaderButton" style="display: none;">
+                <span class="pp ppDownload"></span>
+            </button>
+            <button d-if="{{dcProperties.uploadbutton}}" class="ppUploaderButton" d-on-click="{{dcProperties.uploadaction}}" style="display: none;">
+                <span class="pp ppUpload"></span>
+            </button>
+            <div class="suUploaderBoxDotted">
+                <span title="Select file for object {{objects.[0].Value}}">Select file for object L0V0</span>
+            </div>
+            <input type="file" style="display:none;" accept="" />
+        </div>
+        <hr />
+    </div><div>
+        <div d-sector="@" class="ppUploader" d-datafileextensiontype="" d-datamessage="Select file for object {{objects.[1].Value}}" dc-fileextensionsdefault="" dc-downloadbutton="true" dc-uploadbutton="true" dc-uploadaction="false" d-datafieldname="{{dkFileName}}" d-datafielddata="{{dkFileContent}}">
+            <div>
+                <!--Data-->
+                <div d-datakey="dcProperties" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+            </div>
+            <button d-if="{{dcProperties.downloadbutton}}" class="suDownloadDisabled" disabled="">
+                <span class="pp ppDownload"></span>
+            </button>
+            <button d-if="{{dcProperties.uploadbutton}}" class="suDownloadDisabled" d-on-click="{{dcProperties.uploadaction}}" disabled="">
+                <span class="pp ppUpload"></span>
+            </button>
+            <div class="suUploaderBoxDotted">
+                <span title="Select file for object {{objects.[1].Value}}">Select file for object L0V1</span>
+            </div>
+            <input type="file" style="display:none;" accept="" />
+        </div>
+        <div d-sector="@" class="ppUploader" d-datafileextensiontype="" d-datamessage="Select file for object {{objects.[1].Value}}" dc-fileextensionsdefault="" dc-downloadbutton="true" dc-uploadbutton="false" dc-uploadaction="false" d-datafieldname="{{dkFileName}}" d-datafielddata="{{dkFileContent}}">
+            <div>
+                <!--Data-->
+                <div d-datakey="dcProperties" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+            </div>
+            <button d-if="{{dcProperties.downloadbutton}}" class="suDownloadDisabled" disabled="">
+                <span class="pp ppDownload"></span>
+            </button>
+            <button d-if="{{dcProperties.uploadbutton}}" class="ppUploaderButton" d-on-click="{{dcProperties.uploadaction}}" style="display: none;">
+                <span class="pp ppUpload"></span>
+            </button>
+            <div class="suUploaderBoxDotted">
+                <span title="Select file for object {{objects.[1].Value}}">Select file for object L0V1</span>
+            </div>
+            <input type="file" style="display:none;" accept="" />
+        </div>
+        <div d-sector="@" class="ppUploader" d-datafileextensiontype="" d-datamessage="Select file for object {{objects.[1].Value}}" dc-fileextensionsdefault="" dc-downloadbutton="false" dc-uploadbutton="true" dc-uploadaction="false" d-datafieldname="{{dkFileName}}" d-datafielddata="{{dkFileContent}}">
+            <div>
+                <!--Data-->
+                <div d-datakey="dcProperties" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+            </div>
+            <button d-if="{{dcProperties.downloadbutton}}" class="ppUploaderButton" style="display: none;">
+                <span class="pp ppDownload"></span>
+            </button>
+            <button d-if="{{dcProperties.uploadbutton}}" class="suDownloadDisabled" d-on-click="{{dcProperties.uploadaction}}" disabled="">
+                <span class="pp ppUpload"></span>
+            </button>
+            <div class="suUploaderBoxDotted">
+                <span title="Select file for object {{objects.[1].Value}}">Select file for object L0V1</span>
+            </div>
+            <input type="file" style="display:none;" accept="" />
+        </div>
+        <div d-sector="@" class="ppUploader" d-datafileextensiontype="" d-datamessage="Select file for object {{objects.[1].Value}}" dc-fileextensionsdefault="" dc-downloadbutton="false" dc-uploadbutton="false" dc-uploadaction="false" d-datafieldname="{{dkFileName}}" d-datafielddata="{{dkFileContent}}">
+            <div>
+                <!--Data-->
+                <div d-datakey="dcProperties" d-datatype="parent" d-dataloadtype="reference" d-datavalue="dc-"></div>
+            </div>
+            <button d-if="{{dcProperties.downloadbutton}}" class="ppUploaderButton" style="display: none;">
+                <span class="pp ppDownload"></span>
+            </button>
+            <button d-if="{{dcProperties.uploadbutton}}" class="ppUploaderButton" d-on-click="{{dcProperties.uploadaction}}" style="display: none;">
+                <span class="pp ppUpload"></span>
+            </button>
+            <div class="suUploaderBoxDotted">
+                <span title="Select file for object {{objects.[1].Value}}">Select file for object L0V1</span>
+            </div>
+            <input type="file" style="display:none;" accept="" />
+        </div>
+        <hr />
+    </div>
+
+</body>
+</html>

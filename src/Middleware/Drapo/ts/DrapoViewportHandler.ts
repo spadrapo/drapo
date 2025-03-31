@@ -139,14 +139,14 @@
         return (height);
     }
 
-    public AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, fragment: DocumentFragment): void {
+    public AppendViewportControlFlowBallonAfter(viewport: DrapoViewport, el: HTMLElement): void {
         if ((viewport === null) || (viewport.IsActive))
             return;
         const elBallonAfter: HTMLElement = document.createElement('div');
         elBallonAfter.style.width = '100%';
         this.FillBallon(elBallonAfter, viewport.HeightBallonAfter);
         viewport.ElementBallonAfter = elBallonAfter;
-        fragment.appendChild(elBallonAfter);
+        el.appendChild(elBallonAfter);
     }
 
     public ActivateViewportControlFlow(viewport: DrapoViewport, elItem: HTMLElement): void {

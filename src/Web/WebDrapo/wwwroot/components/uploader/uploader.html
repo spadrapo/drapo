@@ -1,8 +1,15 @@
-﻿<div class="ppUploader" d-dataFileExtensionType="" d-dataMessage="{{text.SelectingFileByClickingOrDragDropping}}" dc-fileextensionsdefault="{{fileExtensionsDefault}}" >
-    <button class="ppUploaderButton">
-        <span class="pp">Download</span>
-    </button>
+﻿<div d-sector="@" class="ppUploader" d-dataFileExtensionType="" d-dataMessage="Select file" dc-fileextensionsdefault="" dc-downloadbutton="true" dc-uploadbutton="false" dc-uploadaction="false">
     <div>
+        <!--Data-->
+        <div d-dataKey="dcProperties" d-dataType="parent" d-dataLoadType="reference" d-dataValue="dc-"></div>
+    </div>
+    <button d-if="{{dcProperties.downloadbutton}}" class="ppUploaderButton">
+        <span class="pp ppDownload"></span>
+    </button>
+    <button d-if="{{dcProperties.uploadbutton}}" class="ppUploaderButton" d-on-click="{{dcProperties.uploadaction}}">
+        <span class="pp ppUpload"></span>
+    </button>
+    <div class="suUploaderBoxDotted">
         <span></span>
     </div>
     <input type="file" style="display:none;" />
