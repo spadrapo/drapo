@@ -1615,6 +1615,11 @@ namespace WebDrapo.Test
             ValidatePage("Render");
         }
         [TestCase]
+        public void ReplaceItemFieldTest()
+        {
+            ValidatePage("ReplaceItemField");
+        }
+        [TestCase]
         public void RouterMasterTest()
         {
             ValidatePage("RouterMaster");
