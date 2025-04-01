@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>ReplaceItemField &Aacute; ReplaceCharsItemField</title>
+</head>
+<body>
+    <div d-dataKey="object" d-dataType="object" d-dataProperty-text1="Hello World!!" d-dataProperty-text2="Hello There!!"></div>
+    <div d-dataKey="fruits" d-dataType="array" d-dataValue='["abacate", "abacaxi", "amora"]'></div>
+    <div d-dataKey="objectArray" d-dataType="array" d-dataValue='[{"name":"Roger"},{"name":"Peter"}]'></div>
+    <div d-dataKey="replaceObject" d-dataType="function" d-dataloadtype="startup" d-dataValue="ReplaceCharsItemField({{object.text1}},'l!','L❗')"></div>
+    <div d-dataKey="replaceAbacate" d-dataType="function" d-dataloadtype="startup" d-dataValue="ReplaceCharsItemField({{fruits.[0]}},'a','o')"></div>
+    <br>
+    <h5>ReplaceCharsItemField</h5>
+    <div>
+        <span>Object.text1:</span> <span>{{object.text1}}</span><br />
+        <span>Fruits</span>
+        <ul>
+            <li d-for="item in fruits">
+                <span>{{item}}</span>
+            </li>
+        </ul>
+        <span>Object Array</span>
+        <ul>
+            <li d-for="item in objectArray">
+                <span>{{item.name}}</span>
+            </li>
+        </ul>
+        <input type="button" driveunittest="click" value="Replace in first name" d-on-click="ReplaceCharsItemField({{objectArray.[0].name}},'Rr','Ll')"/>
+    </div>
+</body>
+</html>
