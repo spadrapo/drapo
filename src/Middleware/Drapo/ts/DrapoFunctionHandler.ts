@@ -627,9 +627,9 @@ class DrapoFunctionHandler {
             if (dataPathValue !== dataPathValueResolved)
                 dataPath[i] = dataPathValueResolved;
         }
-        const recursiveText: string = functionParsed.Parameters.length > 5 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[5]) : null;
+        const recursiveText: string = functionParsed.Parameters.length > 4 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4]) : null;
         const recursive: boolean = ((recursiveText == null) || (recursiveText == '')) ? false : await this.Application.Solver.ResolveConditional(recursiveText);
-        const resolveText: string = functionParsed.Parameters.length > 6 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[6]) : null;
+        const resolveText: string = functionParsed.Parameters.length > 5 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[5]) : null;
         const resolve: boolean = ((resolveText == null) || (resolveText == '')) ? true : await this.Application.Solver.ResolveConditional(resolveText);
         const substr: string = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive) : functionParsed.Parameters[1];
         const replacementStr: string = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2], true, true, recursive) : functionParsed.Parameters[2];
@@ -638,8 +638,6 @@ class DrapoFunctionHandler {
         const originalValue: string = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataPath, true, executionContext);
         const regex: RegExp = new RegExp(substr, (ignoreCase ? 'gi' : 'g'));
         const finalValue = originalValue.replace(regex, replacementStr);
-        const notifyText: string = functionParsed.Parameters[4];
-        const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         return (finalValue);
     }
 
@@ -653,9 +651,9 @@ class DrapoFunctionHandler {
             if (dataPathValue !== dataPathValueResolved)
                 dataPath[i] = dataPathValueResolved;
         }
-        const recursiveText: string = functionParsed.Parameters.length > 5 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[5]) : null;
+        const recursiveText: string = functionParsed.Parameters.length > 4 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4]) : null;
         const recursive: boolean = ((recursiveText == null) || (recursiveText == '')) ? false : await this.Application.Solver.ResolveConditional(recursiveText);
-        const resolveText: string = functionParsed.Parameters.length > 6 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[6]) : null;
+        const resolveText: string = functionParsed.Parameters.length > 5 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[5]) : null;
         const resolve: boolean = ((resolveText == null) || (resolveText == '')) ? true : await this.Application.Solver.ResolveConditional(resolveText);
         const regexStr: string = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive) : functionParsed.Parameters[1];
         const replacementStr: string = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2], true, true, recursive) : functionParsed.Parameters[2];
@@ -664,8 +662,6 @@ class DrapoFunctionHandler {
         const originalValue: string = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataPath, true, executionContext);
         const regex: RegExp = new RegExp(regexStr, (ignoreCase ? 'gi' : 'g'));
         const finalValue = originalValue.replace(regex, replacementStr);
-        const notifyText: string = functionParsed.Parameters[4];
-        const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         return (finalValue);
     }
 
@@ -679,9 +675,9 @@ class DrapoFunctionHandler {
             if (dataPathValue !== dataPathValueResolved)
                 dataPath[i] = dataPathValueResolved;
         }
-        const recursiveText: string = functionParsed.Parameters.length > 4 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4]) : null;
+        const recursiveText: string = functionParsed.Parameters.length > 3 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3]) : null;
         const recursive: boolean = ((recursiveText == null) || (recursiveText == '')) ? false : await this.Application.Solver.ResolveConditional(recursiveText);
-        const resolveText: string = functionParsed.Parameters.length > 5 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[5]) : null;
+        const resolveText: string = functionParsed.Parameters.length > 4 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4]) : null;
         const resolve: boolean = ((resolveText == null) || (resolveText == '')) ? true : await this.Application.Solver.ResolveConditional(resolveText);
         const charToReplace: string = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive) : functionParsed.Parameters[1];
         const replacementChars: string = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2], true, true, recursive) : functionParsed.Parameters[2];
@@ -691,8 +687,6 @@ class DrapoFunctionHandler {
             const regex = new RegExp(charToReplace[i], 'g');
             finalValue = finalValue.replace(regex, replacementChars[i]);
         }
-        const notifyText: string = functionParsed.Parameters[3];
-        const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         return (finalValue);
     }
 
