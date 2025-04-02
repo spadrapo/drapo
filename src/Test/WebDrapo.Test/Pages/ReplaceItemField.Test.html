@@ -10,8 +10,8 @@
     <div d-datakey="object1" d-datatype="object" d-dataproperty-text1="Hello World!!" d-dataproperty-text2="Hello There!!"></div>
     <div d-datakey="fruits1" d-datatype="array" d-datavalue="[&quot;abacate&quot;, &quot;abacaxi&quot;, &quot;amora&quot;]"></div>
     <div d-datakey="objectArray1" d-datatype="array" d-datavalue="[{&quot;name&quot;:&quot;Roger&quot;},{&quot;name&quot;:&quot;Peter&quot;}]"></div>
-    <div d-datakey="ReplaceItemField1" d-datatype="function" d-dataloadtype="startup" d-datavalue="ReplaceItemField({{object1.text2}},'there','World',true)"></div>
-    <div d-datakey="ReplaceItemField2" d-datatype="function" d-dataloadtype="startup" d-datavalue="ReplaceItemField({{fruits1.[1]}},'aba','ABA')"></div>
+    <div d-datakey="ReplaceItemField1" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateItemField({{object1.text2}},ReplaceItemField({{object1.text2}},'there','World',true))"></div>
+    <div d-datakey="ReplaceItemField2" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateItemField({{fruits1.[1]}},ReplaceItemField({{fruits1.[1]}},'aba','ABA'))"></div>
     <div>
         <span>Object.text2:</span> <span>Hello World!!</span><br />
         <span>Fruits</span>
@@ -41,14 +41,14 @@
                 <span>Peter</span>
             </li>
         </ul>
-        <input type="button" driverunittest="click" value="Replace in first name" d-on-click="ReplaceItemField({{objectArray1.[0].name}},'roger','Adam', true)" />
+        <input type="button" driverunittest="click" value="Replace in first name" d-on-click="UpdateItemField({{objectArray1.[0].name}},ReplaceItemField({{objectArray1.[0].name}},'roger','Adam', true))" />
     </div>
     <h5>ReplaceRegexItemField</h5>
     <div d-datakey="object2" d-datatype="object" d-dataproperty-text1="Hello World!!" d-dataproperty-text2="Hello There!!"></div>
     <div d-datakey="fruits2" d-datatype="array" d-datavalue="[&quot;abacate&quot;, &quot;abacaxi&quot;, &quot;amora&quot;]"></div>
     <div d-datakey="objectArray2" d-datatype="array" d-datavalue="[{&quot;name&quot;:&quot;Roger&quot;},{&quot;name&quot;:&quot;Peter&quot;}]"></div>
-    <div d-datakey="ReplaceRegexItemField1" d-datatype="function" d-dataloadtype="startup" d-datavalue="ReplaceRegexItemField({{object2.text2}},'[H!]','')"></div>
-    <div d-datakey="ReplaceRegexItemField2" d-datatype="function" d-dataloadtype="startup" d-datavalue="ReplaceRegexItemField({{fruits2.[1]}},'[^aeiou]','_')"></div>
+    <div d-datakey="ReplaceRegexItemField1" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateItemField({{object2.text2}},ReplaceRegexItemField({{object2.text2}},'[H!]',''))"></div>
+    <div d-datakey="ReplaceRegexItemField2" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateItemField({{fruits2.[1]}},ReplaceRegexItemField({{fruits2.[1]}},'[^aeiou]','_'))"></div>
     <div>
         <span>Object.text2:</span> <span>ello There</span><br />
         <span>Fruits</span>
@@ -78,14 +78,14 @@
                 <span>Peter</span>
             </li>
         </ul>
-        <input type="button" driverunittest="click" value="Replace in first name" d-on-click="ReplaceItemField({{objectArray2.[0].name}},'roger','Adam', true)" />
+        <input type="button" driverunittest="click" value="Replace in first name" d-on-click="UpdateItemField({{objectArray2.[0].name}},ReplaceItemField({{objectArray2.[0].name}},'roger','Adam', true))" />
     </div>
     <h5>ReplaceCharsItemField</h5>
     <div d-datakey="object3" d-datatype="object" d-dataproperty-text1="Hello World!!" d-dataproperty-text2="Hello There!!"></div>
     <div d-datakey="fruits3" d-datatype="array" d-datavalue="[&quot;abacate&quot;, &quot;abacaxi&quot;, &quot;amora&quot;]"></div>
     <div d-datakey="objectArray3" d-datatype="array" d-datavalue="[{&quot;name&quot;:&quot;Roger&quot;},{&quot;name&quot;:&quot;Peter&quot;}]"></div>
-    <div d-datakey="ReplaceCharsItemField1" d-datatype="function" d-dataloadtype="startup" d-datavalue="ReplaceCharsItemField({{object3.text1}},'l!','L❗')"></div>
-    <div d-datakey="ReplaceCharsItemField2" d-datatype="function" d-dataloadtype="startup" d-datavalue="ReplaceCharsItemField({{fruits3.[0]}},'a','o')"></div>
+    <div d-datakey="ReplaceCharsItemField1" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateItemField({{object3.text1}},ReplaceCharsItemField({{object3.text1}},'l!','L❗'))"></div>
+    <div d-datakey="ReplaceCharsItemField2" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateItemField({{fruits3.[0]}},ReplaceCharsItemField({{fruits3.[0]}},'a','o'))"></div>
     <div>
         <span>Object.text1:</span> <span>HeLLo WorLd❗❗</span><br />
         <span>Fruits</span>
@@ -115,7 +115,7 @@
                 <span>Peter</span>
             </li>
         </ul>
-        <input type="button" driverunittest="click" value="Replace in first name" d-on-click="ReplaceCharsItemField({{objectArray3.[0].name}},'Rr','Ll')" />
+        <input type="button" driverunittest="click" value="Replace in first name" d-on-click="UpdateItemField({{objectArray3.[0].name}},ReplaceCharsItemField({{objectArray3.[0].name}},'Rr','Ll'))" />
     </div>
 
 </body>

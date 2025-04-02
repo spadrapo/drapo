@@ -640,7 +640,6 @@ class DrapoFunctionHandler {
         const finalValue = originalValue.replace(regex, replacementStr);
         const notifyText: string = functionParsed.Parameters[4];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, finalValue, notify);
         return (finalValue);
     }
 
@@ -667,7 +666,6 @@ class DrapoFunctionHandler {
         const finalValue = originalValue.replace(regex, replacementStr);
         const notifyText: string = functionParsed.Parameters[4];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, finalValue, notify);
         return (finalValue);
     }
 
@@ -695,7 +693,6 @@ class DrapoFunctionHandler {
         }
         const notifyText: string = functionParsed.Parameters[3];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        await this.Application.Solver.UpdateItemDataPathObject(sector, contextItem, executionContext, dataPath, finalValue, notify);
         return (finalValue);
     }
 
