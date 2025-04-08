@@ -22,6 +22,13 @@
 		<Content Include="tsconfig/development/tsconfig.json" Condition="'$(Configuration)' == 'Debug'" />
 		<Content Include="tsconfig/production/tsconfig.json" Condition="'$(Configuration)' == 'Release'" />
 	</ItemGroup>
+	<Target Name="FixDeniedAccessOnDelete" BeforeTargets="TypeScriptDeleteOutputFromOtherConfigs" Condition="'$(BuildingProject)' != 'false' AND '$(DesignTimeBuild)' != 'true'">
+		<!-- Messing with the bugged target TypeScriptDeleteOutputFromOtherConfigs from Mricrosoft.TypeScript.targets and make it do nothing: https://github.com/microsoft/TypeScript/issues/50428 -->
+		<ItemGroup>
+			<TSOutputLogsToDelete Include="$(BaseIntermediateOutputPath)\**\Tsc*.out"/>
+		</ItemGroup>
+		<Delete Files="@(TSOutputLogsToDelete)" Condition="'@(TSOutputLogsToDelete)' != '' " />
+	</Target>
 	<Target Name="CleanLibFiles" BeforeTargets="Clean" Condition="'$(DesignTimeBuild)' != 'true'">
 		<ItemGroup>
 			<FilesToDelete Include="lib\$(TargetFramework)\**\*;js\*" />

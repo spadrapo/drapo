@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -104,17 +102,12 @@ namespace Sysphera.Middleware.Drapo
             {
                 //JS
                 bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._libETag));
-                context.Response.OnStarting(state =>
-                {
-                    var httpContext = (HttpContext)state;
-                    httpContext.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
-                    httpContext.Response.Headers["ETag"] = new[] { this._libETag };
-                    httpContext.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
-                    httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
-                    httpContext.Response.Headers.Add("Content-Type", new[] { "application/javascript" });
-                    AppendHeaderContainerId(httpContext);
-                    return Task.FromResult(0);
-                }, context);
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                context.Response.Headers["ETag"] = new[] { this._libETag };
+                context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { "text/javascript" });
+                AppendHeaderContainerId(context);
                 if (!isCache)
                     await context.Response.WriteAsync(this._libContent);
             }
@@ -122,17 +115,12 @@ namespace Sysphera.Middleware.Drapo
             {
                 //.JS.MAP
                 bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._jsMapETag));
-                context.Response.OnStarting(state =>
-                {
-                    var httpContext = (HttpContext)state;
-                    httpContext.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
-                    httpContext.Response.Headers["ETag"] = new[] { this._jsMapETag };
-                    httpContext.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
-                    httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
-                    httpContext.Response.Headers.Add("Content-Type", new[] { "application/json" });
-                    AppendHeaderContainerId(httpContext);
-                    return Task.FromResult(0);
-                }, context);
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                context.Response.Headers["ETag"] = new[] { this._jsMapETag };
+                context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { "application/json" });
+                AppendHeaderContainerId(context);
                 if (!isCache)
                     await context.Response.WriteAsync(this._jsMapContent);
             }
@@ -140,17 +128,12 @@ namespace Sysphera.Middleware.Drapo
             {
                 //Config
                 bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._configETag));
-                context.Response.OnStarting(state =>
-                {
-                    var httpContext = (HttpContext)state;
-                    httpContext.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
-                    httpContext.Response.Headers["ETag"] = new[] { this._configETag };
-                    httpContext.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
-                    httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
-                    httpContext.Response.Headers.Add("Content-Type", new[] { "application/json" });
-                    AppendHeaderContainerId(httpContext);
-                    return Task.FromResult(0);
-                }, context);
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                context.Response.Headers["ETag"] = new[] { this._configETag };
+                context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { "application/json" });
+                AppendHeaderContainerId(context);
                 if (!isCache)
                     await context.Response.WriteAsync(this._configContent);
             }
@@ -160,17 +143,12 @@ namespace Sysphera.Middleware.Drapo
                 string key = this.CreateKeyComponentFile(component, file);
                 string eTag = this.GetComponentFileEtag(component, file, key);
                 bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == eTag));
-                context.Response.OnStarting(state =>
-                {
-                    var httpContext = (HttpContext)state;
-                    httpContext.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
-                    httpContext.Response.Headers["ETag"] = new[] { eTag };
-                    httpContext.Response.Headers.Add("Last-Modified", new[] { this.GetComponentFileLastModified(component, file, key) });
-                    httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
-                    httpContext.Response.Headers.Add("Content-Type", new[] { this.GetComponentFileContentType(component, file, key) });
-                    AppendHeaderContainerId(httpContext);
-                    return Task.FromResult(0);
-                }, context);
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                context.Response.Headers["ETag"] = new[] { eTag };
+                context.Response.Headers.Add("Last-Modified", new[] { this.GetComponentFileLastModified(component, file, key) });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { this.GetComponentFileContentType(component, file, key) });
+                AppendHeaderContainerId(context);
                 if (!isCache)
                     await context.Response.WriteAsync(this.GetComponentFileContent(component, file, key));
             }
@@ -178,37 +156,24 @@ namespace Sysphera.Middleware.Drapo
             {
                 //Custom
                 bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == dynamic.ETag));
-                context.Response.OnStarting(state =>
-                {
-                    var httpContext = (HttpContext)state;
-                    httpContext.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : dynamic.Status;
-                    if (!string.IsNullOrEmpty(dynamic.ETag))
-                        httpContext.Response.Headers["ETag"] = new[] { dynamic.ETag };
-                    if (!string.IsNullOrEmpty(dynamic.LastModified))
-                        httpContext.Response.Headers.Add("Last-Modified", new[] { dynamic.LastModified });
-                    httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
-                    if (!string.IsNullOrEmpty(dynamic.ContentType))
-                        httpContext.Response.Headers.Add("Content-Type", new[] { dynamic.ContentType });
-                    if (dynamic.Headers != null)
-                        foreach (KeyValuePair<string, string> entry in dynamic.Headers)
-                            httpContext.Response.Headers.Add(entry.Key, new[] { entry.Value });
-                    AppendHeaderContainerId(httpContext);
-                    return Task.FromResult(0);
-                }, context);
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : dynamic.Status;
+                if (!string.IsNullOrEmpty(dynamic.ETag))
+                    context.Response.Headers["ETag"] = new[] { dynamic.ETag };
+                if (!string.IsNullOrEmpty(dynamic.LastModified))
+                    context.Response.Headers.Add("Last-Modified", new[] { dynamic.LastModified });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                if (!string.IsNullOrEmpty(dynamic.ContentType))
+                    context.Response.Headers.Add("Content-Type", new[] { dynamic.ContentType });
+                if (dynamic.Headers != null)
+                    foreach (KeyValuePair<string, string> entry in dynamic.Headers)
+                        context.Response.Headers.Add(entry.Key, new[] { entry.Value });
+                AppendHeaderContainerId(context);
                 if ((!isCache) && (!string.IsNullOrEmpty(dynamic.ContentData)))
                     await context.Response.WriteAsync(dynamic.ContentData, Encoding.UTF8);
             }
             else
             {
-                if (HasHeaderContainerId())
-                {
-                    context.Response.OnStarting(state =>
-                    {
-                        var httpContext = (HttpContext)state;
-                        AppendHeaderContainerId(httpContext);
-                        return Task.FromResult(0);
-                    }, context);
-                }
+                AppendHeaderContainerId(context);
                 await _next.Invoke(context);
             }
         }
@@ -402,7 +367,7 @@ namespace Sysphera.Middleware.Drapo
             if (file.Type == DrapoFileType.View)
                 return ("text/html");
             else if (file.Type == DrapoFileType.Script)
-                return ("application/javascript");
+                return ("text/javascript");
             else if (file.Type == DrapoFileType.Style)
                 return ("text/css");
             throw new Exception("Drapo: content type not supported");
