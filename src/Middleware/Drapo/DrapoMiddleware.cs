@@ -276,7 +276,7 @@ namespace Sysphera.Middleware.Drapo
             }
             string sectionsString = string.Join(',', sections);
             if (string.IsNullOrEmpty(sectionsString)) //return dummy map
-                return @"{""version"":3,""file"":""drapo.js"",""sourceRoot"":"""",""sources"":[""dummy.ts""],""names"":[],""mappings"":"";AAAA,MAAM""}";
+                return @"{""version"":3,""file"":""drapo.js"",""sourceRoot"":"""",""sources"":[""drapo.js""],""names"":[],""mappings"":""""}";
             return $@"{{ ""version"": 3, ""file"": ""drapo.js"", ""sections"": [{sectionsString}] }}";
         }
         #endregion
