@@ -239,10 +239,6 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionUpdateItemField(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'replaceitemfield')
             return (await this.ExecuteFunctionReplaceItemField(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'replaceregexitemfield')
-            return (await this.ExecuteFunctionReplaceRegexItemField(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'replacecharsitemfield')
-            return (await this.ExecuteFunctionReplaceCharsItemField(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'checkdatafield')
             return (await this.ExecuteFunctionCheckDataField(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'uncheckdatafield')
@@ -629,67 +625,34 @@ class DrapoFunctionHandler {
             if (dataPathValue !== dataPathValueResolved)
                 dataPath[i] = dataPathValueResolved;
         }
-        const recursiveText: string = functionParsed.Parameters.length > 4 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4]) : null;
+        const recursiveText: string = functionParsed.Parameters.length > 5 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[6]) : null;
         const recursive: boolean = ((recursiveText == null) || (recursiveText == '')) ? false : await this.Application.Solver.ResolveConditional(recursiveText);
-        const resolveText: string = functionParsed.Parameters.length > 5 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[5]) : null;
+        const resolveText: string = functionParsed.Parameters.length > 6 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[7]) : null;
         const resolve: boolean = ((resolveText == null) || (resolveText == '')) ? true : await this.Application.Solver.ResolveConditional(resolveText);
         const substr: string = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive) : functionParsed.Parameters[1];
         const replacementStr: string = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2], true, true, recursive) : functionParsed.Parameters[2];
         const ignoreCaseText: string = functionParsed.Parameters.length < 4 ? null : (resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3], true, true, recursive) : functionParsed.Parameters[3]);
         const ignoreCase: boolean = ((ignoreCaseText == null) || (ignoreCaseText == '')) ? false : await this.Application.Solver.ResolveConditional(ignoreCaseText);
-        const originalValue: string = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataPath, true, executionContext);
-        const regex: RegExp = new RegExp(substr, (ignoreCase ? 'gi' : 'g'));
-        const finalValue = originalValue.replace(regex, replacementStr);
-        return (finalValue);
-    }
-
-    private async ExecuteFunctionReplaceRegexItemField(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
-        const dataPath: string[] = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
-        for (let i: number = 0; i < dataPath.length; i++) {
-            const dataPathValue: string = dataPath[i];
-            if (!this.Application.Parser.HasMustache(dataPathValue))
-                continue;
-            const dataPathValueResolved: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, dataPathValue);
-            if (dataPathValue !== dataPathValueResolved)
-                dataPath[i] = dataPathValueResolved;
+        const replaceStyleText: string = functionParsed.Parameters.length < 5 ? null : (resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4], true, true, recursive) : functionParsed.Parameters[4]);
+        let targetString: string = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataPath, true, executionContext);
+        switch (replaceStyleText?.trim()) {
+            case '1': //chars array
+                const endIndex: number = Math.min(substr.length, replacementStr.length);
+                for (let i = 0; i < endIndex; i++) {
+                    const regex = new RegExp(`\\u{${substr[i].charCodeAt(0).toString(16)}}`, (ignoreCase ? 'ugi' : 'ug'));
+                    targetString = targetString.replace(regex, replacementStr[i]);
+                }
+                return targetString;
+            case '2': //regex
+                const regex2: RegExp = new RegExp(substr, (ignoreCase ? 'gi' : 'g'));
+                return targetString.replace(regex2, replacementStr);
+            default: //substring
+                const escapedSubstr: string = Array.from(substr)
+                    .map((char) => `\\u{${char.charCodeAt(0).toString(16)}}`)
+                    .join('');
+                const regex3: RegExp = new RegExp(escapedSubstr, (ignoreCase ? 'ugi' : 'ug'));
+                return targetString.replace(regex3, replacementStr);
         }
-        const recursiveText: string = functionParsed.Parameters.length > 4 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4]) : null;
-        const recursive: boolean = ((recursiveText == null) || (recursiveText == '')) ? false : await this.Application.Solver.ResolveConditional(recursiveText);
-        const resolveText: string = functionParsed.Parameters.length > 5 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[5]) : null;
-        const resolve: boolean = ((resolveText == null) || (resolveText == '')) ? true : await this.Application.Solver.ResolveConditional(resolveText);
-        const regexStr: string = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive) : functionParsed.Parameters[1];
-        const replacementStr: string = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2], true, true, recursive) : functionParsed.Parameters[2];
-        const ignoreCaseText: string = functionParsed.Parameters.length < 4 ? null : (resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3], true, true, recursive) : functionParsed.Parameters[3]);
-        const ignoreCase: boolean = ((ignoreCaseText == null) || (ignoreCaseText == '')) ? false : await this.Application.Solver.ResolveConditional(ignoreCaseText);
-        const originalValue: string = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataPath, true, executionContext);
-        const regex: RegExp = new RegExp(regexStr, (ignoreCase ? 'gi' : 'g'));
-        const finalValue = originalValue.replace(regex, replacementStr);
-        return (finalValue);
-    }
-
-    private async ExecuteFunctionReplaceCharsItemField(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
-        const dataPath: string[] = this.Application.Parser.ParseMustache(functionParsed.Parameters[0]);
-        for (let i: number = 0; i < dataPath.length; i++) {
-            const dataPathValue: string = dataPath[i];
-            if (!this.Application.Parser.HasMustache(dataPathValue))
-                continue;
-            const dataPathValueResolved: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, dataPathValue);
-            if (dataPathValue !== dataPathValueResolved)
-                dataPath[i] = dataPathValueResolved;
-        }
-        const recursiveText: string = functionParsed.Parameters.length > 3 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[3]) : null;
-        const recursive: boolean = ((recursiveText == null) || (recursiveText == '')) ? false : await this.Application.Solver.ResolveConditional(recursiveText);
-        const resolveText: string = functionParsed.Parameters.length > 4 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[4]) : null;
-        const resolve: boolean = ((resolveText == null) || (resolveText == '')) ? true : await this.Application.Solver.ResolveConditional(resolveText);
-        const charToReplace: string = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1], true, true, recursive) : functionParsed.Parameters[1];
-        const replacementChars: string = resolve ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2], true, true, recursive) : functionParsed.Parameters[2];
-        const endIndex: number = Math.min(charToReplace.length, replacementChars.length);
-        let finalValue: string = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataPath, true, executionContext);
-        for (let i = 0; i < endIndex; i++) {
-            const regex = new RegExp(charToReplace[i], 'g');
-            finalValue = finalValue.replace(regex, replacementChars[i]);
-        }
-        return (finalValue);
     }
 
     private async ExecuteFunctionCheckDataField(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
