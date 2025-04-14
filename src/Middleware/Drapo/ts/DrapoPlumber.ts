@@ -23,7 +23,18 @@ class DrapoPlumber {
         return (await this.Application.Config.GetUsePipes());
     }
 
+    private async CanUseWebSocket(): Promise<boolean>{
+        //Client
+        const isWebSocketClientSupported: boolean = ("WebSocket" in window);
+        if (!isWebSocketClientSupported)
+            return (false);
+        //Server
+        return (await this.Application.Config.GetCanUseWebSocket());
+    }
+
     public async ConnectPipe(): Promise<boolean> {
+        if (!await this.CanUseWebSocket())
+            return (false);
         if (this.Application.Document.HasUnitTest())
             return (await this.ConnectPipeInternal());
         this.Application.Document.RunFireAndForgetAfter(this.ConnectPipeInternal.bind(this), 2000);

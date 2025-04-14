@@ -135,7 +135,7 @@ namespace Sysphera.Middleware.Drapo
                 context.Response.Headers.Add("Content-Type", new[] { "application/json" });
                 AppendHeaderContainerId(context);
                 if (!isCache)
-                    await context.Response.WriteAsync(this._configContent);
+                    await context.Response.WriteAsync(this.GetConfigContentForRequest(context));
             }
             else if (this.IsComponentFile(context, out component, out file))
             {
@@ -178,11 +178,13 @@ namespace Sysphera.Middleware.Drapo
             }
         }
 
-        private bool HasHeaderContainerId() {
+        private bool HasHeaderContainerId()
+        {
             return (!string.IsNullOrEmpty(this._options.Config.HeaderContainerId));
         }
 
-        private void AppendHeaderContainerId(HttpContext httpContext) {
+        private void AppendHeaderContainerId(HttpContext httpContext)
+        {
             string headerContainerId = this._options.Config.HeaderContainerId;
             if (string.IsNullOrEmpty(headerContainerId))
                 return;
@@ -263,9 +265,9 @@ namespace Sysphera.Middleware.Drapo
                 }
             }
             //mount sections
-            string localRootPath = Path.GetDirectoryName(GetThisSourceFilePath()).Replace('\\','/');
+            string localRootPath = Path.GetDirectoryName(GetThisSourceFilePath()).Replace('\\', '/');
             List<string> sections = new List<string>(jsMapsOffsets.Count);
-            foreach (var jsOffset in jsMapsOffsets) 
+            foreach (var jsOffset in jsMapsOffsets)
             {
                 string jsOffsetMapContent = null;
                 if (resources.TryGetValue(jsOffset.jsMapFilename, out jsOffsetMapContent))
@@ -289,6 +291,39 @@ namespace Sysphera.Middleware.Drapo
         private string GetConfigContent()
         {
             return (JsonConvert.SerializeObject(this._options.Config));
+        }
+
+        private string GetConfigContentForRequest(HttpContext context)
+        {
+            if (this.IsBotRequest(context))
+                return (this.GetConfigContentForBot());
+            return (this._configContent);
+        }
+
+        private bool IsBotRequest(HttpContext context)
+        {
+            var userAgent = context.Request.Headers["User-Agent"].ToString().ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(userAgent))
+                return (false);
+            if (userAgent.Contains("bot"))
+                return (true);
+            if (userAgent.Contains("crawler"))
+                return (true);
+            if (userAgent.Contains("spider"))
+                return (true);
+            if (userAgent.Contains("pagespeed"))
+                return (true);
+            if (userAgent.Contains("lighthouse"))
+                return (true);
+            return (false);
+        }
+
+        private string GetConfigContentForBot()
+        {
+            string configContent = GetConfigContent();
+            DrapoConfig configBot = JsonConvert.DeserializeObject<DrapoConfig>(configContent);
+            configBot.CanUseWebSocket = false;
+            return (JsonConvert.SerializeObject(configBot));
         }
         #endregion
         #region Components
@@ -436,8 +471,10 @@ namespace Sysphera.Middleware.Drapo
             if (string.IsNullOrEmpty(contentType))
                 return (null);
             //Themes
-            if (contentType == "text/css") {
-                if (this._options.Config.HandlerCustomTheme != null) {
+            if (contentType == "text/css")
+            {
+                if (this._options.Config.HandlerCustomTheme != null)
+                {
                     DrapoDynamic customTheme = await this._options.Config.HandlerCustomTheme(context, theme);
                     if (customTheme != null)
                         return (customTheme);

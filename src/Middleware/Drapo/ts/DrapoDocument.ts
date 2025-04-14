@@ -1127,7 +1127,7 @@ class DrapoDocument {
         return new Promise((resolve) => setTimeout(resolve, timeout));
     }
 
-    public RunFireAndForgetAfter(fn: () => void | Promise<void>, delay: number) : void {
+    public RunFireAndForgetAfter(fn: () => void | Promise<void>, delay: number): void {
         setTimeout(() => {
             fn();
         }, delay);
