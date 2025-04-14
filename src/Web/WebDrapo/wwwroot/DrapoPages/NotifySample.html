@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Notify - Sample</title>
+</head>
+<body>
+    <span>Notify - Sample</span>
+    <div d-dataKey="itemsFirstInstance" d-dataType="array" d-dataValue='[{"Code":"1","Value":"Planejamento","Selected":"false"},{"Code":"2","Value":"Recursos Humanos","Selected":"true"},{"Code":"3","Value":"Consolidação","Selected":"true"}]'></div>
+    <div d-dataKey="itemsSecondInstance" d-dataType="array" d-dataValue='[{"Code":"1","Value":"Planejamento","Selected":"false"},{"Code":"2","Value":"Recursos humanos","Selected":"true"},{"Code":"3","Value":"Consolidação","Selected":"true"},{"Code":"4","Value":"Planejamento 2","Selected":"false"},{"Code":"5","Value":"Consolidação 2","Selected":"true"}]'></div>
+
+    List 1:<br />
+    <d-list dc-source="{{itemsFirstInstance}}"></d-list><br />
+    List 2:<br />
+    <d-list dc-source="{{itemsSecondInstance}}"></d-list><br />
+</body>
+</html>
