@@ -14,8 +14,14 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Middleware\Drapo\Drapo.csproj" />
 	</ItemGroup>
-	<Target Name="CopyDrapoLib" BeforeTargets="PrepareResources">
+	<Target Name="CopyNodeModulesFiles" BeforeTargets="PrepareResources">
 		<Copy SourceFiles="..\..\Middleware\Drapo\lib\$(TargetFramework)\index.d.ts" DestinationFolder="node_modules\@types\drapo\" />
+	</Target>
+	<Target Name="CleanNodeModuleFiles" BeforeTargets="Clean" Condition="'$(DesignTimeBuild)' != 'true'">
+		<ItemGroup>
+			<FilesToDelete Include="node_modules\@types\drapo\**\*" />
+		</ItemGroup>
+		<Delete Files="@(FilesToDelete)" />
 	</Target>
 	<ItemGroup>
 		<Compile Remove="node_modules\**\*;Client\**\*" />

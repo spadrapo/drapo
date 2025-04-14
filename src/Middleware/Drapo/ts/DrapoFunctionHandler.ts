@@ -409,6 +409,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'debugger')
             return (await this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'break')
+            return (await this.ExecuteFunctionBreak(sector, contextItem, element, event, functionParsed, executionContext));
         if (!checkInvalidFunction)
             return (null);
         await this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name);
@@ -1644,6 +1646,12 @@ class DrapoFunctionHandler {
         for (let i: number = 0; i < functionParsed.Parameters.length; i++)
             parameters.push(await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[i], true, true, true));
         await this.Application.Debugger.ExecuteFunctionDebugger(parameters);
+        return ('');
+    }
+
+    private async ExecuteFunctionBreak(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+/* tslint:disable-next-line */
+        debugger;
         return ('');
     }
 
