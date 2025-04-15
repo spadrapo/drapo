@@ -143,7 +143,10 @@ namespace Sysphera.Middleware.Drapo
                 context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
                 context.Response.Headers["ETag"] = new[] { eTag };
                 context.Response.Headers.Add("Last-Modified", new[] { file.LastModified });
-                context.Response.Headers.Add("Cache-Control", new[] { "public, max-age=7000000, immutable" });
+                if (this._options.Config.UseComponentsCacheBurst)
+                    context.Response.Headers.Add("Cache-Control", new[] { "public, max-age=7000000, immutable" });
+                else
+                    context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
                 context.Response.Headers.Add("Content-Type", new[] { file.GetContentType() });
                 AppendHeaderContainerId(context);
                 if (!isCache)
