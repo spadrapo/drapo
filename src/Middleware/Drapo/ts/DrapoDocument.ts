@@ -1127,6 +1127,12 @@ class DrapoDocument {
         return new Promise((resolve) => setTimeout(resolve, timeout));
     }
 
+    public RunFireAndForgetAfter(fn: () => void | Promise<void>, delay: number): void {
+        setTimeout(() => {
+            fn();
+        }, delay);
+    }
+
     public async WaitForMessage(retry: number = 1000, interval: number = 50): Promise<DrapoMessage> {
         for (let i: number = 0; i < retry; i++) {
             if (this.Message != null)
@@ -1532,6 +1538,14 @@ class DrapoDocument {
         const elUnitTest: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-id', '__drapoUnitTest');
         if ((elUnitTest == null))
             return;
+        await this.Application.Plumber.AwaitInitialization();
         await this.Application.EventHandler.TriggerClick(elUnitTest);
+    }
+
+    public HasUnitTest(): boolean {
+        const elUnitTest: HTMLElement = this.Application.Searcher.FindByAttributeAndValue('d-id', '__drapoUnitTest');
+        if ((elUnitTest == null))
+            return (false);
+        return (true);
     }
 }

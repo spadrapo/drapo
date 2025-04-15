@@ -7,6 +7,7 @@ class DrapoPlumber {
     private _messages: DrapoPipeMessage[] = [];
     private _actionPolling: string = null;
     private _pollingMessages: DrapoPipePollingMessage[] = [];
+    private _initialized: boolean = false;
 
     //Properties
     get Application(): DrapoApplication {
@@ -22,7 +23,25 @@ class DrapoPlumber {
         return (await this.Application.Config.GetUsePipes());
     }
 
+    private async CanUseWebSocket(): Promise<boolean>{
+        //Client
+        const isWebSocketClientSupported: boolean = ("WebSocket" in window);
+        if (!isWebSocketClientSupported)
+            return (false);
+        //Server
+        return (await this.Application.Config.GetCanUseWebSocket());
+    }
+
     public async ConnectPipe(): Promise<boolean> {
+        if (!await this.CanUseWebSocket())
+            return (false);
+        if (this.Application.Document.HasUnitTest())
+            return (await this.ConnectPipeInternal());
+        this.Application.Document.RunFireAndForgetAfter(this.ConnectPipeInternal.bind(this), 2000);
+        return (true);
+    }
+
+    private async ConnectPipeInternal(): Promise<boolean> {
         const usePipes = await this.CanUsePipes();
         if (!usePipes)
             return (false);
@@ -64,6 +83,13 @@ class DrapoPlumber {
                 await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onReconnect);
         });
         await this.RequestPipeRegister(connection);
+        this._initialized = true;
+        return (true);
+    }
+
+    public async AwaitInitialization(): Promise<boolean>{
+        while (!this._initialized)
+            await this.Application.Document.Sleep(500);
         return (true);
     }
 

@@ -24,6 +24,7 @@ namespace Sysphera.Middleware.Drapo
         private List<DrapoWindow> _windows = new List<DrapoWindow>();
         private bool _usePipes = false;
         private bool _useRouter = true;
+        private bool _canUseWebSocket = true; 
         private bool _useCacheStatic = false;
         private bool _useCacheLocalStorage = true;
         private string _cacheKeysComponentView = null;
@@ -64,6 +65,7 @@ namespace Sysphera.Middleware.Drapo
         public Func<HttpContext, string, Task<DrapoDynamic>> HandlerCustomTheme { set; get; }
         public bool UsePipes { get => _usePipes; set => _usePipes = value; }
         public bool UseRouter { get => _useRouter; set => _useRouter = value; }
+        public bool CanUseWebSocket { get => _canUseWebSocket; set => _canUseWebSocket = value; }
         public bool UseCacheStatic { get => (_useCacheStatic) && (!string.IsNullOrEmpty(this._applicationBuild)); set => _useCacheStatic = value; }
         public bool UseCacheLocalStorage { get => _useCacheLocalStorage; set => _useCacheLocalStorage = value; }
         public bool UseComponentsCacheBurst { get; set; }

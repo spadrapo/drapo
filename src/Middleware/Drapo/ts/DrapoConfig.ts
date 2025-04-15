@@ -100,6 +100,10 @@ class DrapoConfig {
         return (await this.GetPropertyBoolean('UseRouter'));
     }
 
+    public async GetCanUseWebSocket(): Promise<boolean> {
+        return (await this.GetPropertyBoolean('CanUseWebSocket'));
+    }
+
     public async GetUseCacheLocalStorage(): Promise<boolean> {
         return (await this.GetPropertyBoolean('UseCacheLocalStorage'));
     }
