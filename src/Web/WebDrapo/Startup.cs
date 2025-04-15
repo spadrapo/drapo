@@ -94,6 +94,7 @@ namespace WebDrapo
             options.Config.UseRouter = false;
             options.Config.UseCacheStatic = true;
             options.Config.UseCacheLocalStorage = true;
+            options.Config.UseComponentsCacheBurst = true;
             options.Config.CacheKeysView = "applicationbuild,url,view";
             options.Config.CacheKeysComponentView = "applicationbuild,url,view";
             options.Config.CacheKeysComponentStyle = "applicationbuild,url,theme";
