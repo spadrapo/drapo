@@ -21,6 +21,15 @@
       },
       "hotReloadEnabled": false
     },
+    "IIS Express Prod": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "DrapoPages/ValidationEventConditionalBlocks.html",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "hotReloadEnabled": false
+    },
     "WebDrapo": {
       "commandName": "Project",
       "launchBrowser": true,
