@@ -24,6 +24,7 @@ namespace Sysphera.Middleware.Drapo
         private List<DrapoWindow> _windows = new List<DrapoWindow>();
         private bool _usePipes = false;
         private bool _useRouter = true;
+        private bool _canUseWebSocket = true; 
         private bool _useCacheStatic = false;
         private bool _useCacheLocalStorage = true;
         private string _cacheKeysComponentView = null;
@@ -64,8 +65,10 @@ namespace Sysphera.Middleware.Drapo
         public Func<HttpContext, string, Task<DrapoDynamic>> HandlerCustomTheme { set; get; }
         public bool UsePipes { get => _usePipes; set => _usePipes = value; }
         public bool UseRouter { get => _useRouter; set => _useRouter = value; }
+        public bool CanUseWebSocket { get => _canUseWebSocket; set => _canUseWebSocket = value; }
         public bool UseCacheStatic { get => (_useCacheStatic) && (!string.IsNullOrEmpty(this._applicationBuild)); set => _useCacheStatic = value; }
         public bool UseCacheLocalStorage { get => _useCacheLocalStorage; set => _useCacheLocalStorage = value; }
+        public bool UseComponentsCacheBurst { get; set; }
         public string CacheKeysComponentView { get => _cacheKeysComponentView; set => _cacheKeysComponentView = value; }
         public string CacheKeysComponentStyle { get => _cacheKeysComponentStyle; set => _cacheKeysComponentStyle = value; }
         public string CacheKeysComponentScript { get => _cacheKeysComponentScript; set => _cacheKeysComponentScript = value; }
@@ -126,7 +129,7 @@ namespace Sysphera.Middleware.Drapo
 
         public DrapoComponent GetComponent(string name)
         {
-            return (this.Components.Find(c => c.Name == name));
+            return (this.Components.Find(c => string.Equals(name, c.Name, StringComparison.OrdinalIgnoreCase)));
         }
 
         public List<DrapoComponent> LoadComponents(string pathBase, string urlBase)
@@ -142,7 +145,9 @@ namespace Sysphera.Middleware.Drapo
                     DrapoFileType? type = this.GetFileType(fileName);
                     if (!type.HasValue)
                         continue;
-                    component.CreateFile(fileName, type.Value, DrapoResourceType.Url, string.Format("{0}/{1}/{2}", urlBase, directoryName, fileName));
+                    DrapoComponentFile componentFile = component.CreateDiskFile(directory, fileName, type.Value, string.Format("{0}/{1}/{2}", urlBase, directoryName, fileName));
+                    if (this.UseComponentsCacheBurst)
+                        componentFile.ApplyCacheBurstTag();
                 }
                 component.SortFiles();
                 components.Add(component);
@@ -175,7 +180,9 @@ namespace Sysphera.Middleware.Drapo
                     DrapoFileType? type = this.GetFileType(resourcePath);
                     if (!type.HasValue)
                         continue;
-                    component.CreateFile(fileName, type.Value, DrapoResourceType.Embedded, resourcePath, assembly);
+                    DrapoComponentFile componentFile = component.CreateEmbeddedFile(assembly, fileName, type.Value, resourcePath);
+                    if (this.UseComponentsCacheBurst)
+                        componentFile.ApplyCacheBurstTag();
                 }
                 component.SortFiles();
                 components.Add(component);

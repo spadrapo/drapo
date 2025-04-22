@@ -73,7 +73,7 @@ namespace WebDrapo.Test
                 System.Threading.Thread.Sleep(5000);
             }
             if (pageName.Contains("Async"))
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(3000);
             string htmlEvaluated = Driver.PageSource;
             // Components can have full url file source, we remove it before comparison
             string urlPattern = @"\w+:\/\/[\w@][\w.:@]+\/?[\w\.?=%&=\-@/$,]*";

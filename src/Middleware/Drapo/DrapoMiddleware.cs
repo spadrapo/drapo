@@ -37,10 +37,7 @@ namespace Sysphera.Middleware.Drapo
         private string _configETag = null;
         private string _jsMapContent = null;
         private string _jsMapETag = null;
-        private ConcurrentDictionary<string, string> _cacheComponentFileEtag = new ConcurrentDictionary<string, string>();
         private ConcurrentDictionary<string, string> _cacheComponentFileContent = new ConcurrentDictionary<string, string>();
-        private ConcurrentDictionary<string, string> _cacheComponentFileContentType = new ConcurrentDictionary<string, string>();
-        private ConcurrentDictionary<string, string> _cacheComponentFileLastModified = new ConcurrentDictionary<string, string>();
         private List<DrapoFile> _cacheFiles = new List<DrapoFile>();
         #endregion
         #region Properties
@@ -135,19 +132,22 @@ namespace Sysphera.Middleware.Drapo
                 context.Response.Headers.Add("Content-Type", new[] { "application/json" });
                 AppendHeaderContainerId(context);
                 if (!isCache)
-                    await context.Response.WriteAsync(this._configContent);
+                    await context.Response.WriteAsync(this.GetConfigContentForRequest(context));
             }
             else if (this.IsComponentFile(context, out component, out file))
             {
                 //Component File
                 string key = this.CreateKeyComponentFile(component, file);
-                string eTag = this.GetComponentFileEtag(component, file, key);
+                string eTag = file.ETag;
                 bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == eTag));
                 context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
                 context.Response.Headers["ETag"] = new[] { eTag };
-                context.Response.Headers.Add("Last-Modified", new[] { this.GetComponentFileLastModified(component, file, key) });
-                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
-                context.Response.Headers.Add("Content-Type", new[] { this.GetComponentFileContentType(component, file, key) });
+                context.Response.Headers.Add("Last-Modified", new[] { file.LastModified });
+                if (this._options.Config.UseComponentsCacheBurst)
+                    context.Response.Headers.Add("Cache-Control", new[] { "public, max-age=7000000, immutable" });
+                else
+                    context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { file.GetContentType() });
                 AppendHeaderContainerId(context);
                 if (!isCache)
                     await context.Response.WriteAsync(this.GetComponentFileContent(component, file, key));
@@ -178,11 +178,13 @@ namespace Sysphera.Middleware.Drapo
             }
         }
 
-        private bool HasHeaderContainerId() {
+        private bool HasHeaderContainerId()
+        {
             return (!string.IsNullOrEmpty(this._options.Config.HeaderContainerId));
         }
 
-        private void AppendHeaderContainerId(HttpContext httpContext) {
+        private void AppendHeaderContainerId(HttpContext httpContext)
+        {
             string headerContainerId = this._options.Config.HeaderContainerId;
             if (string.IsNullOrEmpty(headerContainerId))
                 return;
@@ -263,9 +265,9 @@ namespace Sysphera.Middleware.Drapo
                 }
             }
             //mount sections
-            string localRootPath = Path.GetDirectoryName(GetThisSourceFilePath()).Replace('\\','/');
+            string localRootPath = Path.GetDirectoryName(GetThisSourceFilePath()).Replace('\\', '/');
             List<string> sections = new List<string>(jsMapsOffsets.Count);
-            foreach (var jsOffset in jsMapsOffsets) 
+            foreach (var jsOffset in jsMapsOffsets)
             {
                 string jsOffsetMapContent = null;
                 if (resources.TryGetValue(jsOffset.jsMapFilename, out jsOffsetMapContent))
@@ -275,6 +277,8 @@ namespace Sysphera.Middleware.Drapo
                 }
             }
             string sectionsString = string.Join(',', sections);
+            if (string.IsNullOrEmpty(sectionsString)) //return dummy map
+                return @"{""version"":3,""file"":""drapo.js"",""sourceRoot"":"""",""sources"":[""drapo.js""],""names"":[],""mappings"":""""}";
             return $@"{{ ""version"": 3, ""file"": ""drapo.js"", ""sections"": [{sectionsString}] }}";
         }
         #endregion
@@ -287,6 +291,39 @@ namespace Sysphera.Middleware.Drapo
         private string GetConfigContent()
         {
             return (JsonConvert.SerializeObject(this._options.Config));
+        }
+
+        private string GetConfigContentForRequest(HttpContext context)
+        {
+            if (this.IsBotRequest(context))
+                return (this.GetConfigContentForBot());
+            return (this._configContent);
+        }
+
+        private bool IsBotRequest(HttpContext context)
+        {
+            var userAgent = context.Request.Headers["User-Agent"].ToString().ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(userAgent))
+                return (false);
+            if (userAgent.Contains("bot"))
+                return (true);
+            if (userAgent.Contains("crawler"))
+                return (true);
+            if (userAgent.Contains("spider"))
+                return (true);
+            if (userAgent.Contains("pagespeed"))
+                return (true);
+            if (userAgent.Contains("lighthouse"))
+                return (true);
+            return (false);
+        }
+
+        private string GetConfigContentForBot()
+        {
+            string configContent = GetConfigContent();
+            DrapoConfig configBot = JsonConvert.DeserializeObject<DrapoConfig>(configContent);
+            configBot.CanUseWebSocket = false;
+            return (JsonConvert.SerializeObject(configBot));
         }
         #endregion
         #region Components
@@ -313,7 +350,7 @@ namespace Sysphera.Middleware.Drapo
             file = component.GetFile(split[1]);
             if (file == null)
                 return (false);
-            return (file.ResourceType == DrapoResourceType.Embedded);
+            return true;
         }
 
         private string CreateKeyComponentFile(DrapoComponent component, DrapoComponentFile file)
@@ -321,70 +358,11 @@ namespace Sysphera.Middleware.Drapo
             return (string.Format("{0}:{1}", component.Name, file.Name));
         }
 
-        private string GetComponentFileEtag(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            if (!this._cacheComponentFileEtag.ContainsKey(key))
-                this._cacheComponentFileEtag.TryAdd(key, this.GetComponentFileEtagInternal(component, file, key));
-            return (this._cacheComponentFileEtag[key]);
-        }
-
-        private string GetComponentFileEtagInternal(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            return (GenerateETag(Encoding.UTF8.GetBytes(this.GetComponentFileContent(component, file, key))));
-        }
-
         private string GetComponentFileContent(DrapoComponent component, DrapoComponentFile file, string key)
         {
             if (!this._cacheComponentFileContent.ContainsKey(key))
-                this._cacheComponentFileContent.TryAdd(key, this.GetComponentFileContentInternal(component, file, key));
+                this._cacheComponentFileContent.TryAdd(key, file.GetContent());
             return (this._cacheComponentFileContent[key]);
-        }
-
-        private string GetComponentFileContentInternal(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            if (file.ResourceType == DrapoResourceType.Embedded)
-                return (this.GetComponentFileContentInternalEmbedded(component, file, key));
-            throw new Exception("Drapo: resource type not supported");
-        }
-
-        private string GetComponentFileContentInternalEmbedded(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            Dictionary<string, string> resources = GetResources(file.Assembly);
-            if (resources.ContainsKey(file.Path))
-                return (resources[file.Path]);
-            throw new Exception("Drapo: resource embedded not found");
-        }
-
-        private string GetComponentFileContentType(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            if (!this._cacheComponentFileContentType.ContainsKey(key))
-                this._cacheComponentFileContentType.TryAdd(key, this.GetComponentFileContentTypeInternal(component, file, key));
-            return (this._cacheComponentFileContentType[key]);
-        }
-
-        private string GetComponentFileContentTypeInternal(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            if (file.Type == DrapoFileType.View)
-                return ("text/html");
-            else if (file.Type == DrapoFileType.Script)
-                return ("text/javascript");
-            else if (file.Type == DrapoFileType.Style)
-                return ("text/css");
-            throw new Exception("Drapo: content type not supported");
-        }
-
-        private string GetComponentFileLastModified(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            if (!this._cacheComponentFileLastModified.ContainsKey(key))
-                this._cacheComponentFileLastModified.TryAdd(key, this.GetComponentFileLastModifiedInternal(component, file, key));
-            return (this._cacheComponentFileLastModified[key]);
-        }
-
-        private string GetComponentFileLastModifiedInternal(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            if (file.ResourceType == DrapoResourceType.Embedded)
-                return (this._libLastModified);
-            throw new Exception("Drapo: can't find last modified");
         }
         #endregion
         #region Custom
@@ -434,8 +412,10 @@ namespace Sysphera.Middleware.Drapo
             if (string.IsNullOrEmpty(contentType))
                 return (null);
             //Themes
-            if (contentType == "text/css") {
-                if (this._options.Config.HandlerCustomTheme != null) {
+            if (contentType == "text/css")
+            {
+                if (this._options.Config.HandlerCustomTheme != null)
+                {
                     DrapoDynamic customTheme = await this._options.Config.HandlerCustomTheme(context, theme);
                     if (customTheme != null)
                         return (customTheme);

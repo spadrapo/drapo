@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Text;
 
@@ -21,21 +22,32 @@ namespace Sysphera.Middleware.Drapo
         #endregion
 
         #region File
+        [Obsolete("Use CreateEmbeddedFile or CreateDiskFile")]
         public DrapoComponentFile CreateFile(string name, DrapoFileType type, DrapoResourceType resourceType, string path, Assembly assembly = null)
         {
-            DrapoComponentFile file = new DrapoComponentFile();
-            file.Name = name;
-			file.Type = type;
-			file.ResourceType = resourceType;
-            file.Path = path;
-            file.Assembly = assembly;
+            if (resourceType == DrapoResourceType.Embedded)
+                return (this.CreateEmbeddedFile(assembly, name, type, path));
+            else
+                return (this.CreateDiskFile(path, name, type, path));
+        }
+
+        public DrapoComponentFile CreateEmbeddedFile(Assembly assembly, string name, DrapoFileType type, string path)
+        {
+            DrapoComponentFile file = new DrapoComponentFileEmbedded(assembly, name, type, path);
+            this.Files.Add(file);
+            return (file);
+        }
+
+        public DrapoComponentFile CreateDiskFile(string rootDir, string name, DrapoFileType type, string path)
+        {
+            DrapoComponentFile file = new DrapoComponentFileDisk(rootDir, name, type, path);
             this.Files.Add(file);
             return (file);
         }
 
         public DrapoComponentFile GetFile(string name)
         {
-            return (this.Files.Find(f => f.Name == name));
+            return (this.Files.Find(f => string.Equals(name, f.Name, StringComparison.OrdinalIgnoreCase)));
         }
 
         public void SortFiles() {
