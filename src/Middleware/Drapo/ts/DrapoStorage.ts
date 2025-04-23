@@ -1984,6 +1984,8 @@ class DrapoStorage {
             return (this.RetrieveDataItemInternalSystemBrowser(dataKey));
         if (dataKey === '__debuggerProperties')
             return (this.RetrieveDataItemInternalSystemDebuggerProperties(dataKey));
+        if (dataKey === '__route')
+            return (this.RetrieveDataItemInternalSystemRoute(dataKey));
         return (null);
     }
 
@@ -2159,6 +2161,12 @@ class DrapoStorage {
         data.showserver = false;
         data.showsectorsupdate = false;
         data.persist = false;
+        const item: DrapoStorageItem = this.CreateDataItemInternal(dataKey, data);
+        return (item);
+    }
+
+    private async RetrieveDataItemInternalSystemRoute(dataKey: string): Promise<DrapoStorageItem> {
+        const data: any = {};
         const item: DrapoStorageItem = this.CreateDataItemInternal(dataKey, data);
         return (item);
     }

@@ -291,6 +291,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionReloadData(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'filterdata')
             return (await this.ExecuteFunctionFilterData(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'applyroute')
+            return (await this.ExecuteFunctionApplyRoute(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'hasdatachanges')
             return (await this.ExecuteFunctionHasDataChanges(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'acceptdatachanges')
@@ -1030,6 +1032,15 @@ class DrapoFunctionHandler {
         }
         await this.Application.Storage.UpdateData(dataKeyDestination, sector, datasFiltered, notify);
         return ('');
+    }
+
+    private async ExecuteFunctionApplyRoute(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const url: string = functionParsed.Parameters.length <= 0 ? null : await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        const isLoadText: string = functionParsed.Parameters.length <= 0 ? null : await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
+        const isLoad: boolean = ((isLoadText == null) || (isLoadText == '')) ? false : await this.Application.Solver.ResolveConditional(isLoadText);
+        if (await this.Application.Router.ApplyRoutePath(url, isLoad))
+            return ('true');
+        return ('false');
     }
 
     private async ExecuteFunctionHasDataChanges(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {

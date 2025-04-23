@@ -119,6 +119,9 @@ namespace WebDrapo
             options.Config.ValidatorValidClass = "validatorValid";
             options.Config.ValidatorInvalidClass = "validatorInvalid";
             options.Config.LoadComponents(string.Format("{0}{1}components", env.WebRootPath, Path.AltDirectorySeparatorChar), "~/components");
+            options.Config.CreateRoute("^/city/(?<cityCode>\\d+)/(?<cityName>[a-z-]+)$", "UpdateSector(content,~/DrapoPages/RouteAppCity.html)");
+            options.Config.CreateRoute("^/state/(?<stateCode>\\d+)/(?<stateName>[a-z-]+)$", "UpdateSector(content,~/DrapoPages/RouteAppState.html)");
+            options.Config.CreateRoute("^/$", "UpdateSector(content,~/DrapoPages/RouteApp.html)");
             options.PollingEvent += Polling;
             this._options = options;
         }
