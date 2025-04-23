@@ -4,13 +4,13 @@
 	<script src="/drapo.js"></script>
 	<title>Message Send Value</title>
 </head>
-<body>
+<body d-id="__drapoUnitTest">
 	<span>Message Execute</span>
 	<div>
 		<div d-dataKey="itemObject" d-dataType="object" d-dataProperty-value-name="Value" d-dataProperty-value-value="OldValue"></div>
 		<div d-dataKey="valueFromMessage" d-dataType="value"></div>
 		<div d-dataKey="updateItemValue" d-dataType="value" d-dataValue="UpdateDataField(itemObject,Value,{{valueFromMessage}})"></div>
-		<span d-model="{{itemObject.Value}}"></span>
+		<span d-model="{{itemObject.Value}}" driverunittest="click"></span>
 		<iframe id="frameID" src="MessageSendValueSector.html"></iframe>
 	</div>
 </body>

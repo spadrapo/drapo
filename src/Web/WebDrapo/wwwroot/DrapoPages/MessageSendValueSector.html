@@ -4,7 +4,7 @@
 	<script src="/drapo.js"></script>
 	<title>Message Send Value</title>
 </head>
-<body>
+<body d-id="__drapoUnitTest">
 	<script>
         function ExecuteMessage() {
             var message = {};
@@ -28,7 +28,7 @@
 	</script>
 	<br>
 	<span>Function External Frame Sector</span>
-	<input id="buttonSend" type="button" value="Send" onclick="SendAndExecuteMessage()">
+	<input id="buttonSend" type="button" value="Send" onclick="SendAndExecuteMessage()" driverunittest="click">
 	<script>
         setTimeout(SendAndExecuteMessage,0);
 	</script>
