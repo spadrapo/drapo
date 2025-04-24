@@ -145,18 +145,39 @@ class DrapoRouter {
         //Extract
         const parameters: [string, string][] = this.ExtractRouteParameters(path, route);
         //Data
-        const routeParameters: object = Object.fromEntries(parameters);
+        const routeParameters: any = {};
+        for (let i = 0; i < parameters.length; i++) {
+            const pair: [string, string] = parameters[i];
+            routeParameters[pair[0]] = pair[1];
+        }
         //Storage
         const storageRoute: DrapoStorageItem = await this.Application.Storage.RetrieveDataItem('__route', null);
         storageRoute.Data = routeParameters as any[];
     }
 
     private ExtractRouteParameters(path: string, route: DrapoRoute): [string, string][] {
-        const flags: string = 'i';
-        const regex: RegExp = new RegExp(route.Uri, flags);
-        const match: RegExpExecArray = regex.exec(path);
-        if (!match || !match.groups)
-            return [];
-        return Object.entries(match.groups);
+        return (this.ExtractRegexGroupValues(path, route.Uri));
+    }
+
+    private ExtractRegexGroupValues(input: string, patternStr: string): [string, string][] {
+        const { pattern, groupNames } = this.TransformNamedGroups(patternStr);
+        const regex = new RegExp(pattern);
+        const match = regex.exec(input);
+        if (!match)
+            return null;
+        const result: [string, string][] = [];
+        groupNames.forEach((name, i) => {
+            result.push([name, match[i + 1] ?? '']);
+        });
+        return result;
+    }
+
+    private TransformNamedGroups(patternStr: string): { pattern: string; groupNames: string[] } {
+        const groupNames: string[] = [];
+        const transformedPattern = patternStr.replace(/\(\?<([a-zA-Z0-9_]+)>/g, (_, name: string) => {
+            groupNames.push(name);
+            return '(';
+        });
+        return { pattern: transformedPattern, groupNames };
     }
 }
