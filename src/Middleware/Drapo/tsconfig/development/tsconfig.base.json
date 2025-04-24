@@ -1,5 +1,5 @@
 {
-  "compileOnSave": true,
+  "compileOnSave": false,
   "compilerOptions": {
     "alwaysStrict": true,
     "noImplicitAny": true,
@@ -10,7 +10,6 @@
     "removeComments": false,
     "sourceMap": true,
     "target": "es2022",
-    "outDir": "../../js/",
     "declaration": true,
     "lib": [
       "dom",

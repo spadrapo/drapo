@@ -272,7 +272,7 @@ namespace Sysphera.Middleware.Drapo
                 string jsOffsetMapContent = null;
                 if (resources.TryGetValue(jsOffset.jsMapFilename, out jsOffsetMapContent))
                 {
-                    jsOffsetMapContent = jsOffsetMapContent.Replace("../ts", $"file:///{localRootPath}/ts");
+                    jsOffsetMapContent = jsOffsetMapContent.Replace("../../ts", $"file:///{localRootPath}/ts");
                     sections.Add($@" {{ ""offset"": {{""line"":{jsOffset.lineOffset}, ""column"":0}}, ""map"": {jsOffsetMapContent} }} ");
                 }
             }

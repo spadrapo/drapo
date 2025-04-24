@@ -19,29 +19,29 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<Content Include="tsconfig/development/tsconfig.json" Condition="'$(Configuration)' == 'Debug'" />
-		<Content Include="tsconfig/production/tsconfig.json" Condition="'$(Configuration)' == 'Release'" />
+		<Content Include="tsconfig/development/$(TargetFramework)/tsconfig.json" Condition="'$(Configuration)' == 'Debug'" />
+		<Content Include="tsconfig/production/$(TargetFramework)/tsconfig.json" Condition="'$(Configuration)' == 'Release'" />
 	</ItemGroup>
 	<Target Name="FixDeniedAccessOnDelete" BeforeTargets="TypeScriptDeleteOutputFromOtherConfigs" Condition="'$(BuildingProject)' != 'false' AND '$(DesignTimeBuild)' != 'true'">
 		<!-- Messing with the bugged target TypeScriptDeleteOutputFromOtherConfigs from Mricrosoft.TypeScript.targets and make it do nothing: https://github.com/microsoft/TypeScript/issues/50428 -->
 		<ItemGroup>
-			<TSOutputLogsToDelete Include="$(BaseIntermediateOutputPath)\**\Tsc*.out"/>
+			<TSOutputLogsToDelete Include="$(BaseIntermediateOutputPath)\**\Tsc*.out" />
 		</ItemGroup>
 		<Delete Files="@(TSOutputLogsToDelete)" Condition="'@(TSOutputLogsToDelete)' != '' " />
 	</Target>
 	<Target Name="CleanLibFiles" BeforeTargets="Clean" Condition="'$(DesignTimeBuild)' != 'true'">
 		<ItemGroup>
-			<FilesToDelete Include="lib\$(TargetFramework)\**\*;js\*" />
+			<FilesToDelete Include="lib\$(TargetFramework)\**\*;js\$(TargetFramework)\**\*" />
 		</ItemGroup>
 		<Delete Files="@(FilesToDelete)" />
 	</Target>
 	<Target Name="TSLint" BeforeTargets="CompileTypeScriptWithTSConfig" Condition="$(TargetFrameworks.StartsWith($(TargetFramework))) AND '$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
-		<Exec Command="npx tslint --project tsconfig/production/" />
+		<Exec Command="npx tslint --project tsconfig/production/tsconfig.base.json" />
 	</Target>
 	<Target Name="CreateLibFiles" AfterTargets="CompileTypeScriptWithTSConfig" Condition="'$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
 		<ItemGroup>
-			<JsFiles Include="node_modules/es6-promise/dist/es6-promise.auto.min.js;node_modules/@microsoft/signalr/dist/browser/signalr.min.js;js\*.js" />
-			<DefFiles Include="js\*.d.ts" />
+			<JsFiles Include="node_modules/es6-promise/dist/es6-promise.auto.min.js;node_modules/@microsoft/signalr/dist/browser/signalr.min.js;js\$(TargetFramework)\*.js" />
+			<DefFiles Include="js\$(TargetFramework)\*.d.ts" />
 		</ItemGroup>
 		<ItemGroup>
 			<JsFileContents Include="$([System.IO.File]::ReadAllText(%(JsFiles.Identity)))" />
@@ -57,7 +57,7 @@
 	</Target>
 	<Target Name="CreateDebugLibFiles" AfterTargets="CompileTypeScriptWithTSConfig" Condition="'$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true' AND '$(Configuration)' == 'Debug'">
 		<ItemGroup>
-			<LibFiles Include="js\*.map" />
+			<LibFiles Include="js\$(TargetFramework)\*.map" />
 		</ItemGroup>
 		<Copy SourceFiles="@(LibFiles)" DestinationFolder="lib\$(TargetFramework)" />
 		<ItemGroup>
