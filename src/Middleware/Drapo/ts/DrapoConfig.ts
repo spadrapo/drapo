@@ -188,6 +188,10 @@ class DrapoConfig {
         return (await this.GetPropertyArray('Views'));
     }
 
+    public async GetRoutes(): Promise<DrapoRoute[]> {
+        return (await this.GetPropertyArray('Routes'));
+    }
+
     public GetTimezone(): number {
         return (this._timezone);
     }

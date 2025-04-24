@@ -230,6 +230,7 @@
             await this.Document.Resolve();
             await this.Debugger.ConnectDebugger();
             await this.Plumber.ConnectPipe();
+            await this.Router.ApplyRouteStartup();
             await this.Document.StartUnitTest();
             this._isLoaded = true;
             this.Log.WriteVerbose('Application - OnLoad - Finished');

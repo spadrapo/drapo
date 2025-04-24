@@ -45,8 +45,12 @@ namespace WebDrapo.Test
             Driver.Dispose();
         }
 
-        private void ValidatePage(string pageName)
+        private void ValidatePage(string pageName, string pageUrl = null)
         {
+            if (pageUrl == null)
+                pageUrl = string.Format("{0}DrapoPages/{1}.html", VirtualDirectory, pageName);
+            else
+                pageUrl = VirtualDirectory + pageUrl;
             // Expected
             string htmlExpected = string.Empty;
             using (StreamReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(GetResourceName(pageName)), Encoding.UTF8))
@@ -54,7 +58,7 @@ namespace WebDrapo.Test
                 htmlExpected = reader.ReadToEnd();
             }
             // Evaluated
-            Driver.Navigate().GoToUrl(string.Format("{0}DrapoPages/{1}.html", VirtualDirectory, pageName));
+            Driver.Navigate().GoToUrl(pageUrl);
             IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
             int retrys = 20; // Nothing can take more than 2s (20 x 100)
             for (int i = 0; i < retrys; i++)
@@ -1618,6 +1622,21 @@ namespace WebDrapo.Test
         public void ReplaceItemFieldTest()
         {
             ValidatePage("ReplaceItemField");
+        }
+        [TestCase]
+        public void RouteApp()
+        {
+            ValidatePage("RouteApp", "");
+        }
+        [TestCase]
+        public void RouteAppCity()
+        {
+            ValidatePage("RouteAppCity", "city/1/floripa");
+        }
+        [TestCase]
+        public void RouteAppState()
+        {
+            ValidatePage("RouteAppState", "state/2/santa");
         }
         [TestCase]
         public void RouterMasterTest()

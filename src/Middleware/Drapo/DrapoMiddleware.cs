@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Sysphera.Middleware.Drapo
@@ -94,6 +95,7 @@ namespace Sysphera.Middleware.Drapo
             DrapoComponent component = null;
             DrapoComponentFile file = null;
             DrapoDynamic dynamic = null;
+            DrapoRoute route = null;
             //Activator
             if (this.IsActivator(context))
             {
@@ -170,6 +172,23 @@ namespace Sysphera.Middleware.Drapo
                 AppendHeaderContainerId(context);
                 if ((!isCache) && (!string.IsNullOrEmpty(dynamic.ContentData)))
                     await context.Response.WriteAsync(dynamic.ContentData, Encoding.UTF8);
+
+            }
+            else if ((route = this.GetRoute(context)) != null)
+            {
+                //Route
+                string routeBasePath = GetRouteBasePath();
+                string routeBaseContent = await GetRouteBaseContent(routeBasePath);
+                string routeContentETag = this.GetRouteContentETag(routeBaseContent);
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == routeContentETag));
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                context.Response.Headers["ETag"] = new[] { routeContentETag };
+                context.Response.Headers.Add("Last-Modified", new[] { this.GetRouteBaseLastModified(routeBasePath) });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { "text/html" });
+                AppendHeaderContainerId(context);
+                if (!isCache)
+                    await context.Response.WriteAsync(routeBaseContent);
             }
             else
             {
@@ -545,6 +564,43 @@ namespace Sysphera.Middleware.Drapo
             tag = path.Substring(1, index - 1);
             code = path.Substring(index + 1);
             return (true);
+        }
+        #endregion
+        #region Route
+        private DrapoRoute GetRoute(HttpContext context)
+        {
+            foreach (DrapoRoute route in this._options.Config.Routes)
+                if (Regex.IsMatch(context.Request.Path, route.Uri))
+                    return (route);
+            return (null);
+        }
+
+        private string GetRouteBasePath()
+        {
+            return (GetDiskPath("/index.html"));
+        }
+
+        private async Task<string> GetRouteBaseContent(string path)
+        {
+            return (await File.ReadAllTextAsync(path));
+        }
+
+        private string GetRouteBaseLastModified(string path)
+        {
+            return (File.GetLastWriteTime(path).ToString("R"));
+        }
+
+        private string GetRouteContentETag(string routeContent)
+        {
+            //Content
+            string tag = string.Empty;
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(routeContent));
+                string hex = BitConverter.ToString(hash);
+                tag = hex.Replace("-", "");
+            }
+            return (tag);
         }
         #endregion
     }
