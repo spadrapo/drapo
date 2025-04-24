@@ -49,8 +49,9 @@
 		</ItemGroup>
 		<WriteLinesToFile File="lib\$(TargetFramework)\drapo.js" Lines="@(JsFileContents)" Overwrite="true" />
 		<WriteLinesToFile File="lib\$(TargetFramework)\drapo.js" Lines="//# sourceMappingURL=drapo.js.map" Overwrite="false" />
-		<WriteLinesToFile File="lib\$(TargetFramework)\drapo.min.js" Lines="@(JsFileContents)" Overwrite="true" />
 		<WriteLinesToFile File="lib\$(TargetFramework)\index.d.ts" Lines="@(DefFileContents)" Overwrite="true" />
+		<Exec Command="npx uglify-js lib\$(TargetFramework)\drapo.js -o lib\$(TargetFramework)\drapo.min.js" />
+		<WriteLinesToFile File="lib\$(TargetFramework)\drapo.min.js" Lines="%0a//# sourceMappingURL=drapo.js.map" Overwrite="false" />
 		<ItemGroup>
 			<EmbeddedResource Include="lib\$(TargetFramework)\*.js" WithCulture="false" Type="Non-Resx" />
 		</ItemGroup>
