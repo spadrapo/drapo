@@ -125,6 +125,9 @@ class DrapoRouter {
     }
 
     private async ApplyRoute(path: string, route: DrapoRoute, isLoad: boolean, updateHistory: boolean = true): Promise<boolean> {
+        //History
+        if (updateHistory)
+            history.pushState(null, null, path);
         //Parameters
         await this.ApplyRouteParameters(path, route);
         //Before
@@ -135,9 +138,6 @@ class DrapoRouter {
         //After
         if ((isLoad) && (route.AfterLoadExpression != null))
             await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, route.AfterLoadExpression, null);
-        //History
-        if (updateHistory)
-            history.pushState(null, null, path);
         return (true);
     }
 
