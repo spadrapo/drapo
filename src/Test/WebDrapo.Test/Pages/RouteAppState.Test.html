@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <meta charset="utf-8" />
+    <script src="/drapo.js"></script>
+    <title>Drapo</title>
+</head>
+<body>
+    <span>Drapo Main</span>
+    <br />
+    <br />
+    <div>
+        <span d-on-click="ApplyRoute(/)">Main</span>
+        <span d-on-click="ApplyRoute(/city/1/Floripa)">City</span>
+        <span d-on-click="ApplyRoute(/state/1/SantaCatarina)">State</span>
+    </div>
+    <br />
+    <div d-sector="@"><div>
+    <span>State</span>
+    <br />
+    <span>Code:</span><span d-model="{{__route.stateCode}}">2</span>
+    <br />
+    <span>Name:</span><span d-model="{{__route.stateName}}">santa</span>
+</div></div>
+
+</body></html>
