@@ -94,6 +94,7 @@ namespace WebDrapo
             options.Config.UseRouter = false;
             options.Config.UseCacheStatic = true;
             options.Config.UseCacheLocalStorage = true;
+            options.Config.UseComponentsCacheBurst = true;
             options.Config.CacheKeysView = "applicationbuild,url,view";
             options.Config.CacheKeysComponentView = "applicationbuild,url,view";
             options.Config.CacheKeysComponentStyle = "applicationbuild,url,theme";
@@ -118,6 +119,9 @@ namespace WebDrapo
             options.Config.ValidatorValidClass = "validatorValid";
             options.Config.ValidatorInvalidClass = "validatorInvalid";
             options.Config.LoadComponents(string.Format("{0}{1}components", env.WebRootPath, Path.AltDirectorySeparatorChar), "~/components");
+            options.Config.CreateRoute("^/city/(?<cityCode>\\d+)/(?<cityName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppCity.html)");
+            options.Config.CreateRoute("^/state/(?<stateCode>\\d+)/(?<stateName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppState.html)");
+            options.Config.CreateRoute("^/$", "UpdateSector(content,~/DrapoPages/RouteApp.html)");
             options.PollingEvent += Polling;
             this._options = options;
         }

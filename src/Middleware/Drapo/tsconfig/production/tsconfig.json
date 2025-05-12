@@ -1,5 +1,5 @@
 {
-  "compileOnSave": true,
+  "compileOnSave": false,
   "compilerOptions": {
     "alwaysStrict": true,
     "noImplicitAny": true,
@@ -10,7 +10,7 @@
     "removeComments": true,
     "sourceMap": false,
     "target": "es5",
-    "outDir": "./js/",
+    "outDir": "../../js/",
     "declaration": true,
     "lib": [
       "dom",
@@ -20,9 +20,9 @@
     ]
   },
   "exclude": [
-    "js/**/*"
+    "../../js/**/*"
   ],
   "include": [
-    "ts/**/*"
+    "../../ts/**/*"
   ]
 }

@@ -226,11 +226,12 @@
         try {
             this.Log.WriteVerbose('Application - OnLoad - Started');
             await this.Debugger.Initialize();
-            await this.Plumber.ConnectPipe();
             await this.CacheHandler.Initialize();
             await this.Document.Resolve();
-            await this.Document.StartUnitTest();
             await this.Debugger.ConnectDebugger();
+            await this.Plumber.ConnectPipe();
+            await this.Router.ApplyRouteStartup();
+            await this.Document.StartUnitTest();
             this._isLoaded = true;
             this.Log.WriteVerbose('Application - OnLoad - Finished');
         } catch (e) {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
@@ -8,8 +7,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Sysphera.Middleware.Drapo
@@ -19,6 +20,7 @@ namespace Sysphera.Middleware.Drapo
         #region Constants
         private const string ACTIVATORJS = "drapo.js";
         private const string ACTIVATORJSON = "drapo.json";
+        private const string ACTIVATORJSMAP = "/drapo.js.map";
         private const string LIB_RELEASE = "drapo.min.js";
         private const string LIB_DEBUG = "drapo.js";
         private const string CONTENT_TYPE_HTML = "text/html; charset=utf-8";
@@ -34,10 +36,9 @@ namespace Sysphera.Middleware.Drapo
         private string _libLastModified = null;
         private string _configContent = null;
         private string _configETag = null;
-        private ConcurrentDictionary<string, string> _cacheComponentFileEtag = new ConcurrentDictionary<string, string>();
+        private string _jsMapContent = null;
+        private string _jsMapETag = null;
         private ConcurrentDictionary<string, string> _cacheComponentFileContent = new ConcurrentDictionary<string, string>();
-        private ConcurrentDictionary<string, string> _cacheComponentFileContentType = new ConcurrentDictionary<string, string>();
-        private ConcurrentDictionary<string, string> _cacheComponentFileLastModified = new ConcurrentDictionary<string, string>();
         private List<DrapoFile> _cacheFiles = new List<DrapoFile>();
         #endregion
         #region Properties
@@ -69,6 +70,8 @@ namespace Sysphera.Middleware.Drapo
             //Content
             this._libContent = resources[libName];
             this._libETag = GenerateETag(Encoding.UTF8.GetBytes(this._libContent));
+            this._jsMapContent = this.CreateJsMapContent(resources);
+            this._jsMapETag = GenerateETag(Encoding.UTF8.GetBytes(this._jsMapContent));
             this._configContent = this.GetConfigContent();
             this._configETag = GenerateETag(Encoding.UTF8.GetBytes(this._configContent));
             this._libLastModified = System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetEntryAssembly().Location).ToString("R");
@@ -92,107 +95,115 @@ namespace Sysphera.Middleware.Drapo
             DrapoComponent component = null;
             DrapoComponentFile file = null;
             DrapoDynamic dynamic = null;
+            DrapoRoute route = null;
             //Activator
             if (this.IsActivator(context))
             {
                 //JS
-                bool isCache = ((context.Request.Headers.Keys.Contains("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._libETag));
-                context.Response.OnStarting(state =>
-                {
-                    var httpContext = (HttpContext)state;
-                    httpContext.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
-                    httpContext.Response.Headers["ETag"] = new[] { this._libETag };
-                    httpContext.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
-                    httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
-                    httpContext.Response.Headers.Add("Content-Type", new[] { "application/javascript" });
-                    AppendHeaderContainerId(httpContext);
-                    return Task.FromResult(0);
-                }, context);
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._libETag));
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                context.Response.Headers["ETag"] = new[] { this._libETag };
+                context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { "text/javascript" });
+                AppendHeaderContainerId(context);
                 if (!isCache)
                     await context.Response.WriteAsync(this._libContent);
+            }
+            else if (this.IsJsMapActivator(context))
+            {
+                //.JS.MAP
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._jsMapETag));
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                context.Response.Headers["ETag"] = new[] { this._jsMapETag };
+                context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { "application/json" });
+                AppendHeaderContainerId(context);
+                if (!isCache)
+                    await context.Response.WriteAsync(this._jsMapContent);
             }
             else if (this.IsConfig(context))
             {
                 //Config
-                bool isCache = ((context.Request.Headers.Keys.Contains("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._configETag));
-                context.Response.OnStarting(state =>
-                {
-                    var httpContext = (HttpContext)state;
-                    httpContext.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
-                    httpContext.Response.Headers["ETag"] = new[] { this._configETag };
-                    httpContext.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
-                    httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
-                    httpContext.Response.Headers.Add("Content-Type", new[] { "application/json" });
-                    AppendHeaderContainerId(httpContext);
-                    return Task.FromResult(0);
-                }, context);
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._configETag));
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                context.Response.Headers["ETag"] = new[] { this._configETag };
+                context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { "application/json" });
+                AppendHeaderContainerId(context);
                 if (!isCache)
-                    await context.Response.WriteAsync(this._configContent);
+                    await context.Response.WriteAsync(this.GetConfigContentForRequest(context));
             }
             else if (this.IsComponentFile(context, out component, out file))
             {
                 //Component File
                 string key = this.CreateKeyComponentFile(component, file);
-                string eTag = this.GetComponentFileEtag(component, file, key);
-                bool isCache = ((context.Request.Headers.Keys.Contains("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == eTag));
-                context.Response.OnStarting(state =>
-                {
-                    var httpContext = (HttpContext)state;
-                    httpContext.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
-                    httpContext.Response.Headers["ETag"] = new[] { eTag };
-                    httpContext.Response.Headers.Add("Last-Modified", new[] { this.GetComponentFileLastModified(component, file, key) });
-                    httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
-                    httpContext.Response.Headers.Add("Content-Type", new[] { this.GetComponentFileContentType(component, file, key) });
-                    AppendHeaderContainerId(httpContext);
-                    return Task.FromResult(0);
-                }, context);
+                string eTag = file.ETag;
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == eTag));
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                context.Response.Headers["ETag"] = new[] { eTag };
+                context.Response.Headers.Add("Last-Modified", new[] { file.LastModified });
+                if (this._options.Config.UseComponentsCacheBurst)
+                    context.Response.Headers.Add("Cache-Control", new[] { "public, max-age=7000000, immutable" });
+                else
+                    context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { file.GetContentType() });
+                AppendHeaderContainerId(context);
                 if (!isCache)
                     await context.Response.WriteAsync(this.GetComponentFileContent(component, file, key));
             }
             else if ((dynamic = await this.IsRequestCustom(context)) != null)
             {
                 //Custom
-                bool isCache = ((context.Request.Headers.Keys.Contains("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == dynamic.ETag));
-                context.Response.OnStarting(state =>
-                {
-                    var httpContext = (HttpContext)state;
-                    httpContext.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : dynamic.Status;
-                    if (!string.IsNullOrEmpty(dynamic.ETag))
-                        httpContext.Response.Headers["ETag"] = new[] { dynamic.ETag };
-                    if (!string.IsNullOrEmpty(dynamic.LastModified))
-                        httpContext.Response.Headers.Add("Last-Modified", new[] { dynamic.LastModified });
-                    httpContext.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
-                    if (!string.IsNullOrEmpty(dynamic.ContentType))
-                        httpContext.Response.Headers.Add("Content-Type", new[] { dynamic.ContentType });
-                    if (dynamic.Headers != null)
-                        foreach (KeyValuePair<string, string> entry in dynamic.Headers)
-                            httpContext.Response.Headers.Add(entry.Key, new[] { entry.Value });
-                    AppendHeaderContainerId(httpContext);
-                    return Task.FromResult(0);
-                }, context);
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == dynamic.ETag));
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : dynamic.Status;
+                if (!string.IsNullOrEmpty(dynamic.ETag))
+                    context.Response.Headers["ETag"] = new[] { dynamic.ETag };
+                if (!string.IsNullOrEmpty(dynamic.LastModified))
+                    context.Response.Headers.Add("Last-Modified", new[] { dynamic.LastModified });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                if (!string.IsNullOrEmpty(dynamic.ContentType))
+                    context.Response.Headers.Add("Content-Type", new[] { dynamic.ContentType });
+                if (dynamic.Headers != null)
+                    foreach (KeyValuePair<string, string> entry in dynamic.Headers)
+                        context.Response.Headers.Add(entry.Key, new[] { entry.Value });
+                AppendHeaderContainerId(context);
                 if ((!isCache) && (!string.IsNullOrEmpty(dynamic.ContentData)))
                     await context.Response.WriteAsync(dynamic.ContentData, Encoding.UTF8);
+
+            }
+            else if ((route = this.GetRoute(context)) != null)
+            {
+                //Route
+                string routeBasePath = GetRouteBasePath();
+                string routeBaseContent = await GetRouteBaseContent(routeBasePath);
+                string routeContentETag = this.GetRouteContentETag(routeBaseContent);
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == routeContentETag));
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                context.Response.Headers["ETag"] = new[] { routeContentETag };
+                context.Response.Headers.Add("Last-Modified", new[] { this.GetRouteBaseLastModified(routeBasePath) });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { "text/html" });
+                AppendHeaderContainerId(context);
+                if (!isCache)
+                    await context.Response.WriteAsync(routeBaseContent);
             }
             else
             {
-                if (HasHeaderContainerId())
-                {
-                    context.Response.OnStarting(state =>
-                    {
-                        var httpContext = (HttpContext)state;
-                        AppendHeaderContainerId(httpContext);
-                        return Task.FromResult(0);
-                    }, context);
-                }
+                AppendHeaderContainerId(context);
                 await _next.Invoke(context);
             }
         }
 
-        private bool HasHeaderContainerId() {
+        private bool HasHeaderContainerId()
+        {
             return (!string.IsNullOrEmpty(this._options.Config.HeaderContainerId));
         }
 
-        private void AppendHeaderContainerId(HttpContext httpContext) {
+        private void AppendHeaderContainerId(HttpContext httpContext)
+        {
             string headerContainerId = this._options.Config.HeaderContainerId;
             if (string.IsNullOrEmpty(headerContainerId))
                 return;
@@ -248,6 +259,48 @@ namespace Sysphera.Middleware.Drapo
             return (context.Request.Path.Value == this._urlActivator);
         }
         #endregion
+        #region JsMap
+        private bool IsJsMapActivator(HttpContext context)
+        {
+            return (context.Request.Path.Value == ACTIVATORJSMAP);
+        }
+
+        private static string GetThisSourceFilePath([CallerFilePath] string path = null) => path;
+
+        private string CreateJsMapContent(Dictionary<string, string> resources)
+        {
+            //collect line offsets
+            List<(string jsMapFilename, int lineOffset)> jsMapsOffsets = new List<(string jsMapFilename, int offset)>();
+            string[] libLines = this._libContent.Split('\n');
+            int currentOffset = 0;
+            for (int lineNumber = 0; lineNumber < libLines.Length; ++lineNumber)
+            {
+                string line = libLines[lineNumber];
+                if (line.StartsWith("//# sourceMappingURL="))
+                {
+                    string jsMapFilename = line[21..].Trim();
+                    jsMapsOffsets.Add((jsMapFilename, currentOffset));
+                    currentOffset = lineNumber + 1;
+                }
+            }
+            //mount sections
+            string localRootPath = Path.GetDirectoryName(GetThisSourceFilePath()).Replace('\\', '/');
+            List<string> sections = new List<string>(jsMapsOffsets.Count);
+            foreach (var jsOffset in jsMapsOffsets)
+            {
+                string jsOffsetMapContent = null;
+                if (resources.TryGetValue(jsOffset.jsMapFilename, out jsOffsetMapContent))
+                {
+                    jsOffsetMapContent = jsOffsetMapContent.Replace("../ts", $"file:///{localRootPath}/ts");
+                    sections.Add($@" {{ ""offset"": {{""line"":{jsOffset.lineOffset}, ""column"":0}}, ""map"": {jsOffsetMapContent} }} ");
+                }
+            }
+            string sectionsString = string.Join(',', sections);
+            if (string.IsNullOrEmpty(sectionsString)) //return dummy map
+                return @"{""version"":3,""file"":""drapo.js"",""sourceRoot"":"""",""sources"":[""drapo.js""],""names"":[],""mappings"":""""}";
+            return $@"{{ ""version"": 3, ""file"": ""drapo.js"", ""sections"": [{sectionsString}] }}";
+        }
+        #endregion
         #region Config
         private bool IsConfig(HttpContext context)
         {
@@ -257,6 +310,39 @@ namespace Sysphera.Middleware.Drapo
         private string GetConfigContent()
         {
             return (JsonConvert.SerializeObject(this._options.Config));
+        }
+
+        private string GetConfigContentForRequest(HttpContext context)
+        {
+            if (this.IsBotRequest(context))
+                return (this.GetConfigContentForBot());
+            return (this._configContent);
+        }
+
+        private bool IsBotRequest(HttpContext context)
+        {
+            var userAgent = context.Request.Headers["User-Agent"].ToString().ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(userAgent))
+                return (false);
+            if (userAgent.Contains("bot"))
+                return (true);
+            if (userAgent.Contains("crawler"))
+                return (true);
+            if (userAgent.Contains("spider"))
+                return (true);
+            if (userAgent.Contains("pagespeed"))
+                return (true);
+            if (userAgent.Contains("lighthouse"))
+                return (true);
+            return (false);
+        }
+
+        private string GetConfigContentForBot()
+        {
+            string configContent = GetConfigContent();
+            DrapoConfig configBot = JsonConvert.DeserializeObject<DrapoConfig>(configContent);
+            configBot.CanUseWebSocket = false;
+            return (JsonConvert.SerializeObject(configBot));
         }
         #endregion
         #region Components
@@ -283,7 +369,7 @@ namespace Sysphera.Middleware.Drapo
             file = component.GetFile(split[1]);
             if (file == null)
                 return (false);
-            return (file.ResourceType == DrapoResourceType.Embedded);
+            return true;
         }
 
         private string CreateKeyComponentFile(DrapoComponent component, DrapoComponentFile file)
@@ -291,70 +377,11 @@ namespace Sysphera.Middleware.Drapo
             return (string.Format("{0}:{1}", component.Name, file.Name));
         }
 
-        private string GetComponentFileEtag(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            if (!this._cacheComponentFileEtag.ContainsKey(key))
-                this._cacheComponentFileEtag.TryAdd(key, this.GetComponentFileEtagInternal(component, file, key));
-            return (this._cacheComponentFileEtag[key]);
-        }
-
-        private string GetComponentFileEtagInternal(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            return (GenerateETag(Encoding.UTF8.GetBytes(this.GetComponentFileContent(component, file, key))));
-        }
-
         private string GetComponentFileContent(DrapoComponent component, DrapoComponentFile file, string key)
         {
             if (!this._cacheComponentFileContent.ContainsKey(key))
-                this._cacheComponentFileContent.TryAdd(key, this.GetComponentFileContentInternal(component, file, key));
+                this._cacheComponentFileContent.TryAdd(key, file.GetContent());
             return (this._cacheComponentFileContent[key]);
-        }
-
-        private string GetComponentFileContentInternal(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            if (file.ResourceType == DrapoResourceType.Embedded)
-                return (this.GetComponentFileContentInternalEmbedded(component, file, key));
-            throw new Exception("Drapo: resource type not supported");
-        }
-
-        private string GetComponentFileContentInternalEmbedded(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            Dictionary<string, string> resources = GetResources(file.Assembly);
-            if (resources.ContainsKey(file.Path))
-                return (resources[file.Path]);
-            throw new Exception("Drapo: resource embedded not found");
-        }
-
-        private string GetComponentFileContentType(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            if (!this._cacheComponentFileContentType.ContainsKey(key))
-                this._cacheComponentFileContentType.TryAdd(key, this.GetComponentFileContentTypeInternal(component, file, key));
-            return (this._cacheComponentFileContentType[key]);
-        }
-
-        private string GetComponentFileContentTypeInternal(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            if (file.Type == DrapoFileType.View)
-                return ("text/html");
-            else if (file.Type == DrapoFileType.Script)
-                return ("application/javascript");
-            else if (file.Type == DrapoFileType.Style)
-                return ("text/css");
-            throw new Exception("Drapo: content type not supported");
-        }
-
-        private string GetComponentFileLastModified(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            if (!this._cacheComponentFileLastModified.ContainsKey(key))
-                this._cacheComponentFileLastModified.TryAdd(key, this.GetComponentFileLastModifiedInternal(component, file, key));
-            return (this._cacheComponentFileLastModified[key]);
-        }
-
-        private string GetComponentFileLastModifiedInternal(DrapoComponent component, DrapoComponentFile file, string key)
-        {
-            if (file.ResourceType == DrapoResourceType.Embedded)
-                return (this._libLastModified);
-            throw new Exception("Drapo: can't find last modified");
         }
         #endregion
         #region Custom
@@ -404,8 +431,10 @@ namespace Sysphera.Middleware.Drapo
             if (string.IsNullOrEmpty(contentType))
                 return (null);
             //Themes
-            if (contentType == "text/css") {
-                if (this._options.Config.HandlerCustomTheme != null) {
+            if (contentType == "text/css")
+            {
+                if (this._options.Config.HandlerCustomTheme != null)
+                {
                     DrapoDynamic customTheme = await this._options.Config.HandlerCustomTheme(context, theme);
                     if (customTheme != null)
                         return (customTheme);
@@ -535,6 +564,43 @@ namespace Sysphera.Middleware.Drapo
             tag = path.Substring(1, index - 1);
             code = path.Substring(index + 1);
             return (true);
+        }
+        #endregion
+        #region Route
+        private DrapoRoute GetRoute(HttpContext context)
+        {
+            foreach (DrapoRoute route in this._options.Config.Routes)
+                if (Regex.IsMatch(context.Request.Path, route.Uri))
+                    return (route);
+            return (null);
+        }
+
+        private string GetRouteBasePath()
+        {
+            return (GetDiskPath("/index.html"));
+        }
+
+        private async Task<string> GetRouteBaseContent(string path)
+        {
+            return (await File.ReadAllTextAsync(path));
+        }
+
+        private string GetRouteBaseLastModified(string path)
+        {
+            return (File.GetLastWriteTime(path).ToString("R"));
+        }
+
+        private string GetRouteContentETag(string routeContent)
+        {
+            //Content
+            string tag = string.Empty;
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(routeContent));
+                string hex = BitConverter.ToString(hash);
+                tag = hex.Replace("-", "");
+            }
+            return (tag);
         }
         #endregion
     }

@@ -1,0 +1,26 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "target": "es2022",
+    "outDir": "../../js/",
+    "declaration": true,
+    "lib": [
+      "dom",
+      "es2022"
+    ]
+  },
+  "exclude": [
+    "../../js/**/*"
+  ],
+  "include": [
+    "../../ts/**/*"
+  ]
+}

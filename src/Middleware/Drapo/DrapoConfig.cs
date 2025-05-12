@@ -18,12 +18,14 @@ namespace Sysphera.Middleware.Drapo
         private List<DrapoComponent> _components = new List<DrapoComponent>();
         private List<DrapoTheme> _themes = new List<DrapoTheme>();
         private List<DrapoView> _views = new List<DrapoView>();
+        private List<DrapoRoute> _routes = new List<DrapoRoute>();
         private List<DrapoDynamicHandler> _dynamics = new List<DrapoDynamicHandler>();
         [IgnoreDataMember]
         private Func<DrapoDynamic, Task<DrapoDynamic>> _handlerCustom = null;
         private List<DrapoWindow> _windows = new List<DrapoWindow>();
         private bool _usePipes = false;
         private bool _useRouter = true;
+        private bool _canUseWebSocket = true;
         private bool _useCacheStatic = false;
         private bool _useCacheLocalStorage = true;
         private string _cacheKeysComponentView = null;
@@ -57,6 +59,7 @@ namespace Sysphera.Middleware.Drapo
         public List<DrapoComponent> Components { get => _components; set => _components = value; }
         public List<DrapoTheme> Themes { get => _themes; set => _themes = value; }
         public List<DrapoView> Views { get => _views; set => _views = value; }
+        public List<DrapoRoute> Routes { get => _routes; set => _routes = value; }
         public List<DrapoDynamicHandler> Dynamics { get => _dynamics; set => _dynamics = value; }
         [IgnoreDataMember]
         public Func<DrapoDynamic, Task<DrapoDynamic>> HandlerCustom { get => _handlerCustom; set => _handlerCustom = value; }
@@ -64,8 +67,10 @@ namespace Sysphera.Middleware.Drapo
         public Func<HttpContext, string, Task<DrapoDynamic>> HandlerCustomTheme { set; get; }
         public bool UsePipes { get => _usePipes; set => _usePipes = value; }
         public bool UseRouter { get => _useRouter; set => _useRouter = value; }
+        public bool CanUseWebSocket { get => _canUseWebSocket; set => _canUseWebSocket = value; }
         public bool UseCacheStatic { get => (_useCacheStatic) && (!string.IsNullOrEmpty(this._applicationBuild)); set => _useCacheStatic = value; }
         public bool UseCacheLocalStorage { get => _useCacheLocalStorage; set => _useCacheLocalStorage = value; }
+        public bool UseComponentsCacheBurst { get; set; }
         public string CacheKeysComponentView { get => _cacheKeysComponentView; set => _cacheKeysComponentView = value; }
         public string CacheKeysComponentStyle { get => _cacheKeysComponentStyle; set => _cacheKeysComponentStyle = value; }
         public string CacheKeysComponentScript { get => _cacheKeysComponentScript; set => _cacheKeysComponentScript = value; }
@@ -126,7 +131,7 @@ namespace Sysphera.Middleware.Drapo
 
         public DrapoComponent GetComponent(string name)
         {
-            return (this.Components.Find(c => c.Name == name));
+            return (this.Components.Find(c => string.Equals(name, c.Name, StringComparison.OrdinalIgnoreCase)));
         }
 
         public List<DrapoComponent> LoadComponents(string pathBase, string urlBase)
@@ -142,7 +147,9 @@ namespace Sysphera.Middleware.Drapo
                     DrapoFileType? type = this.GetFileType(fileName);
                     if (!type.HasValue)
                         continue;
-                    component.CreateFile(fileName, type.Value, DrapoResourceType.Url, string.Format("{0}/{1}/{2}", urlBase, directoryName, fileName));
+                    DrapoComponentFile componentFile = component.CreateDiskFile(directory, fileName, type.Value, string.Format("{0}/{1}/{2}", urlBase, directoryName, fileName));
+                    if (this.UseComponentsCacheBurst)
+                        componentFile.ApplyCacheBurstTag();
                 }
                 component.SortFiles();
                 components.Add(component);
@@ -175,7 +182,9 @@ namespace Sysphera.Middleware.Drapo
                     DrapoFileType? type = this.GetFileType(resourcePath);
                     if (!type.HasValue)
                         continue;
-                    component.CreateFile(fileName, type.Value, DrapoResourceType.Embedded, resourcePath, assembly);
+                    DrapoComponentFile componentFile = component.CreateEmbeddedFile(assembly, fileName, type.Value, resourcePath);
+                    if (this.UseComponentsCacheBurst)
+                        componentFile.ApplyCacheBurstTag();
                 }
                 component.SortFiles();
                 components.Add(component);
@@ -204,8 +213,8 @@ namespace Sysphera.Middleware.Drapo
                 return (null);
             string name = resourcePath.Substring(pathBase.Length + 1);
             string[] namesplit = name.Split('.');
-            if(namesplit.Length > 1)
-                return(namesplit[0]);
+            if (namesplit.Length > 1)
+                return (namesplit[0]);
             return (null);
         }
 
@@ -218,7 +227,8 @@ namespace Sysphera.Middleware.Drapo
             return (resourcesPaths);
         }
 
-        private string GetFileNameFromResourcePath(string resourcePath) {
+        private string GetFileNameFromResourcePath(string resourcePath)
+        {
             string[] nameSplit = resourcePath.Split(".");
             return ($"{nameSplit[nameSplit.Length - 2]}.{nameSplit[nameSplit.Length - 1]}");
         }
@@ -242,6 +252,18 @@ namespace Sysphera.Middleware.Drapo
             view.Condition = conditional;
             this.Views.Add(view);
             return (view);
+        }
+        #endregion
+        #region Route
+        public DrapoRoute CreateRoute(string uri, string expression, string beforeLoadExpression = null, string afterLoadExpression = null)
+        {
+            DrapoRoute route = new DrapoRoute();
+            route.Uri = uri;
+            route.Expression = expression;
+            route.BeforeLoadExpression = beforeLoadExpression;
+            route.AfterLoadExpression = afterLoadExpression;
+            this._routes.Add(route);
+            return (route);
         }
         #endregion
         #region Dynamic

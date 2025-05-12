@@ -100,6 +100,10 @@ class DrapoConfig {
         return (await this.GetPropertyBoolean('UseRouter'));
     }
 
+    public async GetCanUseWebSocket(): Promise<boolean> {
+        return (await this.GetPropertyBoolean('CanUseWebSocket'));
+    }
+
     public async GetUseCacheLocalStorage(): Promise<boolean> {
         return (await this.GetPropertyBoolean('UseCacheLocalStorage'));
     }
@@ -182,6 +186,10 @@ class DrapoConfig {
 
     public async GetViews(): Promise<DrapoView[]> {
         return (await this.GetPropertyArray('Views'));
+    }
+
+    public async GetRoutes(): Promise<DrapoRoute[]> {
+        return (await this.GetPropertyArray('Routes'));
     }
 
     public GetTimezone(): number {
