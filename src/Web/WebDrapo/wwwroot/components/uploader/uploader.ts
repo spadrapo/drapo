@@ -15,6 +15,9 @@ class Uploader {
     private _dataFieldData: string = null;
     private _dataMessage: string = null;
     private _dataFileExtensionType: string = null;
+    private _dataUploadAction: string = null;
+    private _showDownloadButton: boolean = null;
+    private _showUploadButton: boolean = null;
     //Properties
     get Application(): DrapoApplication {
         return (this._app);
@@ -31,6 +34,9 @@ class Uploader {
         this._dataFieldName = this._el.getAttribute("d-dataFieldName");
         this._dataFieldData = this._el.getAttribute("d-dataFieldData");
         this._dataMessage = this._el.getAttribute("d-dataMessage");
+        this._showDownloadButton = this._el.getAttribute("dc-downloadbutton") === "true";
+        this._showUploadButton = this._el.getAttribute("dc-uploadbutton") === "true";
+        this._dataUploadAction = this._el.getAttribute("dc-uploadaction");
         this._dataFileExtensionType = this._el.getAttribute("d-dataFileExtensionType");
         const dataKeyFileExtensionsDefault = this._el.getAttribute('dc-fileextensionsdefault');
         if (this._app.Parser.IsMustache(this._dataFileExtensionType))
@@ -46,31 +52,40 @@ class Uploader {
         elDrop.addEventListener('click', (evt) => { uploader.HandleClick(evt); }, false);
         const elFile = this.GetElementInputFile();
         elFile.addEventListener('change', (evt) => { uploader.HandleChange(evt); }, false);
-        const elButton = this.GetElementButton();
-        elButton.addEventListener('click', async (evt) => { await uploader.HandleDownload(evt); }, false);
+        this.SetDownloadButtonHandler();
         //Subscribe
         this.Application.Observer.SubscribeComponent(mustacheName, this._el, async () => { await uploader.Notify(); }, this._el);
-        await this.DisableDownloadButton();
+        await this.SetButtonsState();
         return (this.Notify());
     }
 
+    private SetDownloadButtonHandler() {
+        const elDownloadButton: HTMLButtonElement = this.GetDownloadButton();
+        if (elDownloadButton != null)
+            elDownloadButton.addEventListener('click', async (evt) => { await this.HandleDownload(evt); }, false);
+    }
+
     private GetElementInputFile(): HTMLInputElement {
-        const elinput: any = this._el.children[2];
+        const elinput: HTMLInputElement = this._el.children[4] as HTMLInputElement;
         if (this._dataFileExtensionType !== '.*')
             elinput.setAttribute('accept', this._dataFileExtensionType);
         return (elinput as HTMLInputElement);
     }
 
     private GetElementMessage(): HTMLSpanElement {
-        return (this._el.children[1].children[0] as HTMLSpanElement);
+        return (this._el.children[3].children[0] as HTMLSpanElement);
     }
 
     private GetElementDrop(): HTMLDivElement {
-        return (this._el.children[1] as HTMLDivElement);
+        return (this._el.children[3] as HTMLDivElement);
     }
 
-    private GetElementButton(): HTMLButtonElement {
-        return (this._el.children[0] as HTMLButtonElement);
+    private GetDownloadButton(): HTMLButtonElement {
+        return this._el.children[1] as HTMLButtonElement;
+    }
+
+    private GetUploadButton(): HTMLButtonElement {
+        return this._el.children[2] as HTMLButtonElement;
     }
 
     private GetFileNameMustache(): string {
@@ -96,15 +111,31 @@ class Uploader {
         return (this._dataFieldData);
     }
 
-    private async DisableDownloadButton(): Promise<void> {
+    private async SetButtonsState(): Promise<void> {
+        if (!this._showDownloadButton && !this._showUploadButton)
+            return;
         const dataValue = await this.GetValue();
-        const downloadButton = await this.GetElementButton();
         if (dataValue == null || dataValue == '') {
-            downloadButton.setAttribute("class", "suDownloadDisabled");
+            if (this._showDownloadButton)
+                this.DisableButton(this.GetDownloadButton());
+            if (this._showUploadButton)
+                this.DisableButton(this.GetUploadButton());
+        } else {
+            if (this._showDownloadButton)
+                this.EnableButton(this.GetDownloadButton());
+            if (this._showUploadButton)
+                this.EnableButton(this.GetUploadButton());
         }
-        else {
-            downloadButton.setAttribute("class", "ppUploaderButton");
-        }
+    }
+
+    private EnableButton(button: HTMLButtonElement) {
+        button.setAttribute("class", "ppUploaderButton");
+        button.disabled = false;
+    }
+
+    private DisableButton(button: HTMLButtonElement) {
+        button.setAttribute("class", "suDownloadDisabled");
+        button.disabled = true;
     }
 
     public HandleDragOver(evt: any): void {
@@ -169,26 +200,39 @@ class Uploader {
         return dataValue;
     }
 
-    private Download(name: string, dataBase64: string): void {
-        const dataCharacters = atob(dataBase64);
-        const dataBytes = new Array(dataCharacters.length);
-        for (let i = 0; i < dataCharacters.length; i++) {
-            dataBytes[i] = dataCharacters.charCodeAt(i);
+    private Download(name: string, content: string): void {
+        try {
+            //try to use content as URL
+            const url = new window.URL(content);
+            this.DownloadByAnchor(name, content);
+        } catch (e) {
+            if (e instanceof TypeError) {
+                //use content as base64 data
+                const dataCharacters = atob(content);
+                const dataBytes = new Array(dataCharacters.length);
+                for (let i = 0; i < dataCharacters.length; i++) {
+                    dataBytes[i] = dataCharacters.charCodeAt(i);
+                }
+                const data = new Uint8Array(dataBytes);
+                const blob = new Blob([data], { type: 'application/octet-stream' });
+                const navigator: any = window.navigator as any;
+                if (navigator.msSaveOrOpenBlob) {
+                    navigator.msSaveBlob(blob, name);
+                } else {
+                    this.DownloadByAnchor(name, window.URL.createObjectURL(blob));
+                }
+            }
         }
-        const data = new Uint8Array(dataBytes);
-        const blob = new Blob([data], { type: 'application/octet-stream' });
-        const navigator: any = window.navigator as any;
-        if (navigator.msSaveOrOpenBlob) {
-            navigator.msSaveBlob(blob, name);
-        } else {
-            const elDownloader = document.createElement('a');
-            elDownloader.href = window.URL.createObjectURL(blob);
-            elDownloader.download = name;
-            elDownloader.style.display = 'none';
-            document.body.appendChild(elDownloader);
-            elDownloader.click();
-            document.body.removeChild(elDownloader);
-        }
+    }
+
+    private DownloadByAnchor(filename: string, href: string) {
+        const elDownloader = document.createElement('a');
+        elDownloader.href = href;
+        elDownloader.download = filename;
+        elDownloader.style.display = 'none';
+        document.body.appendChild(elDownloader);
+        elDownloader.click();
+        document.body.removeChild(elDownloader);
     }
 
     public async Notify(): Promise<void> {
@@ -218,6 +262,9 @@ class Uploader {
         const uploader: Uploader = this;
         reader.addEventListener("load", async () => {
             await uploader.UpdateData(file.name, uploader.ExtractBase64(reader.result));
+            if (!this._showUploadButton && this._dataUploadAction) {
+                await this._app.FunctionHandler.ResolveFunctionWithoutContext(this._sector, this._el, "Execute(" + this._dataUploadAction + ")");
+            }
         }, false);
         reader.readAsDataURL(file);
     }
@@ -242,6 +289,6 @@ class Uploader {
         const nameKey: string = this.Application.Solver.ResolveDataKey(nameMustachePath);
         const namePath: string[] = this.Application.Solver.ResolveDataFields(nameMustachePath);
         await this.Application.Storage.SetDataKeyField(nameKey, this._sector, namePath, fileName, true);
-        await this.DisableDownloadButton();
+        await this.SetButtonsState();
     }
 }
