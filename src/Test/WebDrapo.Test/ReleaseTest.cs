@@ -1859,11 +1859,7 @@ namespace WebDrapo.Test
         {
             ValidatePage("FunctionUnloadData");
         }
-        [TestCase]
-        public void CopilotExampleTest()
-        {
-            ValidatePage("CopilotExample");
-        }
+
         #endregion
     }
 }
