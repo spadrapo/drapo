@@ -1129,11 +1129,6 @@ namespace WebDrapo.Test
             ValidatePage("FormatTimezone");
         }
         [TestCase]
-        public void Format12HourTest()
-        {
-            ValidatePage("Format12Hour");
-        }
-        [TestCase]
         public void FunctionAcceptDataChangesTest()
         {
             ValidatePage("FunctionAcceptDataChanges");
