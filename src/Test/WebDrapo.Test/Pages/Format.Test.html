@@ -5,7 +5,7 @@
 <body>
     <br />
     <span>Format</span>
-    <div d-datakey="dates" d-dataurlget="~/Data/GetDates"></div>
+    <div d-datakey="dates" d-dataurlget="~/Data/GetDates12Hour"></div>
     <div d-for="date in dates" style="display: none;">
         <br />
         <span d-model="{{date.Date}}" d-format="{{date.Format}}"></span>

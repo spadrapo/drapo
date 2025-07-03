@@ -274,6 +274,19 @@ namespace WebDrapo.Controllers
             dates.Add(new DateVM() { Date = new DateTime(1980, 6, 3), Format = "r" });
             dates.Add(new DateVM() { Date = new DateTime(1980, 6, 3), Format = "dddd, DD MMM YYYY" });
             dates.Add(new DateVM() { Date = null, Format = "g" });
+            return (dates);
+        }
+
+        [HttpGet]
+        public List<DateVM> GetDates12Hour()
+        {
+            List<DateVM> dates = new List<DateVM>();
+            // Original basic format tests
+            dates.Add(new DateVM() { Date = new DateTime(1980, 6, 3), Format = "d" });
+            dates.Add(new DateVM() { Date = new DateTime(1980, 6, 3), Format = "D" });
+            dates.Add(new DateVM() { Date = new DateTime(1980, 6, 3), Format = "r" });
+            dates.Add(new DateVM() { Date = new DateTime(1980, 6, 3), Format = "dddd, DD MMM YYYY" });
+            dates.Add(new DateVM() { Date = null, Format = "g" });
             // 12-hour format tests
             dates.Add(new DateVM() { Date = new DateTime(1980, 6, 3, 0, 15, 30), Format = "h:mm tt" }); // midnight
             dates.Add(new DateVM() { Date = new DateTime(1980, 6, 3, 9, 15, 30), Format = "h:mm tt" }); // morning
