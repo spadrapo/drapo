@@ -8,6 +8,7 @@
     private _resourceMonthName: [string, string[]][] = [];
     private _resourceDateFormat: [string, [string, string][]][] = [];
     private _resourceNumberSizeType: [string, string[]][] = [];
+    private _resourceAmPm: [string, string[]][] = [];
 
     //Properties
     get Application(): DrapoApplication {
@@ -36,6 +37,9 @@
         this.InitializeResourceDictionary(this._resourceDateFormat, 'en', [['d', 'MM/dd/yyyy'], ['D', 'dddd, dd MMMM yyyy'], ['t', 'HH:mm'], ['T', 'HH:mm:ss'], ['g', 'MM/dd/yyyy HH:mm'], ['G', 'MM/dd/yyyy HH:mm:ss'], ['r', 'ddd, dd MMM yyyy HH:mm:ss']]);
         this.InitializeResourceDictionary(this._resourceDateFormat, 'pt', [['d', 'dd/MM/yyyy'], ['D', 'dddd, dd MMMM yyyy'], ['t', 'HH:mm'], ['T', 'HH:mm:ss'], ['g', 'dd/MM/yyyy HH:mm'], ['G', 'dd/MM/yyyy HH:mm:ss'], ['r', 'ddd, dd MMM yyyy HH:mm:ss']]);
         this.InitializeResourceDictionary(this._resourceDateFormat, 'es', [['d', 'dd/MM/yyyy'], ['D', 'dddd, dd MMMM yyyy'], ['t', 'HH:mm'], ['T', 'HH:mm:ss'], ['g', 'dd/MM/yyyy HH:mm'], ['G', 'dd/MM/yyyy HH:mm:ss'], ['r', 'ddd, dd MMM yyyy HH:mm:ss']]);
+        this.InitializeResource(this._resourceAmPm, 'en', 'AM_PM');
+        this.InitializeResource(this._resourceAmPm, 'pt', 'AM_PM');
+        this.InitializeResource(this._resourceAmPm, 'es', 'AM_PM');
         this.InitializeResource(this._resourceNumberSizeType, 'pt', '_mil_mi_bi_tri');
         this.InitializeResource(this._resourceNumberSizeType, 'en', '_K_M_B_T');
         this.InitializeResource(this._resourceNumberSizeType, 'es', '_K_M_B_T');
@@ -128,6 +132,12 @@
         if (culture == null)
             culture = this.GetCulture();
         return (this.GetResourceValue(this._resourceDayOfWeekName, day, culture));
+    }
+
+    public GetAmPm(isAm: boolean, culture: string): string {
+        if (culture == null)
+            culture = this.GetCulture();
+        return (this.GetResourceValue(this._resourceAmPm, isAm ? 0 : 1, culture));
     }
 
     public GetMonthNameShort(day: number, culture: string): string {
