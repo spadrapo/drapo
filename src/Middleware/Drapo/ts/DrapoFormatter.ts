@@ -147,10 +147,11 @@ class DrapoFormatter {
                 dateFormat = this.EnsureLengthMax(date.getMilliseconds().toString(), 3);
                 break;
             case 'tt':
-                dateFormat = date.getHours() < 12 ? 'AM' : 'PM';
+                dateFormat = this.Application.Globalization.GetAmPm(date.getHours() < 12, culture);
                 break;
             case 't':
-                dateFormat = date.getHours() < 12 ? 'A' : 'P';
+                const ampm = this.Application.Globalization.GetAmPm(date.getHours() < 12, culture);
+                dateFormat = ampm.charAt(0);
                 break;
         }
         return (dateFormat);
