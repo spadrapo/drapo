@@ -204,4 +204,14 @@ public void YourFeatureTest()
 - **Data keys**: camelCase (e.g., `userData`, `formModel`)
 - **CSS classes**: kebab-case for custom styles
 
+## Example Files
+
+This repository includes example files that demonstrate the patterns described above:
+
+- **Test Page**: `src/Web/WebDrapo/wwwroot/DrapoPages/CopilotExample.html`
+- **Test Method**: `CopilotExampleTest()` in `ReleaseTest.cs`
+- **Expected Output**: `src/Test/WebDrapo.Test/Pages/CopilotExample.Test.html` (to be generated)
+
+These files demonstrate the complete workflow for adding new Drapo test pages and corresponding unit tests.
+
 Remember: **Every new feature or modification requires corresponding unit tests following these patterns.**
