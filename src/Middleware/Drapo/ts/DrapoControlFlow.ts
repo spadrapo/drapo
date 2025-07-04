@@ -283,9 +283,6 @@ class DrapoControlFlow {
             forReferenceTemplate.removeAttribute('d-for-render');
         //Viewport Ballon Before
         lastInserted = this.Application.ViewportHandler.CreateViewportControlFlowBallonBefore(viewport, lastInserted);
-        //Document Fragment
-        let canFragmentElements: boolean = viewport == null;
-        const fragment: DocumentFragment = document.createDocumentFragment();
         //Inline d-for inside
         const canUseTemplate: boolean = isContextRootFullExclusive && (type == DrapoStorageLinkType.Render) && (datas.length > 3);
         const templateVariables: string[][] = canUseTemplate ? (await this.GetTemplateVariables(sector, context, dataKey, key, forReferenceTemplate)) : null;
@@ -295,6 +292,9 @@ class DrapoControlFlow {
         let endViewport: number = this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length);
         if (isViewportActive)
             context.Initialize(startViewport - 1);
+        const insertedElements = [];
+        const elForParentOriginalStyle: string = elAnchor.parentElement.getAttribute("style");
+        elForParent.style.display = 'none';
         for (let j = startViewport; j < endViewport; j++) {
             const data: any = datas[j];
             //Template
@@ -320,18 +320,14 @@ class DrapoControlFlow {
                 const hashValueBefore: string = ((useHash) && (oldNode != null)) ? oldNode.getAttribute('d-hash') : null;
                 const hashValueCurrent: string = hashTemplate === null ? null : await this.GetElementHashValue(sector, context, template, hashTemplate);
                 const applyHash: boolean = ((!useHash) || (hashValueCurrent !== hashValueBefore));
-                if (applyHash)
-                    await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents);
                 if (((isDifference) || (isViewportActive)) && (oldNode != null)) {
+                    if (applyHash)
+                        await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents);
                     if (applyHash)
                         this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template, isHTML);
                     if (hashValueCurrent !== null)
                         oldNode.setAttribute('d-hash', hashValueCurrent);
                     lastInserted = oldNode;
-                } else if (canFragmentElements) {
-                    if (hashValueCurrent !== null)
-                        template.setAttribute('d-hash', hashValueCurrent);
-                    fragment.appendChild(template);
                 } else {
                     lastInserted.after(template);
                     lastInserted = template;
@@ -340,9 +336,10 @@ class DrapoControlFlow {
                     if (!this.Application.ViewportHandler.HasHeightChanged(viewport)) {
                         this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
                         endViewport = this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length);
-                        canFragmentElements = true;
                     }
+                    await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents);
                 }
+                insertedElements.push(lastInserted);
             } else if (type == DrapoStorageLinkType.RenderClass) {
                 await this.ResolveControlFlowForIterationRenderClass(context, renderContext, template, sector);
                 if (oldNode != null)
@@ -350,19 +347,18 @@ class DrapoControlFlow {
             }
         }
         //Viewport Ballon After
-        this.Application.ViewportHandler.AppendViewportControlFlowBallonAfter(viewport, fragment);
         if ((viewport == null) && (isContextRootFullExclusive) && (!isIncremental)) {
-            this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
-            if (elForParent.children.length !== 1)
-                this.Application.Document.SetHTML(elForParent, content);
-            const template: HTMLElement = elForParent.children[0] as HTMLElement;
-            this.Application.Observer.SubscribeFor(template, dataKey);
-            elForParent.append(fragment);
-            elFor = template;
-        } else {
-            if (fragment.childNodes.length > 0)
-                lastInserted.after(fragment);
+            while (elForParent.children.length > 1)
+                elForParent.children[elForParent.children.length-1].remove();
+            for (const insertedElement of insertedElements) {
+                elForParent.appendChild(insertedElement);
+            }
         }
+        this.Application.ViewportHandler.AppendViewportControlFlowBallonAfter(viewport, elForParent);
+        if (elForParentOriginalStyle)
+            elForParent.setAttribute('style', elForParentOriginalStyle);
+        else
+            elForParent.removeAttribute('style');
         //Viewport Activate
         this.Application.ViewportHandler.ActivateViewportControlFlow(viewport, lastInserted);
         //Enable Incremental Notify

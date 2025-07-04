@@ -5,7 +5,7 @@
 <body>
     <br />
     <span>Format</span>
-    <div d-datakey="dates" d-dataurlget="~/Data/GetDates"></div>
+    <div d-datakey="dates" d-dataurlget="~/Data/GetDates12Hour"></div>
     <div d-for="date in dates" style="display: none;">
         <br />
         <span d-model="{{date.Date}}" d-format="{{date.Format}}"></span>
@@ -24,6 +24,30 @@
     </div><div>
         <br />
         <span></span>
+    </div><div>
+        <br />
+        <span>12:15 AM</span>
+    </div><div>
+        <br />
+        <span>9:15 AM</span>
+    </div><div>
+        <br />
+        <span>12:15 PM</span>
+    </div><div>
+        <br />
+        <span>1:15 PM</span>
+    </div><div>
+        <br />
+        <span>01:05 AM</span>
+    </div><div>
+        <br />
+        <span>1:15:30 PM</span>
+    </div><div>
+        <br />
+        <span>9:15 A</span>
+    </div><div>
+        <br />
+        <span>9:15 P</span>
     </div>
 
 </body></html>

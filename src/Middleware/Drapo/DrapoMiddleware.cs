@@ -379,6 +379,8 @@ namespace Sysphera.Middleware.Drapo
 
         private string GetComponentFileContent(DrapoComponent component, DrapoComponentFile file, string key)
         {
+            if (file is DrapoComponentFileDisk)
+                return file.GetContent();
             if (!this._cacheComponentFileContent.ContainsKey(key))
                 this._cacheComponentFileContent.TryAdd(key, file.GetContent());
             return (this._cacheComponentFileContent[key]);

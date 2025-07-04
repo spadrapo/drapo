@@ -767,10 +767,10 @@ class DrapoParser {
     }
 
     private GetDateISO(data: string): Date {
-        if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(data))
+        if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,7})?(?:Z|[+-]\d{2}:\d{2})?$/.test(data))
             return (null);
         const date: Date = new Date(data);
-        if ((date === null) || (!(date instanceof Date)) || (date.toString() == 'Invalid Date') || (date.toISOString() !== data))
+        if ((date === null) || (!(date instanceof Date)) || (date.toString() === 'Invalid Date'))
             return (null);
         return (date);
     }

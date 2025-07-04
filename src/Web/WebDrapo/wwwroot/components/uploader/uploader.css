@@ -2,12 +2,11 @@
     font-size: 1rem;
     border: none;
     padding: 0;
-    height: 10px;
-    width: 300px;
+    height: 2.25rem;
     background-color: transparent;
 }
 
-    .ppUploader > div {
+    .ppUploader > .suUploaderBoxDotted {
         border: dotted;
         height: 100%;
         margin-right: 50px;
@@ -15,43 +14,46 @@
         overflow: hidden;
     }
 
-        .ppUploader > div > span {
+        .ppUploader > .suUploaderBoxDotted > span {
             padding-left: 10px;
             line-height: 2.2;
             vertical-align: middle;
             color: black;
         }
 
-        .ppUploader > div:hover {
+        .ppUploader > .suUploaderBoxDotted:hover {
             border: dotted;
         }
 
     .ppUploader > button {
         float: right;
         cursor: pointer;
-        background-color: white;
+        background-color: orangered;
         padding: 0 12px;
         border-radius: 0.2rem;
-        border: 0;
+        border: 0px;
         height: 100%;
         line-height: 41px;
-        margin-right: 0;
+        margin-right: 2px;
         pointer-events: auto !important;
     }
 
         .ppUploader > button:hover {
-            background-color: white;
+            background-color: darkorange;
+            .ppUploaderButtonTransition(@uploaderButtonForeColorVelocity);
         }
 
         .ppUploader > button > span {
             font: 1.05rem;
-            color: black;
+            color: white;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-
-.ppDownload {
-    color: #ddd;
+.ppUpload::before {
+    content: "\21A5";
 }
 
+.ppDownload::before {
+    content: "\21A7";
+}

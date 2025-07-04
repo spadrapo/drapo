@@ -103,14 +103,18 @@ class DrapoFormatter {
                 break;
             case 'h':
                 let hours = date.getHours();
-                if (hours > 12)
-                    hours = hours - 12;
+                if (hours === 0)
+                    hours = 12; // midnight should be 12 AM
+                else if (hours > 12)
+                    hours = hours - 12; // afternoon hours
                 dateFormat = hours.toString();
                 break;
             case 'hh':
                 let hoursDouble = date.getHours();
-                if (hoursDouble > 12)
-                    hoursDouble = hoursDouble - 12;
+                if (hoursDouble === 0)
+                    hoursDouble = 12; // midnight should be 12 AM
+                else if (hoursDouble > 12)
+                    hoursDouble = hoursDouble - 12; // afternoon hours
                 dateFormat = this.EnsureLength(hoursDouble.toString());
                 break;
             case 'H':
@@ -141,6 +145,13 @@ class DrapoFormatter {
             case 'fff':
             case 'FFF':
                 dateFormat = this.EnsureLengthMax(date.getMilliseconds().toString(), 3);
+                break;
+            case 'tt':
+                dateFormat = this.Application.Globalization.GetAmPm(date.getHours() < 12, culture);
+                break;
+            case 't':
+                const ampm = this.Application.Globalization.GetAmPm(date.getHours() < 12, culture);
+                dateFormat = ampm.charAt(0);
                 break;
         }
         return (dateFormat);
