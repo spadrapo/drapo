@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Bug: d-on-click scrolling to top</title>
+    <style>
+        .clickable {cursor:pointer}
+    </style>
+</head>
+<body>
+    <div>
+        <div d-dataKey="table" d-dataLoadType="startup" d-dataType="array" d-dataValue='[{"label":"A","value":1},{"label":"B","value":10}]'></div>
+    </div>
+    <div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div d-for="resposta in table" d-if="({{resposta._IndexRelative}}>-1)">
+            <div d-if="({{resposta.value}}<6)">
+                <!-- Catavento sicredi -->
+                <span d-if="{{resposta.value}}>=1" class="clickable" d-on-click="UpdateItemField({{resposta.value}},1)">X</span>
+                <span d-if="{{resposta.value}}>=2" class="clickable" d-on-click="UpdateItemField({{resposta.value}},2)">X</span>
+                <span d-if="{{resposta.value}}>=3" class="clickable" d-on-click="UpdateItemField({{resposta.value}},3)">X</span>
+                <span d-if="{{resposta.value}}>=4" class="clickable" d-on-click="UpdateItemField({{resposta.value}},4)">X</span>
+                <span d-if="{{resposta.value}}>=5" class="clickable" d-on-click="UpdateItemField({{resposta.value}},5)">X</span>
+                <!-- Desabilitado -->
+                <span d-if="({{resposta.value}}=)" class="clickable" d-on-click="UpdateItemField({{resposta.value}},1)">o</span>
+                <span d-if="({{resposta.value}}=)||({{resposta.value}}<2)" class="clickable" d-on-click="UpdateItemField({{resposta.value}},2)">o</span>
+                <span d-if="({{resposta.value}}=)||({{resposta.value}}<3)" class="clickable" d-on-click="UpdateItemField({{resposta.value}},3)">o</span>
+                <span d-if="({{resposta.value}}=)||({{resposta.value}}<4)" class="clickable" d-on-click="UpdateItemField({{resposta.value}},4)">o</span>
+                <span d-if="({{resposta.value}}=)||({{resposta.value}}<5)" class="clickable" d-on-click="UpdateItemField({{resposta.value}},5)">o</span>
+            </div>
+            <div d-if="({{resposta.value}}=10)">
+                <d-checkbox dc-label="{{resposta.value}}"></d-checkbox>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
