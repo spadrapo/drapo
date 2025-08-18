@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <title>Bug: d-on-click scrolling to top</title>
+    <style> .clickable {cursor:pointer} </style>
+    <script src="/drapo.js"></script>
+    <script language="javascript">
+        window.addEventListener('load', () =&gt; {
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        function StartTest() {
+            const originalPosition = window.scrollY;
+            document.querySelectorAll(".test-target")[1].click();
+            setTimeout(() =&gt; {
+                document.getElementById('scrollPosition').textContent = window.scrollY == originalPosition;
+            }, 500)
+        }
+    </script>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <div>
+        <div d-datakey="table" d-dataloadtype="startup" d-datatype="array" d-datavalue="[{&quot;label&quot;:&quot;A&quot;,&quot;value&quot;:1},{&quot;label&quot;:&quot;B&quot;,&quot;value&quot;:10}]"></div>
+    </div>
+    <div>
+        <p>
+            This bug came from a client.<br />
+            The document's scroll bar must keep its position after clicking one of the options in the custom radio
+            buttons at the bottom.
+        </p>
+        <p>
+            The bug happened with the mix of <b>d-if</b> inside the same <b>d-for</b> tag, plus the existence of any component as a child of that <b>d-for</b>.
+        </p>
+        <span>Final scroll position is the same:</span> <span id="scrollPosition">true</span>
+        <div style="height: 2000px"></div>
+        <input type="button" driverunittest="click" value="Unit Test Activator" onclick="StartTest()" />
+        <div d-for="answer in table" d-if="({{answer._IndexRelative}}&gt;-1)" style="display: none;">
+            <div d-if="({{answer.value}}&lt;10)">
+                <span>Custom radio buttons: </span>  
+                <!-- Enabled -->
+                <span d-if="{{answer.value}}&gt;=1" class="clickable" d-on-click="UpdateItemField({{answer.value}},1)">X</span>
+                <span d-if="{{answer.value}}&gt;=2" class="clickable" d-on-click="UpdateItemField({{answer.value}},2)">X</span>
+                <span d-if="{{answer.value}}&gt;=3" class="clickable" d-on-click="UpdateItemField({{answer.value}},3)">X</span>
+                <span d-if="{{answer.value}}&gt;=4" class="clickable" d-on-click="UpdateItemField({{answer.value}},4)">X</span>
+                <span d-if="{{answer.value}}&gt;=5" class="clickable" d-on-click="UpdateItemField({{answer.value}},5)">X</span>
+                <!-- Disabled -->
+                <span d-if="({{answer.value}}=)" class="clickable" d-on-click="UpdateItemField({{answer.value}},1)">o</span>
+                <span d-if="({{answer.value}}=)||({{answer.value}}&lt;2)" class="clickable" d-on-click="UpdateItemField({{answer.value}},2)">o</span>
+                <span d-if="({{answer.value}}=)||({{answer.value}}&lt;3)" class="clickable" d-on-click="UpdateItemField({{answer.value}},3)">o</span>
+                <span d-if="({{answer.value}}=)||({{answer.value}}&lt;4)" class="clickable test-target" d-on-click="UpdateItemField({{answer.value}},4)">o</span>
+                <span d-if="({{answer.value}}=)||({{answer.value}}&lt;5)" class="clickable" d-on-click="UpdateItemField({{answer.value}},5)">o</span>
+            </div>
+            <div d-if="({{answer.value}}=10)">
+                <d-checkbox dc-value="{{answer.value}}" dc-label="{{answer.value}}"></d-checkbox>
+            </div>
+        </div><div>
+            <div>
+                <span>Custom radio buttons: </span>  
+                <!-- Enabled -->
+                <span class="clickable" d-on-click="UpdateItemField({{answer.value}},1)">X</span>
+                <span class="clickable" d-on-click="UpdateItemField({{answer.value}},2)">X</span>
+                <span class="clickable" d-on-click="UpdateItemField({{answer.value}},3)">X</span>
+                <span class="clickable" d-on-click="UpdateItemField({{answer.value}},4)">X</span>
+                
+                <!-- Disabled -->
+                
+                
+                
+                
+                <span class="clickable" d-on-click="UpdateItemField({{answer.value}},5)">o</span>
+            </div>
+            
+        </div><div>
+            
+            <div>
+                <div d-sector="@">
+    <div style="width:100%">
+        <!--Layout-->
+        <div class="ppcCheckboxLayout">
+            <input class="ppcCheckboxInput" type="checkbox" d-model="{{table.[1].value}}" />
+            <span class="ppcCheckboxLabel" d-model="{{table.[1].value}}" d-on-click="ToggleItemField({{table.[1].value}})">10</span>
+        </div>
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+
+</body></html>

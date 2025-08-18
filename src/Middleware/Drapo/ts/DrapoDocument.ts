@@ -908,7 +908,7 @@ class DrapoDocument {
         if (el.children.length > 0)
             return ('');
         const eli: HTMLInputElement = el as HTMLInputElement;
-        if (eli.textContent)
+        if (eli.textContent != null)
             return (eli.textContent);
         return (eli.innerText);
     }
@@ -917,7 +917,7 @@ class DrapoDocument {
         if (el.children.length > 0)
             return;
         const eli: HTMLInputElement = el as HTMLInputElement;
-        if (eli.textContent)
+        if (eli.textContent != null)
             eli.textContent = value;
         else
             eli.innerText = value;
