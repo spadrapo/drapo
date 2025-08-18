@@ -105,7 +105,8 @@ namespace WebDrapo.Test
         {
             foreach (Match match in Regex.Matches(html, @"src=\""(\w|\s|\d|\:|\?|\&|\.|\/|\=|\%|\;)+\"""))
                 html = html.Replace(match.Value, @"src=""""");
-            html = html.Replace(@"<script src=""""></script>", string.Empty);
+            html = Regex.Replace(html, "<script(.*?)</script>", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            html = Regex.Replace(html, "<style(.*?)</style>", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             html = html.Replace(@"<link href="""" rel=""stylesheet"" />", string.Empty);
             html = html.Replace(@" style=""""", string.Empty);
             return (html);
@@ -601,6 +602,11 @@ namespace WebDrapo.Test
         public void ControlFlowForRecursiveLevelTest()
         {
             ValidatePage("ControlFlowForRecursiveLevel");
+        }
+        [TestCase]
+        public void ControlFlowForScrollPositionTest()
+        {
+            ValidatePage("ControlFlowForScrollPosition");
         }
         [TestCase]
         public void ControlFlowForSelectTest()
