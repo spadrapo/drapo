@@ -1,0 +1,10 @@
+﻿<div d-sector="@" dc-source="">
+    
+    <div d-dataKey="dcProperties" d-dataType="parent" d-dataValue="dc-"></div>
+
+    <div d-dataKey="sourceList" d-dataType="pointer" d-dataValue="{{dcProperties.source}}"></div>
+
+    <div d-for="item in sourceList">
+        <d-checkbox dc-value="{{item.Selected}}" dc-label="{{item.Value}}"></d-checkbox>
+    </div>
+</div>
