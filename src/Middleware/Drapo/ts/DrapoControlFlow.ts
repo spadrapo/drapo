@@ -294,7 +294,6 @@ class DrapoControlFlow {
             context.Initialize(startViewport - 1);
         const insertedElements = [];
         const elForParentOriginalStyle: string = elAnchor.parentElement.getAttribute("style");
-        elForParent.style.display = 'none';
         for (let j = startViewport; j < endViewport; j++) {
             const data: any = datas[j];
             //Template
@@ -305,6 +304,7 @@ class DrapoControlFlow {
                 this.AddTemplate(context, templateKey, templateData);
             }
             const template: HTMLElement = templateData !== null ? this.Application.Document.Clone(templateData) : this.Application.Document.Clone(forReferenceTemplate);
+            (template as any).isDForSpawn = true;
             const viewportIndexDifference: number = (isViewportActive ? (1 - startViewport) : 0);
             const nodeIndex: number = j - nodesRemovedCount + viewportIndexDifference;
             const oldNode: HTMLElement = ((items !== null) && (nodeIndex < items.length)) ? items[nodeIndex] : null;
@@ -333,11 +333,12 @@ class DrapoControlFlow {
                     lastInserted = template;
                     if (hashValueCurrent !== null)
                         template.setAttribute('d-hash', hashValueCurrent);
-                    if (!this.Application.ViewportHandler.HasHeightChanged(viewport)) {
+                    await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents);
+                    if (elForParent.style.display != 'none' && !this.Application.ViewportHandler.HasHeightChanged(viewport)) {
                         this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
                         endViewport = this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length);
+                        elForParent.style.display = 'none';
                     }
-                    await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents);
                 }
                 insertedElements.push(lastInserted);
             } else if (type == DrapoStorageLinkType.RenderClass) {
@@ -876,6 +877,7 @@ class DrapoControlFlow {
             const data: any = viewport.Data[i];
             //Template
             const template: HTMLElement = this.Application.Document.Clone(viewport.ElementTemplate);
+            (template as any).isDForSpawn = true;
             const item: DrapoContextItem = context.Create(data, template, template, viewport.DataKey, viewport.Key, viewport.DataKeyIteratorRange, i, null);
             await this.ResolveControlFlowForIterationRender(viewport.Sector, context, template, renderContext, true, true);
             const hashValueCurrent: string = hashTemplate === null ? null : await this.GetElementHashValue(viewport.Sector, context, template, hashTemplate);
