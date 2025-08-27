@@ -17,11 +17,11 @@ class DrapoControlFlow {
         await this.ResolveControlFlowForArray(els);
     }
 
-    public async ResolveControlFlowSector(el: HTMLElement, canResolveComponents: boolean = true): Promise<void> {
+    public async ResolveControlFlowSector(el: HTMLElement): Promise<void> {
         if (el == null)
             return;
         const els: HTMLElement[] = this.Application.Searcher.FindAllByAttributeFromParent('d-for', el);
-        await this.ResolveControlFlowForArray(els, false, true, DrapoStorageLinkType.Render, canResolveComponents);
+        await this.ResolveControlFlowForArray(els, false, true, DrapoStorageLinkType.Render);
     }
 
     private ResolveControlFlowForParent(forElement: HTMLElement): HTMLElement {
@@ -42,13 +42,13 @@ class DrapoControlFlow {
         return (forElement);
     }
 
-    public async ResolveControlFlowForElement(forElement: HTMLElement, isIncremental: boolean = false, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render, canResolveComponents: boolean = true): Promise<void> {
+    public async ResolveControlFlowForElement(forElement: HTMLElement, isIncremental: boolean = false, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render): Promise<void> {
         const forElements: HTMLElement[] = [];
         forElements.push(forElement);
-        return (await this.ResolveControlFlowForArray(forElements, isIncremental, canUseDifference, type, canResolveComponents));
+        return (await this.ResolveControlFlowForArray(forElements, isIncremental, canUseDifference, type));
     }
 
-    public async ResolveControlFlowForArray(forElements: HTMLElement[], isIncremental: boolean = false, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render, canResolveComponents: boolean = true): Promise<void> {
+    public async ResolveControlFlowForArray(forElements: HTMLElement[], isIncremental: boolean = false, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render): Promise<void> {
         const forElementsInserted: HTMLElement[] = [];
         for (let i = 0; i < forElements.length; i++) {
             const forElement: HTMLElement = forElements[i];
@@ -65,7 +65,7 @@ class DrapoControlFlow {
             if (!this.Application.Document.IsSectorReady(sector))
                 continue;
             const renderContext: DrapoRenderContext = new DrapoRenderContext();
-            await this.ResolveControlFlowForInternal(sector, context, renderContext, forElementRoot, isIncremental, canUseDifference, type, canResolveComponents);
+            await this.ResolveControlFlowForInternal(sector, context, renderContext, forElementRoot, isIncremental, canUseDifference, type);
         }
     }
 
@@ -111,7 +111,7 @@ class DrapoControlFlow {
         return (el.style.display === 'none');
     }
 
-    private async ResolveControlFlowForInternal(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, elFor: HTMLElement, isIncremental: boolean, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render, canResolveComponents: boolean = true): Promise<boolean> {
+    private async ResolveControlFlowForInternal(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, elFor: HTMLElement, isIncremental: boolean, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render): Promise<boolean> {
         let forText: string = elFor.getAttribute('d-for');
         let ifText: string = null;
         let forIfText: string = null;
@@ -322,7 +322,7 @@ class DrapoControlFlow {
                 const applyHash: boolean = ((!useHash) || (hashValueCurrent !== hashValueBefore));
                 if (((isDifference) || (isViewportActive)) && (oldNode != null)) {
                     if (applyHash)
-                        await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents);
+                        await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, true);
                     if (applyHash)
                         this.Application.Document.ApplyNodeDifferences(oldNode.parentElement, oldNode, template, isHTML);
                     if (hashValueCurrent !== null)
@@ -333,7 +333,7 @@ class DrapoControlFlow {
                     lastInserted = template;
                     if (hashValueCurrent !== null)
                         template.setAttribute('d-hash', hashValueCurrent);
-                    await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, canResolveComponents);
+                    await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, true);
                     if (elForParent.style.display != 'none' && !this.Application.ViewportHandler.HasHeightChanged(viewport)) {
                         this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
                         endViewport = this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length);

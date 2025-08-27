@@ -306,7 +306,7 @@ class DrapoDocument {
         //Storage Before
         await this.Application.Storage.ResolveData(false, elWindow);
         //Control Flow
-        await this.Application.ControlFlow.ResolveControlFlowSector(elWindow, false);
+        await this.Application.ControlFlow.ResolveControlFlowSector(elWindow);
         //Components
         await this.Application.ComponentHandler.ResolveComponents(elWindow);
         //Storage After
