@@ -306,7 +306,7 @@ class DrapoDocument {
         //Storage Before
         await this.Application.Storage.ResolveData(false, elWindow);
         //Control Flow
-        await this.Application.ControlFlow.ResolveControlFlowSector(elWindow, false);
+        await this.Application.ControlFlow.ResolveControlFlowSector(elWindow);
         //Components
         await this.Application.ComponentHandler.ResolveComponents(elWindow);
         //Storage After
@@ -610,6 +610,8 @@ class DrapoDocument {
             return (false);
         const dfor: string = el.getAttribute('d-for');
         if (dfor != null)
+            return (true);
+        if ((el as any).isDForSpawn === true)
             return (true);
         const elParent: HTMLElement = el.parentElement;
         if (elParent == null)

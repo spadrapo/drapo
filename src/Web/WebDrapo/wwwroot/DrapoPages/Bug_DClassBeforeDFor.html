@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Viewport - Flex - Parent</title>
+    <style>
+        .flexContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            align-items: stretch;
+            height: 170px;
+            width: 100%;
+            border: solid red 1px;
+            padding: 1px;
+        }
+        .displayNone {
+            display: none;
+        }
+        .flexMainItem {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <span>Control Flow - For - Viewport - Flex - Parent</span>
+    <p>
+        All d-fors are processed before existing d-classes.
+        Then the box with {displayNone} will fill all the height of its parent, leaving no room for the next d-for with a viewport.
+        This leads to missbehaviour in the viewport, where it won't paginate its items and show all of them.
+    </p>
+    <div d-dataKey="items" d-dataUrlGet="/Data/GetLevels?Levels=0&Children=300"></div>
+    <div class="flexContainer">
+        <div d-class="{displayNone}" style="border: solid blue 1px">
+            <div d-for="item in items[0..10]">
+                <span>[x]</span>
+            </div>
+        </div>
+        <div class="flexMainItem" style="overflow-y: scroll; border: solid green 1px">
+            <div d-for="item in items" d-for-render="viewport">
+                <d-checkbox dc-value="{{item.Visible}}" dc-label="{{item.Key}}"></d-checkbox>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
