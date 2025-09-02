@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Container Removal Error Test</title>
+</head>
+<body>
+    <span>Container Removal Error Test</span>
+    
+    <!-- Explorer sector -->
+    <div d-sector="explorer">
+        <div d-datakey="showForm" d-datatype="object">false</div>
+        <button d-on-click="UpdateDataField('showForm', '', true)" d-if="!{{showForm}}">Open Form</button>
+        <button d-on-click="UpdateDataField('showForm', '', false)" d-if="{{showForm}}">Close Form</button>
+        
+        <!-- Form container that gets loaded/unloaded -->
+        <div d-if="{{showForm}}" d-sector="@" d-container="{{IF(showForm, 'form-container', '')}}">
+            <div>
+                <h3>Form Content</h3>
+                <div d-datakey="formData" d-datatype="object">{"name": "Test", "value": 123}</div>
+                <input d-model="formData.name" type="text" />
+                <input d-model="formData.value" type="number" />
+                <div>Name: {{formData.name}}</div>
+                <div>Value: {{formData.value}}</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Test multiple open/close cycles -->
+    <div>
+        <input type="button" driverunittest="click" value="Auto Test" d-on-click="TestCycle()" />
+    </div>
+    
+    <!-- Test function -->
+    <div d-datakey="testData" d-datatype="object">{"cycle": 0, "maxCycles": 5}</div>
+    
+    <script>
+        function TestCycle() {
+            const app = drapo.application;
+            const cycles = 3; // Test 3 cycles of open/close
+            
+            function runCycle(i) {
+                if (i >= cycles) return;
+                
+                setTimeout(() => {
+                    // Open form
+                    app.Storage.UpdateDataField('explorer', 'showForm', '', true);
+                    
+                    setTimeout(() => {
+                        // Close form
+                        app.Storage.UpdateDataField('explorer', 'showForm', '', false);
+                        
+                        setTimeout(() => {
+                            runCycle(i + 1);
+                        }, 500);
+                    }, 500);
+                }, 500);
+            }
+            
+            runCycle(0);
+        }
+    </script>
+</body>
+</html>

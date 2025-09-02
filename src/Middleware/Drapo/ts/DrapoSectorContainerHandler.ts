@@ -62,8 +62,14 @@ class DrapoSectorContainerHandler {
         //Detach Element to create a new one later
         if (containerCode === this.CONTAINER_EQUAL) {
             const el: HTMLElement = this.Application.Document.GetSectorElementInner(sector);
-            if ((el !== null) && (el.parentElement !== null))
-                el.parentElement.removeChild(el);
+            if ((el !== null) && (el.parentElement !== null)) {
+                try {
+                    el.parentElement.removeChild(el);
+                } catch (e) {
+                    // Element may already be detached or in invalid state
+                    // This is not an error condition, just continue
+                }
+            }
         }
         //Empty Container
         if ((containerCode === null) || (containerCode === this.CONTAINER_EQUAL)) {
@@ -178,8 +184,14 @@ class DrapoSectorContainerHandler {
             if (sectorContainer[1] !== containerCode)
                 continue;
             const el: HTMLElement = this.Application.Document.GetSectorElementInner(sectorContainer[0]);
-            if ((el !== null) && (el.parentElement !== null))
-                el.parentElement.removeChild(el);
+            if ((el !== null) && (el.parentElement !== null)) {
+                try {
+                    el.parentElement.removeChild(el);
+                } catch (e) {
+                    // Element may already be detached or in invalid state
+                    // This is not an error condition, just continue
+                }
+            }
             this._activeSectorContainers.splice(i, 1);
             break;
         }
@@ -189,8 +201,14 @@ class DrapoSectorContainerHandler {
             const container: DrapoSectorContainerItem = this._containers[i];
             if (container.ContainerCode !== containerCode)
                 continue;
-            if (container.Element != null && container.Element.parentElement != null)
-                container.Element.parentElement.removeChild(container.Element);
+            if (container.Element != null && container.Element.parentElement != null) {
+                try {
+                    container.Element.parentElement.removeChild(container.Element);
+                } catch (e) {
+                    // Element may already be detached or in invalid state
+                    // This is not an error condition, just continue
+                }
+            }
             this._containers.splice(i, 1);
             removed = true;
             break;
@@ -213,8 +231,14 @@ class DrapoSectorContainerHandler {
             const container: DrapoSectorContainerItem = this._containers[i];
             if (container.Sector !== sector)
                 continue;
-            if ((!container.CanDetachElement) && (container.Element.parentElement != null))
-                container.Element.parentElement.removeChild(container.Element);
+            if ((!container.CanDetachElement) && (container.Element.parentElement != null)) {
+                try {
+                    container.Element.parentElement.removeChild(container.Element);
+                } catch (e) {
+                    // Element may already be detached or in invalid state
+                    // This is not an error condition, just continue
+                }
+            }
             this._containers.splice(i, 1);
             removed = true;
         }
