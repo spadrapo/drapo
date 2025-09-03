@@ -78,16 +78,30 @@ class DrapoRouter {
         const route: DrapoRouteItem = this._routes.pop();
         if (route == null)
             return;
-        const routePrevious: DrapoRouteItem = this.GetLastRouteBySector(route.Sector);
-        const title: string = this.GetLastRouteTitle();
-        this.UpdateTitle(title);
-        this.Application.Document.StartUpdate(null);
-        if (routePrevious == null) {
-            // tslint:disable-next-line:no-floating-promises
-            this.Application.Document.LoadChildSectorDefault(route.Sector);
+        
+        // Check if it is the new route system (configured routes) or the old one (manual routes)
+        if (route.Sector != null) {
+            // Old system: Manual route with sector - use existing sector-based logic
+            const routePrevious: DrapoRouteItem = this.GetLastRouteBySector(route.Sector);
+            const title: string = this.GetLastRouteTitle();
+            this.UpdateTitle(title);
+            this.Application.Document.StartUpdate(null);
+            if (routePrevious == null) {
+                // tslint:disable-next-line:no-floating-promises
+                this.Application.Document.LoadChildSectorDefault(route.Sector);
+            } else {
+                // tslint:disable-next-line:no-floating-promises
+                this.Application.Document.LoadChildSector(route.Sector, routePrevious.Url, routePrevious.Title, false);
+            }
         } else {
-            // tslint:disable-next-line:no-floating-promises
-            this.Application.Document.LoadChildSector(route.Sector, route.Url, route.Title, false);
+            // New system: Configured route without sector - apply the previous route using configured routing
+            const previousUrl: string = this.GetLastRouteUrl();
+            const title: string = this.GetLastRouteTitle();
+            this.UpdateTitle(title);
+            if (previousUrl != null) {
+                // tslint:disable-next-line:no-floating-promises
+                this.ApplyRoutePath(previousUrl, false, false);
+            }
         }
     }
 
@@ -126,8 +140,11 @@ class DrapoRouter {
 
     private async ApplyRoute(path: string, route: DrapoRoute, isLoad: boolean, updateHistory: boolean = true): Promise<boolean> {
         //History
-        if (updateHistory)
+        if (updateHistory) {
             history.pushState(null, null, path);
+            // Store route history for back navigation
+            this.Create(path, null, document.title, null);
+        }
         //Parameters
         await this.ApplyRouteParameters(path, route);
         //Before

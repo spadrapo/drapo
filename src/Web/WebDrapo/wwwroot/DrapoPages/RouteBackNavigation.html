@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <meta charset="utf-8" />
+    <title>Route Back Navigation Test</title>
+</head>
+<body>
+    <div>
+        <h1>Route Back Navigation Test</h1>
+        <p>This page tests back navigation with configured routes.</p>
+        
+        <!-- Links to navigate to configured routes -->
+        <ul>
+            <li><a href="/city/1/floripa" d-on-click="UpdateURL(/city/1/floripa)">Go to City: Floripa</a></li>
+            <li><a href="/state/2/santa" d-on-click="UpdateURL(/state/2/santa)">Go to State: Santa</a></li>
+            <li><a href="/" d-on-click="UpdateURL(/)">Go to Home</a></li>
+        </ul>
+        
+        <!-- Content sector for dynamic loading -->
+        <div d-sector="content" d-sector-url="/DrapoPages/RouteApp.html"></div>
+        
+        <!-- Back button simulation -->
+        <button onclick="history.back()">Browser Back Button</button>
+    </div>
+</body>
+</html>
