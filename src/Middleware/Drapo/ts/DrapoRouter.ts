@@ -79,9 +79,9 @@ class DrapoRouter {
         if (route == null)
             return;
         
-        // Handle navigation for configured routes (no sector) vs manual routes (with sector)
+        // Check if it is the new route system (configured routes) or the old one (manual routes)
         if (route.Sector != null) {
-            // Manual route with sector - use existing logic
+            // Old system: Manual route with sector - use existing sector-based logic
             const routePrevious: DrapoRouteItem = this.GetLastRouteBySector(route.Sector);
             const title: string = this.GetLastRouteTitle();
             this.UpdateTitle(title);
@@ -94,7 +94,7 @@ class DrapoRouter {
                 this.Application.Document.LoadChildSector(route.Sector, routePrevious.Url, routePrevious.Title, false);
             }
         } else {
-            // Configured route without sector - apply the previous route
+            // New system: Configured route without sector - apply the previous route using configured routing
             const previousUrl: string = this.GetLastRouteUrl();
             const title: string = this.GetLastRouteTitle();
             this.UpdateTitle(title);
