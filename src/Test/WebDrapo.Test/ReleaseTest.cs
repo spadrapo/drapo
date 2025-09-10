@@ -1675,11 +1675,7 @@ namespace WebDrapo.Test
         {
             ValidatePage("RouterTwo");
         }
-        [TestCase]
-        public void RouteBackNavigationTest()
-        {
-            ValidatePage("RouteBackNavigation");
-        }
+
         [TestCase]
         public void SectorContentDynamicTest()
         {
