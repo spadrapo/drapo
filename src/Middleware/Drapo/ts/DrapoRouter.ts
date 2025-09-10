@@ -78,7 +78,6 @@ class DrapoRouter {
         const route: DrapoRouteItem = this._routes.pop();
         if (route == null)
             return;
-        
         // Check if it is the new route system (configured routes) or the old one (manual routes)
         // The correct way is to verify if there are routes configured in startup
         const configuredRoutes: DrapoRoute[] = await this.Application.Config.GetRoutes();
