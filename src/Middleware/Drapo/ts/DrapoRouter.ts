@@ -82,7 +82,6 @@ class DrapoRouter {
         // The correct way is to verify if there are routes configured in startup
         const configuredRoutes: DrapoRoute[] = await this.Application.Config.GetRoutes();
         const hasConfiguredRoutes: boolean = (configuredRoutes != null) && (configuredRoutes.length > 0);
-        
         if (hasConfiguredRoutes) {
             // New system: Routes are configured in startup - use configured routing
             const previousUrl: string = this.GetLastRouteUrl();
