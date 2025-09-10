@@ -263,6 +263,7 @@ window.onload = () => {
 window.onpopstate = (e : Event) => {
     const windowAny: any = window as any;
     const application: DrapoApplication = windowAny.drapo as DrapoApplication;
+    // tslint:disable-next-line:no-floating-promises
     application.Router.OnPopState(e);
 };
 

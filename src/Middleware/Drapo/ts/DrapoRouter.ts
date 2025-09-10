@@ -74,20 +74,38 @@ class DrapoRouter {
         this._application.Log.WriteVerbose("Router - Route to {0}", url);
     }
 
-    public OnPopState(e: Event): void {
+    public async OnPopState(e: Event): Promise<void> {
         const route: DrapoRouteItem = this._routes.pop();
         if (route == null)
             return;
-        const routePrevious: DrapoRouteItem = this.GetLastRouteBySector(route.Sector);
-        const title: string = this.GetLastRouteTitle();
-        this.UpdateTitle(title);
-        this.Application.Document.StartUpdate(null);
-        if (routePrevious == null) {
-            // tslint:disable-next-line:no-floating-promises
-            this.Application.Document.LoadChildSectorDefault(route.Sector);
+        
+        // Check if it is the new route system (configured routes) or the old one (manual routes)
+        // The correct way is to verify if there are routes configured in startup
+        const configuredRoutes: DrapoRoute[] = await this.Application.Config.GetRoutes();
+        const hasConfiguredRoutes: boolean = (configuredRoutes != null) && (configuredRoutes.length > 0);
+        
+        if (hasConfiguredRoutes) {
+            // New system: Routes are configured in startup - use configured routing
+            const previousUrl: string = this.GetLastRouteUrl();
+            const title: string = this.GetLastRouteTitle();
+            this.UpdateTitle(title);
+            if (previousUrl != null) {
+                // tslint:disable-next-line:no-floating-promises
+                this.ApplyRoutePath(previousUrl, false, false);
+            }
         } else {
-            // tslint:disable-next-line:no-floating-promises
-            this.Application.Document.LoadChildSector(route.Sector, route.Url, route.Title, false);
+            // Old system: No configured routes - use manual sector-based logic
+            const routePrevious: DrapoRouteItem = this.GetLastRouteBySector(route.Sector);
+            const title: string = this.GetLastRouteTitle();
+            this.UpdateTitle(title);
+            this.Application.Document.StartUpdate(null);
+            if (routePrevious == null) {
+                // tslint:disable-next-line:no-floating-promises
+                this.Application.Document.LoadChildSectorDefault(route.Sector);
+            } else {
+                // tslint:disable-next-line:no-floating-promises
+                this.Application.Document.LoadChildSector(route.Sector, routePrevious.Url, routePrevious.Title, false);
+            }
         }
     }
 
@@ -126,8 +144,11 @@ class DrapoRouter {
 
     private async ApplyRoute(path: string, route: DrapoRoute, isLoad: boolean, updateHistory: boolean = true): Promise<boolean> {
         //History
-        if (updateHistory)
+        if (updateHistory) {
             history.pushState(null, null, path);
+            // Store route history for back navigation
+            this.Create(path, null, document.title, null);
+        }
         //Parameters
         await this.ApplyRouteParameters(path, route);
         //Before
