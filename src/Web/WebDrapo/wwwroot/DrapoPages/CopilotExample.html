@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Copilot Instructions Example</title>
+</head>
+<body>
+    <!-- Data definition -->
+    <div d-datakey="example" d-datatype="object" d-dataurlget="none">
+        {
+            "title": "Build Validation Example",
+            "checks": [
+                "TypeScript linting with TSLint",
+                "C# compilation verification", 
+                "Unit test pattern following"
+            ],
+            "status": "success"
+        }
+    </div>
+    
+    <!-- Display example content -->
+    <h1>{{example.title}}</h1>
+    
+    <div d-if="{{example.status}} == 'success'">
+        <h2>✅ Required Validations:</h2>
+        <ul>
+            <li d-for="check in example.checks">{{check}}</li>
+        </ul>
+    </div>
+    
+    <p>This page demonstrates the Copilot instructions workflow for validating builds and ensuring code quality.</p>
+</body>
+</html>

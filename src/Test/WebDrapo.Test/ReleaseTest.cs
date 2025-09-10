@@ -359,6 +359,11 @@ namespace WebDrapo.Test
             ValidatePage("ComponentUploader");
         }
         [TestCase]
+        public void CopilotExampleTest()
+        {
+            ValidatePage("CopilotExample");
+        }
+        [TestCase]
         public void ConditionalBooleanTest()
         {
             ValidatePage("ConditionalBoolean");

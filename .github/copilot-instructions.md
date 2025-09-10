@@ -1,5 +1,16 @@
 # GitHub Copilot Instructions for Drapo
 
+## ⚠️ **CRITICAL REQUIREMENTS - READ FIRST**
+
+**Every code change MUST:**
+1. ✅ **Compile successfully** - `cd src && dotnet build Drapo.sln`  
+2. ✅ **Pass TSLint without errors** - `cd src/Middleware/Drapo && npx tslint --project tsconfig/production/`
+3. ✅ **Include unit tests** when adding new functionality (following existing patterns)
+
+**No exceptions - these requirements are mandatory for all code changes.**
+
+---
+
 ## About Drapo
 
 Drapo is a declarative Single Page Application (SPA) framework that enables building dynamic web applications using HTML attributes instead of JavaScript. The framework uses intuitive `d-*` attributes for data binding, control flow, event handling, and complex UI logic directly in HTML markup.
@@ -83,6 +94,45 @@ The `ValidatePage()` method:
 - Handles any test-specific interactions (clicks, delays)
 - Compares rendered HTML with `Pages/YourFeature.Test.html`
 
+## **CRITICAL: Build Validation and Code Quality**
+
+### **ALWAYS Validate Builds and Linting**
+
+**YOU MUST ALWAYS:**
+
+1. **Compile the project** after any code changes to check for build errors
+2. **Run TypeScript linting** to ensure code quality standards
+3. **Install dependencies** if build fails due to missing packages
+4. **Fix all compilation errors** before considering changes complete
+5. **Ensure TSLint passes without any errors** - this is mandatory
+
+### Build Commands
+```bash
+# Install npm dependencies (required first)
+cd src/Middleware/Drapo && npm install
+
+# MANDATORY: Check TypeScript compilation and linting 
+cd src/Middleware/Drapo && npx tslint --project tsconfig/production/
+
+# Verify C# test project builds (independent validation)
+cd src && dotnet build Test/WebDrapo.Test/WebDrapo.Test.csproj
+
+# Note: Full solution build may require additional setup
+# The TSLint check above is the critical requirement for TypeScript code quality
+```
+
+### Build Requirements
+- **Zero compilation errors**: All C# and TypeScript code must compile successfully
+- **Zero linting errors**: TSLint must pass without warnings or errors  
+- **Dependencies resolved**: Install any missing npm or NuGet packages as needed
+- **Project-level builds**: Individual project builds must succeed even if full solution has integration complexities
+
+### Error Resolution Process
+1. **Check TypeScript linting first**: Run `npx tslint --project tsconfig/production/` - this MUST pass
+2. **Check C# compilation**: Build individual projects to isolate issues
+3. **Install missing dependencies**: Use `npm install` for TypeScript dependencies  
+4. **Address linting errors**: Fix any TypeScript code style or quality issues before proceeding
+
 ## **CRITICAL: Always Create or Update Unit Tests**
 
 ### When Adding New Features
@@ -145,6 +195,19 @@ Cover these areas when creating tests:
 - **Advanced Features**: Drag & drop, resizing, viewport scrolling
 
 ## Development Guidelines
+
+### **Mandatory Build and Quality Checks**
+
+**Before making any code changes:**
+1. Install dependencies if needed: `cd src/Middleware/Drapo && npm install`
+2. Verify TSLint passes: `cd src/Middleware/Drapo && npx tslint --project tsconfig/production/`
+3. Check baseline build status: `cd src && dotnet build Test/WebDrapo.Test/WebDrapo.Test.csproj`
+
+**After making any code changes:**
+1. **ALWAYS run TSLint**: `cd src/Middleware/Drapo && npx tslint --project tsconfig/production/` (MANDATORY)
+2. **Verify test project builds**: `cd src && dotnet build Test/WebDrapo.Test/WebDrapo.Test.csproj`
+3. **Fix any errors** before proceeding with further changes
+4. **Run unit tests** if changes affect existing functionality
 
 ### Code Patterns to Follow
 
