@@ -1677,6 +1677,12 @@ namespace WebDrapo.Test
         }
 
         [TestCase]
+        public void RouteForwardNavigationTest()
+        {
+            ValidatePage("RouteForwardNavigation");
+        }
+
+        [TestCase]
         public void SectorContentDynamicTest()
         {
             ValidatePage("SectorContentDynamic");
