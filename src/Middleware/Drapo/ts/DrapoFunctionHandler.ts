@@ -409,6 +409,10 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'break')
             return (await this.ExecuteFunctionBreak(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'addclass')
+            return (await this.ExecuteFunctionAddClass(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'removeclass')
+            return (await this.ExecuteFunctionRemoveClass(sector, contextItem, element, event, functionParsed, executionContext));
         if (!checkInvalidFunction)
             return (null);
         await this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name);
@@ -1711,5 +1715,25 @@ class DrapoFunctionHandler {
         if (this.Application.Solver.Contains(functions, functionParsed.Name))
             return (true);
         return (false);
+    }
+
+    private async ExecuteFunctionAddClass(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<boolean> {
+        const className: string = (await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]))?.trim() ?? '';
+        if (functionParsed.Parameters.length > 1) {
+            const elementId: string = (await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]))?.trim() ?? '';
+            element = document.getElementById(elementId);
+        }
+        element?.classList.add(className);
+        return true;
+    }
+
+    private async ExecuteFunctionRemoveClass(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<boolean> {
+        const className: string = (await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]))?.trim() ?? '';
+        if (functionParsed.Parameters.length > 1) {
+            const elementId: string = (await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]))?.trim() ?? '';
+            element = document.getElementById(elementId);
+        }
+        element?.classList.remove(className);
+        return true;
     }
 }

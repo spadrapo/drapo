@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function - AddClass and RemoveClass</title>
+    <style>
+        .bold {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <br>
+    <span id="sentence" d-on-click="AddClass(bold)">Click here to make this sentence bold.</span>
+    <br><br>
+    <input type="button" value="Revert to normal" d-on-click="RemoveClass(bold,sentence)">
+</body>
+</html>
