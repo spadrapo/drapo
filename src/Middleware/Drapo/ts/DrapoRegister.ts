@@ -54,6 +54,11 @@ class DrapoRegister {
         }
     }
 
+    public MarkComponentAsActive(tagName: string): void {
+        if (!this.IsActiveComponent(tagName))
+            this._components.push(tagName);
+    }
+
     private async ActivateComponentFileScript(component: any, file : any) : Promise<void>
     {
         const relatedUrl: string = await this.GetComponentFileUrl(component, file);
