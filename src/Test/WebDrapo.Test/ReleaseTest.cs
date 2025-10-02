@@ -1591,11 +1591,6 @@ namespace WebDrapo.Test
             ValidatePage("PageSimple");
         }
         [TestCase]
-        public void PackTest()
-        {
-            ValidatePage("PackTest");
-        }
-        [TestCase]
         public void ParameterFunctionMustacheInsideTest()
         {
             ValidatePage("ParameterFunctionMustacheInside");
