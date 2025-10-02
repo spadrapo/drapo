@@ -1,0 +1,10 @@
+/* Test CSS file for pack */
+.pack-test-style {
+    color: blue;
+    font-weight: bold;
+}
+
+.pack-loaded {
+    background-color: lightgreen;
+    padding: 5px;
+}

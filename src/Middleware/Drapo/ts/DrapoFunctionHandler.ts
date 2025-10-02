@@ -289,6 +289,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionUpdateData(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'reloaddata')
             return (await this.ExecuteFunctionReloadData(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'loadpack')
+            return (await this.ExecuteFunctionLoadPack(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'filterdata')
             return (await this.ExecuteFunctionFilterData(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'applyroute')
@@ -985,6 +987,101 @@ class DrapoFunctionHandler {
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         await this.Application.Storage.ReloadData(dataKey, sector, notify);
         return ('');
+    }
+
+    private async ExecuteFunctionLoadPack(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        if (functionParsed.Parameters.length < 1)
+            return ('');
+        const packName: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        if ((packName == null) || (packName == ''))
+            return ('');
+
+        try {
+            // Get the pack data from the server
+            const packUrl: string = `~/packs/${packName}.pack`;
+            const response: any = await this.Application.Server.GetJSON(packUrl);
+
+            if ((response == null) || (response.files == null))
+                return ('');
+
+            // Process each file in the pack
+            for (const file of response.files) {
+                if ((file.path == null) || (file.content == null))
+                    continue;
+
+                // Place the file content in the correct location
+                await this.ProcessPackFile(file.path, file.content);
+            }
+
+            return ('');
+        } catch (error) {
+            // Log error but don't throw to prevent breaking the application
+            return ('');
+        }
+    }
+
+    private async ProcessPackFile(filePath: string, content: string): Promise<void> {
+        // Determine the file type and handle accordingly
+        const extension = this.GetFileExtension(filePath).toLowerCase();
+
+        if (extension === '.js') {
+            // Load as JavaScript
+            await this.LoadPackScript(filePath, content);
+        } else if (extension === '.css') {
+            // Load as CSS
+            await this.LoadPackStyle(filePath, content);
+        } else if (extension === '.html') {
+            // Load as HTML template - could be stored for later use
+            await this.LoadPackTemplate(filePath, content);
+        }
+        // Add other file types as needed
+    }
+
+    private async LoadPackScript(filePath: string, content: string): Promise<void> {
+        // Create and inject script element
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.text = content;
+        script.setAttribute('data-pack-file', filePath);
+        document.head.appendChild(script);
+    }
+
+    private async LoadPackStyle(filePath: string, content: string): Promise<void> {
+        // Create and inject style element
+        const style = document.createElement('style');
+        style.type = 'text/css';
+        style.textContent = content;
+        style.setAttribute('data-pack-file', filePath);
+        document.head.appendChild(style);
+    }
+
+    private async LoadPackTemplate(filePath: string, content: string): Promise<void> {
+        // Store template content for later use
+        // This could be enhanced to integrate with Drapo's component system
+        const templateId = this.GetTemplateId(filePath);
+        let templateContainer = document.getElementById('drapo-pack-templates');
+        if (!templateContainer) {
+            templateContainer = document.createElement('div');
+            templateContainer.id = 'drapo-pack-templates';
+            templateContainer.style.display = 'none';
+            document.body.appendChild(templateContainer);
+        }
+
+        const template = document.createElement('template');
+        template.id = templateId;
+        template.innerHTML = content;
+        template.setAttribute('data-pack-file', filePath);
+        templateContainer.appendChild(template);
+    }
+
+    private GetFileExtension(filePath: string): string {
+        const lastDot = filePath.lastIndexOf('.');
+        return lastDot !== -1 ? filePath.substring(lastDot) : '';
+    }
+
+    private GetTemplateId(filePath: string): string {
+        // Convert file path to a valid template ID
+        return filePath.replace(/[^a-zA-Z0-9]/g, '_').replace(/__+/g, '_');
     }
 
     private async ExecuteFunctionFilterData(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {

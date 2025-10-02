@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Pack Test</title>
+</head>
+<body>
+    <div d-datakey="packData" d-datatype="object">
+        {
+            "packName": "testpack",
+            "loaded": false,
+            "message": "Pack not loaded yet"
+        }
+    </div>
+
+    <div d-sector="content">
+        <h1>Pack Loading Test</h1>
+        
+        <div class="status">
+            <p>Status: {{packData.message}}</p>
+            <p d-if="{{packData.loaded}}">Pack has been loaded successfully!</p>
+        </div>
+
+        <button d-on-click="LoadPack({{packData.packName}});UpdateDataField(packData,loaded,true);UpdateDataField(packData,message,'Pack loaded!')">
+            Load Pack
+        </button>
+
+        <div class="test-area pack-loaded" style="margin-top: 20px;">
+            <p class="pack-test-style">This should be styled by the pack CSS when loaded.</p>
+            <p id="js-test-result">JavaScript test result will appear here.</p>
+        </div>
+
+        <script>
+            // Test if pack JavaScript was loaded
+            function checkPackJavaScript() {
+                var result = document.getElementById('js-test-result');
+                if (window.packJsLoaded && typeof testPackFunction === 'function') {
+                    result.textContent = testPackFunction();
+                } else {
+                    result.textContent = 'Pack JavaScript not loaded yet.';
+                }
+            }
+            
+            // Check periodically
+            setInterval(checkPackJavaScript, 1000);
+            checkPackJavaScript();
+        </script>
+    </div>
+</body>
+</html>

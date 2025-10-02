@@ -5,6 +5,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -39,6 +41,8 @@ namespace Sysphera.Middleware.Drapo
         private string _jsMapContent = null;
         private string _jsMapETag = null;
         private ConcurrentDictionary<string, string> _cacheComponentFileContent = new ConcurrentDictionary<string, string>();
+        private ConcurrentDictionary<string, string> _cachePackContent = new ConcurrentDictionary<string, string>();
+        private ConcurrentDictionary<string, string> _cachePackETag = new ConcurrentDictionary<string, string>();
         private List<DrapoFile> _cacheFiles = new List<DrapoFile>();
         #endregion
         #region Properties
@@ -153,6 +157,21 @@ namespace Sysphera.Middleware.Drapo
                 AppendHeaderContainerId(context);
                 if (!isCache)
                     await context.Response.WriteAsync(this.GetComponentFileContent(component, file, key));
+            }
+            else if (this.IsPackFile(context, out string packName))
+            {
+                //Pack File
+                string packETag = this.GetPackETag(packName);
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == packETag));
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                context.Response.Headers["ETag"] = new[] { packETag };
+                context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { "application/json" });
+                context.Response.Headers.Add("Content-Encoding", new[] { "gzip" });
+                AppendHeaderContainerId(context);
+                if (!isCache)
+                    await context.Response.WriteAsync(this.GetPackContent(packName), Encoding.UTF8);
             }
             else if ((dynamic = await this.IsRequestCustom(context)) != null)
             {
@@ -384,6 +403,139 @@ namespace Sysphera.Middleware.Drapo
             if (!this._cacheComponentFileContent.ContainsKey(key))
                 this._cacheComponentFileContent.TryAdd(key, file.GetContent());
             return (this._cacheComponentFileContent[key]);
+        }
+        #endregion
+        #region Pack
+        private bool IsPackFile(HttpContext context, out string packName)
+        {
+            packName = null;
+            string url = context.Request.Path.Value;
+            int index = url.IndexOf("/packs/");
+            if (index < 0)
+                return (false);
+            string[] split = url.Substring(index + 7).Split('/');
+            if (split.Length != 1)
+                return (false);
+            packName = Path.GetFileNameWithoutExtension(split[0]);
+            DrapoPack pack = this._options.Config.GetPack(packName);
+            if (pack == null)
+                return (false);
+            return true;
+        }
+
+        private string GetPackETag(string packName)
+        {
+            if (!this._cachePackETag.ContainsKey(packName))
+            {
+                string content = this.GeneratePackContent(packName);
+                string eTag = this.CreateETag(content);
+                this._cachePackETag.TryAdd(packName, eTag);
+            }
+            return this._cachePackETag[packName];
+        }
+
+        private string GetPackContent(string packName)
+        {
+            if (!this._cachePackContent.ContainsKey(packName))
+            {
+                string content = this.GeneratePackContent(packName);
+                string compressedContent = this.CompressContent(content);
+                this._cachePackContent.TryAdd(packName, compressedContent);
+            }
+            return this._cachePackContent[packName];
+        }
+
+        private string GeneratePackContent(string packName)
+        {
+            DrapoPack pack = this._options.Config.GetPack(packName);
+            if (pack == null)
+                return "{}";
+
+            List<object> files = new List<object>();
+            string[] filesPaths = this.ResolvePackFiles(pack);
+            
+            foreach (string filePath in filesPaths)
+            {
+                try
+                {
+                    string content = File.ReadAllText(filePath);
+                    string relativePath = this.GetRelativePath(filePath);
+                    files.Add(new { path = relativePath, content = content });
+                }
+                catch
+                {
+                    // Skip files that cannot be read
+                }
+            }
+
+            var packData = new { name = packName, files = files };
+            return JsonConvert.SerializeObject(packData);
+        }
+
+        private string[] ResolvePackFiles(DrapoPack pack)
+        {
+            List<string> allFiles = new List<string>();
+            
+            // Handle wildcards in FilesPath
+            string basePath = this._webRootPath ?? "";
+            string searchPattern = pack.FilesPath;
+            
+            // Remove leading ~/ if present
+            if (searchPattern.StartsWith("~/"))
+                searchPattern = searchPattern.Substring(2);
+            
+            string fullSearchPath = Path.Combine(basePath, searchPattern);
+            string directory = Path.GetDirectoryName(fullSearchPath);
+            string pattern = Path.GetFileName(fullSearchPath);
+            
+            if (Directory.Exists(directory))
+            {
+                string[] files = Directory.GetFiles(directory, pattern, SearchOption.AllDirectories);
+                allFiles.AddRange(files);
+            }
+            
+            // Apply exclusions
+            if (pack.ExcludePaths.Count > 0)
+            {
+                allFiles = allFiles.Where(file =>
+                {
+                    string relativePath = this.GetRelativePath(file);
+                    return !pack.ExcludePaths.Any(exclude => this.MatchesPattern(relativePath, exclude));
+                }).ToList();
+            }
+            
+            return allFiles.ToArray();
+        }
+
+        private string GetRelativePath(string fullPath)
+        {
+            string basePath = this._webRootPath ?? "";
+            if (fullPath.StartsWith(basePath))
+                return fullPath.Substring(basePath.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            return fullPath;
+        }
+
+        private bool MatchesPattern(string path, string pattern)
+        {
+            // Simple pattern matching - could be enhanced for more complex wildcards
+            if (pattern.Contains("*"))
+            {
+                Regex regex = new Regex("^" + Regex.Escape(pattern).Replace("\\*", ".*") + "$", RegexOptions.IgnoreCase);
+                return regex.IsMatch(path);
+            }
+            return path.Equals(pattern, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private string CompressContent(string content)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(content);
+            using (var compressedStream = new MemoryStream())
+            using (var zipStream = new System.IO.Compression.GZipStream(compressedStream, System.IO.Compression.CompressionMode.Compress))
+            {
+                zipStream.Write(data, 0, data.Length);
+                zipStream.Close();
+                return Convert.ToBase64String(compressedStream.ToArray());
+            }
         }
         #endregion
         #region Custom

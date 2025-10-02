@@ -23,6 +23,7 @@ namespace Sysphera.Middleware.Drapo
         [IgnoreDataMember]
         private Func<DrapoDynamic, Task<DrapoDynamic>> _handlerCustom = null;
         private List<DrapoWindow> _windows = new List<DrapoWindow>();
+        private List<DrapoPack> _packs = new List<DrapoPack>();
         private bool _usePipes = false;
         private bool _useRouter = true;
         private bool _canUseWebSocket = true;
@@ -88,6 +89,7 @@ namespace Sysphera.Middleware.Drapo
         public string OnBadRequest { get => _onBadRequest; set => _onBadRequest = value; }
         public string OnReconnect { get => _onReconnect; set => _onReconnect = value; }
         public List<DrapoWindow> Windows { get => _windows; set => _windows = value; }
+        public List<DrapoPack> Packs { get => _packs; set => _packs = value; }
         public string ValidatorUncheckedClass { get => _validatorUncheckedClass; set => _validatorUncheckedClass = value; }
         public string ValidatorValidClass { get => _validatorValidClass; set => _validatorValidClass = value; }
         public string ValidatorInvalidClass { get => _validatorInvalidClass; set => _validatorInvalidClass = value; }
@@ -278,6 +280,19 @@ namespace Sysphera.Middleware.Drapo
             dynamicHandler.Handler = handler;
             this.Dynamics.Add(dynamicHandler);
             return (dynamicHandler);
+        }
+        #endregion
+        #region Pack
+        public DrapoPack CreatePack(string name, string filesPath)
+        {
+            DrapoPack pack = new DrapoPack(name, filesPath);
+            this.Packs.Add(pack);
+            return (pack);
+        }
+
+        public DrapoPack GetPack(string name)
+        {
+            return this.Packs.Find(p => string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase));
         }
         #endregion
         #region Window
