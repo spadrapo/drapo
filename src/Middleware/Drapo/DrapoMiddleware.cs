@@ -168,10 +168,15 @@ namespace Sysphera.Middleware.Drapo
                 context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
                 context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
                 context.Response.Headers.Add("Content-Type", new[] { "application/json" });
-                context.Response.Headers.Add("Content-Encoding", new[] { "gzip" });
+                
+                // Check compression support and apply best compression
+                string compressionMethod = this.GetBestCompression(context);
+                if (!string.IsNullOrEmpty(compressionMethod))
+                    context.Response.Headers.Add("Content-Encoding", new[] { compressionMethod });
+                
                 AppendHeaderContainerId(context);
                 if (!isCache)
-                    await context.Response.WriteAsync(this.GetPackContent(packName), Encoding.UTF8);
+                    await context.Response.WriteAsync(this.GetPackContent(packName, compressionMethod), Encoding.UTF8);
             }
             else if ((dynamic = await this.IsRequestCustom(context)) != null)
             {
@@ -434,15 +439,27 @@ namespace Sysphera.Middleware.Drapo
             return this._cachePackETag[packName];
         }
 
-        private string GetPackContent(string packName)
+        private string GetPackContent(string packName, string compressionMethod = null)
         {
-            if (!this._cachePackContent.ContainsKey(packName))
+            string cacheKey = $"{packName}_{compressionMethod ?? "none"}";
+            if (!this._cachePackContent.ContainsKey(cacheKey))
             {
                 string content = this.GeneratePackContent(packName);
-                string compressedContent = this.CompressContent(content);
-                this._cachePackContent.TryAdd(packName, compressedContent);
+                string finalContent = content;
+                
+                if (!string.IsNullOrEmpty(compressionMethod))
+                {
+                    if (compressionMethod == "gzip")
+                        finalContent = this.CompressContentGzip(content);
+                    else if (compressionMethod == "deflate")
+                        finalContent = this.CompressContentDeflate(content);
+                    else if (compressionMethod == "br")
+                        finalContent = this.CompressContentBrotli(content);
+                }
+                
+                this._cachePackContent.TryAdd(cacheKey, finalContent);
             }
-            return this._cachePackContent[packName];
+            return this._cachePackContent[cacheKey];
         }
 
         private string GeneratePackContent(string packName)
@@ -456,16 +473,9 @@ namespace Sysphera.Middleware.Drapo
             
             foreach (string filePath in filesPaths)
             {
-                try
-                {
-                    string content = File.ReadAllText(filePath);
-                    string relativePath = this.GetRelativePath(filePath);
-                    files.Add(new { path = relativePath, content = content });
-                }
-                catch
-                {
-                    // Skip files that cannot be read
-                }
+                string content = File.ReadAllText(filePath);
+                string relativePath = this.GetRelativePath(filePath);
+                files.Add(new { path = relativePath, content = content });
             }
 
             var packData = new { name = packName, files = files };
@@ -528,6 +538,11 @@ namespace Sysphera.Middleware.Drapo
 
         private string CompressContent(string content)
         {
+            return this.CompressContentGzip(content);
+        }
+
+        private string CompressContentGzip(string content)
+        {
             byte[] data = Encoding.UTF8.GetBytes(content);
             using (var compressedStream = new MemoryStream())
             using (var zipStream = new System.IO.Compression.GZipStream(compressedStream, System.IO.Compression.CompressionMode.Compress))
@@ -536,6 +551,50 @@ namespace Sysphera.Middleware.Drapo
                 zipStream.Close();
                 return Convert.ToBase64String(compressedStream.ToArray());
             }
+        }
+
+        private string CompressContentDeflate(string content)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(content);
+            using (var compressedStream = new MemoryStream())
+            using (var deflateStream = new System.IO.Compression.DeflateStream(compressedStream, System.IO.Compression.CompressionMode.Compress))
+            {
+                deflateStream.Write(data, 0, data.Length);
+                deflateStream.Close();
+                return Convert.ToBase64String(compressedStream.ToArray());
+            }
+        }
+
+        private string CompressContentBrotli(string content)
+        {
+            // Brotli compression - note: requires .NET Core 2.1+ or additional NuGet package
+            byte[] data = Encoding.UTF8.GetBytes(content);
+            using (var compressedStream = new MemoryStream())
+            using (var brotliStream = new System.IO.Compression.BrotliStream(compressedStream, System.IO.Compression.CompressionMode.Compress))
+            {
+                brotliStream.Write(data, 0, data.Length);
+                brotliStream.Close();
+                return Convert.ToBase64String(compressedStream.ToArray());
+            }
+        }
+
+        private string GetBestCompression(HttpContext context)
+        {
+            string acceptEncoding = context.Request.Headers["Accept-Encoding"].ToString();
+            if (string.IsNullOrEmpty(acceptEncoding))
+                return null;
+
+            acceptEncoding = acceptEncoding.ToLower();
+
+            // Check for compression types in order of preference (best compression ratio)
+            if (acceptEncoding.Contains("br"))
+                return "br";
+            if (acceptEncoding.Contains("gzip"))
+                return "gzip";
+            if (acceptEncoding.Contains("deflate"))
+                return "deflate";
+
+            return null;
         }
         #endregion
         #region Custom

@@ -12,6 +12,7 @@
     private readonly TYPE_COMPONENTSTYLE: string = "cs";
     private readonly TYPE_COMPONENTSCRIPT: string = "cj";
     private readonly TYPE_VIEW: string = "v";
+    private readonly TYPE_PACK: string = "p";
 
     //Properties
     private get Application(): DrapoApplication {
@@ -148,13 +149,13 @@
         return (true);
     }
 
-    private CreateCacheKey(type: string, cacheKeys: string[], sector: string, dataKey: string, dataPath: string[], url : string): string {
+    private CreateCacheKey(type: string, cacheKeys: string[], sector: string, dataKey: string, dataPath: string[], url: string, packName: string = null): string {
         if ((cacheKeys == null) || (cacheKeys.length == 0))
             return (null);
         let key: string = type;
         for (let i: number = 0; i < cacheKeys.length; i++) {
             const cacheKey: string = cacheKeys[i];
-            const cacheKeyValue: string = this.GetKey(cacheKey, sector, dataKey, dataPath, url);
+            const cacheKeyValue: string = this.GetKey(cacheKey, sector, dataKey, dataPath, url, packName);
             if (cacheKeyValue == null)
                 return (null);
             key = key + '_' + cacheKeyValue;
@@ -162,12 +163,14 @@
         return (key);
     }
 
-    private GetKey(cacheKey: string, sector: string, dataKey: string, dataPath: string[], url : string): string {
+    private GetKey(cacheKey: string, sector: string, dataKey: string, dataPath: string[], url: string, packName: string = null): string {
         const key: string = cacheKey.toLowerCase();
         if (key == 'datakey')
             return (dataKey);
         if (key == 'url')
             return (url);
+        if (key == 'packname')
+            return (packName);
         if (key == 'datapath') {
             if ((dataPath == null) || (dataPath.length <= 1))
                 return (dataKey);
@@ -225,5 +228,25 @@
             // tslint:disable-next-line:no-floating-promises
             this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - SetClientDataCache');
         }
+    }
+
+    public GetCachedPack(packName: string): any {
+        if (!this.CanUseLocalStorage)
+            return (null);
+        const cacheKey: string = this.CreatePackCacheKey(packName);
+        return this.GetClientDataCache(cacheKey);
+    }
+
+    public SetCachedPack(packName: string, packData: any, etag: string = null): void {
+        if (!this.CanUseLocalStorage)
+            return;
+        const cacheKey: string = this.CreatePackCacheKey(packName);
+        const cacheItem = { data: packData, etag, timestamp: Date.now() };
+        this.SetClientDataCache(cacheKey, cacheItem);
+    }
+
+    private CreatePackCacheKey(packName: string): string {
+        const cacheKeys = ['applicationbuild', 'packname'];
+        return this.CreateCacheKey(this.TYPE_PACK, cacheKeys, null, null, null, null, packName);
     }
 }

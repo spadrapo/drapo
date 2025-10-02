@@ -996,28 +996,57 @@ class DrapoFunctionHandler {
         if ((packName == null) || (packName == ''))
             return ('');
 
-        try {
-            // Get the pack data from the server
-            const packUrl: string = `~/packs/${packName}.pack`;
-            const response: any = await this.Application.Server.GetJSON(packUrl);
-
-            if ((response == null) || (response.files == null))
+        // Check cache first
+        const cachedPack = this.Application.CacheHandler.GetCachedPack(packName);
+        let etag: string = null;
+        if (cachedPack != null) {
+            etag = cachedPack.etag;
+            // If we have cached data, process it immediately
+            if (cachedPack.data != null) {
+                await this.ProcessPackData(cachedPack.data);
                 return ('');
-
-            // Process each file in the pack
-            for (const file of response.files) {
-                if ((file.path == null) || (file.content == null))
-                    continue;
-
-                // Place the file content in the correct location
-                await this.ProcessPackFile(file.path, file.content);
             }
-
-            return ('');
-        } catch (error) {
-            // Log error but don't throw to prevent breaking the application
-            return ('');
         }
+
+        // Get the pack data from the server
+        const packUrl: string = `~/packs/${packName}.pack`;
+        const headers: [string, string][] = [];
+        if (etag != null)
+            headers.push(['If-None-Match', etag]);
+
+        const response: any = await this.Application.Server.GetJSON(packUrl, null, null, null, null, headers);
+
+        if ((response == null) || (response.files == null))
+            return ('');
+
+        // Cache the response with ETag
+        const responseETag = this.ExtractETagFromResponse(response);
+        this.Application.CacheHandler.SetCachedPack(packName, response, responseETag);
+
+        // Process the pack data
+        await this.ProcessPackData(response);
+
+        return ('');
+    }
+
+    private async ProcessPackData(packData: any): Promise<void> {
+        if ((packData == null) || (packData.files == null))
+            return;
+
+        // Process each file in the pack
+        for (const file of packData.files) {
+            if ((file.path == null) || (file.content == null))
+                continue;
+
+            // Place the file content in the correct location
+            await this.ProcessPackFile(file.path, file.content);
+        }
+    }
+
+    private ExtractETagFromResponse(response: any): string {
+        // Extract ETag from response headers if available
+        // This would need to be implemented based on how the Server.GetJSON handles response headers
+        return null; // For now, return null - this would need Server API enhancement
     }
 
     private async ProcessPackFile(filePath: string, content: string): Promise<void> {
@@ -1038,6 +1067,11 @@ class DrapoFunctionHandler {
     }
 
     private async LoadPackScript(filePath: string, content: string): Promise<void> {
+        // Check if script is already loaded
+        const existingScript = document.querySelector(`script[data-pack-file="${filePath}"]`);
+        if (existingScript)
+            return;
+
         // Create and inject script element
         const script = document.createElement('script');
         script.type = 'text/javascript';
@@ -1047,6 +1081,11 @@ class DrapoFunctionHandler {
     }
 
     private async LoadPackStyle(filePath: string, content: string): Promise<void> {
+        // Check if style is already loaded
+        const existingStyle = document.querySelector(`style[data-pack-file="${filePath}"]`);
+        if (existingStyle)
+            return;
+
         // Create and inject style element
         const style = document.createElement('style');
         style.type = 'text/css';
@@ -1059,6 +1098,12 @@ class DrapoFunctionHandler {
         // Store template content for later use
         // This could be enhanced to integrate with Drapo's component system
         const templateId = this.GetTemplateId(filePath);
+
+        // Check if template is already loaded
+        const existingTemplate = document.getElementById(templateId);
+        if (existingTemplate)
+            return;
+
         let templateContainer = document.getElementById('drapo-pack-templates');
         if (!templateContainer) {
             templateContainer = document.createElement('div');

@@ -192,7 +192,7 @@ class DrapoConfig {
         return (await this.GetPropertyArray('Routes'));
     }
 
-    public async GetPacks(): Promise<any[]> {
+    public async GetPacks(): Promise<DrapoPack[]> {
         return (await this.GetPropertyArray('Packs'));
     }
 
