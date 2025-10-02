@@ -46,8 +46,7 @@ class DrapoPackHandler {
             return (false);
 
         // Cache the response with ETag
-        const responseETag = this.ExtractETagFromResponse(response);
-        this.Application.CacheHandler.SetCachedPack(packName, response, responseETag);
+        this.Application.CacheHandler.SetCachedPack(packName, response, null);
 
         // Process the pack data
         await this.ProcessPackData(packName, response);
@@ -128,7 +127,6 @@ class DrapoPackHandler {
             // Load as HTML template - could be stored for later use
             await this.LoadPackTemplate(filePath, content);
         }
-        // Add other file types as needed
     }
 
     private async LoadPackScript(filePath: string, content: string): Promise<void> {
@@ -169,6 +167,10 @@ class DrapoPackHandler {
         if (existingTemplate)
             return;
 
+        // Cache the HTML content in CacheHandler so it can be reused without server requests
+        const templateUrl = `~/${filePath}`;
+        this.Application.CacheHandler.SetCachedView(templateUrl, content);
+
         let templateContainer = document.getElementById('drapo-pack-templates');
         if (!templateContainer) {
             templateContainer = document.createElement('div');
@@ -192,11 +194,5 @@ class DrapoPackHandler {
     private GetTemplateId(filePath: string): string {
         // Convert file path to a valid template ID
         return filePath.replace(/[^a-zA-Z0-9]/g, '_').replace(/__+/g, '_');
-    }
-
-    private ExtractETagFromResponse(response: any): string {
-        // Extract ETag from response headers if available
-        // This would need to be implemented based on how the Server.GetJSON handles response headers
-        return null; // For now, return null - this would need Server API enhancement
     }
 }
