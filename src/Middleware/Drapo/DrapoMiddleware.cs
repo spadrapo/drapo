@@ -433,7 +433,7 @@ namespace Sysphera.Middleware.Drapo
             if (!this._cachePackETag.ContainsKey(packName))
             {
                 string content = this.GeneratePackContent(packName);
-                string eTag = this.CreateETag(content);
+                string eTag = GenerateETag(Encoding.UTF8.GetBytes(content));
                 this._cachePackETag.TryAdd(packName, eTag);
             }
             return this._cachePackETag[packName];
