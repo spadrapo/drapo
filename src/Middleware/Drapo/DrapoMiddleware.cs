@@ -537,6 +537,10 @@ namespace Sysphera.Middleware.Drapo
                 if (fileRelativePath.StartsWith("~/"))
                     fileRelativePath = fileRelativePath.Substring(2);
                 
+                // Normalize directory separators to handle Windows/Unix path differences
+                componentRelativePath = componentRelativePath.Replace('\\', '/');
+                fileRelativePath = fileRelativePath.Replace('\\', '/');
+                
                 // When cache burst is enabled, the component path contains the ETag
                 // But the pack file path is the original path, so we need to remove the ETag from component path for comparison
                 string cleanComponentPath = componentRelativePath;
