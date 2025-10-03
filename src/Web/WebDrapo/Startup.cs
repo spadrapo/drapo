@@ -121,7 +121,7 @@ namespace WebDrapo
             // Load regular components
             options.Config.LoadComponents(string.Format("{0}{1}components", env.WebRootPath, Path.AltDirectorySeparatorChar), "~/components");
             // Create a pack
-            options.Config.CreatePack("testpack").AddIncludePath("~/testpack/*").AddIncludePath("~/components/labelcontext/*").AddExcludePath("*.tmp");
+            options.Config.CreatePack("testpack").AddIncludePath("~/testpack/*").AddIncludePath("~/components/labelcontext/*").AddExcludePath("*.ts").AddExcludePath("*.d.ts");
             options.Config.CreateRoute("^/city/(?<cityCode>\\d+)/(?<cityName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppCity.html)");
             options.Config.CreateRoute("^/state/(?<stateCode>\\d+)/(?<stateName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppState.html)");
             options.Config.CreateRoute("^/$", "UpdateSector(content,~/DrapoPages/RouteApp.html)");
