@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page with Component</title>
+</head>
+<body>
+    <div d-sector="componenttest">
+        <h2>Component Test Page</h2>
+        <p>This page demonstrates using a component that was loaded from a pack.</p>
+        
+        <!-- Use the component that was loaded from the pack -->
+        <d-testcomponent></d-testcomponent>
+        
+        <div style="margin-top: 20px; padding: 10px; background-color: #e8f5e8; border-radius: 5px;">
+            <p><strong>Success!</strong> If you can see the component above, it means:</p>
+            <ul>
+                <li>✅ The pack was loaded successfully</li>
+                <li>✅ The component files were processed and cached</li>
+                <li>✅ The component was marked as active</li>
+                <li>✅ No duplicate loading occurred</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

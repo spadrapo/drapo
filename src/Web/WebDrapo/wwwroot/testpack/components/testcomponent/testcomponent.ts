@@ -17,23 +17,28 @@ class TestComponent {
         this._el = el;
         this._app = app;
         this._sector = app._document.GetSector(el);
+        this._counter = 0;
     }
 
     async Initialize() {
         console.log('TestComponent initialized from pack!');
-        // Set initial counter value
-        await this._app._functionHandler.ResolveFunctionWithoutContext(
-            this._sector, 
-            this._el, 
-            'UpdateDataField(componentData,counter,0)'
-        );
+        this.UpdateDisplay();
     }
 
     async Increment() {
-        await this._app._functionHandler.ResolveFunctionWithoutContext(
-            this._sector, 
-            this._el, 
-            'UpdateDataField(componentData,counter,{{componentData.counter}} + 1)'
-        );
+        this._counter++;
+        this.UpdateDisplay();
+    }
+
+    async Reset() {
+        this._counter = 0;
+        this.UpdateDisplay();
+    }
+
+    UpdateDisplay() {
+        const counterElement = this._el.querySelector('.counter');
+        if (counterElement) {
+            counterElement.textContent = this._counter.toString();
+        }
     }
 }
