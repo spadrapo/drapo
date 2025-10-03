@@ -151,7 +151,8 @@ class DrapoPackHandler {
         if (existingTemplate)
             return;
         // Cache the HTML content in CacheHandler so it can be reused without server requests
-        const templateUrl = `~/${filePath}`;
+        // Ensure the URL format matches what UpdateSector expects
+        const templateUrl = filePath.startsWith('~/') ? filePath : `~/${filePath}`;
         this.Application.CacheHandler.SetCachedView(templateUrl, content);
         let templateContainer = document.getElementById('drapo-pack-templates');
         if (!templateContainer) {
