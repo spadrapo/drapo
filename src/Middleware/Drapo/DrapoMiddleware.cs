@@ -486,23 +486,30 @@ namespace Sysphera.Middleware.Drapo
         {
             List<string> allFiles = new List<string>();
             
-            // Handle wildcards in FilesPath
+            // Handle multiple include paths
             string basePath = this._webRootPath ?? "";
-            string searchPattern = pack.FilesPath;
             
-            // Remove leading ~/ if present
-            if (searchPattern.StartsWith("~/"))
-                searchPattern = searchPattern.Substring(2);
-            
-            string fullSearchPath = Path.Combine(basePath, searchPattern);
-            string directory = Path.GetDirectoryName(fullSearchPath);
-            string pattern = Path.GetFileName(fullSearchPath);
-            
-            if (Directory.Exists(directory))
+            foreach (string includePath in pack.IncludePaths)
             {
-                string[] files = Directory.GetFiles(directory, pattern, SearchOption.AllDirectories);
-                allFiles.AddRange(files);
+                string searchPattern = includePath;
+                
+                // Remove leading ~/ if present
+                if (searchPattern.StartsWith("~/"))
+                    searchPattern = searchPattern.Substring(2);
+                
+                string fullSearchPath = Path.Combine(basePath, searchPattern);
+                string directory = Path.GetDirectoryName(fullSearchPath);
+                string pattern = Path.GetFileName(fullSearchPath);
+                
+                if (Directory.Exists(directory))
+                {
+                    string[] files = Directory.GetFiles(directory, pattern, SearchOption.AllDirectories);
+                    allFiles.AddRange(files);
+                }
             }
+            
+            // Remove duplicates
+            allFiles = allFiles.Distinct().ToList();
             
             // Apply exclusions
             if (pack.ExcludePaths.Count > 0)

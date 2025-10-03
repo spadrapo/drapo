@@ -283,9 +283,9 @@ namespace Sysphera.Middleware.Drapo
         }
         #endregion
         #region Pack
-        public DrapoPack CreatePack(string name, string filesPath)
+        public DrapoPack CreatePack(string name)
         {
-            DrapoPack pack = new DrapoPack(name, filesPath);
+            DrapoPack pack = new DrapoPack(name);
             this.Packs.Add(pack);
             return (pack);
         }

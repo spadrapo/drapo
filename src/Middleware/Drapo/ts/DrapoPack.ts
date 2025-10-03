@@ -1,14 +1,20 @@
 class DrapoPack {
     //Properties
     public Name: string;
-    public FilesPath: string;
+    public IncludePaths: string[];
     public ExcludePaths: string[];
 
     //Constructors
-    constructor(name: string = null, filesPath: string = null) {
+    constructor(name: string = null) {
         this.Name = name;
-        this.FilesPath = filesPath;
+        this.IncludePaths = [];
         this.ExcludePaths = [];
+    }
+
+    public AddIncludePath(includePath: string): DrapoPack {
+        if (includePath != null && includePath !== '')
+            this.IncludePaths.push(includePath);
+        return this;
     }
 
     public AddExcludePath(excludePath: string): DrapoPack {

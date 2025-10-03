@@ -8,28 +8,36 @@ namespace Sysphera.Middleware.Drapo
     {
         #region Properties
         public string Name { get; set; }
-        public string FilesPath { get; set; }
+        public List<string> IncludePaths { get; set; }
         public List<string> ExcludePaths { get; set; }
         #endregion
 
         #region Constructors
         public DrapoPack()
         {
+            this.IncludePaths = new List<string>();
             this.ExcludePaths = new List<string>();
         }
 
-        public DrapoPack(string name, string filesPath) : this()
+        public DrapoPack(string name) : this()
         {
             this.Name = name;
-            this.FilesPath = filesPath;
         }
         #endregion
 
         #region Methods
-        public void AddExcludePath(string excludePath)
+        public DrapoPack AddIncludePath(string includePath)
+        {
+            if (!string.IsNullOrEmpty(includePath))
+                this.IncludePaths.Add(includePath);
+            return this;
+        }
+
+        public DrapoPack AddExcludePath(string excludePath)
         {
             if (!string.IsNullOrEmpty(excludePath))
                 this.ExcludePaths.Add(excludePath);
+            return this;
         }
         #endregion
     }
