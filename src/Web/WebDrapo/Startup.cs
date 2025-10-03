@@ -119,6 +119,12 @@ namespace WebDrapo
             options.Config.ValidatorValidClass = "validatorValid";
             options.Config.ValidatorInvalidClass = "validatorInvalid";
             options.Config.LoadComponents(string.Format("{0}{1}components", env.WebRootPath, Path.AltDirectorySeparatorChar), "~/components");
+            
+            // Register test component that will be loaded from pack
+            var testComponent = options.Config.CreateComponent("testcomponent", "d-testcomponent", "testComponentConstructor");
+            testComponent.CreateDiskFile(string.Format("{0}{1}testpack{1}components{1}testcomponent", env.WebRootPath, Path.AltDirectorySeparatorChar), "testcomponent.html", DrapoFileType.View, "~/testpack/components/testcomponent/testcomponent.html");
+            testComponent.CreateDiskFile(string.Format("{0}{1}testpack{1}components{1}testcomponent", env.WebRootPath, Path.AltDirectorySeparatorChar), "testcomponent.ts", DrapoFileType.Script, "~/testpack/components/testcomponent/testcomponent.ts");
+            
             options.Config.CreatePack("testpack", "~/testpack/*").AddExcludePath("*.tmp");
             options.Config.CreateRoute("^/city/(?<cityCode>\\d+)/(?<cityName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppCity.html)");
             options.Config.CreateRoute("^/state/(?<stateCode>\\d+)/(?<stateName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppState.html)");

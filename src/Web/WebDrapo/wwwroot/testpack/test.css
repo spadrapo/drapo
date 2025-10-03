@@ -2,6 +2,38 @@
 .pack-test-style {
     color: blue;
     font-weight: bold;
+    background-color: #f0f8ff;
+    padding: 10px;
+    border: 2px solid #0066cc;
+    border-radius: 5px;
+}
+
+.test-component {
+    border: 2px solid #4CAF50;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.test-component .counter {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2196F3;
+}
+
+.test-component button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.test-component button:hover {
+    background-color: #45a049;
 }
 
 .pack-loaded {
