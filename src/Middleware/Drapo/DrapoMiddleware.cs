@@ -455,6 +455,15 @@ namespace Sysphera.Middleware.Drapo
             {
                 string content = File.ReadAllText(filePath);
                 string relativePath = this.GetRelativePath(filePath);
+                
+                // When cache burst is enabled and file is from a component, use the cache-busted filename
+                if (this._options.Config.UseComponentsCacheBurst)
+                {
+                    string cacheBustedPath = this.GetComponentCacheBustedPath(relativePath, filePath);
+                    if (cacheBustedPath != null)
+                        relativePath = cacheBustedPath;
+                }
+                
                 files.Add(new { path = relativePath, content = content });
             }
             var packData = new { name = packName, files = files };
@@ -493,6 +502,49 @@ namespace Sysphera.Middleware.Drapo
                 }).ToList();
             }
             return allFiles.ToArray();
+        }
+
+        private string GetComponentCacheBustedPath(string relativePath, string filePath)
+        {
+            // Check if this file belongs to a component by looking through all loaded components
+            foreach (DrapoComponent component in this._options.Config.Components)
+            {
+                foreach (DrapoComponentFile componentFile in component.Files)
+                {
+                    // Check if the file path matches this component file
+                    if (this.IsComponentFileMatch(filePath, componentFile, relativePath))
+                    {
+                        // Return the cache-busted path from the component file
+                        return componentFile.Path.StartsWith("~/") ? componentFile.Path : $"~/{componentFile.Path}";
+                    }
+                }
+            }
+            return null;
+        }
+
+        private bool IsComponentFileMatch(string filePath, DrapoComponentFile componentFile, string relativePath)
+        {
+            // For disk files, compare using the relative path approach
+            if (componentFile is DrapoComponentFileDisk)
+            {
+                // Get the relative path for the component file
+                string componentRelativePath = componentFile.Path;
+                if (componentRelativePath.StartsWith("~/"))
+                    componentRelativePath = componentRelativePath.Substring(2);
+                
+                // Compare relative paths
+                string fileRelativePath = relativePath;
+                if (fileRelativePath.StartsWith("~/"))
+                    fileRelativePath = fileRelativePath.Substring(2);
+                
+                // Remove cache bust tags from component path for comparison
+                string cleanComponentPath = componentRelativePath;
+                if (!string.IsNullOrEmpty(componentFile.ETag))
+                    cleanComponentPath = cleanComponentPath.Replace($".{componentFile.ETag}.", ".");
+                
+                return string.Equals(cleanComponentPath, fileRelativePath, StringComparison.OrdinalIgnoreCase);
+            }
+            return false;
         }
 
         private string GetRelativePath(string fullPath)
