@@ -168,15 +168,9 @@ namespace Sysphera.Middleware.Drapo
                 context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
                 context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
                 context.Response.Headers.Add("Content-Type", new[] { "application/json" });
-                
-                // Check compression support and apply best compression
-                string compressionMethod = this.GetBestCompression(context);
-                if (!string.IsNullOrEmpty(compressionMethod))
-                    context.Response.Headers.Add("Content-Encoding", new[] { compressionMethod });
-                
                 AppendHeaderContainerId(context);
                 if (!isCache)
-                    await context.Response.WriteAsync(this.GetPackContent(packName, compressionMethod), Encoding.UTF8);
+                    await context.Response.WriteAsync(this.GetPackContent(packName), Encoding.UTF8);
             }
             else if ((dynamic = await this.IsRequestCustom(context)) != null)
             {
@@ -439,23 +433,13 @@ namespace Sysphera.Middleware.Drapo
             return this._cachePackETag[packName];
         }
 
-        private string GetPackContent(string packName, string compressionMethod = null)
+        private string GetPackContent(string packName)
         {
-            string cacheKey = $"{packName}_{compressionMethod ?? "none"}";
+            string cacheKey = $"{packName}";
             if (!this._cachePackContent.ContainsKey(cacheKey))
             {
                 string content = this.GeneratePackContent(packName);
-                string finalContent = content;
-                if (!string.IsNullOrEmpty(compressionMethod))
-                {
-                    if (compressionMethod == "gzip")
-                        finalContent = this.CompressContentGzip(content);
-                    else if (compressionMethod == "deflate")
-                        finalContent = this.CompressContentDeflate(content);
-                    else if (compressionMethod == "br")
-                        finalContent = this.CompressContentBrotli(content);
-                }
-                this._cachePackContent.TryAdd(cacheKey, finalContent);
+                this._cachePackContent.TryAdd(cacheKey, content);
             }
             return this._cachePackContent[cacheKey];
         }
@@ -528,64 +512,6 @@ namespace Sysphera.Middleware.Drapo
                 return regex.IsMatch(path);
             }
             return path.Equals(pattern, StringComparison.OrdinalIgnoreCase);
-        }
-
-        private string CompressContent(string content)
-        {
-            return this.CompressContentGzip(content);
-        }
-
-        private string CompressContentGzip(string content)
-        {
-            byte[] data = Encoding.UTF8.GetBytes(content);
-            using (var compressedStream = new MemoryStream())
-            using (var zipStream = new System.IO.Compression.GZipStream(compressedStream, System.IO.Compression.CompressionMode.Compress))
-            {
-                zipStream.Write(data, 0, data.Length);
-                zipStream.Close();
-                return Convert.ToBase64String(compressedStream.ToArray());
-            }
-        }
-
-        private string CompressContentDeflate(string content)
-        {
-            byte[] data = Encoding.UTF8.GetBytes(content);
-            using (var compressedStream = new MemoryStream())
-            using (var deflateStream = new System.IO.Compression.DeflateStream(compressedStream, System.IO.Compression.CompressionMode.Compress))
-            {
-                deflateStream.Write(data, 0, data.Length);
-                deflateStream.Close();
-                return Convert.ToBase64String(compressedStream.ToArray());
-            }
-        }
-
-        private string CompressContentBrotli(string content)
-        {
-            // Brotli compression - note: requires .NET Core 2.1+ or additional NuGet package
-            byte[] data = Encoding.UTF8.GetBytes(content);
-            using (var compressedStream = new MemoryStream())
-            using (var brotliStream = new System.IO.Compression.BrotliStream(compressedStream, System.IO.Compression.CompressionMode.Compress))
-            {
-                brotliStream.Write(data, 0, data.Length);
-                brotliStream.Close();
-                return Convert.ToBase64String(compressedStream.ToArray());
-            }
-        }
-
-        private string GetBestCompression(HttpContext context)
-        {
-            string acceptEncoding = context.Request.Headers["PAccept-Encoding"].ToString();
-            if (string.IsNullOrEmpty(acceptEncoding))
-                return null;
-            acceptEncoding = acceptEncoding.ToLower();
-            // Check for compression types in order of preference (best compression ratio)
-            if (acceptEncoding.Contains("br"))
-                return "br";
-            if (acceptEncoding.Contains("gzip"))
-                return "gzip";
-            if (acceptEncoding.Contains("deflate"))
-                return "deflate";
-            return null;
         }
         #endregion
         #region Custom
