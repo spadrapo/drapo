@@ -537,10 +537,14 @@ namespace Sysphera.Middleware.Drapo
                 if (fileRelativePath.StartsWith("~/"))
                     fileRelativePath = fileRelativePath.Substring(2);
                 
-                // Remove cache bust tags from component path for comparison
+                // When cache burst is enabled, the component path contains the ETag
+                // But the pack file path is the original path, so we need to remove the ETag from component path for comparison
                 string cleanComponentPath = componentRelativePath;
                 if (!string.IsNullOrEmpty(componentFile.ETag))
+                {
+                    // Remove the ETag from the component path to match against the original pack file path
                     cleanComponentPath = cleanComponentPath.Replace($".{componentFile.ETag}.", ".");
+                }
                 
                 return string.Equals(cleanComponentPath, fileRelativePath, StringComparison.OrdinalIgnoreCase);
             }
