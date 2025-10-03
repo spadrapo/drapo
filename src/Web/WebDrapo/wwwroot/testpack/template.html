@@ -1,14 +1,5 @@
-<div d-sector="@" class="test-component">
-    <div d-datakey="componentData" d-datatype="object">
-        {
-            "counter": 0,
-            "message": "Component loaded from pack!"
-        }
-    </div>
-    
-    <h3>Test Component (Loaded from Pack)</h3>
-    <p>{{componentData.message}}</p>
-    <p>Counter: <span class="counter">{{componentData.counter}}</span></p>
-    <button d-on-click="this.Increment()">Increment Counter</button>
-    <button d-on-click="UpdateDataField(componentData,counter,0)">Reset Counter</button>
+<div class="pack-template">
+    <h3>Pack Template</h3>
+    <p>This template was loaded from a pack and cached for reuse.</p>
+    <p>Templates can contain static content that doesn't require data binding.</p>
 </div>

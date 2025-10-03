@@ -8,11 +8,23 @@
         <h2>Component Test Page</h2>
         <p>This page demonstrates using a component that was loaded from a pack.</p>
         
-        <!-- Use the component that was loaded from the pack -->
-        <d-testcomponent></d-testcomponent>
+        <!-- Use the checkbox component that was loaded from the pack -->
+        <d-checkbox dc-value="testValue" dc-label="Test Checkbox from Pack" dc-onclick="UpdateDataField(pageData,checkboxClicked,true)"></d-checkbox>
+        
+        <div d-datakey="pageData" d-datatype="object">
+            {
+                "testValue": false,
+                "checkboxClicked": false
+            }
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <p>Checkbox Value: <strong>{{pageData.testValue}}</strong></p>
+            <p d-if="{{pageData.checkboxClicked}}">Checkbox was clicked!</p>
+        </div>
         
         <div style="margin-top: 20px; padding: 10px; background-color: #e8f5e8; border-radius: 5px;">
-            <p><strong>Success!</strong> If you can see the component above, it means:</p>
+            <p><strong>Success!</strong> If you can see the checkbox component above, it means:</p>
             <ul>
                 <li>✅ The pack was loaded successfully</li>
                 <li>✅ The component files were processed and cached</li>

@@ -28,7 +28,7 @@
         </button>
 
         <button d-if="{{packData.loaded}}" d-on-click="UpdateSector(componenttest,~/testpack/component-test-page.html);UpdateDataField(packData,componentLoaded,true)" style="margin-left: 10px;">
-            Load Component from Pack
+            Load Checkbox Component from Pack
         </button>
 
         <div class="test-area pack-loaded" style="margin-top: 20px;">
@@ -44,10 +44,10 @@
         <div style="margin-top: 20px; padding: 15px; background-color: #f0f0f0; border-radius: 5px;">
             <h3>Test Instructions:</h3>
             <ol>
-                <li><strong>Load Pack:</strong> Click "Load Pack" to load the test pack containing component files</li>
-                <li><strong>Load Component:</strong> Click "Load Component from Pack" to load a sector that uses the component from the pack</li>
-                <li><strong>Verify:</strong> The component should load without fetching files from server again (check browser network tab)</li>
-                <li><strong>Interact:</strong> Use the increment/reset buttons to verify the component works correctly</li>
+                <li><strong>Load Pack:</strong> Click "Load Pack" to load the test pack containing checkbox component files</li>
+                <li><strong>Load Component:</strong> Click "Load Checkbox Component from Pack" to load a sector that uses the checkbox component from the pack</li>
+                <li><strong>Verify:</strong> The checkbox component should load without fetching files from server again (check browser network tab)</li>
+                <li><strong>Interact:</strong> Click the checkbox to verify the component works correctly</li>
             </ol>
             <p><em>This demonstrates that components loaded via packs are properly marked as active and don't cause duplicate loading.</em></p>
         </div>
