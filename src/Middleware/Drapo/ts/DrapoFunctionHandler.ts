@@ -995,10 +995,8 @@ class DrapoFunctionHandler {
         const packName: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         if ((packName == null) || (packName == ''))
             return ('');
-
         // Use the dedicated PackHandler to load the pack
         await this.Application.PackHandler.LoadPack(packName);
-
         return ('');
     }
 

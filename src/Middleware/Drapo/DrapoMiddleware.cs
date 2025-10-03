@@ -446,7 +446,6 @@ namespace Sysphera.Middleware.Drapo
             {
                 string content = this.GeneratePackContent(packName);
                 string finalContent = content;
-                
                 if (!string.IsNullOrEmpty(compressionMethod))
                 {
                     if (compressionMethod == "gzip")
@@ -456,7 +455,6 @@ namespace Sysphera.Middleware.Drapo
                     else if (compressionMethod == "br")
                         finalContent = this.CompressContentBrotli(content);
                 }
-                
                 this._cachePackContent.TryAdd(cacheKey, finalContent);
             }
             return this._cachePackContent[cacheKey];
@@ -467,17 +465,14 @@ namespace Sysphera.Middleware.Drapo
             DrapoPack pack = this._options.Config.GetPack(packName);
             if (pack == null)
                 return "{}";
-
             List<object> files = new List<object>();
             string[] filesPaths = this.ResolvePackFiles(pack);
-            
             foreach (string filePath in filesPaths)
             {
                 string content = File.ReadAllText(filePath);
                 string relativePath = this.GetRelativePath(filePath);
                 files.Add(new { path = relativePath, content = content });
             }
-
             var packData = new { name = packName, files = files };
             return JsonConvert.SerializeObject(packData);
         }
@@ -485,32 +480,25 @@ namespace Sysphera.Middleware.Drapo
         private string[] ResolvePackFiles(DrapoPack pack)
         {
             List<string> allFiles = new List<string>();
-            
             // Handle multiple include paths
             string basePath = this._webRootPath ?? "";
-            
             foreach (string includePath in pack.IncludePaths)
             {
                 string searchPattern = includePath;
-                
                 // Remove leading ~/ if present
                 if (searchPattern.StartsWith("~/"))
                     searchPattern = searchPattern.Substring(2);
-                
                 string fullSearchPath = Path.Combine(basePath, searchPattern);
                 string directory = Path.GetDirectoryName(fullSearchPath);
                 string pattern = Path.GetFileName(fullSearchPath);
-                
                 if (Directory.Exists(directory))
                 {
                     string[] files = Directory.GetFiles(directory, pattern, SearchOption.AllDirectories);
                     allFiles.AddRange(files);
                 }
             }
-            
             // Remove duplicates
             allFiles = allFiles.Distinct().ToList();
-            
             // Apply exclusions
             if (pack.ExcludePaths.Count > 0)
             {
@@ -520,7 +508,6 @@ namespace Sysphera.Middleware.Drapo
                     return !pack.ExcludePaths.Any(exclude => this.MatchesPattern(relativePath, exclude));
                 }).ToList();
             }
-            
             return allFiles.ToArray();
         }
 
@@ -587,12 +574,10 @@ namespace Sysphera.Middleware.Drapo
 
         private string GetBestCompression(HttpContext context)
         {
-            string acceptEncoding = context.Request.Headers["Accept-Encoding"].ToString();
+            string acceptEncoding = context.Request.Headers["PAccept-Encoding"].ToString();
             if (string.IsNullOrEmpty(acceptEncoding))
                 return null;
-
             acceptEncoding = acceptEncoding.ToLower();
-
             // Check for compression types in order of preference (best compression ratio)
             if (acceptEncoding.Contains("br"))
                 return "br";
@@ -600,7 +585,6 @@ namespace Sysphera.Middleware.Drapo
                 return "gzip";
             if (acceptEncoding.Contains("deflate"))
                 return "deflate";
-
             return null;
         }
         #endregion

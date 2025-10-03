@@ -120,10 +120,7 @@ namespace WebDrapo
             options.Config.ValidatorInvalidClass = "validatorInvalid";
             // Load regular components
             options.Config.LoadComponents(string.Format("{0}{1}components", env.WebRootPath, Path.AltDirectorySeparatorChar), "~/components");
-            
-            // Load components from testpack for demonstration
-            options.Config.LoadComponents(string.Format("{0}{1}testpack{1}components", env.WebRootPath, Path.AltDirectorySeparatorChar), "~/testpack/components");
-            
+            // Create a pack
             options.Config.CreatePack("testpack").AddIncludePath("~/testpack/*").AddExcludePath("*.tmp");
             options.Config.CreateRoute("^/city/(?<cityCode>\\d+)/(?<cityName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppCity.html)");
             options.Config.CreateRoute("^/state/(?<stateCode>\\d+)/(?<stateName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppState.html)");

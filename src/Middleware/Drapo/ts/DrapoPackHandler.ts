@@ -16,11 +16,9 @@ class DrapoPackHandler {
     public async LoadPack(packName: string): Promise<boolean> {
         if ((packName == null) || (packName == ''))
             return (false);
-
         // Check if pack is already loaded
         if (this.IsPackLoaded(packName))
             return (true);
-
         // Check cache first
         const cachedPack = this.Application.CacheHandler.GetCachedPack(packName);
         let etag: string = null;
@@ -33,25 +31,19 @@ class DrapoPackHandler {
                 return (true);
             }
         }
-
         // Get the pack data from the server
         const packUrl: string = `~/packs/${packName}.pack`;
         const headers: [string, string][] = [];
         if (etag != null)
             headers.push(['If-None-Match', etag]);
-
-        const response: any = await this.Application.Server.GetJSON(packUrl, null, null, null, null, headers);
-
+        const response: any = await this.Application.Server.GetJSON(packUrl, null, null, 'application/json; charset=utf-8', null, headers);
         if ((response == null) || (response.files == null))
             return (false);
-
         // Cache the response with ETag
         this.Application.CacheHandler.SetCachedPack(packName, response, null);
-
         // Process the pack data
         await this.ProcessPackData(packName, response);
         this.MarkPackAsLoaded(packName);
-
         return (true);
     }
 
@@ -67,14 +59,11 @@ class DrapoPackHandler {
     private async ProcessPackData(packName: string, packData: any): Promise<void> {
         if ((packData == null) || (packData.files == null))
             return;
-
         const componentFiles: { [key: string]: any[] } = {};
-
         // Process each file in the pack
         for (const file of packData.files) {
             if ((file.path == null) || (file.content == null))
                 continue;
-
             // Check if this file belongs to a component
             const componentName = this.ExtractComponentNameFromPath(file.path);
             if (componentName != null) {
@@ -82,11 +71,9 @@ class DrapoPackHandler {
                     componentFiles[componentName] = [];
                 componentFiles[componentName].push(file);
             }
-
             // Place the file content in the correct location
             await this.ProcessPackFile(file.path, file.content);
         }
-
         // Mark components as active if all their files were loaded
         await this.MarkComponentsAsActive(componentFiles);
     }
@@ -134,7 +121,6 @@ class DrapoPackHandler {
         const existingScript = document.querySelector(`script[data-pack-file="${filePath}"]`);
         if (existingScript)
             return;
-
         // Create and inject script element
         const script = document.createElement('script');
         script.type = 'text/javascript';
@@ -148,7 +134,6 @@ class DrapoPackHandler {
         const existingStyle = document.querySelector(`style[data-pack-file="${filePath}"]`);
         if (existingStyle)
             return;
-
         // Create and inject style element
         const style = document.createElement('style');
         style.type = 'text/css';
@@ -161,16 +146,13 @@ class DrapoPackHandler {
         // Store template content for later use
         // This could be enhanced to integrate with Drapo's component system
         const templateId = this.GetTemplateId(filePath);
-
         // Check if template is already loaded
         const existingTemplate = document.getElementById(templateId);
         if (existingTemplate)
             return;
-
         // Cache the HTML content in CacheHandler so it can be reused without server requests
         const templateUrl = `~/${filePath}`;
         this.Application.CacheHandler.SetCachedView(templateUrl, content);
-
         let templateContainer = document.getElementById('drapo-pack-templates');
         if (!templateContainer) {
             templateContainer = document.createElement('div');
@@ -178,7 +160,6 @@ class DrapoPackHandler {
             templateContainer.style.display = 'none';
             document.body.appendChild(templateContainer);
         }
-
         const template = document.createElement('template');
         template.id = templateId;
         template.innerHTML = content;
