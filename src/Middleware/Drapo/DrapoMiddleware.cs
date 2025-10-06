@@ -455,15 +455,18 @@ namespace Sysphera.Middleware.Drapo
             {
                 string content = File.ReadAllText(filePath);
                 string relativePath = this.GetRelativePath(filePath);
-                
+                // Normalize to forward slashes
+                relativePath = relativePath.Replace('\\', '/');
+                // Ensure path starts with ~/
+                if (!relativePath.StartsWith("~/"))
+                    relativePath = "~/" + relativePath.TrimStart('/');
                 // When cache burst is enabled and file is from a component, use the cache-busted filename
                 if (this._options.Config.UseComponentsCacheBurst)
                 {
                     string cacheBustedPath = this.GetComponentCacheBustedPath(relativePath, filePath);
                     if (cacheBustedPath != null)
-                        relativePath = cacheBustedPath;
+                        relativePath = cacheBustedPath.Replace('\\', '/');
                 }
-                
                 files.Add(new { path = relativePath, content = content });
             }
             var packData = new { name = packName, files = files };
@@ -531,16 +534,13 @@ namespace Sysphera.Middleware.Drapo
                 string componentRelativePath = componentFile.Path;
                 if (componentRelativePath.StartsWith("~/"))
                     componentRelativePath = componentRelativePath.Substring(2);
-                
                 // Compare relative paths
                 string fileRelativePath = relativePath;
                 if (fileRelativePath.StartsWith("~/"))
                     fileRelativePath = fileRelativePath.Substring(2);
-                
                 // Normalize directory separators to handle Windows/Unix path differences
                 componentRelativePath = componentRelativePath.Replace('\\', '/');
                 fileRelativePath = fileRelativePath.Replace('\\', '/');
-                
                 // When cache burst is enabled, the component path contains the ETag
                 // But the pack file path is the original path, so we need to remove the ETag from component path for comparison
                 string cleanComponentPath = componentRelativePath;
@@ -549,7 +549,6 @@ namespace Sysphera.Middleware.Drapo
                     // Remove the ETag from the component path to match against the original pack file path
                     cleanComponentPath = cleanComponentPath.Replace($".{componentFile.ETag}.", ".");
                 }
-                
                 return string.Equals(cleanComponentPath, fileRelativePath, StringComparison.OrdinalIgnoreCase);
             }
             return false;
