@@ -451,6 +451,9 @@ namespace Sysphera.Middleware.Drapo
                 return "{}";
             List<object> files = new List<object>();
             string[] filesPaths = this.ResolvePackFiles(pack);
+            // Use the same logic as AppendUrlQueryStringCacheStatic for query string
+            bool useCacheStatic = this._options.Config.UseCacheStatic;
+            string applicationBuild = this._options.Config.ApplicationBuild ?? string.Empty;
             foreach (string filePath in filesPaths)
             {
                 string content = File.ReadAllText(filePath);
@@ -466,6 +469,14 @@ namespace Sysphera.Middleware.Drapo
                     string cacheBustedPath = this.GetComponentCacheBustedPath(relativePath, filePath);
                     if (cacheBustedPath != null)
                         relativePath = cacheBustedPath.Replace('\\', '/');
+                }
+                // If this is a view (html) and UseCacheStatic is enabled and ApplicationBuild is set, append ab query string
+                if (Path.GetExtension(relativePath).Equals(".html", StringComparison.OrdinalIgnoreCase)
+                    && useCacheStatic
+                    && !string.IsNullOrEmpty(applicationBuild)
+                    && !relativePath.Contains("ab="))
+                {
+                    relativePath += (relativePath.Contains("?") ? "&" : "?") + "ab=" + applicationBuild;
                 }
                 files.Add(new { path = relativePath, content = content });
             }

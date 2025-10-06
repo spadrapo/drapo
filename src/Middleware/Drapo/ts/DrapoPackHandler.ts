@@ -164,7 +164,7 @@ class DrapoPackHandler {
         // Ensure the URL format matches what UpdateSector expects
         const templateUrl = filePath.startsWith('~/') ? filePath : `~/${filePath}`;
         if (isComponent && componentName) {
-            this.Application.CacheHandler.SetCachedComponentView(componentName, content);
+            this.Application.CacheHandler.SetCachedComponentView(templateUrl, content);
         } else {
             this.Application.CacheHandler.SetCachedView(templateUrl, content);
         }
