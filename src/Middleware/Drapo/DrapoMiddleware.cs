@@ -464,20 +464,15 @@ namespace Sysphera.Middleware.Drapo
                 if (!relativePath.StartsWith("~/"))
                     relativePath = "~/" + relativePath.TrimStart('/');
                 // When cache burst is enabled and file is from a component, use the cache-busted filename
+                string cacheBustedPath = this.GetComponentCacheBustedPath(relativePath, filePath);
                 if (this._options.Config.UseComponentsCacheBurst)
                 {
-                    string cacheBustedPath = this.GetComponentCacheBustedPath(relativePath, filePath);
                     if (cacheBustedPath != null)
                         relativePath = cacheBustedPath.Replace('\\', '/');
                 }
                 // If this is a view (html) and UseCacheStatic is enabled and ApplicationBuild is set, append ab query string
-                if (Path.GetExtension(relativePath).Equals(".html", StringComparison.OrdinalIgnoreCase)
-                    && useCacheStatic
-                    && !string.IsNullOrEmpty(applicationBuild)
-                    && !relativePath.Contains("ab="))
-                {
+                if ((cacheBustedPath != null) && (useCacheStatic) && (Path.GetExtension(relativePath).Equals(".html", StringComparison.OrdinalIgnoreCase)) && (!string.IsNullOrEmpty(applicationBuild)) && (!relativePath.Contains("ab=")))
                     relativePath += (relativePath.Contains("?") ? "&" : "?") + "ab=" + applicationBuild;
-                }
                 files.Add(new { path = relativePath, content = content });
             }
             var packData = new { name = packName, files = files };
