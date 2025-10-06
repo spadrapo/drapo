@@ -5,11 +5,11 @@
 </head>
 <body>
     <div d-sector="componenttest">
+        <div d-datakey="packComponent" d-datatype="object" d-dataValue='{"Value": 1}'></div>
         <h2>Component Test Page</h2>
         <p>This page demonstrates using a component that was loaded from a pack.</p>
-        <d-labelcontext dc-model="Hello"></d-labelcontext>
+        <d-labelcontext dc-model="{{packComponent.Value}}"></d-labelcontext>
     </div>
-
     <div style="margin-top: 20px; padding: 10px; background-color: #e8f5e8; border-radius: 5px;">
         <p><strong>Success!</strong> If you can see the checkbox component above, it means:</p>
         <ul>
@@ -18,7 +18,6 @@
             <li>✅ The component was marked as active</li>
             <li>✅ No duplicate loading occurred</li>
         </ul>
-    </div>
     </div>
 </body>
 </html>
