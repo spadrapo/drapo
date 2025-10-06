@@ -143,13 +143,6 @@ class DrapoPackHandler {
     }
 
     private async LoadPackTemplate(filePath: string, content: string): Promise<void> {
-        // Store template content for later use
-        // This could be enhanced to integrate with Drapo's component system
-        const templateId = this.GetTemplateId(filePath);
-        // Check if template is already loaded
-        const existingTemplate = document.getElementById(templateId);
-        if (existingTemplate)
-            return;
         // Determine if this is a component view
         let isComponent = false;
         let componentName: string = null;
@@ -168,27 +161,15 @@ class DrapoPackHandler {
         } else {
             this.Application.CacheHandler.SetCachedView(templateUrl, content);
         }
-        let templateContainer = document.getElementById('drapo-pack-templates');
-        if (!templateContainer) {
-            templateContainer = document.createElement('div');
-            templateContainer.id = 'drapo-pack-templates';
-            templateContainer.style.display = 'none';
-            document.body.appendChild(templateContainer);
-        }
-        const template = document.createElement('template');
-        template.id = templateId;
-        template.innerHTML = content;
-        template.setAttribute('data-pack-file', filePath);
-        templateContainer.appendChild(template);
     }
 
     private GetFileExtension(filePath: string): string {
+        // Remove query string if present
+        const queryIndex = filePath.indexOf('?');
+        if (queryIndex !== -1) {
+            filePath = filePath.substring(0, queryIndex);
+        }
         const lastDot = filePath.lastIndexOf('.');
         return lastDot !== -1 ? filePath.substring(lastDot) : '';
-    }
-
-    private GetTemplateId(filePath: string): string {
-        // Convert file path to a valid template ID
-        return filePath.replace(/[^a-zA-Z0-9]/g, '_').replace(/__+/g, '_');
     }
 }
