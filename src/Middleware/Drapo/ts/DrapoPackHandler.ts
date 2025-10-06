@@ -79,10 +79,10 @@ class DrapoPackHandler {
     }
 
     private ExtractComponentNameFromPath(filePath: string): string {
-        // Extract component name from paths like: "components/mycomponent/file.js"
+        // Extract component name from paths like: "~/components/mycomponent/file.js"
         const pathParts = filePath.split('/');
-        if (pathParts.length >= 2 && pathParts[0] === 'components') {
-            return pathParts[1];
+        if (pathParts.length >= 3 && pathParts[1] === 'components') {
+            return pathParts[2];
         }
         return null;
     }
@@ -150,10 +150,24 @@ class DrapoPackHandler {
         const existingTemplate = document.getElementById(templateId);
         if (existingTemplate)
             return;
+        // Determine if this is a component view
+        let isComponent = false;
+        let componentName: string = null;
+        if (filePath.startsWith('~/components/')) {
+            const pathParts = filePath.split('/');
+            if (pathParts.length >= 3) {
+                isComponent = true;
+                componentName = pathParts[2];
+            }
+        }
         // Cache the HTML content in CacheHandler so it can be reused without server requests
         // Ensure the URL format matches what UpdateSector expects
         const templateUrl = filePath.startsWith('~/') ? filePath : `~/${filePath}`;
-        this.Application.CacheHandler.SetCachedView(templateUrl, content);
+        if (isComponent && componentName) {
+            this.Application.CacheHandler.SetCachedComponentView(componentName, content);
+        } else {
+            this.Application.CacheHandler.SetCachedView(templateUrl, content);
+        }
         let templateContainer = document.getElementById('drapo-pack-templates');
         if (!templateContainer) {
             templateContainer = document.createElement('div');
