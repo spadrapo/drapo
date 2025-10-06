@@ -64,6 +64,8 @@ class DrapoBarber {
     }
 
     private async ResolveMustachesInternal(el: HTMLElement, sector: string, context: DrapoContext, renderContext: DrapoRenderContext, stopAtSectors: boolean): Promise<void> {
+        if (el.tagName && el.tagName.toLowerCase() === 'script')
+            return;
         const pre: string = el.getAttribute != null ? el.getAttribute('d-pre') : null;
         if (pre === 'true')
             return;
@@ -72,6 +74,8 @@ class DrapoBarber {
         if (hasChildren) {
             for (let i = 0; i < children.length; i++) {
                 const child: HTMLElement = children[i];
+                if (child.tagName && child.tagName.toLowerCase() === 'script')
+                    continue;
                 const childSector: string = child.getAttribute('d-sector');
                 if (childSector != null) {
                     if (stopAtSectors)
