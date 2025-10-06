@@ -34,6 +34,7 @@
     private _stylist: DrapoStylist;
     private _viewportHandler: DrapoViewportHandler;
     private _cacheHandler: DrapoCacheHandler;
+    private _packHandler: DrapoPackHandler;
     private _worker: DrapoWorker;
     private _debugger: DrapoDebugger;
 
@@ -175,6 +176,10 @@
         return (this._cacheHandler);
     }
 
+    get PackHandler(): DrapoPackHandler {
+        return (this._packHandler);
+    }
+
     get Worker(): DrapoWorker {
         return (this._worker);
     }
@@ -218,6 +223,7 @@
         this._stylist = new DrapoStylist(this);
         this._viewportHandler = new DrapoViewportHandler(this);
         this._cacheHandler = new DrapoCacheHandler(this);
+        this._packHandler = new DrapoPackHandler(this);
         this._worker = new DrapoWorker(this);
         this._debugger = new DrapoDebugger(this);
     }

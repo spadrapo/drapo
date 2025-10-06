@@ -289,6 +289,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionUpdateData(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'reloaddata')
             return (await this.ExecuteFunctionReloadData(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'loadpack')
+            return (await this.ExecuteFunctionLoadPack(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'filterdata')
             return (await this.ExecuteFunctionFilterData(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'applyroute')
@@ -984,6 +986,17 @@ class DrapoFunctionHandler {
         const notifyText: string = functionParsed.Parameters[1];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         await this.Application.Storage.ReloadData(dataKey, sector, notify);
+        return ('');
+    }
+
+    private async ExecuteFunctionLoadPack(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        if (functionParsed.Parameters.length < 1)
+            return ('');
+        const packName: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        if ((packName == null) || (packName == ''))
+            return ('');
+        // Use the dedicated PackHandler to load the pack
+        await this.Application.PackHandler.LoadPack(packName);
         return ('');
     }
 

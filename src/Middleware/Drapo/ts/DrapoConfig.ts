@@ -192,6 +192,10 @@ class DrapoConfig {
         return (await this.GetPropertyArray('Routes'));
     }
 
+    public async GetPacks(): Promise<DrapoPack[]> {
+        return (await this.GetPropertyArray('Packs'));
+    }
+
     public GetTimezone(): number {
         return (this._timezone);
     }

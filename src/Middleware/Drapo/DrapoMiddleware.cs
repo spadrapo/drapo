@@ -5,6 +5,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -39,6 +41,8 @@ namespace Sysphera.Middleware.Drapo
         private string _jsMapContent = null;
         private string _jsMapETag = null;
         private ConcurrentDictionary<string, string> _cacheComponentFileContent = new ConcurrentDictionary<string, string>();
+        private ConcurrentDictionary<string, string> _cachePackContent = new ConcurrentDictionary<string, string>();
+        private ConcurrentDictionary<string, string> _cachePackETag = new ConcurrentDictionary<string, string>();
         private List<DrapoFile> _cacheFiles = new List<DrapoFile>();
         #endregion
         #region Properties
@@ -153,6 +157,20 @@ namespace Sysphera.Middleware.Drapo
                 AppendHeaderContainerId(context);
                 if (!isCache)
                     await context.Response.WriteAsync(this.GetComponentFileContent(component, file, key));
+            }
+            else if (this.IsPackFile(context, out string packName))
+            {
+                //Pack File
+                string packETag = this.GetPackETag(packName);
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == packETag));
+                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+                context.Response.Headers["ETag"] = new[] { packETag };
+                context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
+                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+                context.Response.Headers.Add("Content-Type", new[] { "application/json" });
+                AppendHeaderContainerId(context);
+                if (!isCache)
+                    await context.Response.WriteAsync(this.GetPackContent(packName), Encoding.UTF8);
             }
             else if ((dynamic = await this.IsRequestCustom(context)) != null)
             {
@@ -384,6 +402,181 @@ namespace Sysphera.Middleware.Drapo
             if (!this._cacheComponentFileContent.ContainsKey(key))
                 this._cacheComponentFileContent.TryAdd(key, file.GetContent());
             return (this._cacheComponentFileContent[key]);
+        }
+        #endregion
+        #region Pack
+        private bool IsPackFile(HttpContext context, out string packName)
+        {
+            packName = null;
+            string url = context.Request.Path.Value;
+            int index = url.IndexOf("/packs/");
+            if (index < 0)
+                return (false);
+            string[] split = url.Substring(index + 7).Split('/');
+            if (split.Length != 1)
+                return (false);
+            packName = Path.GetFileNameWithoutExtension(split[0]);
+            DrapoPack pack = this._options.Config.GetPack(packName);
+            if (pack == null)
+                return (false);
+            return true;
+        }
+
+        private string GetPackETag(string packName)
+        {
+            if (!this._cachePackETag.ContainsKey(packName))
+            {
+                string content = this.GeneratePackContent(packName);
+                string eTag = GenerateETag(Encoding.UTF8.GetBytes(content));
+                this._cachePackETag.TryAdd(packName, eTag);
+            }
+            return this._cachePackETag[packName];
+        }
+
+        private string GetPackContent(string packName)
+        {
+            string cacheKey = $"{packName}";
+            if (!this._cachePackContent.ContainsKey(cacheKey))
+            {
+                string content = this.GeneratePackContent(packName);
+                this._cachePackContent.TryAdd(cacheKey, content);
+            }
+            return this._cachePackContent[cacheKey];
+        }
+
+        private string GeneratePackContent(string packName)
+        {
+            DrapoPack pack = this._options.Config.GetPack(packName);
+            if (pack == null)
+                return "{}";
+            List<object> files = new List<object>();
+            string[] filesPaths = this.ResolvePackFiles(pack);
+            // Use the same logic as AppendUrlQueryStringCacheStatic for query string
+            bool useCacheStatic = this._options.Config.UseCacheStatic;
+            string applicationBuild = this._options.Config.ApplicationBuild ?? string.Empty;
+            foreach (string filePath in filesPaths)
+            {
+                string content = File.ReadAllText(filePath);
+                string relativePath = this.GetRelativePath(filePath);
+                // Normalize to forward slashes
+                relativePath = relativePath.Replace('\\', '/');
+                // Ensure path starts with ~/
+                if (!relativePath.StartsWith("~/"))
+                    relativePath = "~/" + relativePath.TrimStart('/');
+                // When cache burst is enabled and file is from a component, use the cache-busted filename
+                string cacheBustedPath = this.GetComponentCacheBustedPath(relativePath, filePath);
+                if (this._options.Config.UseComponentsCacheBurst)
+                {
+                    if (cacheBustedPath != null)
+                        relativePath = cacheBustedPath.Replace('\\', '/');
+                }
+                // If this is a view (html) and UseCacheStatic is enabled and ApplicationBuild is set, append ab query string
+                if ((cacheBustedPath != null) && (useCacheStatic) && (Path.GetExtension(relativePath).Equals(".html", StringComparison.OrdinalIgnoreCase)) && (!string.IsNullOrEmpty(applicationBuild)) && (!relativePath.Contains("ab=")))
+                    relativePath += (relativePath.Contains("?") ? "&" : "?") + "ab=" + applicationBuild;
+                files.Add(new { path = relativePath, content = content });
+            }
+            var packData = new { name = packName, files = files };
+            return JsonConvert.SerializeObject(packData);
+        }
+
+        private string[] ResolvePackFiles(DrapoPack pack)
+        {
+            List<string> allFiles = new List<string>();
+            // Handle multiple include paths
+            string basePath = this._webRootPath ?? "";
+            foreach (string includePath in pack.IncludePaths)
+            {
+                string searchPattern = includePath;
+                // Remove leading ~/ if present
+                if (searchPattern.StartsWith("~/"))
+                    searchPattern = searchPattern.Substring(2);
+                string fullSearchPath = Path.Combine(basePath, searchPattern);
+                string directory = Path.GetDirectoryName(fullSearchPath);
+                string pattern = Path.GetFileName(fullSearchPath);
+                if (Directory.Exists(directory))
+                {
+                    string[] files = Directory.GetFiles(directory, pattern, SearchOption.AllDirectories);
+                    allFiles.AddRange(files);
+                }
+            }
+            // Remove duplicates
+            allFiles = allFiles.Distinct().ToList();
+            // Apply exclusions
+            if (pack.ExcludePaths.Count > 0)
+            {
+                allFiles = allFiles.Where(file =>
+                {
+                    string relativePath = this.GetRelativePath(file);
+                    return !pack.ExcludePaths.Any(exclude => this.MatchesPattern(relativePath, exclude));
+                }).ToList();
+            }
+            return allFiles.ToArray();
+        }
+
+        private string GetComponentCacheBustedPath(string relativePath, string filePath)
+        {
+            // Check if this file belongs to a component by looking through all loaded components
+            foreach (DrapoComponent component in this._options.Config.Components)
+            {
+                foreach (DrapoComponentFile componentFile in component.Files)
+                {
+                    // Check if the file path matches this component file
+                    if (this.IsComponentFileMatch(filePath, componentFile, relativePath))
+                    {
+                        // Return the cache-busted path from the component file
+                        return componentFile.Path.StartsWith("~/") ? componentFile.Path : $"~/{componentFile.Path}";
+                    }
+                }
+            }
+            return null;
+        }
+
+        private bool IsComponentFileMatch(string filePath, DrapoComponentFile componentFile, string relativePath)
+        {
+            // For disk files, compare using the relative path approach
+            if (componentFile is DrapoComponentFileDisk)
+            {
+                // Get the relative path for the component file
+                string componentRelativePath = componentFile.Path;
+                if (componentRelativePath.StartsWith("~/"))
+                    componentRelativePath = componentRelativePath.Substring(2);
+                // Compare relative paths
+                string fileRelativePath = relativePath;
+                if (fileRelativePath.StartsWith("~/"))
+                    fileRelativePath = fileRelativePath.Substring(2);
+                // Normalize directory separators to handle Windows/Unix path differences
+                componentRelativePath = componentRelativePath.Replace('\\', '/');
+                fileRelativePath = fileRelativePath.Replace('\\', '/');
+                // When cache burst is enabled, the component path contains the ETag
+                // But the pack file path is the original path, so we need to remove the ETag from component path for comparison
+                string cleanComponentPath = componentRelativePath;
+                if (!string.IsNullOrEmpty(componentFile.ETag))
+                {
+                    // Remove the ETag from the component path to match against the original pack file path
+                    cleanComponentPath = cleanComponentPath.Replace($".{componentFile.ETag}.", ".");
+                }
+                return string.Equals(cleanComponentPath, fileRelativePath, StringComparison.OrdinalIgnoreCase);
+            }
+            return false;
+        }
+
+        private string GetRelativePath(string fullPath)
+        {
+            string basePath = this._webRootPath ?? "";
+            if (fullPath.StartsWith(basePath))
+                return fullPath.Substring(basePath.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            return fullPath;
+        }
+
+        private bool MatchesPattern(string path, string pattern)
+        {
+            // Simple pattern matching - could be enhanced for more complex wildcards
+            if (pattern.Contains("*"))
+            {
+                Regex regex = new Regex("^" + Regex.Escape(pattern).Replace("\\*", ".*") + "$", RegexOptions.IgnoreCase);
+                return regex.IsMatch(path);
+            }
+            return path.Equals(pattern, StringComparison.OrdinalIgnoreCase);
         }
         #endregion
         #region Custom
