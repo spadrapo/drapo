@@ -36,7 +36,7 @@ class DrapoPackHandler {
         const headers: [string, string][] = [];
         if (etag != null)
             headers.push(['If-None-Match', etag]);
-        const response: any = await this.Application.Server.GetJSON(packUrl, null, null, 'application/json; charset=utf-8', null, headers);
+        const response: any = await this.Application.Server.GetJSON(packUrl, 'GET', null, 'application/json; charset=utf-8', null, headers);
         if ((response == null) || (response.files == null))
             return (false);
         // Cache the response with ETag
