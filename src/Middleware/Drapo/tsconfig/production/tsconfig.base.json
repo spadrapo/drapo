@@ -7,14 +7,15 @@
     "strictFunctionTypes": true,
     "strictNullChecks": false,
     "noEmitOnError": true,
-    "removeComments": false,
-    "sourceMap": true,
-    "target": "es2022",
-    "outDir": "../../js/",
+    "removeComments": true,
+    "sourceMap": false,
+    "target": "es5",
     "declaration": true,
     "lib": [
       "dom",
-      "es2022"
+      "es5",
+      "es2015.promise",
+      "es6"
     ]
   },
   "exclude": [
