@@ -183,7 +183,7 @@ namespace WebDrapo.Controllers
         private Dictionary<string, string> GetCulturePT()
         {
             Dictionary<string, string> values = new Dictionary<string, string>();
-            values.Add("User", "Usu�rio");
+            values.Add("User", "Usuário");
             values.Add("Name", "Nome");
             values.Add("Date", "Data");
             for (int i = 0; i < 10; i++)
