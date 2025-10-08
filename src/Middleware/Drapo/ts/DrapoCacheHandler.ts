@@ -2,6 +2,7 @@
     private _application: DrapoApplication;
     private _hasLocalStorage: boolean = null;
     private _useLocalStorage: boolean = false;
+    private _useCacheLocalStorageCleanup: boolean = true;
     private _applicationBuild: string = null;
     private _cacheKeysView: string[] = null;
     private _cacheKeysComponentView: string[] = null;
@@ -31,7 +32,11 @@
 
     public async Initialize(): Promise<boolean> {
         this._useLocalStorage = await this.Application.Config.GetUseCacheLocalStorage();
+        this._useCacheLocalStorageCleanup = await this.Application.Config.GetUseCacheLocalStorageCleanup();
         this._applicationBuild = await this.Application.Config.GetApplicationBuild();
+        if (this._useCacheLocalStorageCleanup) {
+            this.CleanupOldVersionCache();
+        }
         this._cacheKeysView = await this.GetConfigurationKeys('CacheKeysView');
         this._cacheKeysComponentView = await this.GetConfigurationKeys('CacheKeysComponentView');
         this._cacheKeysComponentStyle = await this.GetConfigurationKeys('CacheKeysComponentStyle');
@@ -248,5 +253,65 @@
     private CreatePackCacheKey(packName: string): string {
         const cacheKeys = ['applicationbuild', 'packname'];
         return this.CreateCacheKey(this.TYPE_PACK, cacheKeys, null, null, null, null, packName);
+    }
+
+    private CleanupOldVersionCache(): void {
+        if (!this.CanUseLocalStorage || !this._applicationBuild)
+            return;
+
+        try {
+            const currentVersionKey = `drapo_version_${this._applicationBuild}`;
+            const storedVersion = window.localStorage.getItem(currentVersionKey);
+
+            if (storedVersion === null) {
+                // This is a new version, clear all cache entries that depend on applicationbuild
+                this.ClearVersionDependentCache();
+                // Mark this version as seen
+                window.localStorage.setItem(currentVersionKey, this._applicationBuild);
+            }
+        } catch (e) {
+            // If we can't access localStorage, disable it
+            this._useLocalStorage = false;
+            // tslint:disable-next-line:no-floating-promises
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - CleanupOldVersionCache');
+        }
+    }
+
+    private ClearVersionDependentCache(): void {
+        if (!this.CanUseLocalStorage)
+            return;
+
+        try {
+            const keysToRemove: string[] = [];
+            const cacheTypes = [this.TYPE_DATA, this.TYPE_COMPONENTVIEW, this.TYPE_COMPONENTSTYLE,
+                              this.TYPE_COMPONENTSCRIPT, this.TYPE_VIEW, this.TYPE_PACK];
+
+            // Iterate through all localStorage keys
+            for (let i = 0; i < window.localStorage.length; i++) {
+                const key = window.localStorage.key(i);
+                if (key === null) continue;
+
+                // Check if the key starts with any of our cache type prefixes and contains applicationbuild
+                for (const cacheType of cacheTypes) {
+                    if (key.startsWith(cacheType + '_') && key.includes('_applicationbuild_')) {
+                        // Check if it's for a different version
+                        if (!key.includes(`_applicationbuild_${this._applicationBuild}_`)) {
+                            keysToRemove.push(key);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            // Remove all outdated cache entries
+            for (const key of keysToRemove) {
+                window.localStorage.removeItem(key);
+            }
+
+        } catch (e) {
+            this._useLocalStorage = false;
+            // tslint:disable-next-line:no-floating-promises
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - ClearVersionDependentCache');
+        }
     }
 }

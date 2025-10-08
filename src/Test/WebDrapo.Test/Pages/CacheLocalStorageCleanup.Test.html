@@ -1,0 +1,46 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Cache LocalStorage Cleanup Test</title>
+</head>
+<body>
+    <div>
+        <h2>Cache LocalStorage Cleanup Test</h2>
+        <p>This page tests the cache cleanup functionality that should clear old version cache entries on startup.</p>
+        
+        <div>
+            <span>Application Build</span>
+            <div d-datakey="build" d-datacachekeys="datakey,applicationbuild" d-dataurlget="/Data/GetApplicationBuild">1.0</div>
+            <span d-model="{{build}}">1.0</span>
+        </div>
+        
+        <div>
+            <span>Cache Cleanup Status</span>
+            <div d-datakey="cachestatus" d-datatype="object">
+                <div d-datafield="enabled" d-datatype="boolean" d-datavalue="true"></div>
+                <div d-datafield="applicationbuild" d-datatype="string" d-datavalue="{{build}}"></div>
+            </div>
+            
+            <div>
+                <label>Cleanup Enabled:</label>
+                <span d-model="{{cachestatus.enabled}}">true</span>
+            </div>
+            <div>
+                <label>Current Application Build:</label>
+                <span d-model="{{cachestatus.applicationbuild}}">1.0</span>
+            </div>
+        </div>
+        
+        <div>
+            <button d-on-click="TestCacheLocalStorage()">Test Cache Operations</button>
+            <button d-on-click="CheckLocalStorageKeys()">Check LocalStorage Keys</button>
+        </div>
+        
+        <div>
+            <h3>Test Results</h3>
+            <div d-datakey="testresults" d-datatype="array"></div>
+            <ul>
+            </ul>
+        </div>
+    </div>
+
+</body></html>
