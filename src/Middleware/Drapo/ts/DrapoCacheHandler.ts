@@ -278,7 +278,7 @@
     }
 
     private ClearVersionDependentCache(): void {
-        if (!this.CanUseLocalStorage)
+        if (!this.CanUseLocalStorage || !this._applicationBuild)
             return;
 
         try {
@@ -286,11 +286,17 @@
             const cacheTypes = [this.TYPE_DATA, this.TYPE_COMPONENTVIEW, this.TYPE_COMPONENTSTYLE,
                               this.TYPE_COMPONENTSCRIPT, this.TYPE_VIEW, this.TYPE_PACK];
 
-            // Iterate through all localStorage keys
+            // Iterate through all localStorage keys - collect keys first to avoid iteration issues
+            const allKeys: string[] = [];
             for (let i = 0; i < window.localStorage.length; i++) {
                 const key = window.localStorage.key(i);
-                if (key === null) continue;
+                if (key !== null) {
+                    allKeys.push(key);
+                }
+            }
 
+            // Check each key to see if it should be removed
+            for (const key of allKeys) {
                 // Check if the key starts with any of our cache type prefixes and contains applicationbuild
                 for (const cacheType of cacheTypes) {
                     if (key.startsWith(cacheType + '_') && key.includes('_applicationbuild_')) {
