@@ -398,7 +398,7 @@ class DrapoComponentHandler {
             if (updated)
                 el.setAttribute(elAttribute[0], elAttributeValue);
         }
-        if ((canResolveComponents) && (((context != null) && (context.HasContextItemBefore)) || (this.Application.Document.IsElementAlive(el))))
+        if ((canResolveComponents) && (((context != null) && (context.HasContextItemBefore())) || (this.Application.Document.IsElementAlive(el))))
             await this.Application.Document.ResolveComponentUpdate(el, context);
     }
 
