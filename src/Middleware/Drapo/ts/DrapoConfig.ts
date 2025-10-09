@@ -108,6 +108,10 @@ class DrapoConfig {
         return (await this.GetPropertyBoolean('UseCacheLocalStorage'));
     }
 
+    public async GetUseCacheLocalStorageCleanup(): Promise<boolean> {
+        return (await this.GetPropertyBoolean('UseCacheLocalStorageCleanup'));
+    }
+
     public async GetUseCacheStatic(): Promise<boolean> {
         return (await this.GetPropertyBoolean('UseCacheStatic'));
     }

@@ -2,6 +2,7 @@
     private _application: DrapoApplication;
     private _hasLocalStorage: boolean = null;
     private _useLocalStorage: boolean = false;
+    private _useCacheLocalStorageCleanup: boolean = true;
     private _applicationBuild: string = null;
     private _cacheKeysView: string[] = null;
     private _cacheKeysComponentView: string[] = null;
@@ -31,11 +32,15 @@
 
     public async Initialize(): Promise<boolean> {
         this._useLocalStorage = await this.Application.Config.GetUseCacheLocalStorage();
+        this._useCacheLocalStorageCleanup = await this.Application.Config.GetUseCacheLocalStorageCleanup();
         this._applicationBuild = await this.Application.Config.GetApplicationBuild();
         this._cacheKeysView = await this.GetConfigurationKeys('CacheKeysView');
         this._cacheKeysComponentView = await this.GetConfigurationKeys('CacheKeysComponentView');
         this._cacheKeysComponentStyle = await this.GetConfigurationKeys('CacheKeysComponentStyle');
         this._cacheKeysComponentScript = await this.GetConfigurationKeys('CacheKeysComponentScript');
+        if (this._useCacheLocalStorageCleanup) {
+            this.CleanupOldVersionCache();
+        }
         return (true);
     }
 
@@ -248,5 +253,104 @@
     private CreatePackCacheKey(packName: string): string {
         const cacheKeys = ['applicationbuild', 'packname'];
         return this.CreateCacheKey(this.TYPE_PACK, cacheKeys, null, null, null, null, packName);
+    }
+
+    private CleanupOldVersionCache(): void {
+        if (!this.CanUseLocalStorage || !this._applicationBuild)
+            return;
+
+        try {
+            const versionKey = 'drapo_current_version';
+            const storedVersion = window.localStorage.getItem(versionKey);
+
+            if (storedVersion === null || storedVersion !== this._applicationBuild) {
+                // This is a new version or version has changed, clear all cache entries that depend on applicationbuild
+                this.ClearVersionDependentCache();
+                // Mark this version as current
+                window.localStorage.setItem(versionKey, this._applicationBuild);
+            }
+        } catch (e) {
+            // If we can't access localStorage, disable it
+            this._useLocalStorage = false;
+            // tslint:disable-next-line:no-floating-promises
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - CleanupOldVersionCache');
+        }
+    }
+
+    private ClearVersionDependentCache(): void {
+        if (!this.CanUseLocalStorage || !this._applicationBuild)
+            return;
+
+        try {
+            const keysToRemove: string[] = [];
+
+            // Get all configured cache key patterns that include applicationbuild
+            const cacheKeyConfigs = [
+                { type: this.TYPE_VIEW, keys: this._cacheKeysView },
+                { type: this.TYPE_COMPONENTVIEW, keys: this._cacheKeysComponentView },
+                { type: this.TYPE_COMPONENTSTYLE, keys: this._cacheKeysComponentStyle },
+                { type: this.TYPE_COMPONENTSCRIPT, keys: this._cacheKeysComponentScript }
+            ];
+
+            // Filter configs to only those that include applicationbuild
+            const applicationBuildConfigs = cacheKeyConfigs.filter((config) => {
+                if (config.keys == null) return false;
+                return config.keys.some((cacheKeyName) => cacheKeyName.toLowerCase() === 'applicationbuild');
+            });
+
+            // Iterate through all localStorage keys - collect keys first to avoid iteration issues
+            const allKeys: string[] = [];
+            for (let i = 0; i < window.localStorage.length; i++) {
+                const key = window.localStorage.key(i);
+                if (key !== null) {
+                    allKeys.push(key);
+                }
+            }
+
+            // Check each key to see if it should be removed
+            for (const key of allKeys) {
+                // Check if this key matches any cache type that uses applicationbuild
+                for (const config of applicationBuildConfigs) {
+                    if (key.startsWith(config.type + '_')) {
+                        // Check if this key contains the current application build version
+                        if (!key.includes('_' + this._applicationBuild + '_')) {
+                            // This key doesn't contain the current version, so it's from an old version
+                            keysToRemove.push(key);
+                        }
+                        break;
+                    }
+                }
+
+                // Also handle pack cache which has a known pattern
+                if (key.startsWith(this.TYPE_PACK + '_') && !key.includes('_' + this._applicationBuild + '_')) {
+                    keysToRemove.push(key);
+                }
+
+                // Handle data cache - this is trickier as it depends on individual data item cache keys
+                if (key.startsWith(this.TYPE_DATA + '_')) {
+                    // For data cache, we'll use a more conservative approach
+                    // Only remove if it clearly contains a version pattern that's not the current version
+                    const keyParts = key.split('_');
+                    for (let i = 0; i < keyParts.length; i++) {
+                        const part = keyParts[i];
+                        // Look for version-like patterns (numbers with dots)
+                        if (part.match(/^\d+(\.\d+)+$/) && part !== this._applicationBuild) {
+                            keysToRemove.push(key);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Remove all outdated cache entries
+            for (const key of keysToRemove) {
+                window.localStorage.removeItem(key);
+            }
+
+        } catch (e) {
+            this._useLocalStorage = false;
+            // tslint:disable-next-line:no-floating-promises
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - ClearVersionDependentCache');
+        }
     }
 }
