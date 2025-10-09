@@ -292,6 +292,12 @@
                 { type: this.TYPE_COMPONENTSCRIPT, keys: this._cacheKeysComponentScript }
             ];
 
+            // Filter configs to only those that include applicationbuild
+            const applicationBuildConfigs = cacheKeyConfigs.filter((config) => {
+                if (config.keys == null) return false;
+                return config.keys.some((cacheKeyName) => cacheKeyName.toLowerCase() === 'applicationbuild');
+            });
+
             // Iterate through all localStorage keys - collect keys first to avoid iteration issues
             const allKeys: string[] = [];
             for (let i = 0; i < window.localStorage.length; i++) {
@@ -304,30 +310,19 @@
             // Check each key to see if it should be removed
             for (const key of allKeys) {
                 // Check if this key matches any cache type that uses applicationbuild
-                for (const config of cacheKeyConfigs) {
-                    if (config.keys != null && key.startsWith(config.type + '_')) {
-                        // Check if this cache type includes applicationbuild in its configuration
-                        let includesApplicationBuild = false;
-                        for (const cacheKeyName of config.keys) {
-                            if (cacheKeyName.toLowerCase() === 'applicationbuild') {
-                                includesApplicationBuild = true;
-                                break;
-                            }
-                        }
-
-                        if (includesApplicationBuild) {
-                            // Check if this key contains the current application build version
-                            if (!key.includes('_' + this._applicationBuild + '_') && !key.endsWith('_' + this._applicationBuild)) {
-                                // This key doesn't contain the current version, so it's from an old version
-                                keysToRemove.push(key);
-                            }
+                for (const config of applicationBuildConfigs) {
+                    if (key.startsWith(config.type + '_')) {
+                        // Check if this key contains the current application build version
+                        if (!key.includes('_' + this._applicationBuild + '_')) {
+                            // This key doesn't contain the current version, so it's from an old version
+                            keysToRemove.push(key);
                         }
                         break;
                     }
                 }
 
                 // Also handle pack cache which has a known pattern
-                if (key.startsWith(this.TYPE_PACK + '_') && !key.includes('_' + this._applicationBuild + '_') && !key.endsWith('_' + this._applicationBuild)) {
+                if (key.startsWith(this.TYPE_PACK + '_') && !key.includes('_' + this._applicationBuild + '_')) {
                     keysToRemove.push(key);
                 }
 

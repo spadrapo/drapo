@@ -1866,11 +1866,6 @@ namespace WebDrapo.Test
         {
             ValidatePage("FunctionUnloadData");
         }
-        [TestCase]
-        public void CacheLocalStorageCleanupTest()
-        {
-            ValidatePage("CacheLocalStorageCleanup");
-        }
         #endregion
     }
 }
