@@ -283,8 +283,14 @@
 
         try {
             const keysToRemove: string[] = [];
-            const cacheTypes = [this.TYPE_DATA, this.TYPE_COMPONENTVIEW, this.TYPE_COMPONENTSTYLE,
-                              this.TYPE_COMPONENTSCRIPT, this.TYPE_VIEW, this.TYPE_PACK];
+
+            // Get all configured cache key patterns that include applicationbuild
+            const cacheKeyConfigs = [
+                { type: this.TYPE_VIEW, keys: this._cacheKeysView },
+                { type: this.TYPE_COMPONENTVIEW, keys: this._cacheKeysComponentView },
+                { type: this.TYPE_COMPONENTSTYLE, keys: this._cacheKeysComponentStyle },
+                { type: this.TYPE_COMPONENTSCRIPT, keys: this._cacheKeysComponentScript }
+            ];
 
             // Iterate through all localStorage keys - collect keys first to avoid iteration issues
             const allKeys: string[] = [];
@@ -297,14 +303,46 @@
 
             // Check each key to see if it should be removed
             for (const key of allKeys) {
-                // Check if the key starts with any of our cache type prefixes and contains applicationbuild
-                for (const cacheType of cacheTypes) {
-                    if (key.startsWith(cacheType + '_') && key.includes('_applicationbuild_')) {
-                        // Check if it's for a different version
-                        if (!key.includes(`_applicationbuild_${this._applicationBuild}_`)) {
-                            keysToRemove.push(key);
+                // Check if this key matches any cache type that uses applicationbuild
+                for (const config of cacheKeyConfigs) {
+                    if (config.keys != null && key.startsWith(config.type + '_')) {
+                        // Check if this cache type includes applicationbuild in its configuration
+                        let includesApplicationBuild = false;
+                        for (const cacheKeyName of config.keys) {
+                            if (cacheKeyName.toLowerCase() === 'applicationbuild') {
+                                includesApplicationBuild = true;
+                                break;
+                            }
+                        }
+
+                        if (includesApplicationBuild) {
+                            // Check if this key contains the current application build version
+                            if (!key.includes('_' + this._applicationBuild + '_') && !key.endsWith('_' + this._applicationBuild)) {
+                                // This key doesn't contain the current version, so it's from an old version
+                                keysToRemove.push(key);
+                            }
                         }
                         break;
+                    }
+                }
+
+                // Also handle pack cache which has a known pattern
+                if (key.startsWith(this.TYPE_PACK + '_') && !key.includes('_' + this._applicationBuild + '_') && !key.endsWith('_' + this._applicationBuild)) {
+                    keysToRemove.push(key);
+                }
+
+                // Handle data cache - this is trickier as it depends on individual data item cache keys
+                if (key.startsWith(this.TYPE_DATA + '_')) {
+                    // For data cache, we'll use a more conservative approach
+                    // Only remove if it clearly contains a version pattern that's not the current version
+                    const keyParts = key.split('_');
+                    for (let i = 0; i < keyParts.length; i++) {
+                        const part = keyParts[i];
+                        // Look for version-like patterns (numbers with dots)
+                        if (part.match(/^\d+(\.\d+)+$/) && part !== this._applicationBuild) {
+                            keysToRemove.push(key);
+                            break;
+                        }
                     }
                 }
             }
