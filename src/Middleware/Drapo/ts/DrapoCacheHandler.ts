@@ -34,13 +34,13 @@
         this._useLocalStorage = await this.Application.Config.GetUseCacheLocalStorage();
         this._useCacheLocalStorageCleanup = await this.Application.Config.GetUseCacheLocalStorageCleanup();
         this._applicationBuild = await this.Application.Config.GetApplicationBuild();
-        if (this._useCacheLocalStorageCleanup) {
-            this.CleanupOldVersionCache();
-        }
         this._cacheKeysView = await this.GetConfigurationKeys('CacheKeysView');
         this._cacheKeysComponentView = await this.GetConfigurationKeys('CacheKeysComponentView');
         this._cacheKeysComponentStyle = await this.GetConfigurationKeys('CacheKeysComponentStyle');
         this._cacheKeysComponentScript = await this.GetConfigurationKeys('CacheKeysComponentScript');
+        if (this._useCacheLocalStorageCleanup) {
+            this.CleanupOldVersionCache();
+        }
         return (true);
     }
 
