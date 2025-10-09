@@ -260,14 +260,14 @@
             return;
 
         try {
-            const currentVersionKey = `drapo_version_${this._applicationBuild}`;
-            const storedVersion = window.localStorage.getItem(currentVersionKey);
+            const versionKey = 'drapo_current_version';
+            const storedVersion = window.localStorage.getItem(versionKey);
 
-            if (storedVersion === null) {
-                // This is a new version, clear all cache entries that depend on applicationbuild
+            if (storedVersion === null || storedVersion !== this._applicationBuild) {
+                // This is a new version or version has changed, clear all cache entries that depend on applicationbuild
                 this.ClearVersionDependentCache();
-                // Mark this version as seen
-                window.localStorage.setItem(currentVersionKey, this._applicationBuild);
+                // Mark this version as current
+                window.localStorage.setItem(versionKey, this._applicationBuild);
             }
         } catch (e) {
             // If we can't access localStorage, disable it
