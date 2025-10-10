@@ -20,7 +20,7 @@ class DrapoPackHandler {
         if (this.IsPackLoaded(packName))
             return (true);
         // Check cache first
-        const cachedPack = this.Application.CacheHandler.GetCachedPack(packName);
+        const cachedPack = await this.Application.CacheHandler.GetCachedPack(packName);
         let etag: string = null;
         if (cachedPack != null) {
             etag = cachedPack.etag;
@@ -40,7 +40,7 @@ class DrapoPackHandler {
         if ((response == null) || (response.files == null))
             return (false);
         // Cache the response with ETag
-        this.Application.CacheHandler.SetCachedPack(packName, response, null);
+        await this.Application.CacheHandler.SetCachedPack(packName, response, null);
         // Process the pack data
         await this.ProcessPackData(packName, response);
         this.MarkPackAsLoaded(packName);
@@ -157,9 +157,9 @@ class DrapoPackHandler {
         // Ensure the URL format matches what UpdateSector expects
         const templateUrl = filePath.startsWith('~/') ? filePath : `~/${filePath}`;
         if (isComponent && componentName) {
-            this.Application.CacheHandler.SetCachedComponentView(templateUrl, content);
+            await this.Application.CacheHandler.SetCachedComponentView(templateUrl, content);
         } else {
-            this.Application.CacheHandler.SetCachedView(templateUrl, content);
+            await this.Application.CacheHandler.SetCachedView(templateUrl, content);
         }
     }
 

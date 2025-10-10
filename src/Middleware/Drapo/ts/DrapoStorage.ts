@@ -332,7 +332,7 @@ class DrapoStorage {
         const hasData: boolean = this.Application.Solver.ContainsItemStoragePathObject(storageItem, dataPath);
         if (hasData)
             return (true);
-        const isLoaded: boolean = this.Application.CacheHandler.EnsureLoaded(storageItem, sector, dataKey, dataPath);
+        const isLoaded: boolean = await this.Application.CacheHandler.EnsureLoaded(storageItem, sector, dataKey, dataPath);
         if (!isLoaded)
             return (false);
         return (this.Application.Solver.ContainsItemStoragePathObject(storageItem, dataPath));
@@ -669,12 +669,12 @@ class DrapoStorage {
         }
         //Cache LocalStorage
         if (!isDelay) {
-            const cachedData: any[] = this.Application.CacheHandler.GetCachedData(cacheKeys, sector, dataKey);
+            const cachedData: any[] = await this.Application.CacheHandler.GetCachedData(cacheKeys, sector, dataKey);
             if (cachedData != null)
                 return (cachedData);
         }
         if ((isDelay) && (dataDelayFields != null) && (dataDelayFields.length === 1)) {
-            const cachedData: any = this.Application.CacheHandler.GetCachedDataPath(cacheKeys, sector, dataKey, [dataKey, dataDelayFields[0]]);
+            const cachedData: any = await this.Application.CacheHandler.GetCachedDataPath(cacheKeys, sector, dataKey, [dataKey, dataDelayFields[0]]);
             if (cachedData != null) {
                 const objectCachedData: any = {};
                 objectCachedData[dataDelayFields[0]] = cachedData;
@@ -723,7 +723,7 @@ class DrapoStorage {
         else
             dataResponse = await this.Application.Server.GetJSON(url, verb, data, contentType, dataKey, headers, headersResponse);
         //Cache
-        this.Application.CacheHandler.AppendCacheData(cacheKeys, sector, dataKey, dataResponse, isDelay);
+        await this.Application.CacheHandler.AppendCacheData(cacheKeys, sector, dataKey, dataResponse, isDelay);
         return (dataResponse);
     }
 

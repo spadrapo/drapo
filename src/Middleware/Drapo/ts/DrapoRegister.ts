@@ -148,7 +148,7 @@ class DrapoRegister {
         const html: string = response[0];
         const allowCache: boolean = response[1];
         if (allowCache)
-            this.Application.CacheHandler.SetCachedComponentView(url, html);
+            await this.Application.CacheHandler.SetCachedComponentView(url, html);
         return (html);
     }
 

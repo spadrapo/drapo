@@ -67,40 +67,40 @@
         return (true);
     }
 
-    public EnsureLoaded(storageItem: DrapoStorageItem, sector: string, dataKey: string, dataPath: string[] = null): boolean {
+    public async EnsureLoaded(storageItem: DrapoStorageItem, sector: string, dataKey: string, dataPath: string[] = null): Promise<boolean> {
         if (!this.CanUseCache)
             return (false);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_DATA, storageItem.CacheKeys, sector, dataKey, dataPath, null);
         if (cacheKey == null)
             return (false);
-        const valueCached: any = this.GetClientDataCache(cacheKey);
+        const valueCached: any = await this.GetClientDataCache(cacheKey);
         if (valueCached == null)
             return (false);
         const appended: boolean = this.AppendStorageDataCache(storageItem, dataPath, valueCached);
         return (appended);
     }
 
-    public GetCachedData(cacheKeys: string[], sector: string, dataKey: string): any[] {
+    public async GetCachedData(cacheKeys: string[], sector: string, dataKey: string): Promise<any[]> {
         if (!this.CanUseCache)
             return (null);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_DATA, cacheKeys, sector, dataKey, null, null);
         if (cacheKey == null)
             return (null);
-        const valueCached: any = this.GetClientDataCache(cacheKey);
+        const valueCached: any = await this.GetClientDataCache(cacheKey);
         return (valueCached);
     }
 
-    public GetCachedDataPath(cacheKeys: string[], sector: string, dataKey: string, dataPath: string[]): any {
+    public async GetCachedDataPath(cacheKeys: string[], sector: string, dataKey: string, dataPath: string[]): Promise<any> {
         if (!this.CanUseCache)
             return (null);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_DATA, cacheKeys, sector, dataKey, dataPath, null);
         if (cacheKey == null)
             return (null);
-        const valueCached: any = this.GetClientDataCache(cacheKey);
+        const valueCached: any = await this.GetClientDataCache(cacheKey);
         return (valueCached);
     }
 
-    public AppendCacheData(cacheKeys: string[], sector: string, dataKey: string, value: any, isDelay: boolean = false): boolean {
+    public async AppendCacheData(cacheKeys: string[], sector: string, dataKey: string, value: any, isDelay: boolean = false): Promise<boolean> {
         if (!this.CanUseCache)
             return (false);
         if ((cacheKeys == null) || (cacheKeys.length == 0))
@@ -110,52 +110,52 @@
             for (const dataField in value) {
                 const dataPath: string[] = [dataKey, dataField];
                 const dataPathValue: string = value[dataField];
-                if (this.AppendCacheDataEntry(cacheKeys, sector, dataKey, dataPath, dataPathValue))
+                if (await this.AppendCacheDataEntry(cacheKeys, sector, dataKey, dataPath, dataPathValue))
                     appended = true;
             }
         } else {
-            appended = this.AppendCacheDataEntry(cacheKeys, sector, dataKey, null, value);
+            appended = await this.AppendCacheDataEntry(cacheKeys, sector, dataKey, null, value);
         }
         return (appended);
     }
 
-    public GetCachedView(url: string): string {
+    public async GetCachedView(url: string): Promise<string> {
         if (!this.CanUseCache)
             return (null);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_VIEW, this._cacheKeysView, null, null, null, url);
         if (cacheKey == null)
             return (null);
-        const value: string = this.GetClientDataCache(cacheKey);
+        const value: string = await this.GetClientDataCache(cacheKey);
         return (value);
     }
 
-    public SetCachedView(url: string, value: string) : boolean {
+    public async SetCachedView(url: string, value: string): Promise<boolean> {
         if (!this.CanUseCache)
             return (false);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_VIEW, this._cacheKeysView, null, null, null, url);
         if (cacheKey == null)
             return (false);
-        this.SetClientDataCache(cacheKey, value);
+        await this.SetClientDataCache(cacheKey, value);
         return (true);
     }
 
-    public GetCachedComponentView(url: string): string {
+    public async GetCachedComponentView(url: string): Promise<string> {
         if (!this.CanUseCache)
             return (null);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_COMPONENTVIEW, this._cacheKeysView, null, null, null, url);
         if (cacheKey == null)
             return (null);
-        const value: string = this.GetClientDataCache(cacheKey);
+        const value: string = await this.GetClientDataCache(cacheKey);
         return (value);
     }
 
-    public SetCachedComponentView(url: string, value: string): boolean {
+    public async SetCachedComponentView(url: string, value: string): Promise<boolean> {
         if (!this.CanUseCache)
             return (false);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_COMPONENTVIEW, this._cacheKeysView, null, null, null, url);
         if (cacheKey == null)
             return (false);
-        this.SetClientDataCache(cacheKey, value);
+        await this.SetClientDataCache(cacheKey, value);
         return (true);
     }
 
@@ -169,11 +169,11 @@
         return (values);
     }
 
-    private AppendCacheDataEntry(cacheKeys: string[], sector: string, dataKey: string, dataPath: string[], value: any): boolean {
+    private async AppendCacheDataEntry(cacheKeys: string[], sector: string, dataKey: string, dataPath: string[], value: any): Promise<boolean> {
         const cacheKey: string = this.CreateCacheKey(this.TYPE_DATA, cacheKeys, sector, dataKey, dataPath, null);
         if (cacheKey == null)
             return (false);
-        this.SetClientDataCache(cacheKey, value);
+        await this.SetClientDataCache(cacheKey, value);
         return (true);
     }
 
@@ -229,33 +229,7 @@
         return (true);
     }
 
-    private GetClientDataCache(cacheKey: string): any {
-        let value: any = null;
-        try {
-            if (this.CanUseIndexedDB) {
-                // For IndexedDB, we need to use async approach but this method is sync
-                // We'll return null for now and handle IndexedDB in async versions
-                return null;
-            } else if (this.CanUseLocalStorage) {
-                value = window.localStorage.getItem(cacheKey);
-                if (value == null)
-                    return (null);
-            } else {
-                return null;
-            }
-        } catch (e) {
-            this._useLocalStorage = false;
-            // tslint:disable-next-line:no-floating-promises
-            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - GetClientDataCache :' + cacheKey);
-        }
-        try {
-            return (this.Application.Serializer.Deserialize(value));
-        } catch{
-            return (null);
-        }
-    }
-
-    private async GetClientDataCacheAsync(cacheKey: string): Promise<any> {
+    private async GetClientDataCache(cacheKey: string): Promise<any> {
         let value: any = null;
         try {
             if (this.CanUseIndexedDB) {
@@ -276,7 +250,7 @@
                 this._useLocalStorage = false;
             }
             // tslint:disable-next-line:no-floating-promises
-            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - GetClientDataCacheAsync :' + cacheKey);
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - GetClientDataCache :' + cacheKey);
         }
         try {
             return (this.Application.Serializer.Deserialize(value));
@@ -285,29 +259,7 @@
         }
     }
 
-    private SetClientDataCache(cacheKey: string, value: any): void {
-        try {
-            const valueSerialized: string = this.Application.Serializer.SerializeObject(value);
-            if (this.CanUseIndexedDB) {
-                // For async IndexedDB, we'll use fire-and-forget approach for compatibility
-                this._indexedDBHandler.SetItem(cacheKey, valueSerialized).catch((e) => {
-                    this._useIndexedDB = false;
-                    // tslint:disable-next-line:no-floating-promises
-                    this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - SetClientDataCache IndexedDB');
-                });
-            } else if (this.CanUseLocalStorage) {
-                window.localStorage.setItem(cacheKey, valueSerialized);
-            }
-        } catch (e) {
-            if (this.CanUseLocalStorage) {
-                this._useLocalStorage = false;
-            }
-            // tslint:disable-next-line:no-floating-promises
-            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - SetClientDataCache');
-        }
-    }
-
-    private async SetClientDataCacheAsync(cacheKey: string, value: any): Promise<void> {
+    private async SetClientDataCache(cacheKey: string, value: any): Promise<void> {
         try {
             const valueSerialized: string = this.Application.Serializer.SerializeObject(value);
             if (this.CanUseIndexedDB) {
@@ -322,23 +274,23 @@
                 this._useLocalStorage = false;
             }
             // tslint:disable-next-line:no-floating-promises
-            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - SetClientDataCacheAsync');
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - SetClientDataCache');
         }
     }
 
-    public GetCachedPack(packName: string): any {
+    public async GetCachedPack(packName: string): Promise<any> {
         if (!this.CanUseCache)
             return (null);
         const cacheKey: string = this.CreatePackCacheKey(packName);
-        return this.GetClientDataCache(cacheKey);
+        return await this.GetClientDataCache(cacheKey);
     }
 
-    public SetCachedPack(packName: string, packData: any, etag: string = null): void {
+    public async SetCachedPack(packName: string, packData: any, etag: string = null): Promise<void> {
         if (!this.CanUseCache)
             return;
         const cacheKey: string = this.CreatePackCacheKey(packName);
         const cacheItem = { data: packData, etag, timestamp: Date.now() };
-        this.SetClientDataCache(cacheKey, cacheItem);
+        await this.SetClientDataCache(cacheKey, cacheItem);
     }
 
     private CreatePackCacheKey(packName: string): string {
