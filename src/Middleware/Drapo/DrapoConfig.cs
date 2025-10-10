@@ -29,7 +29,7 @@ namespace Sysphera.Middleware.Drapo
         private bool _canUseWebSocket = true;
         private bool _useCacheStatic = false;
         private bool _useCacheLocalStorage = true;
-        private bool _useCacheIndexedDB = false;
+        private bool _useCacheIndexedDB = true;
         private bool _useCacheLocalStorageCleanup = true;
         private string _cacheKeysComponentView = null;
         private string _cacheKeysComponentStyle = null;
