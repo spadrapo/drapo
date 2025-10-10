@@ -29,6 +29,7 @@ namespace Sysphera.Middleware.Drapo
         private bool _canUseWebSocket = true;
         private bool _useCacheStatic = false;
         private bool _useCacheLocalStorage = true;
+        private bool _useCacheIndexedDB = true;
         private bool _useCacheLocalStorageCleanup = true;
         private string _cacheKeysComponentView = null;
         private string _cacheKeysComponentStyle = null;
@@ -72,6 +73,7 @@ namespace Sysphera.Middleware.Drapo
         public bool CanUseWebSocket { get => _canUseWebSocket; set => _canUseWebSocket = value; }
         public bool UseCacheStatic { get => (_useCacheStatic) && (!string.IsNullOrEmpty(this._applicationBuild)); set => _useCacheStatic = value; }
         public bool UseCacheLocalStorage { get => _useCacheLocalStorage; set => _useCacheLocalStorage = value; }
+        public bool UseCacheIndexedDB { get => _useCacheIndexedDB; set => _useCacheIndexedDB = value; }
         public bool UseCacheLocalStorageCleanup { get => _useCacheLocalStorageCleanup; set => _useCacheLocalStorageCleanup = value; }
         public bool UseComponentsCacheBurst { get; set; }
         public string CacheKeysComponentView { get => _cacheKeysComponentView; set => _cacheKeysComponentView = value; }

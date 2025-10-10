@@ -139,7 +139,7 @@ class DrapoRegister {
     private async GetRegisteredComponentFileContentInternal(component: any, file: any): Promise<string>
     {
         const url: string = await this.GetComponentFileUrl(component, file);
-        const htmlCached: string = this.Application.CacheHandler.GetCachedComponentView(url);
+        const htmlCached: string = await this.Application.CacheHandler.GetCachedComponentView(url);
         if (htmlCached != null)
             return (htmlCached);
         const response: [string, boolean] = await this.Application.Server.GetHTML(url);
@@ -148,7 +148,7 @@ class DrapoRegister {
         const html: string = response[0];
         const allowCache: boolean = response[1];
         if (allowCache)
-            this.Application.CacheHandler.SetCachedComponentView(url, html);
+            await this.Application.CacheHandler.SetCachedComponentView(url, html);
         return (html);
     }
 

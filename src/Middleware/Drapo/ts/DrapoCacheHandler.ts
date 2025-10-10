@@ -2,12 +2,14 @@
     private _application: DrapoApplication;
     private _hasLocalStorage: boolean = null;
     private _useLocalStorage: boolean = false;
+    private _useIndexedDB: boolean = false;
     private _useCacheLocalStorageCleanup: boolean = true;
     private _applicationBuild: string = null;
     private _cacheKeysView: string[] = null;
     private _cacheKeysComponentView: string[] = null;
     private _cacheKeysComponentStyle: string[] = null;
     private _cacheKeysComponentScript: string[] = null;
+    private _indexedDBHandler: DrapoIndexedDBHandler = null;
     private readonly TYPE_DATA: string = "d";
     private readonly TYPE_COMPONENTVIEW: string = "cv";
     private readonly TYPE_COMPONENTSTYLE: string = "cs";
@@ -24,61 +26,82 @@
         return ((this._hasLocalStorage) && (this._useLocalStorage));
     }
 
+    private get CanUseIndexedDB(): boolean {
+        return (this._useIndexedDB && this._indexedDBHandler !== null);
+    }
+
+    private get CanUseCache(): boolean {
+        return (this.CanUseLocalStorage || this.CanUseIndexedDB);
+    }
+
     //Constructors
     constructor(application: DrapoApplication) {
         this._application = application;
         this._hasLocalStorage = window.localStorage != null;
+        this._indexedDBHandler = new DrapoIndexedDBHandler();
     }
 
     public async Initialize(): Promise<boolean> {
         this._useLocalStorage = await this.Application.Config.GetUseCacheLocalStorage();
+        this._useIndexedDB = await this.Application.Config.GetUseCacheIndexedDB();
         this._useCacheLocalStorageCleanup = await this.Application.Config.GetUseCacheLocalStorageCleanup();
         this._applicationBuild = await this.Application.Config.GetApplicationBuild();
         this._cacheKeysView = await this.GetConfigurationKeys('CacheKeysView');
         this._cacheKeysComponentView = await this.GetConfigurationKeys('CacheKeysComponentView');
         this._cacheKeysComponentStyle = await this.GetConfigurationKeys('CacheKeysComponentStyle');
         this._cacheKeysComponentScript = await this.GetConfigurationKeys('CacheKeysComponentScript');
+
+        // Initialize IndexedDB if enabled and available
+        if (this._useIndexedDB && this._indexedDBHandler.IsAvailable()) {
+            const indexedDBInitialized = await this._indexedDBHandler.Initialize();
+            if (!indexedDBInitialized) {
+                this._useIndexedDB = false;
+            }
+        } else {
+            this._useIndexedDB = false;
+        }
+
         if (this._useCacheLocalStorageCleanup) {
             this.CleanupOldVersionCache();
         }
         return (true);
     }
 
-    public EnsureLoaded(storageItem: DrapoStorageItem, sector: string, dataKey: string, dataPath: string[] = null): boolean {
-        if (!this.CanUseLocalStorage)
+    public async EnsureLoaded(storageItem: DrapoStorageItem, sector: string, dataKey: string, dataPath: string[] = null): Promise<boolean> {
+        if (!this.CanUseCache)
             return (false);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_DATA, storageItem.CacheKeys, sector, dataKey, dataPath, null);
         if (cacheKey == null)
             return (false);
-        const valueCached: any = this.GetClientDataCache(cacheKey);
+        const valueCached: any = await this.GetClientDataCache(cacheKey);
         if (valueCached == null)
             return (false);
         const appended: boolean = this.AppendStorageDataCache(storageItem, dataPath, valueCached);
         return (appended);
     }
 
-    public GetCachedData(cacheKeys: string[], sector: string, dataKey: string): any[] {
-        if (!this.CanUseLocalStorage)
+    public async GetCachedData(cacheKeys: string[], sector: string, dataKey: string): Promise<any[]> {
+        if (!this.CanUseCache)
             return (null);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_DATA, cacheKeys, sector, dataKey, null, null);
         if (cacheKey == null)
             return (null);
-        const valueCached: any = this.GetClientDataCache(cacheKey);
+        const valueCached: any = await this.GetClientDataCache(cacheKey);
         return (valueCached);
     }
 
-    public GetCachedDataPath(cacheKeys: string[], sector: string, dataKey: string, dataPath: string[]): any {
-        if (!this.CanUseLocalStorage)
+    public async GetCachedDataPath(cacheKeys: string[], sector: string, dataKey: string, dataPath: string[]): Promise<any> {
+        if (!this.CanUseCache)
             return (null);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_DATA, cacheKeys, sector, dataKey, dataPath, null);
         if (cacheKey == null)
             return (null);
-        const valueCached: any = this.GetClientDataCache(cacheKey);
+        const valueCached: any = await this.GetClientDataCache(cacheKey);
         return (valueCached);
     }
 
-    public AppendCacheData(cacheKeys: string[], sector: string, dataKey: string, value: any, isDelay: boolean = false): boolean {
-        if (!this.CanUseLocalStorage)
+    public async AppendCacheData(cacheKeys: string[], sector: string, dataKey: string, value: any, isDelay: boolean = false): Promise<boolean> {
+        if (!this.CanUseCache)
             return (false);
         if ((cacheKeys == null) || (cacheKeys.length == 0))
             return (null);
@@ -87,52 +110,52 @@
             for (const dataField in value) {
                 const dataPath: string[] = [dataKey, dataField];
                 const dataPathValue: string = value[dataField];
-                if (this.AppendCacheDataEntry(cacheKeys, sector, dataKey, dataPath, dataPathValue))
+                if (await this.AppendCacheDataEntry(cacheKeys, sector, dataKey, dataPath, dataPathValue))
                     appended = true;
             }
         } else {
-            appended = this.AppendCacheDataEntry(cacheKeys, sector, dataKey, null, value);
+            appended = await this.AppendCacheDataEntry(cacheKeys, sector, dataKey, null, value);
         }
         return (appended);
     }
 
-    public GetCachedView(url: string): string {
-        if (!this.CanUseLocalStorage)
+    public async GetCachedView(url: string): Promise<string> {
+        if (!this.CanUseCache)
             return (null);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_VIEW, this._cacheKeysView, null, null, null, url);
         if (cacheKey == null)
             return (null);
-        const value: string = this.GetClientDataCache(cacheKey);
+        const value: string = await this.GetClientDataCache(cacheKey);
         return (value);
     }
 
-    public SetCachedView(url: string, value: string) : boolean {
-        if (!this.CanUseLocalStorage)
+    public async SetCachedView(url: string, value: string): Promise<boolean> {
+        if (!this.CanUseCache)
             return (false);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_VIEW, this._cacheKeysView, null, null, null, url);
         if (cacheKey == null)
             return (false);
-        this.SetClientDataCache(cacheKey, value);
+        await this.SetClientDataCache(cacheKey, value);
         return (true);
     }
 
-    public GetCachedComponentView(url: string): string {
-        if (!this.CanUseLocalStorage)
+    public async GetCachedComponentView(url: string): Promise<string> {
+        if (!this.CanUseCache)
             return (null);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_COMPONENTVIEW, this._cacheKeysView, null, null, null, url);
         if (cacheKey == null)
             return (null);
-        const value: string = this.GetClientDataCache(cacheKey);
+        const value: string = await this.GetClientDataCache(cacheKey);
         return (value);
     }
 
-    public SetCachedComponentView(url: string, value: string): boolean {
-        if (!this.CanUseLocalStorage)
+    public async SetCachedComponentView(url: string, value: string): Promise<boolean> {
+        if (!this.CanUseCache)
             return (false);
         const cacheKey: string = this.CreateCacheKey(this.TYPE_COMPONENTVIEW, this._cacheKeysView, null, null, null, url);
         if (cacheKey == null)
             return (false);
-        this.SetClientDataCache(cacheKey, value);
+        await this.SetClientDataCache(cacheKey, value);
         return (true);
     }
 
@@ -146,11 +169,11 @@
         return (values);
     }
 
-    private AppendCacheDataEntry(cacheKeys: string[], sector: string, dataKey: string, dataPath: string[], value: any): boolean {
+    private async AppendCacheDataEntry(cacheKeys: string[], sector: string, dataKey: string, dataPath: string[], value: any): Promise<boolean> {
         const cacheKey: string = this.CreateCacheKey(this.TYPE_DATA, cacheKeys, sector, dataKey, dataPath, null);
         if (cacheKey == null)
             return (false);
-        this.SetClientDataCache(cacheKey, value);
+        await this.SetClientDataCache(cacheKey, value);
         return (true);
     }
 
@@ -206,14 +229,26 @@
         return (true);
     }
 
-    private GetClientDataCache(cacheKey: string): any {
+    private async GetClientDataCache(cacheKey: string): Promise<any> {
         let value: any = null;
         try {
-            value = window.localStorage.getItem(cacheKey);
-            if (value == null)
-                return (null);
+            if (this.CanUseIndexedDB) {
+                value = await this._indexedDBHandler.GetItem(cacheKey);
+                if (value == null)
+                    return (null);
+            } else if (this.CanUseLocalStorage) {
+                value = window.localStorage.getItem(cacheKey);
+                if (value == null)
+                    return (null);
+            } else {
+                return null;
+            }
         } catch (e) {
-            this._useLocalStorage = false;
+            if (this.CanUseIndexedDB) {
+                this._useIndexedDB = false;
+            } else {
+                this._useLocalStorage = false;
+            }
             // tslint:disable-next-line:no-floating-promises
             this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - GetClientDataCache :' + cacheKey);
         }
@@ -224,30 +259,38 @@
         }
     }
 
-    private SetClientDataCache(cacheKey: string, value: any): void {
+    private async SetClientDataCache(cacheKey: string, value: any): Promise<void> {
         try {
             const valueSerialized: string = this.Application.Serializer.SerializeObject(value);
-            window.localStorage.setItem(cacheKey, valueSerialized);
+            if (this.CanUseIndexedDB) {
+                await this._indexedDBHandler.SetItem(cacheKey, valueSerialized);
+            } else if (this.CanUseLocalStorage) {
+                window.localStorage.setItem(cacheKey, valueSerialized);
+            }
         } catch (e) {
-            this._useLocalStorage = false;
+            if (this.CanUseIndexedDB) {
+                this._useIndexedDB = false;
+            } else {
+                this._useLocalStorage = false;
+            }
             // tslint:disable-next-line:no-floating-promises
             this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - SetClientDataCache');
         }
     }
 
-    public GetCachedPack(packName: string): any {
-        if (!this.CanUseLocalStorage)
+    public async GetCachedPack(packName: string): Promise<any> {
+        if (!this.CanUseCache)
             return (null);
         const cacheKey: string = this.CreatePackCacheKey(packName);
-        return this.GetClientDataCache(cacheKey);
+        return await this.GetClientDataCache(cacheKey);
     }
 
-    public SetCachedPack(packName: string, packData: any, etag: string = null): void {
-        if (!this.CanUseLocalStorage)
+    public async SetCachedPack(packName: string, packData: any, etag: string = null): Promise<void> {
+        if (!this.CanUseCache)
             return;
         const cacheKey: string = this.CreatePackCacheKey(packName);
         const cacheItem = { data: packData, etag, timestamp: Date.now() };
-        this.SetClientDataCache(cacheKey, cacheItem);
+        await this.SetClientDataCache(cacheKey, cacheItem);
     }
 
     private CreatePackCacheKey(packName: string): string {
@@ -256,6 +299,16 @@
     }
 
     private CleanupOldVersionCache(): void {
+        if (this.CanUseLocalStorage && this._applicationBuild) {
+            this.CleanupOldVersionLocalStorageCache();
+        }
+        if (this.CanUseIndexedDB && this._applicationBuild) {
+            // tslint:disable-next-line:no-floating-promises
+            this.CleanupOldVersionIndexedDBCache();
+        }
+    }
+
+    private CleanupOldVersionLocalStorageCache(): void {
         if (!this.CanUseLocalStorage || !this._applicationBuild)
             return;
 
@@ -265,7 +318,7 @@
 
             if (storedVersion === null || storedVersion !== this._applicationBuild) {
                 // This is a new version or version has changed, clear all cache entries that depend on applicationbuild
-                this.ClearVersionDependentCache();
+                this.ClearVersionDependentLocalStorageCache();
                 // Mark this version as current
                 window.localStorage.setItem(versionKey, this._applicationBuild);
             }
@@ -273,11 +326,33 @@
             // If we can't access localStorage, disable it
             this._useLocalStorage = false;
             // tslint:disable-next-line:no-floating-promises
-            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - CleanupOldVersionCache');
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - CleanupOldVersionLocalStorageCache');
         }
     }
 
-    private ClearVersionDependentCache(): void {
+    private async CleanupOldVersionIndexedDBCache(): Promise<void> {
+        if (!this.CanUseIndexedDB || !this._applicationBuild)
+            return;
+
+        try {
+            const versionKey = 'drapo_current_version';
+            const storedVersion = await this._indexedDBHandler.GetItem(versionKey);
+
+            if (storedVersion === null || storedVersion !== this._applicationBuild) {
+                // This is a new version or version has changed, clear all cache entries that depend on applicationbuild
+                await this.ClearVersionDependentIndexedDBCache();
+                // Mark this version as current
+                await this._indexedDBHandler.SetItem(versionKey, this._applicationBuild);
+            }
+        } catch (e) {
+            // If we can't access IndexedDB, disable it
+            this._useIndexedDB = false;
+            // tslint:disable-next-line:no-floating-promises
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - CleanupOldVersionIndexedDBCache');
+        }
+    }
+
+    private ClearVersionDependentLocalStorageCache(): void {
         if (!this.CanUseLocalStorage || !this._applicationBuild)
             return;
 
@@ -350,7 +425,78 @@
         } catch (e) {
             this._useLocalStorage = false;
             // tslint:disable-next-line:no-floating-promises
-            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - ClearVersionDependentCache');
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - ClearVersionDependentLocalStorageCache');
+        }
+    }
+
+    private async ClearVersionDependentIndexedDBCache(): Promise<void> {
+        if (!this.CanUseIndexedDB || !this._applicationBuild)
+            return;
+
+        try {
+            const keysToRemove: string[] = [];
+
+            // Get all configured cache key patterns that include applicationbuild
+            const cacheKeyConfigs = [
+                { type: this.TYPE_VIEW, keys: this._cacheKeysView },
+                { type: this.TYPE_COMPONENTVIEW, keys: this._cacheKeysComponentView },
+                { type: this.TYPE_COMPONENTSTYLE, keys: this._cacheKeysComponentStyle },
+                { type: this.TYPE_COMPONENTSCRIPT, keys: this._cacheKeysComponentScript }
+            ];
+
+            // Filter configs to only those that include applicationbuild
+            const applicationBuildConfigs = cacheKeyConfigs.filter((config) => {
+                if (config.keys == null) return false;
+                return config.keys.some((cacheKeyName) => cacheKeyName.toLowerCase() === 'applicationbuild');
+            });
+
+            // Get all keys from IndexedDB
+            const allKeys: string[] = await this._indexedDBHandler.GetAllKeys();
+
+            // Check each key to see if it should be removed
+            for (const key of allKeys) {
+                // Check if this key matches any cache type that uses applicationbuild
+                for (const config of applicationBuildConfigs) {
+                    if (key.startsWith(config.type + '_')) {
+                        // Check if this key contains the current application build version
+                        if (!key.includes('_' + this._applicationBuild + '_')) {
+                            // This key doesn't contain the current version, so it's from an old version
+                            keysToRemove.push(key);
+                        }
+                        break;
+                    }
+                }
+
+                // Also handle pack cache which has a known pattern
+                if (key.startsWith(this.TYPE_PACK + '_') && !key.includes('_' + this._applicationBuild + '_')) {
+                    keysToRemove.push(key);
+                }
+
+                // Handle data cache - this is trickier as it depends on individual data item cache keys
+                if (key.startsWith(this.TYPE_DATA + '_')) {
+                    // For data cache, we'll use a more conservative approach
+                    // Only remove if it clearly contains a version pattern that's not the current version
+                    const keyParts = key.split('_');
+                    for (let i = 0; i < keyParts.length; i++) {
+                        const part = keyParts[i];
+                        // Look for version-like patterns (numbers with dots)
+                        if (part.match(/^\d+(\.\d+)+$/) && part !== this._applicationBuild) {
+                            keysToRemove.push(key);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Remove all outdated cache entries
+            for (const key of keysToRemove) {
+                await this._indexedDBHandler.RemoveItem(key);
+            }
+
+        } catch (e) {
+            this._useIndexedDB = false;
+            // tslint:disable-next-line:no-floating-promises
+            this.Application.ExceptionHandler.Handle(e, 'DrapoCacheHandler - ClearVersionDependentIndexedDBCache');
         }
     }
 }
