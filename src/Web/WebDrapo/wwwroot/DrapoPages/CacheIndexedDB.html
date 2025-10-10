@@ -9,44 +9,16 @@
     <div d-sector="cache-test">
         <h1>IndexedDB Cache Test</h1>
         
-        <!-- Test data storage -->
-        <div d-datakey="testData" d-datatype="object" d-cachekeys="applicationbuild|datakey">
-            <div d-for="item in testData.items">
-                <p>{{item.name}}: {{item.value}}</p>
-            </div>
+        <!-- Test data storage with simple data -->
+        <div d-datakey="testData" d-datatype="object" d-cachekeys="applicationbuild|datakey" d-data='{"message": "Cache test data", "type": "IndexedDB"}'>
+            <p>Message: {{testData.message}}</p>
+            <p>Type: {{testData.type}}</p>
         </div>
         
-        <!-- Button to load test data -->
-        <button d-on-click="LoadTestData()">Load Test Data</button>
-        
-        <!-- Display cache status -->
+        <!-- Display cache configuration status -->
         <div>
-            <p>Cache Type: <span id="cacheType">Unknown</span></p>
-            <p>Data Loaded: <span d-if="{{testData.items.length}} > 0">Yes ({{testData.items.length}} items)</span><span d-if="{{testData.items.length}} == 0">No</span></p>
+            <p>IndexedDB Support: <span id="indexedDBSupport">{{testData.type}}</span></p>
         </div>
-        
-        <script>
-            function LoadTestData() {
-                var testData = {
-                    items: [
-                        { name: "Item 1", value: "Value 1" },
-                        { name: "Item 2", value: "Value 2" },
-                        { name: "Item 3", value: "Value 3" }
-                    ]
-                };
-                drapo.UpdateData('testData', testData);
-                
-                // Display cache type being used
-                var cacheTypeElement = document.getElementById('cacheType');
-                if (window.indexedDB && drapo.CacheHandler._useIndexedDB) {
-                    cacheTypeElement.textContent = 'IndexedDB';
-                } else if (window.localStorage && drapo.CacheHandler._useLocalStorage) {
-                    cacheTypeElement.textContent = 'LocalStorage';
-                } else {
-                    cacheTypeElement.textContent = 'None';
-                }
-            }
-        </script>
     </div>
 </body>
 </html>

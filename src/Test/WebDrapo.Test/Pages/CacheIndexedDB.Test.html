@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <meta charset="utf-8">
+    <script src="/drapo.js"></script>
+    <title>IndexedDB Cache Test</title>
+</head>
+<body>
+    <div d-sector="@">
+        <h1>IndexedDB Cache Test</h1>
+        
+        <!-- Test data storage with simple data -->
+        <div d-datakey="testData" d-datatype="object" d-cachekeys="applicationbuild|datakey" d-data="{&quot;message&quot;: &quot;Cache test data&quot;, &quot;type&quot;: &quot;IndexedDB&quot;}">
+            <p>Message: Cache test data</p>
+            <p>Type: IndexedDB</p>
+        </div>
+        
+        <!-- Display cache configuration status -->
+        <div>
+            <p>IndexedDB Support: <span id="indexedDBSupport">IndexedDB</span></p>
+        </div>
+    </div>
+
+</body></html>
