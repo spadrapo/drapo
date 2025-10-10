@@ -94,6 +94,8 @@ namespace WebDrapo
             options.Config.UseRouter = false;
             options.Config.UseCacheStatic = true;
             options.Config.UseCacheLocalStorage = true;
+            // Uncomment the line below to enable IndexedDB caching instead of LocalStorage
+            // options.Config.UseCacheIndexedDB = true;
             options.Config.UseComponentsCacheBurst = true;
             options.Config.CacheKeysView = "applicationbuild,url,view";
             options.Config.CacheKeysComponentView = "applicationbuild,url,view";
