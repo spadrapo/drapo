@@ -611,8 +611,6 @@ class DrapoDocument {
         const dfor: string = el.getAttribute('d-for');
         if (dfor != null)
             return (true);
-        if ((el as any).isDForSpawn === true)
-            return (true);
         const elParent: HTMLElement = el.parentElement;
         if (elParent == null)
             return (true);

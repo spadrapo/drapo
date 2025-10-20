@@ -304,7 +304,6 @@ class DrapoControlFlow {
                 this.AddTemplate(context, templateKey, templateData);
             }
             const template: HTMLElement = templateData !== null ? this.Application.Document.Clone(templateData) : this.Application.Document.Clone(forReferenceTemplate);
-            (template as any).isDForSpawn = true;
             const viewportIndexDifference: number = (isViewportActive ? (1 - startViewport) : 0);
             const nodeIndex: number = j - nodesRemovedCount + viewportIndexDifference;
             const oldNode: HTMLElement = ((items !== null) && (nodeIndex < items.length)) ? items[nodeIndex] : null;
@@ -877,7 +876,6 @@ class DrapoControlFlow {
             const data: any = viewport.Data[i];
             //Template
             const template: HTMLElement = this.Application.Document.Clone(viewport.ElementTemplate);
-            (template as any).isDForSpawn = true;
             const item: DrapoContextItem = context.Create(data, template, template, viewport.DataKey, viewport.Key, viewport.DataKeyIteratorRange, i, null);
             await this.ResolveControlFlowForIterationRender(viewport.Sector, context, template, renderContext, true, true);
             const hashValueCurrent: string = hashTemplate === null ? null : await this.GetElementHashValue(viewport.Sector, context, template, hashTemplate);
