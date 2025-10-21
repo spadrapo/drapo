@@ -28,10 +28,10 @@
         Working: !ContainsDataItem - Should be disabled (feature 81 not in array)
     </div>
     
-    <!-- Test 2: Broken case according to issue - IF with negation inside -->
-    <h3>Test 2: Broken Case - IF with negation inside parameter</h3>
+    <!-- Test 2: Fixed case - IF with negation inside parameter -->
+    <h3>Test 2: Fixed Case - IF with negation inside parameter</h3>
     <div class="test-item" d-class="{test-item, disabled-element:IF(!ContainsDataItem({{panelUserFeatures}},81), true, false)}">
-        Broken: IF(!ContainsDataItem, true, false) - Should fail according to issue
+        Fixed: IF(!ContainsDataItem, true, false) - Should now work (disabled)
     </div>
     
     <!-- Test 2b: Working case - negation outside IF -->
@@ -40,10 +40,16 @@
         Working: !IF(ContainsDataItem, true, false) - Should work according to issue
     </div>
     
-    <!-- Test 3: Parentheses case -->
-    <h3>Test 3: Broken Case - Extra parentheses</h3>
+    <!-- Test 3: Fixed case - Extra parentheses -->
+    <h3>Test 3: Fixed Case - Extra parentheses</h3>
     <div class="test-item" d-class="{test-item, disabled-element:(!ContainsDataItem({{panelUserFeatures}},81))}">
-        Broken: Extra parentheses - According to issue, this should fail to load
+        Fixed: Extra parentheses - Should now work (disabled)
+    </div>
+    
+    <!-- Test 4: Positive case for comparison -->
+    <h3>Test 4: Positive Case - Feature present</h3>
+    <div class="test-item" d-class="{test-item, disabled-element:!ContainsDataItem({{panelUserFeatures}},80)}">
+        Positive: Feature 80 IS in array, so should be enabled (not disabled)
     </div>
     
     <!-- Debug info -->
@@ -51,6 +57,7 @@
         <h3>Debug Info:</h3>
         <p>Features: <span d-for="feature in panelUserFeatures">{{feature}}, </span></p>
         <p>Feature 81 present: <span d-if="ContainsDataItem({{panelUserFeatures}},81)">YES</span><span d-if="!ContainsDataItem({{panelUserFeatures}},81)">NO</span></p>
+        <p>Feature 80 present: <span d-if="ContainsDataItem({{panelUserFeatures}},80)">YES</span><span d-if="!ContainsDataItem({{panelUserFeatures}},80)">NO</span></p>
     </div>
     
 </body>
