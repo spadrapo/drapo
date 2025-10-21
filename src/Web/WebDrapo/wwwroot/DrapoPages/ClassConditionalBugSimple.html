@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Simple Class Conditional Bug Test</title>
+    <style>
+        .ppSwitch { padding: 5px; margin: 5px; border: 1px solid #ccc; }
+        .ppElementDisabled { opacity: 0.5; background-color: #f0f0f0; }
+        .test-case { margin: 10px 0; padding: 5px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Simple Bug Reproduction Test</h1>
+    
+    <!-- Test data -->
+    <div d-datakey="features" d-datatype="array" d-datavalue='[80, 82, 83]'></div>
+    
+    <!-- Test 1: Working case -->
+    <div class="test-case">
+        <h3>Test 1: Working - Simple negation</h3>
+        <div d-class="{ppSwitch, ppElementDisabled:!ContainsDataItem({{features}},81)}">
+            Should be disabled (feature 81 not in array)
+        </div>
+    </div>
+    
+    <!-- Test 2: Broken case - parentheses -->
+    <div class="test-case">
+        <h3>Test 2: Broken - Extra parentheses (should cause error)</h3>
+        <div d-class="{ppSwitch, ppElementDisabled:(!ContainsDataItem({{features}},81))}">
+            Extra parentheses - this should fail
+        </div>
+    </div>
+    
+    <!-- Test 3: Broken case - IF with negation -->  
+    <div class="test-case">
+        <h3>Test 3: Broken - IF with negation inside (should cause error)</h3>
+        <div d-class="{ppSwitch, ppElementDisabled:IF(!ContainsDataItem({{features}},81), true, false)}">
+            IF with negation inside - should fail
+        </div>
+    </div>
+    
+    <!-- Debug info -->
+    <div style="margin-top: 20px; background-color: #f9f9f9; padding: 10px;">
+        <h3>Debug Info:</h3>
+        <p>Features: <span d-for="feature in features">{{feature}}, </span></p>
+        <p>Contains 81: <span d-if="ContainsDataItem({{features}},81)">Yes</span><span d-if="!ContainsDataItem({{features}},81)">No</span></p>
+    </div>
+</body>
+</html>
