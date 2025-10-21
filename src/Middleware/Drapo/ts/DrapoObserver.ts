@@ -226,7 +226,7 @@ class DrapoObserver {
         const dataElements: HTMLElement[] = this._dataForElement[index];
         for (let i = dataElements.length - 1; i >= 0; i--) {
             const dataElement: HTMLElement = dataElements[i];
-            if (dataElement.parentElement === null) {
+            if ((dataElement == null) || (dataElement.parentElement == null)) {
                 dataElements.splice(i, 1);
             } else if (!this.Application.SectorContainerHandler.IsElementContainerized(dataElement)) {
                 const elParent: HTMLElement = dataElement.parentElement;
