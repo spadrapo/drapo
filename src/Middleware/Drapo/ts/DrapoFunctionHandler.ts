@@ -74,10 +74,13 @@ class DrapoFunctionHandler {
             //Function
             functionParsed = this.Application.Parser.ParseFunction(functionParse);
             if (functionParsed == null) {
-                await this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ResolveFunction - Invalid Parse - {0}', functionParse);
+                await this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ReplaceFunctionExpressionsContext - Invalid Parse - {0}', functionParse);
+                // Return empty string to avoid leaving unresolved function in expression
+                expression = expression.replace(functionParse, '');
                 continue;
             }
-            expression = expression.replace(functionParse, await this.ExecuteFunctionContextSwitch(sector, context.Item, null, null, functionParsed, executionContext));
+            const functionResult = await this.ExecuteFunctionContextSwitch(sector, context.Item, null, null, functionParsed, executionContext);
+            expression = expression.replace(functionParse, functionResult);
         }
         return (expression);
     }
@@ -1170,7 +1173,11 @@ class DrapoFunctionHandler {
     private async ExecuteFunctionIf(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const conditional: string = functionParsed.Parameters[0];
         const context: DrapoContext = new DrapoContext(contextItem);
-        const conditionalResult: boolean = await this.Application.Solver.ResolveConditional(conditional, element, sector, context, null, null, executionContext, false);
+
+        // Resolve any mustaches and functions in the conditional before evaluating
+        const conditionalResolved: string = await this.ReplaceFunctionExpressionsContext(sector, context, conditional, true, executionContext);
+        const conditionalResult: boolean = await this.Application.Solver.ResolveConditional(conditionalResolved, element, sector, context, null, null, executionContext, false);
+
         if (conditionalResult) {
             const statementTrue: string = functionParsed.Parameters[1];
             await this.ResolveFunctionContext(sector, contextItem, element, event, statementTrue, executionContext);
