@@ -835,10 +835,10 @@ class DrapoControlFlow {
         //Before Insert
         const fragmentBefore: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsBeforeInsertStart, rowsBeforeInsertEnd, hashTemplate);
         if (fragmentBefore !== null) {
-            const insertedElements: HTMLElement[] = Array.from(fragmentBefore.childNodes).filter(node => node instanceof HTMLElement) as HTMLElement[];
+            const insertedElements: HTMLElement[] = Array.from(fragmentBefore.childNodes).filter((node) => node instanceof HTMLElement) as HTMLElement[];
             viewport.ElementBallonBefore.after(fragmentBefore);
             for(const el of insertedElements)
-                this.Application.ComponentHandler.ResolveComponents(el);
+                await this.Application.ComponentHandler.ResolveComponents(el);
         }
         //After Remove
         if (rowsAfterRemove !== null) {
@@ -852,11 +852,11 @@ class DrapoControlFlow {
         //After Insert
         const fragmentAfter: DocumentFragment = await this.CreateControlFlowForViewportFragment(viewport, rowsAfterInsertStart, rowsAfterInsertEnd, hashTemplate);
         if (fragmentAfter !== null) {
-            const insertedElements: HTMLElement[] = Array.from(fragmentAfter.childNodes).filter(node => node instanceof HTMLElement) as HTMLElement[];
+            const insertedElements: HTMLElement[] = Array.from(fragmentAfter.childNodes).filter((node) => node instanceof HTMLElement) as HTMLElement[];
             const elementAfterPrevious: Element = viewport.ElementBallonAfter.previousElementSibling;
             elementAfterPrevious.after(fragmentAfter);
             for (const el of insertedElements)
-                this.Application.ComponentHandler.ResolveComponents(el);
+                await this.Application.ComponentHandler.ResolveComponents(el);
         }
         //Ballon
         this.Application.ViewportHandler.UpdateElementsBallon(viewport);
