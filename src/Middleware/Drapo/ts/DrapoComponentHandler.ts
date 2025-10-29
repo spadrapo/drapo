@@ -38,9 +38,9 @@ class DrapoComponentHandler {
         const hasChildren: boolean = children.length > 0;
         if (this.IsComponent(tagName)) {
             //Context
-            const isContext: boolean = context != null;
-            const isInsideContext: boolean = this.Application.Document.IsElementInsideControlFlow(el);
-            if (isContext !== isInsideContext)
+            const hasContext: boolean = context != null;
+            const isInsideControlFlow: boolean = this.Application.Document.IsElementInsideControlFlow(el);
+            if (!hasContext && isInsideControlFlow)
                 return;
             await this.ResolveComponentElement(el, tagName, context, checkSectorReady, handleDynamicSectors);
         } else if (hasChildren) {

@@ -249,3 +249,6 @@ paket-files/
 
 #npm
 package-lock.json
+
+#javascript source maps
+*.js.map
