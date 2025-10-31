@@ -162,9 +162,10 @@ namespace Sysphera.Middleware.Drapo
             {
                 //Pack File
                 string packETag = this.GetPackETag(packName);
-                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == packETag));
+                bool isCache = (!string.IsNullOrEmpty(packETag)) && ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == packETag));
                 context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
-                context.Response.Headers["ETag"] = new[] { packETag };
+                if (!string.IsNullOrEmpty(packETag))
+                    context.Response.Headers["ETag"] = new[] { packETag };
                 context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
                 context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
                 context.Response.Headers.Add("Content-Type", new[] { "application/json" });
@@ -424,6 +425,11 @@ namespace Sysphera.Middleware.Drapo
 
         private string GetPackETag(string packName)
         {
+            // Dynamic packs should not use ETags as their content can change
+            DrapoPack pack = this._options.Config.GetPack(packName);
+            if (pack != null && pack.IsDynamic)
+                return null;
+            // Use cached ETag for static packs
             if (!this._cachePackETag.ContainsKey(packName))
             {
                 string content = this.GeneratePackContent(packName);
