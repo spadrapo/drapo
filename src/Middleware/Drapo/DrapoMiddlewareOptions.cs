@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.StaticFiles;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.StaticFiles;
 using System.Threading.Tasks;
 
 namespace Sysphera.Middleware.Drapo
@@ -9,6 +10,8 @@ namespace Sysphera.Middleware.Drapo
         private DrapoConfig _config = new DrapoConfig();
         public delegate Task<string> PollingDelegate(string domain, string connectionId, string key);
         public PollingDelegate PollingEvent;
+        public delegate Task<string> RouteIndexDelegate(HttpContext context);
+        public RouteIndexDelegate RouteIndexEvent;
         #endregion
         #region Properties
         public bool Debug { set; get;}

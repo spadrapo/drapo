@@ -196,7 +196,7 @@ namespace Sysphera.Middleware.Drapo
             {
                 //Route
                 string routeBasePath = GetRouteBasePath();
-                string routeBaseContent = await GetRouteBaseContent(routeBasePath);
+                string routeBaseContent = await GetRouteBaseContent(context, routeBasePath);
                 string routeContentETag = this.GetRouteContentETag(routeBaseContent);
                 bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == routeContentETag));
                 context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
@@ -775,8 +775,10 @@ namespace Sysphera.Middleware.Drapo
             return (GetDiskPath("/index.html"));
         }
 
-        private async Task<string> GetRouteBaseContent(string path)
+        private async Task<string> GetRouteBaseContent(HttpContext context, string path)
         {
+            if (this._options.RouteIndexEvent != null)
+                return (await this._options.RouteIndexEvent(context));
             return (await File.ReadAllTextAsync(path));
         }
 
