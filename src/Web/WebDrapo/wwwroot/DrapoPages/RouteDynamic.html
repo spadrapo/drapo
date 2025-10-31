@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="/drapo.js"></script>
+    <title>Dynamic Routes Demo</title>
+</head>
+<body>
+    <span>Dynamic Routes - Multi-Tenant Example</span>
+    <br />
+    <br />
+    <div>
+        <span>This page demonstrates dynamic routing for multi-tenant environments.</span>
+        <br />
+        <span>Routes are determined dynamically based on the X-Tenant header.</span>
+    </div>
+    <br />
+    <div>
+        <button d-on-click="ApplyRoute(/tenant1/home)">Go to Tenant 1 Home</button>
+        <button d-on-click="ApplyRoute(/tenant2/home)">Go to Tenant 2 Home</button>
+    </div>
+    <br />
+    <div d-sector="content"></div>
+</body>
+</html>

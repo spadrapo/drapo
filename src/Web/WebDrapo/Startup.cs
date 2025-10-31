@@ -126,6 +126,7 @@ namespace WebDrapo
             options.Config.CreateRoute("^/state/(?<stateCode>\\d+)/(?<stateName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppState.html)");
             options.Config.CreateRoute("^/$", "UpdateSector(content,~/DrapoPages/RouteApp.html)");
             options.PollingEvent += Polling;
+            options.RouteEvent += DynamicRoutes;
             this._options = options;
         }
 
@@ -178,6 +179,36 @@ namespace WebDrapo
         private async Task<string> Polling(string domain, string connectionId, string key) {
             string hash = Math.Ceiling((decimal)(DateTime.Now.Second / 5)).ToString();
             return (await Task.FromResult<string>(hash));
+        }
+
+        private async Task<List<DrapoRoute>> DynamicRoutes(HttpContext context)
+        {
+            // Example: Determine routes based on tenant from subdomain or header
+            // For demonstration, we'll check for a custom header "X-Tenant"
+            string tenant = context.Request.Headers["X-Tenant"].ToString();
+            
+            List<DrapoRoute> routes = new List<DrapoRoute>();
+            
+            if (!string.IsNullOrEmpty(tenant))
+            {
+                // Multi-tenant specific routes
+                if (tenant.Equals("tenant1", StringComparison.OrdinalIgnoreCase))
+                {
+                    DrapoRoute route = new DrapoRoute();
+                    route.Uri = "^/tenant1/home$";
+                    route.Expression = "UpdateSector(content,~/DrapoPages/RouteDynamicTenant1.html)";
+                    routes.Add(route);
+                }
+                else if (tenant.Equals("tenant2", StringComparison.OrdinalIgnoreCase))
+                {
+                    DrapoRoute route = new DrapoRoute();
+                    route.Uri = "^/tenant2/home$";
+                    route.Expression = "UpdateSector(content,~/DrapoPages/RouteDynamicTenant2.html)";
+                    routes.Add(route);
+                }
+            }
+            
+            return (await Task.FromResult<List<DrapoRoute>>(routes));
         }
     }
 }

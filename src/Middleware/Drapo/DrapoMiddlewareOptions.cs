@@ -9,6 +9,8 @@ namespace Sysphera.Middleware.Drapo
         private DrapoConfig _config = new DrapoConfig();
         public delegate Task<string> PollingDelegate(string domain, string connectionId, string key);
         public PollingDelegate PollingEvent;
+        public delegate Task<List<DrapoRoute>> RouteDelegate(Microsoft.AspNetCore.Http.HttpContext context);
+        public RouteDelegate RouteEvent;
         #endregion
         #region Properties
         public bool Debug { set; get;}
