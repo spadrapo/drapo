@@ -170,7 +170,7 @@ namespace Sysphera.Middleware.Drapo
                 context.Response.Headers.Add("Content-Type", new[] { "application/json" });
                 AppendHeaderContainerId(context);
                 if (!isCache)
-                    await context.Response.WriteAsync(this.GetPackContent(packName), Encoding.UTF8);
+                    await context.Response.WriteAsync(await this.GetPackContent(packName, context), Encoding.UTF8);
             }
             else if ((dynamic = await this.IsRequestCustom(context)) != null)
             {
@@ -433,8 +433,15 @@ namespace Sysphera.Middleware.Drapo
             return this._cachePackETag[packName];
         }
 
-        private string GetPackContent(string packName)
+        private async Task<string> GetPackContent(string packName, HttpContext context)
         {
+            DrapoPack pack = this._options.Config.GetPack(packName);
+            if (pack == null)
+                return "{}";
+            // Check if pack is dynamic
+            if (pack.IsDynamic)
+                return await this.GeneratePackContentDynamic(packName, context);
+            // Use cache for static packs
             string cacheKey = $"{packName}";
             if (!this._cachePackContent.ContainsKey(cacheKey))
             {
@@ -442,6 +449,19 @@ namespace Sysphera.Middleware.Drapo
                 this._cachePackContent.TryAdd(cacheKey, content);
             }
             return this._cachePackContent[cacheKey];
+        }
+
+        private async Task<string> GeneratePackContentDynamic(string packName, HttpContext context)
+        {
+            if (this._options.Config.HandlerPackDynamic == null)
+                return "{}";
+            DrapoPackRequest request = new DrapoPackRequest();
+            request.PackName = packName;
+            request.Context = context;
+            DrapoPackResponse response = await this._options.Config.HandlerPackDynamic(request);
+            if (response == null || string.IsNullOrEmpty(response.Content))
+                return "{}";
+            return response.Content;
         }
 
         private string GeneratePackContent(string packName)
