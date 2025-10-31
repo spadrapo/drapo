@@ -10,7 +10,17 @@ namespace Sysphera.Middleware.Drapo
         private DrapoConfig _config = new DrapoConfig();
         public delegate Task<string> PollingDelegate(string domain, string connectionId, string key);
         public PollingDelegate PollingEvent;
+        /// <summary>
+        /// Delegate for dynamically generating the route index content.
+        /// This enables multi-tenant scenarios where different index content is served based on HttpContext.
+        /// The delegate receives the HttpContext and returns the HTML content as a string.
+        /// If not set, the default /index.html file will be used.
+        /// </summary>
         public delegate Task<string> RouteIndexDelegate(HttpContext context);
+        /// <summary>
+        /// Event handler for generating dynamic route index content.
+        /// Set this to provide custom index content based on tenant information from the HttpContext.
+        /// </summary>
         public RouteIndexDelegate RouteIndexEvent;
         #endregion
         #region Properties
