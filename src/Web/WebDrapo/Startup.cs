@@ -198,7 +198,11 @@ namespace WebDrapo
             
             // Default fallback to standard index.html
             string defaultIndexPath = Path.Combine(path, "index.html");
-            return (await File.ReadAllTextAsync(defaultIndexPath));
+            if (File.Exists(defaultIndexPath))
+                return (await File.ReadAllTextAsync(defaultIndexPath));
+            
+            // If no index file exists, return a basic HTML page
+            return "<!DOCTYPE html><html><head><title>Drapo</title></head><body><h1>Welcome to Drapo</h1></body></html>";
         }
     }
 }

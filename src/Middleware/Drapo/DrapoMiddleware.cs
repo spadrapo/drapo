@@ -201,7 +201,11 @@ namespace Sysphera.Middleware.Drapo
                 bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == routeContentETag));
                 context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
                 context.Response.Headers["ETag"] = new[] { routeContentETag };
-                context.Response.Headers.Add("Last-Modified", new[] { this.GetRouteBaseLastModified(routeBasePath) });
+                // Only set Last-Modified from file if not using dynamic content
+                if (this._options.RouteIndexEvent == null)
+                    context.Response.Headers.Add("Last-Modified", new[] { this.GetRouteBaseLastModified(routeBasePath) });
+                else
+                    context.Response.Headers.Add("Last-Modified", new[] { DateTime.UtcNow.ToString("R") });
                 context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
                 context.Response.Headers.Add("Content-Type", new[] { "text/html" });
                 AppendHeaderContainerId(context);
