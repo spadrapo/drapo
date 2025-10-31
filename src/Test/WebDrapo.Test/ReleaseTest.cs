@@ -1866,6 +1866,11 @@ namespace WebDrapo.Test
         {
             ValidatePage("FunctionUnloadData");
         }
+        [TestCase]
+        public void PackDynamicTest()
+        {
+            ValidatePage("PackDynamic");
+        }
         #endregion
     }
 }

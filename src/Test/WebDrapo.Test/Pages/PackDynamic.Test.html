@@ -1,0 +1,34 @@
+<!DOCTYPE html><html><head>
+    <script src="/drapo.js"></script>
+    <title>Pack Dynamic</title>
+<style type="text/css">
+// Dynamically generated JavaScript
+function initDynamicPack() {
+    console.log('Dynamic pack loaded from delegate handler!');
+    // Set dynamic data
+    const app = window['drapo'];
+    if (app) {
+        app.Storage.UpdateData('dynamicData', null, {
+            loaded: true,
+            message: 'Dynamic pack content generated at ' + new Date().toISOString(),
+            source: 'HttpContext-based delegate handler'
+        });
+        document.getElementById('packStatus').textContent = 'Dynamic pack loaded successfully!';
+    }
+}
+// Auto-execute on load
+initDynamicPack();
+</style></head>
+<body>
+    <div d-sector="@" d-sector-default="true" d-sector-url="DrapoPages/PackDynamic.html" d-sector-context="">
+        <h1>Dynamic Pack Test</h1>
+        <button>Load Dynamic Pack</button>
+        <div id="packStatus">Dynamic pack loaded successfully!</div>
+        <div></div>
+        
+            <p>Dynamic pack loaded successfully!</p>
+            <p>Message: </p>
+        
+    </div>
+
+</body></html>
