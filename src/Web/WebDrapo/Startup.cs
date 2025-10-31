@@ -126,6 +126,7 @@ namespace WebDrapo
             options.Config.CreateRoute("^/state/(?<stateCode>\\d+)/(?<stateName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppState.html)");
             options.Config.CreateRoute("^/$", "UpdateSector(content,~/DrapoPages/RouteApp.html)");
             options.PollingEvent += Polling;
+            options.RouteIndexEvent += RouteIndex;
             this._options = options;
         }
 
@@ -178,6 +179,26 @@ namespace WebDrapo
         private async Task<string> Polling(string domain, string connectionId, string key) {
             string hash = Math.Ceiling((decimal)(DateTime.Now.Second / 5)).ToString();
             return (await Task.FromResult<string>(hash));
+        }
+
+        private async Task<string> RouteIndex(HttpContext context)
+        {
+            // Example: Multi-tenant support based on tenant header
+            // In a real implementation, you would check headers, domains, or other tenant identifiers
+            string tenant = context.Request.Headers["X-Tenant"].ToString();
+            string path = this._environment.WebRootPath;
+            
+            // If tenant header is present, try to load tenant-specific index
+            if (!string.IsNullOrEmpty(tenant))
+            {
+                string tenantIndexPath = Path.Combine(path, $"index.{tenant}.html");
+                if (File.Exists(tenantIndexPath))
+                    return (await File.ReadAllTextAsync(tenantIndexPath));
+            }
+            
+            // Default fallback to standard index.html
+            string defaultIndexPath = Path.Combine(path, "index.html");
+            return (await File.ReadAllTextAsync(defaultIndexPath));
         }
     }
 }
