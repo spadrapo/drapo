@@ -122,6 +122,10 @@ namespace WebDrapo
             options.Config.LoadComponents(string.Format("{0}{1}components", env.WebRootPath, Path.AltDirectorySeparatorChar), "~/components");
             // Create a pack
             options.Config.CreatePack("testpack").AddIncludePath("~/testpack/*").AddIncludePath("~/components/labelcontext/*").AddExcludePath("*.ts").AddExcludePath("*.d.ts");
+            // Create a dynamic pack
+            options.Config.CreatePack("dynamicpack").SetDynamic(true);
+            // Set the dynamic pack handler
+            options.Config.HandlerPackDynamic = HandlePackDynamic;
             options.Config.CreateRoute("^/city/(?<cityCode>\\d+)/(?<cityName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppCity.html)");
             options.Config.CreateRoute("^/state/(?<stateCode>\\d+)/(?<stateName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppState.html)");
             options.Config.CreateRoute("^/$", "UpdateSector(content,~/DrapoPages/RouteApp.html)");
@@ -178,6 +182,45 @@ namespace WebDrapo
         private async Task<string> Polling(string domain, string connectionId, string key) {
             string hash = Math.Ceiling((decimal)(DateTime.Now.Second / 5)).ToString();
             return (await Task.FromResult<string>(hash));
+        }
+
+        private async Task<DrapoPackResponse> HandlePackDynamic(DrapoPackRequest request)
+        {
+            // This handler can use the HttpContext to determine what content to return
+            // For this example, we'll create a simple pack with dynamically generated content
+            var packData = new
+            {
+                name = request.PackName,
+                files = new[]
+                {
+                    new
+                    {
+                        path = "~/dynamic/script.js",
+                        content = @"
+// Dynamically generated JavaScript
+function initDynamicPack() {
+    console.log('Dynamic pack loaded from delegate handler!');
+    // Set dynamic data
+    const app = window['drapo'];
+    if (app) {
+        app.Storage.UpdateData('dynamicData', null, {
+            loaded: true,
+            message: 'Dynamic pack content generated at ' + new Date().toISOString(),
+            source: 'HttpContext-based delegate handler'
+        });
+        document.getElementById('packStatus').textContent = 'Dynamic pack loaded successfully!';
+    }
+}
+// Auto-execute on load
+initDynamicPack();
+"
+                    }
+                }
+            };
+
+            DrapoPackResponse response = new DrapoPackResponse();
+            response.Content = Newtonsoft.Json.JsonConvert.SerializeObject(packData);
+            return await Task.FromResult(response);
         }
     }
 }

@@ -22,6 +22,8 @@ namespace Sysphera.Middleware.Drapo
         private List<DrapoDynamicHandler> _dynamics = new List<DrapoDynamicHandler>();
         [IgnoreDataMember]
         private Func<DrapoDynamic, Task<DrapoDynamic>> _handlerCustom = null;
+        [IgnoreDataMember]
+        private Func<DrapoPackRequest, Task<DrapoPackResponse>> _handlerPackDynamic = null;
         private List<DrapoWindow> _windows = new List<DrapoWindow>();
         private List<DrapoPack> _packs = new List<DrapoPack>();
         private bool _usePipes = false;
@@ -68,6 +70,8 @@ namespace Sysphera.Middleware.Drapo
         public Func<DrapoDynamic, Task<DrapoDynamic>> HandlerCustom { get => _handlerCustom; set => _handlerCustom = value; }
         [IgnoreDataMember]
         public Func<HttpContext, string, Task<DrapoDynamic>> HandlerCustomTheme { set; get; }
+        [IgnoreDataMember]
+        public Func<DrapoPackRequest, Task<DrapoPackResponse>> HandlerPackDynamic { get => _handlerPackDynamic; set => _handlerPackDynamic = value; }
         public bool UsePipes { get => _usePipes; set => _usePipes = value; }
         public bool UseRouter { get => _useRouter; set => _useRouter = value; }
         public bool CanUseWebSocket { get => _canUseWebSocket; set => _canUseWebSocket = value; }

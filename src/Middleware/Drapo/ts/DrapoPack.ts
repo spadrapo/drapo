@@ -3,12 +3,14 @@ class DrapoPack {
     public Name: string;
     public IncludePaths: string[];
     public ExcludePaths: string[];
+    public IsDynamic: boolean;
 
     //Constructors
     constructor(name: string = null) {
         this.Name = name;
         this.IncludePaths = [];
         this.ExcludePaths = [];
+        this.IsDynamic = false;
     }
 
     public AddIncludePath(includePath: string): DrapoPack {
@@ -20,6 +22,11 @@ class DrapoPack {
     public AddExcludePath(excludePath: string): DrapoPack {
         if (excludePath != null && excludePath !== '')
             this.ExcludePaths.push(excludePath);
+        return this;
+    }
+
+    public SetDynamic(isDynamic: boolean): DrapoPack {
+        this.IsDynamic = isDynamic;
         return this;
     }
 }
