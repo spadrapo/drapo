@@ -191,9 +191,17 @@ namespace WebDrapo
             // If tenant header is present, try to load tenant-specific index
             if (!string.IsNullOrEmpty(tenant))
             {
-                string tenantIndexPath = Path.Combine(path, $"index.{tenant}.html");
-                if (File.Exists(tenantIndexPath))
-                    return (await File.ReadAllTextAsync(tenantIndexPath));
+                // Sanitize tenant identifier to prevent path traversal attacks
+                // Only allow alphanumeric characters and hyphens
+                string sanitizedTenant = System.Text.RegularExpressions.Regex.Replace(tenant, @"[^a-zA-Z0-9\-]", "");
+                if (!string.IsNullOrEmpty(sanitizedTenant))
+                {
+                    string tenantIndexPath = Path.Combine(path, $"index.{sanitizedTenant}.html");
+                    // Verify the path is still within the web root to prevent path traversal
+                    string fullTenantPath = Path.GetFullPath(tenantIndexPath);
+                    if (fullTenantPath.StartsWith(Path.GetFullPath(path)) && File.Exists(tenantIndexPath))
+                        return (await File.ReadAllTextAsync(tenantIndexPath));
+                }
             }
             
             // Default fallback to standard index.html
