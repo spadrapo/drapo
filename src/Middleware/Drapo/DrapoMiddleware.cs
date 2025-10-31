@@ -130,7 +130,7 @@ namespace Sysphera.Middleware.Drapo
             else if (this.IsConfig(context))
             {
                 //Config
-                string configContent = await this.GetConfigContentForRequest(context);
+                string configContent = await this.GetConfigContentForRequestAsync(context);
                 string configETag = this.HasDynamicRoutes() ? GenerateETag(Encoding.UTF8.GetBytes(configContent)) : this._configETag;
                 bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == configETag));
                 context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
@@ -332,7 +332,7 @@ namespace Sysphera.Middleware.Drapo
             return (JsonConvert.SerializeObject(this._options.Config));
         }
 
-        private async Task<string> GetConfigContentForRequest(HttpContext context)
+        private async Task<string> GetConfigContentForRequestAsync(HttpContext context)
         {
             string baseContent = this.IsBotRequest(context) ? this.GetConfigContentForBot() : this._configContent;
             
@@ -349,7 +349,8 @@ namespace Sysphera.Middleware.Drapo
             DrapoConfig config = JsonConvert.DeserializeObject<DrapoConfig>(baseContent);
             
             // Combine static routes with dynamic routes (dynamic routes take precedence)
-            List<DrapoRoute> combinedRoutes = new List<DrapoRoute>();
+            // Pre-size the list for better performance
+            List<DrapoRoute> combinedRoutes = new List<DrapoRoute>(dynamicRoutes.Count + config.Routes.Count);
             combinedRoutes.AddRange(dynamicRoutes);
             combinedRoutes.AddRange(config.Routes);
             config.Routes = combinedRoutes;

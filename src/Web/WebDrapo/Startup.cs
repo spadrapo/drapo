@@ -208,7 +208,8 @@ namespace WebDrapo
                 }
             }
             
-            return (await Task.FromResult<List<DrapoRoute>>(routes));
+            // Suppress async warning - keeping async for future extensibility
+            return await Task.FromResult(routes);
         }
     }
 }
