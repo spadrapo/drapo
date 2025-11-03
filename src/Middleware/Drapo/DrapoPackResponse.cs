@@ -8,6 +8,7 @@ namespace Sysphera.Middleware.Drapo
     {
         public string Name { set; get; }
         public List<DrapoPackFile> Files { set; get; }
+        public string Content { set; get; }
 
         public DrapoPackResponse()
         {

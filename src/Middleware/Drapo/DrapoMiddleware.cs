@@ -469,9 +469,14 @@ namespace Sysphera.Middleware.Drapo
             request.PackName = packName;
             request.Context = context;
             DrapoPackResponse response = await this._options.Config.HandlerPackDynamic(request);
-            if (response == null || response.Files == null || response.Files.Count == 0)
+            if (response == null)
                 return "{}";
-            // Convert the response to the pack JSON format
+            // If Content is provided directly, return it
+            if (!string.IsNullOrEmpty(response.Content))
+                return response.Content;
+            // Otherwise, generate content from Files
+            if (response.Files == null || response.Files.Count == 0)
+                return "{}";
             var packData = new { name = response.Name ?? packName, files = response.Files.Select(f => new { path = f.Path, content = f.Content }) };
             return JsonConvert.SerializeObject(packData);
         }
