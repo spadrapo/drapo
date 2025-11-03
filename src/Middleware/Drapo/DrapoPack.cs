@@ -10,6 +10,7 @@ namespace Sysphera.Middleware.Drapo
         public string Name { get; set; }
         public List<string> IncludePaths { get; set; }
         public List<string> ExcludePaths { get; set; }
+        public bool IsDynamic { get; set; }
         #endregion
 
         #region Constructors
@@ -37,6 +38,12 @@ namespace Sysphera.Middleware.Drapo
         {
             if (!string.IsNullOrEmpty(excludePath))
                 this.ExcludePaths.Add(excludePath);
+            return this;
+        }
+
+        public DrapoPack SetDynamic(bool isDynamic)
+        {
+            this.IsDynamic = isDynamic;
             return this;
         }
         #endregion
