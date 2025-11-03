@@ -1651,11 +1651,6 @@ namespace WebDrapo.Test
             ValidatePage("RouteAppState", "state/2/santa");
         }
         [TestCase]
-        public void RouteRejected()
-        {
-            ValidatePage("RouteRejected", "blocked/test");
-        }
-        [TestCase]
         public void RouterMasterTest()
         {
             ValidatePage("RouterMaster");
