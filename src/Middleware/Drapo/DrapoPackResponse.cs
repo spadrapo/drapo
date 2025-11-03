@@ -6,6 +6,18 @@ namespace Sysphera.Middleware.Drapo
 {
     public class DrapoPackResponse
     {
+        public string Name { set; get; }
+        public List<DrapoPackFile> Files { set; get; }
+
+        public DrapoPackResponse()
+        {
+            this.Files = new List<DrapoPackFile>();
+        }
+    }
+
+    public class DrapoPackFile
+    {
+        public string Path { set; get; }
         public string Content { set; get; }
     }
 }

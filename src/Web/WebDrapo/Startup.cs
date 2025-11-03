@@ -189,15 +189,14 @@ namespace WebDrapo
         {
             // This handler can use the HttpContext to determine what content to return
             // For this example, we'll create a simple pack with dynamically generated content
-            var packData = new
+            DrapoPackResponse response = new DrapoPackResponse();
+            response.Name = request.PackName;
+            
+            // Add files to the pack
+            response.Files.Add(new DrapoPackFile
             {
-                name = request.PackName,
-                files = new[]
-                {
-                    new
-                    {
-                        path = "~/dynamic/script.js",
-                        content = @"
+                Path = "~/dynamic/script.js",
+                Content = @"
 // Dynamically generated JavaScript
 function initDynamicPack() {
     console.log('Dynamic pack loaded from delegate handler!');
@@ -215,12 +214,8 @@ function initDynamicPack() {
 // Auto-execute on load
 initDynamicPack();
 "
-                    }
-                }
-            };
+            });
 
-            DrapoPackResponse response = new DrapoPackResponse();
-            response.Content = Newtonsoft.Json.JsonConvert.SerializeObject(packData);
             return await Task.FromResult(response);
         }
 
