@@ -198,12 +198,16 @@ namespace Sysphera.Middleware.Drapo
             {
                 //Route
                 string routeBasePath = GetRouteBasePath();
-                string routeBaseContent = await GetRouteBaseContent(routeBasePath);
+                string routeBaseContent = await GetRouteBaseContent(context, routeBasePath);
                 string routeContentETag = this.GetRouteContentETag(routeBaseContent);
                 bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == routeContentETag));
                 context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
                 context.Response.Headers["ETag"] = new[] { routeContentETag };
-                context.Response.Headers.Add("Last-Modified", new[] { this.GetRouteBaseLastModified(routeBasePath) });
+                // Only set Last-Modified from file if not using dynamic content
+                if (this._options.RouteIndexEvent == null)
+                    context.Response.Headers.Add("Last-Modified", new[] { this.GetRouteBaseLastModified(routeBasePath) });
+                else
+                    context.Response.Headers.Add("Last-Modified", new[] { DateTime.UtcNow.ToString("R") });
                 context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
                 context.Response.Headers.Add("Content-Type", new[] { "text/html" });
                 AppendHeaderContainerId(context);
@@ -801,8 +805,10 @@ namespace Sysphera.Middleware.Drapo
             return (GetDiskPath("/index.html"));
         }
 
-        private async Task<string> GetRouteBaseContent(string path)
+        private async Task<string> GetRouteBaseContent(HttpContext context, string path)
         {
+            if (this._options.RouteIndexEvent != null)
+                return (await this._options.RouteIndexEvent(context));
             return (await File.ReadAllTextAsync(path));
         }
 
