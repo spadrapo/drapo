@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Pack Dynamic</title>
+</head>
+<body>
+    <div d-sector="content" d-sector-default="true">
+        <h1>Dynamic Pack Test</h1>
+        <button d-on-click="LoadPack('dynamicpack')">Load Dynamic Pack</button>
+        <div id="packStatus">Pack not loaded</div>
+        <div d-datakey="dynamicData" d-datatype="object"></div>
+        <div d-if="{{dynamicData.loaded}}">
+            <p>Dynamic pack loaded successfully!</p>
+            <p>Message: {{dynamicData.message}}</p>
+        </div>
+    </div>
+</body>
+</html>

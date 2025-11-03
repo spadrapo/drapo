@@ -161,16 +161,19 @@ namespace Sysphera.Middleware.Drapo
             else if (this.IsPackFile(context, out string packName))
             {
                 //Pack File
-                string packETag = this.GetPackETag(packName);
-                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == packETag));
+                // Generate content first (needed for dynamic packs to compute ETag)
+                string packContent = await this.GetPackContent(packName, context);
+                string packETag = this.GetPackETag(packName, packContent);
+                bool isCache = (!string.IsNullOrEmpty(packETag)) && ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == packETag));
                 context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
-                context.Response.Headers["ETag"] = new[] { packETag };
+                if (!string.IsNullOrEmpty(packETag))
+                    context.Response.Headers["ETag"] = new[] { packETag };
                 context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
                 context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
                 context.Response.Headers.Add("Content-Type", new[] { "application/json" });
                 AppendHeaderContainerId(context);
                 if (!isCache)
-                    await context.Response.WriteAsync(this.GetPackContent(packName), Encoding.UTF8);
+                    await context.Response.WriteAsync(packContent, Encoding.UTF8);
             }
             else if ((dynamic = await this.IsRequestCustom(context)) != null)
             {
@@ -426,19 +429,32 @@ namespace Sysphera.Middleware.Drapo
             return true;
         }
 
-        private string GetPackETag(string packName)
+        private string GetPackETag(string packName, string content)
         {
+            DrapoPack pack = this._options.Config.GetPack(packName);
+            if (pack != null && pack.IsDynamic)
+            {
+                // For dynamic packs, generate ETag based on the actual content
+                return GenerateETag(Encoding.UTF8.GetBytes(content));
+            }
+            // Use cached ETag for static packs
             if (!this._cachePackETag.ContainsKey(packName))
             {
-                string content = this.GeneratePackContent(packName);
                 string eTag = GenerateETag(Encoding.UTF8.GetBytes(content));
                 this._cachePackETag.TryAdd(packName, eTag);
             }
             return this._cachePackETag[packName];
         }
 
-        private string GetPackContent(string packName)
+        private async Task<string> GetPackContent(string packName, HttpContext context)
         {
+            DrapoPack pack = this._options.Config.GetPack(packName);
+            if (pack == null)
+                return "{}";
+            // Check if pack is dynamic
+            if (pack.IsDynamic)
+                return await this.GeneratePackContentDynamic(packName, context);
+            // Use cache for static packs
             string cacheKey = $"{packName}";
             if (!this._cachePackContent.ContainsKey(cacheKey))
             {
@@ -446,6 +462,26 @@ namespace Sysphera.Middleware.Drapo
                 this._cachePackContent.TryAdd(cacheKey, content);
             }
             return this._cachePackContent[cacheKey];
+        }
+
+        private async Task<string> GeneratePackContentDynamic(string packName, HttpContext context)
+        {
+            if (this._options.Config.HandlerPackDynamic == null)
+                return "{}";
+            DrapoPackRequest request = new DrapoPackRequest();
+            request.PackName = packName;
+            request.Context = context;
+            DrapoPackResponse response = await this._options.Config.HandlerPackDynamic(request);
+            if (response == null)
+                return "{}";
+            // If Content is provided directly, return it
+            if (!string.IsNullOrEmpty(response.Content))
+                return response.Content;
+            // Otherwise, generate content from Files
+            if (response.Files == null || response.Files.Count == 0)
+                return "{}";
+            var packData = new { name = response.Name ?? packName, files = response.Files.Select(f => new { path = f.Path, content = f.Content }) };
+            return JsonConvert.SerializeObject(packData);
         }
 
         private string GeneratePackContent(string packName)
