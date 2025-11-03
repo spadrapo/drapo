@@ -14,10 +14,4 @@ namespace Sysphera.Middleware.Drapo
             this.Files = new List<DrapoPackFile>();
         }
     }
-
-    public class DrapoPackFile
-    {
-        public string Path { set; get; }
-        public string Content { set; get; }
-    }
 }
