@@ -4,6 +4,13 @@
 
 Dynamic Routes allow you to configure routes at runtime based on the HTTP request context. This is particularly useful for multi-tenant applications where different tenants may have different routing configurations.
 
+Drapo provides **two complementary features** for dynamic routing in multi-tenant scenarios:
+
+1. **RouteDelegate** (this document): Dynamically generates route configurations based on HttpContext
+2. **RouteIndexDelegate** (see [RouteIndexDelegate.md](RouteIndexDelegate.md)): Dynamically serves different index.html files based on HttpContext
+
+Both features can be used together for comprehensive multi-tenant support.
+
 ## Features
 
 - **Per-Request Route Configuration**: Routes can be determined dynamically for each HTTP request
@@ -206,8 +213,57 @@ When dynamic routes are configured:
 3. Use static routes for common routes that don't need to be dynamic
 4. Profile your route determination logic
 
+## Combining with RouteIndexDelegate
+
+For comprehensive multi-tenant support, you can use both `RouteEvent` and `RouteIndexEvent` together:
+
+```csharp
+private void ConfigureDrapo(IWebHostEnvironment env, DrapoMiddlewareOptions options)
+{
+    // Configure dynamic routes based on tenant
+    options.RouteEvent += async (HttpContext context) =>
+    {
+        string tenant = context.Request.Headers["X-Tenant"].ToString();
+        List<DrapoRoute> routes = new List<DrapoRoute>();
+        
+        if (tenant == "tenant1")
+        {
+            // Tenant1-specific routes
+            routes.Add(new DrapoRoute 
+            { 
+                Uri = "^/dashboard$", 
+                Expression = "UpdateSector(content,~/tenant1/dashboard.html)" 
+            });
+        }
+        
+        return routes;
+    };
+    
+    // Configure dynamic index.html based on tenant
+    options.RouteIndexEvent += async (HttpContext context) =>
+    {
+        string tenant = context.Request.Headers["X-Tenant"].ToString();
+        string path = env.WebRootPath;
+        
+        if (!string.IsNullOrEmpty(tenant))
+        {
+            string tenantIndexPath = Path.Combine(path, $"index.{tenant}.html");
+            if (File.Exists(tenantIndexPath))
+                return await File.ReadAllTextAsync(tenantIndexPath);
+        }
+        
+        return await File.ReadAllTextAsync(Path.Combine(path, "index.html"));
+    };
+}
+```
+
+This combination allows you to:
+- Serve different entry points (index.html) for different tenants
+- Have completely different routing configurations per tenant
+- Maintain separate page structures for each tenant
+
 ## Related Documentation
 
+- [Route Index Delegate](./RouteIndexDelegate.md) - Dynamic index.html serving
 - [Drapo Routing Basics](../README.md)
-- [Multi-Tenant Applications](./multi-tenant.md)
 - [Configuration Options](./configuration.md)
