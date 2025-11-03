@@ -161,7 +161,9 @@ namespace Sysphera.Middleware.Drapo
             else if (this.IsPackFile(context, out string packName))
             {
                 //Pack File
-                string packETag = this.GetPackETag(packName);
+                // Generate content first (needed for dynamic packs to compute ETag)
+                string packContent = await this.GetPackContent(packName, context);
+                string packETag = this.GetPackETag(packName, packContent);
                 bool isCache = (!string.IsNullOrEmpty(packETag)) && ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == packETag));
                 context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
                 if (!string.IsNullOrEmpty(packETag))
@@ -171,7 +173,7 @@ namespace Sysphera.Middleware.Drapo
                 context.Response.Headers.Add("Content-Type", new[] { "application/json" });
                 AppendHeaderContainerId(context);
                 if (!isCache)
-                    await context.Response.WriteAsync(await this.GetPackContent(packName, context), Encoding.UTF8);
+                    await context.Response.WriteAsync(packContent, Encoding.UTF8);
             }
             else if ((dynamic = await this.IsRequestCustom(context)) != null)
             {
@@ -427,16 +429,17 @@ namespace Sysphera.Middleware.Drapo
             return true;
         }
 
-        private string GetPackETag(string packName)
+        private string GetPackETag(string packName, string content)
         {
-            // Dynamic packs should not use ETags as their content can change
             DrapoPack pack = this._options.Config.GetPack(packName);
             if (pack != null && pack.IsDynamic)
-                return null;
+            {
+                // For dynamic packs, generate ETag based on the actual content
+                return GenerateETag(Encoding.UTF8.GetBytes(content));
+            }
             // Use cached ETag for static packs
             if (!this._cachePackETag.ContainsKey(packName))
             {
-                string content = this.GeneratePackContent(packName);
                 string eTag = GenerateETag(Encoding.UTF8.GetBytes(content));
                 this._cachePackETag.TryAdd(packName, eTag);
             }
