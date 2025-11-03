@@ -261,14 +261,26 @@ namespace Sysphera.Middleware.Drapo
         }
         #endregion
         #region Route
-        public DrapoRoute CreateRoute(string uri, string expression, string beforeLoadExpression = null, string afterLoadExpression = null, bool isRejected = false)
+        public DrapoRoute CreateRoute(string uri, string expression, string beforeLoadExpression = null, string afterLoadExpression = null)
         {
             DrapoRoute route = new DrapoRoute();
             route.Uri = uri;
             route.Expression = expression;
             route.BeforeLoadExpression = beforeLoadExpression;
             route.AfterLoadExpression = afterLoadExpression;
-            route.IsRejected = isRejected;
+            route.IsRejected = false;
+            this._routes.Add(route);
+            return (route);
+        }
+
+        public DrapoRoute CreateRejectedRoute(string uri)
+        {
+            DrapoRoute route = new DrapoRoute();
+            route.Uri = uri;
+            route.Expression = null;
+            route.BeforeLoadExpression = null;
+            route.AfterLoadExpression = null;
+            route.IsRejected = true;
             this._routes.Add(route);
             return (route);
         }
