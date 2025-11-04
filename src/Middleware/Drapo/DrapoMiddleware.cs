@@ -769,8 +769,13 @@ namespace Sysphera.Middleware.Drapo
         private DrapoRoute GetRoute(HttpContext context)
         {
             foreach (DrapoRoute route in this._options.Config.Routes)
-                if (Regex.IsMatch(context.Request.Path, route.Uri))
-                    return (route);
+            {
+                if (!Regex.IsMatch(context.Request.Path, route.Uri))
+                    continue;
+                if (route.IsRejected)
+                    return (null);
+                return (route);
+            }
             return (null);
         }
 
