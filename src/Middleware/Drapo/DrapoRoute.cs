@@ -11,5 +11,6 @@ namespace Sysphera.Middleware.Drapo
         public string BeforeLoadExpression { set; get; }
 
         public string AfterLoadExpression { set; get; }
+        public bool IsRejected { set; get; }
     }
 }

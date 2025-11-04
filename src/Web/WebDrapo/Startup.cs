@@ -129,6 +129,8 @@ namespace WebDrapo
             options.Config.CreateRoute("^/city/(?<cityCode>\\d+)/(?<cityName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppCity.html)");
             options.Config.CreateRoute("^/state/(?<stateCode>\\d+)/(?<stateName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppState.html)");
             options.Config.CreateRoute("^/$", "UpdateSector(content,~/DrapoPages/RouteApp.html)");
+            options.Config.CreateRejectedRoute("^/allowed/deny.*$");
+            options.Config.CreateRoute("^/allowed/.*$", "UpdateSector(content,~/DrapoPages/RouteApp.html)");
             options.PollingEvent += Polling;
             options.RouteEvent += DynamicRoutes;
             options.RouteIndexEvent += RouteIndex;
@@ -186,6 +188,7 @@ namespace WebDrapo
             return (await Task.FromResult<string>(hash));
         }
 
+<<<<<<< HEAD
         private async Task<List<DrapoRoute>> DynamicRoutes(HttpContext context)
         {
             // Example: Determine routes based on tenant from subdomain or header
@@ -217,6 +220,8 @@ namespace WebDrapo
             return await Task.FromResult(routes);
         }
 
+=======
+>>>>>>> remotes/origin/master
         private async Task<DrapoPackResponse> HandlePackDynamic(DrapoPackRequest request)
         {
             // This handler can use the HttpContext to determine what content to return
