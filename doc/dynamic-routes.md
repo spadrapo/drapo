@@ -50,6 +50,52 @@ private async Task<List<DrapoRoute>> DynamicRoutes(HttpContext context)
 }
 ```
 
+### Example: Query String-Based Multi-Tenant Routing
+
+```csharp
+private async Task<List<DrapoRoute>> DynamicRoutes(HttpContext context)
+{
+    // Get tenant identifier from query string
+    string tenant = context.Request.Query["tenant"].ToString();
+    
+    List<DrapoRoute> routes = new List<DrapoRoute>();
+    
+    if (!string.IsNullOrEmpty(tenant))
+    {
+        if (tenant.Equals("tenant1", StringComparison.OrdinalIgnoreCase))
+        {
+            // Routes specific to Tenant 1
+            routes.Add(new DrapoRoute
+            {
+                Uri = "^/home$",
+                Expression = "UpdateSector(content,~/DrapoPages/Tenant1Home.html)"
+            });
+            routes.Add(new DrapoRoute
+            {
+                Uri = "^/products$",
+                Expression = "UpdateSector(content,~/DrapoPages/Tenant1Products.html)"
+            });
+        }
+        else if (tenant.Equals("tenant2", StringComparison.OrdinalIgnoreCase))
+        {
+            // Routes specific to Tenant 2
+            routes.Add(new DrapoRoute
+            {
+                Uri = "^/home$",
+                Expression = "UpdateSector(content,~/DrapoPages/Tenant2Home.html)"
+            });
+            routes.Add(new DrapoRoute
+            {
+                Uri = "^/services$",
+                Expression = "UpdateSector(content,~/DrapoPages/Tenant2Services.html)"
+            });
+        }
+    }
+    
+    return await Task.FromResult(routes);
+}
+```
+
 ### Example: Header-Based Multi-Tenant Routing
 
 ```csharp

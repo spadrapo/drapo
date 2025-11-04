@@ -190,9 +190,9 @@ namespace WebDrapo
 
         private async Task<List<DrapoRoute>> DynamicRoutes(HttpContext context)
         {
-            // Example: Determine routes based on tenant from subdomain or header
-            // For demonstration, we'll check for a custom header "X-Tenant"
-            string tenant = context.Request.Headers["X-Tenant"].ToString();
+            // Example: Determine routes based on tenant from query string
+            // For demonstration, we'll check for a query parameter "tenant"
+            string tenant = context.Request.Query["tenant"].ToString();
             
             List<DrapoRoute> routes = new List<DrapoRoute>();
             
