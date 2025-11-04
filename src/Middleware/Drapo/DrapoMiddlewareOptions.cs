@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Sysphera.Middleware.Drapo
@@ -10,6 +11,8 @@ namespace Sysphera.Middleware.Drapo
         private DrapoConfig _config = new DrapoConfig();
         public delegate Task<string> PollingDelegate(string domain, string connectionId, string key);
         public PollingDelegate PollingEvent;
+        public delegate Task<List<DrapoRoute>> RouteDelegate(Microsoft.AspNetCore.Http.HttpContext context);
+        public RouteDelegate RouteEvent;
         /// <summary>
         /// Delegate for dynamically generating the route index content.
         /// This enables multi-tenant scenarios where different index content is served based on HttpContext.

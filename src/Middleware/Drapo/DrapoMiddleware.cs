@@ -130,15 +130,17 @@ namespace Sysphera.Middleware.Drapo
             else if (this.IsConfig(context))
             {
                 //Config
-                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._configETag));
+                string configContent = await this.GetConfigContentForRequestAsync(context);
+                string configETag = this.HasDynamicRoutes() ? GenerateETag(Encoding.UTF8.GetBytes(configContent)) : this._configETag;
+                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == configETag));
                 context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
-                context.Response.Headers["ETag"] = new[] { this._configETag };
+                context.Response.Headers["ETag"] = new[] { configETag };
                 context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
                 context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
                 context.Response.Headers.Add("Content-Type", new[] { "application/json" });
                 AppendHeaderContainerId(context);
                 if (!isCache)
-                    await context.Response.WriteAsync(this.GetConfigContentForRequest(context));
+                    await context.Response.WriteAsync(configContent);
             }
             else if (this.IsComponentFile(context, out component, out file))
             {
@@ -195,7 +197,7 @@ namespace Sysphera.Middleware.Drapo
                     await context.Response.WriteAsync(dynamic.ContentData, Encoding.UTF8);
 
             }
-            else if ((route = this.GetRoute(context)) != null)
+            else if ((route = await this.GetRouteAsync(context)) != null)
             {
                 //Route
                 string routeBasePath = GetRouteBasePath();
@@ -337,11 +339,30 @@ namespace Sysphera.Middleware.Drapo
             return (JsonConvert.SerializeObject(this._options.Config));
         }
 
-        private string GetConfigContentForRequest(HttpContext context)
+        private async Task<string> GetConfigContentForRequestAsync(HttpContext context)
         {
-            if (this.IsBotRequest(context))
-                return (this.GetConfigContentForBot());
-            return (this._configContent);
+            string baseContent = this.IsBotRequest(context) ? this.GetConfigContentForBot() : this._configContent;
+            
+            // If there is no dynamic route delegate, return the base content
+            if (this._options.RouteEvent == null)
+                return baseContent;
+            
+            // Get dynamic routes from the delegate
+            List<DrapoRoute> dynamicRoutes = await this._options.RouteEvent(context);
+            if (dynamicRoutes == null || dynamicRoutes.Count == 0)
+                return baseContent;
+            
+            // Deserialize the base config, add dynamic routes, and serialize back
+            DrapoConfig config = JsonConvert.DeserializeObject<DrapoConfig>(baseContent);
+            
+            // Combine static routes with dynamic routes (dynamic routes take precedence)
+            // Pre-size the list for better performance
+            List<DrapoRoute> combinedRoutes = new List<DrapoRoute>(dynamicRoutes.Count + config.Routes.Count);
+            combinedRoutes.AddRange(dynamicRoutes);
+            combinedRoutes.AddRange(config.Routes);
+            config.Routes = combinedRoutes;
+            
+            return JsonConvert.SerializeObject(config);
         }
 
         private bool IsBotRequest(HttpContext context)
@@ -368,6 +389,11 @@ namespace Sysphera.Middleware.Drapo
             DrapoConfig configBot = JsonConvert.DeserializeObject<DrapoConfig>(configContent);
             configBot.CanUseWebSocket = false;
             return (JsonConvert.SerializeObject(configBot));
+        }
+
+        private bool HasDynamicRoutes()
+        {
+            return (this._options.RouteEvent != null);
         }
         #endregion
         #region Components
@@ -802,8 +828,26 @@ namespace Sysphera.Middleware.Drapo
         }
         #endregion
         #region Route
-        private DrapoRoute GetRoute(HttpContext context)
+        private async Task<DrapoRoute> GetRouteAsync(HttpContext context)
         {
+            // Check dynamic routes first (if delegate is configured)
+            if (this._options.RouteEvent != null)
+            {
+                List<DrapoRoute> dynamicRoutes = await this._options.RouteEvent(context);
+                if (dynamicRoutes != null)
+                {
+                    foreach (DrapoRoute route in dynamicRoutes)
+                    {
+                        if (!Regex.IsMatch(context.Request.Path, route.Uri))
+                            continue;
+                        if (route.IsRejected)
+                            return (null);
+                        return (route);
+                    }
+                }
+            }
+            
+            // Check static routes
             foreach (DrapoRoute route in this._options.Config.Routes)
             {
                 if (!Regex.IsMatch(context.Request.Path, route.Uri))
