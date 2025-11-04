@@ -189,6 +189,7 @@ namespace WebDrapo
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         private async Task<List<DrapoRoute>> DynamicRoutes(HttpContext context)
         {
             // Example: Determine routes based on tenant from subdomain or header
@@ -222,6 +223,8 @@ namespace WebDrapo
 
 =======
 >>>>>>> remotes/origin/master
+=======
+>>>>>>> origin/master
         private async Task<DrapoPackResponse> HandlePackDynamic(DrapoPackRequest request)
         {
             // This handler can use the HttpContext to determine what content to return
