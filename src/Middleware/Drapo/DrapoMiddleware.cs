@@ -830,6 +830,24 @@ namespace Sysphera.Middleware.Drapo
         #region Route
         private DrapoRoute GetRoute(HttpContext context)
         {
+            // Check dynamic routes first (if delegate is configured)
+            if (this._options.RouteEvent != null)
+            {
+                List<DrapoRoute> dynamicRoutes = this._options.RouteEvent(context).Result;
+                if (dynamicRoutes != null)
+                {
+                    foreach (DrapoRoute route in dynamicRoutes)
+                    {
+                        if (!Regex.IsMatch(context.Request.Path, route.Uri))
+                            continue;
+                        if (route.IsRejected)
+                            return (null);
+                        return (route);
+                    }
+                }
+            }
+            
+            // Check static routes
             foreach (DrapoRoute route in this._options.Config.Routes)
             {
                 if (!Regex.IsMatch(context.Request.Path, route.Uri))
