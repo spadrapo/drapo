@@ -197,7 +197,7 @@ namespace Sysphera.Middleware.Drapo
                     await context.Response.WriteAsync(dynamic.ContentData, Encoding.UTF8);
 
             }
-            else if ((route = this.GetRoute(context)) != null)
+            else if ((route = await this.GetRouteAsync(context)) != null)
             {
                 //Route
                 string routeBasePath = GetRouteBasePath();
@@ -828,12 +828,12 @@ namespace Sysphera.Middleware.Drapo
         }
         #endregion
         #region Route
-        private DrapoRoute GetRoute(HttpContext context)
+        private async Task<DrapoRoute> GetRouteAsync(HttpContext context)
         {
             // Check dynamic routes first (if delegate is configured)
             if (this._options.RouteEvent != null)
             {
-                List<DrapoRoute> dynamicRoutes = this._options.RouteEvent(context).Result;
+                List<DrapoRoute> dynamicRoutes = await this._options.RouteEvent(context);
                 if (dynamicRoutes != null)
                 {
                     foreach (DrapoRoute route in dynamicRoutes)
