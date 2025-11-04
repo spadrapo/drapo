@@ -129,6 +129,8 @@ namespace WebDrapo
             options.Config.CreateRoute("^/city/(?<cityCode>\\d+)/(?<cityName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppCity.html)");
             options.Config.CreateRoute("^/state/(?<stateCode>\\d+)/(?<stateName>\\w+)$", "UpdateSector(content,~/DrapoPages/RouteAppState.html)");
             options.Config.CreateRoute("^/$", "UpdateSector(content,~/DrapoPages/RouteApp.html)");
+            options.Config.CreateRejectedRoute("^/allowed/deny.*$");
+            options.Config.CreateRoute("^/allowed/.*$", "UpdateSector(content,~/DrapoPages/RouteApp.html)");
             options.PollingEvent += Polling;
             options.RouteIndexEvent += RouteIndex;
             this._options = options;

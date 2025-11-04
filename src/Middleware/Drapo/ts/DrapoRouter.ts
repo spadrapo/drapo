@@ -135,6 +135,8 @@ class DrapoRouter {
             const regex: RegExp = new RegExp(route.Uri, flags);
             if (!regex.test(path))
                 continue;
+            if (route.IsRejected)
+                return (false);
             return (await this.ApplyRoute(path, route, isLoad, updateHistory));
         }
         return (false);

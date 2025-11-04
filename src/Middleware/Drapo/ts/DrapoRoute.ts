@@ -3,6 +3,7 @@ class DrapoRoute {
     private _expression: string = null;
     private _beforeLoadExpression: string = null;
     private _afterLoadExpression: string = null;
+    private _isRejected: boolean = false;
 
     get Uri(): string {
         return (this._uri);
@@ -30,5 +31,12 @@ class DrapoRoute {
     }
     set AfterLoadExpression(value: string) {
         this._afterLoadExpression = value;
+    }
+
+    get IsRejected(): boolean {
+        return (this._isRejected);
+    }
+    set IsRejected(value: boolean) {
+        this._isRejected = value;
     }
 }
