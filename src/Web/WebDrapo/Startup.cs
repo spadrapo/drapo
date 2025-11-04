@@ -132,7 +132,6 @@ namespace WebDrapo
             options.Config.CreateRejectedRoute("^/allowed/deny.*$");
             options.Config.CreateRoute("^/allowed/.*$", "UpdateSector(content,~/DrapoPages/RouteApp.html)");
             options.PollingEvent += Polling;
-            options.RouteEvent += DynamicRoutes;
             options.RouteIndexEvent += RouteIndex;
             this._options = options;
         }
@@ -188,43 +187,6 @@ namespace WebDrapo
             return (await Task.FromResult<string>(hash));
         }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        private async Task<List<DrapoRoute>> DynamicRoutes(HttpContext context)
-        {
-            // Example: Determine routes based on tenant from subdomain or header
-            // For demonstration, we'll check for a custom header "X-Tenant"
-            string tenant = context.Request.Headers["X-Tenant"].ToString();
-            
-            List<DrapoRoute> routes = new List<DrapoRoute>();
-            
-            if (!string.IsNullOrEmpty(tenant))
-            {
-                // Multi-tenant specific routes
-                if (tenant.Equals("tenant1", StringComparison.OrdinalIgnoreCase))
-                {
-                    DrapoRoute route = new DrapoRoute();
-                    route.Uri = "^/tenant1/home$";
-                    route.Expression = "UpdateSector(content,~/DrapoPages/RouteDynamicTenant1.html)";
-                    routes.Add(route);
-                }
-                else if (tenant.Equals("tenant2", StringComparison.OrdinalIgnoreCase))
-                {
-                    DrapoRoute route = new DrapoRoute();
-                    route.Uri = "^/tenant2/home$";
-                    route.Expression = "UpdateSector(content,~/DrapoPages/RouteDynamicTenant2.html)";
-                    routes.Add(route);
-                }
-            }
-            
-            // Suppress async warning - keeping async for future extensibility
-            return await Task.FromResult(routes);
-        }
-
-=======
->>>>>>> remotes/origin/master
-=======
->>>>>>> origin/master
         private async Task<DrapoPackResponse> HandlePackDynamic(DrapoPackRequest request)
         {
             // This handler can use the HttpContext to determine what content to return
