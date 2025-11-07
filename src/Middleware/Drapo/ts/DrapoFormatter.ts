@@ -193,7 +193,7 @@ class DrapoFormatter {
     }
 
     private FormatNumberNumeric(value: number, formatTokens: string[], culture: string): string {
-        const decimals: number = this.GetFormatTokenNumber(formatTokens, 1, 2);
+        const decimals: number = this.GetFormatTokenNumber(formatTokens, 1, 2, value);
         const isNegative: boolean = value < 0;
         const valueAbsolute: number = Math.abs(value);
         const valueDecimals = valueAbsolute.toFixed(decimals);
@@ -201,7 +201,7 @@ class DrapoFormatter {
         return ((isNegative ? '-' : '') + valueDecimalsWithCulture);
     }
     private FormatNumberPercentage(value: number, formatTokens: string[], culture: string): string {
-        const decimals: number = this.GetFormatTokenNumber(formatTokens, 1, 2);
+        const decimals: number = this.GetFormatTokenNumber(formatTokens, 1, 2, value);
         const isNegative: boolean = value < 0;
         const valueAbsolute: number = Math.abs(value);
         const valueDecimals = (valueAbsolute * 100).toFixed(decimals);
@@ -210,7 +210,7 @@ class DrapoFormatter {
     }
 
     private FormatNumberDecimal(value: number, formatTokens: string[], culture: string): string {
-        const decimals: number = this.GetFormatTokenNumber(formatTokens, 1, 1);
+        const decimals: number = this.GetFormatTokenNumber(formatTokens, 1, 1, value);
         const isNegative: boolean = value < 0;
         const valueAbsolute: number = Math.abs(value);
         const valueDecimals = this.EnsureLength(valueAbsolute.toFixed(0), decimals);
@@ -264,10 +264,23 @@ class DrapoFormatter {
         return (value);
     }
 
-    private GetFormatTokenNumber(formatTokens: string[], index: number, valueDefault: number): number {
+    private GetFormatTokenNumber(formatTokens: string[], index: number, valueDefault: number, value: number): number {
         if (index >= formatTokens.length)
             return (valueDefault);
         const token: string = formatTokens[index];
+        if (token === '*') {
+            return this.GetFormatNumberDynamicDecimals(value);
+        }
         return (this.Application.Parser.ParseNumber(token, valueDefault));
+    }
+
+    private GetFormatNumberDynamicDecimals(value: number): number {
+        if (Math.floor(value) === value)
+            return (0);
+        const valueString: string = value.toString();
+        const indexDecimal: number = valueString.indexOf('.');
+        if (indexDecimal === -1)
+            return (0);
+        return (valueString.length - indexDecimal - 1);
     }
 }
