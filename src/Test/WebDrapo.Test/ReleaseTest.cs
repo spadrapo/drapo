@@ -955,6 +955,11 @@ namespace WebDrapo.Test
             ValidatePage("DataQueryDuplicate");
         }
         [TestCase]
+        public void DataQueryDistinctTest()
+        {
+            ValidatePage("DataQueryDistinct");
+        }
+        [TestCase]
         public void DataQueryEmptyTest()
         {
             ValidatePage("DataQueryEmpty");

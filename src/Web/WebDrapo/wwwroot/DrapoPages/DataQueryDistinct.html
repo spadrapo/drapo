@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Distinct</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Distinct</span>
+        <div d-dataKey="persons" d-dataType="array" d-dataValue='[{"Code":1,"Name":"Thiago", "GenderCode": 1},{"Code":2,"Name":"Augusto", "GenderCode": 1},{"Code":3,"Name":"Maria", "GenderCode": 2}]'></div>
+        <div d-dataKey="genders" d-dataType="array" d-dataValue='[{"Code":1,"Name":"Masculine"},{"Code":2,"Name":"Feminine"}]'></div>
+        <div d-dataKey="personsGenders" d-dataType="query" d-dataValue="SELECT DISTINCT G.Name AS Gender FROM persons AS P INNER JOIN genders AS G ON P.GenderCode = G.Code"></div>
+        <div>
+            <div d-for="personGender in personsGenders">
+                <span>{{personGender.Gender}}</span>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

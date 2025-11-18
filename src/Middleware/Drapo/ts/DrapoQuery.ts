@@ -6,6 +6,7 @@
     private _sorts: DrapoQuerySort[] = null;
     private _outputArray: string = null;
     private _options: DrapoQueryOptions = null;
+    private _distinct: boolean = false;
 
     get Error(): string {
         return (this._error);
@@ -56,5 +57,13 @@
 
     set Options(value: DrapoQueryOptions) {
         this._options = value;
+    }
+
+    get Distinct(): boolean {
+        return (this._distinct);
+    }
+
+    set Distinct(value: boolean) {
+        this._distinct = value;
     }
 }
