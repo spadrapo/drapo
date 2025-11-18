@@ -960,6 +960,11 @@ namespace WebDrapo.Test
             ValidatePage("DataQueryDistinct");
         }
         [TestCase]
+        public void DataQueryDistinctMultipleColumnsTest()
+        {
+            ValidatePage("DataQueryDistinctMultipleColumns");
+        }
+        [TestCase]
         public void DataQueryEmptyTest()
         {
             ValidatePage("DataQueryEmpty");
