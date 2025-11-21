@@ -2261,6 +2261,9 @@ class DrapoStorage {
         //Order By
         if (query.Sorts != null)
             objects = this.ResolveQueryOrderBy(query, objects);
+        //Distinct
+        if (query.Distinct)
+            objects = this.ResolveQueryDistinct(query, objects);
         return (objects);
     }
 
@@ -2633,5 +2636,25 @@ class DrapoStorage {
         if (sort.Type == 'DESC')
             value = 0 - value;
         return (value);
+    }
+
+    private ResolveQueryDistinct(query: DrapoQuery, objects: any[]): any[] {
+        if ((objects == null) || (objects.length === 0))
+            return (objects);
+        const uniqueObjects: any[] = [];
+        const seenKeys: Set<string> = new Set<string>();
+        for (let i: number = 0; i < objects.length; i++) {
+            const object: any = objects[i];
+            const key: string = this.GetObjectDistinctKey(object);
+            if (seenKeys.has(key))
+                continue;
+            seenKeys.add(key);
+            uniqueObjects.push(object);
+        }
+        return (uniqueObjects);
+    }
+
+    private GetObjectDistinctKey(object: any): string {
+        return (JSON.stringify(object));
     }
 }

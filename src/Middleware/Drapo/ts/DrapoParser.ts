@@ -1234,6 +1234,8 @@ class DrapoParser {
         if ((value == null) || (value === ''))
             return (null);
         const query: DrapoQuery = new DrapoQuery();
+        //Distinct
+        query.Distinct = this.ParseQueryDistinct(value);
         //Projections
         const projections: DrapoQueryProjection[] = this.ParseQueryProjections(value);
         if (projections === null) {
@@ -1262,12 +1264,26 @@ class DrapoParser {
         return (query);
     }
 
+    private ParseQueryDistinct(value: string): boolean {
+        const tokenProjections: string = this.ParseSubstring(value, "SELECT", "FROM");
+        if (tokenProjections === null)
+            return (false);
+        const tokenTrimmed: string = this.Trim(tokenProjections);
+        const tokenUpper: string = tokenTrimmed.toUpperCase();
+        return (tokenUpper.startsWith("DISTINCT "));
+    }
+
     public ParseQueryProjections(value: string): DrapoQueryProjection[] {
         const tokenProjections: string = this.ParseSubstring(value, "SELECT", "FROM");
         if (tokenProjections === null)
             return (null);
+        //Remove DISTINCT if present
+        let tokenProjectionsTrimmed: string = this.Trim(tokenProjections);
+        const tokenUpper: string = tokenProjectionsTrimmed.toUpperCase();
+        if (tokenUpper.startsWith("DISTINCT "))
+            tokenProjectionsTrimmed = tokenProjectionsTrimmed.substring(9);
         const projections: DrapoQueryProjection[] = [];
-        const tokenProjectionsSplit: string[] = this.ParseBlock(tokenProjections, ',');
+        const tokenProjectionsSplit: string[] = this.ParseBlock(tokenProjectionsTrimmed, ',');
         for (let i: number = 0; i < tokenProjectionsSplit.length; i++) {
             const tokenProjection: string = tokenProjectionsSplit[i];
             const projection: DrapoQueryProjection = this.ParseQueryProjection(tokenProjection);

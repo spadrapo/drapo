@@ -1,0 +1,31 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Data Query - Distinct Multiple Columns</title>
+</head>
+<body>
+    <div>
+        <span>Data Query - Distinct Multiple Columns</span>
+        <div d-datakey="orders" d-datatype="array" d-datavalue="[{&quot;OrderId&quot;:1,&quot;Product&quot;:&quot;Apple&quot;,&quot;Quantity&quot;:5},{&quot;OrderId&quot;:2,&quot;Product&quot;:&quot;Apple&quot;,&quot;Quantity&quot;:5},{&quot;OrderId&quot;:3,&quot;Product&quot;:&quot;Orange&quot;,&quot;Quantity&quot;:3},{&quot;OrderId&quot;:4,&quot;Product&quot;:&quot;Apple&quot;,&quot;Quantity&quot;:10}]"></div>
+        <div d-datakey="uniqueOrders" d-datatype="query" d-datavalue="SELECT DISTINCT Product, Quantity FROM orders"></div>
+        <div style="">
+            <div d-for="order in uniqueOrders" style="display: none;">
+                <span>{{order.Product}}</span>
+                <span>{{order.Quantity}}</span>
+                <br />
+            </div>
+        <div>
+                <span>Apple</span>
+                <span>5</span>
+                <br />
+            </div><div>
+                <span>Orange</span>
+                <span>3</span>
+                <br />
+            </div><div>
+                <span>Apple</span>
+                <span>10</span>
+                <br />
+            </div></div>
+    </div>
+
+</body></html>
