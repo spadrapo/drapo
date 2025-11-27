@@ -75,24 +75,33 @@ class DrapoRouter {
     }
 
     public async OnPopState(e: Event): Promise<void> {
-        const route: DrapoRouteItem = this._routes.pop();
-        if (route == null)
-            return;
+        // Get current URL from browser (this reflects the actual navigation target)
+        const currentPath: string = window.location.pathname;
+
         // Check if it is the new route system (configured routes) or the old one (manual routes)
         // The correct way is to verify if there are routes configured in startup
         const configuredRoutes: DrapoRoute[] = await this.Application.Config.GetRoutes();
         const hasConfiguredRoutes: boolean = (configuredRoutes != null) && (configuredRoutes.length > 0);
+
         if (hasConfiguredRoutes) {
             // New system: Routes are configured in startup - use configured routing
-            const previousUrl: string = this.GetLastRouteUrl();
-            const title: string = this.GetLastRouteTitle();
-            this.UpdateTitle(title);
-            if (previousUrl != null) {
-                // tslint:disable-next-line:no-floating-promises
-                this.ApplyRoutePath(previousUrl, false, false);
+            // Find the route that matches the current path and apply it without updating history
+            const routeFound: boolean = await this.ApplyRoutePath(currentPath, false, false);
+            if (routeFound) {
+                // Update our route tracking to match the current URL
+                this.SyncRouteHistoryWithCurrentPath(currentPath);
             }
         } else {
             // Old system: No configured routes - use manual sector-based logic
+            // For backward compatibility, keep the original logic but don't pop unconditionally
+            if (this._routes.length === 0)
+                return;
+
+            // Find the last route that was popped (this maintains the original behavior)
+            const route: DrapoRouteItem = this._routes.pop();
+            if (route == null)
+                return;
+
             const routePrevious: DrapoRouteItem = this.GetLastRouteBySector(route.Sector);
             const title: string = this.GetLastRouteTitle();
             this.UpdateTitle(title);
@@ -200,5 +209,21 @@ class DrapoRouter {
             return '(';
         });
         return { pattern: transformedPattern, groupNames };
+    }
+
+    private SyncRouteHistoryWithCurrentPath(currentPath: string): void {
+        // Find the route in our history that matches the current path
+        for (let i = 0; i < this._routes.length; i++) {
+            const route: DrapoRouteItem = this._routes[i];
+            if (route.Url === currentPath) {
+                // Remove all routes after this one (they represent "future" navigation)
+                this._routes.splice(i + 1);
+                return;
+            }
+        }
+
+        // If the current path is not in our routes history, add it
+        // This can happen if the user manually entered a URL or refreshed
+        this.Create(currentPath, null, document.title, null);
     }
 }
