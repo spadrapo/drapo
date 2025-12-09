@@ -1129,7 +1129,9 @@ class DrapoFunctionHandler {
 
     private async ExecuteFunctionUpdateURL(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const url: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
-        await this.Application.Router.UpdateURL(url);
+        const addToHistoryText: string = functionParsed.Parameters.length > 1 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]) : null;
+        const addToHistory: boolean = ((addToHistoryText == null) || (addToHistoryText == '')) ? true : await this.Application.Solver.ResolveConditional(addToHistoryText);
+        await this.Application.Router.UpdateURL(url, addToHistory);
         return ('');
     }
 

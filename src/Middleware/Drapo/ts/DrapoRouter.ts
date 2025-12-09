@@ -126,9 +126,12 @@ class DrapoRouter {
         document.title = title;
     }
 
-    public async UpdateURL(url: string): Promise<void> {
+    public async UpdateURL(url: string, addToHistory: boolean = true): Promise<void> {
         const urlResolved: string = this.Application.Server.ResolveUrl(url);
-        history.pushState(null, document.title, urlResolved);
+        if (addToHistory)
+            history.pushState(null, document.title, urlResolved);
+        else
+            history.replaceState(null, document.title, urlResolved);
     }
 
     public async ApplyRouteStartup(): Promise<boolean> {
