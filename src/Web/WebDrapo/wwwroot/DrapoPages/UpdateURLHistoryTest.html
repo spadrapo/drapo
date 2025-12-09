@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Update URL History Test</title>
+</head>
+<body>
+    <h1>UpdateUrl History Parameter Test</h1>
+    <p>This page demonstrates the UpdateUrl function with different history behaviors.</p>
+    
+    <h2>Test Cases:</h2>
+    
+    <div style="margin: 20px 0; padding: 10px; border: 1px solid #ccc;">
+        <h3>1. Default Behavior (adds to history)</h3>
+        <p>Clicking this button uses the default behavior and adds an entry to the browser history.</p>
+        <button d-on-click="UpdateUrl(~/DrapoPages/FunctionUpdateURL.html)">
+            UpdateUrl with History (default)
+        </button>
+        <p><em>Usage: UpdateUrl(url)</em></p>
+    </div>
+    
+    <div style="margin: 20px 0; padding: 10px; border: 1px solid #ccc;">
+        <h3>2. Explicit True Parameter (adds to history)</h3>
+        <p>Clicking this button explicitly passes true and adds an entry to the browser history.</p>
+        <button d-on-click="UpdateUrl(~/DrapoPages/FunctionUpdateURL.html, true)">
+            UpdateUrl with History (explicit true)
+        </button>
+        <p><em>Usage: UpdateUrl(url, true)</em></p>
+    </div>
+    
+    <div style="margin: 20px 0; padding: 10px; border: 1px solid #ccc;">
+        <h3>3. Replace URL without History (false parameter)</h3>
+        <p>Clicking this button passes false and replaces the current URL without adding to history.</p>
+        <button d-on-click="UpdateUrl(~/DrapoPages/FunctionUpdateURL.html, false)">
+            UpdateUrl without History (replace)
+        </button>
+        <p><em>Usage: UpdateUrl(url, false)</em></p>
+    </div>
+    
+    <div style="margin: 20px 0; padding: 10px; border: 1px solid #999; background-color: #f0f0f0;">
+        <h3>How to Test:</h3>
+        <ol>
+            <li>Use the browser's back button to verify history behavior</li>
+            <li>Buttons 1 and 2 should allow navigation back after clicking</li>
+            <li>Button 3 should replace the URL without allowing back navigation to this page</li>
+        </ol>
+    </div>
+</body>
+</html>
