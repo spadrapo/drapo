@@ -83,6 +83,9 @@ class DrapoPlumber {
                 await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onReconnect);
         });
         await this.RequestPipeRegister(connection);
+        const onConnect = await this.Application.Config.GetOnConnect();
+        if ((onConnect != null) && (onConnect != ''))
+            await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, onConnect);
         this._initialized = true;
         return (true);
     }

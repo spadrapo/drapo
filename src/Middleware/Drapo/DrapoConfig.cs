@@ -49,6 +49,7 @@ namespace Sysphera.Middleware.Drapo
         private string _onError = null;
         private string _onBadRequest = null;
         private string _onReconnect = null;
+        private string _onConnect = null;
         private string _validatorUncheckedClass = null;
         private string _validatorValidClass = null;
         private string _validatorInvalidClass = null;
@@ -96,6 +97,7 @@ namespace Sysphera.Middleware.Drapo
         public string OnError { get => _onError; set => _onError = value; }
         public string OnBadRequest { get => _onBadRequest; set => _onBadRequest = value; }
         public string OnReconnect { get => _onReconnect; set => _onReconnect = value; }
+        public string OnConnect { get => _onConnect; set => _onConnect = value; }
         public List<DrapoWindow> Windows { get => _windows; set => _windows = value; }
         public List<DrapoPack> Packs { get => _packs; set => _packs = value; }
         public string ValidatorUncheckedClass { get => _validatorUncheckedClass; set => _validatorUncheckedClass = value; }
