@@ -115,7 +115,6 @@ namespace WebDrapo
             options.Config.OnAuthorizationRequest = "AddDataItem(list,keyValue)";
             options.Config.OnError = "";
             options.Config.OnBadRequest = "UpdateDataField(config,message,{{badrequest}})";
-            options.Config.OnConnect = "OnPipeConnect()";
             options.Config.ValidatorUncheckedClass = "validationUnchecked";
             options.Config.ValidatorValidClass = "validatorValid";
             options.Config.ValidatorInvalidClass = "validatorInvalid";
