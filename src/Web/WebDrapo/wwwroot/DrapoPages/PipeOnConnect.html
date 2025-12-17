@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="/drapo.js"></script>
+	<title>Pipe OnConnect</title>
+</head>
+<body>
+    <div>
+        <div d-dataKey="status" d-dataType="object" d-dataProperty-connected-name="Connected" d-dataProperty-connected-value="false" d-dataProperty-message-name="Message" d-dataProperty-message-value=""></div>
+        <div>
+            <span>Connection Status: </span>
+            <span d-if="{{status.Connected}}">Connected</span>
+            <span d-if="!{{status.Connected}}">Not Connected</span>
+        </div>
+        <div>
+            <span>Message: </span>
+            <span>{{status.Message}}</span>
+        </div>
+    </div>
+    <script>
+        function OnPipeConnect() {
+            drapo.UpdateDataField('status', 'Connected', true);
+            drapo.UpdateDataField('status', 'Message', 'OnConnect callback executed successfully');
+        }
+    </script>
+</body>
+</html>
