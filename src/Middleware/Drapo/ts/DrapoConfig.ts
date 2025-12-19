@@ -152,6 +152,10 @@ class DrapoConfig {
         return (await this.GetProperty('OnReconnect'));
     }
 
+    public async GetOnConnect(): Promise<string> {
+        return (await this.GetProperty('OnConnect'));
+    }
+
     public async GetStorageErrors(): Promise<string> {
         return (await this.GetProperty('StorageErrors'));
     }
