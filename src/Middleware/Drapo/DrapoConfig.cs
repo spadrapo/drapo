@@ -59,6 +59,8 @@ namespace Sysphera.Middleware.Drapo
         private string _headerContainerId = null;
         private string _headerCSRF = null;
         private string _timestamp = null;
+        private List<string> _allowedWebSocketOrigins = null;
+        private bool _validateWebSocketOrigin = true;
         #endregion
         #region Properties
         public Dictionary<string, string> Properties { get => _properties; set => _properties = value; }
@@ -109,6 +111,8 @@ namespace Sysphera.Middleware.Drapo
         public string HeaderContainerId { get => _headerContainerId; set => _headerContainerId = value; }
         public string HeaderCSRF { get => _headerCSRF; set => _headerCSRF = value; }
         public string Timestamp { get => _timestamp; set => _timestamp = value; }
+        public List<string> AllowedWebSocketOrigins { get => _allowedWebSocketOrigins; set => _allowedWebSocketOrigins = value; }
+        public bool ValidateWebSocketOrigin { get => _validateWebSocketOrigin; set => _validateWebSocketOrigin = value; }
         #endregion
 
         #region Constructors
