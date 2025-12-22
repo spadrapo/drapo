@@ -37,6 +37,16 @@ namespace Sysphera.Middleware.Drapo.Pipe
 
         public override async Task OnConnectedAsync()
         {
+            // Validate Origin header to prevent Cross-Site WebSocket Hijacking (CSWSH)
+            if (this._options.Config.ValidateWebSocketOrigin)
+            {
+                if (!IsOriginAllowed())
+                {
+                    Context.Abort();
+                    return;
+                }
+            }
+
             string connectionId = this.GetConnectionId();
             string domain = this.GetDomain() ?? string.Empty;
             string containerId = GetContainerId();
@@ -73,6 +83,57 @@ namespace Sysphera.Middleware.Drapo.Pipe
 
         private string GetContainerId() {
             return (Environment.MachineName);
+        }
+
+        private bool IsOriginAllowed()
+        {
+            HttpContext httpContext = this.Context?.GetHttpContext();
+            if (httpContext == null)
+                return false;
+
+            // Get the Origin header
+            string origin = httpContext.Request.Headers["Origin"].ToString();
+            
+            // If no Origin header is present, check Referer as fallback
+            if (string.IsNullOrEmpty(origin))
+            {
+                origin = httpContext.Request.Headers["Referer"].ToString();
+                if (!string.IsNullOrEmpty(origin))
+                {
+                    // Extract origin from referer URL
+                    try
+                    {
+                        Uri refererUri = new Uri(origin);
+                        origin = $"{refererUri.Scheme}://{refererUri.Authority}";
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // If still no origin, reject the connection
+            if (string.IsNullOrEmpty(origin))
+                return false;
+
+            // Check if there's a configured list of allowed origins
+            if (this._options.Config.AllowedWebSocketOrigins != null && this._options.Config.AllowedWebSocketOrigins.Count > 0)
+            {
+                foreach (string allowedOrigin in this._options.Config.AllowedWebSocketOrigins)
+                {
+                    if (string.Equals(origin, allowedOrigin, StringComparison.OrdinalIgnoreCase))
+                        return true;
+                }
+                return false;
+            }
+
+            // If no explicit list is configured, validate against the current request host
+            string requestScheme = httpContext.Request.Scheme;
+            string requestHost = httpContext.Request.Host.ToString();
+            string expectedOrigin = $"{requestScheme}://{requestHost}";
+
+            return string.Equals(origin, expectedOrigin, StringComparison.OrdinalIgnoreCase);
         }
 
         public async Task Polling(DrapoPipePollingMessage message) {
