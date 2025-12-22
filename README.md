@@ -316,6 +316,50 @@ Drapo provides many built-in functions for common operations:
 </div>
 ```
 
+## 🔒 Security
+
+### WebSocket Origin Validation
+
+Drapo automatically validates WebSocket connection origins to prevent Cross-Site WebSocket Hijacking (CSWSH) attacks. By default, only connections from the same origin as your application are allowed.
+
+#### Configuration
+
+You can configure WebSocket origin validation in your `Startup.cs`:
+
+```csharp
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseDrapo(options => 
+    {
+        // Enable/disable origin validation (enabled by default)
+        options.Config.ValidateWebSocketOrigin = true;
+        
+        // Optional: Specify allowed origins explicitly
+        options.Config.AllowedWebSocketOrigins = new List<string>
+        {
+            "https://yourdomain.com",
+            "https://www.yourdomain.com",
+            "https://subdomain.yourdomain.com"
+        };
+    });
+}
+```
+
+#### Default Behavior
+
+- **Origin validation is enabled by default** for security
+- If no explicit allow-list is configured, only connections from the same scheme and host as the current request are allowed
+- Both `Origin` and `Referer` headers are checked
+- Invalid or missing headers result in connection rejection
+
+#### Disabling Validation
+
+⚠️ **Not recommended for production**: You can disable origin validation if needed:
+
+```csharp
+options.Config.ValidateWebSocketOrigin = false;
+```
+
 ## 🧪 Testing
 
 Drapo includes a comprehensive testing framework using Selenium WebDriver and NUnit to validate the framework's functionality across different browsers and scenarios.
