@@ -112,11 +112,6 @@ namespace Sysphera.Middleware.Drapo.Pipe
                         // Invalid URI format in Referer header
                         return false;
                     }
-                    catch (ArgumentNullException)
-                    {
-                        // Null or empty URI
-                        return false;
-                    }
                 }
             }
 
@@ -127,7 +122,6 @@ namespace Sysphera.Middleware.Drapo.Pipe
             // Check if there's a configured list of allowed origins
             if (this._options.Config.AllowedWebSocketOrigins != null && this._options.Config.AllowedWebSocketOrigins.Count > 0)
             {
-                // Use LINQ for cleaner code
                 return this._options.Config.AllowedWebSocketOrigins.Any(allowedOrigin => 
                     string.Equals(origin, allowedOrigin, StringComparison.OrdinalIgnoreCase));
             }
