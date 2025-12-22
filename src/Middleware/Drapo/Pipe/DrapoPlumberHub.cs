@@ -91,10 +91,8 @@ namespace Sysphera.Middleware.Drapo.Pipe
             HttpContext httpContext = this.Context?.GetHttpContext();
             if (httpContext == null)
                 return false;
-
             // Get the Origin header
             string origin = httpContext.Request.Headers["Origin"].ToString();
-            
             // If no Origin header is present, check Referer as fallback
             if (string.IsNullOrEmpty(origin))
             {
@@ -114,27 +112,19 @@ namespace Sysphera.Middleware.Drapo.Pipe
                     }
                 }
             }
-
             // If still no origin, reject the connection
             if (string.IsNullOrEmpty(origin))
                 return false;
-
             // Always validate against the current request host
             string requestScheme = httpContext.Request.Scheme;
             string requestHost = httpContext.Request.Host.ToString();
             string expectedOrigin = $"{requestScheme}://{requestHost}";
-
             // Check if origin matches current domain
             if (string.Equals(origin, expectedOrigin, StringComparison.OrdinalIgnoreCase))
                 return true;
-
             // Also check configured list of allowed origins if present
             if (this._options.Config.AllowedWebSocketOrigins != null && this._options.Config.AllowedWebSocketOrigins.Count > 0)
-            {
-                return this._options.Config.AllowedWebSocketOrigins.Any(allowedOrigin => 
-                    string.Equals(origin, allowedOrigin, StringComparison.OrdinalIgnoreCase));
-            }
-
+                return this._options.Config.AllowedWebSocketOrigins.Any(allowedOrigin => string.Equals(origin, allowedOrigin, StringComparison.OrdinalIgnoreCase));
             // Origin is neither current domain nor in the allowed list
             return false;
         }
