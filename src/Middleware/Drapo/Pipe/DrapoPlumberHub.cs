@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -106,8 +107,14 @@ namespace Sysphera.Middleware.Drapo.Pipe
                         Uri refererUri = new Uri(origin);
                         origin = $"{refererUri.Scheme}://{refererUri.Authority}";
                     }
-                    catch
+                    catch (UriFormatException)
                     {
+                        // Invalid URI format in Referer header
+                        return false;
+                    }
+                    catch (ArgumentNullException)
+                    {
+                        // Null or empty URI
                         return false;
                     }
                 }
@@ -120,12 +127,9 @@ namespace Sysphera.Middleware.Drapo.Pipe
             // Check if there's a configured list of allowed origins
             if (this._options.Config.AllowedWebSocketOrigins != null && this._options.Config.AllowedWebSocketOrigins.Count > 0)
             {
-                foreach (string allowedOrigin in this._options.Config.AllowedWebSocketOrigins)
-                {
-                    if (string.Equals(origin, allowedOrigin, StringComparison.OrdinalIgnoreCase))
-                        return true;
-                }
-                return false;
+                // Use LINQ for cleaner code
+                return this._options.Config.AllowedWebSocketOrigins.Any(allowedOrigin => 
+                    string.Equals(origin, allowedOrigin, StringComparison.OrdinalIgnoreCase));
             }
 
             // If no explicit list is configured, validate against the current request host
