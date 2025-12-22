@@ -348,7 +348,8 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 #### Default Behavior
 
 - **Origin validation is enabled by default** for security
-- If no explicit allow-list is configured, only connections from the same scheme and host as the current request are allowed
+- The current request's origin (scheme + host) is **always** allowed
+- If an explicit allow-list is configured, origins in that list are **also** allowed (in addition to the current origin)
 - Both `Origin` and `Referer` headers are checked
 - Invalid or missing headers result in connection rejection
 

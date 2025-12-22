@@ -119,19 +119,24 @@ namespace Sysphera.Middleware.Drapo.Pipe
             if (string.IsNullOrEmpty(origin))
                 return false;
 
-            // Check if there's a configured list of allowed origins
+            // Always validate against the current request host
+            string requestScheme = httpContext.Request.Scheme;
+            string requestHost = httpContext.Request.Host.ToString();
+            string expectedOrigin = $"{requestScheme}://{requestHost}";
+
+            // Check if origin matches current domain
+            if (string.Equals(origin, expectedOrigin, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            // Also check configured list of allowed origins if present
             if (this._options.Config.AllowedWebSocketOrigins != null && this._options.Config.AllowedWebSocketOrigins.Count > 0)
             {
                 return this._options.Config.AllowedWebSocketOrigins.Any(allowedOrigin => 
                     string.Equals(origin, allowedOrigin, StringComparison.OrdinalIgnoreCase));
             }
 
-            // If no explicit list is configured, validate against the current request host
-            string requestScheme = httpContext.Request.Scheme;
-            string requestHost = httpContext.Request.Host.ToString();
-            string expectedOrigin = $"{requestScheme}://{requestHost}";
-
-            return string.Equals(origin, expectedOrigin, StringComparison.OrdinalIgnoreCase);
+            // Origin is neither current domain nor in the allowed list
+            return false;
         }
 
         public async Task Polling(DrapoPipePollingMessage message) {
