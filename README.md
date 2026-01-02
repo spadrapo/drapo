@@ -335,6 +335,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         options.Config.ValidateWebSocketOrigin = true;
         
         // Optional: Specify allowed origins explicitly
+        // Note: Scheme (http/https) is ignored during validation
         options.Config.AllowedWebSocketOrigins = new List<string>
         {
             "https://yourdomain.com",
@@ -345,13 +346,16 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 }
 ```
 
+**Gateway Support**: The origin validation automatically supports scenarios where an external gateway or load balancer handles HTTPS, while the internal application runs on HTTP. Only the host/domain portion is compared, not the scheme.
+
 #### Default Behavior
 
 - **Origin validation is enabled by default** for security
-- The current request's origin (scheme + host) is **always** allowed
-- If an explicit allow-list is configured, origins in that list are **also** allowed (in addition to the current origin)
+- The current request's host is **always** allowed (scheme-independent to support gateways)
+- If an explicit allow-list is configured, origins in that list are **also** allowed (in addition to the current host)
 - Both `Origin` and `Referer` headers are checked
 - Invalid or missing headers result in connection rejection
+- **Schema is ignored** during validation - only the host/domain is compared, allowing gateways to handle HTTPS while the internal application uses HTTP
 
 #### Disabling Validation
 

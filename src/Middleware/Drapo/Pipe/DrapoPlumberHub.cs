@@ -115,17 +115,49 @@ namespace Sysphera.Middleware.Drapo.Pipe
             // If still no origin, reject the connection
             if (string.IsNullOrEmpty(origin))
                 return false;
-            // Always validate against the current request host
-            string requestScheme = httpContext.Request.Scheme;
+            
+            // Extract host from origin (without scheme) for comparison
+            // This allows gateways to handle HTTPS while internal app uses HTTP
+            string originHost;
+            try
+            {
+                Uri originUri = new Uri(origin);
+                originHost = originUri.Authority;
+            }
+            catch (UriFormatException)
+            {
+                // Invalid origin format
+                return false;
+            }
+            
+            // Always validate against the current request host (scheme-independent)
             string requestHost = httpContext.Request.Host.ToString();
-            string expectedOrigin = $"{requestScheme}://{requestHost}";
-            // Check if origin matches current domain
-            if (string.Equals(origin, expectedOrigin, StringComparison.OrdinalIgnoreCase))
+            
+            // Check if origin host matches current domain host (ignoring scheme)
+            if (string.Equals(originHost, requestHost, StringComparison.OrdinalIgnoreCase))
                 return true;
+            
             // Also check configured list of allowed origins if present
             if (this._options.Config.AllowedWebSocketOrigins != null && this._options.Config.AllowedWebSocketOrigins.Count > 0)
-                return this._options.Config.AllowedWebSocketOrigins.Any(allowedOrigin => string.Equals(origin, allowedOrigin, StringComparison.OrdinalIgnoreCase));
-            // Origin is neither current domain nor in the allowed list
+            {
+                foreach (string allowedOrigin in this._options.Config.AllowedWebSocketOrigins)
+                {
+                    try
+                    {
+                        // Extract host from allowed origin and compare (scheme-independent)
+                        Uri allowedUri = new Uri(allowedOrigin);
+                        if (string.Equals(originHost, allowedUri.Authority, StringComparison.OrdinalIgnoreCase))
+                            return true;
+                    }
+                    catch (UriFormatException)
+                    {
+                        // If allowed origin is not a valid URI, skip it
+                        continue;
+                    }
+                }
+            }
+            
+            // Origin host is neither current domain nor in the allowed list
             return false;
         }
 
