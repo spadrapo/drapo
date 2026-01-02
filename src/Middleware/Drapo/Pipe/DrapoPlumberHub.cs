@@ -86,6 +86,13 @@ namespace Sysphera.Middleware.Drapo.Pipe
             return (Environment.MachineName);
         }
 
+        private bool IsValidHttpScheme(Uri uri)
+        {
+            // Only accept http or https schemes for security
+            return string.Equals(uri.Scheme, "http", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(uri.Scheme, "https", StringComparison.OrdinalIgnoreCase);
+        }
+
         private bool IsOriginAllowed()
         {
             HttpContext httpContext = this.Context?.GetHttpContext();
@@ -104,9 +111,7 @@ namespace Sysphera.Middleware.Drapo.Pipe
                 try
                 {
                     Uri originUri = new Uri(origin);
-                    // Only accept http or https schemes for security
-                    if (!string.Equals(originUri.Scheme, "http", StringComparison.OrdinalIgnoreCase) &&
-                        !string.Equals(originUri.Scheme, "https", StringComparison.OrdinalIgnoreCase))
+                    if (!IsValidHttpScheme(originUri))
                         return false;
                     originHost = originUri.Authority;
                 }
@@ -127,9 +132,7 @@ namespace Sysphera.Middleware.Drapo.Pipe
                 try
                 {
                     Uri refererUri = new Uri(referer);
-                    // Only accept http or https schemes for security
-                    if (!string.Equals(refererUri.Scheme, "http", StringComparison.OrdinalIgnoreCase) &&
-                        !string.Equals(refererUri.Scheme, "https", StringComparison.OrdinalIgnoreCase))
+                    if (!IsValidHttpScheme(refererUri))
                         return false;
                     originHost = refererUri.Authority;
                 }
@@ -156,9 +159,7 @@ namespace Sysphera.Middleware.Drapo.Pipe
                     {
                         // Extract host from allowed origin and compare (scheme-independent)
                         Uri allowedUri = new Uri(allowedOrigin);
-                        // Only accept http or https schemes for security
-                        if (!string.Equals(allowedUri.Scheme, "http", StringComparison.OrdinalIgnoreCase) &&
-                            !string.Equals(allowedUri.Scheme, "https", StringComparison.OrdinalIgnoreCase))
+                        if (!IsValidHttpScheme(allowedUri))
                             continue;
                         if (string.Equals(originHost, allowedUri.Authority, StringComparison.OrdinalIgnoreCase))
                             return true;
