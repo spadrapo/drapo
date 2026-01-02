@@ -104,6 +104,10 @@ namespace Sysphera.Middleware.Drapo.Pipe
                 try
                 {
                     Uri originUri = new Uri(origin);
+                    // Only accept http or https schemes for security
+                    if (!string.Equals(originUri.Scheme, "http", StringComparison.OrdinalIgnoreCase) &&
+                        !string.Equals(originUri.Scheme, "https", StringComparison.OrdinalIgnoreCase))
+                        return false;
                     originHost = originUri.Authority;
                 }
                 catch (UriFormatException)
@@ -123,6 +127,10 @@ namespace Sysphera.Middleware.Drapo.Pipe
                 try
                 {
                     Uri refererUri = new Uri(referer);
+                    // Only accept http or https schemes for security
+                    if (!string.Equals(refererUri.Scheme, "http", StringComparison.OrdinalIgnoreCase) &&
+                        !string.Equals(refererUri.Scheme, "https", StringComparison.OrdinalIgnoreCase))
+                        return false;
                     originHost = refererUri.Authority;
                 }
                 catch (UriFormatException)
@@ -148,6 +156,10 @@ namespace Sysphera.Middleware.Drapo.Pipe
                     {
                         // Extract host from allowed origin and compare (scheme-independent)
                         Uri allowedUri = new Uri(allowedOrigin);
+                        // Only accept http or https schemes for security
+                        if (!string.Equals(allowedUri.Scheme, "http", StringComparison.OrdinalIgnoreCase) &&
+                            !string.Equals(allowedUri.Scheme, "https", StringComparison.OrdinalIgnoreCase))
+                            continue;
                         if (string.Equals(originHost, allowedUri.Authority, StringComparison.OrdinalIgnoreCase))
                             return true;
                     }
