@@ -99,7 +99,9 @@ namespace Sysphera.Middleware.Drapo.Pipe
                 origin = httpContext.Request.Headers["Referer"].ToString();
                 if (!string.IsNullOrEmpty(origin))
                 {
-                    // Extract origin from referer URL
+                    // Extract origin from referer URL (normalize to origin format)
+                    // Note: We reconstruct the full origin here for consistency,
+                    // then extract only the authority later for scheme-independent comparison
                     try
                     {
                         Uri refererUri = new Uri(origin);

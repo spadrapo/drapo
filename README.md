@@ -355,7 +355,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 - If an explicit allow-list is configured, origins in that list are **also** allowed (in addition to the current host)
 - Both `Origin` and `Referer` headers are checked
 - Invalid or missing headers result in connection rejection
-- **Schema is ignored** during validation - only the host/domain is compared, allowing gateways to handle HTTPS while the internal application uses HTTP
+- **Scheme is ignored** during validation - only the host/domain is compared, allowing gateways to handle HTTPS while the internal application uses HTTP
 
 #### Disabling Validation
 
