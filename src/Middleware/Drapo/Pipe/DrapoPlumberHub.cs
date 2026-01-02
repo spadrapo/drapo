@@ -86,46 +86,93 @@ namespace Sysphera.Middleware.Drapo.Pipe
             return (Environment.MachineName);
         }
 
+        private bool IsValidHttpScheme(Uri uri)
+        {
+            // Only accept http or https schemes for security
+            return string.Equals(uri.Scheme, "http", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(uri.Scheme, "https", StringComparison.OrdinalIgnoreCase);
+        }
+
         private bool IsOriginAllowed()
         {
             HttpContext httpContext = this.Context?.GetHttpContext();
             if (httpContext == null)
                 return false;
+            
+            // Extract the origin host (authority) from either Origin or Referer header
+            // This allows gateways to handle HTTPS while internal app uses HTTP
+            string originHost;
+            
             // Get the Origin header
             string origin = httpContext.Request.Headers["Origin"].ToString();
-            // If no Origin header is present, check Referer as fallback
-            if (string.IsNullOrEmpty(origin))
+            if (!string.IsNullOrEmpty(origin))
             {
-                origin = httpContext.Request.Headers["Referer"].ToString();
-                if (!string.IsNullOrEmpty(origin))
+                // Parse Origin header to extract host
+                try
                 {
-                    // Extract origin from referer URL
+                    Uri originUri = new Uri(origin);
+                    if (!IsValidHttpScheme(originUri))
+                        return false;
+                    originHost = originUri.Authority;
+                }
+                catch (UriFormatException)
+                {
+                    // Invalid origin format
+                    return false;
+                }
+            }
+            else
+            {
+                // If no Origin header, check Referer as fallback
+                string referer = httpContext.Request.Headers["Referer"].ToString();
+                if (string.IsNullOrEmpty(referer))
+                    return false;
+                
+                // Parse Referer to extract host
+                try
+                {
+                    Uri refererUri = new Uri(referer);
+                    if (!IsValidHttpScheme(refererUri))
+                        return false;
+                    originHost = refererUri.Authority;
+                }
+                catch (UriFormatException)
+                {
+                    // Invalid URI format in Referer header
+                    return false;
+                }
+            }
+            
+            // Always validate against the current request host (scheme-independent)
+            string requestHost = httpContext.Request.Host.ToString();
+            
+            // Check if origin host matches current domain host (ignoring scheme)
+            if (string.Equals(originHost, requestHost, StringComparison.OrdinalIgnoreCase))
+                return true;
+            
+            // Also check configured list of allowed origins if present
+            if (this._options.Config.AllowedWebSocketOrigins != null && this._options.Config.AllowedWebSocketOrigins.Count > 0)
+            {
+                foreach (string allowedOrigin in this._options.Config.AllowedWebSocketOrigins)
+                {
                     try
                     {
-                        Uri refererUri = new Uri(origin);
-                        origin = $"{refererUri.Scheme}://{refererUri.Authority}";
+                        // Extract host from allowed origin and compare (scheme-independent)
+                        Uri allowedUri = new Uri(allowedOrigin);
+                        if (!IsValidHttpScheme(allowedUri))
+                            continue;
+                        if (string.Equals(originHost, allowedUri.Authority, StringComparison.OrdinalIgnoreCase))
+                            return true;
                     }
                     catch (UriFormatException)
                     {
-                        // Invalid URI format in Referer header
-                        return false;
+                        // If allowed origin is not a valid URI, skip it
+                        continue;
                     }
                 }
             }
-            // If still no origin, reject the connection
-            if (string.IsNullOrEmpty(origin))
-                return false;
-            // Always validate against the current request host
-            string requestScheme = httpContext.Request.Scheme;
-            string requestHost = httpContext.Request.Host.ToString();
-            string expectedOrigin = $"{requestScheme}://{requestHost}";
-            // Check if origin matches current domain
-            if (string.Equals(origin, expectedOrigin, StringComparison.OrdinalIgnoreCase))
-                return true;
-            // Also check configured list of allowed origins if present
-            if (this._options.Config.AllowedWebSocketOrigins != null && this._options.Config.AllowedWebSocketOrigins.Count > 0)
-                return this._options.Config.AllowedWebSocketOrigins.Any(allowedOrigin => string.Equals(origin, allowedOrigin, StringComparison.OrdinalIgnoreCase));
-            // Origin is neither current domain nor in the allowed list
+            
+            // Origin host is neither current domain nor in the allowed list
             return false;
         }
 
