@@ -91,45 +91,45 @@ namespace Sysphera.Middleware.Drapo.Pipe
             HttpContext httpContext = this.Context?.GetHttpContext();
             if (httpContext == null)
                 return false;
-            // Get the Origin header
-            string origin = httpContext.Request.Headers["Origin"].ToString();
-            // If no Origin header is present, check Referer as fallback
-            if (string.IsNullOrEmpty(origin))
-            {
-                origin = httpContext.Request.Headers["Referer"].ToString();
-                if (!string.IsNullOrEmpty(origin))
-                {
-                    // Extract origin from referer URL (normalize to origin format)
-                    // Note: We reconstruct the full origin here for consistency,
-                    // then extract only the authority later for scheme-independent comparison
-                    try
-                    {
-                        Uri refererUri = new Uri(origin);
-                        origin = $"{refererUri.Scheme}://{refererUri.Authority}";
-                    }
-                    catch (UriFormatException)
-                    {
-                        // Invalid URI format in Referer header
-                        return false;
-                    }
-                }
-            }
-            // If still no origin, reject the connection
-            if (string.IsNullOrEmpty(origin))
-                return false;
             
-            // Extract host from origin (without scheme) for comparison
+            // Extract the origin host (authority) from either Origin or Referer header
             // This allows gateways to handle HTTPS while internal app uses HTTP
             string originHost;
-            try
+            
+            // Get the Origin header
+            string origin = httpContext.Request.Headers["Origin"].ToString();
+            if (!string.IsNullOrEmpty(origin))
             {
-                Uri originUri = new Uri(origin);
-                originHost = originUri.Authority;
+                // Parse Origin header to extract host
+                try
+                {
+                    Uri originUri = new Uri(origin);
+                    originHost = originUri.Authority;
+                }
+                catch (UriFormatException)
+                {
+                    // Invalid origin format
+                    return false;
+                }
             }
-            catch (UriFormatException)
+            else
             {
-                // Invalid origin format
-                return false;
+                // If no Origin header, check Referer as fallback
+                string referer = httpContext.Request.Headers["Referer"].ToString();
+                if (string.IsNullOrEmpty(referer))
+                    return false;
+                
+                // Parse Referer to extract host
+                try
+                {
+                    Uri refererUri = new Uri(referer);
+                    originHost = refererUri.Authority;
+                }
+                catch (UriFormatException)
+                {
+                    // Invalid URI format in Referer header
+                    return false;
+                }
             }
             
             // Always validate against the current request host (scheme-independent)
