@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -352,17 +353,27 @@ namespace Sysphera.Middleware.Drapo
             if (dynamicRoutes == null || dynamicRoutes.Count == 0)
                 return baseContent;
             
-            // Deserialize the base config, add dynamic routes, and serialize back
-            DrapoConfig config = JsonConvert.DeserializeObject<DrapoConfig>(baseContent);
+            // Parse JSON and add dynamic routes without full deserialization to avoid
+            // instantiation issues with abstract DrapoComponentFile class
+            JObject configJson = JObject.Parse(baseContent);
             
-            // Combine static routes with dynamic routes (dynamic routes take precedence)
-            // Pre-size the list for better performance
-            List<DrapoRoute> combinedRoutes = new List<DrapoRoute>(dynamicRoutes.Count + config.Routes.Count);
-            combinedRoutes.AddRange(dynamicRoutes);
-            combinedRoutes.AddRange(config.Routes);
-            config.Routes = combinedRoutes;
+            // Get existing routes array or create new one
+            JArray routesArray = configJson["Routes"] as JArray ?? new JArray();
             
-            return JsonConvert.SerializeObject(config);
+            // Add dynamic routes at the beginning (they take precedence)
+            JArray newRoutesArray = new JArray();
+            foreach (DrapoRoute route in dynamicRoutes)
+            {
+                newRoutesArray.Add(JObject.FromObject(route));
+            }
+            foreach (JToken existingRoute in routesArray)
+            {
+                newRoutesArray.Add(existingRoute);
+            }
+            
+            configJson["Routes"] = newRoutesArray;
+            
+            return configJson.ToString(Formatting.None);
         }
 
         private bool IsBotRequest(HttpContext context)
@@ -386,9 +397,11 @@ namespace Sysphera.Middleware.Drapo
         private string GetConfigContentForBot()
         {
             string configContent = GetConfigContent();
-            DrapoConfig configBot = JsonConvert.DeserializeObject<DrapoConfig>(configContent);
-            configBot.CanUseWebSocket = false;
-            return (JsonConvert.SerializeObject(configBot));
+            // Parse JSON and modify CanUseWebSocket property without deserializing to avoid
+            // instantiation issues with abstract DrapoComponentFile class
+            JObject configJson = JObject.Parse(configContent);
+            configJson["CanUseWebSocket"] = false;
+            return configJson.ToString(Formatting.None);
         }
 
         private bool HasDynamicRoutes()
