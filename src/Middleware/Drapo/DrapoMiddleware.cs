@@ -386,9 +386,10 @@ namespace Sysphera.Middleware.Drapo
         private string GetConfigContentForBot()
         {
             string configContent = GetConfigContent();
-            DrapoConfig configBot = JsonConvert.DeserializeObject<DrapoConfig>(configContent);
-            configBot.CanUseWebSocket = false;
-            return (JsonConvert.SerializeObject(configBot));
+            // Replace the value of CanUseWebSocket to false using regex
+            // Handles: "CanUseWebSocket":true or "CanUseWebSocket": true
+            configContent = Regex.Replace(configContent, @"(""CanUseWebSocket""\s*:\s*)true", "$1false", RegexOptions.IgnoreCase);
+            return configContent;
         }
 
         private bool HasDynamicRoutes()
