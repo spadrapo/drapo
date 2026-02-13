@@ -8,6 +8,7 @@ namespace Sysphera.Middleware.Drapo.Pipe
     {
         Register = 0,
         Storage = 1,
-        Execute = 2
+        Execute = 2,
+        Notify = 3
     }
 }
