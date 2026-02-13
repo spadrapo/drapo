@@ -29,6 +29,12 @@ namespace WebDrapo.Controllers
             _plumber.Send(new DrapoPipeMessage() { Type = DrapoPipeMessageType.Storage, Data = dataKey }, DrapoPipeAudienceType.Me);
         }
 
+        [HttpPost]
+        public void NotifyOnly([FromQuery] string dataKey)
+        {
+            _plumber.Send(new DrapoPipeMessage() { Type = DrapoPipeMessageType.Notify, Data = dataKey }, DrapoPipeAudienceType.Me);
+        }
+
         [HttpGet]
         public async Task<long> GetCount()
         {

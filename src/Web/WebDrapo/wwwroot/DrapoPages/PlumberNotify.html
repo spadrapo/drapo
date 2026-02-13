@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Plumber Notify</title>
+</head>
+<body>
+    <span>Plumber Notify</span>
+    <div class="cloak" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-dataKey="counter" d-datatype="value" d-dataValue="0" d-onNotify="IncrementCounter(counter)"></div>
+            <div d-dataKey="notifyAction" d-datatype="value" d-dataloadtype="startup" d-dataValue="counter" d-dataUrlSet="~/Plumber/NotifyOnly"></div>
+            <div d-dataKey="post" d-dataUrlGet="~/Plumber/NotifyOnly" d-dataPostGet="notifyAction"></div>
+        </div>
+        <div>
+            <p>Counter: {{counter}}</p>
+        </div>
+        <div>
+            <input type="button" value="Notify" d-on-click="PostData(post)" d-id="__drapoUnitTest" />
+        </div>
+    </div>
+</body>
+</html>
