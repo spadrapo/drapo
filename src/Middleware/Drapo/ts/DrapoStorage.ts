@@ -245,6 +245,17 @@ class DrapoStorage {
         return (reloaded);
     }
 
+    public async NotifyPipe(dataPipe: string): Promise<boolean> {
+        let notified = false;
+        const storageItems: DrapoStorageItem[] = this._cacheItems.filter((i) => (i.Pipes != null) && (this.Application.Solver.Contains(i.Pipes, dataPipe)));
+        for (const storageItem of storageItems)
+        {
+            await this.Application.Observer.Notify(storageItem.DataKey, null, null);
+            notified = true;
+        }
+        return (notified);
+    }
+
     private async ReloadDataDebounce(debounceKey: string, dataKey: string, timeout: number): Promise<boolean> {
         if (this._debounceReloadData.has(debounceKey)) {
             clearTimeout(this._debounceReloadData.get(debounceKey));

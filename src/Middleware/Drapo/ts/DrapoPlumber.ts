@@ -164,8 +164,8 @@ class DrapoPlumber {
             const dataPipe: string = dataPipes[i];
             //Debugger
             await this.Application.Debugger.AddPipe(dataPipe);
-            //Fire OnNotify event for the storage
-            await this.Application.Storage.FireEventOnNotify(dataPipe);
+            //Notify storage without reloading
+            await this.Application.Storage.NotifyPipe(dataPipe);
         }
     }
 
