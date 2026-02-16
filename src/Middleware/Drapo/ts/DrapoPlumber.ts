@@ -125,6 +125,8 @@ class DrapoPlumber {
                 await this.NofityPipeRegister(message);
             else if (message.Type == DrapoPipeMessageType.Execute)
                 await this.NofityPipeExecute(message);
+            else if (message.Type == DrapoPipeMessageType.Notify)
+                await this.NotifyPipeNotify(message);
         } catch (e) {
             await this.Application.ExceptionHandler.Handle(e, 'DrapoPlumber - NotifyPipe');
         }
@@ -152,6 +154,19 @@ class DrapoPlumber {
 
     private async NofityPipeExecute(message: DrapoPipeMessage): Promise<void> {
         await this.Application.FunctionHandler.ResolveFunctionWithoutContext(null, null, message.Data);
+    }
+
+    private async NotifyPipeNotify(message: DrapoPipeMessage): Promise<void> {
+        const dataPipes: string[] = this.Application.Parser.ParsePipes(message.Data);
+        if (dataPipes == null)
+            return;
+        for (let i: number = 0; i < dataPipes.length; i++) {
+            const dataPipe: string = dataPipes[i];
+            //Debugger
+            await this.Application.Debugger.AddPipe(dataPipe);
+            //Notify storage without reloading
+            await this.Application.Storage.NotifyPipe(dataPipe);
+        }
     }
 
     public async SendPolling(pollingKey: string): Promise<string> {

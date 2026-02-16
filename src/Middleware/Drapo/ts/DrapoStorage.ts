@@ -8,6 +8,7 @@ class DrapoStorage {
     private _lock: boolean = false;
     private readonly CHUNK_SIZE: number = 3 * 1024 * 1024;
     private readonly _debounceReloadData: Map<string, number> = new Map<string, number>();
+    private readonly _debounceNotifyData: Map<string, number> = new Map<string, number>();
     //Properties
     get Application(): DrapoApplication {
         return (this._application);
@@ -245,6 +246,22 @@ class DrapoStorage {
         return (reloaded);
     }
 
+    public async NotifyPipe(dataPipe: string): Promise<boolean> {
+        let notified = false;
+        const storageItems: DrapoStorageItem[] = this._cacheItems.filter((i) => (i.Pipes != null) && (this.Application.Solver.Contains(i.Pipes, dataPipe)));
+        for (const storageItem of storageItems)
+        {
+            if (storageItem.PipesDebounce != null) {
+                if (await this.NotifyDataDebounce(dataPipe + '_' + storageItem.DataKey, storageItem.DataKey, storageItem.PipesDebounce))
+                    notified = true;
+            } else {
+                await this.Application.Observer.Notify(storageItem.DataKey, null, null);
+                notified = true;
+            }
+        }
+        return (notified);
+    }
+
     private async ReloadDataDebounce(debounceKey: string, dataKey: string, timeout: number): Promise<boolean> {
         if (this._debounceReloadData.has(debounceKey)) {
             clearTimeout(this._debounceReloadData.get(debounceKey));
@@ -254,6 +271,19 @@ class DrapoStorage {
             clearTimeout(this._debounceReloadData.get(debounceKey));
             this._debounceReloadData.delete(debounceKey);
             await this.ReloadData(dataKey, null);
+        }, timeout));
+        return (false);
+    }
+
+    private async NotifyDataDebounce(debounceKey: string, dataKey: string, timeout: number): Promise<boolean> {
+        if (this._debounceNotifyData.has(debounceKey)) {
+            clearTimeout(this._debounceNotifyData.get(debounceKey));
+            this._debounceNotifyData.delete(debounceKey);
+        }
+        this._debounceNotifyData.set(debounceKey, setTimeout(async () => {
+            clearTimeout(this._debounceNotifyData.get(debounceKey));
+            this._debounceNotifyData.delete(debounceKey);
+            await this.Application.Observer.Notify(dataKey, null, null);
         }, timeout));
         return (false);
     }
