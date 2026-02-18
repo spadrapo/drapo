@@ -1876,6 +1876,16 @@ namespace WebDrapo.Test
         {
             ValidatePage("FunctionUnloadData");
         }
+        [TestCase]
+        public void ConditionalBugReproductionTest()
+        {
+            ValidatePage("ConditionalBugReproduction");
+        }
+        [TestCase]
+        public void MinimalBugTest()
+        {
+            ValidatePage("MinimalBugTest");
+        }
         #endregion
     }
 }
