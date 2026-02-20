@@ -258,13 +258,13 @@
     }
 }
 
-window.onload = () => {
+window.addEventListener("load", () => {
     const application: DrapoApplication = new DrapoApplication();
     const windowAny: any = window as any;
     windowAny.drapo = application;
     // tslint:disable-next-line:no-floating-promises
     application.OnLoad();
-};
+});
 
 window.onpopstate = (e : Event) => {
     const windowAny: any = window as any;
