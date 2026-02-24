@@ -9,62 +9,6 @@
 		<AssemblyName>Sysphera.Middleware.Drapo</AssemblyName>
 		<RootNamespace>Sysphera.Middleware.Drapo</RootNamespace>
 	</PropertyGroup>
-	<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
-	<PropertyGroup>
-		<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
-		<TypeScriptCompileBlocked>false</TypeScriptCompileBlocked>
-	</PropertyGroup>
-	<ItemGroup>
-		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.4.5">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<Content Include="tsconfig/development/tsconfig.json" Condition="'$(Configuration)' == 'Debug'" />
-		<Content Include="tsconfig/production/tsconfig.json" Condition="'$(Configuration)' == 'Release'" />
-	</ItemGroup>
-	<Target Name="FixDeniedAccessOnDelete" BeforeTargets="TypeScriptDeleteOutputFromOtherConfigs" Condition="'$(BuildingProject)' != 'false' AND '$(DesignTimeBuild)' != 'true'">
-		<!-- Messing with the bugged target TypeScriptDeleteOutputFromOtherConfigs from Microsoft.TypeScript.targets and make it do nothing: https://github.com/microsoft/TypeScript/issues/50428 -->
-		<ItemGroup>
-			<TSOutputLogsToDelete Include="$(BaseIntermediateOutputPath)\**\Tsc*.out"/>
-		</ItemGroup>
-		<Delete Files="@(TSOutputLogsToDelete)" Condition="'@(TSOutputLogsToDelete)' != '' " />
-	</Target>
-	<Target Name="CleanLibFiles" BeforeTargets="Clean" Condition="'$(DesignTimeBuild)' != 'true'">
-		<ItemGroup>
-			<FilesToDelete Include="lib\$(TargetFramework)\**\*;js\*" />
-		</ItemGroup>
-		<Delete Files="@(FilesToDelete)" />
-	</Target>
-	<Target Name="TSLint" BeforeTargets="CompileTypeScriptWithTSConfig" Condition="$(TargetFrameworks.StartsWith($(TargetFramework))) AND $(Configuration) == 'Release' AND '$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
-		<Exec Command="npx tslint --project tsconfig/production/" />
-	</Target>
-	<Target Name="CreateLibFiles" AfterTargets="CompileTypeScriptWithTSConfig" Condition="'$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
-		<ItemGroup>
-			<JsFiles Include="node_modules/es6-promise/dist/es6-promise.auto.min.js;node_modules/@microsoft/signalr/dist/browser/signalr.min.js;js\*.js" />
-			<DefFiles Include="js\*.d.ts" />
-		</ItemGroup>
-		<ItemGroup>
-			<JsFileContents Include="$([System.IO.File]::ReadAllText(%(JsFiles.Identity)))" />
-			<DefFileContents Include="$([System.IO.File]::ReadAllText(%(DefFiles.Identity)))" />
-		</ItemGroup>
-		<WriteLinesToFile File="lib\$(TargetFramework)\drapo.js" Lines="@(JsFileContents)" Overwrite="true" />
-		<WriteLinesToFile File="lib\$(TargetFramework)\drapo.js" Lines="//# sourceMappingURL=drapo.js.map" Overwrite="false" />
-		<WriteLinesToFile File="lib\$(TargetFramework)\index.d.ts" Lines="@(DefFileContents)" Overwrite="true" />
-		<Exec Command="npx uglify-js lib\$(TargetFramework)\drapo.js -o lib\$(TargetFramework)\drapo.min.js" />
-		<WriteLinesToFile File="lib\$(TargetFramework)\drapo.min.js" Lines="%0a//# sourceMappingURL=drapo.js.map" Overwrite="false" />
-		<ItemGroup>
-			<EmbeddedResource Include="lib\$(TargetFramework)\*.js" WithCulture="false" Type="Non-Resx" />
-		</ItemGroup>
-	</Target>
-	<Target Name="CreateDebugLibFiles" AfterTargets="CompileTypeScriptWithTSConfig" Condition="'$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true' AND '$(Configuration)' == 'Debug'">
-		<ItemGroup>
-			<LibFiles Include="js\*.map" />
-		</ItemGroup>
-		<Copy SourceFiles="@(LibFiles)" DestinationFolder="lib\$(TargetFramework)" />
-		<ItemGroup>
-			<EmbeddedResource Include="lib\$(TargetFramework)\*.map" WithCulture="false" Type="Non-Resx" />
-		</ItemGroup>
-	</Target>
 	<ItemGroup>
 		<None Remove="components\**\*" />
 	</ItemGroup>
@@ -76,5 +20,5 @@
 		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
 		<PackageReference Include="StackExchange.Redis" Version="2.2.50" />
 	</ItemGroup>
-	<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+	<Import Project="Drapo.TypeScript.targets" />
 </Project>
