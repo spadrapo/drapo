@@ -168,7 +168,7 @@ class DrapoFunctionHandler {
             return (value);
         const valueReplaceMustache: string = parameter.replace(mustaches[0], value);
         //Recursive
-        return (await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, valueReplaceMustache));
+        return (await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, valueReplaceMustache, canForceLoadDataDelay));
     }
 
     public ResolveExecutionContextMustache(sector: string, executionContext: DrapoExecutionContext<any>, value: string): string {
