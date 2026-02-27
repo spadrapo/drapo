@@ -258,20 +258,20 @@
     }
 }
 
-window.onload = () => {
+window.addEventListener("load", () => {
     const application: DrapoApplication = new DrapoApplication();
     const windowAny: any = window as any;
     windowAny.drapo = application;
     // tslint:disable-next-line:no-floating-promises
     application.OnLoad();
-};
+});
 
-window.onpopstate = (e : Event) => {
+window.addEventListener("popstate", (e : Event) => {
     const windowAny: any = window as any;
     const application: DrapoApplication = windowAny.drapo as DrapoApplication;
     // tslint:disable-next-line:no-floating-promises
     application.Router.OnPopState(e);
-};
+});
 
 window.addEventListener('message', (event) => {
     const windowAny: any = window as any;
