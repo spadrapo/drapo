@@ -1,6 +1,7 @@
 class DrapoFunctionHandler {
     //Field
     private _application: DrapoApplication;
+    private _functionExecutors: { [key: string]: (sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>) => Promise<any> };
 
     //Properties
     get Application(): DrapoApplication {
@@ -10,6 +11,107 @@ class DrapoFunctionHandler {
     //Constructors
     constructor(application: DrapoApplication) {
         this._application = application;
+        this.InitializeFunctionExecutors();
+    }
+
+    private InitializeFunctionExecutors(): void {
+        this._functionExecutors = {
+            external: this.ExecuteFunctionExternal,
+            toggleitemfield: this.ExecuteFunctionToggleItemField,
+            toggledata: this.ExecuteFunctionToggleData,
+            uncheckitemfield: this.ExecuteFunctionUncheckItemField,
+            clearitemfield: this.ExecuteFunctionClearItemField,
+            updateitemfield: this.ExecuteFunctionUpdateItemField,
+            replaceitemfield: this.ExecuteFunctionReplaceItemField,
+            checkdatafield: this.ExecuteFunctionCheckDataField,
+            uncheckdatafield: this.ExecuteFunctionUncheckDataField,
+            cleardatafield: this.ExecuteFunctionClearDataField,
+            updatedatafield: this.ExecuteFunctionUpdateDataField,
+            updatedatafieldlookup: this.ExecuteFunctionUpdateDataFieldLookup,
+            checkitemfield: this.ExecuteFunctionCheckItemField,
+            moveitem: this.ExecuteFunctionMoveItem,
+            updatedataurl: this.ExecuteFunctionUpdateDataUrl,
+            updatedataurlset: this.ExecuteFunctionUpdateDataUrlSet,
+            adddataitem: this.ExecuteFunctionAddDataItem,
+            removedataitem: this.ExecuteFunctionRemoveDataItem,
+            removedataitemlookup: this.ExecuteFunctionRemoveDataItemLookup,
+            containsdataitem: this.ExecuteFunctionContainsDataItem,
+            updatesector: this.ExecuteFunctionUpdateSector,
+            switchsector: this.ExecuteFunctionSwitchSector,
+            reloadsector: this.ExecuteFunctionReloadSector,
+            clearsector: this.ExecuteFunctionClearSector,
+            loadsectorcontent: this.ExecuteFunctionLoadSectorContent,
+            postdata: this.ExecuteFunctionPostData,
+            postdataitem: this.ExecuteFunctionPostDataItem,
+            cleardata: this.ExecuteFunctionClearData,
+            unloaddata: this.ExecuteFunctionUnloadData,
+            createdata: this.ExecuteFunctionCreateData,
+            updatedata: this.ExecuteFunctionUpdateData,
+            reloaddata: this.ExecuteFunctionReloadData,
+            loadpack: this.ExecuteFunctionLoadPack,
+            filterdata: this.ExecuteFunctionFilterData,
+            applyroute: this.ExecuteFunctionApplyRoute,
+            hasdatachanges: this.ExecuteFunctionHasDataChanges,
+            acceptdatachanges: this.ExecuteFunctionAcceptDataChanges,
+            reloadpage: this.ExecuteFunctionReloadPage,
+            closepage: this.ExecuteFunctionClosePage,
+            redirectpage: this.ExecuteFunctionRedirectPage,
+            updateurl: this.ExecuteFunctionUpdateURL,
+            updatetoken: this.ExecuteFunctionUpdateToken,
+            cleartoken: this.ExecuteFunctionClearToken,
+            hastoken: this.ExecuteFunctionHasToken,
+            updatetokenantiforgery: this.ExecuteFunctionUpdateTokenAntiforgery,
+            destroycontainer: this.ExecuteFunctionDestroyContainer,
+            if: this.ExecuteFunctionIf,
+            async: this.ExecuteFunctionAsync,
+            notify: this.ExecuteFunctionNotify,
+            focus: this.ExecuteFunctionFocus,
+            showwindow: this.ExecuteFunctionShowWindow,
+            closewindow: this.ExecuteFunctionCloseWindow,
+            hidewindow: this.ExecuteFunctionHideWindow,
+            getwindow: this.ExecuteFunctionGetWindow,
+            setexternal: this.ExecuteFunctionSetExternal,
+            getexternal: this.ExecuteFunctionGetExternal,
+            setexternalframe: this.ExecuteFunctionSetExternalFrame,
+            getexternalframe: this.ExecuteFunctionGetExternalFrame,
+            setexternalframemessage: this.ExecuteFunctionSetExternalFrameMessage,
+            getexternalframemessage: this.ExecuteFunctionGetExternalFrameMessage,
+            createguid: this.ExecuteFunctionCreateGuid,
+            createtick: this.ExecuteFunctionCreateTick,
+            getdate: this.ExecuteFunctionGetDate,
+            adddate: this.ExecuteFunctionAddDate,
+            pushstack: this.ExecuteFunctionPushStack,
+            popstack: this.ExecuteFunctionPopStack,
+            peekstack: this.ExecuteFunctionPeekStack,
+            execute: this.ExecuteFunctionExecute,
+            executedataitem: this.ExecuteFunctionExecuteDataItem,
+            executecomponentfunction: this.ExecuteFunctionExecuteComponentFunction,
+            executeinstancefunction: this.ExecuteFunctionExecuteInstanceFunction,
+            cast: this.ExecuteFunctionCast,
+            encodeurl: this.ExecuteFunctionEncodeUrl,
+            addrequestheader: this.ExecuteFunctionAddRequestHeader,
+            getsector: this.ExecuteFunctionGetSector,
+            getclipboard: this.ExecuteFunctionGetClipboard,
+            setclipboard: this.ExecuteFunctionSetClipboard,
+            createtimer: this.ExecuteFunctionCreateTimer,
+            createreference: this.ExecuteFunctionCreateReference,
+            wait: this.ExecuteFunctionWait,
+            executevalidation: this.ExecuteFunctionExecuteValidation,
+            clearvalidation: this.ExecuteFunctionClearValidation,
+            downloaddata: this.ExecuteFunctionDownloadData,
+            detectview: this.ExecuteFunctionDetectView,
+            setconfig: this.ExecuteFunctionSetConfig,
+            getconfig: this.ExecuteFunctionGetConfig,
+            lockplumber: this.ExecuteFunctionLockPlumber,
+            unlockplumber: this.ExecuteFunctionUnlockPlumber,
+            lockdata: this.ExecuteFunctionLockData,
+            unlockdata: this.ExecuteFunctionUnlockData,
+            clearplumber: this.ExecuteFunctionClearPlumber,
+            debugger: this.ExecuteFunctionDebugger,
+            break: this.ExecuteFunctionBreak,
+            addclass: this.ExecuteFunctionAddClass,
+            removeclass: this.ExecuteFunctionRemoveClass
+        };
     }
 
     public async ResolveFunctionWithoutContext(sector: string, element: HTMLElement, functionsValue: string, executionContext: DrapoExecutionContext<any> = null): Promise<string> {
@@ -224,204 +326,19 @@ class DrapoFunctionHandler {
     }
 
     private async ExecuteFunctionContextSwitch(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>, checkInvalidFunction: boolean = true): Promise<any> {
-        await this.Application.Debugger.AddFunction(functionParsed);
-        if (functionParsed.Name === 'external')
-            return (this.ExecuteFunctionExternal(contextItem, element, event, functionParsed));
-        if (functionParsed.Name === 'toggleitemfield')
-            return (await this.ExecuteFunctionToggleItemField(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'toggledata')
-            return (await this.ExecuteFunctionToggleData(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'uncheckitemfield')
-            return (await this.ExecuteFunctionUncheckItemField(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'clearitemfield')
-            return (await this.ExecuteFunctionClearItemField(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'updateitemfield')
-            return (await this.ExecuteFunctionUpdateItemField(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'replaceitemfield')
-            return (await this.ExecuteFunctionReplaceItemField(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'checkdatafield')
-            return (await this.ExecuteFunctionCheckDataField(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'uncheckdatafield')
-            return (await this.ExecuteFunctionUncheckDataField(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'cleardatafield')
-            return (await this.ExecuteFunctionClearDataField(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'updatedatafield')
-            return (await this.ExecuteFunctionUpdateDataField(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'updatedatafieldlookup')
-            return (await this.ExecuteFunctionUpdateDataFieldLookup(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'checkitemfield')
-            return (await this.ExecuteFunctionCheckItemField(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'moveitem')
-            return (await this.ExecuteFunctionMoveItem(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'updatedataurl')
-            return (await this.ExecuteFunctionUpdateDataUrl(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'updatedataurlset')
-            return (await this.ExecuteFunctionUpdateDataUrlSet(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'adddataitem')
-            return (await this.ExecuteFunctionAddDataItem(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'removedataitem')
-            return (await this.ExecuteFunctionRemoveDataItem(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'removedataitemlookup')
-            return (await this.ExecuteFunctionRemoveDataItemLookup(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'containsdataitem')
-            return (await this.ExecuteFunctionContainsDataItem(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'updatesector')
-            return (await this.ExecuteFunctionUpdateSector(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'switchsector')
-            return (await this.ExecuteFunctionSwitchSector(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'reloadsector')
-            return (await this.ExecuteFunctionReloadSector(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'clearsector')
-            return (await this.ExecuteFunctionClearSector(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'loadsectorcontent')
-            return (await this.ExecuteFunctionLoadSectorContent(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'postdata')
-            return (await this.ExecuteFunctionPostData(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'postdataitem')
-            return (await this.ExecuteFunctionPostDataItem(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'cleardata')
-            return (await this.ExecuteFunctionClearData(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'unloaddata')
-            return (await this.ExecuteFunctionUnloadData(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'createdata')
-            return (await this.ExecuteFunctionCreateData(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'updatedata')
-            return (await this.ExecuteFunctionUpdateData(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'reloaddata')
-            return (await this.ExecuteFunctionReloadData(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'loadpack')
-            return (await this.ExecuteFunctionLoadPack(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'filterdata')
-            return (await this.ExecuteFunctionFilterData(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'applyroute')
-            return (await this.ExecuteFunctionApplyRoute(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'hasdatachanges')
-            return (await this.ExecuteFunctionHasDataChanges(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'acceptdatachanges')
-            return (await this.ExecuteFunctionAcceptDataChanges(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'reloadpage')
-            return (await this.ExecuteFunctionReloadPage(sector, contextItem, element, event, functionParsed));
-        if (functionParsed.Name === 'closepage')
-            return (await this.ExecuteFunctionClosePage(sector, contextItem, element, event, functionParsed));
-        if (functionParsed.Name === 'redirectpage')
-            return (await this.ExecuteFunctionRedirectPage(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'updateurl')
-            return (await this.ExecuteFunctionUpdateURL(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'updatetoken')
-            return (await this.ExecuteFunctionUpdateToken(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'cleartoken')
-            return (await this.ExecuteFunctionClearToken(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'hastoken')
-            return (this.ExecuteFunctionHasToken(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'updatetokenantiforgery')
-            return (await this.ExecuteFunctionUpdateTokenAntiforgery(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'destroycontainer')
-            return (await this.ExecuteFunctionDestroyContainer(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'if')
-            return (await this.ExecuteFunctionIf(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'async')
-            return (await this.ExecuteFunctionAsync(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'notify')
-            return (await this.ExecuteFunctionNotify(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'focus')
-            return (await this.ExecuteFunctionFocus(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'showwindow')
-            return (await this.ExecuteFunctionShowWindow(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'closewindow')
-            return (await this.ExecuteFunctionCloseWindow(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'hidewindow')
-            return (await this.ExecuteFunctionHideWindow(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'getwindow')
-            return (await this.ExecuteFunctionGetWindow(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'setexternal')
-            return (await this.ExecuteFunctionSetExternal(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'getexternal')
-            return (await this.ExecuteFunctionGetExternal(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'setexternalframe')
-            return (await this.ExecuteFunctionSetExternalFrame(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'getexternalframe')
-            return (await this.ExecuteFunctionGetExternalFrame(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'setexternalframemessage')
-            return (await this.ExecuteFunctionSetExternalFrameMessage(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'getexternalframemessage')
-            return (await this.ExecuteFunctionGetExternalFrameMessage(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'createguid')
-            return (await this.ExecuteFunctionCreateGuid(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'createtick')
-            return (await this.ExecuteFunctionCreateTick(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'getdate')
-            return (await this.ExecuteFunctionGetDate(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'adddate')
-            return (await this.ExecuteFunctionAddDate(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'pushstack')
-            return (await this.ExecuteFunctionPushStack(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'popstack')
-            return (await this.ExecuteFunctionPopStack(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'peekstack')
-            return (await this.ExecuteFunctionPeekStack(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'execute')
-            return (await this.ExecuteFunctionExecute(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'executedataitem')
-            return (await this.ExecuteFunctionExecuteDataItem(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'executecomponentfunction')
-            return (await this.ExecuteFunctionExecuteComponentFunction(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'executeinstancefunction')
-            return (await this.ExecuteFunctionExecuteInstanceFunction(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'cast')
-            return (await this.ExecuteFunctionCast(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'encodeurl')
-            return (await this.ExecuteFunctionEncodeUrl(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'addrequestheader')
-            return (await this.ExecuteFunctionAddRequestHeader(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'getsector')
-            return (await this.ExecuteFunctionGetSector(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'getclipboard')
-            return (await this.ExecuteFunctionGetClipboard(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'setclipboard')
-            return (await this.ExecuteFunctionSetClipboard(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'createtimer')
-            return (await this.ExecuteFunctionCreateTimer(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'createreference')
-            return (await this.ExecuteFunctionCreateReference(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'wait')
-            return (await this.ExecuteFunctionWait(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'executevalidation')
-            return (await this.ExecuteFunctionExecuteValidation(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'clearvalidation')
-            return (await this.ExecuteFunctionClearValidation(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'downloaddata')
-            return (await this.ExecuteFunctionDownloadData(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'detectview')
-            return (await this.ExecuteFunctionDetectView(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'setconfig')
-            return (await this.ExecuteFunctionSetConfig(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'getconfig')
-            return (await this.ExecuteFunctionGetConfig(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'lockplumber')
-            return (await this.ExecuteFunctionLockPlumber(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'unlockplumber')
-            return (await this.ExecuteFunctionUnlockPlumber(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'lockdata')
-            return (await this.ExecuteFunctionLockData(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'unlockdata')
-            return (await this.ExecuteFunctionUnlockData(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'clearplumber')
-            return (await this.ExecuteFunctionClearPlumber(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'debugger')
-            return (await this.ExecuteFunctionDebugger(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'break')
-            return (await this.ExecuteFunctionBreak(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'addclass')
-            return (await this.ExecuteFunctionAddClass(sector, contextItem, element, event, functionParsed, executionContext));
-        if (functionParsed.Name === 'removeclass')
-            return (await this.ExecuteFunctionRemoveClass(sector, contextItem, element, event, functionParsed, executionContext));
+        const functionExecutor = this._functionExecutors[functionParsed.Name];
+        if (functionExecutor != null)
+        {
+            await this.Application.Debugger.AddFunction(functionParsed);
+            return (await functionExecutor.call(this, sector, contextItem, element, event, functionParsed, executionContext));
+        }
         if (!checkInvalidFunction)
             return (null);
         await this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ExecuteFunction - Invalid Function - {0}', functionParsed.Name);
         return ('');
     }
 
-    private ExecuteFunctionExternal(contextItem: DrapoContextItem, element: Element, event: Event, functionParsed: DrapoFunction): string {
+    private async ExecuteFunctionExternal(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         return ('');
     }
 
@@ -1110,12 +1027,12 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private ExecuteFunctionReloadPage(sector: string, contextItem: DrapoContextItem, element: Element, event: Event, functionParsed: DrapoFunction): string {
+    private async ExecuteFunctionReloadPage(sector: string, contextItem: DrapoContextItem, element: Element, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         window.location.reload();
         return ('');
     }
 
-    private ExecuteFunctionClosePage(sector: string, contextItem: DrapoContextItem, element: Element, event: Event, functionParsed: DrapoFunction): string {
+    private async ExecuteFunctionClosePage(sector: string, contextItem: DrapoContextItem, element: Element, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         window.location.href = "about:blank";
         return ('');
     }
@@ -1146,7 +1063,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private ExecuteFunctionHasToken(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): string {
+    private async ExecuteFunctionHasToken(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         return (this.Application.Server.HasToken().toString());
     }
 
@@ -1629,7 +1546,7 @@ class DrapoFunctionHandler {
         return ('');
     }
 
-    private async ExecuteFunctionClearPlumber(sector: string, contextItem: DrapoContextItem, element: Element, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    private async ExecuteFunctionClearPlumber(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         await this.Application.Plumber.Clear();
         return ('');
     }
