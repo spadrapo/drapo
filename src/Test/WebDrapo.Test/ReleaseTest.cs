@@ -35,7 +35,7 @@ namespace WebDrapo.Test
                 break;
             }
             options.AddArgument("--no-sandbox");
-            Driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), options);
+            Driver = new ChromeDriver(options);
         }
 
 
@@ -69,7 +69,7 @@ namespace WebDrapo.Test
                 System.Threading.Thread.Sleep(100);
             }
             //Unit Test Click
-            var elClickUnitTest = Driver.FindElementsByXPath("//input[@driverunittest='click']");
+            var elClickUnitTest = Driver.FindElements(By.XPath("//input[@driverunittest='click']"));
             if ((elClickUnitTest != null) && (elClickUnitTest.Count > 0))
             {
                 foreach (IWebElement el in elClickUnitTest)
@@ -81,7 +81,7 @@ namespace WebDrapo.Test
             string htmlEvaluated = Driver.PageSource;
             // Components can have full url file source, we remove it before comparison
             string urlPattern = @"\w+:\/\/[\w@][\w.:@]+\/?[\w\.?=%&=\-@/$,]*";
-            foreach (Match match in Regex.Matches(htmlEvaluated, @"<script[^>]*>[\s\S]*?</script>|<link [\s\S]*?/>"))
+            foreach (Match match in Regex.Matches(htmlEvaluated, @"<script[^>]*>[\s\S]*?</script>|<link [\s\S]*?/?>"))
                 if (Regex.IsMatch(match.Value, urlPattern))
                     htmlEvaluated = htmlEvaluated.Replace(match.Value, Regex.Replace(match.Value, urlPattern, string.Empty));
             //Dynamic Sectors
@@ -93,7 +93,7 @@ namespace WebDrapo.Test
             //Clean
             string htmlExpectedClean = CleanHtml(htmlExpectedCleanAttributeSrc);
             string htmlEvaluatedClean = CleanHtml(htmlEvaluatedCleanAttributeSrc);
-            Assert.AreEqual(htmlExpectedClean, htmlEvaluatedClean, "Evaluated: {0}", htmlEvaluatedClean);
+            Assert.That(htmlEvaluatedClean, Is.EqualTo(htmlExpectedClean), "Evaluated: {0}", htmlEvaluatedClean);
         }
 
         private string GetResourceName(string pageName)
@@ -107,8 +107,15 @@ namespace WebDrapo.Test
                 html = html.Replace(match.Value, @"src=""""");
             html = Regex.Replace(html, "<script(.*?)</script>", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             html = Regex.Replace(html, "<style(.*?)</style>", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            html = html.Replace(@"<link href="""" rel=""stylesheet"" />", string.Empty);
+            html = Regex.Replace(html, @"<link href="""" rel=""stylesheet""\s*/?>", string.Empty);
             html = html.Replace(@" style=""""", string.Empty);
+            // Normalize differences between Selenium 3 and Selenium 4 PageSource output
+            html = Regex.Replace(html, @"<!DOCTYPE[^>]*>", string.Empty, RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"\s+xmlns=""[^""]*""", string.Empty, RegexOptions.IgnoreCase);
+            // Selenium 3 returned XHTML (self-closing <br />, <input />); Selenium 4 returns HTML5 (<br>, <input>)
+            html = Regex.Replace(html, @"\s+/>", ">");
+            // Selenium 4 encodes non-breaking spaces as &nbsp; entities; normalize to the actual character
+            html = html.Replace("&nbsp;", "\u00a0");
             return (html);
         }
 

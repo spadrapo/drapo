@@ -19,6 +19,7 @@
     <file src="src\Middleware\Drapo\bin\Release\net10.0\Sysphera.Middleware.Drapo.dll" target="lib\net10.0\" />
     <file src="src\**\*.*" exclude="src\**\*.*" />
     <file src="src\Middleware\Drapo\lib\net8.0\*.d.ts" target="contentFiles\any\any\node_modules\@types\drapo" />
+    <file src="src\Middleware\Drapo\lib\net10.0\*.d.ts" target="contentFiles\any\any\node_modules\@types\drapo" />
 	<file src="src\Middleware\Drapo\build\**" target="build" />
   </files>
 </package>

@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0
 ARG source=.
 WORKDIR /app
 EXPOSE 9991
