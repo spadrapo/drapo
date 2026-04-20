@@ -22,8 +22,11 @@
 		<Content Include="tsconfig/development/tsconfig.json" Condition="'$(Configuration)' == 'Debug'" />
 		<Content Include="tsconfig/production/tsconfig.json" Condition="'$(Configuration)' == 'Release'" />
 	</ItemGroup>
-	<Target Name="FixDeniedAccessOnDelete" BeforeTargets="TypeScriptDeleteOutputFromOtherConfigs" Condition="'$(BuildingProject)' != 'false' AND '$(DesignTimeBuild)' != 'true'">
-		<!-- Messing with the bugged target TypeScriptDeleteOutputFromOtherConfigs from Microsoft.TypeScript.targets and make it do nothing: https://github.com/microsoft/TypeScript/issues/50428 -->
+	<!-- Workaround for the bugged target TypeScriptDeleteOutputFromOtherConfigs from Microsoft.TypeScript.targets: https://github.com/microsoft/TypeScript/issues/50428
+	     Running in the outer build (BeforeTargets="DispatchToInnerBuilds") deletes all .out files once before inner builds start in parallel,
+	     so each inner build's TypeScriptDeleteOutputFromOtherConfigs finds nothing to delete.
+	     IsInnerBuild='true' is excluded to prevent parallel inner builds from conflicting on the same .out files. -->
+	<Target Name="FixDeniedAccessOnDelete" BeforeTargets="TypeScriptDeleteOutputFromOtherConfigs;DispatchToInnerBuilds" Condition="'$(IsInnerBuild)' != 'true' AND '$(BuildingProject)' != 'false' AND '$(DesignTimeBuild)' != 'true'">
 		<ItemGroup>
 			<TSOutputLogsToDelete Include="$(BaseIntermediateOutputPath)\**\Tsc*.out"/>
 		</ItemGroup>
@@ -31,11 +34,30 @@
 	</Target>
 	<Target Name="CleanLibFiles" BeforeTargets="Clean" Condition="'$(DesignTimeBuild)' != 'true'">
 		<ItemGroup>
-			<FilesToDelete Include="lib\$(TargetFramework)\**\*;js\*" />
+			<FilesToDelete Include="lib\$(TargetFramework)\**\*" />
 		</ItemGroup>
 		<Delete Files="@(FilesToDelete)" />
 	</Target>
-	<Target Name="TSLint" BeforeTargets="CompileTypeScriptWithTSConfig" Condition="$(TargetFrameworks.StartsWith($(TargetFramework))) AND $(Configuration) == 'Release' AND '$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
+	<!-- Block TypeScript in inner builds of multi-target builds; compilation is handled once in the outer build by CompileTypeScriptOnce.
+	     IsInnerBuild is set late by NuGet.Build.Tasks.Pack.targets (after PropertyGroup evaluation), so we must set
+	     TypeScriptCompileBlocked inside a target (dynamic PropertyGroup) where IsInnerBuild is correctly available. -->
+	<Target Name="BlockTypeScriptInInnerBuilds" BeforeTargets="CompileTypeScriptWithTSConfig">
+		<PropertyGroup Condition="'$(IsInnerBuild)' == 'true'">
+			<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+		</PropertyGroup>
+	</Target>
+	<!-- Run TSLint and TypeScript once in the outer build before inner builds are dispatched in parallel.
+	     This prevents EBUSY race conditions caused by multiple inner builds writing to the shared js/ directory simultaneously.
+	     Note: BuildingProject is only set to 'true' in inner builds (by BuildOnlySettings target), not in the outer cross-targeting build,
+	     so we must NOT use BuildingProject=true as a condition here. IsCrossTargetingBuild=true is the correct outer-build guard. -->
+	<Target Name="CompileTypeScriptOnce" BeforeTargets="DispatchToInnerBuilds" Condition="'$(IsCrossTargetingBuild)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
+		<Exec Command="npx tslint --project tsconfig/production/" Condition="'$(Configuration)' == 'Release'" />
+		<Exec Command="npx tslint --project tsconfig/production/" Condition="'$(Configuration)' == 'Release'" />
+		<Exec Command="npx tsc -p tsconfig/production/tsconfig.json" Condition="'$(Configuration)' == 'Release'" />
+		<Exec Command="npx tsc -p tsconfig/development/tsconfig.json" Condition="'$(Configuration)' != 'Release'" />
+	</Target>
+	<!-- For single-target builds (not inner builds), TSLint still runs via the standard BeforeTargets mechanism -->
+	<Target Name="TSLint" BeforeTargets="CompileTypeScriptWithTSConfig" Condition="$(TargetFrameworks.StartsWith($(TargetFramework))) AND $(Configuration) == 'Release' AND '$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true' AND '$(IsInnerBuild)' != 'true'">
 		<Exec Command="npx tslint --project tsconfig/production/" />
 	</Target>
 	<Target Name="CreateLibFiles" AfterTargets="CompileTypeScriptWithTSConfig" Condition="'$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
