@@ -34,7 +34,7 @@
 	</Target>
 	<Target Name="CleanLibFiles" BeforeTargets="Clean" Condition="'$(DesignTimeBuild)' != 'true'">
 		<ItemGroup>
-			<FilesToDelete Include="lib\$(TargetFramework)\**\*;js\*" />
+			<FilesToDelete Include="lib\$(TargetFramework)\**\*" />
 		</ItemGroup>
 		<Delete Files="@(FilesToDelete)" />
 	</Target>
@@ -47,8 +47,11 @@
 		</PropertyGroup>
 	</Target>
 	<!-- Run TSLint and TypeScript once in the outer build before inner builds are dispatched in parallel.
-	     This prevents EBUSY race conditions caused by multiple inner builds writing to the shared js/ directory simultaneously. -->
-	<Target Name="CompileTypeScriptOnce" BeforeTargets="DispatchToInnerBuilds" Condition="'$(IsCrossTargetingBuild)' == 'true' AND '$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
+	     This prevents EBUSY race conditions caused by multiple inner builds writing to the shared js/ directory simultaneously.
+	     Note: BuildingProject is only set to 'true' in inner builds (by BuildOnlySettings target), not in the outer cross-targeting build,
+	     so we must NOT use BuildingProject=true as a condition here. IsCrossTargetingBuild=true is the correct outer-build guard. -->
+	<Target Name="CompileTypeScriptOnce" BeforeTargets="DispatchToInnerBuilds" Condition="'$(IsCrossTargetingBuild)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
+		<Exec Command="npx tslint --project tsconfig/production/" Condition="'$(Configuration)' == 'Release'" />
 		<Exec Command="npx tslint --project tsconfig/production/" Condition="'$(Configuration)' == 'Release'" />
 		<Exec Command="npx tsc -p tsconfig/production/tsconfig.json" Condition="'$(Configuration)' == 'Release'" />
 		<Exec Command="npx tsc -p tsconfig/development/tsconfig.json" Condition="'$(Configuration)' != 'Release'" />
