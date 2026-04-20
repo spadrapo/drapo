@@ -38,10 +38,14 @@
 		</ItemGroup>
 		<Delete Files="@(FilesToDelete)" />
 	</Target>
-	<!-- Block TypeScript in inner builds of multi-target builds; compilation is handled once in the outer build by CompileTypeScriptOnce -->
-	<PropertyGroup Condition="'$(IsInnerBuild)' == 'true'">
-		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-	</PropertyGroup>
+	<!-- Block TypeScript in inner builds of multi-target builds; compilation is handled once in the outer build by CompileTypeScriptOnce.
+	     IsInnerBuild is set late by NuGet.Build.Tasks.Pack.targets (after PropertyGroup evaluation), so we must set
+	     TypeScriptCompileBlocked inside a target (dynamic PropertyGroup) where IsInnerBuild is correctly available. -->
+	<Target Name="BlockTypeScriptInInnerBuilds" BeforeTargets="CompileTypeScriptWithTSConfig">
+		<PropertyGroup Condition="'$(IsInnerBuild)' == 'true'">
+			<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+		</PropertyGroup>
+	</Target>
 	<!-- Run TSLint and TypeScript once in the outer build before inner builds are dispatched in parallel.
 	     This prevents EBUSY race conditions caused by multiple inner builds writing to the shared js/ directory simultaneously. -->
 	<Target Name="CompileTypeScriptOnce" BeforeTargets="DispatchToInnerBuilds" Condition="'$(IsCrossTargetingBuild)' == 'true' AND '$(BuildingProject)' == 'true' AND '$(DesignTimeBuild)' != 'true'">
