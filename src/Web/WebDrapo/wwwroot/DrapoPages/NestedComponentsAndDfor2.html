@@ -1,0 +1,11 @@
+﻿<!DOCTYPE html>
+<script src="/drapo.js"></script>
+
+<div class="content">
+    <div d-dataKey="data" d-dataType="object" d-dataUrlGet="/Data/GetLevels?levels=0&children=1"></div>
+    <d-importedtags>
+        <div d-for="datum in data">
+            <d-datavalue d-dataValue="{{datum.Value}}"></d-datavalue>
+        </div>
+    </d-importedtags>
+</div>
