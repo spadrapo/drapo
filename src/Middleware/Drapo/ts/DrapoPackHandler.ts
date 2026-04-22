@@ -13,19 +13,19 @@ class DrapoPackHandler {
         this._application = application;
     }
 
-    public async LoadPack(packName: string): Promise<boolean> {
+    public async LoadPack(packName: string, checkEtag: boolean = false): Promise<boolean> {
         if ((packName == null) || (packName == ''))
             return (false);
-        // Check if pack is already loaded
-        if (this.IsPackLoaded(packName))
+        // Check if pack is already loaded (skip if checkEtag is true to allow server validation)
+        if ((!checkEtag) && (this.IsPackLoaded(packName)))
             return (true);
-        // Check cache first
+        // Check cache for ETag and data
         const cachedPack = await this.Application.CacheHandler.GetCachedPack(packName);
         let etag: string = null;
         if (cachedPack != null) {
             etag = cachedPack.etag;
-            // If we have cached data, process it immediately
-            if (cachedPack.data != null) {
+            // If not doing etag check and we have cached data, process it immediately
+            if ((!checkEtag) && (cachedPack.data != null)) {
                 await this.ProcessPackData(packName, cachedPack.data);
                 this.MarkPackAsLoaded(packName);
                 return (true);
@@ -36,11 +36,31 @@ class DrapoPackHandler {
         const headers: [string, string][] = [];
         if (etag != null)
             headers.push(['If-None-Match', etag]);
-        const response: any = await this.Application.Server.GetJSON(packUrl, 'GET', null, 'application/json; charset=utf-8', null, headers);
+        // Use headersResponse to capture response headers (e.g. ETag) from the server.
+        // When headersResponse is provided, GetJSON returns the raw response body string on 200
+        // and null on 304 Not Modified. Pack endpoints only return 200 or 304, never 204.
+        const responseHeaders: [string, string][] = [];
+        const responseBody: any = await this.Application.Server.GetJSON(packUrl, 'GET', null, 'application/json; charset=utf-8', null, headers, responseHeaders);
+        if (responseBody === null) {
+            // null response means 304 Not Modified - server confirmed the cached pack is current
+            // (only reached when etag was sent in If-None-Match, so etag != null implies 304)
+            if (etag != null) {
+                // ETag was sent and server confirmed pack is unchanged
+                if (!this.IsPackLoaded(packName) && (cachedPack != null) && (cachedPack.data != null)) {
+                    await this.ProcessPackData(packName, cachedPack.data);
+                    this.MarkPackAsLoaded(packName);
+                }
+                return (this.IsPackLoaded(packName));
+            }
+            return (false);
+        }
+        // Deserialize the response body - GetJSON returns a raw string when headersResponse is provided
+        const response: any = (typeof responseBody === 'string') ? this.Application.Serializer.Deserialize(responseBody) : responseBody;
         if ((response == null) || (response.files == null))
             return (false);
-        // Cache the response with ETag
-        await this.Application.CacheHandler.SetCachedPack(packName, response, null);
+        // Extract ETag from response headers and cache the response with it
+        const responseETag: string = this.GetResponseHeaderValue(responseHeaders, 'etag');
+        await this.Application.CacheHandler.SetCachedPack(packName, response, responseETag);
         // Process the pack data
         await this.ProcessPackData(packName, response);
         this.MarkPackAsLoaded(packName);
@@ -161,6 +181,15 @@ class DrapoPackHandler {
         } else {
             await this.Application.CacheHandler.SetCachedView(templateUrl, content);
         }
+    }
+
+    private GetResponseHeaderValue(headers: [string, string][], name: string): string {
+        for (let i: number = 0; i < headers.length; i++) {
+            const header: [string, string] = headers[i];
+            if (header[0].toLowerCase() === name.toLowerCase())
+                return (header[1]);
+        }
+        return (null);
     }
 
     private GetFileExtension(filePath: string): string {

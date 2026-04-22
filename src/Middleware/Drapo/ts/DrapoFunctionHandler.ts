@@ -995,8 +995,12 @@ class DrapoFunctionHandler {
         const packName: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
         if ((packName == null) || (packName == ''))
             return ('');
-        // Use the dedicated PackHandler to load the pack
-        await this.Application.PackHandler.LoadPack(packName);
+        let checkEtag: boolean = false;
+        if (functionParsed.Parameters.length > 1) {
+            const checkEtagText: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
+            checkEtag = ((checkEtagText != null) && (checkEtagText != '')) ? await this.Application.Solver.ResolveConditional(checkEtagText) : false;
+        }
+        await this.Application.PackHandler.LoadPack(packName, checkEtag);
         return ('');
     }
 

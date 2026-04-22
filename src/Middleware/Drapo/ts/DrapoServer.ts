@@ -148,6 +148,8 @@ class DrapoServer {
             return (dataResponse);
         } else if (response.Status == 204) {
             return (null);
+        } else if (response.Status == 304) {
+            return (null);
         } else if (response.Status == 400) {
             //Event On BadRequest
             this.HasBadRequest = true;
