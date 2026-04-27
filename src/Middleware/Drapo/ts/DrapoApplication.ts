@@ -37,6 +37,7 @@
     private _packHandler: DrapoPackHandler;
     private _worker: DrapoWorker;
     private _debugger: DrapoDebugger;
+    private _bridge: DrapoBridge;
 
     // Properties
     get IsLoaded(): boolean {
@@ -188,6 +189,10 @@
         return (this._debugger);
     }
 
+    get Bridge(): DrapoBridge {
+        return (this._bridge);
+    }
+
     // Constructors
     constructor() {
         this._logger = new DrapoLogger(this);
@@ -226,6 +231,7 @@
         this._packHandler = new DrapoPackHandler(this);
         this._worker = new DrapoWorker(this);
         this._debugger = new DrapoDebugger(this);
+        this._bridge = new DrapoBridge(this);
     }
 
     public async OnLoad(): Promise<void> {
@@ -276,6 +282,9 @@ window.addEventListener("popstate", (e : Event) => {
 window.addEventListener('message', (event) => {
     const windowAny: any = window as any;
     const application: DrapoApplication = windowAny.drapo as DrapoApplication;
+    const message: any = event.data;
+    if ((message != null) && (typeof message === 'object') && (typeof message.type === 'string') && (message.type.indexOf('drapo-bridge:') === 0))
+        return;
     // tslint:disable-next-line:no-floating-promises
-    application.Document.ReceiveMessage(event.data);
+    application.Document.ReceiveMessage(message);
 }, false);

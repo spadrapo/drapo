@@ -2,6 +2,9 @@
   "version": "1.0.0",
   "name": "asp.net",
   "private": true,
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
   "devDependencies": {
     "typescript": "5.0.4",
     "tslint": "6.1.3",
