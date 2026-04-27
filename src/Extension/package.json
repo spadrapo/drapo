@@ -1,0 +1,18 @@
+{
+  "name": "drapo-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Drapo Bridge browser extension for pixel-faithful page screenshots.",
+  "scripts": {
+    "clean": "node scripts/clean.mjs",
+    "compile": "tsc -p tsconfig.json",
+    "compile:dev": "tsc -p tsconfig.dev.json",
+    "test": "npm run compile:dev && node --test test/*.test.mjs",
+    "build": "npm run clean && npm run compile && node scripts/package-extension.mjs chrome && node scripts/package-extension.mjs edge",
+    "build:customer": "npm run clean && npm run compile && node scripts/package-extension.mjs customer",
+    "build:dev": "npm run clean && npm run compile:dev && node scripts/package-extension.mjs dev"
+  },
+  "devDependencies": {
+    "typescript": "5.4.5"
+  }
+}
