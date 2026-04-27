@@ -206,6 +206,11 @@ namespace WebDrapo.Test
             ValidatePage("BadRequest");
         }
         [TestCase]
+        public void BridgeClientTest()
+        {
+            ValidatePage("BridgeClient");
+        }
+        [TestCase]
         public void ClassTest()
         {
             ValidatePage("Class");
