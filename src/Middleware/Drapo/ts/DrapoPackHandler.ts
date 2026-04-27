@@ -13,19 +13,19 @@ class DrapoPackHandler {
         this._application = application;
     }
 
-    public async LoadPack(packName: string, checkEtag: boolean = false): Promise<boolean> {
+    public async LoadPack(packName: string, skipLocalCache: boolean = false): Promise<boolean> {
         if ((packName == null) || (packName == ''))
             return (false);
-        // Check if pack is already loaded (skip if checkEtag is true to allow server validation)
-        if ((!checkEtag) && (this.IsPackLoaded(packName)))
+        // When skipLocalCache is false, short-circuit if already loaded or data is cached locally
+        if ((!skipLocalCache) && (this.IsPackLoaded(packName)))
             return (true);
         // Check cache for ETag and data
         const cachedPack = await this.Application.CacheHandler.GetCachedPack(packName);
         let etag: string = null;
         if (cachedPack != null) {
             etag = cachedPack.etag;
-            // If not doing etag check and we have cached data, process it immediately
-            if ((!checkEtag) && (cachedPack.data != null)) {
+            // Use cached data immediately unless skipLocalCache is true (server ETag check required)
+            if ((!skipLocalCache) && (cachedPack.data != null)) {
                 await this.ProcessPackData(packName, cachedPack.data);
                 this.MarkPackAsLoaded(packName);
                 return (true);
