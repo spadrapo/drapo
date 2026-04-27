@@ -230,6 +230,24 @@ class DrapoStorage {
         return (dataKeys);
     }
 
+    public GetDataKeys(sector: string = null): string[] {
+        const dataKeys: string[] = [];
+        for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
+            const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
+            if ((sector != null) && (!this.Application.Document.IsEqualSector(storageItem.Sector, sector)))
+                continue;
+            const dataKey: string = storageItem.DataKey;
+            if (this.Application.Document.IsHiddenKey(dataKey))
+                continue;
+            if (dataKeys.indexOf(dataKey) >= 0)
+                continue;
+            dataKeys.push(dataKey);
+        }
+        return (dataKeys);
+    }
+
     public async ReloadPipe(dataPipe: string): Promise<boolean> {
         let reloaded = false;
         const storageItems: DrapoStorageItem[] = this._cacheItems.filter((i) => (i.Pipes != null) && (this.Application.Solver.Contains(i.Pipes, dataPipe)));
