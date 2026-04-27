@@ -124,14 +124,19 @@ The backend must only emit the opaque `bridgeSessionId` into pages where the cur
 
 The backend cannot grant extension host permissions. Browser host access must come from the extension manifest, optional user grant, or enterprise browser policy.
 
-SaaS package:
+Chrome requires the `"<all_urls>"` host permission for `chrome.tabs.captureVisibleTab` when capture is not triggered by a direct extension user gesture. A button click inside the Drapo page does not create an `activeTab` grant for the extension. The generated manifests therefore request `"<all_urls>"` for capture access, while content-script injection remains restricted to the generated app-host match list.
+
+This means Chrome can show the site-access warning as `On all sites`. That permission is required for page-initiated pixel screenshots with `captureVisibleTab`; it is not used to inject Drapo Bridge on every site. If a package must avoid the broad browser warning, the product flow must change to an extension-action/`activeTab` capture flow or a non-pixel-faithful in-page capture implementation.
+
+SaaS package content-script matches:
 
 ```json
-"permissions": ["activeTab"],
-"host_permissions": ["https://*.tech6cloud.com/*"]
+"permissions": [],
+"host_permissions": ["<all_urls>"],
+"content_scripts": [{ "matches": ["https://*.tech6cloud.com/*"] }]
 ```
 
-`activeTab` is included because `captureVisibleTab` documents `activeTab` or `<all_urls>` as required. The extension still uses explicit host permissions to decide where the content script can run and where Drapo can handshake.
+The extension still uses explicit content-script matches to decide where Drapo can handshake.
 
 On-prem customer deployments should default to exact app hosts:
 
@@ -171,10 +176,33 @@ Replace `EXTENSION_ID_HERE` and `https://drapo.customer.com`.
 
 ## Mock Page
 
-For local manual validation:
+The mock files are committed developer fixtures. They are not copied into packaged extensions; `scripts/package-extension.mjs` only packages `dist`, `icons`, and `manifest.json`.
 
-1. Run `npm run build:dev`.
-2. Load `build/dev` as an unpacked extension in Chrome or Edge.
-3. Serve this directory on localhost.
-4. Open `mock/index.html`.
-5. Start a mock session and request screenshots.
+Use the Drapo client mock to validate `window.drapo.Bridge` against the unpacked dev extension:
+
+```bash
+cd src/Middleware/Drapo
+npm install
+npx tsc -p tsconfig/development/tsconfig.json
+
+cd ../../Extension
+npm install
+npm run build:dev
+npm run mock
+```
+
+Then load `src/Extension/build/dev` as an unpacked extension in Chrome or Edge and open:
+
+```text
+http://localhost:6335/src/Extension/mock/drapo-client.html
+```
+
+The mock page has one button for each bridge client method:
+
+- `Configure` calls `window.drapo.Bridge.Configure`.
+- `Capture Viewport`, `Capture Element`, and `Capture Full Page` call `window.drapo.Bridge.CaptureScreen`.
+- `Clear Session` calls `Configure("")`.
+
+Use `PORT=6336 npm run mock` if port `6335` is already in use.
+
+`mock/index.html` remains as a lower-level protocol fixture that posts bridge messages directly without going through Drapo's client API.

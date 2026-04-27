@@ -33,7 +33,7 @@ for (const file of distFiles)
 for (const size of [16, 32, 48, 128])
   await cp(resolve(root, 'icons', `icon-${size}.png`), resolve(buildDirectory, 'icons', `icon-${size}.png`));
 
-function resolveHostPermissions() {
+function resolveContentScriptMatches() {
   if (target === 'dev')
     return ['https://*.tech6cloud.com/*', 'http://localhost/*', 'http://127.0.0.1/*'];
   if (target === 'customer') {
@@ -50,21 +50,22 @@ function resolveHostPermissions() {
   return ['https://*.tech6cloud.com/*'];
 }
 
-const hostPermissions = resolveHostPermissions();
+const contentScriptMatches = resolveContentScriptMatches();
+const hostPermissions = ['<all_urls>'];
 
 const manifest = {
   manifest_version: 3,
   name: target === 'dev' ? 'Drapo Bridge Dev' : 'Drapo Bridge',
   version: packageJson.version,
   description: packageJson.description,
-  permissions: ['activeTab'],
+  permissions: [],
   host_permissions: hostPermissions,
   background: {
     service_worker: 'dist/background.js'
   },
   content_scripts: [
     {
-      matches: hostPermissions,
+      matches: contentScriptMatches,
       js: ['dist/protocol.js', 'dist/content.js'],
       run_at: 'document_start'
     }
