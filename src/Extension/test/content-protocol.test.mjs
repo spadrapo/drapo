@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { Script, createContext } from 'node:vm';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
+import { Script, createContext } from 'node:vm';
 
-const root = new URL('..', import.meta.url).pathname;
+const root = fileURLToPath(new URL('..', import.meta.url));
 
 class FakeWindow {
   constructor({ origin = 'https://tenant.tech6cloud.com', topLevel = true } = {}) {
@@ -351,8 +352,55 @@ test('full-page capture calls are paced under captureVisibleTab rate limits', as
   const result = await waitForResult(fakeWindow, 'request-full-page-paced');
 
   assert.equal(result.ok, true);
+  assert.equal(result.imageDataUrl, 'data:image/png;base64,c3RpdGNoZWQ=');
+  assert.equal(result.width, 800);
+  assert.equal(result.height, 1200);
   assert.equal(captureStartedAt.length, 2);
   assert.ok(captureStartedAt[1] - captureStartedAt[0] >= 500);
+});
+
+test('element capture scrolls into view, crops, echoes rect, and restores scroll', async () => {
+  const fakeWindow = await loadContent();
+  fakeWindow.document.body.scrollHeight = 1400;
+  fakeWindow.document.documentElement.scrollHeight = 1400;
+  fakeWindow.document.body.scrollWidth = 1600;
+  fakeWindow.document.documentElement.scrollWidth = 1600;
+
+  fakeWindow.dispatchMessage({
+    source: 'drapo',
+    type: 'drapo-bridge:handshake',
+    bridgeSessionId: 'session-1'
+  });
+
+  fakeWindow.dispatchMessage({
+    source: 'drapo',
+    type: 'drapo-bridge:screenshot',
+    requestId: 'request-element',
+    bridgeSessionId: 'session-1',
+    mode: 'element',
+    rect: {
+      x: 900,
+      y: 700,
+      width: 200,
+      height: 100
+    }
+  });
+
+  const result = await waitForResult(fakeWindow, 'request-element');
+
+  assert.equal(result.ok, true);
+  assert.equal(result.mode, 'element');
+  assert.equal(result.imageDataUrl, 'data:image/png;base64,c3RpdGNoZWQ=');
+  assert.equal(result.width, 200);
+  assert.equal(result.height, 100);
+  assert.equal(result.rect.x, 900);
+  assert.equal(result.rect.y, 700);
+  assert.equal(result.rect.width, 200);
+  assert.equal(result.rect.height, 100);
+  assert.equal(result.scrollX, 800);
+  assert.equal(result.scrollY, 700);
+  assert.equal(fakeWindow.scrollX, 0);
+  assert.equal(fakeWindow.scrollY, 0);
 });
 
 

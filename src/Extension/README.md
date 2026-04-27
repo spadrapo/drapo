@@ -18,6 +18,8 @@ npm test
 npm run build
 ```
 
+Packaging requires the system `zip` command to be available in `PATH`.
+
 Outputs:
 
 - `artifacts/drapo-bridge-chrome.zip`
@@ -111,6 +113,12 @@ Common `errorCode` values:
 - `capture_failed`
 
 The content script emits `drapo-bridge:hello` at startup, again during the first 300ms detection window, and in response to a `drapo-bridge:hello-request` message from Drapo.
+
+## Security Contract
+
+The extension only runs on configured hosts and only accepts top-level, same-window, same-origin, namespaced messages. Within that boundary, the page origin is trusted: any script running in the authorized top-level page can see the backend-issued bridge session id and can send the same bridge messages.
+
+The backend must only emit the opaque `bridgeSessionId` into pages where the current user/session is authorized for T6 GPT CMS editing. Avoid adding untrusted third-party scripts to those edit pages. The extension does not validate the session id cryptographically and does not contact the backend; server-side authorization and auditing belong to Drapo/PowerPlanning.
 
 ## Host Permissions
 

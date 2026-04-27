@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { Script, createContext } from 'node:vm';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
+import { Script, createContext } from 'node:vm';
 
-const root = new URL('..', import.meta.url).pathname;
+const root = fileURLToPath(new URL('..', import.meta.url));
 
 async function loadBackground({ captureVisibleTab }) {
   let listener = null;

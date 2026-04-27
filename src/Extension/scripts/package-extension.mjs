@@ -80,6 +80,12 @@ const manifest = {
 await writeFile(resolve(buildDirectory, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
 await rm(artifactPath, { force: true });
 
+const zipCheck = spawnSync('zip', ['-v'], { stdio: 'ignore' });
+if (zipCheck.error || zipCheck.status !== 0) {
+  console.error('The extension package step requires the system "zip" command in PATH. Install zip or run this build in an environment that provides it.');
+  process.exit(zipCheck.status ?? 1);
+}
+
 const zip = spawnSync('zip', ['-qr', artifactPath, '.'], { cwd: buildDirectory, stdio: 'inherit' });
 if (zip.status !== 0)
   process.exit(zip.status ?? 1);
