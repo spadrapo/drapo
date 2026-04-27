@@ -57,7 +57,7 @@ const manifest = {
   name: target === 'dev' ? 'Drapo Bridge Dev' : 'Drapo Bridge',
   version: packageJson.version,
   description: packageJson.description,
-  permissions: [],
+  permissions: ['activeTab'],
   host_permissions: hostPermissions,
   background: {
     service_worker: 'dist/background.js'

@@ -119,8 +119,11 @@ The backend cannot grant extension host permissions. Browser host access must co
 SaaS package:
 
 ```json
+"permissions": ["activeTab"],
 "host_permissions": ["https://*.tech6cloud.com/*"]
 ```
+
+`activeTab` is included because `captureVisibleTab` documents `activeTab` or `<all_urls>` as required. The extension still uses explicit host permissions to decide where the content script can run and where Drapo can handshake.
 
 On-prem customer deployments should default to exact app hosts:
 

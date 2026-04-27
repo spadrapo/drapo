@@ -17,7 +17,17 @@ class FakeWindow {
     this.devicePixelRatio = 1;
     this.document = {
       body: { scrollHeight: 600, scrollWidth: 800 },
-      documentElement: { scrollHeight: 600, scrollWidth: 800 }
+      documentElement: { scrollHeight: 600, scrollWidth: 800 },
+      createElement: (tagName) => {
+        if (tagName !== 'canvas')
+          return {};
+        return {
+          width: 0,
+          height: 0,
+          getContext: () => ({ drawImage: () => {} }),
+          toDataURL: () => 'data:image/png;base64,c3RpdGNoZWQ='
+        };
+      }
     };
     this.listeners = new Map();
     this.messages = [];
@@ -51,6 +61,22 @@ class FakeWindow {
   }
 }
 
+class FakeImage {
+  constructor() {
+    this.height = 600;
+    this.onload = null;
+    this.onerror = null;
+    this.width = 800;
+  }
+
+  set src(_value) {
+    setTimeout(() => {
+      if (this.onload)
+        this.onload();
+    }, 0);
+  }
+}
+
 async function loadContent({ runtimeResponse, runtimeSendMessage, topLevel = true } = {}) {
   const fakeWindow = new FakeWindow({ topLevel });
   const context = createContext({
@@ -65,6 +91,7 @@ async function loadContent({ runtimeResponse, runtimeSendMessage, topLevel = tru
       }
     },
     document: fakeWindow.document,
+    Image: FakeImage,
     location: fakeWindow.location,
     setTimeout,
     clearTimeout,
@@ -92,6 +119,17 @@ function resultFor(fakeWindow, requestId) {
   return fakeWindow.messages
     .map((item) => item.message)
     .find((message) => message?.type === 'drapo-bridge:screenshot-result' && message.requestId === requestId);
+}
+
+async function waitForResult(fakeWindow, requestId, timeoutMs = 2000) {
+  const started = Date.now();
+  while ((Date.now() - started) < timeoutMs) {
+    const result = resultFor(fakeWindow, requestId);
+    if (result)
+      return result;
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+  throw new Error(`Timed out waiting for ${requestId}`);
 }
 
 function deferred() {
@@ -279,6 +317,44 @@ test('full-page capture is bounded and rejects pages that are too tall', async (
   assert.equal(result.errorCode, 'too_large');
   assert.equal(captureCalls, 0);
 });
+
+test('full-page capture calls are paced under captureVisibleTab rate limits', async () => {
+  const captureStartedAt = [];
+  const fakeWindow = await loadContent({
+    runtimeSendMessage: async () => {
+      captureStartedAt.push(Date.now());
+      return {
+        ok: true,
+        imageDataUrl: 'data:image/png;base64,c2VnbWVudA==',
+        width: 800,
+        height: 600
+      };
+    }
+  });
+  fakeWindow.document.body.scrollHeight = 1200;
+  fakeWindow.document.documentElement.scrollHeight = 1200;
+
+  fakeWindow.dispatchMessage({
+    source: 'drapo',
+    type: 'drapo-bridge:handshake',
+    bridgeSessionId: 'session-1'
+  });
+
+  fakeWindow.dispatchMessage({
+    source: 'drapo',
+    type: 'drapo-bridge:screenshot',
+    requestId: 'request-full-page-paced',
+    bridgeSessionId: 'session-1',
+    mode: 'fullPage'
+  });
+
+  const result = await waitForResult(fakeWindow, 'request-full-page-paced');
+
+  assert.equal(result.ok, true);
+  assert.equal(captureStartedAt.length, 2);
+  assert.ok(captureStartedAt[1] - captureStartedAt[0] >= 500);
+});
+
 
 test('content returns structured capture failures from the background worker', async () => {
   const fakeWindow = await loadContent({

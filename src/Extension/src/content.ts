@@ -6,6 +6,7 @@ namespace DrapoBridgeContent {
     const CaptureTimeoutMs: number = 10000;
     const CaptureTimeoutMinMs: number = 1;
     const CaptureTimeoutMaxMs: number = 30000;
+    const CaptureVisibleTabMinIntervalMs: number = 500;
     const MaxFullPageCaptures: number = 8;
     const MaxFullPageHeight: number = 16000;
     const MaxCanvasPixelHeight: number = 32767;
@@ -166,12 +167,15 @@ namespace DrapoBridgeContent {
             const originalScrollX: number = this._window.scrollX;
             const originalScrollY: number = this._window.scrollY;
             const captures: FullPageCaptureItem[] = [];
+            let lastCaptureStartedAt: number = null;
             try {
                 for (let i: number = 0; i < captureCount; i++) {
                     const scrollY: number = Math.min(i * metadata.viewportHeight, Math.max(metadata.documentHeight - metadata.viewportHeight, 0));
                     this._window.scrollTo(originalScrollX, scrollY);
                     await this.WaitForRender();
                     const metadataCurrent: DrapoBridgeProtocol.ViewportMetadata = this.CreateViewportMetadata();
+                    await this.WaitForCapturePacing(lastCaptureStartedAt);
+                    lastCaptureStartedAt = Date.now();
                     const capture: CaptureRawResult = await this.CaptureViewportRaw(request, metadataCurrent);
                     captures.push({
                         image: await this.LoadImage(capture.imageDataUrl),
@@ -327,12 +331,21 @@ namespace DrapoBridgeContent {
                 const requestAnimationFrameCurrent: any = (this._window as any).requestAnimationFrame;
                 if (typeof requestAnimationFrameCurrent === 'function') {
                     requestAnimationFrameCurrent(() => {
-                        requestAnimationFrameCurrent(() => setTimeout(resolve, 50));
+                        requestAnimationFrameCurrent(() => this.Sleep(50).then(resolve));
                     });
                     return;
                 }
-                setTimeout(resolve, 50);
+                this.Sleep(50).then(resolve);
             });
+        }
+
+        private async WaitForCapturePacing(lastCaptureStartedAt: number): Promise<void> {
+            if (lastCaptureStartedAt === null)
+                return;
+            const elapsed: number = Date.now() - lastCaptureStartedAt;
+            const waitMs: number = CaptureVisibleTabMinIntervalMs - elapsed;
+            if (waitMs > 0)
+                await this.Sleep(waitMs);
         }
 
         private StartCapture(request: DrapoBridgeProtocol.ScreenshotRequest): void {
@@ -428,6 +441,10 @@ namespace DrapoBridgeContent {
                 if (timeout !== null)
                     clearTimeout(timeout);
             }
+        }
+
+        private async Sleep(ms: number): Promise<void> {
+            await new Promise<void>((resolve: () => void) => setTimeout(resolve, ms));
         }
     }
 }
