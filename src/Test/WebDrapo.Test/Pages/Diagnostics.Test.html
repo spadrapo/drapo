@@ -27,7 +27,7 @@
 <body>
     <span>Diagnostics</span>
     <div d-datakey="result" d-datatype="object" d-dataproperty-consoleerror="false" d-dataproperty-consolewarn="false" d-dataproperty-datakey="false" d-dataproperty-drapoerror="false" d-dataproperty-runtime="false" d-dataproperty-sector="false" d-dataproperty-rootdatakeys="false" d-dataproperty-contentdatakeys="false"></div>
-    <div d-sector="content">
+    <div d-sector="@">
         <div d-datakey="contentData" d-datatype="object" d-dataproperty-value="content"></div>
     </div>
     <input type="button" value="Run" driverunittest="click" d-on-click="GetExternal(CreateDiagnosticsResult,result,true)" />

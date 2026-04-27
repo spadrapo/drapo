@@ -245,6 +245,19 @@ class DrapoStorage {
                 continue;
             dataKeys.push(dataKey);
         }
+        const elements: HTMLElement[] = this.Application.Searcher.FindAllByAttribute('d-datakey');
+        for (let i: number = 0; i < elements.length; i++) {
+            const element: HTMLElement = elements[i];
+            const elementSector: string = this.Application.Document.GetSector(element);
+            if ((sector != null) && (!this.Application.Document.IsEqualSector(elementSector, sector)))
+                continue;
+            const dataKey: string = element.getAttribute('d-datakey');
+            if (this.Application.Document.IsHiddenKey(dataKey))
+                continue;
+            if (dataKeys.indexOf(dataKey) >= 0)
+                continue;
+            dataKeys.push(dataKey);
+        }
         return (dataKeys);
     }
 
