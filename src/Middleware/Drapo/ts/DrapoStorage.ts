@@ -1629,19 +1629,22 @@ class DrapoStorage {
         //Post
         let url: string = dataItem.UrlSet;
         url = await this.ResolveDataUrlMustaches(null, sector, url, executionContext);
-        const object: any = {};
+        let postData: any;
         if (dataItem.IsUnitOfWork) {
+            postData = {};
             if (dataItem.DataInserted.length > 0)
-                object.Inserted = dataItem.DataInserted;
+                postData.Inserted = dataItem.DataInserted;
             if (dataItem.DataUpdated.length > 0)
-                object.Updated = dataItem.DataUpdated;
+                postData.Updated = dataItem.DataUpdated;
             if (dataItem.DataDeleted.length > 0)
-                object.Deleted = dataItem.DataDeleted;
+                postData.Deleted = dataItem.DataDeleted;
+        } else if (dataItem.IsTypeArray) {
+            postData = {Entities: dataItem.Data};
         } else {
-            object.Entities = dataItem.Data;
+            postData = dataItem.Data;
         }
         const headersResponse: [string, string][] = dataItem.IsCookieChange ? [] : null;
-        const data: any[] = await this.Application.Server.GetJSON(url, "POST", this.Application.Serializer.Serialize(object), this.CONTENT_TYPE_JSON, null, headers);
+        const data: any[] = await this.Application.Server.GetJSON(url, "POST", this.Application.Serializer.Serialize(postData), this.CONTENT_TYPE_JSON, null, headers);
         if (this.Application.Server.HasBadRequest)
             return (false);
         if ((data != null) && (dataItemResponse != null))
