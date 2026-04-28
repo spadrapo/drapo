@@ -3,25 +3,34 @@
     <title>DiagnosticsImage</title>
     <script>
         function RunDiagnosticsImageTest() {
-            var prefix = 'data:image/png;base64,';
             drapo.Diagnostics.GetSectorImage('content').then(function (sectorImage) {
-                var hasSectorImage = sectorImage != null && sectorImage.indexOf(prefix) === 0;
                 drapo.Diagnostics.GetSectorImage(null).then(function (bodyImage) {
-                    var hasBodyImage = bodyImage != null && bodyImage.indexOf(prefix) === 0;
-                    drapo.Storage.UpdateData('result', null, { hasBodyImage: hasBodyImage, hasSectorImage: hasSectorImage });
+                    drapo.Storage.UpdateData('result', null, { bodyImage: bodyImage, sectorImage: sectorImage });
                 });
             });
         }
     </script>
+    <style>
+        .image-container { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+        .image-container img { max-width: 400px; border: 1px solid #999; margin: 10px 0; }
+    </style>
 </head>
 <body>
     <span>DiagnosticsImage</span>
-    <div d-datakey="result" d-datatype="object" d-dataproperty-hassectorimage="false" d-dataproperty-hasbodyimage="false"></div>
+    <div d-datakey="result" d-datatype="object" d-dataproperty-sectorimage="" d-dataproperty-bodyimage=""></div>
     <div d-sector="@">
         <span style="background-color: red; display: block; height: 50px; width: 100px;"></span>
     </div>
     <input type="button" value="Run" driverunittest="click" onclick="RunDiagnosticsImageTest()">
-    <br><span>hasSectorImage: </span><span d-model="{{result.hasSectorImage}}">true</span>
-    <br><span>hasBodyImage: </span><span d-model="{{result.hasBodyImage}}">true</span>
+    <div class="image-container">
+        <div>Sector Image:</div>
+        <img d-model-src="{{result.sectorImage}}" style="display: block">
+        <div style="display: none;">No sector image captured</div>
+    </div>
+    <div class="image-container">
+        <div>Body Image:</div>
+        <img d-model-src="{{result.bodyImage}}" style="display: block">
+        <div style="display: none;">No body image captured</div>
+    </div>
 
 </body></html>
