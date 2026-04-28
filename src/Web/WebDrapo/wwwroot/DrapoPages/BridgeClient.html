@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bridge Client</title>
+    <script>
+        (function () {
+            const state = {
+                autoHandshake: true,
+                autoScreenshot: false,
+                enabled: false,
+                handshakeDelay: 0,
+                helloDelay: 0,
+                messages: [],
+                requests: [],
+                screenshotDelay: 0
+            };
+
+            function postBridgeMessage(message, delay) {
+                window.setTimeout(function () {
+                    window.postMessage(message, window.location.origin);
+                }, delay || 0);
+            }
+
+            function createScreenshotResult(request, values) {
+                return Object.assign({
+                    devicePixelRatio: 1,
+                    documentHeight: 600,
+                    documentWidth: 800,
+                    height: 600,
+                    imageDataUrl: 'data:image/png;base64,abc',
+                    mode: request.mode,
+                    ok: true,
+                    requestId: request.requestId,
+                    scrollX: 0,
+                    scrollY: 0,
+                    source: 'drapo-bridge',
+                    type: 'drapo-bridge:screenshot-result',
+                    viewportHeight: 600,
+                    viewportWidth: 800,
+                    width: 800
+                }, values || {});
+            }
+
+            window.__bridgeTest = {
+                createScreenshotResult: createScreenshotResult,
+                postBridgeMessage: postBridgeMessage,
+                reset: function () {
+                    state.autoHandshake = true;
+                    state.autoScreenshot = false;
+                    state.enabled = false;
+                    state.handshakeDelay = 0;
+                    state.helloDelay = 0;
+                    state.messages = [];
+                    state.requests = [];
+                    state.screenshotDelay = 0;
+                },
+                state: state
+            };
+
+            window.addEventListener('message', function (event) {
+                const message = event.data;
+                if ((message == null) || (typeof message !== 'object') || (message.source !== 'drapo'))
+                    return;
+                state.messages.push(message);
+                if (!state.enabled)
+                    return;
+                if (message.type === 'drapo-bridge:hello-request') {
+                    postBridgeMessage({
+                        source: 'drapo-bridge',
+                        type: 'drapo-bridge:hello',
+                        version: '1.0.0'
+                    }, state.helloDelay);
+                    return;
+                }
+                if ((message.type === 'drapo-bridge:handshake') && state.autoHandshake) {
+                    postBridgeMessage({
+                        bridgeSessionId: message.bridgeSessionId,
+                        ok: true,
+                        source: 'drapo-bridge',
+                        type: 'drapo-bridge:handshake-result'
+                    }, state.handshakeDelay);
+                    return;
+                }
+                if (message.type === 'drapo-bridge:screenshot') {
+                    state.requests.push(message);
+                    if (state.autoScreenshot)
+                        postBridgeMessage(createScreenshotResult(message), state.screenshotDelay);
+                }
+            }, false);
+        })();
+
+        function Wait(timeout) {
+            return new Promise(function (resolve) {
+                window.setTimeout(resolve, timeout);
+            });
+        }
+
+        async function WaitForItem(items, count) {
+            for (let i = 0; i < 50; i++) {
+                if (items.length >= count)
+                    return items[count - 1];
+                await Wait(20);
+            }
+            return null;
+        }
+
+        async function RunBridgeClientTests() {
+            const results = {};
+            const errors = [];
+            const test = window.__bridgeTest;
+            const bridge = window.drapo.Bridge;
+
+            function check(name, value) {
+                results[name] = value === true;
+                if (!results[name])
+                    errors.push(name);
+            }
+
+            try {
+                test.reset();
+                test.state.enabled = true;
+                bridge.Configure('session-1');
+                const capture = bridge.CaptureScreen({ mode: 'viewport' });
+                const request = await WaitForItem(test.state.requests, 1);
+                test.postBridgeMessage(test.createScreenshotResult(request), 0);
+                const result = await capture;
+                check('handshake', bridge.IsAvailable && (bridge.Version === '1.0.0') && (request.bridgeSessionId === 'session-1'));
+                check('viewport', (result != null) && result.ok && (result.imageDataUrl === 'data:image/png;base64,abc') && (request.timeoutMs === 10000));
+
+                test.reset();
+                test.state.enabled = false;
+                bridge.Configure('missing-session');
+                const missingResult = await bridge.CaptureScreen({ mode: 'viewport', timeoutMs: 5 });
+                check('missing', (missingResult == null) && !bridge.IsAvailable);
+
+                test.reset();
+                test.state.enabled = true;
+                test.state.handshakeDelay = 40;
+                bridge.Configure('late-session');
+                const lateCapture = bridge.CaptureScreen({ mode: 'viewport', timeoutMs: 500 });
+                const earlyRequestCount = test.state.requests.length;
+                await Wait(10);
+                const delayedRequest = await WaitForItem(test.state.requests, 1);
+                test.postBridgeMessage(test.createScreenshotResult(delayedRequest), 0);
+                const lateResult = await lateCapture;
+                check('delayedHandshake', (earlyRequestCount === 0) && (lateResult != null) && lateResult.ok);
+
+                test.reset();
+                test.state.enabled = true;
+                bridge.Configure('malformed-session');
+                const malformedCapture = bridge.CaptureScreen({ mode: 'viewport' });
+                const malformedRequest = await WaitForItem(test.state.requests, 1);
+                test.postBridgeMessage({
+                    mode: 'viewport',
+                    ok: 'true',
+                    requestId: malformedRequest.requestId,
+                    source: 'drapo-bridge',
+                    type: 'drapo-bridge:screenshot-result'
+                }, 0);
+                await Wait(20);
+                test.postBridgeMessage(test.createScreenshotResult(malformedRequest, {
+                    imageDataUrl: 'data:image/png;base64,valid'
+                }), 0);
+                const malformedResult = await malformedCapture;
+                check('malformed', (malformedResult != null) && (malformedResult.imageDataUrl === 'data:image/png;base64,valid'));
+
+                test.reset();
+                test.state.enabled = true;
+                bridge.Configure('concurrent-session');
+                const captureA = bridge.CaptureScreen({ mode: 'viewport' });
+                const captureB = bridge.CaptureScreen({ mode: 'fullPage', timeoutMs: 15000 });
+                await WaitForItem(test.state.requests, 2);
+                test.postBridgeMessage(test.createScreenshotResult(test.state.requests[1], {
+                    imageDataUrl: 'data:image/png;base64,b'
+                }), 0);
+                test.postBridgeMessage(test.createScreenshotResult(test.state.requests[0], {
+                    imageDataUrl: 'data:image/png;base64,a'
+                }), 0);
+                const resultA = await captureA;
+                const resultB = await captureB;
+                check('concurrent', (resultA.imageDataUrl === 'data:image/png;base64,a') && (resultB.imageDataUrl === 'data:image/png;base64,b'));
+
+                test.reset();
+                test.state.enabled = true;
+                bridge.Configure('error-session');
+                const errorCapture = bridge.CaptureScreen({
+                    mode: 'element',
+                    rect: { height: 100, width: 200, x: 10, y: 20 }
+                });
+                const errorRequest = await WaitForItem(test.state.requests, 1);
+                test.postBridgeMessage(test.createScreenshotResult(errorRequest, {
+                    errorCode: 'too_large',
+                    errorMessage: 'Page is too large.',
+                    imageDataUrl: undefined,
+                    ok: false
+                }), 0);
+                const errorResult = await errorCapture;
+                check('extensionError', (errorResult != null) && !errorResult.ok && (errorResult.errorCode === 'too_large'));
+
+                test.reset();
+                test.state.enabled = true;
+                bridge.Configure('clear-session');
+                const pendingCapture = bridge.CaptureScreen({ mode: 'viewport' });
+                await WaitForItem(test.state.requests, 1);
+                bridge.Configure('');
+                const clearResult = await pendingCapture;
+                check('clear', (clearResult == null) && !bridge.IsAvailable);
+            } catch (e) {
+                errors.push((e && e.message) ? e.message : 'unexpected');
+            }
+
+            for (const name in results)
+                document.getElementById('result-' + name).textContent = results[name].toString();
+            document.getElementById('result-error').textContent = errors.join(',');
+        }
+    </script>
+    <script src="/drapo.js"></script>
+</head>
+<body>
+    <span>Bridge Client</span>
+    <input type="button" driverunittest="click" value="Run Bridge Client Tests" onclick="RunBridgeClientTests()">
+    <div>
+        <div>Handshake: <span id="result-handshake">false</span></div>
+        <div>Viewport: <span id="result-viewport">false</span></div>
+        <div>Missing: <span id="result-missing">false</span></div>
+        <div>Delayed handshake: <span id="result-delayedHandshake">false</span></div>
+        <div>Malformed: <span id="result-malformed">false</span></div>
+        <div>Concurrent: <span id="result-concurrent">false</span></div>
+        <div>Error: <span id="result-extensionError">false</span></div>
+        <div>Clear: <span id="result-clear">false</span></div>
+        <div>Failures: <span id="result-error"></span></div>
+    </div>
+</body>
+</html>

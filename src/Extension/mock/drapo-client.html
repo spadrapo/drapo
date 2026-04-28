@@ -1,0 +1,297 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Drapo Bridge Client Test</title>
+  <script src="/drapo.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.35;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f7fb;
+      color: #17202a;
+    }
+
+    main {
+      margin: 0 auto;
+      max-width: 1120px;
+      padding: 24px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0 0 16px;
+    }
+
+    .toolbar {
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid #d7dee8;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px;
+    }
+
+    label {
+      align-items: center;
+      display: flex;
+      gap: 8px;
+    }
+
+    input {
+      border: 1px solid #b9c3d0;
+      font: inherit;
+      min-width: 260px;
+      padding: 8px;
+    }
+
+    button {
+      background: #234f8f;
+      border: 0;
+      color: #ffffff;
+      cursor: pointer;
+      font: inherit;
+      padding: 9px 12px;
+    }
+
+    button.secondary {
+      background: #4c5968;
+    }
+
+    button:disabled {
+      background: #8f9bab;
+      cursor: not-allowed;
+    }
+
+    .status {
+      background: #ffffff;
+      border: 1px solid #d7dee8;
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-top: 12px;
+      padding: 12px;
+    }
+
+    .status div {
+      min-width: 0;
+    }
+
+    .workspace {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      margin-top: 16px;
+    }
+
+    .capture-area,
+    .output {
+      background: #ffffff;
+      border: 1px solid #d7dee8;
+      min-width: 0;
+      padding: 16px;
+    }
+
+    #elementTarget {
+      align-items: center;
+      background: #fff3c4;
+      border: 2px solid #bd8b00;
+      display: flex;
+      font-weight: 700;
+      height: 140px;
+      justify-content: center;
+      margin: 260px 0 420px 140px;
+      width: 280px;
+    }
+
+    .filler {
+      color: #465262;
+      margin: 0;
+      max-width: 720px;
+    }
+
+    img {
+      border: 1px solid #d7dee8;
+      display: block;
+      max-height: 260px;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    pre {
+      background: #0f1720;
+      color: #d8e1ee;
+      margin: 12px 0 0;
+      max-height: 420px;
+      overflow: auto;
+      padding: 12px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    @media (max-width: 860px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Drapo Bridge Client Test</h1>
+
+    <section class="toolbar">
+      <label>
+        Session
+        <input id="sessionId" value="local-dev-session">
+      </label>
+      <button id="configure">Configure</button>
+      <button id="viewport">Capture Viewport</button>
+      <button id="element">Capture Element</button>
+      <button id="fullPage">Capture Full Page</button>
+      <button id="clear" class="secondary">Clear Session</button>
+    </section>
+
+    <section class="status">
+      <div><strong>Drapo:</strong> <span id="drapoStatus">waiting</span></div>
+      <div><strong>Bridge available:</strong> <span id="available">false</span></div>
+      <div><strong>Extension version:</strong> <span id="version">-</span></div>
+      <div><strong>Last action:</strong> <span id="lastAction">none</span></div>
+    </section>
+
+    <section class="workspace">
+      <div class="capture-area">
+        <p class="filler">
+          Use the buttons above to call <code>window.drapo.Bridge.Configure</code> and
+          <code>window.drapo.Bridge.CaptureScreen</code>. The element capture button
+          computes the document-pixel rectangle for the highlighted target below, then
+          sends that rect to the extension.
+        </p>
+        <div id="elementTarget">Element target</div>
+        <p class="filler">
+          This bottom content makes the document taller so full-page capture and element
+          scrolling have visible work to do.
+        </p>
+      </div>
+
+      <aside class="output">
+        <strong>Preview</strong>
+        <img id="preview" alt="Last capture preview">
+        <pre id="result">No result yet.</pre>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const state = {
+      drapoReady: false
+    };
+
+    function getBridge() {
+      return window.drapo && window.drapo.Bridge ? window.drapo.Bridge : null;
+    }
+
+    function setText(id, value) {
+      document.getElementById(id).textContent = value;
+    }
+
+    function renderStatus(action) {
+      const bridge = getBridge();
+      setText('drapoStatus', bridge ? 'ready' : 'waiting');
+      setText('available', bridge ? String(bridge.IsAvailable) : 'false');
+      setText('version', bridge && bridge.Version ? bridge.Version : '-');
+      if (action)
+        setText('lastAction', action);
+    }
+
+    function writeResult(result) {
+      document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+      const preview = document.getElementById('preview');
+      if (result && result.ok && result.imageDataUrl)
+        preview.src = result.imageDataUrl;
+    }
+
+    function getElementRect(element) {
+      const rect = element.getBoundingClientRect();
+      return {
+        x: rect.left + window.scrollX,
+        y: rect.top + window.scrollY,
+        width: rect.width,
+        height: rect.height
+      };
+    }
+
+    async function waitForBridge() {
+      for (let i = 0; i < 100; i++) {
+        const bridge = getBridge();
+        if (bridge)
+          return bridge;
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      return null;
+    }
+
+    async function capture(request) {
+      const bridge = await waitForBridge();
+      if (!bridge) {
+        writeResult({ ok: false, errorCode: 'drapo_not_ready' });
+        renderStatus('Drapo not ready');
+        return;
+      }
+      const result = await bridge.CaptureScreen(request);
+      writeResult(result);
+      renderStatus(request.mode + ' capture');
+    }
+
+    document.getElementById('configure').addEventListener('click', async () => {
+      const bridge = await waitForBridge();
+      if (!bridge) {
+        writeResult({ ok: false, errorCode: 'drapo_not_ready' });
+        renderStatus('Drapo not ready');
+        return;
+      }
+      bridge.Configure(document.getElementById('sessionId').value);
+      renderStatus('configured');
+      window.setTimeout(() => renderStatus('configured'), 400);
+    });
+
+    document.getElementById('viewport').addEventListener('click', () => {
+      capture({ mode: 'viewport' });
+    });
+
+    document.getElementById('element').addEventListener('click', () => {
+      capture({
+        mode: 'element',
+        rect: getElementRect(document.getElementById('elementTarget'))
+      });
+    });
+
+    document.getElementById('fullPage').addEventListener('click', () => {
+      capture({
+        mode: 'fullPage',
+        timeoutMs: 15000
+      });
+    });
+
+    document.getElementById('clear').addEventListener('click', async () => {
+      const bridge = await waitForBridge();
+      if (bridge)
+        bridge.Configure('');
+      writeResult(null);
+      renderStatus('cleared');
+    });
+
+    waitForBridge().then(() => {
+      renderStatus('ready');
+      window.setInterval(() => renderStatus(), 500);
+    });
+  </script>
+</body>
+</html>

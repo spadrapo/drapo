@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Drapo Bridge Mock</title>
+  <style>
+    body {
+      color: #17202a;
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .toolbar {
+      align-items: center;
+      display: flex;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      background: #ffffff;
+      border-bottom: 1px solid #ccd4df;
+      padding: 12px 0;
+      z-index: 1;
+    }
+    button {
+      border: 1px solid #50657d;
+      background: #ffffff;
+      color: #17202a;
+      cursor: pointer;
+      padding: 8px 10px;
+    }
+    #fragment {
+      border: 1px solid #ccd4df;
+      margin: 24px 0;
+      padding: 16px;
+    }
+    .spacer {
+      height: 1400px;
+      background: linear-gradient(#f5f8fb, #dfe8f2);
+    }
+    img {
+      border: 1px solid #ccd4df;
+      display: block;
+      max-width: 100%;
+      margin-top: 16px;
+    }
+    pre {
+      background: #f5f8fb;
+      overflow: auto;
+      padding: 12px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="toolbar">
+      <button id="handshake">Start Session</button>
+      <button id="viewport">Viewport</button>
+      <button id="element">Element</button>
+      <button id="fullPage">Full Page</button>
+    </div>
+    <section id="fragment">
+      <h1>CMS Fragment</h1>
+      <p>This page simulates an authorized Drapo/T6 GPT edit session.</p>
+    </section>
+    <div class="spacer"></div>
+    <pre id="log"></pre>
+    <img id="preview" alt="Last screenshot preview">
+  </main>
+  <script src="mock.js"></script>
+</body>
+</html>
