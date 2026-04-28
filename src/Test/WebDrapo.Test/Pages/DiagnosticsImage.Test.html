@@ -3,10 +3,19 @@
     <title>DiagnosticsImage</title>
     <script>
         function RunDiagnosticsImageTest() {
+            console.log('RunDiagnosticsImageTest called');
+            console.log('drapo:', typeof drapo);
+            console.log('drapo.Diagnostics:', typeof drapo.Diagnostics);
+            console.log('drapo.Diagnostics.GetSectorImage:', typeof drapo.Diagnostics.GetSectorImage);
+            
             drapo.Diagnostics.GetSectorImage('content').then(function (sectorImage) {
+                console.log('sectorImage:', sectorImage ? 'captured' : 'null');
                 drapo.Diagnostics.GetSectorImage(null).then(function (bodyImage) {
+                    console.log('bodyImage:', bodyImage ? 'captured' : 'null');
                     drapo.Storage.UpdateData('result', null, { bodyImage: bodyImage, sectorImage: sectorImage });
                 });
+            }).catch(function(error) {
+                console.error('Error in GetSectorImage:', error);
             });
         }
     </script>
