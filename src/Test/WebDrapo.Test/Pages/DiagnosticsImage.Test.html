@@ -1,0 +1,47 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>DiagnosticsImage</title>
+    <script>
+        function RunDiagnosticsImageTest() {
+            console.log('RunDiagnosticsImageTest called');
+            drapo.Diagnostics.GetSectorImage('content').then(function (sectorImage) {
+                console.log('sectorImage captured:', sectorImage != null);
+                if (sectorImage && document.getElementById('sectorImg')) {
+                    document.getElementById('sectorImg').setAttribute('src', sectorImage);
+                }
+                drapo.Diagnostics.GetSectorImage(null).then(function (bodyImage) {
+                    console.log('bodyImage captured:', bodyImage != null);
+                    if (bodyImage && document.getElementById('bodyImg')) {
+                        document.getElementById('bodyImg').setAttribute('src', bodyImage);
+                    }
+                    drapo.Storage.UpdateData('result', null, { bodyImage: bodyImage, sectorImage: sectorImage });
+                });
+            }).catch(function(error) {
+                console.error('Error in GetSectorImage:', error);
+            });
+        }
+    </script>
+    <style>
+        .image-container { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+        .image-container img { max-width: 400px; border: 1px solid #999; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <span>DiagnosticsImage</span>
+    <div d-datakey="result" d-datatype="object" d-dataproperty-sectorimage="" d-dataproperty-bodyimage=""></div>
+    <div d-sector="content">
+        <span style="background-color: red; display: block; height: 50px; width: 100px;"></span>
+    </div>
+    <input type="button" value="Run" driverunittest="click" onclick="RunDiagnosticsImageTest()">
+    <div class="image-container">
+        <div>Sector Image:</div>
+        <img id="sectorImg" style="display: block">
+        <div style="display: none;">No sector image captured</div>
+    </div>
+    <div class="image-container">
+        <div>Body Image:</div>
+        <img id="bodyImg" style="display: block">
+        <div style="display: none;">No body image captured</div>
+    </div>
+
+</body></html>
