@@ -1102,6 +1102,11 @@ namespace WebDrapo.Test
             ValidatePage("Diagnostics");
         }
         [TestCase]
+        public void DiagnosticsImageTest()
+        {
+            ValidatePage("DiagnosticsImage");
+        }
+        [TestCase]
         public void DynamicContentRedirectTest()
         {
             ValidatePage("DynamicContentRedirect");

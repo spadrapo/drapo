@@ -1,0 +1,27 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>DiagnosticsImage</title>
+    <script>
+        function RunDiagnosticsImageTest() {
+            var prefix = 'data:image/png;base64,';
+            drapo.Diagnostics.GetSectorImage('content').then(function (sectorImage) {
+                var hasSectorImage = sectorImage != null && sectorImage.indexOf(prefix) === 0;
+                drapo.Diagnostics.GetSectorImage(null).then(function (bodyImage) {
+                    var hasBodyImage = bodyImage != null && bodyImage.indexOf(prefix) === 0;
+                    drapo.Storage.UpdateData('result', null, { hasBodyImage: hasBodyImage, hasSectorImage: hasSectorImage });
+                });
+            });
+        }
+    </script>
+</head>
+<body>
+    <span>DiagnosticsImage</span>
+    <div d-datakey="result" d-datatype="object" d-dataproperty-hassectorimage="false" d-dataproperty-hasbodyimage="false"></div>
+    <div d-sector="@">
+        <span style="background-color: red; display: block; height: 50px; width: 100px;"></span>
+    </div>
+    <input type="button" value="Run" driverunittest="click" onclick="RunDiagnosticsImageTest()">
+    <br><span>hasSectorImage: </span><span d-model="{{result.hasSectorImage}}">true</span>
+    <br><span>hasBodyImage: </span><span d-model="{{result.hasBodyImage}}">true</span>
+
+</body></html>

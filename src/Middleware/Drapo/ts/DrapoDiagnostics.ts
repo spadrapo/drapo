@@ -36,6 +36,19 @@ class DrapoDiagnostics {
             this._levelFilter = this.NormalizeLevelFilter(levelFilter);
     }
 
+    // Returns a best-effort base64 PNG data URL of the sector's visible bounds.
+    // Rendering uses the SVG foreignObject + Canvas technique and may not capture
+    // computed styles, cross-origin assets, or canvas/video content.
+    // Pass null as sector to capture document.body.
+    public async GetSectorImage(sector: string | null): Promise<string> {
+        const element: HTMLElement = sector == null
+            ? document.body
+            : this.Application.Searcher.FindByAttributeAndValue('d-sector', sector);
+        if (element == null)
+            return (null);
+        return (this.RenderElementToBase64(element));
+    }
+
     public GetErrorBuffer(count: number = null, levelFilter: string | string[] = null): DrapoDiagnosticEntry[] {
         const levels: string[] = levelFilter == null ? null : this.NormalizeLevelFilter(levelFilter);
         let entries: DrapoDiagnosticEntry[] = this._entries;
@@ -52,6 +65,50 @@ class DrapoDiagnostics {
 
     public CaptureDrapoError(message: string, parameters: string[] = [], stack: string = null): void {
         this.Capture('error', 'drapo', this.CreateMessage(message, parameters), stack);
+    }
+
+    private async RenderElementToBase64(element: HTMLElement): Promise<string> {
+        const rect: ClientRect = element.getBoundingClientRect();
+        const height: number = Math.round(rect.height);
+        const width: number = Math.round(rect.width);
+        if ((width <= 0) || (height <= 0))
+            return (null);
+        const svgNS: string = 'http://www.w3.org/2000/svg';
+        const svgElement: SVGSVGElement = document.createElementNS(svgNS, 'svg') as SVGSVGElement;
+        svgElement.setAttribute('height', String(height));
+        svgElement.setAttribute('width', String(width));
+        svgElement.setAttribute('xmlns', svgNS);
+        const foreignObject: SVGForeignObjectElement = document.createElementNS(svgNS, 'foreignObject') as SVGForeignObjectElement;
+        foreignObject.setAttribute('height', '100%');
+        foreignObject.setAttribute('width', '100%');
+        foreignObject.appendChild(element.cloneNode(true));
+        svgElement.appendChild(foreignObject);
+        const svgDataUrl: string = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(svgElement));
+        const img: HTMLImageElement = await this.LoadImage(svgDataUrl);
+        if (img == null)
+            return (null);
+        const canvas: HTMLCanvasElement = document.createElement('canvas');
+        canvas.height = height;
+        canvas.width = width;
+        const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+        if (ctx == null)
+            return (null);
+        try {
+            ctx.drawImage(img, 0, 0);
+            return (canvas.toDataURL('image/png'));
+        } catch (e) {
+            return (null);
+        }
+    }
+
+    private LoadImage(src: string): Promise<HTMLImageElement> {
+        return (new Promise<HTMLImageElement>((resolve) => {
+            const img: HTMLImageElement = new Image();
+            const timeoutHandle: number = window.setTimeout(() => resolve(null), 5000);
+            img.onload = () => { window.clearTimeout(timeoutHandle); resolve(img); };
+            img.onerror = () => { window.clearTimeout(timeoutHandle); resolve(null); };
+            img.src = src;
+        }));
     }
 
     private WrapConsole(): void {
