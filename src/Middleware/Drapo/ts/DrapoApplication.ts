@@ -37,6 +37,8 @@
     private _packHandler: DrapoPackHandler;
     private _worker: DrapoWorker;
     private _debugger: DrapoDebugger;
+    private _diagnostics: DrapoDiagnostics;
+    private _introspection: DrapoIntrospection;
 
     // Properties
     get IsLoaded(): boolean {
@@ -188,9 +190,18 @@
         return (this._debugger);
     }
 
+    get Diagnostics(): DrapoDiagnostics {
+        return (this._diagnostics);
+    }
+
+    get Introspection(): DrapoIntrospection {
+        return (this._introspection);
+    }
+
     // Constructors
     constructor() {
         this._logger = new DrapoLogger(this);
+        this._diagnostics = new DrapoDiagnostics(this);
         this._router = new DrapoRouter(this);
         this._server = new DrapoServer(this);
         this._observer = new DrapoObserver(this);
@@ -226,6 +237,7 @@
         this._packHandler = new DrapoPackHandler(this);
         this._worker = new DrapoWorker(this);
         this._debugger = new DrapoDebugger(this);
+        this._introspection = new DrapoIntrospection(this);
     }
 
     public async OnLoad(): Promise<void> {

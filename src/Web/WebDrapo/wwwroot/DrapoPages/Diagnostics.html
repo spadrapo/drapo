@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Diagnostics</title>
+    <script>
+        function CreateDiagnosticsResult() {
+            console.warn('diagnostics-warning');
+            console.error('diagnostics-error');
+            drapo.ExceptionHandler.HandleError('Diagnostics page error {0}', 'ok');
+            var buffer = drapo.Diagnostics.GetErrorBuffer(3);
+            var sectors = drapo.Introspection.GetSectors();
+            var rootDataKeys = drapo.Introspection.GetDataKeys();
+            var contentDataKeys = drapo.Introspection.GetDataKeys('content');
+            var runtimeState = drapo.Introspection.GetRuntimeState();
+            return ({
+                consoleError: buffer.some(function (entry) { return entry.source === 'console' && entry.level === 'error' && entry.message === 'diagnostics-error'; }),
+                consoleWarn: buffer.some(function (entry) { return entry.source === 'console' && entry.level === 'warn' && entry.message === 'diagnostics-warning'; }),
+                dataKey: drapo.Introspection.IsDataKey('contentData', 'content'),
+                drapoError: buffer.some(function (entry) { return entry.source === 'drapo' && entry.message === 'Drapo - Diagnostics page error ok'; }),
+                runtime: runtimeState.isLoaded && runtimeState.browser.width > 0 && runtimeState.browser.height > 0,
+                sector: sectors.indexOf('content') >= 0,
+                rootDataKeys: rootDataKeys.indexOf('result') >= 0,
+                contentDataKeys: contentDataKeys.indexOf('contentData') >= 0
+            });
+        }
+    </script>
+</head>
+<body>
+    <span>Diagnostics</span>
+    <div d-dataKey="result" d-dataType="object"
+         d-dataProperty-consoleError="false"
+         d-dataProperty-consoleWarn="false"
+         d-dataProperty-dataKey="false"
+         d-dataProperty-drapoError="false"
+         d-dataProperty-runtime="false"
+         d-dataProperty-sector="false"
+         d-dataProperty-rootDataKeys="false"
+         d-dataProperty-contentDataKeys="false"></div>
+    <div d-sector="content">
+        <div d-dataKey="contentData" d-dataType="object" d-dataProperty-value="content"></div>
+    </div>
+    <input type="button" value="Run" driverunittest="click" d-on-click="GetExternal(CreateDiagnosticsResult,result,true)" />
+    <br /><span>consoleError: </span><span d-model="{{result.consoleError}}"></span>
+    <br /><span>consoleWarn: </span><span d-model="{{result.consoleWarn}}"></span>
+    <br /><span>drapoError: </span><span d-model="{{result.drapoError}}"></span>
+    <br /><span>sector: </span><span d-model="{{result.sector}}"></span>
+    <br /><span>rootDataKeys: </span><span d-model="{{result.rootDataKeys}}"></span>
+    <br /><span>contentDataKeys: </span><span d-model="{{result.contentDataKeys}}"></span>
+    <br /><span>dataKey: </span><span d-model="{{result.dataKey}}"></span>
+    <br /><span>runtime: </span><span d-model="{{result.runtime}}"></span>
+</body>
+</html>

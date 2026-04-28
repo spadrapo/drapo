@@ -14,11 +14,14 @@
 
     public async Handle(e: any, context: string = null): Promise<void> {
         const message: string = context != null ? context: 'DrapoExceptionHandler - Handle - Exception';
-        await this.Application.Log.WriteError('Drapo - ' + message + ' - Stack: ' + e.stack.toString(), []);
+        const stack: string = ((e != null) && (e.stack != null)) ? e.stack.toString() : ((e == null) ? '' : e.toString());
+        this.Application.Diagnostics.CaptureDrapoError('Drapo - ' + message, [], stack);
+        await this.Application.Log.WriteError('Drapo - ' + message + ' - Stack: ' + stack, []);
     }
 
     public async HandleError(message: string, ...parameters: string[]) : Promise<void>
     {
+        this.Application.Diagnostics.CaptureDrapoError('Drapo - ' + message, parameters);
         await this.Application.Log.WriteError('Drapo - ' + message, parameters);
     }
 }
