@@ -8,8 +8,14 @@
             console.log('RunDiagnosticsImageTest called');
             drapo.Diagnostics.GetSectorImage('content').then(function (sectorImage) {
                 console.log('sectorImage captured:', sectorImage != null);
+                if (sectorImage && document.getElementById('sectorImg')) {
+                    document.getElementById('sectorImg').setAttribute('src', sectorImage);
+                }
                 drapo.Diagnostics.GetSectorImage(null).then(function (bodyImage) {
                     console.log('bodyImage captured:', bodyImage != null);
+                    if (bodyImage && document.getElementById('bodyImg')) {
+                        document.getElementById('bodyImg').setAttribute('src', bodyImage);
+                    }
                     drapo.Storage.UpdateData('result', null, { bodyImage: bodyImage, sectorImage: sectorImage });
                 });
             }).catch(function(error) {
@@ -41,15 +47,8 @@
         <img id="bodyImg" style="display: {{result.bodyImage ? 'block' : 'none'}}" />
         <div d-if="{{result.bodyImage == null}}">No body image captured</div>
     </div>
-    <script>
-        drapo.Storage.Subscribe('result', function(result) {
-            if (result && result.sectorImage) {
-                document.getElementById('sectorImg').src = result.sectorImage;
-            }
-            if (result && result.bodyImage) {
-                document.getElementById('bodyImg').src = result.bodyImage;
-            }
-        });
-    </script>
+</body>
+</html>
+
 </body>
 </html>

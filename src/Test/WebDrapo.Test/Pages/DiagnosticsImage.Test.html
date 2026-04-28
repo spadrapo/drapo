@@ -6,8 +6,14 @@
             console.log('RunDiagnosticsImageTest called');
             drapo.Diagnostics.GetSectorImage('content').then(function (sectorImage) {
                 console.log('sectorImage captured:', sectorImage != null);
+                if (sectorImage && document.getElementById('sectorImg')) {
+                    document.getElementById('sectorImg').setAttribute('src', sectorImage);
+                }
                 drapo.Diagnostics.GetSectorImage(null).then(function (bodyImage) {
                     console.log('bodyImage captured:', bodyImage != null);
+                    if (bodyImage && document.getElementById('bodyImg')) {
+                        document.getElementById('bodyImg').setAttribute('src', bodyImage);
+                    }
                     drapo.Storage.UpdateData('result', null, { bodyImage: bodyImage, sectorImage: sectorImage });
                 });
             }).catch(function(error) {
@@ -23,7 +29,7 @@
 <body>
     <span>DiagnosticsImage</span>
     <div d-datakey="result" d-datatype="object" d-dataproperty-sectorimage="" d-dataproperty-bodyimage=""></div>
-    <div d-sector="@">
+    <div d-sector="content">
         <span style="background-color: red; display: block; height: 50px; width: 100px;"></span>
     </div>
     <input type="button" value="Run" driverunittest="click" onclick="RunDiagnosticsImageTest()">
@@ -37,15 +43,5 @@
         <img id="bodyImg" style="display: block">
         <div style="display: none;">No body image captured</div>
     </div>
-    <script>
-        drapo.Storage.Subscribe('result', function(result) {
-            if (result && result.sectorImage) {
-                document.getElementById('sectorImg').src = result.sectorImage;
-            }
-            if (result && result.bodyImage) {
-                document.getElementById('bodyImg').src = result.bodyImage;
-            }
-        });
-    </script>
 
 </body></html>
