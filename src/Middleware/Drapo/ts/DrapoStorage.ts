@@ -230,6 +230,37 @@ class DrapoStorage {
         return (dataKeys);
     }
 
+    public GetDataKeys(sector: string = null): string[] {
+        const dataKeys: string[] = [];
+        for (let i: number = this._cacheItems.length - 1; i >= 0; i--) {
+            const storageItem: DrapoStorageItem = this._cacheItems[i];
+            if (storageItem == null)
+                continue;
+            if ((sector != null) && (!this.Application.Document.IsEqualSector(storageItem.Sector, sector)))
+                continue;
+            const dataKey: string = storageItem.DataKey;
+            if (this.Application.Document.IsHiddenKey(dataKey))
+                continue;
+            if (dataKeys.indexOf(dataKey) >= 0)
+                continue;
+            dataKeys.push(dataKey);
+        }
+        const elements: HTMLElement[] = this.Application.Searcher.FindAllByAttribute('d-datakey');
+        for (let i: number = 0; i < elements.length; i++) {
+            const element: HTMLElement = elements[i];
+            const elementSector: string = this.Application.Document.GetSector(element);
+            if ((sector != null) && (!this.Application.Document.IsEqualSector(elementSector, sector)))
+                continue;
+            const dataKey: string = element.getAttribute('d-datakey');
+            if (this.Application.Document.IsHiddenKey(dataKey))
+                continue;
+            if (dataKeys.indexOf(dataKey) >= 0)
+                continue;
+            dataKeys.push(dataKey);
+        }
+        return (dataKeys);
+    }
+
     public async ReloadPipe(dataPipe: string): Promise<boolean> {
         let reloaded = false;
         const storageItems: DrapoStorageItem[] = this._cacheItems.filter((i) => (i.Pipes != null) && (this.Application.Solver.Contains(i.Pipes, dataPipe)));
