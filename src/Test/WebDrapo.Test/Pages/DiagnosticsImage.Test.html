@@ -4,14 +4,10 @@
     <script>
         function RunDiagnosticsImageTest() {
             console.log('RunDiagnosticsImageTest called');
-            console.log('drapo:', typeof drapo);
-            console.log('drapo.Diagnostics:', typeof drapo.Diagnostics);
-            console.log('drapo.Diagnostics.GetSectorImage:', typeof drapo.Diagnostics.GetSectorImage);
-            
             drapo.Diagnostics.GetSectorImage('content').then(function (sectorImage) {
-                console.log('sectorImage:', sectorImage ? 'captured' : 'null');
+                console.log('sectorImage captured:', sectorImage != null);
                 drapo.Diagnostics.GetSectorImage(null).then(function (bodyImage) {
-                    console.log('bodyImage:', bodyImage ? 'captured' : 'null');
+                    console.log('bodyImage captured:', bodyImage != null);
                     drapo.Storage.UpdateData('result', null, { bodyImage: bodyImage, sectorImage: sectorImage });
                 });
             }).catch(function(error) {
@@ -33,13 +29,23 @@
     <input type="button" value="Run" driverunittest="click" onclick="RunDiagnosticsImageTest()">
     <div class="image-container">
         <div>Sector Image:</div>
-        <img d-model-src="{{result.sectorImage}}" style="display: block">
+        <img id="sectorImg" style="display: block">
         <div style="display: none;">No sector image captured</div>
     </div>
     <div class="image-container">
         <div>Body Image:</div>
-        <img d-model-src="{{result.bodyImage}}" style="display: block">
+        <img id="bodyImg" style="display: block">
         <div style="display: none;">No body image captured</div>
     </div>
+    <script>
+        drapo.Storage.Subscribe('result', function(result) {
+            if (result && result.sectorImage) {
+                document.getElementById('sectorImg').src = result.sectorImage;
+            }
+            if (result && result.bodyImage) {
+                document.getElementById('bodyImg').src = result.bodyImage;
+            }
+        });
+    </script>
 
 </body></html>
