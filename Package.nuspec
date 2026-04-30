@@ -12,6 +12,7 @@
     <tags>Drapo Framework SPA</tags>
     <projectUrl>http://drapo.azurewebsites.net</projectUrl>
     <contentFiles>
+      <files include="any/any/node_modules/@types/**" buildAction="None" copyToOutput="false" />
       <files include="**/*" buildAction="Content" copyToOutput="true" />
     </contentFiles>
   </metadata>
