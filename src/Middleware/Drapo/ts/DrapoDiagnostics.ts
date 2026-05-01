@@ -75,6 +75,7 @@ class DrapoDiagnostics {
             return (null);
         const clone: HTMLElement = element.cloneNode(true) as HTMLElement;
         await this.InlineAbsoluteImages(clone);
+        await this.InlineStylesheets(clone);
         this.StripInvalidXmlAttributes(clone);
         const svgNS: string = 'http://www.w3.org/2000/svg';
         const svgElement: SVGSVGElement = document.createElementNS(svgNS, 'svg') as SVGSVGElement;
@@ -112,6 +113,35 @@ class DrapoDiagnostics {
             img.onerror = () => { window.clearTimeout(timeoutHandle); resolve(null); };
             img.src = src;
         }));
+    }
+
+    // Fetches all external stylesheets and inline <style> blocks from the document
+    // and injects them as a single <style> element into the clone so that
+    // SVG foreignObject rendering (which cannot load external CSS) shows correct styles.
+    private async InlineStylesheets(element: HTMLElement): Promise<void> {
+        const cssTexts: string[] = [];
+        const linkElements: NodeListOf<HTMLLinkElement> = document.querySelectorAll('link[rel="stylesheet"]');
+        await Promise.all(Array.from(linkElements).map(async (link: HTMLLinkElement) => {
+            const href: string = link.href;
+            if (!href)
+                return;
+            try {
+                const response: Response = await fetch(href, { credentials: 'include' });
+                if (!response.ok)
+                    return;
+                cssTexts.push(await response.text());
+            } catch {
+                // Skip stylesheets that fail to load
+            }
+        }));
+        const inlineStyles: NodeListOf<HTMLStyleElement> = document.querySelectorAll('style');
+        for (const style of Array.from(inlineStyles))
+            cssTexts.push(style.textContent || '');
+        if (cssTexts.length === 0)
+            return;
+        const styleElement: HTMLStyleElement = document.createElement('style');
+        styleElement.textContent = cssTexts.join('\n');
+        element.insertBefore(styleElement, element.firstChild);
     }
 
     // Removes attributes whose names are invalid in XML from the entire element subtree.
