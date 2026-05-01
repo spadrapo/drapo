@@ -69,8 +69,8 @@ class DrapoDiagnostics {
 
     private async RenderElementToBase64(element: HTMLElement): Promise<string> {
         const rect: ClientRect = element.getBoundingClientRect();
-        const height: number = Math.round(rect.height);
-        const width: number = Math.round(rect.width);
+        const width: number = element.scrollWidth > 0 ? element.scrollWidth : Math.round(rect.width);
+        const height: number = element.scrollHeight > 0 ? element.scrollHeight : Math.round(rect.height);
         if ((width <= 0) || (height <= 0))
             return (null);
         const clone: HTMLElement = element.cloneNode(true) as HTMLElement;
