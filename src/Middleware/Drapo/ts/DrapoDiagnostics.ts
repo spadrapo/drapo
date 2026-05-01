@@ -74,7 +74,6 @@ class DrapoDiagnostics {
         if ((width <= 0) || (height <= 0))
             return (null);
         const clone: HTMLElement = element.cloneNode(true) as HTMLElement;
-        this.ExpandOverflow(clone, element);
         await this.InlineAbsoluteImages(clone);
         await this.InlineStylesheets(clone);
         this.StripInvalidXmlAttributes(clone);
@@ -104,37 +103,6 @@ class DrapoDiagnostics {
         } catch (e) {
             return (null);
         }
-    }
-
-    // Walks the clone and original trees in parallel. For every element in the
-    // original that has overflowing content (scrollWidth > clientWidth or
-    // scrollHeight > clientHeight), the corresponding clone element gets
-    // overflow:visible plus explicit width/height set to the scroll dimensions.
-    // This prevents SVG foreignObject from clipping scrollable children.
-    private ExpandOverflow(clone: HTMLElement, original: HTMLElement): void {
-        const walk = (cloneEl: Element, origEl: Element): void => {
-            if (!(cloneEl instanceof HTMLElement) || !(origEl instanceof HTMLElement))
-                return;
-            const style: CSSStyleDeclaration = window.getComputedStyle(origEl);
-            const ov: string = style.overflow;
-            const ox: string = style.overflowX;
-            const oy: string = style.overflowY;
-            const isClippedX: boolean = (ox === 'hidden' || ox === 'auto' || ox === 'scroll' || ov === 'hidden' || ov === 'auto' || ov === 'scroll') && origEl.scrollWidth > origEl.clientWidth + 1;
-            const isClippedY: boolean = (oy === 'hidden' || oy === 'auto' || oy === 'scroll' || ov === 'hidden' || ov === 'auto' || ov === 'scroll') && origEl.scrollHeight > origEl.clientHeight + 1;
-            if (isClippedX || isClippedY) {
-                cloneEl.style.overflow = 'visible';
-                if (isClippedX)
-                    cloneEl.style.width = origEl.scrollWidth + 'px';
-                if (isClippedY)
-                    cloneEl.style.height = origEl.scrollHeight + 'px';
-            }
-            const cloneChildren: HTMLCollection = cloneEl.children;
-            const origChildren: HTMLCollection = origEl.children;
-            const count: number = Math.min(cloneChildren.length, origChildren.length);
-            for (let i: number = 0; i < count; i++)
-                walk(cloneChildren[i], origChildren[i]);
-        };
-        walk(clone, original);
     }
 
     private LoadImage(src: string): Promise<HTMLImageElement> {
@@ -180,13 +148,19 @@ class DrapoDiagnostics {
 
     // Resolves all url(...) references in a CSS string relative to baseUrl,
     // fetches them and replaces with inline base64 data URLs.
+    // Font files (woff, woff2, ttf, otf, eot) are intentionally skipped — inlining them
+    // makes the SVG too large for Chrome's foreignObject renderer, causing content to
+    // be invisible. Fonts are not needed for the LLM to read text content.
     private async InlineCssUrls(cssText: string, baseUrl: string): Promise<string> {
         const urlRegex: RegExp = /url\(\s*['"]?([^'")\s]+)['"]?\s*\)/g;
+        const fontExtRegex: RegExp = /\.(woff2?|ttf|otf|eot)(\?|#|$)/i;
         const matches: Array<{ raw: string; resolved: string }> = [];
         let m: RegExpExecArray;
         while ((m = urlRegex.exec(cssText)) !== null) {
             const raw: string = m[1];
             if (raw.startsWith('data:'))
+                continue;
+            if (fontExtRegex.test(raw))
                 continue;
             matches.push({ raw, resolved: new URL(raw, baseUrl).href });
         }
