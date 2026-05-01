@@ -147,7 +147,9 @@ class DrapoDiagnostics {
     }
 
     // Resolves all url(...) references in a CSS string relative to baseUrl,
-    // fetches them and replaces with inline base64 data URLs.
+    // fetches them and replaces with inline base64 data URLs so the SVG blob
+    // can render without making any external requests (which would be blocked
+    // by browser security policy in a blob URL context).
     private async InlineCssUrls(cssText: string, baseUrl: string): Promise<string> {
         const urlRegex: RegExp = /url\(\s*['"]?([^'")\s]+)['"]?\s*\)/g;
         const matches: Array<{ raw: string; resolved: string }> = [];
