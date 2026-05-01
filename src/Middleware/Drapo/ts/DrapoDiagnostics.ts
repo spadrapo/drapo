@@ -74,6 +74,7 @@ class DrapoDiagnostics {
         if ((width <= 0) || (height <= 0))
             return (null);
         const clone: HTMLElement = element.cloneNode(true) as HTMLElement;
+        this.ExpandOverflow(clone, element);
         await this.InlineAbsoluteImages(clone);
         await this.InlineStylesheets(clone);
         this.StripInvalidXmlAttributes(clone);
@@ -103,6 +104,37 @@ class DrapoDiagnostics {
         } catch (e) {
             return (null);
         }
+    }
+
+    // Walks the clone and original trees in parallel. For every element in the
+    // original that has overflowing content (scrollWidth > clientWidth or
+    // scrollHeight > clientHeight), the corresponding clone element gets
+    // overflow:visible plus explicit width/height set to the scroll dimensions.
+    // This prevents SVG foreignObject from clipping scrollable children.
+    private ExpandOverflow(clone: HTMLElement, original: HTMLElement): void {
+        const walk = (cloneEl: Element, origEl: Element): void => {
+            if (!(cloneEl instanceof HTMLElement) || !(origEl instanceof HTMLElement))
+                return;
+            const style: CSSStyleDeclaration = window.getComputedStyle(origEl);
+            const ov: string = style.overflow;
+            const ox: string = style.overflowX;
+            const oy: string = style.overflowY;
+            const isClippedX: boolean = (ox === 'hidden' || ox === 'auto' || ox === 'scroll' || ov === 'hidden' || ov === 'auto' || ov === 'scroll') && origEl.scrollWidth > origEl.clientWidth + 1;
+            const isClippedY: boolean = (oy === 'hidden' || oy === 'auto' || oy === 'scroll' || ov === 'hidden' || ov === 'auto' || ov === 'scroll') && origEl.scrollHeight > origEl.clientHeight + 1;
+            if (isClippedX || isClippedY) {
+                cloneEl.style.overflow = 'visible';
+                if (isClippedX)
+                    cloneEl.style.width = origEl.scrollWidth + 'px';
+                if (isClippedY)
+                    cloneEl.style.height = origEl.scrollHeight + 'px';
+            }
+            const cloneChildren: HTMLCollection = cloneEl.children;
+            const origChildren: HTMLCollection = origEl.children;
+            const count: number = Math.min(cloneChildren.length, origChildren.length);
+            for (let i: number = 0; i < count; i++)
+                walk(cloneChildren[i], origChildren[i]);
+        };
+        walk(clone, original);
     }
 
     private LoadImage(src: string): Promise<HTMLImageElement> {
