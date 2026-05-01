@@ -115,9 +115,10 @@ class DrapoDiagnostics {
         }));
     }
 
-    // Fetches all external stylesheets and inline <style> blocks from the document
-    // and injects them as a single <style> element into the clone so that
-    // SVG foreignObject rendering (which cannot load external CSS) shows correct styles.
+    // Fetches all external stylesheets and inline <style> blocks from the document,
+    // inlines all url() references (fonts, images) as base64 data URLs, and injects
+    // everything as a single <style> element into the clone so that SVG foreignObject
+    // rendering (which cannot load external resources) shows correct styles and fonts.
     private async InlineStylesheets(element: HTMLElement): Promise<void> {
         const cssTexts: string[] = [];
         const linkElements: NodeListOf<HTMLLinkElement> = document.querySelectorAll('link[rel="stylesheet"]');
@@ -129,7 +130,8 @@ class DrapoDiagnostics {
                 const response: Response = await fetch(href, { credentials: 'include' });
                 if (!response.ok)
                     return;
-                cssTexts.push(await response.text());
+                const cssText: string = await response.text();
+                cssTexts.push(await this.InlineCssUrls(cssText, href));
             } catch {
                 // Skip stylesheets that fail to load
             }
@@ -142,6 +144,45 @@ class DrapoDiagnostics {
         const styleElement: HTMLStyleElement = document.createElement('style');
         styleElement.textContent = cssTexts.join('\n');
         element.insertBefore(styleElement, element.firstChild);
+    }
+
+    // Resolves all url(...) references in a CSS string relative to baseUrl,
+    // fetches them and replaces with inline base64 data URLs.
+    private async InlineCssUrls(cssText: string, baseUrl: string): Promise<string> {
+        const urlRegex: RegExp = /url\(\s*['"]?([^'")\s]+)['"]?\s*\)/g;
+        const matches: Array<{ raw: string; resolved: string }> = [];
+        let m: RegExpExecArray;
+        while ((m = urlRegex.exec(cssText)) !== null) {
+            const raw: string = m[1];
+            if (raw.startsWith('data:'))
+                continue;
+            matches.push({ raw, resolved: new URL(raw, baseUrl).href });
+        }
+        const cache: Map<string, string> = new Map();
+        await Promise.all(matches.map(async ({ resolved }) => {
+            if (cache.has(resolved))
+                return;
+            try {
+                const response: Response = await fetch(resolved, { credentials: 'include' });
+                if (!response.ok) { cache.set(resolved, null); return; }
+                const blob: Blob = await response.blob();
+                const dataUrl: string = await new Promise<string>((resolve) => {
+                    const reader: FileReader = new FileReader();
+                    reader.onload = () => resolve(reader.result as string);
+                    reader.onerror = () => resolve(null);
+                    reader.readAsDataURL(blob);
+                });
+                cache.set(resolved, dataUrl);
+            } catch {
+                cache.set(resolved, null);
+            }
+        }));
+        return cssText.replace(/url\(\s*['"]?([^'")\s]+)['"]?\s*\)/g, (_match: string, raw: string) => {
+            if (raw.startsWith('data:'))
+                return _match;
+            const dataUrl: string = cache.get(new URL(raw, baseUrl).href);
+            return dataUrl ? `url("${dataUrl}")` : _match;
+        });
     }
 
     // Removes attributes whose names are invalid in XML from the entire element subtree.
