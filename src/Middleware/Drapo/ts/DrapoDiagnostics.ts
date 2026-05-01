@@ -73,6 +73,9 @@ class DrapoDiagnostics {
         const width: number = Math.round(rect.width);
         if ((width <= 0) || (height <= 0))
             return (null);
+        const clone: HTMLElement = element.cloneNode(true) as HTMLElement;
+        await this.InlineAbsoluteImages(clone);
+        this.StripInvalidXmlAttributes(clone);
         const svgNS: string = 'http://www.w3.org/2000/svg';
         const svgElement: SVGSVGElement = document.createElementNS(svgNS, 'svg') as SVGSVGElement;
         svgElement.setAttribute('height', String(height));
@@ -81,7 +84,7 @@ class DrapoDiagnostics {
         const foreignObject: SVGForeignObjectElement = document.createElementNS(svgNS, 'foreignObject') as SVGForeignObjectElement;
         foreignObject.setAttribute('height', '100%');
         foreignObject.setAttribute('width', '100%');
-        foreignObject.appendChild(element.cloneNode(true));
+        foreignObject.appendChild(clone);
         svgElement.appendChild(foreignObject);
         const svgDataUrl: string = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(svgElement));
         const img: HTMLImageElement = await this.LoadImage(svgDataUrl);
@@ -108,6 +111,50 @@ class DrapoDiagnostics {
             img.onload = () => { window.clearTimeout(timeoutHandle); resolve(img); };
             img.onerror = () => { window.clearTimeout(timeoutHandle); resolve(null); };
             img.src = src;
+        }));
+    }
+
+    // Removes attributes whose names are invalid in XML from the entire element subtree.
+    // HTML allows attribute names like ")" or "!" that would break XML/SVG parsing.
+    private StripInvalidXmlAttributes(element: HTMLElement): void {
+        const xmlNameRegex: RegExp = /^[a-zA-Z_][a-zA-Z0-9\-_\.:]*$/;
+        const allElements: Element[] = Array.from(element.querySelectorAll('*'));
+        allElements.push(element);
+        for (const el of allElements) {
+            const toRemove: string[] = [];
+            for (let i: number = 0; i < el.attributes.length; i++) {
+                const attrName: string = el.attributes[i].name;
+                if (!xmlNameRegex.test(attrName))
+                    toRemove.push(attrName);
+            }
+            for (const name of toRemove)
+                el.removeAttribute(name);
+        }
+    }
+
+    // Replaces absolute HTTP/HTTPS src attributes in a cloned element tree with
+    // inline base64 data URLs so SVG foreignObject serialization can render them.
+    // Cross-origin images that fail the fetch are silently left unchanged.
+    private async InlineAbsoluteImages(element: HTMLElement): Promise<void> {
+        const imgs: Element[] = Array.from(element.querySelectorAll('[src^="http://"], [src^="https://"]'));
+        await Promise.all(imgs.map(async (img: Element) => {
+            const src: string = img.getAttribute('src');
+            try {
+                const response: Response = await fetch(src, { credentials: 'include' });
+                if (!response.ok)
+                    return;
+                const blob: Blob = await response.blob();
+                const dataUrl: string = await new Promise<string>((resolve) => {
+                    const reader: FileReader = new FileReader();
+                    reader.onload = () => resolve(reader.result as string);
+                    reader.onerror = () => resolve(null);
+                    reader.readAsDataURL(blob);
+                });
+                if (dataUrl != null)
+                    img.setAttribute('src', dataUrl);
+            } catch {
+                // Leave as-is if fetch fails (cross-origin or network error)
+            }
         }));
     }
 
