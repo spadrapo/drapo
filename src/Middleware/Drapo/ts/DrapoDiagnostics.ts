@@ -147,20 +147,16 @@ class DrapoDiagnostics {
     }
 
     // Resolves all url(...) references in a CSS string relative to baseUrl,
-    // fetches them and replaces with inline base64 data URLs.
-    // Font files (woff, woff2, ttf, otf, eot) are intentionally skipped — inlining them
-    // makes the SVG too large for Chrome's foreignObject renderer, causing content to
-    // be invisible. Fonts are not needed for the LLM to read text content.
+    // fetches them and replaces with inline base64 data URLs so the SVG blob
+    // can render without making any external requests (which would be blocked
+    // by browser security policy in a blob URL context).
     private async InlineCssUrls(cssText: string, baseUrl: string): Promise<string> {
         const urlRegex: RegExp = /url\(\s*['"]?([^'")\s]+)['"]?\s*\)/g;
-        const fontExtRegex: RegExp = /\.(woff2?|ttf|otf|eot)(\?|#|$)/i;
         const matches: Array<{ raw: string; resolved: string }> = [];
         let m: RegExpExecArray;
         while ((m = urlRegex.exec(cssText)) !== null) {
             const raw: string = m[1];
             if (raw.startsWith('data:'))
-                continue;
-            if (fontExtRegex.test(raw))
                 continue;
             matches.push({ raw, resolved: new URL(raw, baseUrl).href });
         }
