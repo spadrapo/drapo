@@ -1,0 +1,24 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>DiagnosticsHtmlResult</title>
+    <script>
+        function RunDiagnosticsHtmlResultTest() {
+            var html = '<div d-dataKey="greetData" d-dataType="object" d-dataProperty-name="World"></div><span>Hello {{greetData.name}}</span>';
+            drapo.Diagnostics.GetHtmlResult(html).then(function (htmlResult) {
+                var hasResult = htmlResult != null;
+                var hasContent = hasResult && htmlResult.indexOf('World') >= 0;
+                drapo.Storage.UpdateData('result', null, { hasResult: hasResult, hasContent: hasContent });
+            }).catch(function (error) {
+                drapo.Storage.UpdateData('result', null, { hasResult: false, hasContent: false });
+            });
+        }
+    </script>
+</head>
+<body>
+    <span>DiagnosticsHtmlResult</span>
+    <div d-datakey="result" d-datatype="object" d-dataproperty-hasresult="false" d-dataproperty-hascontent="false"></div>
+    <input type="button" value="Run" driverunittest="click" onclick="RunDiagnosticsHtmlResultTest()">
+    <br><span>hasResult: </span><span d-model="{{result.hasResult}}">true</span>
+    <br><span>hasContent: </span><span d-model="{{result.hasContent}}">true</span>
+
+</body></html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>DiagnosticsHtmlImage</title>
+    <script>
+        function RunDiagnosticsHtmlImageTest() {
+            var html = '<span style="background-color:blue;display:block;height:50px;width:100px;"></span>';
+            drapo.Diagnostics.GetHtmlImage(html).then(function (htmlImage) {
+                var hasImage = htmlImage != null && htmlImage.indexOf('data:image/png') === 0;
+                drapo.Storage.UpdateData('result', null, { hasImage: hasImage });
+            }).catch(function (error) {
+                drapo.Storage.UpdateData('result', null, { hasImage: false });
+            });
+        }
+    </script>
+</head>
+<body>
+    <span>DiagnosticsHtmlImage</span>
+    <div d-dataKey="result" d-dataType="object"
+         d-dataProperty-hasImage="false"></div>
+    <input type="button" value="Run" driverunittest="click" onclick="RunDiagnosticsHtmlImageTest()" />
+    <br /><span>hasImage: </span><span d-model="{{result.hasImage}}"></span>
+</body>
+</html>
