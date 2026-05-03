@@ -1,9 +1,9 @@
-<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+﻿<html><head>
     <script src="/drapo.js"></script>
     <title>DiagnosticsHtmlResult</title>
     <script>
         function RunDiagnosticsHtmlResultTest() {
-            var html = '<div d-dataKey="greetData" d-dataType="object" d-dataProperty-name="World"></div><span>Hello {{greetData.name}}</span>';
+            var html = document.getElementById('htmlInput').value;
             drapo.Diagnostics.GetHtmlResult(html).then(function (htmlResult) {
                 var hasResult = htmlResult != null;
                 var hasContent = hasResult && htmlResult.indexOf('World') >= 0;
@@ -13,12 +13,24 @@
             });
         }
     </script>
+    <style>
+        textarea { font-family: monospace; width: 600px; }
+        .result-area { margin-top: 10px; padding: 10px; border: 1px solid #ccc; }
+    </style>
 </head>
 <body>
     <span>DiagnosticsHtmlResult</span>
-    <div d-datakey="result" d-datatype="object" d-dataproperty-hasresult="false" d-dataproperty-hascontent="false"></div>
-    <input type="button" value="Run" driverunittest="click" onclick="RunDiagnosticsHtmlResultTest()">
-    <br><span>hasResult: </span><span d-model="{{result.hasResult}}">true</span>
-    <br><span>hasContent: </span><span d-model="{{result.hasContent}}">true</span>
+    <div d-datakey="result" d-datatype="object" d-dataproperty-hasresult="" d-dataproperty-hascontent=""></div>
+    <div>
+        <label>HTML Input:</label><br>
+        <textarea id="htmlInput" rows="4"></textarea>
+    </div>
+    <script>document.getElementById('htmlInput').value = '<div d-dataKey="greetData" d-dataType="object" d-dataProperty-name="World"></div><span>Hello {{greetData.name}}</span>';</script>
+    <input type="button" value="Apply" driverunittest="click" onclick="RunDiagnosticsHtmlResultTest()">
+    <div class="result-area">
+        <div>hasResult: <span d-model="{{result.hasResult}}">true</span></div>
+        <div>hasContent: <span d-model="{{result.hasContent}}">true</span></div>
+    </div>
+
 
 </body></html>

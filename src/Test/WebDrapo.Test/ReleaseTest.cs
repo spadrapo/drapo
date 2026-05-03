@@ -105,6 +105,8 @@ namespace WebDrapo.Test
         {
             foreach (Match match in Regex.Matches(html, @"src=\""(\w|\s|\d|\:|\?|\&|\.|\/|\=|\%|\;)+\"""))
                 html = html.Replace(match.Value, @"src=""""");
+            // Also strip data: URL src attributes (e.g. base64-encoded screenshots)
+            html = Regex.Replace(html, @"src=""data:[^""]*""", @"src=""""");
             html = Regex.Replace(html, "<script(.*?)</script>", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             html = Regex.Replace(html, "<style(.*?)</style>", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             html = Regex.Replace(html, @"<link href="""" rel=""stylesheet""\s*/?>", string.Empty);

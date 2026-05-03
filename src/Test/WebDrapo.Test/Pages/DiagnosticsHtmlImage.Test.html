@@ -1,22 +1,38 @@
-<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+﻿<html><head>
     <script src="/drapo.js"></script>
     <title>DiagnosticsHtmlImage</title>
     <script>
         function RunDiagnosticsHtmlImageTest() {
-            var html = '<span style="background-color:blue;display:block;height:50px;width:100px;"></span>';
+            var html = document.getElementById('htmlInput').value;
             drapo.Diagnostics.GetHtmlImage(html).then(function (htmlImage) {
                 var hasImage = htmlImage != null && htmlImage.indexOf('data:image/png') === 0;
                 drapo.Storage.UpdateData('result', null, { hasImage: hasImage });
+                var img = document.getElementById('htmlOutput');
+                if (img) img.src = htmlImage || '';
             }).catch(function (error) {
                 drapo.Storage.UpdateData('result', null, { hasImage: false });
             });
         }
     </script>
+    <style>
+        textarea { font-family: monospace; width: 600px; }
+        .result-area { margin-top: 10px; padding: 10px; border: 1px solid #ccc; }
+        .img-preview { max-width: 400px; border: 1px solid #999; }
+    </style>
 </head>
 <body>
     <span>DiagnosticsHtmlImage</span>
-    <div d-datakey="result" d-datatype="object" d-dataproperty-hasimage="false"></div>
-    <input type="button" value="Run" driverunittest="click" onclick="RunDiagnosticsHtmlImageTest()">
-    <br><span>hasImage: </span><span d-model="{{result.hasImage}}">true</span>
+    <div d-datakey="result" d-datatype="object" d-dataproperty-hasimage=""></div>
+    <div>
+        <label>HTML Input:</label><br>
+        <textarea id="htmlInput" rows="4"></textarea>
+    </div>
+    <script>document.getElementById('htmlInput').value = '<span style="background-color:blue;display:block;height:50px;width:100px;"></span>';</script>
+    <input type="button" value="Apply" driverunittest="click" onclick="RunDiagnosticsHtmlImageTest()">
+    <div class="result-area">
+        <div>hasImage: <span d-model="{{result.hasImage}}">true</span></div>
+        <img id="htmlOutput" class="img-preview" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAyCAYAAACqNX6+AAABAUlEQVR4AeyTwQnAMBDDQvcfuhvkIRA4oH6LjSNx3+mbIpCQKR3nJCQhYwTG5nQhCRkjMDanC0nIGIGxOV1IQsYIjM1xLmTskS/NSciYrYQkZIzA2JwuJCFjBMbmdCEJGSMwNqcLScgYgbE5L13IGDpnTkIcrrg1IRidE0yIwxW3JgSjc4IJcbji1oRgdE4wIQ5X3JoQjM4JJsThilsTgtE5wYQ4XHFrQjA6J5gQhytuTQhG5wQT4nDFrQnB6JxgQhyuuDUhGJ0TTIjDFbcmBKO7BvHPhGB0TjAhDlfcmhCMzgkmxOGKWxOC0TnBhDhccWtCMDonmBCHK25NCEbnBH8AAAD//6yJlugAAAAGSURBVAMA6YkAZc4p0AQAAAAASUVORK5CYII=">
+    </div>
+
 
 </body></html>
