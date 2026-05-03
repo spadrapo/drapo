@@ -245,7 +245,7 @@ class DrapoParser {
 
     private GetFunctionStart(functionText: string): number {
         for (let i: number = 0; i < functionText.length; i++)
-            if (this.IsFunctionStartValid(functionText[i]))
+            if (!this.ShouldSkipFunctionStartCharacter(functionText, i))
                 return (i);
         return (functionText.length);
     }
@@ -256,6 +256,32 @@ class DrapoParser {
         if (character === '!')
             return (false);
         return (true);
+    }
+
+    private ShouldSkipFunctionStartCharacter(functionText: string, index: number): boolean {
+        const character: string = functionText[index];
+        if (character === ' ')
+            return (true);
+        if (character === '!') {
+            // Only skip '!' if the remaining text (after skipping) forms a valid function
+            const remainingText: string = functionText.substring(index + 1);
+            if (remainingText.length === 0)
+                return (true); // Skip standalone '!'
+            // Check if the remaining text looks like a function call
+            const openParenIndex: number = remainingText.indexOf('(');
+            if (openParenIndex <= 0)
+                return (true); // Not a function call, skip the '!'
+            // Check if it ends with closing paren
+            if (remainingText[remainingText.length - 1] !== ')')
+                return (true); // Not a complete function call, skip the '!'
+            // Check if the function name is valid
+            const functionName: string = remainingText.substring(0, openParenIndex);
+            if (!this.IsValidFunctionName(functionName))
+                return (true); // Invalid function name, skip the '!'
+            // This looks like a negated function call - don't skip the '!'
+            return (false);
+        }
+        return (false);
     }
 
     public ParseFunction(data: string, checkParameters: boolean = true): DrapoFunction {
