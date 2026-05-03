@@ -4,19 +4,12 @@
     <script>
         function RunDiagnosticsHtmlResultTest() {
             var html = document.getElementById('htmlInput').value;
-            Promise.all([
-                drapo.Diagnostics.GetHtmlResult(html),
-                drapo.Diagnostics.GetHtmlImage(html)
-            ]).then(function (results) {
-                var htmlResult = results[0];
-                var htmlImage = results[1];
+            drapo.Diagnostics.GetHtmlResult(html).then(function (htmlResult) {
                 var hasResult = htmlResult != null;
                 var hasContent = hasResult && htmlResult.indexOf('World') >= 0;
                 drapo.Storage.UpdateData('result', null, { hasResult: hasResult, hasContent: hasContent });
                 var htmlResultOutput = document.getElementById('htmlResultOutput');
                 if (htmlResultOutput) htmlResultOutput.value = htmlResult || '';
-                var img = document.getElementById('htmlOutput');
-                if (img) img.src = htmlImage || '';
             }).catch(function (error) {
                 drapo.Storage.UpdateData('result', null, { hasResult: false, hasContent: false });
             });
@@ -25,7 +18,6 @@
     <style>
         textarea { font-family: monospace; width: 600px; }
         .result-area { margin-top: 10px; padding: 10px; border: 1px solid #ccc; }
-        .img-preview { max-width: 400px; border: 1px solid #999; }
     </style>
 </head>
 <body>
@@ -43,10 +35,6 @@
         <div>
             <label>Generated HTML:</label><br>
             <textarea id="htmlResultOutput" readonly="" rows="4"></textarea>
-        </div>
-        <div>
-            <label>Generated Screenshot:</label><br>
-            <img id="htmlOutput" class="img-preview" src="">
         </div>
     </div>
 

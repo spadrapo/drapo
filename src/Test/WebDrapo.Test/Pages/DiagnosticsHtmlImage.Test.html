@@ -4,18 +4,11 @@
     <script>
         function RunDiagnosticsHtmlImageTest() {
             var html = document.getElementById('htmlInput').value;
-            Promise.all([
-                drapo.Diagnostics.GetHtmlImage(html),
-                drapo.Diagnostics.GetHtmlResult(html)
-            ]).then(function (results) {
-                var htmlImage = results[0];
-                var htmlResult = results[1];
+            drapo.Diagnostics.GetHtmlImage(html).then(function (htmlImage) {
                 var hasImage = htmlImage != null && htmlImage.indexOf('data:image/png') === 0;
                 drapo.Storage.UpdateData('result', null, { hasImage: hasImage });
                 var img = document.getElementById('htmlOutput');
                 if (img) img.src = htmlImage || '';
-                var htmlResultOutput = document.getElementById('htmlResultOutput');
-                if (htmlResultOutput) htmlResultOutput.value = htmlResult || '';
             }).catch(function (error) {
                 drapo.Storage.UpdateData('result', null, { hasImage: false });
             });
@@ -38,10 +31,6 @@
     <input type="button" value="Apply" driverunittest="click" onclick="RunDiagnosticsHtmlImageTest()">
     <div class="result-area">
         <div>hasImage: <span d-model="{{result.hasImage}}">true</span></div>
-        <div>
-            <label>Generated HTML:</label><br>
-            <textarea id="htmlResultOutput" readonly="" rows="4"></textarea>
-        </div>
         <div>
             <label>Generated Screenshot:</label><br>
             <img id="htmlOutput" class="img-preview" src="">
