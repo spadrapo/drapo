@@ -49,6 +49,61 @@ class DrapoDiagnostics {
         return (this.RenderElementToBase64(element));
     }
 
+    // Executes the Drapo engine on the given HTML string and returns a best-effort
+    // base64 PNG data URL of the rendered result. The HTML is loaded into an
+    // isolated off-screen sector so it does not interact with existing page sectors.
+    public async GetHtmlImage(html: string): Promise<string> {
+        const sectorName: string = this.Application.Document.CreateGuid();
+        const container: HTMLElement = await this.CreateTempSector(sectorName, html);
+        if (container == null)
+            return (null);
+        try {
+            return (await this.RenderElementToBase64(container));
+        } finally {
+            await this.DestroyTempSector(sectorName, container);
+        }
+    }
+
+    // Executes the Drapo engine on the given HTML string and returns the rendered
+    // innerHTML after all Drapo processing (data binding, control flow, mustaches).
+    // The HTML is loaded into an isolated off-screen sector.
+    public async GetHtmlResult(html: string): Promise<string> {
+        const sectorName: string = this.Application.Document.CreateGuid();
+        const container: HTMLElement = await this.CreateTempSector(sectorName, html);
+        if (container == null)
+            return (null);
+        try {
+            return (container.innerHTML);
+        } finally {
+            await this.DestroyTempSector(sectorName, container);
+        }
+    }
+
+    // Creates an isolated off-screen sector, loads the given HTML into it via the
+    // full Drapo rendering pipeline, and returns the sector container element.
+    // Returns null if html is empty or the sector could not be loaded.
+    private async CreateTempSector(sectorName: string, html: string): Promise<HTMLElement> {
+        if ((html == null) || (html === ''))
+            return (null);
+        const container: HTMLElement = document.createElement('div');
+        container.setAttribute('d-sector', sectorName);
+        container.style.cssText = 'position:fixed;left:-9999px;top:-9999px;overflow:auto;';
+        document.body.appendChild(container);
+        const loaded: boolean = await this.Application.Document.LoadChildSectorContent(sectorName, html);
+        if (!loaded) {
+            await this.DestroyTempSector(sectorName, container);
+            return (null);
+        }
+        return (container);
+    }
+
+    // Removes the temporary sector element from the DOM and cleans up all Drapo
+    // metadata associated with it (storage, observers, validators, components).
+    private async DestroyTempSector(sectorName: string, container: HTMLElement): Promise<void> {
+        this.Application.Document.StartUpdate(sectorName);
+        await this.Application.Document.RemoveElement(container);
+    }
+
     public GetErrorBuffer(count: number = null, levelFilter: string | string[] = null): DrapoDiagnosticEntry[] {
         const levels: string[] = levelFilter == null ? null : this.NormalizeLevelFilter(levelFilter);
         let entries: DrapoDiagnosticEntry[] = this._entries;
@@ -74,6 +129,11 @@ class DrapoDiagnostics {
         if ((width <= 0) || (height <= 0))
             return (null);
         const clone: HTMLElement = element.cloneNode(true) as HTMLElement;
+        clone.style.position = '';
+        clone.style.left = '';
+        clone.style.top = '';
+        clone.style.visibility = '';
+        clone.style.overflow = '';
         await this.InlineAbsoluteImages(clone);
         await this.InlineStylesheets(clone);
         this.StripInvalidXmlAttributes(clone);

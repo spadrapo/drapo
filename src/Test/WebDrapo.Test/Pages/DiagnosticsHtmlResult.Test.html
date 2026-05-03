@@ -1,0 +1,42 @@
+﻿<html><head>
+    <script src="/drapo.js"></script>
+    <title>DiagnosticsHtmlResult</title>
+    <script>
+        function RunDiagnosticsHtmlResultTest() {
+            var html = document.getElementById('htmlInput').value;
+            drapo.Diagnostics.GetHtmlResult(html).then(function (htmlResult) {
+                var hasResult = htmlResult != null;
+                var hasContent = hasResult && htmlResult.indexOf('World') >= 0;
+                drapo.Storage.UpdateData('result', null, { hasResult: hasResult, hasContent: hasContent });
+                var htmlResultOutput = document.getElementById('htmlResultOutput');
+                if (htmlResultOutput) htmlResultOutput.value = htmlResult || '';
+            }).catch(function (error) {
+                drapo.Storage.UpdateData('result', null, { hasResult: false, hasContent: false });
+            });
+        }
+    </script>
+    <style>
+        textarea { font-family: monospace; width: 600px; }
+        .result-area { margin-top: 10px; padding: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <span>DiagnosticsHtmlResult</span>
+    <div d-datakey="result" d-datatype="object" d-dataproperty-hasresult="" d-dataproperty-hascontent=""></div>
+    <div>
+        <label>HTML Input:</label><br>
+        <textarea id="htmlInput" rows="4"></textarea>
+    </div>
+    <script>document.getElementById('htmlInput').value = '<div d-dataKey="greetData" d-dataType="object" d-dataProperty-name="World"></div><span>Hello {{greetData.name}}</span>';</script>
+    <input type="button" value="Apply" driverunittest="click" onclick="RunDiagnosticsHtmlResultTest()">
+    <div class="result-area">
+        <div>hasResult: <span d-model="{{result.hasResult}}">true</span></div>
+        <div>hasContent: <span d-model="{{result.hasContent}}">true</span></div>
+        <div>
+            <label>Generated HTML:</label><br>
+            <textarea id="htmlResultOutput" readonly="" rows="4"></textarea>
+        </div>
+    </div>
+
+
+</body></html>
