@@ -87,7 +87,7 @@ class DrapoDiagnostics {
             return (null);
         const container: HTMLElement = document.createElement('div');
         container.setAttribute('d-sector', sectorName);
-        container.style.cssText = 'position:fixed;left:-9999px;top:-9999px;visibility:hidden;overflow:auto;';
+        container.style.cssText = 'position:fixed;left:-9999px;top:-9999px;overflow:auto;';
         document.body.appendChild(container);
         const loaded: boolean = await this.Application.Document.LoadChildSectorContent(sectorName, html);
         if (!loaded) {
@@ -129,6 +129,11 @@ class DrapoDiagnostics {
         if ((width <= 0) || (height <= 0))
             return (null);
         const clone: HTMLElement = element.cloneNode(true) as HTMLElement;
+        clone.style.position = '';
+        clone.style.left = '';
+        clone.style.top = '';
+        clone.style.visibility = '';
+        clone.style.overflow = '';
         await this.InlineAbsoluteImages(clone);
         await this.InlineStylesheets(clone);
         this.StripInvalidXmlAttributes(clone);
