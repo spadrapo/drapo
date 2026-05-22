@@ -577,6 +577,8 @@ namespace Sysphera.Middleware.Drapo
                     return !pack.ExcludePaths.Any(exclude => this.MatchesPattern(relativePath, exclude));
                 }).ToList();
             }
+            // Sort alphabetically to ensure consistent script load order on all file systems
+            allFiles.Sort(StringComparer.OrdinalIgnoreCase);
             return allFiles.ToArray();
         }
 
