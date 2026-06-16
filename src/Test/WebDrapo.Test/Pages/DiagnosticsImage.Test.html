@@ -1,5 +1,5 @@
-<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
-    <script src="/drapo.js"></script>
+<!DOCTYPE html><html><head>
+    <script src=""></script>
     <title>DiagnosticsImage</title>
     <script>
         function RunDiagnosticsImageTest() {
@@ -29,19 +29,23 @@
 <body>
     <span>DiagnosticsImage</span>
     <div d-datakey="result" d-datatype="object" d-dataproperty-sectorimage="" d-dataproperty-bodyimage=""></div>
-    <div d-sector="content">
+    <div d-sector="@">
         <span style="background-color: red; display: block; height: 50px; width: 100px;"></span>
     </div>
     <input type="button" value="Run" driverunittest="click" onclick="RunDiagnosticsImageTest()">
     <div class="image-container">
         <div>Sector Image:</div>
-        <img id="sectorImg" style="display: block">
-        <div style="display: none;">No sector image captured</div>
+        <img id="sectorImg" style="display: {{result.sectorImage ? 'block' : 'none'}}" src="">
+        <div d-if="{{result.sectorImage == null}}" style="display: none;">No sector image captured</div>
     </div>
     <div class="image-container">
         <div>Body Image:</div>
-        <img id="bodyImg" style="display: block">
-        <div style="display: none;">No body image captured</div>
+        <img id="bodyImg" style="display: {{result.bodyImage ? 'block' : 'none'}}" src="">
+        <div d-if="{{result.bodyImage == null}}" style="display: none;">No body image captured</div>
     </div>
+
+
+
+
 
 </body></html>
