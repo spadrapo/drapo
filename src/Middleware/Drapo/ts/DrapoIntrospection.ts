@@ -45,6 +45,21 @@ class DrapoIntrospection {
         });
     }
 
+    // One-call snapshot of the running application for external tooling (LLM/agent drivers,
+    // test harnesses): runtime state + sectors + data keys by sector + recent diagnostics.
+    public GetSnapshot(diagnosticsCount: number = null, diagnosticsLevelFilter: string | string[] = null): DrapoRuntimeSnapshot {
+        const sectors: string[] = this.GetSectors();
+        const dataKeysBySector: { [sector: string]: string[] } = {};
+        for (let i: number = 0; i < sectors.length; i++)
+            dataKeysBySector[sectors[i]] = this.GetDataKeys(sectors[i]);
+        return ({
+            dataKeysBySector,
+            diagnostics: this.Application.Diagnostics.GetErrorBuffer(diagnosticsCount, diagnosticsLevelFilter),
+            sectors,
+            state: this.GetRuntimeState()
+        });
+    }
+
     private GetBrowserState(): { width: number; height: number } {
         const documentElement: HTMLElement = this._window.document.documentElement;
         const body: HTMLElement = this._window.document.body;
