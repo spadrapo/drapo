@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <link href="../css/validation.css" rel="stylesheet" />
+    <title>Validation Svg Path</title>
+</head>
+<body>
+    <div d-id="Windows" d-sector="sector" d-on-body-keyup-escape="CloseWindow()"></div>
+    <br />
+    <span>Validation Svg Path</span>
+    <div class="cloak" d-cloak="cloak">
+        <div>
+            <!--Data-->
+            <div d-dataKey="data" d-dataType="object" d-dataProperty-agree="false"></div>
+            <div d-dataKey="click" d-datatype="value" d-dataloadtype="startup" d-dataValue="ShowWindow(~/DrapoPages/WindowLoading.html,Windows,false)"></div>
+        </div>
+        <div>
+            <!--Validation-->
+            <div d-validation-id="agree" d-validation-type="conditional" d-validation-value="{{data.agree}}"></div>
+        </div>
+        <div>
+            <!--Svg with a bare 'd' attribute (regression: must not crash the validator)-->
+            <svg width="10" height="10"><path d="M10 10 H 90 V 90 H 10 Z" fill="none"></path></svg>
+            <div d-foo="x" data-end="123"></div>
+        </div>
+        <div>
+            <!--UI-->
+            <input type="checkbox" d-model="{{data.agree}}" /><span>Agree</span>
+            <div d-validation="agree">
+                <span>You must check the agree checkbox</span>
+            </div>
+            <br />
+            <br />
+            <input type="button" value="Validate" d-on-click="{{click}}" d-validation-on-click="agree" d-id="__drapoUnitTest" />
+        </div>
+    </div>
+</body>
+</html>

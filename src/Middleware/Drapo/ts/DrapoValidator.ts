@@ -260,7 +260,7 @@ class DrapoValidator {
 
     private ExtractValidationProperty(property: string): string {
         const parse: string[] = this.Application.Parser.ParseProperty(property);
-        if (parse[0] != 'd')
+        if (parse[0] != 'd' || parse.length < 2) // bare 'd' (e.g. SVG <path d="...">) is not a validation
             return (null);
         if (parse[1].toLowerCase() != 'validation')
             return (null);
