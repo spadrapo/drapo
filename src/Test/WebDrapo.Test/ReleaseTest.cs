@@ -1791,6 +1791,16 @@ namespace WebDrapo.Test
             ValidatePage("ValidationEventCompare");
         }
         [TestCase]
+        public void ValidationSvgPathTest()
+        {
+            ValidatePage("ValidationSvgPath");
+        }
+        [TestCase]
+        public void ValidationSvgWidgetTest()
+        {
+            ValidatePage("ValidationSvgWidget");
+        }
+        [TestCase]
         public void ValidationEventConditionalTest()
         {
             ValidatePage("ValidationEventConditional");
