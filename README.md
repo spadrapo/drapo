@@ -452,18 +452,22 @@ We welcome contributions to Drapo! Here's how to get started:
    dotnet build
    ```
 
-4. **Run Tests**:
-   ```bash
-   dotnet test
-   ```
+4. **Run Tests**: the suite is browser-driven (Selenium + NUnit) and needs a running
+   WebDrapo host — start it, then run `dotnet test` with the local run settings. Full
+   step-by-step in **[doc/development.md → Running the tests](doc/development.md#running-the-tests)**.
+
+> 📋 For the complete build/lint/test workflow, conventions, and quality gates, see the
+> **[Development Guide](doc/development.md)**. The project's non-negotiable principles
+> live in the **[constitution](.specify/memory/constitution.md)**.
 
 ### Development Workflow
 
 1. **Create a Feature Branch**: `git checkout -b feature/your-feature-name`
 2. **Make Changes**: Implement your feature or bug fix
-3. **Add Tests**: Ensure your changes are covered by tests
-4. **Build and Test**: Verify everything works correctly
-5. **Submit Pull Request**: Create a PR with a clear description
+3. **Add Tests**: Cover changes with DrapoPages tests (see the [Development Guide](doc/development.md#testing-workflow))
+4. **Build and Lint**: `dotnet build Drapo.sln` and `npx tslint --project tsconfig/production/` must both be clean
+5. **Run the full suite**: every test must pass — **a PR is only approved when all tests pass**
+6. **Submit Pull Request**: Create a PR with a clear description
 
 ### Code Style
 
@@ -486,6 +490,9 @@ When reporting bugs or requesting features:
 - **[Live Demo](http://drapo.azurewebsites.net/)** - Interactive examples and playground
 - **[API Reference](#-api-reference)** - Complete attribute and function documentation
 - **[Examples](#-examples)** - Common usage patterns and code samples
+- **[Documentation Index](doc/README.md)** - All project docs in one place
+- **[Architecture](doc/architecture.md)** - Tech stack, code layout, and build pipeline
+- **[Development Guide](doc/development.md)** - Build, lint, test workflow and conventions
 - **[d-for Documentation](doc/dfor.md)** - Detailed loop syntax guide
 
 ## 📦 Packages & Versions
