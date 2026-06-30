@@ -2494,7 +2494,53 @@ class DrapoStorage {
             objectAggregation[query.Projections[0].Alias] = this.ResolveQueryAggregationsMin(query, query.Projections[0], objects, objectsInformation);
             return (objectAggregation);
         }
+        if (query.Projections[0].FunctionName === 'SUM') {
+            const objectAggregation: any = {};
+            objectAggregation[query.Projections[0].Alias] = this.ResolveQueryAggregationsSum(query, query.Projections[0], objects, objectsInformation);
+            return (objectAggregation);
+        }
+        if (query.Projections[0].FunctionName === 'AVG') {
+            const objectAggregation: any = {};
+            objectAggregation[query.Projections[0].Alias] = this.ResolveQueryAggregationsAvg(query, query.Projections[0], objects, objectsInformation);
+            return (objectAggregation);
+        }
         return (null);
+    }
+
+    private ResolveQueryAggregationsSum(query: DrapoQuery, projection: DrapoQueryProjection, objects: any[], objectsInformation: any[]): string {
+        let sum: number = 0;
+        let hasValue: boolean = false;
+        const functionParameter: string = projection.FunctionParameters[0];
+        const functionParameterName: string = this.ResolveQueryFunctionParameterName(functionParameter);
+        for (let i: number = 0; i < objectsInformation.length; i++) {
+            const valueCurrent: any = objectsInformation[i][functionParameterName];
+            if (valueCurrent == null)
+                continue;
+            const valueNumber: number = Number(valueCurrent);
+            if (isNaN(valueNumber))
+                continue;
+            sum += valueNumber;
+            hasValue = true;
+        }
+        return (hasValue ? this.Application.Solver.EnsureString(sum) : null);
+    }
+
+    private ResolveQueryAggregationsAvg(query: DrapoQuery, projection: DrapoQueryProjection, objects: any[], objectsInformation: any[]): string {
+        let sum: number = 0;
+        let count: number = 0;
+        const functionParameter: string = projection.FunctionParameters[0];
+        const functionParameterName: string = this.ResolveQueryFunctionParameterName(functionParameter);
+        for (let i: number = 0; i < objectsInformation.length; i++) {
+            const valueCurrent: any = objectsInformation[i][functionParameterName];
+            if (valueCurrent == null)
+                continue;
+            const valueNumber: number = Number(valueCurrent);
+            if (isNaN(valueNumber))
+                continue;
+            sum += valueNumber;
+            count++;
+        }
+        return (count > 0 ? this.Application.Solver.EnsureString(sum / count) : null);
     }
 
     private ResolveQueryAggregationsMax(query: DrapoQuery, projection: DrapoQueryProjection, objects: any[], objectsInformation: any[]): string {
