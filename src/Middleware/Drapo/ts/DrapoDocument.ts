@@ -7,7 +7,6 @@ class DrapoDocument {
     private _sectorHierarchy: [string, string][] = [];
     private _sectorFriends: [string, string[]][] = [];
     private _lastGuid: string = null;
-    private _forRenderedItems: WeakSet<HTMLElement> = new WeakSet<HTMLElement>();
 
     //Properties
     get Application(): DrapoApplication {
@@ -1437,28 +1436,6 @@ class DrapoDocument {
                 found = true;
             else if (found)
                 els.push(elChild);
-        }
-        return (els);
-    }
-
-    public MarkForRenderedItem(el: HTMLElement): void {
-        if (el != null)
-            this._forRenderedItems.add(el);
-    }
-
-    public IsForRenderedItem(el: HTMLElement): boolean {
-        return ((el != null) && (this._forRenderedItems.has(el)));
-    }
-
-    public GetForRenderedItems(elAnchor: HTMLElement): HTMLElement[] {
-        //Returns the contiguous run of siblings after the anchor that this d-for rendered.
-        //Stops at the first sibling that is not an owned rendered item (another d-for
-        //template anchor or static content), so a loop never consumes its siblings.
-        const els: HTMLElement[] = [];
-        let elSibling: Element = elAnchor.nextElementSibling;
-        while ((elSibling != null) && (this._forRenderedItems.has(elSibling as HTMLElement))) {
-            els.push(elSibling as HTMLElement);
-            elSibling = elSibling.nextElementSibling;
         }
         return (els);
     }
