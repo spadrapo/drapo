@@ -448,6 +448,21 @@ namespace WebDrapo.Test
             ValidatePage("ControlFlowForArray");
         }
         [TestCase]
+        public void ForConsecutiveTest()
+        {
+            ValidatePage("ForConsecutive");
+        }
+        [TestCase]
+        public void ForTrailingStaticTest()
+        {
+            ValidatePage("ForTrailingStatic");
+        }
+        [TestCase]
+        public void ForConsecutiveMixedTest()
+        {
+            ValidatePage("ForConsecutiveMixed");
+        }
+        [TestCase]
         public void ControlFlowForArrayNotifyTest()
         {
             ValidatePage("ControlFlowForArrayNotify");

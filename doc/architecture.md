@@ -73,7 +73,9 @@ organized around a central application object plus focused handlers and services
   - `DrapoWindowHandler` / `DrapoBehaviorHandler` / `DrapoExceptionHandler`
 - **Core services** — `DrapoStorage` (data lifecycle, the largest module),
   `DrapoDocument` (DOM processing), `DrapoParser`/`DrapoSolver`/`DrapoExpressionItem`
-  (expression parsing & evaluation), `DrapoControlFlow` (`d-for`/`d-if`),
+  (expression parsing & evaluation), `DrapoControlFlow` (`d-for`/`d-if`; each `d-for`
+  tags the rows it renders via `DrapoDocument`'s owned-items registry so a loop only
+  ever touches its own items and never consumes following siblings),
   `DrapoObserver` (reactivity), `DrapoServer`/`DrapoServerRequest`/`DrapoServerResponse`
   (HTTP), `DrapoRouter`/`DrapoRoute` (client routing), `DrapoValidator` (validation),
   `DrapoGlobalization`, `DrapoTheme`/`DrapoStylist` (theming), and `DrapoPipeMessage*`

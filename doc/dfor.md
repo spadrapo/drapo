@@ -77,6 +77,23 @@ of a specific element:
 <li d-for="item in data.[1].Children">{{item.Name}}</li>
 ```
 
+## Placement among siblings
+
+A `d-for` loop can be placed **anywhere** among its parent's children — it does not have
+to be the last child. Two or more loops can be declared consecutively under the same
+parent, and a loop may be followed by static content. Each loop renders and re-renders
+only the items it produced and never disturbs its siblings:
+
+```html
+<ul>
+    <!-- two consecutive loops, each independent -->
+    <li d-for="a in listA">{{a.Name}}</li>
+    <li d-for="b in listB">{{b.Name}}</li>
+    <!-- static content after a loop is preserved -->
+    <li class="footer-row">Total: {{listA.Count}}</li>
+</ul>
+```
+
 ## Combining with other attributes
 
 `d-for` composes with the rest of the attribute model — conditional rendering, dynamic
