@@ -1,6 +1,8 @@
 class DrapoControlFlow {
     //Field
     private _application: DrapoApplication;
+    //Rows rendered by each d-for loop, so a loop only ever touches its own items.
+    private _forRenderedItems: WeakSet<HTMLElement> = new WeakSet<HTMLElement>();
 
     //Properties
     get Application(): DrapoApplication {
@@ -10,6 +12,24 @@ class DrapoControlFlow {
     //Constructors
     constructor(application: DrapoApplication) {
         this._application = application;
+    }
+
+    private MarkForRenderedItem(el: HTMLElement): void {
+        if (el != null)
+            this._forRenderedItems.add(el);
+    }
+
+    private GetForRenderedItems(elAnchor: HTMLElement): HTMLElement[] {
+        //Returns the contiguous run of siblings after the anchor that this d-for rendered.
+        //Stops at the first sibling that is not an owned rendered item (another d-for
+        //template anchor or static content), so a loop never consumes its siblings.
+        const els: HTMLElement[] = [];
+        let elSibling: Element = elAnchor.nextElementSibling;
+        while ((elSibling != null) && (this._forRenderedItems.has(elSibling as HTMLElement))) {
+            els.push(elSibling as HTMLElement);
+            elSibling = elSibling.nextElementSibling;
+        }
+        return (els);
     }
 
     public async ResolveControlFlowDocument(): Promise<void> {
@@ -167,7 +187,7 @@ class DrapoControlFlow {
             //Backup scrollPosition
             viewportBeforeScrollPosition = viewportBefore.ElementScroll.scrollTop;
             this.Application.ViewportHandler.DestroyViewportControlFlow(viewportBefore);
-            const itemsViewport: HTMLElement[] = this.Application.Document.GetNextAll(elAnchor);
+            const itemsViewport: HTMLElement[] = this.GetForRenderedItems(elAnchor);
             this.RemoveList(itemsViewport);
         }
         //Difference
@@ -181,7 +201,7 @@ class DrapoControlFlow {
         const elForParent: HTMLElement = elAnchor.parentElement;
         if (hasForIfText)
             conditionalForIfResult = await this.Application.Solver.ResolveConditional(forIfText, null, sector, context, renderContext);
-        const items: HTMLElement[] = isContextRootFullExclusive ? null : this.Application.Document.GetNextAll(elAnchor);
+        const items: HTMLElement[] = isContextRootFullExclusive ? null : this.GetForRenderedItems(elAnchor);
         let dataItem: DrapoStorageItem = null;
         let datas: any[] = null;
         const range: DrapoRange = this.GetIteratorRange(dataKeyIteratorRange);
@@ -234,7 +254,7 @@ class DrapoControlFlow {
         let lastInserted: HTMLElement = elAnchor;
         let start: number = 0;
         if (isIncremental) {
-            const nextElements: HTMLElement[] = this.Application.Document.GetNextAll(elAnchor);
+            const nextElements: HTMLElement[] = this.GetForRenderedItems(elAnchor);
             start = this.Application.Document.GetIndex(elAnchor) + nextElements.length;
             if (nextElements.length > 0)
                 lastInserted = nextElements[nextElements.length - 1];
@@ -255,8 +275,10 @@ class DrapoControlFlow {
                 return (false);
             if (isContextRootFullExclusive) {
                 this.Application.Observer.UnsubscribeFor(dataKey, elementForTemplate);
-                if (!isLastChild)
-                    this.Application.Document.SetHTML(elForParent,content);
+                if (!isLastChild) {
+                    //Remove only the rows this loop rendered; preserve trailing siblings.
+                    this.RemoveList(this.GetForRenderedItems(elAnchor));
+                }
                 const template: HTMLElement = elForParent.children[0] as HTMLElement;
                 this.Application.Observer.SubscribeFor(template, dataKey);
             }
@@ -339,6 +361,8 @@ class DrapoControlFlow {
                         elForParent.style.display = 'none';
                     }
                 }
+                //Mark the row as owned by this loop so it is never mistaken for a sibling.
+                this.MarkForRenderedItem(lastInserted);
                 insertedElements.push(lastInserted);
             } else if (type == DrapoStorageLinkType.RenderClass) {
                 await this.ResolveControlFlowForIterationRenderClass(context, renderContext, template, sector);

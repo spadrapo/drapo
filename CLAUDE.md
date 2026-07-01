@@ -63,6 +63,11 @@ The managed section below is refreshed by `/speckit-agent-context-update` after
 `/speckit-specify` or `/speckit-plan`.
 
 <!-- SPECKIT START -->
-For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+Active feature: **Support consecutive d-for loops as siblings** (issue #661, branch
+`661-dfor-consecutive-siblings`). Current plan:
+[specs/001-dfor-consecutive-siblings/plan.md](specs/001-dfor-consecutive-siblings/plan.md).
+Fix bounds each `d-for` loop's rendered-item region (in
+`src/Middleware/Drapo/ts/DrapoControlFlow.ts`) so it no longer removes following siblings;
+verified via new DrapoPages render-comparison tests. See that plan for technologies,
+structure, and commands.
 <!-- SPECKIT END -->
