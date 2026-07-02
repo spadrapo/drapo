@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Class Conditional Bug Fix Test</title>
+    <style>
+        .ppSwitch {
+            padding: 5px;
+            margin: 5px;
+            border: 1px solid #ccc;
+        }
+        .ppElementDisabled {
+            opacity: 0.5;
+            pointer-events: none;
+            background-color: #f0f0f0;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Testing Class Conditional Bug Fixes</h1>
+    
+    <!-- Test data setup -->
+    <div d-datakey="panelUserFeatures" d-datatype="array" d-datavalue='[66, 67, 68, 69, 70, 71, 72, 74, 75, 77, 78, 79, 80, 82, 83, 84, 85, 86, 87, 89, 90]'></div>
+    <div d-datakey="panelSecurityUserNewOrEditObjectSave" d-datatype="object" d-dataproperty-IsBlocked="true"></div>
+    
+    <!-- Test cases -->
+    <div class="test-result">
+        <h3>Test 1: Working case - Simple ContainsDataItem (should be enabled)</h3>
+        <div d-class="{ppSwitch, ppElementDisabled:!ContainsDataItem({{panelUserFeatures}},81)}">
+            Simple condition working - Feature 81 NOT in array, so should be disabled
+        </div>
+    </div>
+    
+    <div class="test-result">
+        <h3>Test 2: Working case - ContainsDataItem with existing feature (should be enabled)</h3>
+        <div d-class="{ppSwitch, ppElementDisabled:!ContainsDataItem({{panelUserFeatures}},80)}">
+            Feature 80 IS in array, so should be enabled (not disabled)
+        </div>
+    </div>
+    
+    <div class="test-result">
+        <h3>Test 3: Bug case - IF with negation inside (should fail according to issue)</h3>
+        <div d-class="{ppSwitch, ppElementDisabled:IF(!ContainsDataItem({{panelUserFeatures}},81))}">
+            IF with negation inside - This should fail according to the bug report
+        </div>
+    </div>
+    
+    <div class="test-result">
+        <h3>Test 4: Complex case - Two conditions combined (should fail according to issue)</h3>
+        <div d-class="{ppSwitch, ppElementDisabled:!ContainsDataItem({{panelUserFeatures}},81) && {{panelSecurityUserNewOrEditObjectSave.IsBlocked}}}">
+            Two conditions: user doesn't have unblock feature AND user is blocked
+        </div>
+    </div>
+    
+    <div class="test-result">
+        <h3>Test 5: Alternative complex case with IF</h3>
+        <div d-class="{ppSwitch, ppElementDisabled:IF(!ContainsDataItem({{panelUserFeatures}},81) && {{panelSecurityUserNewOrEditObjectSave.IsBlocked}}, true, false)}">
+            IF with complex condition - both negation and multiple conditions
+        </div>
+    </div>
+    
+    <div class="test-result">
+        <h3>Test 6: Parentheses test (mentioned as causing errors)</h3>
+        <div d-class="{ppSwitch, ppElementDisabled:(!ContainsDataItem({{panelUserFeatures}},81))}">
+            Parentheses around negation - should cause parsing errors according to issue
+        </div>
+    </div>
+    
+    <!-- Display data for debugging -->
+    <div style="margin-top: 20px; padding: 10px; background-color: #f9f9f9;">
+        <h3>Debug Info:</h3>
+        <p>Panel User Features: <span d-for="feature in panelUserFeatures">{{feature}}, </span></p>
+        <p>User Is Blocked: {{panelSecurityUserNewOrEditObjectSave.IsBlocked}}</p>
+        <p>Contains Feature 81: <span d-if="ContainsDataItem({{panelUserFeatures}},81)">Yes</span><span d-if="!ContainsDataItem({{panelUserFeatures}},81)">No</span></p>
+        <p>Contains Feature 80: <span d-if="ContainsDataItem({{panelUserFeatures}},80)">Yes</span><span d-if="!ContainsDataItem({{panelUserFeatures}},80)">No</span></p>
+    </div>
+</body>
+</html>
