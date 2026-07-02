@@ -2420,7 +2420,21 @@ class DrapoStorage {
                     }
                     if ((query.Sources.length > 1) && ((querySource.Alias ?? querySource.Source) !== source))
                         continue;
-                    const value: any = isObject ? sourceObject[projection.Column ?? property] : sourceObject;
+                    // Resolve the parameter as a data path so nested / positional columns (e.g. Cells.[3].Value)
+                    // aggregate correctly — not only flat top-level columns. Falls back to the flat lookup.
+                    let value: any;
+                    if (isObject) {
+                        let columnPath: string = functionParameter;
+                        const aliasPrefix: string = (querySource.Alias ?? querySource.Source) + '.';
+                        if ((query.Sources.length > 1) && (columnPath.indexOf(aliasPrefix) === 0))
+                            columnPath = columnPath.substring(aliasPrefix.length);
+                        if (columnPath.indexOf('.') >= 0)
+                            value = this.Application.Solver.ResolveDataObjectPathObject(sourceObject, [''].concat(columnPath.split('.')));
+                        else
+                            value = sourceObject[projection.Column ?? property];
+                    } else {
+                        value = sourceObject;
+                    }
                     objectInformation[functionParameterName] = value;
                 }
             } else {
