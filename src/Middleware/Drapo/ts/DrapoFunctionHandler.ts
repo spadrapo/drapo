@@ -817,12 +817,13 @@ class DrapoFunctionHandler {
         } else {
             itemPath.push(itemText);
         }
-        const item: any = contextItem === null ? itemText : await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, itemPath);
+        const isNestedPath: boolean = mustacheParts !== null && mustacheParts.length > 1;
+        const item: any = (contextItem === null && !isNestedPath) ? itemText : await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, itemPath);
         if (item == null)
             return (null);
         const notifyText: string = functionParsed.Parameters[2];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
-        const deleted: boolean = contextItem === null ? await this.Application.Storage.DeleteDataItemArray(dataKey, sector, item, notify) : await this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item, notify);
+        const deleted: boolean = (contextItem === null && !isNestedPath) ? await this.Application.Storage.DeleteDataItemArray(dataKey, sector, item, notify) : await this.Application.Storage.DeleteDataItem(dataKey, mustacheParts, sector, item, notify);
         if (!deleted)
             return (null);
     }
