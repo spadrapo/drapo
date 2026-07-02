@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Bug d-attr can't execute functions</title>
+</head>
+<body>
+    <br>
+    <p>
+        Clicking 'Add' button shouldn't log the function 'notAFunction(123)' in Drapo debugger
+    </p>
+    <div d-dataKey="objectTemplate" d-dataType="object" d-dataProperty-title="notAFunction(123)" d-dataProperty-username="John Doe"></div>
+    <div d-dataKey="list" d-dataType="array"></div>
+    <input type="text" d-model="{{objectTemplate.username}}">
+    <input type="button" value="Add" d-on-click="AddDataItem(list,{{objectTemplate}})">
+    <div>
+        <div d-for="obj in list">
+            <span d-model="{{obj.username}}" d-attr-title="{{obj.title}}"></span><br/>
+         </div>
+    </div>
+</body>
+</html>
