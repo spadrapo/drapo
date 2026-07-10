@@ -17,6 +17,7 @@ namespace WebDrapo.Controllers
             List<KeyValueVO> dictionary = new List<KeyValueVO>();
             dictionary.Add(new KeyValueVO() { Key = "sector", Value = "Sectors", Children = GetSectorTags()});
             dictionary.Add(new KeyValueVO() { Key = "sector", Value = "Data Handlers", Children = GetDataTags() });
+            dictionary.Add(new KeyValueVO() { Key = "sector", Value = "Validation", Children = GetValidationTags() });
             dictionary.Add(new KeyValueVO() { Key = "sector", Value = "Statements", Children = GetStatementTags() });
             dictionary.Add(new KeyValueVO() { Key = "sector", Value = "Configurations", Children = GetConfigurationTags() });
             dictionary.Add(new KeyValueVO() { Key = "sector", Value = "Events", Children = GetEventTags() });
@@ -56,6 +57,19 @@ namespace WebDrapo.Controllers
             dataTags.Add(new KeyValueVO() { Key = "d-dataDelay", Value = "When set to true, loads properties individually instead of the whole object" });
             dataTags.Add(new KeyValueVO() { Key = "d-dataUnitOfWork", Value = "When set to true, d-dataKey object will be treated as DataSet" });
             return dataTags;
+        }
+
+        private List<KeyValueVO> GetValidationTags()
+        {
+            List<KeyValueVO> validationTags = new List<KeyValueVO>();
+            validationTags.Add(new KeyValueVO() { Key = "d-validation-id", Value = "Unique identifier of a validation rule, referenced by d-validation and d-validation-on-click" });
+            validationTags.Add(new KeyValueVO() { Key = "d-validation-type", Value = "Type of the validation rule: \"required\", \"conditional\", \"compare\" or \"regex\"" });
+            validationTags.Add(new KeyValueVO() { Key = "d-validation-value", Value = "Field or expression being validated, typically a mustache-bound model value" });
+            validationTags.Add(new KeyValueVO() { Key = "d-validation-expression", Value = "Regular expression the value must match, used when d-validation-type is \"regex\"" });
+            validationTags.Add(new KeyValueVO() { Key = "d-validation-group", Value = "Name of a validation group; multiple rules can share a group so d-validation-on-click can check them together" });
+            validationTags.Add(new KeyValueVO() { Key = "d-validation", Value = "Marks an element (typically a validation message) as tied to the rule identified by d-validation-id" });
+            validationTags.Add(new KeyValueVO() { Key = "d-validation-on-click", Value = "Runs the click handler only if the named validation id or group passes; blocks it otherwise" });
+            return validationTags;
         }
 
         private List<KeyValueVO> GetStatementTags()
@@ -168,6 +182,20 @@ namespace WebDrapo.Controllers
                 return "<div d-datakey=\"keyValue\" d-dataType=\"object\" d-dataproperty-key-name=\"Key\" d-dataproperty-key-value=\"admin\" d-dataurlset=\"/Authentication/Login\">";
             else if (key == "d-dataProperty-<name>-value")
                 return "<div d-datakey=\"keyValue\" d-dataType=\"object\" d-dataproperty-key-name=\"Key\" d-dataproperty-key-value=\"admin\" d-dataurlset=\"/Authentication/Login\">";
+            else if (key == "d-validation-id")
+                return "<div d-validation-id=\"validatorName\" d-validation-type=\"conditional\" d-validation-value=\"{{user.Name}}\"></div>";
+            else if (key == "d-validation-type")
+                return "<div d-validation-id=\"validatorEmail\" d-validation-type=\"regex\" d-validation-value=\"{{user.Email}}\" d-validation-expression=\"^[\\w.-]+@[\\w.-]+\\.\\w{2,}$\"></div>";
+            else if (key == "d-validation-value")
+                return "<div d-validation-id=\"validatorName\" d-validation-type=\"conditional\" d-validation-value=\"{{user.Name}}\"></div>";
+            else if (key == "d-validation-expression")
+                return "<div d-validation-id=\"validatorEmail\" d-validation-type=\"regex\" d-validation-value=\"{{user.Email}}\" d-validation-expression=\"^[\\w.-]+@[\\w.-]+\\.\\w{2,}$\"></div>";
+            else if (key == "d-validation-group")
+                return "<div d-validation-id=\"validatorName\" d-validation-group=\"formGroup\" d-validation-type=\"conditional\" d-validation-value=\"{{user.Name}}\"></div>";
+            else if (key == "d-validation")
+                return "<div d-validation=\"validatorName\"><span class=\"validation-message\">Name is required</span></div>";
+            else if (key == "d-validation-on-click")
+                return "<input type=\"button\" value=\"Save\" d-validation-on-click=\"formGroup\" d-on-click=\"PostData(user)\"/>";
             else if (key == "d-dataLazy")
                 return "< div d-dataKey = \"users\" d-dataLazy = \"true\" d-dataLazyStart = \"0\" d-dataLazyIncrement = \"100\" d - dataUrlGet = \"/Data/GetData\"> ";
             else if (key == "d-dataLazyStart")
@@ -368,6 +396,46 @@ namespace WebDrapo.Controllers
                 relatedTags.Add(new KeyValueVO() { Key = "d-attr-<name>", Value = "Value of object property d-dataProperty-<name>" });
                 relatedTags.Add(new KeyValueVO() { Key = "d-dataProperty-<name>-name", Value = "Name of a property inside object defined by d-dataType" });
                 relatedTags.Add(new KeyValueVO() { Key = "d-dataLazy", Value = "When set to true, data will be loaded in increments" });
+            }
+            else if (key == "d-validation-id")
+            {
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-type", Value = "Type of the validation rule: \"required\", \"conditional\", \"compare\" or \"regex\"" });
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-value", Value = "Field or expression being validated, typically a mustache-bound model value" });
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-group", Value = "Name of a validation group; multiple rules can share a group so d-validation-on-click can check them together" });
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation", Value = "Marks an element (typically a validation message) as tied to the rule identified by d-validation-id" });
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-on-click", Value = "Runs the click handler only if the named validation id or group passes; blocks it otherwise" });
+            }
+            else if (key == "d-validation-type")
+            {
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-id", Value = "Unique identifier of a validation rule, referenced by d-validation and d-validation-on-click" });
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-value", Value = "Field or expression being validated, typically a mustache-bound model value" });
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-expression", Value = "Regular expression the value must match, used when d-validation-type is \"regex\"" });
+            }
+            else if (key == "d-validation-value")
+            {
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-id", Value = "Unique identifier of a validation rule, referenced by d-validation and d-validation-on-click" });
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-type", Value = "Type of the validation rule: \"required\", \"conditional\", \"compare\" or \"regex\"" });
+            }
+            else if (key == "d-validation-expression")
+            {
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-id", Value = "Unique identifier of a validation rule, referenced by d-validation and d-validation-on-click" });
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-type", Value = "Type of the validation rule: \"required\", \"conditional\", \"compare\" or \"regex\"" });
+            }
+            else if (key == "d-validation-group")
+            {
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-id", Value = "Unique identifier of a validation rule, referenced by d-validation and d-validation-on-click" });
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-on-click", Value = "Runs the click handler only if the named validation id or group passes; blocks it otherwise" });
+            }
+            else if (key == "d-validation")
+            {
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-id", Value = "Unique identifier of a validation rule, referenced by d-validation and d-validation-on-click" });
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-type", Value = "Type of the validation rule: \"required\", \"conditional\", \"compare\" or \"regex\"" });
+            }
+            else if (key == "d-validation-on-click")
+            {
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-id", Value = "Unique identifier of a validation rule, referenced by d-validation and d-validation-on-click" });
+                relatedTags.Add(new KeyValueVO() { Key = "d-validation-group", Value = "Name of a validation group; multiple rules can share a group so d-validation-on-click can check them together" });
+                relatedTags.Add(new KeyValueVO() { Key = "d-on-click", Value = "Functions to be called by OnClick events" });
             }
             else if (key == "d-dataLazy")
             {
