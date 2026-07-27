@@ -183,6 +183,9 @@ class DrapoFormatter {
         //D
         if ((formatTokenType === 'D') || (formatTokenType === 'd'))
             return (this.FormatNumberDecimal(value, formatTokens, culture));
+        //F
+        if ((formatTokenType === 'F') || (formatTokenType === 'f'))
+            return (this.FormatNumberFixedPoint(value, culture));
         //T
         if ((formatTokenType === 'T') || (formatTokenType === 't'))
             return (this.FormatNumberTimespan(value, formatTokens, culture));
@@ -214,6 +217,21 @@ class DrapoFormatter {
         const isNegative: boolean = value < 0;
         const valueAbsolute: number = Math.abs(value);
         const valueDecimals = this.EnsureLength(valueAbsolute.toFixed(0), decimals);
+        const valueDecimalsWithCulture: string = this.GetNumberFormattedWithCulture(valueDecimals, culture);
+        return ((isNegative ? '-' : '') + valueDecimalsWithCulture);
+    }
+
+    private FormatNumberFixedPoint(value: number, culture: string): string {
+        if (Math.floor(value) === value)
+            return this.GetNumberFormattedWithCulture(value.toString(), culture);
+        const valueString: string = value.toString();
+        const indexDecimal: number = valueString.indexOf('.');
+        if (indexDecimal === -1)
+            return this.GetNumberFormattedWithCulture(valueString, culture);
+        const decimals: number = (valueString.length - indexDecimal - 1);
+        const isNegative: boolean = value < 0;
+        const valueAbsolute: number = Math.abs(value);
+        const valueDecimals = valueAbsolute.toFixed(decimals);
         const valueDecimalsWithCulture: string = this.GetNumberFormattedWithCulture(valueDecimals, culture);
         return ((isNegative ? '-' : '') + valueDecimalsWithCulture);
     }
