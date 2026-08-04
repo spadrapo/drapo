@@ -1239,6 +1239,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionCastNumberBlock");
         }
         [TestCase]
+        public void CastNumberEmptyFieldTest()
+        {
+            ValidatePage("CastNumberEmptyField");
+        }
+        [TestCase]
         public void FunctionRoundTest()
         {
             ValidatePage("FunctionRound");
