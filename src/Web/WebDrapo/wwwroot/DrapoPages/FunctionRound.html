@@ -9,6 +9,9 @@
     <span>Function Round</span>
     <div d-datakey="object" d-datatype="object" d-dataproperty-a="2.567" d-dataproperty-x="2.2" d-dataproperty-y="3.3" d-dataproperty-rounded="0"></div>
     <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateItemField({{object.rounded}},Round({{object.a}},2))"></div>
+    <div d-datakey="sum" d-datatype="object" d-dataproperty-t1="1.6" d-dataproperty-t2="2.6" d-dataproperty-t3="3.6" d-dataproperty-t4="4.6" d-dataproperty-t5="5.6" d-dataproperty-t6="6.6"></div>
+    <div d-datakey="total" d-datatype="value" d-datavalue="0"></div>
+    <div d-datakey="loaderTotal" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateData(total,Round(Cast({{sum.t1}}+{{sum.t2}}+{{sum.t3}}+{{sum.t4}}+{{sum.t5}}+{{sum.t6}},number),0))"></div>
     <div>
         <span>nearest down: </span><span id="r1" d-model="Round(2.4)"></span><br />
         <span>nearest tie away: </span><span id="r2" d-model="Round(2.5)"></span><br />
@@ -26,6 +29,7 @@
         <span>with cast: </span><span id="r14" d-model="Round(Cast({{object.x}} + {{object.y}},number),0,ceiling)"></span><br />
         <span>mustache value: </span><span id="r15" d-model="Round({{object.a}},2)"></span><br />
         <span>with updateitemfield: </span><span id="r16" d-model="{{object.rounded}}"></span><br />
+        <span>with updatedata + cast sum: </span><span id="r17" d-model="{{total}}"></span><br />
     </div>
 </body>
 </html>
