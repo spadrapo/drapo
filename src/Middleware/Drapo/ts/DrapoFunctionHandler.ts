@@ -369,6 +369,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionExecuteInstanceFunction(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'cast')
             return (await this.ExecuteFunctionCast(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'round')
+            return (await this.ExecuteFunctionRound(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'encodeurl')
             return (await this.ExecuteFunctionEncodeUrl(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'addrequestheader')
@@ -1475,6 +1477,26 @@ class DrapoFunctionHandler {
         if (type === 'number')
             return (this.Application.Parser.ParseNumberBlock(value));
         return (value);
+    }
+
+    private async ExecuteFunctionRound(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
+        const context: DrapoContext = contextItem != null ? contextItem.Context : new DrapoContext();
+        const valueResolved: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, functionParsed.Parameters[0], null, false);
+        const value: number = this.Application.Parser.ParseNumberBlock(valueResolved);
+        const digitsParameter: string = functionParsed.Parameters.length > 1 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]) : null;
+        const digits: number = this.Application.Parser.ParseNumber(digitsParameter, 0);
+        const modeParameter: string = functionParsed.Parameters.length > 2 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[2]) : null;
+        const mode: string = (modeParameter == null) ? 'round' : ('' + modeParameter).toLowerCase();
+        const factor: number = Math.pow(10, digits);
+        const scaled: number = value * factor;
+        let rounded: number;
+        if (mode === 'floor')
+            rounded = Math.floor(scaled);
+        else if (mode === 'ceiling')
+            rounded = Math.ceil(scaled);
+        else
+            rounded = scaled < 0 ? -Math.round(-scaled) : Math.round(scaled);
+        return (rounded / factor);
     }
 
     private async ExecuteFunctionEncodeUrl(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {

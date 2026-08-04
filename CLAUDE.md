@@ -63,11 +63,12 @@ The managed section below is refreshed by `/speckit-agent-context-update` after
 `/speckit-specify` or `/speckit-plan`.
 
 <!-- SPECKIT START -->
-Active feature: **Support consecutive d-for loops as siblings** (issue #661, branch
-`661-dfor-consecutive-siblings`). Current plan:
-[specs/001-dfor-consecutive-siblings/plan.md](specs/001-dfor-consecutive-siblings/plan.md).
-Fix bounds each `d-for` loop's rendered-item region (in
-`src/Middleware/Drapo/ts/DrapoControlFlow.ts`) so it no longer removes following siblings;
-verified via new DrapoPages render-comparison tests. See that plan for technologies,
-structure, and commands.
+Active feature: **Round function** (issue #668, branch `668-round-function`). Current plan:
+[specs/002-round-function/plan.md](specs/002-round-function/plan.md).
+Adds a declarative `Round(value, digits, mode)` function to the TypeScript runtime
+(`src/Middleware/Drapo/ts/DrapoFunctionHandler.ts`): rounds a resolved numeric expression
+to `digits` decimals (default 0) with mode `round` (nearest, ties half away from zero;
+default), `floor` (toward −∞), or `ceiling` (toward +∞); composes with `Cast` and
+`UpdateItemField`. Verified via a new DrapoPages render-comparison test; docs added in the
+separate `spadrapo/docs` repo. See that plan for technologies, structure, and commands.
 <!-- SPECKIT END -->
