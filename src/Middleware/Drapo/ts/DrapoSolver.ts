@@ -60,7 +60,11 @@ class DrapoSolver {
         if ((resultSecond === '&&') && (!this.ResolveConditionalBoolean(resultFirst)))
             return ('false');
         if (resultFirst === '!') {
-            //Deny Second
+            //Deny Second - ensure resultSecond is properly resolved
+            if (resultSecond == null || resultSecond === '') {
+                // If the second item failed to resolve, return false
+                return ('false');
+            }
             const resultDenySecond: string = (!this.ResolveConditionalBoolean(resultSecond)).toString();
             const resultDenyItemSecond: DrapoExpressionItem = new DrapoExpressionItem(DrapoExpressionItemType.Text, resultDenySecond);
             block.Items[0] = resultDenyItemSecond;
@@ -175,8 +179,16 @@ class DrapoSolver {
         const item: DrapoExpressionItem = block.Items[index];
         if (item.Type === DrapoExpressionItemType.Block)
             block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.ResolveConditionalExpressionBlock(sector, context, renderContext, executionContext, el, eljForTemplate, item, canBind)).toString());
-        else if (item.Type === DrapoExpressionItemType.Function)
-            block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.FunctionHandler.ReplaceFunctionExpressionsContext(sector, context, item.Value, canBind, executionContext)));
+        else if (item.Type === DrapoExpressionItemType.Function) {
+            const resolvedValue = await this.Application.FunctionHandler.ReplaceFunctionExpressionsContext(sector, context, item.Value, canBind, executionContext);
+            // Ensure function resolution returns a valid result
+            if (resolvedValue === item.Value) {
+                // Function failed to resolve, treat as false
+                block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, 'false');
+            } else {
+                block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, resolvedValue);
+            }
+        }
         else if (item.Type === DrapoExpressionItemType.Mustache)
             block.Items[index] = new DrapoExpressionItem(DrapoExpressionItemType.Text, (await this.Application.Barber.ResolveControlFlowMustacheString(context, renderContext, executionContext, item.Value, el, sector, canBind, DrapoStorageLinkType.Render, eljForTemplate != null, eljForTemplate)));
     }

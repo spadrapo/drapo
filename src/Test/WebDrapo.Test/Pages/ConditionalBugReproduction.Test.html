@@ -1,0 +1,44 @@
+<!DOCTYPE html><html><head></head><body>
+    <h1>Conditional Bug Reproduction Test</h1>
+    
+    
+    
+    <!-- Test 1: Known working case -->
+    <h3>Test 1: Working Case</h3>
+    <div class="test-item disabled-element">
+        Working: !ContainsDataItem - Should be disabled (feature 81 not in array)
+    </div>
+    
+    <!-- Test 2: Fixed case - IF with negation inside parameter -->
+    <h3>Test 2: Fixed Case - IF with negation inside parameter</h3>
+    <div class="test-item disabled-element">
+        Fixed: IF(!ContainsDataItem, true, false) - Should now work (disabled)
+    </div>
+    
+    <!-- Test 2b: Working case - negation outside IF -->
+    <h3>Test 2b: Working Case - negation outside IF</h3>
+    <div class="test-item disabled-element">
+        Working: !IF(ContainsDataItem, true, false) - Should work according to issue
+    </div>
+    
+    <!-- Test 3: Fixed case - Extra parentheses -->
+    <h3>Test 3: Fixed Case - Extra parentheses</h3>
+    <div class="test-item disabled-element">
+        Fixed: Extra parentheses - Should now work (disabled)
+    </div>
+    
+    <!-- Test 4: Positive case for comparison -->
+    <h3>Test 4: Positive Case - Feature present</h3>
+    <div class="test-item">
+        Positive: Feature 80 IS in array, so should be enabled (not disabled)
+    </div>
+    
+    <!-- Debug info -->
+    <div>
+        <h3>Debug Info:</h3>
+        <p>Features: 66, 67, 68, 69, 70, 71, 72, 74, 75, 77, 78, 79, 80, 82, 83, 84, 85, 86, 87, 89, 90, </p>
+        <p>Feature 81 present: <span>NO</span></p>
+        <p>Feature 80 present: <span>YES</span></p>
+    </div>
+    
+</body></html>

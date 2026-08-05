@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Minimal Bug Test</title>
+</head>
+<body>
+    <h1>Minimal Bug Reproduction</h1>
+    
+    <!-- Simple test data -->
+    <div d-datakey="features" d-datatype="array" d-datavalue='[80]'></div>
+    
+    <!-- Test case: IF with negation inside parameter -->
+    <div d-if="IF(!ContainsDataItem({{features}},81), true, false)">
+        This text should appear because !ContainsDataItem(features,81) = true, so IF should return true
+    </div>
+    
+    <!-- Debug -->
+    <div>Feature 81 present: <span d-if="ContainsDataItem({{features}},81)">YES</span><span d-if="!ContainsDataItem({{features}},81)">NO</span></div>
+    
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Conditional Bug Reproduction</title>
+    <style>
+        .test-item {
+            padding: 10px;
+            margin: 5px;
+            border: 2px solid #ccc;
+        }
+        .disabled-element {
+            opacity: 0.5;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Conditional Bug Reproduction Test</h1>
+    
+    <!-- Test data matching the issue description -->
+    <div d-datakey="panelUserFeatures" d-datatype="array" 
+         d-datavalue='[66, 67, 68, 69, 70, 71, 72, 74, 75, 77, 78, 79, 80, 82, 83, 84, 85, 86, 87, 89, 90]'></div>
+    
+    <!-- Test 1: Known working case -->
+    <h3>Test 1: Working Case</h3>
+    <div class="test-item" d-class="{test-item, disabled-element:!ContainsDataItem({{panelUserFeatures}},81)}">
+        Working: !ContainsDataItem - Should be disabled (feature 81 not in array)
+    </div>
+    
+    <!-- Test 2: Fixed case - IF with negation inside parameter -->
+    <h3>Test 2: Fixed Case - IF with negation inside parameter</h3>
+    <div class="test-item" d-class="{test-item, disabled-element:IF(!ContainsDataItem({{panelUserFeatures}},81), true, false)}">
+        Fixed: IF(!ContainsDataItem, true, false) - Should now work (disabled)
+    </div>
+    
+    <!-- Test 2b: Working case - negation outside IF -->
+    <h3>Test 2b: Working Case - negation outside IF</h3>
+    <div class="test-item" d-class="{test-item, disabled-element:!IF(ContainsDataItem({{panelUserFeatures}},81), true, false)}">
+        Working: !IF(ContainsDataItem, true, false) - Should work according to issue
+    </div>
+    
+    <!-- Test 3: Fixed case - Extra parentheses -->
+    <h3>Test 3: Fixed Case - Extra parentheses</h3>
+    <div class="test-item" d-class="{test-item, disabled-element:(!ContainsDataItem({{panelUserFeatures}},81))}">
+        Fixed: Extra parentheses - Should now work (disabled)
+    </div>
+    
+    <!-- Test 4: Positive case for comparison -->
+    <h3>Test 4: Positive Case - Feature present</h3>
+    <div class="test-item" d-class="{test-item, disabled-element:!ContainsDataItem({{panelUserFeatures}},80)}">
+        Positive: Feature 80 IS in array, so should be enabled (not disabled)
+    </div>
+    
+    <!-- Debug info -->
+    <div style="margin-top: 20px; padding: 10px; background-color: #f9f9f9;">
+        <h3>Debug Info:</h3>
+        <p>Features: <span d-for="feature in panelUserFeatures">{{feature}}, </span></p>
+        <p>Feature 81 present: <span d-if="ContainsDataItem({{panelUserFeatures}},81)">YES</span><span d-if="!ContainsDataItem({{panelUserFeatures}},81)">NO</span></p>
+        <p>Feature 80 present: <span d-if="ContainsDataItem({{panelUserFeatures}},80)">YES</span><span d-if="!ContainsDataItem({{panelUserFeatures}},80)">NO</span></p>
+    </div>
+    
+</body>
+</html>
