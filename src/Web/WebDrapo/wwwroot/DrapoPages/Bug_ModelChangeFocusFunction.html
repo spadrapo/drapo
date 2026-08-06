@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Bug - Model Change Focus Function</title>
+</head>
+<body>
+    <span>Bug - Model Change Focus Function</span>
+    <div d-datakey="total" d-datatype="value" d-datavalue="1000"></div>
+    <div d-datakey="months" d-datatype="array"
+         d-datavalue="[{&quot;Month&quot;:&quot;Jan&quot;,&quot;Perc&quot;:&quot;&quot;,&quot;Value&quot;:&quot;0&quot;},{&quot;Month&quot;:&quot;Feb&quot;,&quot;Perc&quot;:&quot;&quot;,&quot;Value&quot;:&quot;0&quot;},{&quot;Month&quot;:&quot;Mar&quot;,&quot;Perc&quot;:&quot;&quot;,&quot;Value&quot;:&quot;0&quot;},{&quot;Month&quot;:&quot;Apr&quot;,&quot;Perc&quot;:&quot;&quot;,&quot;Value&quot;:&quot;0&quot;},{&quot;Month&quot;:&quot;May&quot;,&quot;Perc&quot;:&quot;&quot;,&quot;Value&quot;:&quot;0&quot;},{&quot;Month&quot;:&quot;Jun&quot;,&quot;Perc&quot;:&quot;&quot;,&quot;Value&quot;:&quot;0&quot;},{&quot;Month&quot;:&quot;Jul&quot;,&quot;Perc&quot;:&quot;&quot;,&quot;Value&quot;:&quot;0&quot;},{&quot;Month&quot;:&quot;Aug&quot;,&quot;Perc&quot;:&quot;&quot;,&quot;Value&quot;:&quot;0&quot;}]"></div>
+    <div>
+        <div d-for="month in months" d-if="{{total}}>0">
+            <span>{{month.Month}}: </span>
+            <!-- Explicit Focus(perc6=Jul), deferred with the notify so it survives the rebuild -->
+            <input type="text" d-id="perc{{month._Index}}"
+                   d-model="{{month.Perc}}" d-model-event="blur" d-modelNotify="false"
+                   d-on-model-change="UpdateItemField({{month.Value}},Cast({{total}}*{{month.Perc}},number),false);Async(Focus(perc6);Notify(months),0)" />
+            <span d-id="val{{month._Index}}">{{month.Value}}</span>
+            <br />
+        </div>
+    </div>
+</body>
+</html>

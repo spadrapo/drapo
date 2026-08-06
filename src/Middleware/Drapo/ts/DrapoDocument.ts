@@ -904,6 +904,56 @@ class DrapoDocument {
             eli.value = value;
     }
 
+    public IsElementSelectable(el: HTMLElement): boolean {
+        const tag: string = el.tagName.toLowerCase();
+        if (tag === 'textarea')
+            return (true);
+        if (tag !== 'input')
+            return (false);
+        const typeAttribute: string = el.getAttribute('type');
+        const type: string = (typeAttribute == null) ? 'text' : typeAttribute.toLowerCase();
+        return ((type === 'text') || (type === 'search') || (type === 'password') || (type === 'tel') || (type === 'url'));
+    }
+
+    public GetFocusStateForElement(el: HTMLElement): [string, number, number] {
+        if ((el == null) || (el === document.body) || (el.getAttribute == null))
+            return (null);
+        const tag: string = el.tagName.toLowerCase();
+        if ((tag !== 'input') && (tag !== 'textarea') && (tag !== 'select'))
+            return (null);
+        //We can only relocate the element after a re-render when it has a stable d-id
+        const did: string = el.getAttribute('d-id');
+        if (did == null)
+            return (null);
+        let start: number = null;
+        let end: number = null;
+        if (this.IsElementSelectable(el)) {
+            const input: HTMLInputElement = el as HTMLInputElement;
+            start = input.selectionStart;
+            end = input.selectionEnd;
+        }
+        return ([did, start, end]);
+    }
+
+    public RestoreFocusState(state: [string, number, number], scope: HTMLElement): void {
+        if ((state == null) || (scope == null))
+            return;
+        const did: string = state[0];
+        //The focused node was recreated by the render, so relocate it by its d-id and restore focus and caret.
+        //Search only inside the container that was rebuilt, so a duplicate d-id elsewhere on the page is never matched.
+        const target: HTMLElement = this.Application.Searcher.FindByAttributeAndValueFromParent('d-id', did, scope);
+        if (target == null)
+            return;
+        target.focus();
+        const start: number = state[1];
+        const end: number = state[2];
+        if ((start != null) && (end != null) && (this.IsElementSelectable(target))) {
+            const input: HTMLInputElement = target as HTMLInputElement;
+            if (input.setSelectionRange != null)
+                input.setSelectionRange(start, end);
+        }
+    }
+
     public GetText(el: HTMLElement): string {
         if (el.children.length > 0)
             return ('');

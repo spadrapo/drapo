@@ -132,6 +132,25 @@ class DrapoControlFlow {
     }
 
     private async ResolveControlFlowForInternal(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, elFor: HTMLElement, isIncremental: boolean, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render): Promise<boolean> {
+        //Preserve focus across the rebuild. If this d-for recreates the element that currently holds focus, the node
+        //is detached by the render; we snapshot it (by d-id, with caret) before and restore focus to the new node
+        //after. The detached check scopes this to the d-for that actually owns the focused element - when focus must
+        //survive a Tab (activeElement is the page body during the blur), defer the notify with Async(Notify(...),0)
+        //so this runs after the browser has settled focus on the target field, which is then inside this rebuild.
+        const focusedElement: HTMLElement = document.activeElement as HTMLElement;
+        const focusState: [string, number, number] = this.Application.Document.GetFocusStateForElement(focusedElement);
+        //The container that holds this loop's rendered rows; the recreated node is relocated within it (never globally).
+        const focusScope: HTMLElement = (focusState != null) ? elFor.parentElement : null;
+        try {
+            return (await this.ResolveControlFlowForInternalCore(sector, context, renderContext, elFor, isIncremental, canUseDifference, type));
+        } finally {
+            const active: Element = document.activeElement;
+            if ((focusState != null) && (!this.Application.Document.IsElementAttached(focusedElement)) && ((active == null) || (active === document.body)))
+                this.Application.Document.RestoreFocusState(focusState, focusScope);
+        }
+    }
+
+    private async ResolveControlFlowForInternalCore(sector: string, context: DrapoContext, renderContext: DrapoRenderContext, elFor: HTMLElement, isIncremental: boolean, canUseDifference: boolean = true, type: DrapoStorageLinkType = DrapoStorageLinkType.Render): Promise<boolean> {
         let forText: string = elFor.getAttribute('d-for');
         let ifText: string = null;
         let forIfText: string = null;

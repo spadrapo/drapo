@@ -1375,6 +1375,84 @@ namespace WebDrapo.Test
             ValidatePage("FunctionFocus");
         }
         [TestCase]
+        public void ModelChangeUpdateItemFieldFocusTest()
+        {
+            // Regression: a model change that rebuilds the d-for rows used to steal focus from the field the
+            // user tabbed into. The handler updates data synchronously then defers the re-render with
+            // Async(Notify(...),0); the deferred notify snapshots and restores the focused element.
+            string pageUrl = string.Format("{0}DrapoPages/{1}.html", VirtualDirectory, "Bug_ModelChangeUpdateItemFieldFocus");
+            Driver.Navigate().GoToUrl(pageUrl);
+            IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
+            for (int i = 0; i < 20; i++)
+            {
+                bool loaded = (bool)js.ExecuteScript("return(drapo._isLoaded);");
+                if (loaded)
+                    break;
+                System.Threading.Thread.Sleep(100);
+            }
+            // Type a percentage into April and Tab to May. The blur fires d-on-model-change, which
+            // calls UpdateItemField(notify=true) and re-renders the rows.
+            IWebElement april = Driver.FindElement(By.CssSelector("[d-id='perc3']"));
+            april.Click();
+            april.SendKeys("0.1");
+            april.SendKeys(Keys.Tab);
+            System.Threading.Thread.Sleep(1000);
+            // Focus must have moved to May (perc4) and stayed there instead of falling back to the body.
+            IWebElement active = Driver.SwitchTo().ActiveElement();
+            string activeDId = active.GetDomAttribute("d-id");
+            Assert.That(activeDId, Is.EqualTo("perc4"), "Focus should remain on the next field (May) after the model-change notify.");
+            // The calculated financial field must have been updated (proves the notify still happened).
+            IWebElement aprilValue = Driver.FindElement(By.CssSelector("[d-id='val3']"));
+            Assert.That(aprilValue.Text.Trim(), Is.Not.EqualTo("0"), "The calculated field must update after the model change.");
+        }
+        [TestCase]
+        public void ModelChangeFocusFunctionTest()
+        {
+            // When d-on-model-change defers an explicit Focus() with the notify (Async(Focus(...);Notify(...),0)),
+            // that focus must survive the re-render (here the handler focuses Jul / perc6).
+            string pageUrl = string.Format("{0}DrapoPages/{1}.html", VirtualDirectory, "Bug_ModelChangeFocusFunction");
+            Driver.Navigate().GoToUrl(pageUrl);
+            IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
+            for (int i = 0; i < 20; i++)
+            {
+                bool loaded = (bool)js.ExecuteScript("return(drapo._isLoaded);");
+                if (loaded)
+                    break;
+                System.Threading.Thread.Sleep(100);
+            }
+            IWebElement april = Driver.FindElement(By.CssSelector("[d-id='perc3']"));
+            april.Click();
+            april.SendKeys("0.1");
+            april.SendKeys(Keys.Tab);
+            System.Threading.Thread.Sleep(1000);
+            IWebElement active = Driver.SwitchTo().ActiveElement();
+            string activeDId = active.GetDomAttribute("d-id");
+            Assert.That(activeDId, Is.EqualTo("perc6"), "The explicit Focus() deferred with the notify must keep focus on its target.");
+        }
+        [TestCase]
+        public void FunctionAsyncTimespanTest()
+        {
+            // Async(content, timespan) must defer content to a macrotask (setTimeout), not run it synchronously.
+            string pageUrl = string.Format("{0}DrapoPages/{1}.html", VirtualDirectory, "FunctionAsyncTimespan");
+            Driver.Navigate().GoToUrl(pageUrl);
+            IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
+            for (int i = 0; i < 20; i++)
+            {
+                bool loaded = (bool)js.ExecuteScript("return(drapo._isLoaded);");
+                if (loaded)
+                    break;
+                System.Threading.Thread.Sleep(100);
+            }
+            IWebElement run = Driver.FindElement(By.CssSelector("[d-id='run']"));
+            IWebElement result = Driver.FindElement(By.CssSelector("[d-id='result']"));
+            run.Click();
+            // Immediately after the click the deferred UpdateDataField (timespan 800ms) has not run yet.
+            Assert.That(result.Text.Trim(), Is.EqualTo("EARLY"), "Async with a timespan must defer, not run synchronously.");
+            // After the timespan elapses it runs.
+            System.Threading.Thread.Sleep(1500);
+            Assert.That(result.Text.Trim(), Is.EqualTo("LATE"), "The deferred content must run after the timespan.");
+        }
+        [TestCase]
         public void FunctionGetSectorTest()
         {
             ValidatePage("FunctionGetSector");
