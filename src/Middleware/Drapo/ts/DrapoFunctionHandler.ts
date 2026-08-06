@@ -1192,8 +1192,19 @@ class DrapoFunctionHandler {
     private async ExecuteFunctionAsync(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
         const content: string = functionParsed.Parameters[0];
         const executionContextContent: DrapoExecutionContext<any> = this.CreateExecutionContext(false);
-        // tslint:disable-next-line:no-floating-promises
-        this.ResolveFunctionContext(sector, contextItem, element, event, content, executionContextContent);
+        //An optional timespan (ms) defers the content to a macrotask via setTimeout instead of the default microtask,
+        //so it runs after the current task completes (e.g. after the browser settles a Tab focus change).
+        const timespanText: string = functionParsed.Parameters.length > 1 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]) : null;
+        if ((timespanText !== null) && (timespanText !== '')) {
+            const timespan: number = this.Application.Parser.GetStringAsNumber(timespanText);
+            setTimeout(() => {
+                // tslint:disable-next-line:no-floating-promises
+                this.ResolveFunctionContext(sector, contextItem, element, event, content, executionContextContent);
+            }, timespan);
+        } else {
+            // tslint:disable-next-line:no-floating-promises
+            this.ResolveFunctionContext(sector, contextItem, element, event, content, executionContextContent);
+        }
         return ('');
     }
 
