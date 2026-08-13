@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WebDrapo.Test
 {
@@ -1401,9 +1402,83 @@ namespace WebDrapo.Test
             IWebElement active = Driver.SwitchTo().ActiveElement();
             string activeDId = active.GetDomAttribute("d-id");
             Assert.That(activeDId, Is.EqualTo("perc4"), "Focus should remain on the next field (May) after the model-change notify.");
-            // The calculated financial field must have been updated (proves the notify still happened).
+            // The calculated financial field must have been updated with the value of ITS OWN row
+            // (1000 * 0.1 = 100). A weaker not-zero assertion used to hide the expression resolving
+            // the percentage against the context cursor (the last rendered row) instead of the edited row.
             IWebElement aprilValue = Driver.FindElement(By.CssSelector("[d-id='val3']"));
-            Assert.That(aprilValue.Text.Trim(), Is.Not.EqualTo("0"), "The calculated field must update after the model change.");
+            Assert.That(aprilValue.Text.Trim(), Is.EqualTo("100"), "The calculated field must update with the edited row's own percentage after the model change.");
+        }
+        [TestCase]
+        public void ModelChangeSecondEditStaleTest()
+        {
+            // Regression: Cast (and Round/EncodeUrl) resolved context mustaches through the shared context
+            // cursor, which points at the LAST rendered row after a render. Editing any other row computed
+            // with the wrong row's percentage (blank -> 'total*' -> total), and re-editing the same field
+            // looked frozen because the wrong result never changed. Both edits below must compute with the
+            // edited row's own value.
+            string pageUrl = string.Format("{0}DrapoPages/{1}.html", VirtualDirectory, "Bug_ModelChangeSecondEditStale");
+            Driver.Navigate().GoToUrl(pageUrl);
+            IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
+            for (int i = 0; i < 20; i++)
+            {
+                bool loaded = (bool)js.ExecuteScript("return(drapo._isLoaded);");
+                if (loaded)
+                    break;
+                System.Threading.Thread.Sleep(100);
+            }
+            // First edit on the FIRST row (not the last, where the cursor bug was masked).
+            IWebElement jan = Driver.FindElements(By.CssSelector("input")).First(el => el.Displayed);
+            jan.Click();
+            jan.SendKeys("0.1");
+            jan.SendKeys(Keys.Tab);
+            System.Threading.Thread.Sleep(1000);
+            IWebElement janValue = Driver.FindElements(By.CssSelector("span.month-value")).First(el => el.Displayed);
+            Assert.That(janValue.Text.Trim(), Is.EqualTo("100"), "The first edit must compute with the edited row's own percentage (1000 * 0.1).");
+            // Second edit on the SAME field must recompute (the customer symptom was a frozen value).
+            jan = Driver.FindElements(By.CssSelector("input")).First(el => el.Displayed);
+            jan.Click();
+            jan.Clear();
+            jan.SendKeys("0.25");
+            jan.SendKeys(Keys.Tab);
+            System.Threading.Thread.Sleep(1000);
+            janValue = Driver.FindElements(By.CssSelector("span.month-value")).First(el => el.Displayed);
+            Assert.That(janValue.Text.Trim(), Is.EqualTo("250"), "A second edit of the same field must recompute with the new percentage (1000 * 0.25).");
+        }
+        [TestCase]
+        public void ModelChangeFocusNoDIdTest()
+        {
+            // Regression: the focus preservation across a d-for rebuild only worked for elements with a
+            // d-id. Inputs without d-id (the common case in real forms and the docs sample) lost focus to
+            // the body when d-if forced the full rebuild path. The structural fallback must restore focus
+            // to the recreated input at the same position.
+            string pageUrl = string.Format("{0}DrapoPages/{1}.html", VirtualDirectory, "Bug_ModelChangeFocusNoDId");
+            Driver.Navigate().GoToUrl(pageUrl);
+            IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
+            for (int i = 0; i < 20; i++)
+            {
+                bool loaded = (bool)js.ExecuteScript("return(drapo._isLoaded);");
+                if (loaded)
+                    break;
+                System.Threading.Thread.Sleep(100);
+            }
+            // Type a percentage into January and Tab to February. The blur updates the data and defers the
+            // notify; the d-if on the row forces the full-rebuild path that recreates the inputs.
+            IWebElement jan = Driver.FindElements(By.CssSelector("input.perc-input")).First(el => el.Displayed);
+            jan.Click();
+            jan.SendKeys("0.5");
+            jan.SendKeys(Keys.Tab);
+            System.Threading.Thread.Sleep(1000);
+            // Focus must be on February (the second visible input) instead of falling back to the body.
+            IWebElement active = Driver.SwitchTo().ActiveElement();
+            Assert.That(active.TagName.ToLower(), Is.EqualTo("input"), "Focus must not fall back to the body after the rebuild.");
+            var visibleInputs = Driver.FindElements(By.CssSelector("input.perc-input")).Where(el => el.Displayed).ToList();
+            Assert.That(active.Equals(visibleInputs[1]), Is.True, "Focus must be restored to the field being tabbed into (February).");
+            // The calculation still happened with the edited row's own percentage.
+            bool valueUpdated = false;
+            foreach (IWebElement span in Driver.FindElements(By.CssSelector("span")))
+                if (span.Displayed && span.Text.Trim() == "500")
+                    valueUpdated = true;
+            Assert.That(valueUpdated, Is.True, "The calculated field must update with the edited row's own percentage (1000 * 0.5).");
         }
         [TestCase]
         public void ModelChangeFocusFunctionTest()

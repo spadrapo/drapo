@@ -142,6 +142,23 @@ class DrapoFunctionHandler {
         return (result);
     }
 
+    private async ResolveFunctionExpression(sector: string, contextItem: DrapoContextItem, executionContext: DrapoExecutionContext<any>, expression: string): Promise<string> {
+        //Replace inner function expressions first
+        const context: DrapoContext = contextItem != null ? contextItem.Context : new DrapoContext();
+        let resolved: string = await this.ReplaceFunctionExpressions(sector, context, expression, false);
+        //Resolve mustaches against the element's own context item. The shared context cursor (context.Item)
+        //is left pointing at the LAST iterated row after a render, so resolving through the context reads the
+        //wrong row when the function runs from an event raised on any other row.
+        const mustaches: string[] = this.Application.Parser.ParseMustaches(resolved);
+        for (let i: number = 0; i < mustaches.length; i++) {
+            const mustache: string = mustaches[i];
+            const mustacheParts: string[] = this.Application.Parser.ParseMustache(mustache);
+            const value: any = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, mustacheParts, false, executionContext);
+            resolved = resolved.replace(mustache, this.Application.Solver.EnsureString(value));
+        }
+        return (resolved);
+    }
+
     public async ResolveFunctionParameter(sector: string, contextItem: DrapoContextItem, element: HTMLElement, executionContext: DrapoExecutionContext<any>, parameter: string, canForceLoadDataDelay: boolean = false, canUseReturnFunction: boolean = false, isRecursive: boolean = false): Promise<any> {
         //Function
         if (canUseReturnFunction) {
@@ -1482,8 +1499,7 @@ class DrapoFunctionHandler {
     }
 
     private async ExecuteFunctionCast(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
-        const context: DrapoContext = contextItem != null ? contextItem.Context : new DrapoContext();
-        const value: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, functionParsed.Parameters[0], null, false);
+        const value: string = await this.ResolveFunctionExpression(sector, contextItem, executionContext, functionParsed.Parameters[0]);
         const type: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]);
         if (type === 'number')
             return (this.Application.Parser.ParseNumberBlock(value));
@@ -1491,8 +1507,7 @@ class DrapoFunctionHandler {
     }
 
     private async ExecuteFunctionRound(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
-        const context: DrapoContext = contextItem != null ? contextItem.Context : new DrapoContext();
-        const valueResolved: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, functionParsed.Parameters[0], null, false);
+        const valueResolved: string = await this.ResolveFunctionExpression(sector, contextItem, executionContext, functionParsed.Parameters[0]);
         const value: number = this.Application.Parser.ParseNumberBlock(valueResolved);
         const digitsParameter: string = functionParsed.Parameters.length > 1 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]) : null;
         const digits: number = this.Application.Parser.ParseNumber(digitsParameter, 0);
@@ -1511,8 +1526,7 @@ class DrapoFunctionHandler {
     }
 
     private async ExecuteFunctionEncodeUrl(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<any> {
-        const context: DrapoContext = contextItem != null ? contextItem.Context : new DrapoContext();
-        const value: string = await this.Application.Barber.ResolveControlFlowMustacheStringFunction(sector, context, null, executionContext, functionParsed.Parameters[0], null, false);
+        const value: string = await this.ResolveFunctionExpression(sector, contextItem, executionContext, functionParsed.Parameters[0]);
         const valueEncoded: string = this.Application.Server.EnsureUrlComponentEncoded(value);
         return (valueEncoded);
     }
