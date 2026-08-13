@@ -138,9 +138,9 @@ class DrapoControlFlow {
         //survive a Tab (activeElement is the page body during the blur), defer the notify with Async(Notify(...),0)
         //so this runs after the browser has settled focus on the target field, which is then inside this rebuild.
         const focusedElement: HTMLElement = document.activeElement as HTMLElement;
-        const focusState: [string, number, number] = this.Application.Document.GetFocusStateForElement(focusedElement);
         //The container that holds this loop's rendered rows; the recreated node is relocated within it (never globally).
-        const focusScope: HTMLElement = (focusState != null) ? elFor.parentElement : null;
+        const focusScope: HTMLElement = elFor.parentElement;
+        const focusState: [string, number, number, number] = this.Application.Document.GetFocusStateForElement(focusedElement, focusScope);
         try {
             return (await this.ResolveControlFlowForInternalCore(sector, context, renderContext, elFor, isIncremental, canUseDifference, type));
         } finally {
