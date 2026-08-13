@@ -46,11 +46,14 @@ class DrapoFunctionHandler {
         return (false);
     }
 
-    public async ReplaceFunctionExpressions(sector: string, context: DrapoContext, expression: string, canBind: boolean): Promise<string> {
-        return (await this.ReplaceFunctionExpressionsContext(sector, context, expression, canBind, this.CreateExecutionContext(false)));
+    public async ReplaceFunctionExpressions(sector: string, context: DrapoContext, expression: string, canBind: boolean, contextItem: DrapoContextItem = null): Promise<string> {
+        return (await this.ReplaceFunctionExpressionsContext(sector, context, expression, canBind, this.CreateExecutionContext(false), contextItem));
     }
 
-    public async ReplaceFunctionExpressionsContext(sector: string, context: DrapoContext, expression: string, canBind: boolean, executionContext: DrapoExecutionContext<any>): Promise<string> {
+    public async ReplaceFunctionExpressionsContext(sector: string, context: DrapoContext, expression: string, canBind: boolean, executionContext: DrapoExecutionContext<any>, contextItem: DrapoContextItem = null): Promise<string> {
+        //When the expression runs from an event raised on a specific element, that element's context item must
+        //win over the shared context cursor (context.Item), which is left pointing at the last iterated row.
+        const item: DrapoContextItem = (contextItem != null) ? contextItem : context.Item;
         //Parser
         const functionsParsed: string[] = this.Application.Parser.ParseFunctions(expression);
         for (let i = 0; i < functionsParsed.length; i++) {
@@ -61,11 +64,11 @@ class DrapoFunctionHandler {
             //Mustache
             if (this.Application.Parser.IsMustache(functionParse)) {
                 const dataPath: string[] = this.Application.Parser.ParseMustache(functionParse);
-                const data: string = await this.Application.Solver.ResolveItemDataPathObject(sector, context.Item, dataPath);
+                const data: string = await this.Application.Solver.ResolveItemDataPathObject(sector, item, dataPath);
                 if ((data == null) || (data == ''))
                     continue;
                 functionParse = data;
-                const functionInnerParsed = await this.ReplaceFunctionExpressionsContext(sector, context, functionParse, canBind, executionContext);
+                const functionInnerParsed = await this.ReplaceFunctionExpressionsContext(sector, context, functionParse, canBind, executionContext, contextItem);
                 if (functionInnerParsed === functionParse)
                     continue;
                 functionParse = functionInnerParsed;
@@ -77,7 +80,7 @@ class DrapoFunctionHandler {
                 await this.Application.ExceptionHandler.HandleError('DrapoFunctionHandler - ResolveFunction - Invalid Parse - {0}', functionParse);
                 continue;
             }
-            expression = expression.replace(functionParse, await this.ExecuteFunctionContextSwitch(sector, context.Item, null, null, functionParsed, executionContext));
+            expression = expression.replace(functionParse, await this.ExecuteFunctionContextSwitch(sector, item, null, null, functionParsed, executionContext));
         }
         return (expression);
     }
@@ -143,9 +146,9 @@ class DrapoFunctionHandler {
     }
 
     private async ResolveFunctionExpression(sector: string, contextItem: DrapoContextItem, executionContext: DrapoExecutionContext<any>, expression: string): Promise<string> {
-        //Replace inner function expressions first
+        //Replace inner function expressions first, also against the element's own context item
         const context: DrapoContext = contextItem != null ? contextItem.Context : new DrapoContext();
-        let resolved: string = await this.ReplaceFunctionExpressions(sector, context, expression, false);
+        let resolved: string = await this.ReplaceFunctionExpressions(sector, context, expression, false, contextItem);
         //Resolve mustaches against the element's own context item. The shared context cursor (context.Item)
         //is left pointing at the LAST iterated row after a render, so resolving through the context reads the
         //wrong row when the function runs from an event raised on any other row.

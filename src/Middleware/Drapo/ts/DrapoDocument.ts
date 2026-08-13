@@ -918,8 +918,19 @@ class DrapoDocument {
     private GetFocusableElements(scope: HTMLElement): HTMLElement[] {
         const nodes: NodeListOf<Element> = scope.querySelectorAll('input, textarea, select');
         const elements: HTMLElement[] = [];
-        for (let i: number = 0; i < nodes.length; i++)
-            elements.push(nodes[i] as HTMLElement);
+        for (let i: number = 0; i < nodes.length; i++) {
+            const el: HTMLElement = nodes[i] as HTMLElement;
+            //Skip elements that can not actually receive focus, so the positional snapshot stays
+            //stable when hidden or disabled controls exist in the rebuilt scope
+            const type: string = el.getAttribute('type');
+            if ((type != null) && (type.toLowerCase() === 'hidden'))
+                continue;
+            if ((el as HTMLInputElement).disabled)
+                continue;
+            if (el.getAttribute('tabindex') === '-1')
+                continue;
+            elements.push(el);
+        }
         return (elements);
     }
 
