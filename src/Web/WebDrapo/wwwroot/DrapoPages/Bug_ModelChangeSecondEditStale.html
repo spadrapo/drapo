@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Bug - Model Change Second Edit Stale</title>
+</head>
+<body>
+    <span>Bug - Model Change Second Edit Stale</span>
+    <!-- Exact structure of the docs Async sample 003: no d-id, no d-if.
+         Customer report: the FIRST edit updates the calculated value, but editing the SAME field
+         again does not update it anymore. -->
+    <div d-datakey="total" d-datatype="value" d-datavalue="1000"></div>
+    <div d-datakey="months" d-datatype="array"
+         d-datavalue="[{&quot;Month&quot;:&quot;Jan&quot;,&quot;Perc&quot;:&quot;&quot;,&quot;Value&quot;:&quot;0&quot;},{&quot;Month&quot;:&quot;Feb&quot;,&quot;Perc&quot;:&quot;&quot;,&quot;Value&quot;:&quot;0&quot;},{&quot;Month&quot;:&quot;Mar&quot;,&quot;Perc&quot;:&quot;&quot;,&quot;Value&quot;:&quot;0&quot;}]"></div>
+    <div>
+        <div d-for="month in months">
+            <span>{{month.Month}}: </span>
+            <input type="text"
+                   d-model="{{month.Perc}}"
+                   d-model-event="blur"
+                   d-modelNotify="false"
+                   d-on-model-change="UpdateItemField({{month.Value}},Cast({{total}}*{{month.Perc}},number),false);Async(Notify(months),0)" />
+            <span class="month-value">{{month.Value}}</span>
+            <br />
+        </div>
+    </div>
+</body>
+</html>

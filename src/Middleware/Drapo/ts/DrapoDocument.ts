@@ -904,6 +904,92 @@ class DrapoDocument {
             eli.value = value;
     }
 
+    public IsElementSelectable(el: HTMLElement): boolean {
+        const tag: string = el.tagName.toLowerCase();
+        if (tag === 'textarea')
+            return (true);
+        if (tag !== 'input')
+            return (false);
+        const typeAttribute: string = el.getAttribute('type');
+        const type: string = (typeAttribute == null) ? 'text' : typeAttribute.toLowerCase();
+        return ((type === 'text') || (type === 'search') || (type === 'password') || (type === 'tel') || (type === 'url'));
+    }
+
+    private GetFocusableElements(scope: HTMLElement): HTMLElement[] {
+        const nodes: NodeListOf<Element> = scope.querySelectorAll('input, textarea, select');
+        const elements: HTMLElement[] = [];
+        for (let i: number = 0; i < nodes.length; i++) {
+            const el: HTMLElement = nodes[i] as HTMLElement;
+            //Skip elements that can not actually receive focus, so the positional snapshot stays
+            //stable when hidden or disabled controls exist in the rebuilt scope
+            const type: string = el.getAttribute('type');
+            if ((type != null) && (type.toLowerCase() === 'hidden'))
+                continue;
+            if ((el as HTMLInputElement).disabled)
+                continue;
+            if (el.getAttribute('tabindex') === '-1')
+                continue;
+            elements.push(el);
+        }
+        return (elements);
+    }
+
+    public GetFocusStateForElement(el: HTMLElement, scope: HTMLElement): [string, number, number, number] {
+        if ((el == null) || (el === document.body) || (el.getAttribute == null))
+            return (null);
+        const tag: string = el.tagName.toLowerCase();
+        if ((tag !== 'input') && (tag !== 'textarea') && (tag !== 'select'))
+            return (null);
+        //Relocate the element after a re-render by its stable d-id when it has one; otherwise fall back to its
+        //structural position among the focusable elements of the rebuilt scope (elements without d-id, like the
+        //inner input of a component or a plain input inside a d-for row).
+        const did: string = el.getAttribute('d-id');
+        let position: number = null;
+        if ((did == null) && (scope != null) && (scope.contains(el))) {
+            const focusables: HTMLElement[] = this.GetFocusableElements(scope);
+            const index: number = focusables.indexOf(el);
+            if (index >= 0)
+                position = index;
+        }
+        if ((did == null) && (position == null))
+            return (null);
+        let start: number = null;
+        let end: number = null;
+        if (this.IsElementSelectable(el)) {
+            const input: HTMLInputElement = el as HTMLInputElement;
+            start = input.selectionStart;
+            end = input.selectionEnd;
+        }
+        return ([did, position, start, end]);
+    }
+
+    public RestoreFocusState(state: [string, number, number, number], scope: HTMLElement): void {
+        if ((state == null) || (scope == null))
+            return;
+        const did: string = state[0];
+        const position: number = state[1];
+        //The focused node was recreated by the render, so relocate it and restore focus and caret.
+        //Search only inside the container that was rebuilt, so a duplicate d-id elsewhere on the page is never matched.
+        let target: HTMLElement = null;
+        if (did != null) {
+            target = this.Application.Searcher.FindByAttributeAndValueFromParent('d-id', did, scope);
+        } else if (position != null) {
+            const focusables: HTMLElement[] = this.GetFocusableElements(scope);
+            if (position < focusables.length)
+                target = focusables[position];
+        }
+        if (target == null)
+            return;
+        target.focus();
+        const start: number = state[2];
+        const end: number = state[3];
+        if ((start != null) && (end != null) && (this.IsElementSelectable(target))) {
+            const input: HTMLInputElement = target as HTMLInputElement;
+            if (input.setSelectionRange != null)
+                input.setSelectionRange(start, end);
+        }
+    }
+
     public GetText(el: HTMLElement): string {
         if (el.children.length > 0)
             return ('');

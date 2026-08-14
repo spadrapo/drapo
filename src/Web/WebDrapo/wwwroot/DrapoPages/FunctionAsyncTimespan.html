@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function Async Timespan</title>
+</head>
+<body>
+    <span>Function Async Timespan</span>
+    <div d-datakey="state" d-datatype="object" d-dataproperty-value="EARLY"></div>
+    <input type="button" value="run" d-id="run"
+           d-on-click="Async(UpdateDataField(state,value,LATE),800)" />
+    <span d-id="result" d-model="{{state.value}}"></span>
+</body>
+</html>

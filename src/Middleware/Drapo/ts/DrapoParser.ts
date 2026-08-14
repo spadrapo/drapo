@@ -399,8 +399,14 @@ class DrapoParser {
         for (let i: number = 0; i < items.length; i++) {
             const item: string = items[i];
             if (isLastOperation) {
-                itemsSignal.push(item);
-                isLastOperation = false;
+                if (this.IsMathematicalOperator(item)) {
+                    //Missing operand (e.g. a blank field between operators): treat it as zero
+                    itemsSignal.push('0');
+                    itemsSignal.push(item);
+                } else {
+                    itemsSignal.push(item);
+                    isLastOperation = false;
+                }
             } else if (this.IsMathematicalOperator(item)) {
                 itemsSignal.push(item);
                 isLastOperation = true;
@@ -843,7 +849,7 @@ class DrapoParser {
         if (data == null)
             return (valueDefault);
         const value: number = Number(data);
-        if (Number.NaN === value)
+        if (Number.isNaN(value))
             return (valueDefault);
         return (value);
     }
