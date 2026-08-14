@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Bug - Switch Condition Null Context</title>
+</head>
+<body>
+    <span>Bug - Switch Condition Null Context</span>
+    <!-- Customer report: a switch data key whose conditional is a parenthesized comparison,
+         like ({{mode}}='edit-data-form'), is resolved during storage retrieval with a null
+         DrapoContext. The dangling ')' left after the comparison is classified as a Function
+         expression item, and resolving it dereferenced context.Item on the null context, so
+         retrieving the switch data key (and anything depending on it) rejected. -->
+    <div d-datakey="mode" d-datatype="value" d-datavalue="view"></div>
+    <div d-datakey="typeEdit" d-datatype="value" d-datavalue="edit-type"></div>
+    <div d-datakey="typeView" d-datatype="value" d-datavalue="view-type"></div>
+    <div d-datakey="modeDependentType" d-datatype="switch"
+         d-datavalue="typeEdit:({{mode}}='edit-data-form'),typeView"></div>
+    <span d-id="result">{{modeDependentType}}</span>
+</body>
+</html>
