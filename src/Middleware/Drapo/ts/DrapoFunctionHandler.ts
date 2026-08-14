@@ -53,7 +53,9 @@ class DrapoFunctionHandler {
     public async ReplaceFunctionExpressionsContext(sector: string, context: DrapoContext, expression: string, canBind: boolean, executionContext: DrapoExecutionContext<any>, contextItem: DrapoContextItem = null): Promise<string> {
         //When the expression runs from an event raised on a specific element, that element's context item must
         //win over the shared context cursor (context.Item), which is left pointing at the last iterated row.
-        const item: DrapoContextItem = (contextItem != null) ? contextItem : context.Item;
+        //The context itself can be null when the expression is resolved outside a render (like a switch
+        //data key conditional resolved during storage retrieval).
+        const item: DrapoContextItem = (contextItem != null) ? contextItem : ((context != null) ? context.Item : null);
         //Parser
         const functionsParsed: string[] = this.Application.Parser.ParseFunctions(expression);
         for (let i = 0; i < functionsParsed.length; i++) {

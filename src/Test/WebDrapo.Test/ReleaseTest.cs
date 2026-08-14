@@ -1445,6 +1445,27 @@ namespace WebDrapo.Test
             Assert.That(janValue.Text.Trim(), Is.EqualTo("250"), "A second edit of the same field must recompute with the new percentage (1000 * 0.25).");
         }
         [TestCase]
+        public void SwitchConditionNullContextTest()
+        {
+            // Regression: a switch data key conditional like ({{mode}}='edit-data-form') is resolved during
+            // storage retrieval with a null DrapoContext. The dangling ')' left after the comparison is
+            // classified as a Function expression item, and resolving it dereferenced context.Item on the
+            // null context, so retrieving the switch data key rejected and the mustache never resolved.
+            string pageUrl = string.Format("{0}DrapoPages/{1}.html", VirtualDirectory, "Bug_SwitchConditionNullContext");
+            Driver.Navigate().GoToUrl(pageUrl);
+            IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
+            for (int i = 0; i < 20; i++)
+            {
+                bool loaded = (bool)js.ExecuteScript("return(drapo._isLoaded);");
+                if (loaded)
+                    break;
+                System.Threading.Thread.Sleep(100);
+            }
+            System.Threading.Thread.Sleep(500);
+            IWebElement result = Driver.FindElement(By.CssSelector("[d-id='result']"));
+            Assert.That(result.Text.Trim(), Is.EqualTo("view-type"), "The switch data key must resolve its parenthesized conditional without a render context and fall through to the default entry.");
+        }
+        [TestCase]
         public void ModelChangeFocusNoDIdTest()
         {
             // Regression: the focus preservation across a d-for rebuild only worked for elements with a
