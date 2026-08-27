@@ -204,6 +204,9 @@ class DrapoServer {
         const urlResolvedTimestamp: string = await this.AppendUrlQueryStringTimestamp(urlResolved);
         const request: DrapoServerRequest = new DrapoServerRequest(verb, urlResolvedTimestamp, requestHeaders, data, true, true);
         const response: DrapoServerResponse = await this.Request(request);
+        //Binary request: error bodies arrive as Blob; convert to text so they can be deserialized
+        if ((response.Status !== 200) && (response.Body != null) && (response.Body instanceof Blob))
+            response.Body = await this.ConvertBlobToText(response.Body);
         //Redirect
         if ((200 <= response.Status) && (response.Status < 400)) {
             const location: string = this.GetHeaderValue(response.Headers, 'Location');
@@ -301,6 +304,15 @@ class DrapoServer {
             }
         }
         return (object);
+    }
+
+    private ConvertBlobToText(body: Blob): Promise<string> {
+        return (new Promise<string>((resolve) => {
+            const reader: FileReader = new FileReader();
+            reader.onload = () => { resolve(reader.result as string); };
+            reader.onerror = () => { resolve(''); };
+            reader.readAsText(body);
+        }));
     }
 
     private ConvertFileBody(body: string): string {

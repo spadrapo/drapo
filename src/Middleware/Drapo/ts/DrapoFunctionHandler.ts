@@ -1589,6 +1589,9 @@ class DrapoFunctionHandler {
         const name: any = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, namePath, true);
         const dataPath: string[] = this.Application.Solver.CreateDataPath(dataKeyFile, ['body']);
         const data: any = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, dataPath, true);
+        //A file item without a body (e.g. the request failed) has nothing to download
+        if ((data == null) || (data === ''))
+            return ('');
         const contentTypePath: string[] = this.Application.Solver.CreateDataPath(dataKeyFile, ['contenttype']);
         const contentType: any = await this.Application.Solver.ResolveItemDataPathObject(sector, contextItem, contentTypePath, true);
         this.DownloadData(name, data, contentType);
