@@ -9,6 +9,8 @@
 
 **No exceptions - these requirements are mandatory for all code changes.**
 
+4. 🚫 **NEVER approve or merge a pull request** - no `gh pr merge`, no `--admin` override, no review approvals. Open the PR, report CI status, and stop: a human maintainer merges. Merging `master` auto-publishes the `Drapo` package to nuget.org, so the merge is a human-only release decision.
+
 ---
 
 ## About Drapo

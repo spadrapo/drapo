@@ -19,6 +19,15 @@ Core middleware (NuGet `Drapo`) plus a TypeScript-compiled client runtime (`drap
 These are non-negotiable. A Release build runs TSLint and fails if it does not pass.
 Resolve errors in order: TSLint → C# compilation → missing dependencies.
 
+## 🚫 PR discipline — humans merge, never the agent
+
+**NEVER approve or merge a pull request in this repository — no `gh pr merge`, no
+`--admin` override, no review approvals.** Open the PR, link its issue, report the CI
+status, and STOP: a human maintainer decides the merge. Merging to `master`
+automatically publishes a new `Drapo` package to nuget.org that every consumer picks
+up, so the merge is a release decision and it is human-only. This applies even when CI
+is green, the change is urgent, or a downstream repo is waiting on the release.
+
 ## Project documentation
 
 Detailed project knowledge lives in [`doc/`](doc/README.md) — read the relevant doc
