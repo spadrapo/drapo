@@ -29,6 +29,12 @@ namespace Sysphera.Middleware.Drapo
         #region Properties
         public bool Debug { set; get;}
         public bool UseInternalComponents { set; get; }
+        /// <summary>
+        /// When true (the default) drapo.js and drapo.js.map are served brotli- or gzip-compressed to clients that
+        /// send a matching Accept-Encoding header. Set to false when a reverse proxy or another middleware already
+        /// compresses responses and you want the middleware to emit the identity bytes only.
+        /// </summary>
+        public bool UseCompression { set; get; }
         public string BackplaneRedis { set; get; }
         public string ContainerUrl { set; get; }
         public DrapoConfig Config
@@ -43,6 +49,7 @@ namespace Sysphera.Middleware.Drapo
             public DrapoMiddlewareOptions()
             {
                 this.UseInternalComponents = true;
+                this.UseCompression = true;
             }
         #endregion
 

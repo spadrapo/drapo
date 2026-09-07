@@ -348,6 +348,21 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 
 **Gateway Support**: The origin validation automatically supports scenarios where an external gateway or load balancer handles HTTPS, while the internal application runs on HTTP. Only the host/domain portion is compared, not the scheme.
 
+#### Runtime compression
+
+The middleware serves `drapo.js` (and `drapo.js.map` in debug mode) brotli- or gzip-compressed to
+browsers that send a matching `Accept-Encoding`, with one ETag per representation and
+`Vary: Accept-Encoding`. The compressed variants are produced once per process, in the background,
+at startup. This is on by default; turn it off when a reverse proxy or another middleware already
+compresses responses:
+
+```csharp
+app.UseDrapo(options =>
+{
+    options.UseCompression = false;
+});
+```
+
 #### Default Behavior
 
 - **Origin validation is enabled by default** for security
