@@ -5,7 +5,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.0" />
-		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.4.5">
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="7.0.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -13,17 +13,23 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Middleware\Drapo\Drapo.csproj" />
 	</ItemGroup>
+	<!-- The Microsoft.TypeScript.MSBuild 7.x package appends its TypeScript* properties to the tsc command line, where they
+	     would override tsconfig.json. Clear/disable them so tsconfig.json stays the single source of truth for the components. -->
+	<PropertyGroup>
+		<TypeScriptTarget></TypeScriptTarget>
+		<TypeScriptSourceMap>false</TypeScriptSourceMap>
+	</PropertyGroup>
 	<Target Name="CopyNodeModulesFiles" BeforeTargets="PrepareResources">
 		<Copy SourceFiles="..\..\Middleware\Drapo\lib\$(TargetFramework)\index.d.ts" DestinationFolder="node_modules\@types\drapo\" />
 	</Target>
-	<!-- TypeScript's TypeScriptDeleteCompilerOutput reads a .out log to know which emitted files to delete during
+	<!-- TypeScript's CleanTypeScriptOutputs reads the tsc-emitted.txt log to know which emitted files to delete during
 	     Clean. If those .js files (e.g. autoclick.js) are in wwwroot/ and get discovered as static web assets at
 	     project-load time, DefineStaticWebAssets (AssignTargetPaths) validates them BEFORE TypeScript can recompile.
-	     Fix: delete the .out log before TypeScriptDeleteCompilerOutput reads it so TypeScript Clean is a no-op.
-	     TypeScript recompiles on the next Build and writes a fresh .out log anyway. -->
-	<Target Name="PreserveTypeScriptOutputsFromClean" BeforeTargets="TypeScriptDeleteCompilerOutput" Condition="'$(DesignTimeBuild)' != 'true'">
+	     Fix: delete the log before CleanTypeScriptOutputs reads it so TypeScript Clean is a no-op.
+	     TypeScript recompiles on the next Build and writes a fresh log anyway. -->
+	<Target Name="PreserveTypeScriptOutputsFromClean" BeforeTargets="CleanTypeScriptOutputs" Condition="'$(DesignTimeBuild)' != 'true'">
 		<ItemGroup>
-			<TSOutFilesToPreserve Include="$(TSCompilerOutputLogDirectory)Tsc*.out" />
+			<TSOutFilesToPreserve Include="$(IntermediateOutputPath)tsc-emitted.txt" />
 		</ItemGroup>
 		<Delete Files="@(TSOutFilesToPreserve)" Condition="'@(TSOutFilesToPreserve)' != ''" />
 	</Target>

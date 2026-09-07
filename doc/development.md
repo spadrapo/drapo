@@ -9,7 +9,7 @@ For the system design and code layout, see [architecture.md](architecture.md).
 
 1. **Compiles** — `cd src && dotnet build Drapo.sln`
 2. **Passes TSLint with zero errors** —
-   `cd src/Middleware/Drapo && npx tslint --project tsconfig/production/`
+   `cd src/Middleware/Drapo && npm run lint`
 3. **Has tests** — new functionality includes tests; modified functionality updates
    the affected tests (see [Testing workflow](#testing-workflow)).
 4. **Passes the full test suite** — every test must be green. A PR can only be approved
@@ -20,7 +20,8 @@ These are non-negotiable. A Release build runs TSLint and will fail if it does n
 ## Prerequisites
 
 - .NET SDK `10.0.100` (pinned in `global.json`; `rollForward: latestFeature`)
-- Node.js + npm (for the TypeScript toolchain)
+- Node.js 16.20+ + npm (TypeScript 7 ships as a native binary for Windows, Linux, and
+  macOS on x64/arm64)
 
 ## Build & lint commands
 
@@ -29,10 +30,12 @@ These are non-negotiable. A Release build runs TSLint and will fail if it does n
 cd src/Middleware/Drapo && npm install
 
 # MANDATORY: TypeScript lint — must pass with zero errors
-cd src/Middleware/Drapo && npx tslint --project tsconfig/production/
+# (runs TSLint through scripts/tslint.cjs, which gives it the TypeScript 6 compiler API)
+cd src/Middleware/Drapo && npm run lint
 
 # Compile the TypeScript runtime directly (optional; the build also does this)
-cd src/Middleware/Drapo && npx tsc -p tsconfig/production/tsconfig.json
+cd src/Middleware/Drapo && npm run compile       # production tsconfig (ES2015, no source maps)
+cd src/Middleware/Drapo && npm run compile:dev   # development tsconfig (ES2022, source maps)
 
 # Build the full solution
 cd src && dotnet build Drapo.sln
@@ -167,7 +170,7 @@ Additional guidance:
 
 Before opening a PR:
 
-- [ ] `npx tslint --project tsconfig/production/` passes with zero errors
+- [ ] `npm run lint` passes with zero errors
 - [ ] `dotnet build Drapo.sln` succeeds
 - [ ] New/changed behavior has DrapoPages tests, registered in `ReleaseTest.cs`
 - [ ] **The full test suite passes** (run against a local WebDrapo — see

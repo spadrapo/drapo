@@ -183,7 +183,7 @@ Use the Drapo client mock to validate `window.drapo.Bridge` against the unpacked
 ```bash
 cd src/Middleware/Drapo
 npm install
-npx tsc -p tsconfig/development/tsconfig.json
+npm run compile:dev
 
 cd ../../Extension
 npm install

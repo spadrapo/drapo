@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "alwaysStrict": true,
+    "strict": false,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictFunctionTypes": true,
@@ -10,8 +10,10 @@
     "removeComments": false,
     "sourceMap": true,
     "target": "es2022",
+    "rootDir": "../../ts/",
     "outDir": "../../js/",
     "declaration": true,
+    "types": [],
     "lib": [
       "dom",
       "es2022"

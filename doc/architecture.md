@@ -20,8 +20,8 @@ JavaScript. It ships as two cooperating parts:
 
 | Area | Technology |
 |------|------------|
-| Client runtime | TypeScript 5.0.4 → `drapo.js` (compiled via `tsc`) |
-| Client lint | TSLint 6.1.3 (`tslint.json`) |
+| Client runtime | TypeScript 7.0.2 (native compiler) → `drapo.js`; production target ES2015, development target ES2022 |
+| Client lint | TSLint 6.1.3 (`tslint.json`), running on the `@typescript/typescript6` compiler API via `scripts/tslint.cjs` |
 | Real-time | `@microsoft/signalr` 3.1.17 (WebSocket pipes) |
 | Minification | `uglify-js` |
 | Server | ASP.NET Core middleware in C# |
@@ -41,6 +41,7 @@ src/
 │   ├── tsconfig/development/       # Dev tsconfig (used for Debug builds)
 │   ├── tsconfig/production/        # Prod tsconfig (used for TSLint + Release builds)
 │   ├── tslint.json                 # TSLint rules
+│   ├── scripts/                    # create-lib.mjs (bundle drapo.js) and tslint.cjs (TSLint on TypeScript 7)
 │   ├── components/                 # Built-in components (e.g. debugger)
 │   ├── lib/<tfm>/                  # Per-framework build artifacts
 │   ├── *.cs                        # ASP.NET Core middleware + server-side types
@@ -101,16 +102,30 @@ serves the framework and its resources:
 
 ## Build pipeline
 
-The TypeScript build is wired into the C# project (`Drapo.csproj`) via
-`Microsoft.TypeScript.MSBuild`, so building the package also lints and compiles the
-runtime:
+The TypeScript build is wired into the C# project (`Drapo.csproj`), so building the
+package also lints and compiles the runtime. The commands live in
+`src/Middleware/Drapo/package.json` and run the TypeScript 7 native compiler from
+`node_modules`:
 
-- **Release** builds run `npx tslint --project tsconfig/production/` and then
-  `npx tsc -p tsconfig/production/tsconfig.json`.
-- **Debug** builds compile with `tsconfig/development/tsconfig.json`.
-- For multi-target builds, TypeScript is compiled **once** in the outer (cross-target)
-  build before the per-framework inner builds run in parallel, avoiding races on the
-  shared `js/` output. Inner builds have TypeScript compilation blocked.
+- **Release** builds run `npm run lint` (TSLint) and then `npm run compile`
+  (`tsconfig/production/tsconfig.json`, target ES2015).
+- **Debug** builds run `npm run compile:dev` (`tsconfig/development/tsconfig.json`,
+  target ES2022, source maps).
+- TypeScript is compiled **once** in the outer (cross-target) build before the
+  per-framework inner builds run in parallel, avoiding races on the shared `js/`
+  output. Each inner build then bundles `js/` with the runtime dependencies into
+  `lib/<tfm>/drapo.js`, minifies it with `uglify-js`, and embeds both files.
+- The `Microsoft.TypeScript.MSBuild` package (7.x) is referenced for the Visual Studio
+  integration only; its own compilation is blocked (`TypeScriptCompileBlocked`) so the
+  runtime is never compiled twice. `WebDrapo` does use that package to compile its
+  demo components (`wwwroot/components/**/*.ts`) with the project's `tsconfig.json`.
+
+**TypeScript 7 notes.** The native compiler has no JavaScript API and no ES5 target.
+TSLint needs that API, so `scripts/tslint.cjs` redirects its `require('typescript')`
+to Microsoft's `@typescript/typescript6` compatibility package while `tsc` itself is
+TypeScript 7. The production output moved from ES5 to ES2015 (the lowest target
+TypeScript 7 supports); every browser that supports ES2015 classes also has native
+`Promise`, and the bundled `es6-promise` polyfill remains for backward compatibility.
 
 This is why **TSLint passing is a hard gate**: a Release build will fail if it doesn't.
 See [development.md](development.md) for the exact commands.

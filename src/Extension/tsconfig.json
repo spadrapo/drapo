@@ -1,19 +1,20 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "alwaysStrict": true,
     "declaration": false,
     "lib": ["dom", "es2020"],
-    "module": "none",
     "noEmitOnError": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "outDir": "dist",
     "removeComments": true,
+    "rootDir": "src",
     "sourceMap": false,
+    "strict": false,
     "strictFunctionTypes": true,
     "strictNullChecks": false,
-    "target": "es2020"
+    "target": "es2020",
+    "types": []
   },
   "include": ["src/**/*.ts"]
 }

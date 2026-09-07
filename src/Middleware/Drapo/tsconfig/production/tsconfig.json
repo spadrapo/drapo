@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "alwaysStrict": true,
+    "strict": false,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictFunctionTypes": true,
@@ -9,14 +9,14 @@
     "noEmitOnError": true,
     "removeComments": true,
     "sourceMap": false,
-    "target": "es5",
+    "target": "es2015",
+    "rootDir": "../../ts/",
     "outDir": "../../js/",
     "declaration": true,
+    "types": [],
     "lib": [
       "dom",
-      "es5",
-      "es2015.promise",
-      "es6"
+      "es2015"
     ]
   },
   "exclude": [
