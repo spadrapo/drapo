@@ -503,7 +503,7 @@ When reporting bugs or requesting features:
   - .NET 6.0  
   - .NET Core 3.1
 - **Browser Support**: Modern browsers (Chrome, Firefox, Safari, Edge) — the runtime is
-  compiled to ES2015
+  compiled to ES2017 (Chrome 55+, Firefox 52+, Safari 11+, Edge 15+)
 
 ## 📄 License
 
