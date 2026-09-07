@@ -33,13 +33,11 @@ namespace Sysphera.Middleware.Drapo
         private readonly string _webRootPath = null;
         private readonly string _urlActivator = null;
         private readonly string _urlConfig = null;
-        private string _libContent = null;
-        private string _libETag = null;
+        private DrapoCompressedContent _lib = null;
         private string _libLastModified = null;
         private string _configContent = null;
         private string _configETag = null;
-        private string _jsMapContent = null;
-        private string _jsMapETag = null;
+        private DrapoCompressedContent _jsMap = null;
         private ConcurrentDictionary<string, string> _cacheComponentFileContent = new ConcurrentDictionary<string, string>();
         private ConcurrentDictionary<string, string> _cachePackContent = new ConcurrentDictionary<string, string>();
         private ConcurrentDictionary<string, string> _cachePackETag = new ConcurrentDictionary<string, string>();
@@ -72,10 +70,14 @@ namespace Sysphera.Middleware.Drapo
             if (this._options.UseInternalComponents)
                 InitilizeInternalComponents();
             //Content
-            this._libContent = resources[libName];
-            this._libETag = GenerateETag(Encoding.UTF8.GetBytes(this._libContent));
-            this._jsMapContent = this.CreateJsMapContent(resources);
-            this._jsMapETag = GenerateETag(Encoding.UTF8.GetBytes(this._jsMapContent));
+            this._lib = new DrapoCompressedContent(resources[libName], GenerateETag);
+            this._jsMap = new DrapoCompressedContent(this.CreateJsMapContent(resources, resources[libName]), GenerateETag);
+            if (this._options.UseCompression)
+            {
+                // Produce the gzip/brotli variants in the background so no request pays the one-time compression cost.
+                _ = this._lib.WarmUpAsync();
+                _ = this._jsMap.WarmUpAsync();
+            }
             this._configContent = this.GetConfigContent();
             this._configETag = GenerateETag(Encoding.UTF8.GetBytes(this._configContent));
             this._libLastModified = System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetEntryAssembly().Location).ToString("R");
@@ -104,28 +106,12 @@ namespace Sysphera.Middleware.Drapo
             if (this.IsActivator(context))
             {
                 //JS
-                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._libETag));
-                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
-                context.Response.Headers["ETag"] = new[] { this._libETag };
-                context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
-                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
-                context.Response.Headers.Add("Content-Type", new[] { "text/javascript" });
-                AppendHeaderContainerId(context);
-                if (!isCache)
-                    await context.Response.WriteAsync(this._libContent);
+                await this.WriteCompressedContentAsync(context, this._lib, "text/javascript");
             }
             else if (this.IsJsMapActivator(context))
             {
                 //.JS.MAP
-                bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == this._jsMapETag));
-                context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
-                context.Response.Headers["ETag"] = new[] { this._jsMapETag };
-                context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
-                context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
-                context.Response.Headers.Add("Content-Type", new[] { "application/json" });
-                AppendHeaderContainerId(context);
-                if (!isCache)
-                    await context.Response.WriteAsync(this._jsMapContent);
+                await this.WriteCompressedContentAsync(context, this._jsMap, "application/json");
             }
             else if (this.IsConfig(context))
             {
@@ -229,6 +215,32 @@ namespace Sysphera.Middleware.Drapo
             return (!string.IsNullOrEmpty(this._options.Config.HeaderContainerId));
         }
 
+        /// <summary>
+        /// Serves an in-memory resource with ETag/If-None-Match handling. When compression is enabled and the client
+        /// accepts brotli or gzip, the pre-compressed variant is written with the matching Content-Encoding; each variant
+        /// has its own ETag so a cached compressed copy is revalidated against the same representation.
+        /// </summary>
+        private async Task WriteCompressedContentAsync(HttpContext context, DrapoCompressedContent content, string contentType)
+        {
+            string acceptEncoding = this._options.UseCompression ? context.Request.Headers["Accept-Encoding"].ToString() : null;
+            DrapoCompressedContentVariant variant = content.Select(acceptEncoding);
+            bool isCache = ((context.Request.Headers.ContainsKey("If-None-Match")) && (context.Request.Headers["If-None-Match"].ToString() == variant.ETag));
+            context.Response.StatusCode = isCache ? (int)HttpStatusCode.NotModified : (int)HttpStatusCode.OK;
+            context.Response.Headers["ETag"] = new[] { variant.ETag };
+            context.Response.Headers.Add("Last-Modified", new[] { this._libLastModified });
+            context.Response.Headers.Add("Cache-Control", new[] { "no-cache" });
+            context.Response.Headers.Add("Content-Type", new[] { contentType });
+            if (this._options.UseCompression)
+                context.Response.Headers["Vary"] = new[] { "Accept-Encoding" };
+            if (variant.ContentEncoding != null)
+                context.Response.Headers["Content-Encoding"] = new[] { variant.ContentEncoding };
+            AppendHeaderContainerId(context);
+            if (isCache)
+                return;
+            context.Response.ContentLength = variant.Bytes.Length;
+            await context.Response.Body.WriteAsync(variant.Bytes, 0, variant.Bytes.Length);
+        }
+
         private void AppendHeaderContainerId(HttpContext httpContext)
         {
             string headerContainerId = this._options.Config.HeaderContainerId;
@@ -294,11 +306,11 @@ namespace Sysphera.Middleware.Drapo
 
         private static string GetThisSourceFilePath([CallerFilePath] string path = null) => path;
 
-        private string CreateJsMapContent(Dictionary<string, string> resources)
+        private string CreateJsMapContent(Dictionary<string, string> resources, string libContent)
         {
             //collect line offsets
             List<(string jsMapFilename, int lineOffset)> jsMapsOffsets = new List<(string jsMapFilename, int offset)>();
-            string[] libLines = this._libContent.Split('\n');
+            string[] libLines = libContent.Split('\n');
             int currentOffset = 0;
             for (int lineNumber = 0; lineNumber < libLines.Length; ++lineNumber)
             {

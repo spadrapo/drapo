@@ -135,7 +135,10 @@ See [development.md](development.md) for the exact commands.
 
 ## Request/data flow (high level)
 
-1. The browser loads a page that includes `<script src="/drapo.js"></script>`.
+1. The browser loads a page that includes `<script src="/drapo.js"></script>`. The
+   middleware serves the embedded bundle brotli- or gzip-compressed when the browser
+   accepts it (`DrapoMiddlewareOptions.UseCompression`, on by default; see
+   `DrapoCompressedContent`), with a per-representation ETag for revalidation.
 2. `DrapoApplication` boots, scans the DOM, and resolves `d-datakey` data contexts
    (loading from `d-dataurlget`/`d-dataurl` endpoints served by the middleware as needed).
 3. Control-flow attributes (`d-for`, `d-if`) expand the DOM; binding (`{{ }}`, `d-model`)
