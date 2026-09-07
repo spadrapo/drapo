@@ -34,7 +34,7 @@ cd src/Middleware/Drapo && npm install
 cd src/Middleware/Drapo && npm run lint
 
 # Compile the TypeScript runtime directly (optional; the build also does this)
-cd src/Middleware/Drapo && npm run compile       # production tsconfig (ES2015, no source maps)
+cd src/Middleware/Drapo && npm run compile       # production tsconfig (ES2017, no source maps)
 cd src/Middleware/Drapo && npm run compile:dev   # development tsconfig (ES2022, source maps)
 
 # Build the full solution

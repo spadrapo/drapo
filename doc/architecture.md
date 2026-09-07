@@ -20,10 +20,10 @@ JavaScript. It ships as two cooperating parts:
 
 | Area | Technology |
 |------|------------|
-| Client runtime | TypeScript 7.0.2 (native compiler) → `drapo.js`; production target ES2015, development target ES2022 |
+| Client runtime | TypeScript 7.0.2 (native compiler) → `drapo.js`; production target ES2017, development target ES2022 |
 | Client lint | TSLint 6.1.3 (`tslint.json`), running on the `@typescript/typescript6` compiler API via `scripts/tslint.cjs` |
 | Real-time | `@microsoft/signalr` 3.1.17 (WebSocket pipes) |
-| Minification | `uglify-js` |
+| Minification | `uglify-js` (compress + mangle) |
 | Server | ASP.NET Core middleware in C# |
 | Target frameworks | `netcoreapp3.1`, `netcoreapp6.0`, `net8.0`, `net10.0` |
 | .NET SDK | `10.0.100` (pinned in `global.json`, `rollForward: latestFeature`) |
@@ -108,13 +108,14 @@ package also lints and compiles the runtime. The commands live in
 `node_modules`:
 
 - **Release** builds run `npm run lint` (TSLint) and then `npm run compile`
-  (`tsconfig/production/tsconfig.json`, target ES2015).
+  (`tsconfig/production/tsconfig.json`, target ES2017, native async/await).
 - **Debug** builds run `npm run compile:dev` (`tsconfig/development/tsconfig.json`,
   target ES2022, source maps).
 - TypeScript is compiled **once** in the outer (cross-target) build before the
   per-framework inner builds run in parallel, avoiding races on the shared `js/`
   output. Each inner build then bundles `js/` with the runtime dependencies into
-  `lib/<tfm>/drapo.js`, minifies it with `uglify-js`, and embeds both files.
+  `lib/<tfm>/drapo.js`, minifies it with `uglify-js -c -m` (local names are mangled; top-level names such as the
+  `Drapo*` classes are kept), and embeds both files.
 - The `Microsoft.TypeScript.MSBuild` package (7.x) is referenced for the Visual Studio
   integration only; its own compilation is blocked (`TypeScriptCompileBlocked`) so the
   runtime is never compiled twice. `WebDrapo` does use that package to compile its
@@ -123,9 +124,11 @@ package also lints and compiles the runtime. The commands live in
 **TypeScript 7 notes.** The native compiler has no JavaScript API and no ES5 target.
 TSLint needs that API, so `scripts/tslint.cjs` redirects its `require('typescript')`
 to Microsoft's `@typescript/typescript6` compatibility package while `tsc` itself is
-TypeScript 7. The production output moved from ES5 to ES2015 (the lowest target
-TypeScript 7 supports); every browser that supports ES2015 classes also has native
-`Promise`, and the bundled `es6-promise` polyfill remains for backward compatibility.
+TypeScript 7. The production output moved from ES5 to ES2017 (TypeScript 7 supports
+ES2015 and up; ES2017 additionally keeps `async`/`await` native instead of compiling
+every async function into a generator state machine). Every browser that runs ES2017
+also has a native `Promise`; the bundled `es6-promise` polyfill remains for backward
+compatibility.
 
 This is why **TSLint passing is a hard gate**: a Release build will fail if it doesn't.
 See [development.md](development.md) for the exact commands.

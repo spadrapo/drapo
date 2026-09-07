@@ -9,14 +9,14 @@
     "noEmitOnError": true,
     "removeComments": true,
     "sourceMap": false,
-    "target": "es2015",
+    "target": "es2017",
     "rootDir": "../../ts/",
     "outDir": "../../js/",
     "declaration": true,
     "types": [],
     "lib": [
       "dom",
-      "es2015"
+      "es2017"
     ]
   },
   "exclude": [
