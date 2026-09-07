@@ -22,7 +22,7 @@ JavaScript. It ships as two cooperating parts:
 |------|------------|
 | Client runtime | TypeScript 7.0.2 (native compiler) → `drapo.js`; production target ES2017, development target ES2022 |
 | Client lint | TSLint 6.1.3 (`tslint.json`), running on the `@typescript/typescript6` compiler API via `scripts/tslint.cjs` |
-| Real-time | `@microsoft/signalr` 3.1.17 (WebSocket pipes) |
+| Real-time | `@microsoft/signalr` 10.0.11 browser build (WebSocket pipes); its ES2019 syntax sets the floor of the bundle |
 | Minification | `uglify-js` (compress + mangle) |
 | Server | ASP.NET Core middleware in C# |
 | Target frameworks | `netcoreapp3.1`, `netcoreapp6.0`, `net8.0`, `net10.0` |
@@ -126,9 +126,11 @@ TSLint needs that API, so `scripts/tslint.cjs` redirects its `require('typescrip
 to Microsoft's `@typescript/typescript6` compatibility package while `tsc` itself is
 TypeScript 7. The production output moved from ES5 to ES2017 (TypeScript 7 supports
 ES2015 and up; ES2017 additionally keeps `async`/`await` native instead of compiling
-every async function into a generator state machine). Every browser that runs ES2017
-also has a native `Promise`; the bundled `es6-promise` polyfill remains for backward
-compatibility.
+every async function into a generator state machine). The bundled SignalR client is an
+ES2019 build (optional catch binding, object spread), so the shipped `drapo.js` as a
+whole needs an ES2019 browser: Chrome 66, Firefox 58, Safari 11.1, Chromium Edge 79 or
+newer. The former `es6-promise` polyfill is gone; every such browser has a native
+`Promise`.
 
 This is why **TSLint passing is a hard gate**: a Release build will fail if it doesn't.
 See [development.md](development.md) for the exact commands.
