@@ -13,8 +13,9 @@ if (!targetFramework) {
 const outputDirectory = resolve(root, 'lib', targetFramework);
 await mkdir(outputDirectory, { recursive: true });
 
+// Runtime dependencies bundled in front of the compiled runtime. The SignalR browser build is ES2019
+// (optional catch binding, object spread), which sets the syntax floor of the whole drapo.js bundle.
 const dependencies = [
-  resolve(root, 'node_modules/es6-promise/dist/es6-promise.auto.min.js'),
   resolve(root, 'node_modules/@microsoft/signalr/dist/browser/signalr.min.js')
 ];
 const jsDirectory = resolve(root, 'js');
