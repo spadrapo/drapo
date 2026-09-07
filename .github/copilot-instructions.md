@@ -4,7 +4,7 @@
 
 **Every code change MUST:**
 1. ✅ **Compile successfully** - `cd src && dotnet build Drapo.sln`  
-2. ✅ **Pass TSLint without errors** - `cd src/Middleware/Drapo && npx tslint --project tsconfig/production/`
+2. ✅ **Pass TSLint without errors** - `cd src/Middleware/Drapo && npm run lint`
 3. ✅ **Include unit tests** when adding new functionality (following existing patterns)
 
 **No exceptions - these requirements are mandatory for all code changes.**
@@ -114,7 +114,7 @@ The `ValidatePage()` method:
 cd src/Middleware/Drapo && npm install
 
 # MANDATORY: Check TypeScript compilation and linting 
-cd src/Middleware/Drapo && npx tslint --project tsconfig/production/
+cd src/Middleware/Drapo && npm run lint
 
 # Verify C# test project builds (independent validation)
 cd src && dotnet build Test/WebDrapo.Test/WebDrapo.Test.csproj
@@ -130,7 +130,7 @@ cd src && dotnet build Test/WebDrapo.Test/WebDrapo.Test.csproj
 - **Project-level builds**: Individual project builds must succeed even if full solution has integration complexities
 
 ### Error Resolution Process
-1. **Check TypeScript linting first**: Run `npx tslint --project tsconfig/production/` - this MUST pass
+1. **Check TypeScript linting first**: Run `npm run lint` - this MUST pass
 2. **Check C# compilation**: Build individual projects to isolate issues
 3. **Install missing dependencies**: Use `npm install` for TypeScript dependencies  
 4. **Address linting errors**: Fix any TypeScript code style or quality issues before proceeding
@@ -202,11 +202,11 @@ Cover these areas when creating tests:
 
 **Before making any code changes:**
 1. Install dependencies if needed: `cd src/Middleware/Drapo && npm install`
-2. Verify TSLint passes: `cd src/Middleware/Drapo && npx tslint --project tsconfig/production/`
+2. Verify TSLint passes: `cd src/Middleware/Drapo && npm run lint`
 3. Check baseline build status: `cd src && dotnet build Test/WebDrapo.Test/WebDrapo.Test.csproj`
 
 **After making any code changes:**
-1. **ALWAYS run TSLint**: `cd src/Middleware/Drapo && npx tslint --project tsconfig/production/` (MANDATORY)
+1. **ALWAYS run TSLint**: `cd src/Middleware/Drapo && npm run lint` (MANDATORY)
 2. **Verify test project builds**: `cd src && dotnet build Test/WebDrapo.Test/WebDrapo.Test.csproj`
 3. **Fix any errors** before proceeding with further changes
 4. **Run unit tests** if changes affect existing functionality

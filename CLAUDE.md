@@ -9,7 +9,7 @@ Core middleware (NuGet `Drapo`) plus a TypeScript-compiled client runtime (`drap
 **Every code change MUST:**
 
 1. **Compile** — `cd src && dotnet build Drapo.sln`
-2. **Pass TSLint with zero errors** — `cd src/Middleware/Drapo && npx tslint --project tsconfig/production/`
+2. **Pass TSLint with zero errors** — `cd src/Middleware/Drapo && npm run lint`
 3. **Include or update tests** — follow the DrapoPages testing workflow in [doc/development.md](doc/development.md)
 4. **Keep the full test suite green** — a PR is only approved when **all** tests pass.
    Run them locally against a running WebDrapo (`dotnet test` with

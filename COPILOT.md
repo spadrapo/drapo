@@ -12,7 +12,7 @@ Detailed project documentation is centralized in **[doc/](doc/README.md)**:
 ## Key reminders
 
 - 🚨 **Validate builds and linting before changes** — TSLint must pass:
-  `cd src/Middleware/Drapo && npx tslint --project tsconfig/production/`
+  `cd src/Middleware/Drapo && npm run lint`
 - **Create or update unit tests** for any behavior change (DrapoPages workflow in
   [doc/development.md](doc/development.md)).
 - **Use Drapo's declarative `d-*` attributes** instead of JavaScript.

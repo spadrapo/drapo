@@ -12,7 +12,7 @@ hand-written script. New behavior must compose with the existing attribute model
 No change is complete until it compiles and lints cleanly:
 - C# / .NET solution builds: `cd src && dotnet build Drapo.sln`
 - TypeScript passes TSLint with zero errors:
-  `cd src/Middleware/Drapo && npx tslint --project tsconfig/production/`
+  `cd src/Middleware/Drapo && npm run lint`
 
 Linting and compilation are gates, not suggestions. Broken builds are never merged.
 

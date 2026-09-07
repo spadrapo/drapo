@@ -465,7 +465,7 @@ We welcome contributions to Drapo! Here's how to get started:
 1. **Create a Feature Branch**: `git checkout -b feature/your-feature-name`
 2. **Make Changes**: Implement your feature or bug fix
 3. **Add Tests**: Cover changes with DrapoPages tests (see the [Development Guide](doc/development.md#testing-workflow))
-4. **Build and Lint**: `dotnet build Drapo.sln` and `npx tslint --project tsconfig/production/` must both be clean
+4. **Build and Lint**: `dotnet build Drapo.sln` and `npm run lint` must both be clean
 5. **Run the full suite**: every test must pass — **a PR is only approved when all tests pass**
 6. **Submit Pull Request**: Create a PR with a clear description
 
@@ -502,7 +502,8 @@ When reporting bugs or requesting features:
   - .NET 8.0
   - .NET 6.0  
   - .NET Core 3.1
-- **Browser Support**: Modern browsers (Chrome, Firefox, Safari, Edge)
+- **Browser Support**: Modern browsers (Chrome, Firefox, Safari, Edge) — the runtime is
+  compiled to ES2015
 
 ## 📄 License
 
