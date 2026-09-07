@@ -8,7 +8,9 @@
 		<div d-datakey="itemObject" d-datatype="object" d-dataproperty-value-name="Value" d-dataproperty-value-value="OldValue"></div>
 		<div d-datakey="valueFromMessage" d-datatype="value"></div>
 		<div d-datakey="updateItemValue" d-datatype="value" d-datavalue="UpdateDataField(itemObject,Value,{{valueFromMessage}})"></div>
-		<span d-model="{{itemObject.Value}}" driverunittest="click">NewValue</span>
+		<span d-model="{{itemObject.Value}}">NewValue</span>
+		<!-- The harness clicks input[driverunittest=click] and then waits 5s, which gives the iframe message time to be processed after drapo._isLoaded -->
+		<input type="button" value="Wait" driverunittest="click">
 		<iframe id="frameID" src="MessageSendValueSector.html"></iframe>
 	</div>
 
