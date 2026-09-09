@@ -238,6 +238,24 @@ namespace WebDrapo.Controllers
         }
 
         [HttpGet]
+        public DataNestedVM GetFunctionPostDataObjectNested()
+        {
+            DataNestedVM data = new DataNestedVM();
+            data.Code = 1;
+            data.Name = "1";
+            data.Items.Add(new DataVM() { Code = 1, Name = "Item 1" });
+            return (data);
+        }
+
+        [HttpPost]
+        public DataNestedVM SetFunctionPostDataObjectNested([FromBody] DataNestedVM data)
+        {
+            data.Name += " +1";
+            data.Items.Add(new DataVM() { Code = data.Items.Count + 1, Name = string.Format("Item {0}", data.Items.Count + 1) });
+            return (data);
+        }
+
+        [HttpGet]
         public IEnumerable<KeyValueVO> GetModelSelectOptionTree()
         {
             List<KeyValueVO> tree = new List<KeyValueVO>();
