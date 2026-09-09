@@ -930,6 +930,11 @@ namespace WebDrapo.Test
             ValidatePage("DataParentSectorSide");
         }
         [TestCase]
+        public void DataPipesSectorAsyncTest()
+        {
+            ValidatePage("DataPipesSectorAsync");
+        }
+        [TestCase]
         public void DataPointerTest()
         {
             ValidatePage("DataPointer");

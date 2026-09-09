@@ -1,0 +1,5 @@
+﻿<div d-sector="@">
+    <div d-dataKey="pipeNotified" d-dataType="value" d-dataAccess="private" d-dataValue="no"></div>
+    <div d-dataKey="pipeColumns" d-dataAccess="private" d-dataLoadType="startup" d-dataUrlGet="~/Data/GetColumns" d-dataPipes="pipeSector" d-dataPipesDebounce="1000" d-dataOnNotify="UpdateData(pipeNotified,yes)"></div>
+    <span>Notified: </span><span d-model="{{pipeNotified}}"></span>
+</div>

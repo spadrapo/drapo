@@ -267,10 +267,10 @@ class DrapoStorage {
         for (const storageItem of storageItems)
         {
             if (storageItem.PipesDebounce != null) {
-                if (await this.ReloadDataDebounce(dataPipe + '_' + storageItem.DataKey, storageItem.DataKey, storageItem.PipesDebounce))
+                if (await this.ReloadDataDebounce(dataPipe + '_' + storageItem.DataKey, storageItem.DataKey, storageItem.Sector, storageItem.PipesDebounce))
                     reloaded = true;
             } else {
-                if (await this.ReloadData(storageItem.DataKey, null))
+                if (await this.ReloadData(storageItem.DataKey, storageItem.Sector))
                     reloaded = true;
             }
         }
@@ -293,7 +293,7 @@ class DrapoStorage {
         return (notified);
     }
 
-    private async ReloadDataDebounce(debounceKey: string, dataKey: string, timeout: number): Promise<boolean> {
+    private async ReloadDataDebounce(debounceKey: string, dataKey: string, sector: string, timeout: number): Promise<boolean> {
         if (this._debounceReloadData.has(debounceKey)) {
             clearTimeout(this._debounceReloadData.get(debounceKey));
             this._debounceReloadData.delete(debounceKey);
@@ -301,7 +301,7 @@ class DrapoStorage {
         this._debounceReloadData.set(debounceKey, setTimeout(async () => {
             clearTimeout(this._debounceReloadData.get(debounceKey));
             this._debounceReloadData.delete(debounceKey);
-            await this.ReloadData(dataKey, null);
+            await this.ReloadData(dataKey, sector);
         }, timeout));
         return (false);
     }
