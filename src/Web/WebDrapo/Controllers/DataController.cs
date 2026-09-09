@@ -64,6 +64,20 @@ namespace WebDrapo.Controllers
             return (DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff tt"));
         }
 
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, int> _callCounts = new System.Collections.Concurrent.ConcurrentDictionary<string, int>();
+
+        //Counts the calls made under a name; reset starts the count over for the page that asks.
+        [HttpGet]
+        public int GetCallCount(string name, bool reset = false)
+        {
+            if (reset)
+            {
+                _callCounts[name] = 0;
+                return (0);
+            }
+            return (_callCounts.AddOrUpdate(name, 1, (key, count) => count + 1));
+        }
+
         [HttpGet]
         public List<string> GetColumns()
         {

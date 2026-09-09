@@ -263,15 +263,23 @@ class DrapoStorage {
 
     public async ReloadPipe(dataPipe: string): Promise<boolean> {
         let reloaded = false;
+        const reloadedKeys: string[] = [];
         const storageItems: DrapoStorageItem[] = this._cacheItems.filter((i) => (i.Pipes != null) && (this.Application.Solver.Contains(i.Pipes, dataPipe)));
         for (const storageItem of storageItems)
         {
-            if (storageItem.PipesDebounce != null) {
-                if (await this.ReloadDataDebounce(dataPipe + '_' + storageItem.DataKey, storageItem.DataKey, storageItem.Sector, storageItem.PipesDebounce))
-                    reloaded = true;
-            } else {
-                if (await this.ReloadData(storageItem.DataKey, storageItem.Sector))
-                    reloaded = true;
+            const sectors: string[] = storageItem.IsPipesScopeSector ? [storageItem.Sector] : this.GetSectors(storageItem.DataKey);
+            for (const sector of sectors) {
+                const reloadKey: string = storageItem.DataKey + '_' + sector;
+                if (reloadedKeys.indexOf(reloadKey) >= 0)
+                    continue;
+                reloadedKeys.push(reloadKey);
+                if (storageItem.PipesDebounce != null) {
+                    if (await this.ReloadDataDebounce(dataPipe + '_' + reloadKey, storageItem.DataKey, sector, storageItem.PipesDebounce))
+                        reloaded = true;
+                } else {
+                    if (await this.ReloadData(storageItem.DataKey, sector))
+                        reloaded = true;
+                }
             }
         }
         return (reloaded);
@@ -655,6 +663,7 @@ class DrapoStorage {
         const groups: string[] = ((groupsAttribute == null) || (groupsAttribute == '')) ? null : this.Application.Parser.ParsePipes(groupsAttribute);
         const pipes: string[] = this.Application.Parser.ParsePipes(el.getAttribute('d-dataPipes'));
         const pipesDebounce: number = this.Application.Parser.ParseNumber(el.getAttribute('d-dataPipesDebounce'), null);
+        const pipesScope: string = el.getAttribute('d-dataPipesScope');
         const channels: string[] = await this.ParseChannels(sector, el.getAttribute('d-dataChannels'));
         const canCache: boolean = this.Application.Parser.ParseBoolean(el.getAttribute('d-dataCache'), true);
         const cacheKeys: string[] = this.Application.Parser.ParsePipes(el.getAttribute('d-dataCacheKeys'));
@@ -682,6 +691,7 @@ class DrapoStorage {
         const pollingKey: string = await this.ResolveValueMustaches(dataKey, sector, el.getAttribute('d-dataPollingKey'));
         const pollingTimespan: number = await this.ResolveValueMustachesAsNumber(dataKey, sector, el.getAttribute('d-dataPollingTimespan'));
         const item: DrapoStorageItem = new DrapoStorageItem(dataKey, type, access, el, data, dataUrlGet, dataUrlSet, dataUrlSetChunk, chunk, dataUrlParameters, dataPostGet, this.Application.Parser.GetStringAsNumber(dataStart), increment, isLazy, isFull, isUnitOfWork, isDelay, cookieName, isCookieChange, userConfig, isToken, dataSector, groups, pipes, pipesDebounce, channels, canCache, cacheKeys, onLoad, onAfterLoad, onAfterContainerLoad, onBeforeContainerUnload, onAfterCached, onNotify, headersGet, headersSet, pollingKey, pollingTimespan);
+        item.PipesScope = pipesScope;
         return (item);
     }
 

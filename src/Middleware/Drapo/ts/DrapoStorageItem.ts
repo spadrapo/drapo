@@ -29,6 +29,7 @@
     private _groups: string[] = null;
     private _pipes: string[] = null;
     private _pipesDebounce: number = null;
+    private _pipesScope: string = null;
     private _channels: string[] = null;
     private _canCache: boolean = true;
     private _cacheKeys: string[] = null;
@@ -267,6 +268,15 @@
     }
     set PipesDebounce(value: number) {
         this._pipesDebounce = value;
+    }
+    get PipesScope(): string {
+        return (this._pipesScope);
+    }
+    set PipesScope(value: string) {
+        this._pipesScope = value;
+    }
+    get IsPipesScopeSector(): boolean {
+        return (this._pipesScope === 'sector');
     }
 
     get Channels(): string[] {
