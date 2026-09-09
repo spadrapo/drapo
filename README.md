@@ -217,6 +217,7 @@ Drapo provides many built-in functions for common operations:
 | `CheckDataField(dataKey, field)` | Set field to true | `CheckDataField(config, enabled)` |
 | `UncheckDataField(dataKey, field)` | Set field to false | `UncheckDataField(config, enabled)` |
 | `UpdateData(dataKey, data)` | Update entire data object | `UpdateData(user, newUserData)` |
+| `ReloadPipe(dataPipe, sector)` | Reload every data key that declares the pipe, in every sector holding it; a sector restricts the reload to it | `ReloadPipe(orders)` |
 | `CreateGuid()` | Generate unique identifier | `CreateGuid()` |
 
 ## 💡 Examples

@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html><html><head>
+    <script src="/drapo.js"></script>
+    <title>Data Pipes Scope</title>
+</head>
+<body>
+    <span>Data Pipes Scope</span>
+    <div d-datakey="resetA" d-datatype="value" d-dataloadtype="startup" d-dataurlget="~/Data/GetCallCount?name=DataPipesScopeA&amp;reset=true"></div>
+    <div d-datakey="resetB" d-datatype="value" d-dataloadtype="startup" d-dataurlget="~/Data/GetCallCount?name=DataPipesScopeB&amp;reset=true"></div>
+    <div d-datakey="update" d-datatype="value" d-dataloadtype="startup" d-dataurlset="~/Plumber/Notify?datakey=pipeScope"></div>
+    <div d-datakey="loaderA" d-datatype="function" d-dataloadtype="startup" d-datavalue="ShowWindow(~/DrapoPages/DataPipesScopeWindowA.html,windowA)"></div>
+    <div d-datakey="loaderB" d-datatype="function" d-dataloadtype="startup" d-datavalue="ShowWindow(~/DrapoPages/DataPipesScopeWindowB.html,windowB)"></div>
+    <div d-sector="@" d-id="windowA"><div>
+    <div d-datakey="pipeCalls" d-datatype="value" d-dataaccess="private" d-dataloadtype="startup" d-dataurlget="~/Data/GetCallCount?name=DataPipesScopeA" d-datapipes="pipeScope"></div>
+    <span>A: </span><span d-model="{{pipeCalls}}">2</span>
+</div></div>
+    <div d-sector="@" d-id="windowB"><div>
+    <div d-datakey="pipeCalls" d-datatype="value" d-dataaccess="private" d-dataloadtype="startup" d-dataurlget="~/Data/GetCallCount?name=DataPipesScopeB"></div>
+    <span>B: </span><span d-model="{{pipeCalls}}">2</span>
+</div></div>
+    <input type="button" value="Notify" d-id="__drapoUnitTest" d-on-click="PostDataItem(update)">
+
+
+</body></html>

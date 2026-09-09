@@ -261,17 +261,25 @@ class DrapoStorage {
         return (dataKeys);
     }
 
-    public async ReloadPipe(dataPipe: string): Promise<boolean> {
+    public async ReloadPipe(dataPipe: string, sector: string = null): Promise<boolean> {
         let reloaded = false;
+        const reloadedKeys: string[] = [];
         const storageItems: DrapoStorageItem[] = this._cacheItems.filter((i) => (i.Pipes != null) && (this.Application.Solver.Contains(i.Pipes, dataPipe)));
         for (const storageItem of storageItems)
         {
-            if (storageItem.PipesDebounce != null) {
-                if (await this.ReloadDataDebounce(dataPipe + '_' + storageItem.DataKey, storageItem.DataKey, storageItem.PipesDebounce))
-                    reloaded = true;
-            } else {
-                if (await this.ReloadData(storageItem.DataKey, null))
-                    reloaded = true;
+            const sectors: string[] = this.GetSectors(storageItem.DataKey).filter((candidate: string) => (sector == null) || (candidate === sector));
+            for (const sectorReload of sectors) {
+                const reloadKey: string = storageItem.DataKey + '_' + sectorReload;
+                if (reloadedKeys.indexOf(reloadKey) >= 0)
+                    continue;
+                reloadedKeys.push(reloadKey);
+                if (storageItem.PipesDebounce != null) {
+                    if (await this.ReloadDataDebounce(dataPipe + '_' + reloadKey, storageItem.DataKey, sectorReload, storageItem.PipesDebounce))
+                        reloaded = true;
+                } else {
+                    if (await this.ReloadData(storageItem.DataKey, sectorReload))
+                        reloaded = true;
+                }
             }
         }
         return (reloaded);
@@ -293,7 +301,7 @@ class DrapoStorage {
         return (notified);
     }
 
-    private async ReloadDataDebounce(debounceKey: string, dataKey: string, timeout: number): Promise<boolean> {
+    private async ReloadDataDebounce(debounceKey: string, dataKey: string, sector: string, timeout: number): Promise<boolean> {
         if (this._debounceReloadData.has(debounceKey)) {
             clearTimeout(this._debounceReloadData.get(debounceKey));
             this._debounceReloadData.delete(debounceKey);
@@ -301,7 +309,7 @@ class DrapoStorage {
         this._debounceReloadData.set(debounceKey, setTimeout(async () => {
             clearTimeout(this._debounceReloadData.get(debounceKey));
             this._debounceReloadData.delete(debounceKey);
-            await this.ReloadData(dataKey, null);
+            await this.ReloadData(dataKey, sector);
         }, timeout));
         return (false);
     }

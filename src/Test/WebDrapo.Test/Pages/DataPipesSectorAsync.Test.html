@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html><html><head>
+    <script src="/drapo.js"></script>
+    <title>Data Pipes Sector</title>
+</head>
+<body>
+    <span>Data Pipes Sector</span>
+    <div d-datakey="update" d-datatype="value" d-dataloadtype="startup" d-dataurlset="~/Plumber/Notify?datakey=pipeSector"></div>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="ShowWindow(~/DrapoPages/DataPipesSectorWindow.html,windows)"></div>
+    <div d-sector="@" d-id="windows"><div d-sector="@">
+    <div d-datakey="pipeNotified" d-datatype="value" d-dataaccess="private" d-datavalue="no"></div>
+    <div d-datakey="pipeColumns" d-dataaccess="private" d-dataloadtype="startup" d-dataurlget="~/Data/GetColumns" d-datapipes="pipeSector" d-datapipesdebounce="1000" d-dataonnotify="UpdateData(pipeNotified,yes)"></div>
+    <span>Notified: </span><span d-model="{{pipeNotified}}">yes</span>
+</div></div>
+    <input type="button" value="Notify" d-id="__drapoUnitTest" d-on-click="PostDataItem(update)">
+
+
+</body></html>
