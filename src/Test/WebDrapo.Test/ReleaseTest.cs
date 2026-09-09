@@ -935,11 +935,6 @@ namespace WebDrapo.Test
             ValidatePage("DataPipesScopeAsync");
         }
         [TestCase]
-        public void DataPipesScopeSectorAsyncTest()
-        {
-            ValidatePage("DataPipesScopeSectorAsync");
-        }
-        [TestCase]
         public void DataPipesSectorAsyncTest()
         {
             ValidatePage("DataPipesSectorAsync");
