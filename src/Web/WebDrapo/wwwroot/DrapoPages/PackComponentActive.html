@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <script>
+        window.addEventListener('error', function (e) { document.getElementById('pageErrors').textContent += e.message + ';'; });
+    </script>
+    <title>Pack - Component Active</title>
+</head>
+<body>
+    <span>Pack - Component Active</span>
+    <br />
+    <span>Page errors: </span><span id="pageErrors"></span>
+    <br />
+    <div d-dataKey="packData" d-dataType="object" d-dataValue='{"name": "Drapo", "message": "Pack not loaded"}'></div>
+    <d-labelcontext dc-model="{{packData.name}}"></d-labelcontext>
+    <br />
+    <span d-model="{{packData.message}}"></span>
+    <br />
+    <input type="button" driverunittest="click" value="Load Pack" d-on-click="LoadPack(testpack);UpdateDataField(packData,message,Loaded);UpdateSector(componenttest,~/testpack/component-test-page.html)" />
+    <div d-sector="componenttest"></div>
+</body>
+</html>
