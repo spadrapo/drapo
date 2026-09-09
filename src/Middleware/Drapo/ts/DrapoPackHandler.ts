@@ -79,57 +79,53 @@ class DrapoPackHandler {
     private async ProcessPackData(packName: string, packData: any): Promise<void> {
         if ((packData == null) || (packData.files == null))
             return;
-        const componentFiles: { [key: string]: any[] } = {};
+        const componentTags: { [url: string]: string } = await this.Application.Register.GetComponentTagsByFileUrl();
+        const componentsActivated: string[] = [];
         // Process each file in the pack
         for (const file of packData.files) {
             if ((file.path == null) || (file.content == null))
                 continue;
-            // Check if this file belongs to a component
-            const componentName = this.ExtractComponentNameFromPath(file.path);
-            if (componentName != null) {
-                if (!componentFiles[componentName])
-                    componentFiles[componentName] = [];
-                componentFiles[componentName].push(file);
-            }
+            // Component assets already on the page (activated before the pack landed) are not appended again
+            const tagName: string = componentTags[this.NormalizeFileUrl(file.path)];
+            const skipAssets: boolean = (tagName != null) && (this.IsComponentAssetsLoaded(tagName, componentsActivated));
             // Place the file content in the correct location
-            await this.ProcessPackFile(file.path, file.content);
-        }
-        // Mark components as active if all their files were loaded
-        await this.MarkComponentsAsActive(componentFiles);
-    }
-
-    private ExtractComponentNameFromPath(filePath: string): string {
-        // Extract component name from paths like: "~/components/mycomponent/file.js"
-        const pathParts = filePath.split('/');
-        if (pathParts.length >= 3 && pathParts[1] === 'components') {
-            return pathParts[2];
-        }
-        return null;
-    }
-
-    private async MarkComponentsAsActive(componentFiles: { [key: string]: any[] }): Promise<void> {
-        for (const componentName in componentFiles) {
-            const files = componentFiles[componentName];
-            // Check if component exists and mark it as active
-            if (await this.Application.Register.IsRegisteredComponent(`d-${componentName}`)) {
-                if (!this.Application.Register.IsActiveComponent(`d-${componentName}`)) {
-                    // Mark as active without loading files since we already loaded them from the pack
-                    this.Application.Register.MarkComponentAsActive(`d-${componentName}`);
-                }
-            }
+            await this.ProcessPackFile(file.path, file.content, skipAssets);
         }
     }
 
-    private async ProcessPackFile(filePath: string, content: string): Promise<void> {
+    private IsComponentAssetsLoaded(tagName: string, componentsActivated: string[]): boolean {
+        // Components activated by this pack keep receiving their remaining files
+        if (componentsActivated.indexOf(tagName) !== -1)
+            return (false);
+        if (this.Application.Register.IsActiveComponent(tagName))
+            return (true);
+        // Mark as active before appending the first file so a concurrent activation does not load the files again
+        this.Application.Register.MarkComponentAsActive(tagName);
+        componentsActivated.push(tagName);
+        return (false);
+    }
+
+    private NormalizeFileUrl(filePath: string): string {
+        const queryIndex: number = filePath.indexOf('?');
+        if (queryIndex !== -1)
+            filePath = filePath.substring(0, queryIndex);
+        if (filePath.startsWith('~/'))
+            return (filePath);
+        return ('~/' + (filePath.startsWith('/') ? filePath.substring(1) : filePath));
+    }
+
+    private async ProcessPackFile(filePath: string, content: string, skipAssets: boolean): Promise<void> {
         // Determine the file type and handle accordingly
         const extension = this.GetFileExtension(filePath).toLowerCase();
 
         if (extension === '.js') {
             // Load as JavaScript
-            await this.LoadPackScript(filePath, content);
+            if (!skipAssets)
+                await this.LoadPackScript(filePath, content);
         } else if (extension === '.css') {
             // Load as CSS
-            await this.LoadPackStyle(filePath, content);
+            if (!skipAssets)
+                await this.LoadPackStyle(filePath, content);
         } else if (extension === '.html') {
             // Load as HTML template - could be stored for later use
             await this.LoadPackTemplate(filePath, content);

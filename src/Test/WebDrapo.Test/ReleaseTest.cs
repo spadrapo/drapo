@@ -1854,6 +1854,11 @@ namespace WebDrapo.Test
             ValidatePage("ParseDate");
         }
         [TestCase]
+        public void PackComponentActiveTest()
+        {
+            ValidatePage("PackComponentActive");
+        }
+        [TestCase]
         public void ParseNumberTest()
         {
             ValidatePage("ParseNumber");

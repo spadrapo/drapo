@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html><html><head>
+    <script src="/drapo.js"></script>
+    <script>
+        window.addEventListener('error', function (e) { document.getElementById('pageErrors').textContent += e.message + ';'; });
+    </script>
+    <title>Pack - Component Active</title>
+<link href="" rel="stylesheet" /><script src=""></script><style type="text/css" data-pack-file="~/testpack/test.css">/* Test CSS file for pack */
+.pack-test-style {
+    color: blue;
+    font-weight: bold;
+    background-color: #f0f8ff;
+    padding: 10px;
+    border: 2px solid #0066cc;
+    border-radius: 5px;
+}
+
+.test-component {
+    border: 2px solid #4CAF50;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.test-component .counter {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2196F3;
+}
+
+.test-component button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.test-component button:hover {
+    background-color: #45a049;
+}
+
+.pack-loaded {
+    background-color: lightgreen;
+    padding: 5px;
+}</style></head>
+<body>
+    <span>Pack - Component Active</span>
+    <br>
+    <span>Page errors: </span><span id="pageErrors"></span>
+    <br>
+    <div d-datakey="packData" d-datatype="object" d-datavalue="{&quot;name&quot;: &quot;Drapo&quot;, &quot;message&quot;: &quot;Pack not loaded&quot;}"></div>
+    <div dc-model="{{packData.name}}">
+    <span>packData.name</span>
+    <span>Drapo</span>
+</div>
+    <br>
+    <span d-model="{{packData.message}}">Loaded</span>
+    <br>
+    <input type="button" driverunittest="click" value="Load Pack" d-on-click="LoadPack(testpack);UpdateDataField(packData,message,Loaded);UpdateSector(componenttest,~/testpack/component-test-page.html)">
+    <div d-sector="@"><div d-sector="@">
+        <div d-datakey="packComponent" d-datatype="object" d-datavalue="{&quot;Value&quot;: 1}"></div>
+        <h2>Component Test Page</h2>
+        <p>This page demonstrates using a component that was loaded from a pack.</p>
+        <div dc-model="{{packComponent.Value}}">
+    <span>packComponent.Value</span>
+    <span>1</span>
+</div>
+    </div>
+    <div style="margin-top: 20px; padding: 10px; background-color: #e8f5e8; border-radius: 5px;">
+        <p><strong>Success!</strong> If you can see the checkbox component above, it means:</p>
+        <ul>
+            <li>✅ The pack was loaded successfully</li>
+            <li>✅ The component files were processed and cached</li>
+            <li>✅ The component was marked as active</li>
+            <li>✅ No duplicate loading occurred</li>
+        </ul>
+    </div>
+
+</div>
+
+
+</body></html>

@@ -1,4 +1,4 @@
-class DrapoRegister {
+﻿class DrapoRegister {
     //Field
     private _application: DrapoApplication;
     private _components: string[] = [];
@@ -129,9 +129,24 @@ class DrapoRegister {
         return (this.GetCacheData(index));
     }
 
+    public async GetComponentTagsByFileUrl(): Promise<{ [url: string]: string }> {
+        const tags: { [url: string]: string } = {};
+        const components: any[] = await this.Application.Config.GetSector("Components");
+        if (components == null)
+            return (tags);
+        for (const component of components)
+            for (const file of component.Files)
+                tags[this.GetComponentFileRelativeUrl(component, file)] = component.Tag;
+        return (tags);
+    }
+
+    private GetComponentFileRelativeUrl(component: any, file: any): string {
+        return (file.ResourceType === 1 ? file.Path : '~/components/' + component.Name + '/' + file.Name);
+    }
+
     private async GetComponentFileUrl(component: any, file: any) : Promise<string>
     {
-        let url: string = file.ResourceType === 1 ? file.Path : '~/components/' + component.Name + '/' + file.Name;
+        let url: string = this.GetComponentFileRelativeUrl(component, file);
         url += await this.Application.Server.AppendUrlQueryStringCacheStatic(url);
         return (url);
     }
