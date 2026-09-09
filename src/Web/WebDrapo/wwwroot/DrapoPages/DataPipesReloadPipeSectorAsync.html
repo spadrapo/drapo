@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Data Pipes ReloadPipe Sector</title>
+</head>
+<body>
+    <span>Data Pipes ReloadPipe Sector</span>
+    <div d-dataKey="resetA" d-dataType="value" d-dataLoadType="startup" d-dataUrlGet="~/Data/GetCallCount?name=DataPipesScopeA&reset=true"></div>
+    <div d-dataKey="resetB" d-dataType="value" d-dataLoadType="startup" d-dataUrlGet="~/Data/GetCallCount?name=DataPipesScopeB&reset=true"></div>
+    <div d-dataKey="update" d-dataType="value" d-dataLoadType="startup" d-dataUrlSet="~/Plumber/Notify?datakey=pipeScope"></div>
+    <div d-dataKey="loaderA" d-dataType="function" d-dataLoadType="startup" d-dataValue="ShowWindow(~/DrapoPages/DataPipesScopeWindowA.html,windowA)"></div>
+    <div d-dataKey="loaderB" d-dataType="function" d-dataLoadType="startup" d-dataValue="ShowWindow(~/DrapoPages/DataPipesScopeWindowB.html,windowB)"></div>
+    <div d-sector="windowA" d-id="windowA"></div>
+    <div d-sector="windowB" d-id="windowB"></div>
+    <input type="button" value="Notify" d-id="__drapoUnitTest" d-on-click="ReloadPipe(pipeScope,windowA)" />
+</body>
+</html>

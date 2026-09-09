@@ -141,7 +141,7 @@ class DrapoPlumber {
             //Debugger
             await this.Application.Debugger.AddPipe(dataPipe);
             //Reload Active Storage
-            await this.Application.Storage.ReloadPipe(dataPipe);
+            await this.Application.Storage.ReloadPipe(dataPipe, ((message.Sector == null) || (message.Sector === '')) ? null : message.Sector);
             //Reload Containers
             this.Application.SectorContainerHandler.ReloadStorageItemByPipe(dataPipe);
         }

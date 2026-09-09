@@ -311,6 +311,8 @@ class DrapoFunctionHandler {
             return (await this.ExecuteFunctionUpdateData(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'reloaddata')
             return (await this.ExecuteFunctionReloadData(sector, contextItem, element, event, functionParsed, executionContext));
+        if (functionParsed.Name === 'reloadpipe')
+            return (await this.ExecuteFunctionReloadPipe(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'loadpack')
             return (await this.ExecuteFunctionLoadPack(sector, contextItem, element, event, functionParsed, executionContext));
         if (functionParsed.Name === 'filterdata')
@@ -1010,6 +1012,16 @@ class DrapoFunctionHandler {
         const notifyText: string = functionParsed.Parameters[1];
         const notify: boolean = ((notifyText == null) || (notifyText == '')) ? true : await this.Application.Solver.ResolveConditional(notifyText);
         await this.Application.Storage.ReloadData(dataKey, sector, notify);
+        return ('');
+    }
+
+    private async ExecuteFunctionReloadPipe(sector: string, contextItem: DrapoContextItem, element: HTMLElement, event: Event, functionParsed: DrapoFunction, executionContext: DrapoExecutionContext<any>): Promise<string> {
+        const dataPipe: string = await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[0]);
+        if ((dataPipe == null) || (dataPipe === ''))
+            return ('');
+        const sectorText: string = functionParsed.Parameters.length > 1 ? await this.ResolveFunctionParameter(sector, contextItem, element, executionContext, functionParsed.Parameters[1]) : null;
+        const sectorReload: string = ((sectorText == null) || (sectorText === '')) ? null : sectorText;
+        await this.Application.Storage.ReloadPipe(dataPipe, sectorReload);
         return ('');
     }
 

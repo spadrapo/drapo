@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html><html><head>
     <script src="/drapo.js"></script>
-    <title>Data Pipes Scope</title>
+    <title>Data Pipes ReloadPipe</title>
 </head>
 <body>
-    <span>Data Pipes Scope</span>
+    <span>Data Pipes ReloadPipe</span>
     <div d-datakey="resetA" d-datatype="value" d-dataloadtype="startup" d-dataurlget="~/Data/GetCallCount?name=DataPipesScopeA&amp;reset=true"></div>
     <div d-datakey="resetB" d-datatype="value" d-dataloadtype="startup" d-dataurlget="~/Data/GetCallCount?name=DataPipesScopeB&amp;reset=true"></div>
     <div d-datakey="update" d-datatype="value" d-dataloadtype="startup" d-dataurlset="~/Plumber/Notify?datakey=pipeScope"></div>
@@ -17,7 +17,7 @@
     <div d-datakey="pipeCalls" d-datatype="value" d-dataaccess="private" d-dataloadtype="startup" d-dataurlget="~/Data/GetCallCount?name=DataPipesScopeB"></div>
     <span>B: </span><span d-model="{{pipeCalls}}">2</span>
 </div></div>
-    <input type="button" value="Notify" d-id="__drapoUnitTest" d-on-click="PostDataItem(update)">
+    <input type="button" value="Notify" d-id="__drapoUnitTest" d-on-click="ReloadPipe(pipeScope)">
 
 
 </body></html>

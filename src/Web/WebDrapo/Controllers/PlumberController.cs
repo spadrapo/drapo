@@ -24,9 +24,9 @@ namespace WebDrapo.Controllers
         }
 
         [HttpPost]
-        public void Notify([FromQuery] string dataKey)
+        public void Notify([FromQuery] string dataKey, [FromQuery] string sector = null)
         {
-            _plumber.Send(new DrapoPipeMessage() { Type = DrapoPipeMessageType.Storage, Data = dataKey }, DrapoPipeAudienceType.Me);
+            _plumber.Send(new DrapoPipeMessage() { Type = DrapoPipeMessageType.Storage, Data = dataKey, Sector = sector }, DrapoPipeAudienceType.Me);
         }
 
         [HttpPost]

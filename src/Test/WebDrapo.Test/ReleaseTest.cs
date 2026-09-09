@@ -930,9 +930,24 @@ namespace WebDrapo.Test
             ValidatePage("DataParentSectorSide");
         }
         [TestCase]
+        public void DataPipesReloadPipeAsyncTest()
+        {
+            ValidatePage("DataPipesReloadPipeAsync");
+        }
+        [TestCase]
+        public void DataPipesReloadPipeSectorAsyncTest()
+        {
+            ValidatePage("DataPipesReloadPipeSectorAsync");
+        }
+        [TestCase]
         public void DataPipesScopeAsyncTest()
         {
             ValidatePage("DataPipesScopeAsync");
+        }
+        [TestCase]
+        public void DataPipesScopeMessageSectorAsyncTest()
+        {
+            ValidatePage("DataPipesScopeMessageSectorAsync");
         }
         [TestCase]
         public void DataPipesSectorAsyncTest()
