@@ -79,40 +79,39 @@ class DrapoPackHandler {
     private async ProcessPackData(packName: string, packData: any): Promise<void> {
         if ((packData == null) || (packData.files == null))
             return;
+        const componentTags: { [url: string]: string } = await this.Application.Register.GetComponentTagsByFileUrl();
         const componentsActivated: string[] = [];
         // Process each file in the pack
         for (const file of packData.files) {
             if ((file.path == null) || (file.content == null))
                 continue;
             // Component assets already on the page (activated before the pack landed) are not appended again
-            const componentName: string = this.ExtractComponentNameFromPath(file.path);
-            const skipAssets: boolean = (componentName != null) && (await this.IsComponentAssetsLoaded(componentName, componentsActivated));
+            const tagName: string = componentTags[this.NormalizeFileUrl(file.path)];
+            const skipAssets: boolean = (tagName != null) && (this.IsComponentAssetsLoaded(tagName, componentsActivated));
             // Place the file content in the correct location
             await this.ProcessPackFile(file.path, file.content, skipAssets);
         }
     }
 
-    private async IsComponentAssetsLoaded(componentName: string, componentsActivated: string[]): Promise<boolean> {
+    private IsComponentAssetsLoaded(tagName: string, componentsActivated: string[]): boolean {
         // Components activated by this pack keep receiving their remaining files
-        if (componentsActivated.indexOf(componentName) !== -1)
+        if (componentsActivated.indexOf(tagName) !== -1)
             return (false);
-        const tagName: string = `d-${componentName}`;
         if (this.Application.Register.IsActiveComponent(tagName))
             return (true);
         // Mark as active before appending the first file so a concurrent activation does not load the files again
-        if (await this.Application.Register.IsRegisteredComponent(tagName))
-            this.Application.Register.MarkComponentAsActive(tagName);
-        componentsActivated.push(componentName);
+        this.Application.Register.MarkComponentAsActive(tagName);
+        componentsActivated.push(tagName);
         return (false);
     }
 
-    private ExtractComponentNameFromPath(filePath: string): string {
-        // Extract component name from paths like: "~/components/mycomponent/file.js"
-        const pathParts = filePath.split('/');
-        if (pathParts.length >= 3 && pathParts[1] === 'components') {
-            return pathParts[2];
-        }
-        return null;
+    private NormalizeFileUrl(filePath: string): string {
+        const queryIndex: number = filePath.indexOf('?');
+        if (queryIndex !== -1)
+            filePath = filePath.substring(0, queryIndex);
+        if (filePath.startsWith('~/'))
+            return (filePath);
+        return ('~/' + (filePath.startsWith('/') ? filePath.substring(1) : filePath));
     }
 
     private async ProcessPackFile(filePath: string, content: string, skipAssets: boolean): Promise<void> {
