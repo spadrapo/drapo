@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="../drapo.js"></script>
+    <title>x - x</title>
+</head>
+<body>
+    <div d-dataKey="panelObjectClipboard" d-dataType="object" d-dataLoadType="startup"></div>
+    <div d-id="Windows" d-sector="@"></div>
+    <div d-sector="first-sector">
+        <div d-dataKey="dropdownList" d-dataType="object" d-dataUrlGet="~/Data/GetLevels?levels=5"></div>
+        <div d-dataKey="dropdownListColumns" d-dataType="query" d-dataValue="SELECT Q.Key, Q.Value FROM {{dropdownList}} AS Q"></div>
+        <div d-dataKey="dropdownModel" d-dataType="object" d-dataProperty="Value"></div>
+        <div d-dataKey="dropdownListReference" d-dataType="object" d-dataOnNotify="ClearData(dropdownList);ReloadData(dropdownList);UpdateDataField(dropdownModel,Value,{{dropdownListReference.Value}})"></div>
+        <br>
+        <d-dropdowntree dc-dataKey="dropdownListColumns" dc-Key="Key" dc-Value="Value" dc-model="{{dropdownModel.Value}}"></d-dropdowntree>
+        <input type="button" value="Open" d-on-click="UpdateDataField(panelObjectClipboard,dropdowntree,CreateReference({{dropdownListReference}}));ShowWindow(~/DrapoPages/ComponentCreateSectorPostDataWindow.html,Windows)" />
+    </div>
+
+
+    
+</body>
+</html>
