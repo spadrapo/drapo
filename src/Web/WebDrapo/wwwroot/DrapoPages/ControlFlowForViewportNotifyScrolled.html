@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow - For - Viewport - Notify Scrolled</title>
+</head>
+<body>
+    <script>
+        function ScrollViewportToBottom() {
+            var el = document.getElementById('viewport-scroll');
+            el.scrollTop = el.scrollHeight;
+            return ('bottom');
+        }
+    </script>
+    <span>Control Flow - For - Viewport - Notify Scrolled</span>
+    <div d-dataKey="items" d-dataUrlGet="/Data/GetLevels?Levels=0&Children=100"></div>
+    <div d-dataKey="scrollState" d-dataType="value"></div>
+    <div id="viewport-scroll" style="overflow-y: scroll; height: 200px; width: 400px;">
+        <div d-for="item in items" d-for-render="viewport,hash" style="height: 20px;">
+            <span>{{item.Key}}</span>
+            <span>Index: {{item._Index}}</span>
+        </div>
+    </div>
+    <input type="button" value="Scroll and Refresh" d-on-click="GetExternal(ScrollViewportToBottom,scrollState);Wait(500);Notify(items)" driverunittest="click" />
+</body>
+</html>

@@ -705,6 +705,11 @@ namespace WebDrapo.Test
         //    ValidatePage("ControlFlowForViewportNotify");
         //}
         [TestCase]
+        public void ControlFlowForViewportNotifyScrolledTest()
+        {
+            ValidatePage("ControlFlowForViewportNotifyScrolled");
+        }
+        [TestCase]
         public void ControlFlowIfSelectTest()
         {
             ValidatePage("ControlFlowIfSelect");
