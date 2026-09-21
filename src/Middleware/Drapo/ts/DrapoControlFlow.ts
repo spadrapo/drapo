@@ -331,7 +331,7 @@ class DrapoControlFlow {
         let nodesRemovedCount: number = 0;
         const startViewport: number = this.Application.ViewportHandler.GetViewportControlFlowStart(viewport, start);
         let endViewport: number = this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length);
-        if (isViewportActive)
+        if (viewport !== null)
             context.Initialize(startViewport - 1);
         const insertedElements = [];
         const elForParentOriginalStyle: string = elAnchor.parentElement.getAttribute("style");
