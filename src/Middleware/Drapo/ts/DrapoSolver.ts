@@ -570,7 +570,8 @@ class DrapoSolver {
                 //Property
                 if ((data === null) || (data === undefined) || (data[currentKey] === undefined)) {
                     if ((dataEnforce !== null) && (i === dataPath.length - 1)) { // Enforce Data
-                        data[currentKey] = dataEnforce;
+                        if (!this.IsPrimitive(data))
+                            data[currentKey] = dataEnforce;
                         return (dataEnforce);
                     }
                     return ('');
@@ -790,7 +791,7 @@ class DrapoSolver {
                 data = data[index];
             }
         }
-        if (data == null)
+        if (this.IsPrimitive(data))
             return (false);
         const dataField: string = dataPath[dataPath.length - 1];
         //Mustache is ending in indexer

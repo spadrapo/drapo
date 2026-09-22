@@ -1684,6 +1684,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionUpdateDataFieldLookup");
         }
         [TestCase]
+        public void FunctionWritePrimitiveTest()
+        {
+            ValidatePage("FunctionWritePrimitive");
+        }
+        [TestCase]
         public void FunctionUpdateDataFieldObjectWithDelayTest()
         {
             ValidatePage("FunctionUpdateDataFieldObjectWithDelay");
