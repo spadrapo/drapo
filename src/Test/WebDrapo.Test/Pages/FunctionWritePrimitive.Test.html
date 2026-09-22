@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html><html><head>
+    <script src="/drapo.js"></script>
+    <title>Function - Write Primitive</title>
+</head>
+<body>
+    <span>Function - Write Primitive</span>
+    <div d-datakey="source" d-datatype="object" d-dataproperty-name-name="Name" d-dataproperty-name-value="Bob"></div>
+    <div d-datakey="list" d-datatype="object"></div>
+    <div d-datakey="names" d-datatype="array" d-datavalue="[&quot;a&quot;,&quot;b&quot;]"></div>
+    <div d-datakey="user" d-datatype="object" d-dataproperty-name-name="Name" d-dataproperty-name-value="Ann"></div>
+    <div d-datakey="status" d-datatype="object" d-dataproperty-result-name="Result" d-dataproperty-result-value="pending"></div>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="UpdateData(list,{{source.Missing}});UpdateDataField(list,Field,1);UpdateDataField(names,Field,1);UpdateDataField(user,Name.First,Carl);UpdateDataField(user,Age,30);AddDataItem({{list.Items}},x);UpdateDataField(status,Result,done)"></div>
+    <div>
+        <span>List:</span><span d-model="{{list}}"></span>
+        <ul style="">
+            <li d-for="name in names" style="display: none;">{{name}}</li>
+        <li>a</li><li>b</li></ul>
+        <span>User:</span><span d-model="{{user.Name}}">Ann</span><span d-model="{{user.Age}}">30</span>
+        <span>Status:</span><span d-model="{{status.Result}}">done</span>
+    </div>
+
+
+</body></html>
