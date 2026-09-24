@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Function RemoveDataItem Mustache Without Context</title>
+</head>
+<body>
+    <span>Function RemoveDataItem Mustache Without Context</span>
+    <div d-datakey="object" d-datatype="object" d-datavalue="{&quot;Persons&quot;:[{&quot;name&quot;: &quot;John&quot;},{&quot;name&quot;: &quot;Mary&quot;},{&quot;name&quot;: &quot;Thiago&quot;}]}"></div>
+    <div d-datakey="personNew" d-datatype="object" d-datavalue="{&quot;name&quot;: &quot;Mick&quot;}"></div>
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="AddDataItem({{object.Persons}},{{personNew}},true,false)"></div>
+    <ul>
+        <li d-for="person in object.Persons" d-model="{{person.name}}"></li>
+    </ul>
+    <input type="button" driverunittest="click" d-on-click="RemoveDataItem({{object.Persons}},{{personNew}})" value="Remove Mick" />
+</body>
+</html>
