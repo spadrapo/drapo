@@ -2150,9 +2150,9 @@ namespace WebDrapo.Test
             ValidatePage("WindowsTemplate");
         }
         [TestCase]
-        public void WindowsTemplateOnLoadTest()
+        public void ConditionalContainsDataItemNegationFixedTest()
         {
-            ValidatePage("WindowsTemplateOnLoad");
+            ValidatePage("ConditionalContainsDataItemNegationFixed");
         }
         [TestCase]
         public void FunctionUnloadDataTest()

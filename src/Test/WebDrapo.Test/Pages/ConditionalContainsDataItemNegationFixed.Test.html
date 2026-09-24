@@ -1,0 +1,72 @@
+<!DOCTYPE html><html><head>
+    <script src="/drapo.js"></script>
+    <title>Conditional ContainsDataItem with Negation Test</title>
+</head>
+<body>
+    <span>Testing IF function with negated ContainsDataItem</span>
+    
+    <!-- Test data setup -->
+    <div></div>
+    
+    <div>
+        <h3>Test Results:</h3>
+        
+        <!-- Test 1: Direct negation (should work) -->
+        <div class="test-case">
+            <label>Test 1: !ContainsDataItem (feature 81 NOT in list)</label>
+            <span>PASS: Feature 81 is correctly NOT in the list</span>
+        </div>
+        
+        <!-- Test 2: IF with negation inside (the fix) -->
+        <div class="test-case">
+            <label>Test 2: IF(!ContainsDataItem...) (feature 81 NOT in list)</label>
+            <span>PASS: IF with negated ContainsDataItem works</span>
+        </div>
+        
+        <!-- Test 3: IF with negation outside (should continue working) -->
+        <div class="test-case">
+            <label>Test 3: !IF(ContainsDataItem...) (feature 81 NOT in list)</label>
+            <span>PASS: Negated IF with ContainsDataItem works</span>
+        </div>
+        
+        <!-- Test 4: Positive case - feature that exists -->
+        <div class="test-case">
+            <label>Test 4: IF(!ContainsDataItem...) (feature 80 IS in list)</label>
+            <span>PASS: Feature 80 is correctly in the list</span>
+        </div>
+        
+        <!-- Test 5: Complex condition using d-class -->
+        <div class="test-case">
+            <label>Test 5: d-class with IF(!ContainsDataItem...)</label>
+            <input class="testbox disabled" type="checkbox">
+            <span>Should have 'disabled' class (feature 81 not in list)</span>
+        </div>
+        
+        <!-- Test 6: Control - d-class with negation outside -->
+        <div class="test-case">
+            <label>Test 6: d-class with !IF(ContainsDataItem...)</label>
+            <input class="testbox disabled" type="checkbox">
+            <span>Should have 'disabled' class (feature 81 not in list)</span>
+        </div>
+    </div>
+    
+    <style>
+        .test-case {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        .testbox {
+            margin-right: 10px;
+        }
+        
+        .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #f0f0f0;
+        }
+    </style>
+
+</body></html>
