@@ -78,6 +78,16 @@ namespace WebDrapo.Controllers
             return (_callCounts.AddOrUpdate(name, 1, (key, count) => count + 1));
         }
 
+        //Counts like GetCallCount; every call after the first answers only after the delay.
+        [HttpGet]
+        public async Task<int> GetCallCountDelayed(string name, int delay)
+        {
+            int count = _callCounts.AddOrUpdate(name, 1, (key, current) => current + 1);
+            if (count > 1)
+                await Task.Delay(delay);
+            return (count);
+        }
+
         [HttpGet]
         public List<string> GetColumns()
         {

@@ -1,0 +1,17 @@
+﻿<html><head>
+    <script src="/drapo.js"></script>
+    <title>Data Reload During Unload</title>
+</head>
+<body>
+    <span>Data Reload During Unload</span>
+    <div d-datakey="reset" d-datatype="value" d-dataloadtype="startup" d-dataurlget="~/Data/GetCallCount?name=DataReloadDuringUnload&amp;reset=true"></div>
+    <div d-datakey="first" d-datatype="object" d-dataproperty-name="First"></div>
+    <div d-datakey="reloaded" d-datatype="value" d-dataurlget="~/Data/GetCallCountDelayed?name=DataReloadDuringUnload&amp;delay=1000"></div>
+    <div d-datakey="last" d-datatype="object" d-dataproperty-name="Last"></div>
+    <div><span d-model="{{first.name}}">First</span></div>
+    <div><span d-model="{{reloaded}}">2</span></div>
+    <div><span d-model="{{last.name}}">Last</span></div>
+    <input type="button" value="Reload" driverunittest="click" d-on-click="ReloadData(reloaded);Notify(last)">
+    <input type="button" value="Unload" driverunittest="click" d-on-click="UnloadData(first)">
+
+</body></html>
