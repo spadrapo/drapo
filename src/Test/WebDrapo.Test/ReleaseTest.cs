@@ -950,6 +950,11 @@ namespace WebDrapo.Test
             ValidatePage("DataPipesScopeAsync");
         }
         [TestCase]
+        public void DataReloadDuringUnloadTest()
+        {
+            ValidatePage("DataReloadDuringUnload");
+        }
+        [TestCase]
         public void DataPipesScopeMessageSectorAsyncTest()
         {
             ValidatePage("DataPipesScopeMessageSectorAsync");

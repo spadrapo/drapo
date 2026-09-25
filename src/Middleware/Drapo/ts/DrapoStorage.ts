@@ -183,20 +183,15 @@ class DrapoStorage {
         const storageItem: DrapoStorageItem = this._cacheItems[dataKeyIndex];
         if (storageItem.UrlGet !== null) {
             const storageItemLoaded: DrapoStorageItem = await this.RetrieveDataItemInternal(dataKey, sector);
-            if (storageItemLoaded !== null) {
-                await this.AdquireLock();
-                this._cacheItems[dataKeyIndex] = storageItemLoaded;
-                this.ReleaseLock();
-            }
+            if (storageItemLoaded !== null)
+                await this.ReplaceCacheItem(dataKey, sector, storageItemLoaded);
         } else if (storageItem.Type === 'query') {
             const storageItemLoaded: DrapoStorageItem = await this.RetrieveDataItemInternal(dataKey, sector);
             if (storageItemLoaded !== null) {
                 const isEqual: boolean = this.Application.Solver.IsEqualAny(storageItem.Data, storageItemLoaded.Data);
                 if (isEqual)
                     return (false);
-                await this.AdquireLock();
-                this._cacheItems[dataKeyIndex] = storageItemLoaded;
-                this.ReleaseLock();
+                await this.ReplaceCacheItem(dataKey, sector, storageItemLoaded);
             }
         } else {
             await this.RemoveCacheData(dataKeyIndex, false);
@@ -204,6 +199,15 @@ class DrapoStorage {
         if (notify)
             await this.Application.Observer.Notify(dataKey, null, null, canUseDifference);
         return (true);
+    }
+
+    private async ReplaceCacheItem(dataKey: string, sector: string, storageItemLoaded: DrapoStorageItem): Promise<void> {
+        await this.AdquireLock();
+        //The index is resolved again under the lock: items removed while the data was loading shift the cache
+        const dataKeyIndex: number = this.GetCacheKeyIndex(dataKey, sector);
+        if (dataKeyIndex !== null)
+            this._cacheItems[dataKeyIndex] = storageItemLoaded;
+        this.ReleaseLock();
     }
 
     public GetSectors(dataKey: string): string[] {
