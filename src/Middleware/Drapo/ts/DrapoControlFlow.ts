@@ -3,6 +3,8 @@ class DrapoControlFlow {
     private _application: DrapoApplication;
     //Rows rendered by each d-for loop, so a loop only ever touches its own items.
     private _forRenderedItems: WeakSet<HTMLElement> = new WeakSet<HTMLElement>();
+    //Style a d-for parent had before a render hid it, kept until that render restores it.
+    private _forParentStyles: WeakMap<HTMLElement, string> = new WeakMap<HTMLElement, string>();
 
     //Properties
     get Application(): DrapoApplication {
@@ -17,6 +19,27 @@ class DrapoControlFlow {
     private MarkForRenderedItem(el: HTMLElement): void {
         if (el != null)
             this._forRenderedItems.add(el);
+    }
+
+    private GetForParentStyle(elForParent: HTMLElement): string {
+        //A render in progress has the parent hidden: its style before that render is the original.
+        if (this._forParentStyles.has(elForParent))
+            return (this._forParentStyles.get(elForParent));
+        return (elForParent.getAttribute('style'));
+    }
+
+    private HideForParent(elForParent: HTMLElement, style: string): void {
+        if (!this._forParentStyles.has(elForParent))
+            this._forParentStyles.set(elForParent, style);
+        elForParent.style.display = 'none';
+    }
+
+    private RestoreForParent(elForParent: HTMLElement, style: string): void {
+        this._forParentStyles.delete(elForParent);
+        if (style)
+            elForParent.setAttribute('style', style);
+        else
+            elForParent.removeAttribute('style');
     }
 
     private GetForRenderedItems(elAnchor: HTMLElement): HTMLElement[] {
@@ -334,7 +357,7 @@ class DrapoControlFlow {
         if (viewport !== null)
             context.Initialize(startViewport - 1);
         const insertedElements = [];
-        const elForParentOriginalStyle: string = elAnchor.parentElement.getAttribute("style");
+        const elForParentOriginalStyle: string = this.GetForParentStyle(elForParent);
         for (let j = startViewport; j < endViewport; j++) {
             const data: any = datas[j];
             //Template
@@ -371,13 +394,15 @@ class DrapoControlFlow {
                 } else {
                     lastInserted.after(template);
                     lastInserted = template;
+                    //Owned as soon as it is inserted, so a render running meanwhile finds it instead of inserting another.
+                    this.MarkForRenderedItem(template);
                     if (hashValueCurrent !== null)
                         template.setAttribute('d-hash', hashValueCurrent);
                     await this.ResolveControlFlowForIterationRender(sector, context, template, renderContext, true, true);
                     if (elForParent.style.display != 'none' && !this.Application.ViewportHandler.HasHeightChanged(viewport)) {
                         this.Application.ViewportHandler.UpdateHeightItem(viewport, template);
                         endViewport = this.Application.ViewportHandler.GetViewportControlFlowEnd(viewport, length);
-                        elForParent.style.display = 'none';
+                        this.HideForParent(elForParent, elForParentOriginalStyle);
                     }
                 }
                 //Mark the row as owned by this loop so it is never mistaken for a sibling.
@@ -398,10 +423,7 @@ class DrapoControlFlow {
             }
         }
         this.Application.ViewportHandler.AppendViewportControlFlowBallonAfter(viewport, elForParent);
-        if (elForParentOriginalStyle)
-            elForParent.setAttribute('style', elForParentOriginalStyle);
-        else
-            elForParent.removeAttribute('style');
+        this.RestoreForParent(elForParent, elForParentOriginalStyle);
         //Viewport Activate
         this.Application.ViewportHandler.ActivateViewportControlFlow(viewport, lastInserted);
         //Enable Incremental Notify

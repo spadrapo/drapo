@@ -479,6 +479,11 @@ namespace WebDrapo.Test
             ValidatePage("ControlFlowForAttributeExpression");
         }
         [TestCase]
+        public void ControlFlowForConcurrentRenderTest()
+        {
+            ValidatePage("ControlFlowForConcurrentRender");
+        }
+        [TestCase]
         public void ControlFlowForComponentMultipleSourcesTest()
         {
             ValidatePage("ControlFlowForComponentMultipleSources");

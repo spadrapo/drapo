@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For Concurrent Render</title>
+</head>
+<body>
+    <span>Control Flow For Concurrent Render</span>
+    <div d-dataKey="reset" d-dataType="value" d-dataLoadType="startup" d-dataUrlGet="~/Data/GetCallCount?name=ControlFlowForConcurrentRender&reset=true"></div>
+    <div d-dataKey="items" d-dataType="array" d-dataValue='[{"id":1,"name":"One"}]'></div>
+    <div d-dataKey="itemTwo" d-dataType="object" d-dataValue='{"id":2,"name":"Two"}'></div>
+    <div d-dataKey="itemThree" d-dataType="object" d-dataValue='{"id":3,"name":"Three"}'></div>
+    <div d-dataKey="slow" d-dataType="value" d-dataUrlGet="~/Data/GetCallCountDelayed?name=ControlFlowForConcurrentRender&delay=1000"></div>
+    <div d-if="{{slow}}>0"><span>Slow</span></div>
+    <div class="rows">
+        <span>Rows</span>
+        <div d-for="item in items">
+            <span>{{item.name}}</span>
+            <span d-if="({{item.id}}=3)&&({{slow}}>0)">Loaded</span>
+        </div>
+    </div>
+    <input type="button" value="Render" driverunittest="click" d-on-click="UnloadData(slow);AddDataItem(items,{{itemTwo}},false);AddDataItem(items,{{itemThree}},false);Async(Notify(items));Async(Notify(items),200)" />
+</body>
+</html>
