@@ -798,7 +798,7 @@ class DrapoObserver {
                 if (sectors[j] !== sector)
                     continue;
                 sectors.splice(j, 1);
-                this._dataForElement[i].splice(j, i);
+                this._dataForElement[i].splice(j, 1);
             }
             if (sectors.length > 0)
                 continue;
@@ -815,8 +815,8 @@ class DrapoObserver {
                 if (sectors[j] !== sector)
                     continue;
                 sectors.splice(j, 1);
-                this._dataBarberElements[i].splice(j, i);
-                this._dataBarberFields[i].splice(j, i);
+                this._dataBarberElements[i].splice(j, 1);
+                this._dataBarberFields[i].splice(j, 1);
             }
             if (sectors.length > 0)
                 continue;
@@ -834,10 +834,10 @@ class DrapoObserver {
                 if (sectors[j] !== sector)
                     continue;
                 sectors.splice(j, 1);
-                this._dataComponentField[i].splice(j, i);
-                this._dataComponentElements[i].splice(j, i);
-                this._dataComponentFunction[i].splice(j, i);
-                this._dataComponentElementsFocus[i].splice(j, i);
+                this._dataComponentField[i].splice(j, 1);
+                this._dataComponentElements[i].splice(j, 1);
+                this._dataComponentFunction[i].splice(j, 1);
+                this._dataComponentElementsFocus[i].splice(j, 1);
             }
             if (sectors.length > 0)
                 continue;

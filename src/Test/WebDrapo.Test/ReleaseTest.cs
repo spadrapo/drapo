@@ -359,6 +359,11 @@ namespace WebDrapo.Test
             ValidatePage("ComponentMenuApplicationComponent");
         }
         [TestCase]
+        public void ComponentObserverUnloadSectorTest()
+        {
+            ValidatePage("ComponentObserverUnloadSector");
+        }
+        [TestCase]
         public void ComponentStateTest()
         {
             ValidatePage("ComponentState");
