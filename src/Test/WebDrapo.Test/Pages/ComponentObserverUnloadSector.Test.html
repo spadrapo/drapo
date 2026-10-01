@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - Observer Unload Sector</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <span>Component - Observer Unload Sector</span>
+    <div d-datakey="first" d-datatype="value" d-datavalue="First"></div>
+    <div d-datakey="second" d-datatype="value" d-datavalue="Second"></div>
+    <div d-datakey="target" d-datatype="value" d-datavalue="Before"></div>
+    <div d-datakey="show" d-datatype="value" d-datavalue="0"></div>
+    <div d-datakey="objects" d-dataurlget="~/Data/GetLevels?children=1"></div>
+    <div d-sector="@" dc-model="{{first}}">
+    <span>first</span>
+    <span>First</span>
+</div>
+    <div d-sector="@" dc-model="{{second}}">
+    <span>second</span>
+    <span>Second</span>
+</div>
+    <div d-for="object in objects" d-if="{{show}}=1" style="display: none;">
+        <d-labelcontextsector dc-model="{{target}}"></d-labelcontextsector>
+    </div><div>
+        <div d-sector="@" dc-model="{{target}}">
+    <span>target</span>
+    <span>After</span>
+</div>
+    </div>
+    <input type="button" value="Render" driverunittest="click" d-on-click="UpdateData(show,1);Notify(objects,,,false);UpdateData(target,After)" />
+
+
+</body></html>
