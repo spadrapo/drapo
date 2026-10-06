@@ -1,0 +1,35 @@
+<!DOCTYPE html><html><head>
+    <script src="/drapo.js"></script>
+    <title>Drag and Drop Disabled</title>
+</head>
+<body>
+    <span>Drag and Drop Disabled</span>
+    <div d-datakey="users" d-datatype="array" d-datavalue="[{&quot;Key&quot;:&quot;A&quot;},{&quot;Key&quot;:&quot;B&quot;},{&quot;Key&quot;:&quot;C&quot;}]"></div>
+    <div d-datakey="editingKey" d-datatype="value" d-datavalue="B"></div>
+    <div d-datakey="objects" d-datatype="array" d-datavalue="[{&quot;Key&quot;:&quot;D&quot;,&quot;editingName&quot;:true},{&quot;Key&quot;:&quot;E&quot;,&quot;editingDescription&quot;:true},{&quot;Key&quot;:&quot;F&quot;}]"></div>
+    <div>
+        <div d-for="user in users" d-dragstart="true" d-dragend="true" d-dragstartdisabled="{{user.Key}}={{editingKey}}" style="display: none;">
+            <span>{{user.Key}}</span>
+        </div>
+    <div d-dragstart="true" d-dragend="true" d-dragstartdisabled="{{user.Key}}={{editingKey}}" draggable="false">
+            <span>A</span>
+        </div><div d-dragstart="true" d-dragend="true" d-dragstartdisabled="{{user.Key}}={{editingKey}}" draggable="true">
+            <span>B</span>
+        </div><div d-dragstart="true" d-dragend="true" d-dragstartdisabled="{{user.Key}}={{editingKey}}" draggable="true">
+            <span>C</span>
+        </div></div>
+    <div style="">
+        <div d-for="object in objects" d-dragstart="true" d-dragend="true" d-dragstartdisabled="({{object.editingName}})||({{object.editingDescription}})" style="display: none;">
+            <span>{{object.Key}}</span>
+        </div>
+    <div d-dragstart="true" d-dragend="true" d-dragstartdisabled="({{object.editingName}})||({{object.editingDescription}})" draggable="false">
+            <span>D</span>
+        </div><div d-dragstart="true" d-dragend="true" d-dragstartdisabled="({{object.editingName}})||({{object.editingDescription}})" draggable="false">
+            <span>E</span>
+        </div><div d-dragstart="true" d-dragend="true" d-dragstartdisabled="({{object.editingName}})||({{object.editingDescription}})" draggable="true">
+            <span>F</span>
+        </div></div>
+    <input type="button" value="Edit A" driverunittest="click" d-on-click="UpdateData(editingKey,A);Notify(users)">
+
+
+</body></html>

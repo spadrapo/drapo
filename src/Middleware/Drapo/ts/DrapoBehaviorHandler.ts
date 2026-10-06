@@ -108,12 +108,16 @@ class DrapoBehaviorHandler {
         const onAfter: string = el.getAttribute('d-dragOnAfterEnd');
         const application: DrapoApplication = this.Application;
         const drag: DrapoDrag = this.CreateDrag(dragActionAttribute, custom, context.Item, this.Application.Parser.ParseTags(dragStartAttribute), notify, dataKey, sector, onBefore, onAfter);
-        el.setAttribute('draggable', 'true');
+        const disabledText: string = el.getAttribute('d-dragStartDisabled');
+        const disabled: boolean = ((disabledText == null) || (disabledText == '')) ? false : await this.Application.Solver.ResolveConditional(disabledText, null, sector, context);
+        el.setAttribute('draggable', disabled ? 'false' : 'true');
         //Drag Start
         const eventType: string = 'dragstart';
         const eventNamespace: string = this.Application.EventHandler.CreateEventNamespace(null, null, eventType, 'drag');
         this.Application.EventHandler.DetachEventListener(el, eventNamespace);
         this.Application.EventHandler.AttachEventListener(el, eventType, eventNamespace, (e: any) => {
+            if (disabled)
+                return;
             application.BehaviorHandler.SetDrag(drag);
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text', drag.Code);
