@@ -199,6 +199,7 @@ Visit `https://localhost:5001` to see the demo application.
 | Attribute | Description | Example |
 |-----------|-------------|---------|
 | `d-dragStart` | Enable drag functionality | `d-dragStart="true"` |
+| `d-dragActive` | Conditional evaluated when the `d-for` item renders; when false the element is not draggable (`draggable="false"`), so text inside it can be selected with the mouse. Missing or empty means active | `d-dragActive="!{{item.editing}}"` |
 | `d-dragEnd` | Enable drop functionality | `d-dragEnd="true"` |
 | `d-resize` | Enable element resizing | `d-resize-location="width"` |
 | `d-cloak` | Hide element until data is loaded | `d-cloak` |

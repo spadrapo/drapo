@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Drag and Drop Active</title>
+</head>
+<body>
+    <span>Drag and Drop Active</span>
+    <div d-dataKey="users" d-dataType="array" d-dataValue='[{"Key":"A"},{"Key":"B"},{"Key":"C"}]'></div>
+    <div d-dataKey="editingKey" d-dataType="value" d-dataValue="B"></div>
+    <div d-dataKey="objects" d-dataType="array" d-dataValue='[{"Key":"D","editingName":true},{"Key":"E","editingDescription":true},{"Key":"F"}]'></div>
+    <div>
+        <div d-for="user in users" d-dragStart="true" d-dragEnd="true" d-dragActive="{{user.Key}}!={{editingKey}}">
+            <span>{{user.Key}}</span>
+        </div>
+    </div>
+    <div>
+        <div d-for="object in objects" d-dragStart="true" d-dragEnd="true" d-dragActive="(!{{object.editingName}})&&(!{{object.editingDescription}})">
+            <span>{{object.Key}}</span>
+        </div>
+    </div>
+    <input type="button" value="Edit A" driverunittest="click" d-on-click="UpdateData(editingKey,A);Notify(users)" />
+</body>
+</html>
