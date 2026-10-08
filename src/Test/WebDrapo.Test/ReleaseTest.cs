@@ -209,9 +209,9 @@ namespace WebDrapo.Test
             ValidatePage("BadRequest");
         }
         [TestCase]
-        public void BehaviorDragAndDropDisabledTest()
+        public void BehaviorDragAndDropActiveTest()
         {
-            ValidatePage("BehaviorDragAndDropDisabled");
+            ValidatePage("BehaviorDragAndDropActive");
         }
         [TestCase]
         public void BridgeClientTest()
