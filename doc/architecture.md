@@ -138,7 +138,10 @@ See [development.md](development.md) for the exact commands.
 ### CI and release
 
 The GitHub Actions workflow **Build Artifact** (`.github/workflows/build-artifact.yml`)
-builds `Drapo.sln` in Release on `windows-latest` and packs `Package.nuspec`:
+builds `Drapo.sln` in Release on `windows-latest`, runs the `WebDrapo.Test` suite against a
+WebDrapo it starts on `http://localhost:9991/` (Chrome is preinstalled on the runner; tests
+that fail are re-run once on their own, since a few are timing-sensitive), and packs
+`Package.nuspec`:
 
 - **A pull request to `master` is approved** → the package (version
   `yyyy.M.d.N-prNNN`) is attached to the workflow run as an artifact. Nothing is
@@ -148,7 +151,7 @@ builds `Drapo.sln` in Release on `windows-latest` and packs `Package.nuspec`:
   Trusted Publishing (`NuGet/login` with a GitHub OIDC token), so no API key is stored
   in the repository.
 
-The Selenium test suite does not run in CI; see [development.md](development.md#running-the-tests).
+A failing test stops the run before anything is packed or published.
 
 ## Request/data flow (high level)
 
