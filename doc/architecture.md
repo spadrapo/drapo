@@ -135,6 +135,21 @@ newer. The former `es6-promise` polyfill is gone; every such browser has a nativ
 This is why **TSLint passing is a hard gate**: a Release build will fail if it doesn't.
 See [development.md](development.md) for the exact commands.
 
+### CI and release
+
+The GitHub Actions workflow **Build Artifact** (`.github/workflows/build-artifact.yml`)
+builds `Drapo.sln` in Release on `windows-latest` and packs `Package.nuspec`:
+
+- **A pull request to `master` is approved** → the package (version
+  `yyyy.M.d.N-prNNN`) is attached to the workflow run as an artifact. Nothing is
+  published.
+- **A push to `master`** (a merged pull request) → the package (version `yyyy.M.d.N`,
+  where `N` is the workflow run number) is pushed to nuget.org. Publishing uses nuget.org
+  Trusted Publishing (`NuGet/login` with a GitHub OIDC token), so no API key is stored
+  in the repository.
+
+The Selenium test suite does not run in CI; see [development.md](development.md#running-the-tests).
+
 ## Request/data flow (high level)
 
 1. The browser loads a page that includes `<script src="/drapo.js"></script>`. The

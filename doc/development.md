@@ -57,9 +57,10 @@ stored expected snapshot in `src/Test/WebDrapo.Test/Pages/`.
 
 > **PR approval requires a fully green test suite.** A pull request may only be approved
 > and merged once **all** tests pass. There are no exceptions and no "known failing"
-> tests. The Azure pipeline's automated `Test` step is currently disabled, so reviewers
-> and authors must run the suite locally (steps below) and confirm every test passes
-> before approving.
+> tests. The CI workflow (**Build Artifact**, see
+> [architecture.md](architecture.md#ci-and-release)) does not run this suite, so reviewers
+> and authors must run it locally (steps below) and confirm every test passes before
+> approving.
 
 ### Running the tests
 

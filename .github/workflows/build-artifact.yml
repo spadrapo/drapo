@@ -1,0 +1,96 @@
+name: Build Artifact
+
+# Builds the Drapo NuGet package in Release (TSLint, TypeScript runtime, C#) and attaches it to the run.
+# - A pull request to master that gets approved only builds the package; nothing is published.
+# - A push to master (a merged pull request) builds the package and publishes it to nuget.org.
+on:
+  pull_request_review:
+    types: [submitted]
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    # pull_request_review has no branch filter, so the review state and the target branch are checked here.
+    if: github.event_name == 'push' || (github.event.review.state == 'approved' && github.event.pull_request.base.ref == 'master')
+    # Package.nuspec uses Windows paths.
+    runs-on: windows-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - uses: NuGet/setup-nuget@v4
+
+      - name: Version
+        id: version
+        shell: pwsh
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          # yyyy.M.d.N like the Azure pipeline, with the workflow run number as N so every run gets its own version.
+          # Pull request builds get a -prN suffix so they can never be mistaken for a release.
+          $now = [DateTime]::UtcNow
+          $version = "$($now.Year).$($now.Month).$($now.Day).$env:GITHUB_RUN_NUMBER"
+          if ($env:PR_NUMBER) { $version += "-pr$env:PR_NUMBER" }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          Write-Host "Package version: $version"
+
+      - name: npm install (Drapo)
+        working-directory: src/Middleware/Drapo
+        run: npm install
+
+      - name: npm install (WebDrapo)
+        working-directory: src/Web/WebDrapo
+        run: npm install
+
+      - name: Build
+        run: dotnet build src/Drapo.sln --configuration Release
+
+      - name: Pack
+        run: nuget pack Package.nuspec -Version ${{ steps.version.outputs.version }} -OutputDirectory artifacts
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Drapo.${{ steps.version.outputs.version }}
+          path: artifacts/*.nupkg
+          if-no-files-found: error
+
+  publish:
+    name: Publish to nuget.org
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # GitHub OIDC token that NuGet/login exchanges for a short-lived nuget.org API key (Trusted Publishing)
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: Drapo.${{ needs.build.outputs.version }}
+          path: artifacts
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: NuGet login
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: thsilva
+
+      - name: Push
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
