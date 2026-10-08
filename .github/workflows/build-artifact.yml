@@ -1,0 +1,135 @@
+name: Build Artifact
+
+# Builds the Drapo NuGet package in Release (TSLint, TypeScript runtime, C#), runs the WebDrapo.Test suite against it
+# and attaches the package to the run.
+# - A pull request to master that gets approved only builds the package; nothing is published.
+# - A push to master (a merged pull request) builds the package and publishes it to nuget.org.
+on:
+  pull_request_review:
+    types: [submitted]
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    # pull_request_review has no branch filter, so the review state and the target branch are checked here.
+    if: github.event_name == 'push' || (github.event.review.state == 'approved' && github.event.pull_request.base.ref == 'master')
+    # Package.nuspec uses Windows paths.
+    runs-on: windows-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - uses: NuGet/setup-nuget@v4
+
+      - name: Version
+        id: version
+        shell: pwsh
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          # yyyy.M.d.N like the Azure pipeline, with the workflow run number as N so every run gets its own version.
+          # Pull request builds get a -prN suffix so they can never be mistaken for a release.
+          $now = [DateTime]::UtcNow
+          $version = "$($now.Year).$($now.Month).$($now.Day).$env:GITHUB_RUN_NUMBER"
+          if ($env:PR_NUMBER) { $version += "-pr$env:PR_NUMBER" }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          Write-Host "Package version: $version"
+
+      - name: npm install (Drapo)
+        working-directory: src/Middleware/Drapo
+        run: npm install
+
+      - name: npm install (WebDrapo)
+        working-directory: src/Web/WebDrapo
+        run: npm install
+
+      - name: Build
+        run: dotnet build src/Drapo.sln --configuration Release
+
+      - name: Test
+        id: test
+        shell: pwsh
+        run: |
+          # The WebDrapo.Test suite drives Chrome against a running WebDrapo (http://localhost:9991/), so start it first.
+          New-Item -ItemType Directory -Force TestResults | Out-Null
+          $web = Start-Process dotnet -ArgumentList 'run', '--no-build', '--configuration', 'Release' -WorkingDirectory src/Web/WebDrapo -PassThru `
+            -RedirectStandardOutput TestResults/webdrapo.log -RedirectStandardError TestResults/webdrapo.error.log
+          $ready = $false
+          for ($i = 0; $i -lt 60 -and -not $ready -and -not $web.HasExited; $i++) {
+            Start-Sleep -Seconds 2
+            try { Invoke-WebRequest http://localhost:9991/drapo.js -UseBasicParsing -TimeoutSec 5 | Out-Null; $ready = $true } catch { }
+          }
+          if (-not $ready) {
+            Write-Host '::error::WebDrapo did not start on http://localhost:9991/'
+            Get-Content TestResults/webdrapo.log, TestResults/webdrapo.error.log
+            exit 1
+          }
+
+          $test = 'test', 'src/Test/WebDrapo.Test/WebDrapo.Test.csproj', '--configuration', 'Release', '--no-build',
+            '--settings', 'src/Test/WebDrapo.Test/Test.Debug.runsettings', '--results-directory', 'TestResults'
+          dotnet @test --logger 'trx;LogFileName=tests.trx'
+          if ($LASTEXITCODE -ne 0) {
+            # A few Selenium tests are timing-sensitive and fail now and then in a full run, so failures are re-run once
+            # on their own. Many failures at once means something is really broken and is not retried.
+            [xml]$trx = Get-Content TestResults/tests.trx
+            $failed = @($trx.TestRun.Results.UnitTestResult | Where-Object outcome -eq 'Failed' | ForEach-Object testName)
+            if ($failed.Count -eq 0 -or $failed.Count -gt 10) { exit 1 }
+            Write-Host "::warning::Re-running $($failed.Count) failed test(s): $($failed -join ', ')"
+            dotnet @test --logger 'trx;LogFileName=retry.trx' --filter (($failed | ForEach-Object { "Name=$_" }) -join '|')
+          }
+
+      - uses: actions/upload-artifact@v7
+        if: failure() && steps.test.outcome == 'failure'
+        with:
+          name: TestResults
+          path: TestResults
+
+      - name: Pack
+        run: nuget pack Package.nuspec -Version ${{ steps.version.outputs.version }} -OutputDirectory artifacts
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Drapo.${{ steps.version.outputs.version }}
+          path: artifacts/*.nupkg
+          if-no-files-found: error
+
+  publish:
+    name: Publish to nuget.org
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # GitHub OIDC token that NuGet/login exchanges for a short-lived nuget.org API key (Trusted Publishing)
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: Drapo.${{ needs.build.outputs.version }}
+          path: artifacts
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: NuGet login
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: thsilva
+
+      - name: Push
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
