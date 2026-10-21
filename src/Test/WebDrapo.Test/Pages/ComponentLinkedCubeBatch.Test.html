@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - LinkedCube</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <span>Component - LinkedCube</span>
+    <div d-sector="@" dc-type="batch">
+    <!--Data-->
+    <div>
+        <div d-datakey="internal" d-datatype="object" d-dataproperty-page="p1" d-dataproperty-row="r1" d-dataproperty-column="c1" d-dataproperty-value="v1"></div>
+        <div d-datakey="functionAdd" d-datatype="value" d-dataloadtype="startup" d-datavalue="ExecuteInstanceFunction(,Add,,{{internal.page}},{{internal.row}},{{internal.column}},{{internal.value}})"></div>
+        <div d-datakey="functionRemove" d-datatype="value" d-dataloadtype="startup" d-datavalue="ExecuteInstanceFunction(,Remove,,{{internal.page}},{{internal.row}},{{internal.column}})"></div>
+        <div d-datakey="functionClear" d-datatype="value" d-dataloadtype="startup" d-datavalue="ExecuteInstanceFunction(,Clear)"></div>
+    </div>
+    <!--Input-->
+    <div>
+        <label>Page:</label><input type="text" d-model="{{internal.page}}" /><br />
+        <label>Row:</label><input type="text" d-model="{{internal.row}}" /><br />
+        <label>Column:</label><input type="text" d-model="{{internal.column}}" /><br />
+        <label>Value:</label><input type="text" d-model="{{internal.value}}" /><br />
+        <input type="button" value="Add" d-on-click="{{functionAdd}}" />
+        <input type="button" value="Remove" d-on-click="{{functionRemove}}" />
+        <input type="button" value="Clear" d-on-click="{{functionClear}}" />
+    </div>
+    <!--Cube-->
+    <div class="linkedCube">
+    <div><span style="left: 0px; color: green;">[p0,r0,c0] v000</span></div><div><span style="left: 40px; color: green;">[p0,r0,c1] v001 : 2 &lt;= (p0,r0,c0)</span></div><div><span style="left: 40px; color: green;">[p0,r0,c2] v002 : 2 &lt;= (p0,r0,c1)</span></div><div><span style="left: 20px; color: green;">[p0,r1,c0] w00 : 1 &lt;= (p0,r0,c0)</span></div><div><span style="left: 40px; color: green;">[p0,r1,c1] w01 : 2 &lt;= (p0,r1,c0)</span></div><div><span style="left: 40px; color: green;">[p0,r1,c2] w02 : 2 &lt;= (p0,r1,c1)</span></div><div><span style="left: 0px; color: green;">[p1,r0,c0] v100 : 0 &lt;= (p0,r0,c0)</span></div><div><span style="left: 40px; color: green;">[p1,r0,c1] v101 : 2 &lt;= (p1,r0,c0)</span></div><div><span style="left: 40px; color: green;">[p1,r0,c2] v102 : 2 &lt;= (p1,r0,c1)</span></div><div><span style="left: 20px; color: green;">[p1,r1,c0] w10 : 1 &lt;= (p1,r0,c0)</span></div><div><span style="left: 40px; color: green;">[p1,r1,c1] w11 : 2 &lt;= (p1,r1,c0)</span></div><div><span style="left: 40px; color: green;">[p1,r1,c2] w12 : 2 &lt;= (p1,r1,c1)</span></div><div><span style="left: 20px; color: green;">[p1,r3,c0] v130 : 1 &lt;= (p1,r1,c0)</span></div><div><span style="left: 40px; color: green;">[p1,r3,c1] v131 : 2 &lt;= (p1,r3,c0)</span></div><div><span style="left: 40px; color: green;">[p1,r3,c2] v132 : 2 &lt;= (p1,r3,c1)</span></div><div><span style="left: 20px; color: green;">[p1,r4,c0] n0 : 1 &lt;= (p1,r3,c0)</span></div><div><span style="left: 40px; color: green;">[p1,r4,c1] n1 : 2 &lt;= (p1,r4,c0)</span></div><div><span style="left: 40px; color: green;">[p1,r4,c2] n2 : 2 &lt;= (p1,r4,c1)</span></div><div><span style="left: 0px; color: green;">[p2,r0,c0] v200 : 0 &lt;= (p1,r0,c0)</span></div><div><span style="left: 40px; color: green;">[p2,r0,c1] v201 : 2 &lt;= (p2,r0,c0)</span></div><div><span style="left: 40px; color: green;">[p2,r0,c2] v202 : 2 &lt;= (p2,r0,c1)</span></div><div><span style="left: 20px; color: green;">[p2,r1,c0] w20 : 1 &lt;= (p2,r0,c0)</span></div><div><span style="left: 40px; color: green;">[p2,r1,c1] w21 : 2 &lt;= (p2,r1,c0)</span></div><div><span style="left: 40px; color: green;">[p2,r1,c2] w22 : 2 &lt;= (p2,r1,c1)</span></div><div><span style="left: 20px; color: green;">[p2,r3,c0] v230 : 1 &lt;= (p2,r1,c0)</span></div><div><span style="left: 40px; color: green;">[p2,r3,c1] v231 : 2 &lt;= (p2,r3,c0)</span></div><div><span style="left: 40px; color: green;">[p2,r3,c2] x : 2 &lt;= (p2,r3,c1)</span></div></div>
+</div>
+
+</body></html>

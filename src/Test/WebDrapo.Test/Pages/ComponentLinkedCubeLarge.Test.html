@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Component - LinkedCube</title>
+<link href="" rel="stylesheet" /><script src=""></script></head>
+<body>
+    <span>Component - LinkedCube</span>
+    <div d-sector="@" dc-type="large">
+    <!--Data-->
+    <div>
+        <div d-datakey="internal" d-datatype="object" d-dataproperty-page="p1" d-dataproperty-row="r1" d-dataproperty-column="c1" d-dataproperty-value="v1"></div>
+        <div d-datakey="functionAdd" d-datatype="value" d-dataloadtype="startup" d-datavalue="ExecuteInstanceFunction(,Add,,{{internal.page}},{{internal.row}},{{internal.column}},{{internal.value}})"></div>
+        <div d-datakey="functionRemove" d-datatype="value" d-dataloadtype="startup" d-datavalue="ExecuteInstanceFunction(,Remove,,{{internal.page}},{{internal.row}},{{internal.column}})"></div>
+        <div d-datakey="functionClear" d-datatype="value" d-dataloadtype="startup" d-datavalue="ExecuteInstanceFunction(,Clear)"></div>
+    </div>
+    <!--Input-->
+    <div>
+        <label>Page:</label><input type="text" d-model="{{internal.page}}" /><br />
+        <label>Row:</label><input type="text" d-model="{{internal.row}}" /><br />
+        <label>Column:</label><input type="text" d-model="{{internal.column}}" /><br />
+        <label>Value:</label><input type="text" d-model="{{internal.value}}" /><br />
+        <input type="button" value="Add" d-on-click="{{functionAdd}}" />
+        <input type="button" value="Remove" d-on-click="{{functionRemove}}" />
+        <input type="button" value="Clear" d-on-click="{{functionClear}}" />
+    </div>
+    <!--Cube-->
+    <div class="linkedCube">
+    <div><span>20000 added, 20000 found, 20000 linked, ordered: true, under 1 s: true</span></div></div>
+</div>
+
+</body></html>
