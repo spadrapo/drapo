@@ -1,9 +1,87 @@
 ﻿class DrapoLinkedCube<T> {
     private _head: DrapoLinkedCubeNode<T> = null;
+    //While every context has the same length and only strings, the nodes are found by their context and linked only when the structure is read
+    private _isIndexed: boolean = true;
+    private _contextLength: number = null;
+    private _nodesByContext: Map<string, DrapoLinkedCubeNode<T>> = new Map<string, DrapoLinkedCubeNode<T>>();
+    private _nodesToLink: Set<DrapoLinkedCubeNode<T>> = new Set<DrapoLinkedCubeNode<T>>();
+    private _nodesToUnlink: DrapoLinkedCubeNode<T>[] = [];
+
     public AddOrUpdate(context: string[], value: T): DrapoLinkedCubeNode<T> {
+        if ((!this._isIndexed) || (!this.IsContextIndexable(context))) {
+            this.DisableIndex();
+            return (this.AddOrUpdateLinked(context, value));
+        }
+        const key: string = this.CreateContextKey(context);
+        const nodeExisting: DrapoLinkedCubeNode<T> = this._nodesByContext.get(key);
+        if (nodeExisting != null) {
+            nodeExisting.Value = value;
+            return (nodeExisting);
+        }
+        if (this._nodesByContext.size === 0)
+            this._contextLength = context.length;
+        else if (this._contextLength !== context.length)
+            throw new Error('Drapo: The context to insert in linked cube must be the same lenght of the context lenght of head');
+        const node: DrapoLinkedCubeNode<T> = this.CreateNode(context, value);
+        this._nodesByContext.set(key, node);
+        this._nodesToLink.add(node);
+        return (node);
+    }
+
+    public Get(context: string[]): T {
+        if (this.IsContextIndexed(context)) {
+            const node: DrapoLinkedCubeNode<T> = this._nodesByContext.get(this.CreateContextKey(context));
+            return (node != null ? node.Value : null);
+        }
+        this.LinkNodes();
+        return (this.GetLinked(context));
+    }
+
+    public GetNode(context: string[]): DrapoLinkedCubeNode<T> {
+        if (this.IsContextIndexed(context))
+            return (this._nodesByContext.get(this.CreateContextKey(context)) ?? null);
+        this.LinkNodes();
+        return (this.GetNodeLinked(context));
+    }
+
+    public Clear(): void {
+        this._head = null;
+        this._isIndexed = true;
+        this._contextLength = null;
+        this._nodesByContext.clear();
+        this._nodesToLink.clear();
+        this._nodesToUnlink = [];
+    }
+
+    public Remove(context: string[]): DrapoLinkedCubeNode<T> {
+        if (!this.IsContextIndexed(context)) {
+            this.LinkNodes();
+            const nodeRemoved: DrapoLinkedCubeNode<T> = this.RemoveLinked(context);
+            if ((nodeRemoved !== null) && (this._isIndexed))
+                this.IndexNodesLinked();
+            return (nodeRemoved);
+        }
+        const key: string = this.CreateContextKey(context);
+        const node: DrapoLinkedCubeNode<T> = this._nodesByContext.get(key);
+        if (node == null)
+            return (null);
+        this._nodesByContext.delete(key);
+        if (this._nodesByContext.size === 0)
+            this.Clear();
+        else if (!this._nodesToLink.delete(node))
+            this._nodesToUnlink.push(node);
+        return (node);
+    }
+
+    public GetHead(): DrapoLinkedCubeNode<T> {
+        this.LinkNodes();
+        return (this._head);
+    }
+
+    private AddOrUpdateLinked(context: string[], value: T, nodeToLink: DrapoLinkedCubeNode<T> = null): DrapoLinkedCubeNode<T> {
         //Head
         if (this._head === null) {
-            this._head = this.CreateNode(context, value);
+            this._head = this.CreateNodeToLink(context, value, nodeToLink);
             return (this._head);
 
         }
@@ -20,7 +98,7 @@
             const contextValue: string = context[i];
             while ((compare = this.Compare(contextValue,node.Context[i])) !== 0) {
                 if (compare < 0) {
-                    const nodeNew: DrapoLinkedCubeNode<T> = this.CreateNode(context, value);
+                    const nodeNew: DrapoLinkedCubeNode<T> = this.CreateNodeToLink(context, value, nodeToLink);
                     this.AddNodeNext(nodeNew, node, i);
                     if (node === this._head) //Replaces head
                         this._head = nodeNew;
@@ -33,7 +111,7 @@
                     const nodeNext: DrapoLinkedCubeNode<T> = this.GetNodeNext(node, i);
                     if (nodeNext === null) {
                         //Inserting at the end of linked node
-                        const nodeNew: DrapoLinkedCubeNode<T> = this.CreateNode(context, value);
+                        const nodeNew: DrapoLinkedCubeNode<T> = this.CreateNodeToLink(context, value, nodeToLink);
                         this.AddNodeNext(node, nodeNew, i);
                         return (nodeNew);
                     } else {
@@ -47,7 +125,7 @@
         return (node);
     }
 
-    public Get(context: string[]): T {
+    private GetLinked(context: string[]): T {
         let entry: [DrapoLinkedCubeNode<T>, number] = null;
         let node: DrapoLinkedCubeNode<T> = this._head;
         let index: number = 0;
@@ -63,7 +141,7 @@
         return (null);
     }
 
-    public GetNode(context: string[]): DrapoLinkedCubeNode<T> {
+    private GetNodeLinked(context: string[]): DrapoLinkedCubeNode<T> {
         if (context == null)
             return (null);
         let entry: [DrapoLinkedCubeNode<T>,number] = null;
@@ -81,11 +159,7 @@
         return (null);
     }
 
-    public Clear(): void {
-        this._head = null;
-    }
-
-    public Remove(context: string[]): DrapoLinkedCubeNode<T> {
+    private RemoveLinked(context: string[]): DrapoLinkedCubeNode<T> {
         if (this._head === null)
             return (null);
         let node: DrapoLinkedCubeNode<T> = this._head;
@@ -126,8 +200,88 @@
         return (node);
     }
 
-    public GetHead(): DrapoLinkedCubeNode<T> {
-        return (this._head);
+    private IsContextIndexable(context: string[]): boolean {
+        if (context == null)
+            return (false);
+        for (let i: number = 0; i < context.length; i++)
+            if (typeof context[i] !== 'string')
+                return (false);
+        return (true);
+    }
+
+    private IsContextIndexed(context: string[]): boolean {
+        return ((this._isIndexed) && (context != null) && (context.length === this._contextLength) && (this.IsContextIndexable(context)));
+    }
+
+    private CreateContextKey(context: string[]): string {
+        return (JSON.stringify(context));
+    }
+
+    private DisableIndex(): void {
+        if (!this._isIndexed)
+            return;
+        this.LinkNodes();
+        this._isIndexed = false;
+        this._contextLength = null;
+        this._nodesByContext.clear();
+    }
+
+    private IndexNodesLinked(): void {
+        this._nodesByContext.clear();
+        const nodes: DrapoLinkedCubeNode<T>[] = this.ToList();
+        for (let i: number = 0; i < nodes.length; i++)
+            this._nodesByContext.set(this.CreateContextKey(nodes[i].Context), nodes[i]);
+        if (nodes.length === 0)
+            this.Clear();
+    }
+
+    private LinkNodes(): void {
+        const nodesChanged: number = this._nodesToLink.size + this._nodesToUnlink.length;
+        if (nodesChanged === 0)
+            return;
+        //Each change walks the linked nodes, so many changes on many nodes relink every node instead
+        const nodesCount: number = this._nodesByContext.size;
+        const nodesLinkedCount: number = nodesCount - this._nodesToLink.size + this._nodesToUnlink.length;
+        if (nodesChanged * nodesLinkedCount > 4 * nodesCount * Math.ceil(Math.log2(nodesCount + 2)))
+            this.RelinkNodes();
+        else
+            this.LinkNodesChanged();
+        this._nodesToLink.clear();
+        this._nodesToUnlink = [];
+    }
+
+    private LinkNodesChanged(): void {
+        for (let i: number = 0; i < this._nodesToUnlink.length; i++)
+            this.RemoveLinked(this._nodesToUnlink[i].Context);
+        const nodes: DrapoLinkedCubeNode<T>[] = [];
+        this._nodesToLink.forEach((node: DrapoLinkedCubeNode<T>) => nodes.push(node));
+        this.LinkNodesDescending(nodes);
+    }
+
+    private RelinkNodes(): void {
+        const nodes: DrapoLinkedCubeNode<T>[] = [];
+        this._nodesByContext.forEach((node: DrapoLinkedCubeNode<T>) => {
+            node.Next = null;
+            nodes.push(node);
+        });
+        this._head = null;
+        this.LinkNodesDescending(nodes);
+    }
+
+    private LinkNodesDescending(nodes: DrapoLinkedCubeNode<T>[]): void {
+        //A node linked before every other node only walks its own context
+        nodes.sort((nodeA: DrapoLinkedCubeNode<T>, nodeB: DrapoLinkedCubeNode<T>) => this.CompareContext(nodeB.Context, nodeA.Context));
+        for (let i: number = 0; i < nodes.length; i++)
+            this.AddOrUpdateLinked(nodes[i].Context, nodes[i].Value, nodes[i]);
+    }
+
+    private CompareContext(context1: string[], context2: string[]): number {
+        for (let i: number = 0; i < context1.length; i++) {
+            const compare: number = this.Compare(context1[i], context2[i]);
+            if (compare !== 0)
+                return (compare);
+        }
+        return (0);
     }
 
     private CreateNode(context: string[], value: T): DrapoLinkedCubeNode<T> {
@@ -135,6 +289,12 @@
         node.Context = context;
         node.Value = value;
         return (node);
+    }
+
+    private CreateNodeToLink(context: string[], value: T, nodeToLink: DrapoLinkedCubeNode<T>): DrapoLinkedCubeNode<T> {
+        if (nodeToLink !== null)
+            return (nodeToLink);
+        return (this.CreateNode(context, value));
     }
 
     private GetNextInContext(node: DrapoLinkedCubeNode<T>, context: string[], index : number): [DrapoLinkedCubeNode<T>,number] {
@@ -239,6 +399,7 @@
     }
 
     public ToList(node: DrapoLinkedCubeNode<T> = null): DrapoLinkedCubeNode<T>[] {
+        this.LinkNodes();
         const list: DrapoLinkedCubeNode<T>[] = [];
         const stack: DrapoLinkedCubeNode<T>[] = [];
         if (node === null)

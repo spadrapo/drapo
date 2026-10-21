@@ -359,6 +359,16 @@ namespace WebDrapo.Test
             ValidatePage("ComponentLinkedCubeRemove");
         }
         [TestCase]
+        public void ComponentLinkedCubeBatchTest()
+        {
+            ValidatePage("ComponentLinkedCubeBatch");
+        }
+        [TestCase]
+        public void ComponentLinkedCubeLargeTest()
+        {
+            ValidatePage("ComponentLinkedCubeLarge");
+        }
+        [TestCase]
         public void ComponentMenuApplicationComponentTest()
         {
             ValidatePage("ComponentMenuApplicationComponent");

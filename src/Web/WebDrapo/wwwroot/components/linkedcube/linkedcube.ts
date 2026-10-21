@@ -43,7 +43,57 @@ class LinkedCube {
             await this.Remove('p2','','');
             await this.Remove('p1', 'r2', 'c1');
             await this.Remove('p0', 'r1', '');
+        } else if (type === 'batch') {
+            await this.ChangeBatch();
+        } else if (type === 'large') {
+            await this.AddLarge(20000);
         }
+    }
+
+    private async ChangeBatch(): Promise<void> {
+        const pages: string[] = ['p0', 'p1', 'p2'];
+        const rows: string[] = ['r0', 'r1', 'r2', 'r3'];
+        const columns: string[] = ['c0', 'c1', 'c2'];
+        for (let c: number = columns.length - 1; c >= 0; c--)
+            for (let r: number = 0; r < rows.length; r++)
+                for (let p: number = 0; p < pages.length; p++)
+                    this._cube.AddOrUpdate([pages[(p + r) % pages.length], rows[r], columns[c]], 'v' + p + r + c);
+        this._cube.GetHead();
+        //Many changes between two reads of the linked nodes
+        for (let p: number = 0; p < pages.length; p++) {
+            for (let c: number = 0; c < columns.length; c++) {
+                this._cube.Remove([pages[p], 'r1', columns[c]]);
+                this._cube.Remove([pages[p], 'r2', columns[c]]);
+                this._cube.AddOrUpdate([pages[p], 'r1', columns[c]], 'w' + p + c);
+            }
+        }
+        for (let c: number = 0; c < columns.length; c++)
+            this._cube.AddOrUpdate(['p1', 'r4', columns[c]], 'n' + c);
+        this._cube.GetNode(['p2', 'r3', 'c2']).Value = 'x';
+        this._cube.Remove(['p0', 'r3']);
+        await this.Render();
+    }
+
+    private async AddLarge(count: number): Promise<void> {
+        const start: number = performance.now();
+        const contexts: string[][] = [];
+        for (let i: number = 0; i < count; i++)
+            contexts.push(['p1', 'r' + (100000 + i), 'c1']);
+        for (let i: number = 0; i < count; i++)
+            if (this._cube.GetNode(contexts[i]) === null)
+                this._cube.AddOrUpdate(contexts[i], 'v' + i);
+        let found: number = 0;
+        for (let i: number = 0; i < count; i++)
+            if (this._cube.Get(contexts[i]) === 'v' + i)
+                found++;
+        const nodes: DrapoLinkedCubeNode<string>[] = this._cube.ToList();
+        let isOrdered: boolean = true;
+        for (let i: number = 1; i < nodes.length; i++)
+            if (nodes[i - 1].Context[1] >= nodes[i].Context[1])
+                isOrdered = false;
+        //Each operation walking the cube takes seconds here, constant-time operations a few milliseconds
+        const isFast: boolean = (performance.now() - start) < 1000;
+        this.RenderText(count + ' added, ' + found + ' found, ' + nodes.length + ' linked, ordered: ' + isOrdered + ', under 1 s: ' + isFast);
     }
 
     private GetElementCube(): HTMLDivElement {
@@ -81,6 +131,14 @@ class LinkedCube {
         const node: DrapoLinkedCubeNode<string> = this._cube.GetHead();
         this.InsertNodeElement(fragment, node, null, 0, 0);
         elCube.appendChild(fragment);
+    }
+
+    private RenderText(text: string): void {
+        const elDiv: HTMLDivElement = document.createElement('div');
+        const elSpan: HTMLSpanElement = document.createElement('span');
+        elSpan.textContent = text;
+        elDiv.appendChild(elSpan);
+        this.GetElementCube().appendChild(elDiv);
     }
 
     private InsertNodeElement(fragment: DocumentFragment, node: DrapoLinkedCubeNode<string>, nodePrevious: DrapoLinkedCubeNode<string>, index: number, identation: number): void {
