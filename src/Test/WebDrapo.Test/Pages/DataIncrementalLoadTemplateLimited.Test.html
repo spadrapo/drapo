@@ -7,7 +7,7 @@
         <span>Data - Incremental Load Limited</span>
         <div d-datakey="items" d-datalazy="true" d-datalazystart="0" d-datalazyincrement="5" d-dataurlget="/Data/GetData?start={{start}}&amp;length={{increment}}&amp;max=14"></div>
         <div d-datakey="itemsInternal" d-dataurlget="/Data/GetLevels?levels=1&amp;children=2&amp;prefix=I"></div>
-        <div>
+        <div style="height: 1500px; overflow: auto;">
             <div d-for="item in items" style="display: none;">
                 <span d-model="{{item.Key}}"></span>
                 <div>

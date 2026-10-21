@@ -89,7 +89,8 @@ jobs:
             $failed = @($trx.TestRun.Results.UnitTestResult | Where-Object outcome -eq 'Failed' | ForEach-Object testName)
             if ($failed.Count -eq 0 -or $failed.Count -gt 10) { exit 1 }
             Write-Host "::warning::Re-running $($failed.Count) failed test(s): $($failed -join ', ')"
-            dotnet @test --logger 'trx;LogFileName=retry.trx' --filter (($failed | ForEach-Object { "Name=$_" }) -join '|')
+            # Test names end in "()" and ( ) & | = ! ~ \ are --filter syntax, so they are escaped with a backslash.
+            dotnet @test --logger 'trx;LogFileName=retry.trx' --filter (($failed | ForEach-Object { 'Name=' + ($_ -replace '[\\()&|=!~]', '\$0') }) -join '|')
           }
 
       - uses: actions/upload-artifact@v7
