@@ -82,15 +82,6 @@ jobs:
           $test = 'test', 'src/Test/WebDrapo.Test/WebDrapo.Test.csproj', '--configuration', 'Release', '--no-build',
             '--settings', 'src/Test/WebDrapo.Test/Test.Debug.runsettings', '--results-directory', 'TestResults'
           dotnet @test --logger 'trx;LogFileName=tests.trx'
-          if ($LASTEXITCODE -ne 0) {
-            # A few Selenium tests are timing-sensitive and fail now and then in a full run, so failures are re-run once
-            # on their own. Many failures at once means something is really broken and is not retried.
-            [xml]$trx = Get-Content TestResults/tests.trx
-            $failed = @($trx.TestRun.Results.UnitTestResult | Where-Object outcome -eq 'Failed' | ForEach-Object testName)
-            if ($failed.Count -eq 0 -or $failed.Count -gt 10) { exit 1 }
-            Write-Host "::warning::Re-running $($failed.Count) failed test(s): $($failed -join ', ')"
-            dotnet @test --logger 'trx;LogFileName=retry.trx' --filter (($failed | ForEach-Object { "Name=$_" }) -join '|')
-          }
 
       - uses: actions/upload-artifact@v7
         if: failure() && steps.test.outcome == 'failure'
