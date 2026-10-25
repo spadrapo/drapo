@@ -1649,6 +1649,11 @@ namespace WebDrapo.Test
             ValidatePage("FunctionPostDataItem");
         }
         [TestCase]
+        public void FunctionPostDataObjectNestedTest()
+        {
+            ValidatePage("FunctionPostDataObjectNested");
+        }
+        [TestCase]
         public void FunctionRemoveDataItemLookupTest()
         {
             ValidatePage("FunctionRemoveDataItemLookup");
@@ -1667,6 +1672,11 @@ namespace WebDrapo.Test
         public void FunctionRemoveDataItemMustacheTest()
         {
             ValidatePage("FunctionRemoveDataItemMustache");
+        }
+        [TestCase]
+        public void FunctionRemoveDataItemMustacheWithoutContextTest()
+        {
+            ValidatePage("FunctionRemoveDataItemMustacheWithoutContext");
         }
         [TestCase]
         public void FunctionRemoveDataItemWithoutContextTest()
