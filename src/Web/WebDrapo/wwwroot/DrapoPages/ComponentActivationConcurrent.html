@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <script>
+        window.addEventListener('error', function (e) { document.getElementById('pageErrors').textContent += e.message + ';'; });
+        function countIncrementScripts() {
+            return (document.querySelectorAll('script[src*="components/increment/"]').length);
+        }
+        async function activateConcurrent() {
+            var register = drapo.Register;
+            var server = drapo.Server;
+            // First activation fails while resolving the script url
+            var appendUrl = server.AppendUrlQueryStringCacheStatic;
+            server.AppendUrlQueryStringCacheStatic = function (url) {
+                server.AppendUrlQueryStringCacheStatic = appendUrl;
+                return (Promise.reject(new Error('Activation failed')));
+            };
+            try {
+                await register.ActivateComponent('d-increment');
+            } catch (e) {
+                document.getElementById('failedError').textContent = e.message;
+            }
+            document.getElementById('failedActive').textContent = register.IsActiveComponent('d-increment');
+            document.getElementById('failedScripts').textContent = countIncrementScripts();
+            // Retry with two concurrent activations of the same tag
+            await Promise.all([register.ActivateComponent('d-increment'), register.ActivateComponent('d-increment')]);
+            document.getElementById('retryActive').textContent = register.IsActiveComponent('d-increment');
+            document.getElementById('retryScripts').textContent = countIncrementScripts();
+        }
+    </script>
+    <title>Component - Activation Concurrent</title>
+</head>
+<body>
+    <span>Component - Activation Concurrent</span>
+    <br />
+    <span>Page errors: </span><span id="pageErrors"></span>
+    <br />
+    <span>Failed activation error: </span><span id="failedError"></span>
+    <br />
+    <span>Failed activation active: </span><span id="failedActive"></span>
+    <br />
+    <span>Failed activation scripts: </span><span id="failedScripts"></span>
+    <br />
+    <span>Concurrent activation active: </span><span id="retryActive"></span>
+    <br />
+    <span>Concurrent activation scripts: </span><span id="retryScripts"></span>
+    <br />
+    <input type="button" driverunittest="click" value="Activate" onclick="activateConcurrent()" />
+</body>
+</html>

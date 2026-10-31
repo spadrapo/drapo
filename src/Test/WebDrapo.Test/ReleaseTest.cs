@@ -269,6 +269,11 @@ namespace WebDrapo.Test
             ValidatePage("Cloak");
         }
         [TestCase]
+        public void ComponentActivationConcurrentTest()
+        {
+            ValidatePage("ComponentActivationConcurrent");
+        }
+        [TestCase]
         public void ComponentContentTest()
         {
             ValidatePage("ComponentContent");

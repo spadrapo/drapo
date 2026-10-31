@@ -2,6 +2,7 @@
     //Field
     private _application: DrapoApplication;
     private _components: string[] = [];
+    private _componentsActivation: { [tagName: string]: Promise<void> } = {};
     private _cacheKeys: string[] = [];
     private _cacheDatas: string[] = [];
 
@@ -42,16 +43,52 @@
 
     public async ActivateComponent(tagName : string) : Promise<void>
     {
-        const component: any = await this.GetRegisteredComponent(tagName);
+        // A concurrent caller awaits the activation in progress instead of appending the files again
+        const activation: Promise<void> = this._componentsActivation[tagName];
+        if (activation != null)
+            return (await activation);
+        if (this.IsActiveComponent(tagName))
+            return;
+        // Mark as active before the first await so a concurrent resolution of the same tag does not load it twice
         this._components.push(tagName);
+        const activationNew: Promise<void> = this.ActivateComponentFiles(tagName);
+        this._componentsActivation[tagName] = activationNew;
+        try {
+            await activationNew;
+        } catch (e) {
+            // A failed activation can be retried
+            this.UnmarkComponentAsActive(tagName);
+            throw e;
+        } finally {
+            delete this._componentsActivation[tagName];
+        }
+    }
+
+    private async ActivateComponentFiles(tagName: string): Promise<void>
+    {
+        const component: any = await this.GetRegisteredComponent(tagName);
+        // Resolve every url before appending, so a failure leaves nothing on the page
+        const files: [any, string][] = [];
         for (let i: number = 0; i < component.Files.length; i++)
         {
             const file: any = component.Files[i];
-            if (file.Type === 2)
-                await this.ActivateComponentFileScript(component, file);
-            else if (file.Type === 1)
-                await this.ActivateComponentFileStyle(component, file);
+            if ((file.Type === 2) || (file.Type === 1))
+                files.push([file, this.Application.Server.ResolveUrl(await this.GetComponentFileUrl(component, file))]);
         }
+        for (let i: number = 0; i < files.length; i++)
+        {
+            const [file, url] = files[i];
+            if (file.Type === 2)
+                this.ActivateComponentFileScript(url);
+            else
+                this.ActivateComponentFileStyle(url);
+        }
+    }
+
+    private UnmarkComponentAsActive(tagName: string): void {
+        const index: number = this._components.indexOf(tagName);
+        if (index >= 0)
+            this._components.splice(index, 1);
     }
 
     public MarkComponentAsActive(tagName: string): void {
@@ -59,20 +96,16 @@
             this._components.push(tagName);
     }
 
-    private async ActivateComponentFileScript(component: any, file : any) : Promise<void>
+    private ActivateComponentFileScript(url: string): void
     {
-        const relatedUrl: string = await this.GetComponentFileUrl(component, file);
-        const url: string = this.Application.Server.ResolveUrl(relatedUrl);
         const script: HTMLScriptElement = document.createElement('script');
         script.src = url;
         script.async = false;
         document.head.appendChild(script);
     }
 
-    private async ActivateComponentFileStyle(component: any, file: any): Promise<void>
+    private ActivateComponentFileStyle(url: string): void
     {
-        const relatedUrl: string = await this.GetComponentFileUrl(component, file);
-        const url: string = this.Application.Server.ResolveUrl(relatedUrl);
         const link: HTMLLinkElement = document.createElement('link');
         link.href = url;
         link.rel = 'stylesheet';
