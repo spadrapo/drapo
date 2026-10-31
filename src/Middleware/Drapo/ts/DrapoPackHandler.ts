@@ -87,20 +87,19 @@ class DrapoPackHandler {
                 continue;
             // Component assets already on the page (activated before the pack landed) are not appended again
             const tagName: string = componentTags[this.NormalizeFileUrl(file.path)];
-            const skipAssets: boolean = (tagName != null) && (this.IsComponentAssetsLoaded(tagName, componentsActivated));
+            const skipAssets: boolean = (tagName != null) && (await this.IsComponentAssetsLoaded(tagName, componentsActivated));
             // Place the file content in the correct location
             await this.ProcessPackFile(file.path, file.content, skipAssets);
         }
     }
 
-    private IsComponentAssetsLoaded(tagName: string, componentsActivated: string[]): boolean {
+    private async IsComponentAssetsLoaded(tagName: string, componentsActivated: string[]): Promise<boolean> {
         // Components activated by this pack keep receiving their remaining files
         if (componentsActivated.indexOf(tagName) !== -1)
             return (false);
-        if (this.Application.Register.IsActiveComponent(tagName))
-            return (true);
         // Mark as active before appending the first file so a concurrent activation does not load the files again
-        this.Application.Register.MarkComponentAsActive(tagName);
+        if (!await this.Application.Register.TryMarkComponentAsActive(tagName))
+            return (true);
         componentsActivated.push(tagName);
         return (false);
     }

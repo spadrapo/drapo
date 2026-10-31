@@ -64,6 +64,24 @@
         }
     }
 
+    public async TryMarkComponentAsActive(tagName: string): Promise<boolean>
+    {
+        // Waits for the activations in progress, then decides without yielding so no other activation can start in between
+        let activation: Promise<void> = this._componentsActivation[tagName];
+        while (activation != null) {
+            try {
+                await activation;
+            } catch (e) {
+                // The caller of ActivateComponent receives the error
+            }
+            activation = this._componentsActivation[tagName];
+        }
+        if (this.IsActiveComponent(tagName))
+            return (false);
+        this._components.push(tagName);
+        return (true);
+    }
+
     private async ActivateComponentFiles(tagName: string): Promise<void>
     {
         const component: any = await this.GetRegisteredComponent(tagName);
