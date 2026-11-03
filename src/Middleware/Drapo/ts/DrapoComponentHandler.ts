@@ -63,8 +63,7 @@ class DrapoComponentHandler {
             return;
         }
         //Activate
-        if (!this.Application.Register.IsActiveComponent(tagName))
-            await this.Application.Register.ActivateComponent(tagName);
+        await this.Application.Register.ActivateComponent(tagName);
         //Content
         const html: string = await this.Application.Register.GetRegisteredComponentViewContent(tagName);
         if (html == null) {
