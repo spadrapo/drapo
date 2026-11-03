@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Conditional ContainsDataItem with Negation</title>
+</head>
+<body>
+    <span>Conditional ContainsDataItem with Negation</span>
+    
+    <!-- Test data setup similar to the reported issue -->
+    <div d-datakey="panelUserFeatures" d-datatype="array" d-datavalue='[30, 31, 35, 66, 67, 68, 69, 70, 71, 72, 74, 75, 77, 78, 79, 80, 82, 83, 84, 85, 86, 87, 89, 90]'></div>
+    <div d-datakey="panelSecurityUserNewOrEditObjectSave" d-datatype="object" d-dataproperty-isblocked-name="IsBlocked" d-dataproperty-isblocked-value="true"></div>
+    
+    <div>
+        <h3>Test Cases:</h3>
+        
+        <!-- Case 1: Working - Direct negation without parentheses -->
+        <div class="test-case">
+            <label>Case 1 (Working): !ContainsDataItem without parentheses</label>
+            <input d-class="{switch, disabled:!ContainsDataItem({{panelUserFeatures}},81)}" type="checkbox" />
+            <span>Should be disabled (feature 81 not in list)</span>
+        </div>
+        
+        <!-- Case 2: Working - IF wrapper without negation inside -->
+        <div class="test-case">
+            <label>Case 2 (Working): !IF(ContainsDataItem...)</label>
+            <input d-class="{switch, disabled:!IF(ContainsDataItem({{panelUserFeatures}},81))}" type="checkbox" />
+            <span>Should be disabled (feature 81 not in list)</span>
+        </div>
+        
+        <!-- Case 3: Failing - IF with negation inside -->
+        <div class="test-case">
+            <label>Case 3 (Failing): IF(!ContainsDataItem...)</label>
+            <input d-class="{switch, disabled:IF(!ContainsDataItem({{panelUserFeatures}},81))}" type="checkbox" />
+            <span>Should be disabled (feature 81 not in list)</span>
+        </div>
+        
+        <!-- Case 3a: Testing simple IF with negation parameter -->
+        <div class="test-case">
+            <label>Case 3a (Test): IF(!true)</label>
+            <input d-class="{switch, disabled:IF(!true)}" type="checkbox" />
+            <span>Should be disabled (false result)</span>
+        </div>
+        
+        <!-- Case 4: Complex condition - both ContainsDataItem and IsBlocked check -->
+        <div class="test-case">
+            <label>Case 4 (Target): Complex condition with both checks</label>
+            <input d-class="{switch, disabled:!ContainsDataItem({{panelUserFeatures}},81)&&{{panelSecurityUserNewOrEditObjectSave.IsBlocked}}}" type="checkbox" />
+            <span>Should be disabled (no feature AND user is blocked)</span>
+        </div>
+        
+        <!-- Case 5: Alternative complex condition with IF -->
+        <div class="test-case">
+            <label>Case 5 (Alternative): IF wrapper for complex condition</label>
+            <input d-class="{switch, disabled:IF(!ContainsDataItem({{panelUserFeatures}},81)&&{{panelSecurityUserNewOrEditObjectSave.IsBlocked}})}" type="checkbox" />
+            <span>Should be disabled (no feature AND user is blocked)</span>
+        </div>
+        
+        <!-- Test with feature that exists -->
+        <div class="test-case">
+            <label>Case 6 (Control): Feature that exists (should be enabled)</label>
+            <input d-class="{switch, disabled:!ContainsDataItem({{panelUserFeatures}},80)}" type="checkbox" />
+            <span>Should be enabled (feature 80 exists in list)</span>
+        </div>
+    </div>
+    
+    <style>
+        .test-case {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        .switch {
+            margin-right: 10px;
+        }
+        
+        .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</body>
+</html>
