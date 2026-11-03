@@ -1804,6 +1804,11 @@ namespace WebDrapo.Test
             ValidatePage("InputDelay");
         }
         [TestCase]
+        public void MessageBeforeLoadTest()
+        {
+            ValidatePage("MessageBeforeLoad");
+        }
+        [TestCase]
         public void MessageExecuteAsyncTest()
         {
             ValidatePage("MessageExecuteAsync");
