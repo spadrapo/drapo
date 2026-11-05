@@ -5,9 +5,9 @@
         function showPageErrors() { var el = document.getElementById('pageErrors'); if (el != null) el.textContent = pageErrors.join(';'); }
         window.addEventListener('error', function (e) { pageErrors.push(e.message); showPageErrors(); });
         document.addEventListener('DOMContentLoaded', showPageErrors);
-        // Posted before the load event, so it reaches Drapo's message listener before window.drapo exists
-        window.postMessage({ source: 'extension' }, '*');
-        window.postMessage('extension', '*');
+        // Dispatched synchronously while the head is parsed, so Drapo's message listener runs before window.drapo exists
+        window.dispatchEvent(new MessageEvent('message', { data: { source: 'extension' } }));
+        window.dispatchEvent(new MessageEvent('message', { data: 'extension' }));
     </script>
     <title>Message - Before Load</title>
 </head>
