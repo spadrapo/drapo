@@ -287,6 +287,8 @@ window.addEventListener("load", () => {
 window.addEventListener("popstate", (e : Event) => {
     const windowAny: any = window as any;
     const application: DrapoApplication = windowAny.drapo as DrapoApplication;
+    if (application == null)
+        return;
     // tslint:disable-next-line:no-floating-promises
     application.Router.OnPopState(e);
 });
@@ -294,6 +296,9 @@ window.addEventListener("popstate", (e : Event) => {
 window.addEventListener('message', (event) => {
     const windowAny: any = window as any;
     const application: DrapoApplication = windowAny.drapo as DrapoApplication;
+    // Messages posted before the load event (e.g. by browser extensions) arrive before drapo exists
+    if (application == null)
+        return;
     const message: any = event.data;
     if ((message != null) && (typeof message === 'object') && (typeof message.type === 'string') && (message.type.indexOf('drapo-bridge:') === 0))
         return;

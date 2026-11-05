@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html><html><head>
+    <script src="/drapo.js"></script>
+    <script>
+        var pageErrors = [];
+        function showPageErrors() { var el = document.getElementById('pageErrors'); if (el != null) el.textContent = pageErrors.join(';'); }
+        window.addEventListener('error', function (e) { pageErrors.push(e.message); showPageErrors(); });
+        document.addEventListener('DOMContentLoaded', showPageErrors);
+        // Dispatched synchronously while the head is parsed, so Drapo's message listener runs before window.drapo exists
+        window.dispatchEvent(new MessageEvent('message', { data: { source: 'extension' } }));
+        window.dispatchEvent(new MessageEvent('message', { data: 'extension' }));
+    </script>
+    <title>Message - Before Load</title>
+</head>
+<body>
+    <span>Message - Before Load</span>
+    <br>
+    <span>Page errors: </span><span id="pageErrors"></span>
+    <br>
+    <div d-datakey="messageData" d-datatype="object" d-datavalue="{&quot;status&quot;: &quot;Loaded&quot;}"></div>
+    <span d-model="{{messageData.status}}">Loaded</span>
+
+
+</body></html>
