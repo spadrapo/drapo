@@ -20,7 +20,10 @@ namespace Sysphera.Middleware.Drapo.Request
         }
         public string Get(string key)
         {
-            if(!this._context.HttpContext.Request.Headers.TryGetValue(key, out StringValues values))
+            HttpContext httpContext = this._context.HttpContext;
+            if (httpContext == null)
+                return (null);
+            if(!httpContext.Request.Headers.TryGetValue(key, out StringValues values))
                 return (null);
             return (values.ToString());
         }
@@ -44,7 +47,10 @@ namespace Sysphera.Middleware.Drapo.Request
             string domainRegex = this._options.Config.DomainRegex;
             if (string.IsNullOrEmpty(domainRegex))
                 return (string.Empty);
-            string host = this._context.HttpContext.Request.Host.Host;
+            HttpContext httpContext = this._context.HttpContext;
+            if (httpContext == null)
+                return (string.Empty);
+            string host = httpContext.Request.Host.Host;
             if (string.IsNullOrEmpty(host))
                 return (string.Empty);
             Match match = Regex.Match(host, domainRegex);
