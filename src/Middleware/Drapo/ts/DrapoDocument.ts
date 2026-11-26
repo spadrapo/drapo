@@ -1086,8 +1086,6 @@ class DrapoDocument {
                 return;
             //Events
             this.ApplyNodeEventsDifferences(nodeOld, nodeNew);
-            //Special
-            this.ApplyNodeSpecialDifferences(nodeOld, nodeNew);
             //Attributes
             this.ApplyNodeAttributesDifferences(nodeOld, nodeNew);
             //Children
@@ -1098,14 +1096,20 @@ class DrapoDocument {
             if ((lengthOld === 0) && (lengthNew === 0)) {
                 if (nodeOld.textContent !== nodeNew.textContent)
                     nodeOld.textContent = nodeNew.textContent;
-            } else if ((lengthOld === 0) || (lengthNew === 0) || (this.HasDirectText(nodeOld)) || (this.HasDirectText(nodeNew))) {
-                //Content shape differs (text vs elements) or mixes text with elements: patching children by position would leave stale text behind
+            } else if ((lengthOld === 0) || (lengthNew === 0)) {
+                //Content shape differs (text vs elements): patching element children by position would leave stale or missing text
                 this.ReplaceNodeContent(nodeOld, nodeNew);
+            } else if ((this.HasDirectText(nodeOld)) || (this.HasDirectText(nodeNew))) {
+                //Text mixed with elements: patch every child node when both sides line up, otherwise take the new content
+                if (!this.ApplyNodeMixedDifferences(nodeOld, nodeNew, isHTML))
+                    this.ReplaceNodeContent(nodeOld, nodeNew);
             } else {
                 for (let i = 0; i < lengthNew || i < lengthOld; i++) {
                     this.ApplyNodeDifferences(nodeOld, childrenOld[i], childrenNew[i], isHTML);
                 }
             }
+            //Special (after the children, so a select already has the option its value refers to)
+            this.ApplyNodeSpecialDifferences(nodeOld, nodeNew);
         }
     }
 
@@ -1117,6 +1121,26 @@ class DrapoDocument {
                 return (true);
         }
         return (false);
+    }
+
+    private ApplyNodeMixedDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement, isHTML: boolean): boolean {
+        const childNodesOld: Array<Node> = [].slice.call(nodeOld.childNodes);
+        const childNodesNew: Array<Node> = [].slice.call(nodeNew.childNodes);
+        if (childNodesOld.length !== childNodesNew.length)
+            return (false);
+        for (let i: number = 0; i < childNodesOld.length; i++) {
+            if (childNodesOld[i].nodeType !== childNodesNew[i].nodeType)
+                return (false);
+        }
+        for (let i: number = 0; i < childNodesOld.length; i++) {
+            const childNodeOld: Node = childNodesOld[i];
+            const childNodeNew: Node = childNodesNew[i];
+            if (childNodeOld.nodeType === Node.ELEMENT_NODE)
+                this.ApplyNodeDifferences(nodeOld, childNodeOld as HTMLElement, childNodeNew as HTMLElement, isHTML);
+            else if (childNodeOld.textContent !== childNodeNew.textContent)
+                childNodeOld.textContent = childNodeNew.textContent;
+        }
+        return (true);
     }
 
     private ReplaceNodeContent(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
