@@ -504,6 +504,17 @@ namespace WebDrapo.Test
             ValidatePage("ControlFlowForDifferenceLeafAsync");
         }
         [TestCase]
+        public void ControlFlowForDifferenceSelectAsyncTest()
+        {
+            // The difference patch moves option nodes that only exist in the new select into the old one, so the
+            // select value must be read from the new node before its children are patched. The page source does not
+            // carry the selected value, so it is checked on the live elements after the render comparison.
+            ValidatePage("ControlFlowForDifferenceSelectAsync");
+            IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
+            string values = (string)js.ExecuteScript("return(Array.prototype.slice.call(document.querySelectorAll('select.row-select')).filter(function(s){ return(s.offsetParent !== null); }).map(function(s){ return(s.value); }).join(','));");
+            Assert.That(values, Is.EqualTo("c,b"), "Each select must keep the value rendered for its row after the difference patch.");
+        }
+        [TestCase]
         public void ControlFlowForAttributeTest()
         {
             ValidatePage("ControlFlowForAttribute");

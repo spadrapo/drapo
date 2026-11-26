@@ -1088,6 +1088,8 @@ class DrapoDocument {
             this.ApplyNodeEventsDifferences(nodeOld, nodeNew);
             //Attributes
             this.ApplyNodeAttributesDifferences(nodeOld, nodeNew);
+            //Select value is read before the children: patching them can move option nodes out of nodeNew, which changes nodeNew.value
+            const selectValueNew: string = this.IsSelect(nodeNew) ? (nodeNew as HTMLSelectElement).value : null;
             //Children
             const childrenOld: Array<HTMLElement> = nodeOld != null ? [].slice.call(nodeOld.children) : [];
             const childrenNew: Array<HTMLElement> = nodeNew != null ? [].slice.call(nodeNew.children) : [];
@@ -1109,7 +1111,7 @@ class DrapoDocument {
                 }
             }
             //Special (after the children, so a select already has the option its value refers to)
-            this.ApplyNodeSpecialDifferences(nodeOld, nodeNew);
+            this.ApplyNodeSpecialDifferences(nodeOld, nodeNew, selectValueNew);
         }
     }
 
@@ -1171,12 +1173,16 @@ class DrapoDocument {
         this.Application.EventHandler.SyncNodeEventsDifferences(nodeOld, nodeNew);
     }
 
-    private ApplyNodeSpecialDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
+    private IsSelect(node: HTMLElement): boolean {
+        return (node.tagName.toLowerCase() === "select");
+    }
+
+    private ApplyNodeSpecialDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement, selectValueNew: string): void {
         const tag: string = nodeOld.tagName.toLowerCase();
         if (tag === "input")
             this.ApplyNodeSpecialDifferencesInput(nodeOld as HTMLInputElement, nodeNew as HTMLInputElement);
         else if (tag === "select")
-            this.ApplyNodeSpecialDifferencesSelect(nodeOld as HTMLSelectElement, nodeNew as HTMLSelectElement);
+            this.ApplyNodeSpecialDifferencesSelect(nodeOld as HTMLSelectElement, selectValueNew);
         else if (tag === "textarea")
             this.ApplyNodeSpecialDifferencesTextarea(nodeOld as HTMLInputElement, nodeNew as HTMLInputElement);
     }
@@ -1189,9 +1195,9 @@ class DrapoDocument {
             nodeOld.value = nodeNew.value;
     }
 
-    private ApplyNodeSpecialDifferencesSelect(nodeOld: HTMLSelectElement, nodeNew: HTMLSelectElement): void {
-        if (nodeOld.value !== nodeNew.value)
-            nodeOld.value = nodeNew.value;
+    private ApplyNodeSpecialDifferencesSelect(nodeOld: HTMLSelectElement, valueNew: string): void {
+        if (nodeOld.value !== valueNew)
+            nodeOld.value = valueNew;
     }
 
     private ApplyNodeSpecialDifferencesTextarea(nodeOld: HTMLInputElement, nodeNew: HTMLInputElement): void {
