@@ -529,6 +529,50 @@ namespace WebDrapo.Test
             ValidatePage("ControlFlowForDataField");
         }
         [TestCase]
+        public void ControlFlowForDifferenceHeaderAsyncTest()
+        {
+            ValidatePage("ControlFlowForDifferenceHeaderAsync");
+        }
+        [TestCase]
+        public void ControlFlowForDifferenceLeafAsyncTest()
+        {
+            ValidatePage("ControlFlowForDifferenceLeafAsync");
+        }
+        [TestCase]
+        public void ControlFlowForDifferenceMixedIdentityTest()
+        {
+            // A d-for row mixes direct text with elements, and a d-if sibling toggles across a difference re-render,
+            // so the old and new child nodes do not line up. The text must be updated and the elements that line up
+            // (the input) must be kept, not replaced: a replaced input loses its validation state, focus and widgets.
+            string pageUrl = string.Format("{0}DrapoPages/{1}.html", VirtualDirectory, "ControlFlowForDifferenceMixedIdentity");
+            Driver.Navigate().GoToUrl(pageUrl);
+            IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
+            for (int i = 0; i < 20; i++)
+            {
+                bool loaded = (bool)js.ExecuteScript("return(drapo._isLoaded);");
+                if (loaded)
+                    break;
+                System.Threading.Thread.Sleep(100);
+            }
+            // Mark the live inputs: only the same node still carries the mark after the re-render.
+            js.ExecuteScript("Array.prototype.slice.call(document.querySelectorAll('input.row-input')).forEach(function(el){ el.__kept = true; });");
+            Driver.FindElement(By.CssSelector("input.row-update")).Click();
+            System.Threading.Thread.Sleep(1000);
+            string rows = (string)js.ExecuteScript("return(Array.prototype.slice.call(document.querySelectorAll('div.row')).filter(function(r){ return(r.offsetParent !== null); }).map(function(r){ var input = r.querySelector('input.row-input'); return(r.textContent.replace(/\\s+/g, ' ').trim() + '|' + ((input !== null) && (input.__kept === true))); }).join(';'));");
+            Assert.That(rows, Is.EqualTo("Qty C: !|true;Qty D:|true"), "The row text must be updated and the input must be the same node after the difference patch.");
+        }
+        [TestCase]
+        public void ControlFlowForDifferenceSelectAsyncTest()
+        {
+            // The difference patch moves option nodes that only exist in the new select into the old one, so the
+            // select value must be read from the new node before its children are patched. The page source does not
+            // carry the selected value, so it is checked on the live elements after the render comparison.
+            ValidatePage("ControlFlowForDifferenceSelectAsync");
+            IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
+            string values = (string)js.ExecuteScript("return(Array.prototype.slice.call(document.querySelectorAll('select.row-select')).filter(function(s){ return(s.offsetParent !== null); }).map(function(s){ return(s.value); }).join(','));");
+            Assert.That(values, Is.EqualTo("c,b,a"), "Each select must keep the value rendered for its row after the difference patch.");
+        }
+        [TestCase]
         public void ControlFlowForDictionaryTest()
         {
             ValidatePage("ControlFlowForDictionary");

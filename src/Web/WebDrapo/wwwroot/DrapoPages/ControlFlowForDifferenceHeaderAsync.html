@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For Difference Header Async</title>
+</head>
+<body>
+    <span>Control Flow For Difference Header Async</span>
+    <div d-dataKey="cards" d-dataType="array" d-dataValue='[{"title":"Card A","header":false},{"title":"Card B","header":true}]'></div>
+    <div d-dataKey="cardsHeader" d-dataType="array" d-dataValue='[{"title":"Card C","header":true},{"title":"Card D","header":false}]'></div>
+    <div d-dataKey="cardsNoHeader" d-dataType="array" d-dataValue='[{"title":"Card E","header":false},{"title":"Card F","header":true}]'></div>
+    <div>
+        <div d-for="card in cards" class="card"><div class="card-title">{{card.title}}</div><div class="card-body"><span d-if="{{card.header}}" class="card-header"><span class="icon"></span></span><span class="card-text">Body {{card.title}}</span></div></div>
+        <span>End</span>
+    </div>
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="Async(UpdateData(cards,{{cardsHeader}},false);Notify(cards);UpdateData(cards,{{cardsNoHeader}},false);Notify(cards),100)"></div>
+</body>
+</html>

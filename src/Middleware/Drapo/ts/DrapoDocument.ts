@@ -1086,10 +1086,10 @@ class DrapoDocument {
                 return;
             //Events
             this.ApplyNodeEventsDifferences(nodeOld, nodeNew);
-            //Special
-            this.ApplyNodeSpecialDifferences(nodeOld, nodeNew);
             //Attributes
             this.ApplyNodeAttributesDifferences(nodeOld, nodeNew);
+            //Select value is read before the children: patching them can move option nodes out of nodeNew, which changes nodeNew.value
+            const selectValueNew: string = this.IsSelect(nodeNew) ? (nodeNew as HTMLSelectElement).value : null;
             //Children
             const childrenOld: Array<HTMLElement> = nodeOld != null ? [].slice.call(nodeOld.children) : [];
             const childrenNew: Array<HTMLElement> = nodeNew != null ? [].slice.call(nodeNew.children) : [];
@@ -1098,12 +1098,73 @@ class DrapoDocument {
             if ((lengthOld === 0) && (lengthNew === 0)) {
                 if (nodeOld.textContent !== nodeNew.textContent)
                     nodeOld.textContent = nodeNew.textContent;
+            } else if ((lengthOld === 0) || (lengthNew === 0)) {
+                //Content shape differs (text vs elements): patching element children by position would leave stale or missing text
+                this.ReplaceNodeContent(nodeOld, nodeNew);
+            } else if ((this.HasDirectText(nodeOld)) || (this.HasDirectText(nodeNew))) {
+                //Text mixed with elements: elements are patched in place, then the text is placed around them
+                this.ApplyNodeMixedDifferences(nodeOld, nodeNew, childrenOld, childrenNew, isHTML);
             } else {
                 for (let i = 0; i < lengthNew || i < lengthOld; i++) {
                     this.ApplyNodeDifferences(nodeOld, childrenOld[i], childrenNew[i], isHTML);
                 }
             }
+            //Special (after the children, so a select already has the option its value refers to)
+            this.ApplyNodeSpecialDifferences(nodeOld, nodeNew, selectValueNew);
         }
+    }
+
+    private HasDirectText(node: HTMLElement): boolean {
+        const childNodes: NodeList = node.childNodes;
+        for (let i: number = 0; i < childNodes.length; i++) {
+            const childNode: Node = childNodes[i];
+            if ((childNode.nodeType === Node.TEXT_NODE) && (childNode.textContent.trim() !== ''))
+                return (true);
+        }
+        return (false);
+    }
+
+    private ApplyNodeMixedDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement, childrenOld: Array<HTMLElement>, childrenNew: Array<HTMLElement>, isHTML: boolean): void {
+        //Snapshot before the elements are patched: the patch moves element nodes out of nodeNew
+        const childNodesNew: Array<Node> = [].slice.call(nodeNew.childNodes);
+        //Elements are patched by position, as in the element-only path, so the nodes that line up keep their identity (focus, validation, widgets)
+        for (let i: number = 0; (i < childrenNew.length) || (i < childrenOld.length); i++)
+            this.ApplyNodeDifferences(nodeOld, childrenOld[i], childrenNew[i], isHTML);
+        //nodeOld now has one element per element of nodeNew, in the same order. Elements are never moved: only the text and comment nodes around them are updated, inserted or removed
+        const elementsOld: Array<HTMLElement> = [].slice.call(nodeOld.children);
+        let indexElement: number = 0;
+        let cursor: Node = nodeOld.firstChild;
+        for (let i: number = 0; i < childNodesNew.length; i++) {
+            const childNodeNew: Node = childNodesNew[i];
+            if (childNodeNew.nodeType === Node.ELEMENT_NODE) {
+                const elementOld: HTMLElement = elementsOld[indexElement++];
+                while ((cursor !== null) && (cursor !== elementOld)) {
+                    const next: Node = cursor.nextSibling;
+                    nodeOld.removeChild(cursor);
+                    cursor = next;
+                }
+                cursor = cursor !== null ? cursor.nextSibling : null;
+            } else if ((cursor !== null) && (cursor.nodeType === childNodeNew.nodeType)) {
+                if (cursor.textContent !== childNodeNew.textContent)
+                    cursor.textContent = childNodeNew.textContent;
+                cursor = cursor.nextSibling;
+            } else {
+                nodeOld.insertBefore(childNodeNew, cursor);
+            }
+        }
+        while (cursor !== null) {
+            const next: Node = cursor.nextSibling;
+            nodeOld.removeChild(cursor);
+            cursor = next;
+        }
+    }
+
+    private ReplaceNodeContent(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
+        //Keeps nodeOld itself (the rendered item and its attributes/events) and takes the content rendered in nodeNew
+        while (nodeOld.firstChild != null)
+            nodeOld.removeChild(nodeOld.firstChild);
+        while (nodeNew.firstChild != null)
+            nodeOld.appendChild(nodeNew.firstChild);
     }
 
     public ApplyNodeDifferencesRenderClass(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
@@ -1126,12 +1187,16 @@ class DrapoDocument {
         this.Application.EventHandler.SyncNodeEventsDifferences(nodeOld, nodeNew);
     }
 
-    private ApplyNodeSpecialDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
+    private IsSelect(node: HTMLElement): boolean {
+        return (node.tagName.toLowerCase() === "select");
+    }
+
+    private ApplyNodeSpecialDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement, selectValueNew: string): void {
         const tag: string = nodeOld.tagName.toLowerCase();
         if (tag === "input")
             this.ApplyNodeSpecialDifferencesInput(nodeOld as HTMLInputElement, nodeNew as HTMLInputElement);
         else if (tag === "select")
-            this.ApplyNodeSpecialDifferencesSelect(nodeOld as HTMLSelectElement, nodeNew as HTMLSelectElement);
+            this.ApplyNodeSpecialDifferencesSelect(nodeOld as HTMLSelectElement, selectValueNew);
         else if (tag === "textarea")
             this.ApplyNodeSpecialDifferencesTextarea(nodeOld as HTMLInputElement, nodeNew as HTMLInputElement);
     }
@@ -1144,9 +1209,9 @@ class DrapoDocument {
             nodeOld.value = nodeNew.value;
     }
 
-    private ApplyNodeSpecialDifferencesSelect(nodeOld: HTMLSelectElement, nodeNew: HTMLSelectElement): void {
-        if (nodeOld.value !== nodeNew.value)
-            nodeOld.value = nodeNew.value;
+    private ApplyNodeSpecialDifferencesSelect(nodeOld: HTMLSelectElement, valueNew: string): void {
+        if (nodeOld.value !== valueNew)
+            nodeOld.value = valueNew;
     }
 
     private ApplyNodeSpecialDifferencesTextarea(nodeOld: HTMLInputElement, nodeNew: HTMLInputElement): void {

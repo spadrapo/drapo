@@ -1,0 +1,17 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For Difference Header Async</title>
+</head>
+<body>
+    <span>Control Flow For Difference Header Async</span>
+    <div d-datakey="cards" d-datatype="array" d-datavalue="[{&quot;title&quot;:&quot;Card A&quot;,&quot;header&quot;:false},{&quot;title&quot;:&quot;Card B&quot;,&quot;header&quot;:true}]"></div>
+    <div d-datakey="cardsHeader" d-datatype="array" d-datavalue="[{&quot;title&quot;:&quot;Card C&quot;,&quot;header&quot;:true},{&quot;title&quot;:&quot;Card D&quot;,&quot;header&quot;:false}]"></div>
+    <div d-datakey="cardsNoHeader" d-datatype="array" d-datavalue="[{&quot;title&quot;:&quot;Card E&quot;,&quot;header&quot;:false},{&quot;title&quot;:&quot;Card F&quot;,&quot;header&quot;:true}]"></div>
+    <div>
+        <div d-for="card in cards" class="card" style="display: none;"><div class="card-title">{{card.title}}</div><div class="card-body"><span d-if="{{card.header}}" class="card-header"><span class="icon"></span></span><span class="card-text">Body {{card.title}}</span></div></div><div class="card"><div class="card-title">Card E</div><div class="card-body"><span class="card-text">Body Card E</span></div></div><div class="card"><div class="card-title">Card F</div><div class="card-body"><span class="card-header"><span class="icon"></span></span><span class="card-text">Body Card F</span></div></div>
+        <span>End</span>
+    </div>
+    <div d-datakey="loader" d-datatype="function" d-dataloadtype="startup" d-datavalue="Async(UpdateData(cards,{{cardsHeader}},false);Notify(cards);UpdateData(cards,{{cardsNoHeader}},false);Notify(cards),100)"></div>
+
+
+</body></html>

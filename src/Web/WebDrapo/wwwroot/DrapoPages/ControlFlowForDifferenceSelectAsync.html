@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For Difference Select Async</title>
+</head>
+<body>
+    <span>Control Flow For Difference Select Async</span>
+    <div d-dataKey="rows" d-dataType="array" d-dataValue='[{"name":"A","value":"x","options":[{"key":"x"}]},{"name":"B","value":"","options":[]},{"name":"E","value":"x","options":[{"key":"x"}]}]'></div>
+    <div d-dataKey="rowsNew" d-dataType="array" d-dataValue='[{"name":"C","value":"c","options":[{"key":"a"},{"key":"b"},{"key":"c"}]},{"name":"D","value":"b","options":[{"key":"a"},{"key":"b"}]},{"name":"F","value":"a","options":[{"key":"a"}]}]'></div>
+    <div>
+        <div d-for="row in rows" class="row"><b>{{row.name}}</b><select class="row-select" d-model="{{row.value}}"><option d-for="option in row.options" value="{{option.key}}">{{option.key}}</option></select></div>
+        <span>End</span>
+    </div>
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="Async(UpdateData(rows,{{rowsNew}},false);Notify(rows),100)"></div>
+</body>
+</html>
