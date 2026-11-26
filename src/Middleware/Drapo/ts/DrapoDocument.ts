@@ -1098,12 +1098,33 @@ class DrapoDocument {
             if ((lengthOld === 0) && (lengthNew === 0)) {
                 if (nodeOld.textContent !== nodeNew.textContent)
                     nodeOld.textContent = nodeNew.textContent;
+            } else if ((lengthOld === 0) || (lengthNew === 0) || (this.HasDirectText(nodeOld)) || (this.HasDirectText(nodeNew))) {
+                //Content shape differs (text vs elements) or mixes text with elements: patching children by position would leave stale text behind
+                this.ReplaceNodeContent(nodeOld, nodeNew);
             } else {
                 for (let i = 0; i < lengthNew || i < lengthOld; i++) {
                     this.ApplyNodeDifferences(nodeOld, childrenOld[i], childrenNew[i], isHTML);
                 }
             }
         }
+    }
+
+    private HasDirectText(node: HTMLElement): boolean {
+        const childNodes: NodeList = node.childNodes;
+        for (let i: number = 0; i < childNodes.length; i++) {
+            const childNode: Node = childNodes[i];
+            if ((childNode.nodeType === Node.TEXT_NODE) && (childNode.textContent.trim() !== ''))
+                return (true);
+        }
+        return (false);
+    }
+
+    private ReplaceNodeContent(nodeOld: HTMLElement, nodeNew: HTMLElement): void {
+        //Keeps nodeOld itself (the rendered item and its attributes/events) and takes the content rendered in nodeNew
+        while (nodeOld.firstChild != null)
+            nodeOld.removeChild(nodeOld.firstChild);
+        while (nodeNew.firstChild != null)
+            nodeOld.appendChild(nodeNew.firstChild);
     }
 
     public ApplyNodeDifferencesRenderClass(nodeOld: HTMLElement, nodeNew: HTMLElement): void {

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For Difference Leaf Async</title>
+</head>
+<body>
+    <span>Control Flow For Difference Leaf Async</span>
+    <div d-dataKey="items" d-dataType="array" d-dataValue='[{"name":"Group","icon":false},{"name":"Why","icon":true}]'></div>
+    <div d-dataKey="itemsSwapped" d-dataType="array" d-dataValue='[{"name":"Card","icon":true},{"name":"Reason","icon":false}]'></div>
+    <div>
+        <div d-for="item in items" class="item"><span d-if="{{item.icon}}"><span class="icon"></span></span><span d-if="!{{item.icon}}">{{item.name}}</span><b>{{item.name}}</b><p>{{item.name}}: <i>info</i></p></div>
+        <span>End</span>
+    </div>
+    <div d-dataKey="loader" d-dataType="function" d-dataLoadType="startup" d-dataValue="Async(UpdateData(items,{{itemsSwapped}},false);Notify(items),100)"></div>
+</body>
+</html>

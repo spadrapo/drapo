@@ -494,6 +494,16 @@ namespace WebDrapo.Test
             ValidatePage("ControlFlowForArrayNotify");
         }
         [TestCase]
+        public void ControlFlowForDifferenceHeaderAsyncTest()
+        {
+            ValidatePage("ControlFlowForDifferenceHeaderAsync");
+        }
+        [TestCase]
+        public void ControlFlowForDifferenceLeafAsyncTest()
+        {
+            ValidatePage("ControlFlowForDifferenceLeafAsync");
+        }
+        [TestCase]
         public void ControlFlowForAttributeTest()
         {
             ValidatePage("ControlFlowForAttribute");
