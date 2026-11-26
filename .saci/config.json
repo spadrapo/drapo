@@ -1,0 +1,129 @@
+// Settings not listed here keep saci's defaults: 'saci docs config' shows them all.
+{
+  "language": "English",
+  "trust": {
+    "associations": [
+      "OWNER",
+      "MEMBER",
+      "COLLABORATOR"
+    ],
+    "authors": [
+      "PedroBertoldi"
+    ]
+  },
+  "triager": {
+    "kinds": [
+      "Bug",
+      "bug"
+    ]
+  },
+  "developer": {
+    "kinds": [
+      "Bug",
+      "bug"
+    ],
+    "branchPrefix": "",
+    "branchName": "{number}-{slug}",
+    "protectedPaths": [
+      ".saci/**",
+      ".github/workflows/**",
+      "Package.nuspec",
+      "azure-pipelines.yml",
+      ".specify/memory/constitution.md"
+    ]
+  },
+  "checks": {
+    "enabled": true,
+    "shell": "pwsh",
+    "commands": [
+      {
+        "name": "npm install",
+        "run": "Push-Location src/Middleware/Drapo; npm install; $ok = $LASTEXITCODE -eq 0; Pop-Location; Push-Location src/Web/WebDrapo; npm install; $ok = $ok -and $LASTEXITCODE -eq 0; Pop-Location; if (-not $ok) { exit 1 }",
+        "timeoutMinutes": 15
+      },
+      {
+        "name": "release build (TSLint, runtime, middleware on every target)",
+        "run": "dotnet build src/Drapo.sln --configuration Release",
+        "timeoutMinutes": 20
+      }
+    ]
+  },
+  "reviewer": {
+    "gates": {
+      "compatibility": true,
+      "testsKept": true,
+      "custom": [
+        {
+          "name": "build-and-lint",
+          "instruction": "`cd src && dotnet build Drapo.sln` succeeds and `cd src/Middleware/Drapo && npm run lint` (TSLint) reports zero errors."
+        },
+        {
+          "name": "drapo-page-test",
+          "instruction": "A new or changed runtime or middleware behavior has a Selenium test: a page in src/Web/WebDrapo/wwwroot/DrapoPages/, its expected output in src/Test/WebDrapo.Test/Pages/<Page>.Test.html included as an Embedded Resource, and a <Page>Test method in src/Test/WebDrapo.Test/ReleaseTest.cs. The expected output comes from real runtime rendering, not written by hand. A change to existing behavior updates the affected tests.",
+          "paths": [
+            "src/Middleware/Drapo/ts/**",
+            "src/Middleware/Drapo/components/**",
+            "src/Middleware/Drapo/**/*.cs"
+          ]
+        },
+        {
+          "name": "full-suite-green",
+          "trigger": "when the diff changes anything under src/ (not only documentation, specs or .saci files)",
+          "instruction": "The whole WebDrapo.Test suite passes, in Release, against a WebDrapo started from the pull request's head on SACI_PORT, the way the reviewer persona describes (a scratch copy of Test.Debug.runsettings pointing WebDrapoURL at that port; never Test.runsettings). Give the command, how many tests ran and how many passed. No test is skipped or accepted as a known failure; a test that fails in the suite and passes alone is flaky and named. A suite that could not run leaves the gate unchecked, never passed.",
+          "because": "The Build Artifact workflow runs the suite only after a pull request is approved, so before approval the review's own run is the only evidence; the constitution allows no known-failing tests."
+        },
+        {
+          "name": "no-test-retries",
+          "instruction": "No test retries are added to the tests or to CI. A flaky test is fixed at its cause.",
+          "paths": [
+            "src/Test/**",
+            ".github/workflows/**"
+          ],
+          "because": "CI runs every test once and each must pass on the first run; the retry that had been added for DataIncrementalLoadTemplateLimitedTest was removed when the test itself was fixed (#711)."
+        },
+        {
+          "name": "multi-target",
+          "instruction": "Middleware code compiles and behaves correctly on every target framework of Drapo.csproj (netcoreapp3.1, netcoreapp6.0, net8.0, net10.0).",
+          "paths": [
+            "src/Middleware/Drapo/**/*.cs",
+            "src/Middleware/Drapo/Drapo.csproj"
+          ]
+        },
+        {
+          "name": "declarative-first",
+          "instruction": "New capability is exposed through d-* attributes, mustache binding or built-in functions that compose with the existing model, not through JavaScript that page authors must write by hand. Public attribute, function and middleware behavior stays backward compatible, or the pull request justifies the break and gives a migration path.",
+          "paths": [
+            "src/Middleware/Drapo/**"
+          ]
+        },
+        {
+          "name": "naming",
+          "instruction": "Test pages are PascalCase, test methods are the page name followed by Test, data keys are camelCase and custom CSS classes are kebab-case.",
+          "paths": [
+            "src/Web/WebDrapo/wwwroot/DrapoPages/**",
+            "src/Test/WebDrapo.Test/**"
+          ]
+        }
+      ]
+    }
+  },
+  "tester": {
+    "areas": [
+      "Data binding and d-model",
+      "Control flow: d-for, d-if, viewport and difference rendering",
+      "Events and built-in functions",
+      "Data storage, loading, caching and observers",
+      "Components, sectors and windows",
+      "Validation",
+      "Routing, packs, themes and the ASP.NET Core middleware",
+      "SignalR pipes"
+    ],
+    "checks": [
+      "console"
+    ],
+    "browser": "required"
+  },
+  "documenter": {
+    "repository": "spadrapo/docs"
+  }
+}
