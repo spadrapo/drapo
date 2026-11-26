@@ -1102,9 +1102,8 @@ class DrapoDocument {
                 //Content shape differs (text vs elements): patching element children by position would leave stale or missing text
                 this.ReplaceNodeContent(nodeOld, nodeNew);
             } else if ((this.HasDirectText(nodeOld)) || (this.HasDirectText(nodeNew))) {
-                //Text mixed with elements: patch every child node when both sides line up, otherwise take the new content
-                if (!this.ApplyNodeMixedDifferences(nodeOld, nodeNew, isHTML))
-                    this.ReplaceNodeContent(nodeOld, nodeNew);
+                //Text mixed with elements: elements are patched in place, then the text is placed around them
+                this.ApplyNodeMixedDifferences(nodeOld, nodeNew, childrenOld, childrenNew, isHTML);
             } else {
                 for (let i = 0; i < lengthNew || i < lengthOld; i++) {
                     this.ApplyNodeDifferences(nodeOld, childrenOld[i], childrenNew[i], isHTML);
@@ -1125,24 +1124,39 @@ class DrapoDocument {
         return (false);
     }
 
-    private ApplyNodeMixedDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement, isHTML: boolean): boolean {
-        const childNodesOld: Array<Node> = [].slice.call(nodeOld.childNodes);
+    private ApplyNodeMixedDifferences(nodeOld: HTMLElement, nodeNew: HTMLElement, childrenOld: Array<HTMLElement>, childrenNew: Array<HTMLElement>, isHTML: boolean): void {
+        //Snapshot before the elements are patched: the patch moves element nodes out of nodeNew
         const childNodesNew: Array<Node> = [].slice.call(nodeNew.childNodes);
-        if (childNodesOld.length !== childNodesNew.length)
-            return (false);
-        for (let i: number = 0; i < childNodesOld.length; i++) {
-            if (childNodesOld[i].nodeType !== childNodesNew[i].nodeType)
-                return (false);
-        }
-        for (let i: number = 0; i < childNodesOld.length; i++) {
-            const childNodeOld: Node = childNodesOld[i];
+        //Elements are patched by position, as in the element-only path, so the nodes that line up keep their identity (focus, validation, widgets)
+        for (let i: number = 0; (i < childrenNew.length) || (i < childrenOld.length); i++)
+            this.ApplyNodeDifferences(nodeOld, childrenOld[i], childrenNew[i], isHTML);
+        //nodeOld now has one element per element of nodeNew, in the same order. Elements are never moved: only the text and comment nodes around them are updated, inserted or removed
+        const elementsOld: Array<HTMLElement> = [].slice.call(nodeOld.children);
+        let indexElement: number = 0;
+        let cursor: Node = nodeOld.firstChild;
+        for (let i: number = 0; i < childNodesNew.length; i++) {
             const childNodeNew: Node = childNodesNew[i];
-            if (childNodeOld.nodeType === Node.ELEMENT_NODE)
-                this.ApplyNodeDifferences(nodeOld, childNodeOld as HTMLElement, childNodeNew as HTMLElement, isHTML);
-            else if (childNodeOld.textContent !== childNodeNew.textContent)
-                childNodeOld.textContent = childNodeNew.textContent;
+            if (childNodeNew.nodeType === Node.ELEMENT_NODE) {
+                const elementOld: HTMLElement = elementsOld[indexElement++];
+                while ((cursor !== null) && (cursor !== elementOld)) {
+                    const next: Node = cursor.nextSibling;
+                    nodeOld.removeChild(cursor);
+                    cursor = next;
+                }
+                cursor = cursor !== null ? cursor.nextSibling : null;
+            } else if ((cursor !== null) && (cursor.nodeType === childNodeNew.nodeType)) {
+                if (cursor.textContent !== childNodeNew.textContent)
+                    cursor.textContent = childNodeNew.textContent;
+                cursor = cursor.nextSibling;
+            } else {
+                nodeOld.insertBefore(childNodeNew, cursor);
+            }
         }
-        return (true);
+        while (cursor !== null) {
+            const next: Node = cursor.nextSibling;
+            nodeOld.removeChild(cursor);
+            cursor = next;
+        }
     }
 
     private ReplaceNodeContent(nodeOld: HTMLElement, nodeNew: HTMLElement): void {

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Control Flow For Difference Mixed Identity</title>
+</head>
+<body>
+    <span>Control Flow For Difference Mixed Identity</span>
+    <div d-dataKey="rows" d-dataType="array" d-dataValue='[{"name":"A","warn":false},{"name":"B","warn":true}]'></div>
+    <div d-dataKey="rowsNew" d-dataType="array" d-dataValue='[{"name":"C","warn":true},{"name":"D","warn":false}]'></div>
+    <div>
+        <div d-for="row in rows" class="row">Qty {{row.name}}: <input type="text" class="row-input" /> <span d-if="{{row.warn}}" class="row-warn">!</span></div>
+        <span>End</span>
+    </div>
+    <input type="button" class="row-update" value="Update" d-on-click="UpdateData(rows,{{rowsNew}},false);Notify(rows)" />
+</body>
+</html>
