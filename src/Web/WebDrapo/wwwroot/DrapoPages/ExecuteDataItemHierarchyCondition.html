@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="/drapo.js"></script>
+    <title>Execute Data Item Html</title>
+</head>
+<body>
+    <br>
+    <span>Execute Data Item Html</span>
+    <div>
+        <div>
+            <div d-datakey="data" d-dataurlget="/Data/GetLevels?levels=2&amp;children=2&amp;includeIndex=true"></div>
+        </div>
+        <div d-for="item in data">
+            <span d-on-click="ExecuteDataItem(IF({{item.Key}}={{parent.Key}},UpdateItemField({{parent.Key}},{{parent.Value}})),parent in data,true,true,parent in parent.Children)">Parent: {{item.Key}} - {{item.Value}}</span>
+            <div d-for="child in item.Children">
+                <span>Children: {{child.Key}} - {{child.Value}}</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
