@@ -1,0 +1,14 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <script src="/drapo.js"></script>
+    <title>Function - PostData Object Nested</title>
+</head>
+<body>
+    <span>PostData Object Nested</span>
+    <div d-datakey="data" d-datatype="object" d-dataurlget="/Data/GetFunctionPostDataObjectNested" d-dataurlset="/Data/SetFunctionPostDataObjectNested"></div>
+    <span d-model="{{data.Name}}">1 +1</span>
+    <ul>
+        <li d-for="item in data.Items" style="display: none;">{{item.Name}}</li>
+    <li>Item 1</li><li>Item 2</li></ul>
+    <input type="button" driverunittest="click" d-on-click="PostData(data)" value="PostData" />
+
+</body></html>
